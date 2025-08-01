@@ -57,6 +57,6 @@ public class PathWithSpacesITest {
 
     @Test
     void start() throws Exception {
-        assertThat(asadmin.exec("start-domain", "spaces"), asadminOK());
+        assertThat(asadmin.exec(60_000, "start-domain", "spaces"), asadminOK());
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import java.io.File;
 import java.util.logging.Level;
 
@@ -28,6 +27,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.admin.servermgmt.SLogger.BAD_RENAME_CERT_FILE;
 import static com.sun.enterprise.admin.servermgmt.SLogger.RENAME_CERT_FILE;
 import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Startup service to update the filesystem from v2 to the v3 format
@@ -45,7 +45,7 @@ public class UpgradeFilesystem implements ConfigurationUpgrade, PostConstruct {
     private void upgradeFilesystem() {
 
         // Rename nodeagents to nodes
-        String installDir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installDir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
 
         File agentsDir = new File(installDir, "nodeagents");
         File nodesDir = new File(installDir, "nodes");

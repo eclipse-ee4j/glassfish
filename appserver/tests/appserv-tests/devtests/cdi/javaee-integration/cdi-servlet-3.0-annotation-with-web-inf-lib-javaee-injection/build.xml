@@ -46,8 +46,8 @@
         <!-- create WEB-INF/lib/bean-lib.jar -->
         <mkdir dir="${build.classes.dir}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
-        <javac srcdir="servlet" includes="TestBean.java" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11"/>
-        <javac srcdir="util" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="11"/>
+        <javac srcdir="servlet" includes="TestBean.java" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="17"/>
+        <javac srcdir="util" destdir="${build.classes.dir}" classpath="${s1astest.classpath}" debug="on" source="17"/>
         <copy file="descriptor/beans.xml" tofile="${build.classes.dir}/META-INF/beans.xml"/>
         <delete file="${build.classes.dir}/TestBean.class" /> <!-- This is included in the WAR below -->
 

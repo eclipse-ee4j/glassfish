@@ -22,7 +22,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_5.xsd">
     <display-name>security-multirolemapping</display-name>
-    
+
     <module>
         <web>
             <web-uri>security-multirolemapping-web.war</web-uri>

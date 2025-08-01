@@ -70,7 +70,7 @@ asadmin-options::
 === Operands
 
 attribute-name=value [attribute-name=value]::
-  Identifies the full dotted name of the attribute name and its value. 
+  Identifies the full dotted name of the attribute name and its value.
   Multiple attribute=value pairs can be provided as multiple arguments, separated by a space.
   To delete a value, set the value to an empty value, e.g. `attribute-name=`
 

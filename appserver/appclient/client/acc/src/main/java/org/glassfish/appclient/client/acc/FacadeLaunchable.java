@@ -44,6 +44,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.appclient.common.ACCAppClientArchivist;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
 
@@ -265,9 +266,7 @@ public class FacadeLaunchable implements Launchable {
              */
             archivist.setAnnotationProcessingRequested( ! isJWSLaunch);
 
-            final ACCClassLoader tempLoader = new ACCClassLoader(loader.getURLs(), loader.getParent());
-
-
+            final TransformingClassLoader tempLoader = new TransformingClassLoader(loader.getURLs(), loader.getParent());
             archivist.setClassLoader(tempLoader);
 
             acDesc = archivist.open(combinedRA, mainClassNameToLaunch);

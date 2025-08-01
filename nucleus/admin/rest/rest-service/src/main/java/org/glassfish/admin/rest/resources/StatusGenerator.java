@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -244,7 +244,7 @@ public class StatusGenerator extends AbstractResource {
     }
 
     private void detectFromCommandRunner(Set<String> commands) {
-        CommandRunner cr = locate(CommandRunner.class);
+        CommandRunner<?> cr = locate(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
         ParameterMap parameters = new ParameterMap();
         cr.getCommandInvocation("list-commands", ar, getSubject()).parameters(parameters).execute();
@@ -294,7 +294,7 @@ public class StatusGenerator extends AbstractResource {
 
     private Collection<CommandModel.ParamModel> getParamMetaData(String commandName) {
         CommandRunner cr = locate(CommandRunner.class);
-        CommandModel cm = cr.getModel(commandName, RestLogging.restLogger);
+        CommandModel cm = cr.getModel(commandName);
         Collection<CommandModel.ParamModel> params = cm.getParameters();
         return params;
     }

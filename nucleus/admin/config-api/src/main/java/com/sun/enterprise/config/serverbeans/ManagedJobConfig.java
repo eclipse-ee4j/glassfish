@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,7 +59,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
      * @return
      */
     @Attribute(defaultValue = "24h")
-    @Pattern(regexp = "[1-9]\\d*([hms]|[HMS])", message = "{invalid.time.period.specified}", payload = ManagedJobConfig.class)
+    @Pattern(regexp = "[0-9]\\d*([hms]|[HMS])", message = "{invalid.time.period.specified}", payload = ManagedJobConfig.class)
     String getJobRetentionPeriod();
 
     /**
@@ -90,7 +91,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "20m")
-    @Pattern(regexp = "[1-9]\\d*([hms]|[HMS])", message = "{invalid.time.period.specified}", payload = ManagedJobConfig.class)
+    @Pattern(regexp = "[0-9]\\d*([hms]|[HMS])", message = "{invalid.time.period.specified}", payload = ManagedJobConfig.class)
     String getPollInterval();
 
     /**
@@ -107,7 +108,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
      * @return
      */
     @Attribute(defaultValue = "20m")
-    @Pattern(regexp = "[1-9]\\d*([hms]|[HMS])", message = "{invalid.time.period.specified}", payload = ManagedJobConfig.class)
+    @Pattern(regexp = "[0-9]\\d*([hms]|[HMS])", message = "{invalid.time.period.specified}", payload = ManagedJobConfig.class)
     String getInitialDelay();
 
     /**

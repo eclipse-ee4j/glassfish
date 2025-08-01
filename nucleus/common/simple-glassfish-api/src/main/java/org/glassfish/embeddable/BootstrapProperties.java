@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,8 @@ package org.glassfish.embeddable;
 
 import java.util.Properties;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 /**
  * Encapsulates the set of properties required to bootstrap GlassFishRuntime.
  *
@@ -33,9 +35,6 @@ import java.util.Properties;
  * @author Prasad.Subramanian@Sun.COM
  */
 public class BootstrapProperties {
-
-    /** Key for specifying which installation root the GlassFish should run with. */
-    private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
 
     private final Properties properties;
 
@@ -81,7 +80,7 @@ public class BootstrapProperties {
      * @param installRoot Location of installation root.
      */
     public void setInstallRoot(String installRoot) {
-        properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot);
+        properties.setProperty(INSTALL_ROOT.getPropertyName(), installRoot);
     }
 
     /**
@@ -90,7 +89,7 @@ public class BootstrapProperties {
      * @return Location of installation root set using {@link #setInstallRoot}
      */
     public String getInstallRoot() {
-        return properties.getProperty(INSTALL_ROOT_PROP_NAME);
+        return properties.getProperty(INSTALL_ROOT.getPropertyName());
     }
 
     /**

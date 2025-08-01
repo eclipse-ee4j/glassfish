@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.servermgmt.cli;
 import com.sun.enterprise.admin.launcher.GFLauncher;
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
@@ -38,10 +37,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
-import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
@@ -69,14 +67,10 @@ public class StartServerHelper {
     private final ServerDirs serverDirs;
     private final String masterPassword;
     private final String serverOrDomainName;
-    private final int debugPort;
-
-    public StartServerHelper(boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword) {
-        this(terse, serverDirs, launcher, masterPassword, false);
-    }
+    private final Duration timeout;
 
     public StartServerHelper(boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword,
-            boolean debug) {
+        Duration timeout) {
         this.terse = terse;
         this.launcher = launcher;
         this.info = launcher.getInfo();
@@ -91,9 +85,7 @@ public class StartServerHelper {
         this.serverDirs = serverDirs;
         this.pidFile = serverDirs.getPidFile();
         this.masterPassword = masterPassword;
-
-        // it will be < 0 if both --debug is false and debug-enabled=false in jvm-config
-        this.debugPort = launcher.getDebugPort();
+        this.timeout = timeout;
     }
 
 
@@ -123,13 +115,12 @@ public class StartServerHelper {
             // Don't wait if the process died.
             return !glassFishProcess.isAlive();
         };
-        final Duration timeout = Duration.ofMillis(WAIT_FOR_DAS_TIME_MS);
         if (!ProcessUtils.waitFor(signOfFinishedStartup, timeout, !terse)) {
             final String msg;
             if (info.isDomain()) {
-                msg = I18N.get("serverNoStart", I18N.get("DAS"), info.getDomainName(), timeout.toSeconds());
+                msg = I18N.get("serverNoStart", I18N.get("DAS"), info.getDomainName(), timeout);
             } else {
-                msg = I18N.get("serverNoStart", I18N.get("INSTANCE"), info.getInstanceName(), timeout.toSeconds());
+                msg = I18N.get("serverNoStart", I18N.get("INSTANCE"), info.getInstanceName(), timeout);
             }
             throw new CommandException(msg);
         }
@@ -212,8 +203,8 @@ public class StartServerHelper {
             return;
         }
         LOG.log(DEBUG, "Waiting for death of the parent process with pid={0}", pid);
-        if (!ProcessUtils.waitWhileIsAlive(pid, Duration.ofMillis(DEATH_TIMEOUT_MS), false)) {
-            throw new CommandException(I18N.get("deathwait_timeout", DEATH_TIMEOUT_MS));
+        if (!ProcessUtils.waitWhileIsAlive(pid, timeout, false)) {
+            throw new CommandException(I18N.get("deathwait_timeout", timeout));
         }
         LOG.log(DEBUG, "Parent process with PID={0} is dead and all admin endpoints are free.", pid);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,58 +17,57 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
 import com.sun.enterprise.admin.remote.RestPayloadImpl;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ManagedJobConfig;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
-import com.sun.enterprise.v3.server.ExecutorServiceFactory;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.AdminCommandState.State;
 import org.glassfish.api.admin.Job;
+import org.glassfish.api.admin.JobLocator;
 import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
+import org.glassfish.api.admin.progress.JobPersistence;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.event.RestrictTo;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This is the implementation for the JobManagerService The JobManager is responsible for
@@ -84,15 +83,15 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service(name = "job-manager")
 @Singleton
-public class JobManagerService implements JobManager, PostConstruct, EventListener {
+public class JobManagerService implements JobManager<AdminCommandJob>, EventListener {
 
-    private final static Logger logger = KernelLoggerInfo.getLogger();
-    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobManagerService.class);
+    private static final Logger LOG = System.getLogger(JobManagerService.class.getName());
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(JobManagerService.class);
     private static final String CHECKPOINT_MAINDATA = "MAINCMD";
     private static final int MAX_SIZE = 65535;
+    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
-    private ManagedJobConfig managedJobConfig;
-    private final ConcurrentHashMap<String, Job> jobRegistry = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, AdminCommandJob> jobRegistry = new ConcurrentHashMap<>();
     private final AtomicInteger lastId = new AtomicInteger(0);
 
     // This will store the data related to completed jobs so that unique ids
@@ -101,41 +100,67 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     // jobs.xml and load the information in memory
     private final ConcurrentHashMap<String, CompletedJob> completedJobsInfo = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, CheckpointFilename> retryableJobsInfo = new ConcurrentHashMap<>();
-    private final String JOBS_FILE = "jobs.xml";
-
-    private ExecutorService pool;
-    protected JAXBContext jaxbContext;
-    protected File jobsFile;
 
     @Inject
     private Domain domain;
 
     @Inject
-    private ExecutorServiceFactory executorFactory;
-
-    @Inject
-    private ServerEnvironment serverEnvironment;
-
-    @Inject
     private ServiceLocator serviceLocator;
 
     @Inject
-    private JobFileScanner jobFileScanner;
+    private Events events;
 
     @Inject
-    Events events;
+    private CheckpointHelper checkpointHelper;
 
     @Inject
-    CheckpointHelper checkpointHelper;
+    private DefaultJobManagerFile defaultJobsFile;
 
     @Inject
-    CommandRunnerImpl commandRunner;
+    private JobPersistence jobPersistence;
 
-    /**
-     * This will return a new id which is unused
-     *
-     * @return
-     */
+    private ExecutorService pool;
+
+    @PostConstruct
+    public void postConstruct() {
+        ThreadFactory threadFactory = r -> {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            t.setName("managed-job-" + t.getId());
+            return t;
+        };
+        pool = Executors.newCachedThreadPool(threadFactory);
+        Set<File> persistedJobFiles = locateJobFiles(defaultJobsFile.getFile(), serviceLocator);
+
+        // Check if there are jobs.xml files which have completed jobs so that
+        // unique ids get generated
+        for (File jobfile : persistedJobFiles) {
+            reapCompletedJobs(jobfile);
+            boolean dropInterruptedCommands = Boolean.getBoolean(DROP_INTERRUPTED_COMMANDS);
+            Collection<CheckpointFilename> listed = checkpointHelper.listCheckpoints(jobfile.getParentFile());
+            for (CheckpointFilename cf : listed) {
+                if (dropInterruptedCommands) {
+                    LOG.log(INFO, "Dropping checkpoint: {0}", cf.getFile());
+                    deleteCheckpoint(cf.getParentDir(), cf.getJobId());
+                } else {
+                    this.retryableJobsInfo.put(cf.getJobId(), cf);
+                }
+            }
+        }
+        events.register(this);
+    }
+
+    @Override
+    public AdminCommandJob createJob(String scope, String name, Subject subject, boolean isManagedJob,
+        ParameterMap parameters, ActionReport report) {
+        if (!isManagedJob) {
+            return new AdminCommandJob(name, scope, subject, false, parameters, report);
+        }
+        AdminCommandJob job = new AdminCommandJob(getNewId(), name, scope, subject, true, parameters, report);
+        job.setJobsFile(defaultJobsFile.getFile());
+        return job;
+    }
+
     @Override
     public synchronized String getNewId() {
         int nextId = lastId.incrementAndGet();
@@ -143,22 +168,17 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
             reset();
         }
         String nextIdToUse = String.valueOf(nextId);
-        return !idInUse(nextIdToUse) ? String.valueOf(nextId) : getNewId();
+        return isIdInUse(nextIdToUse) ? getNewId() : String.valueOf(nextId);
     }
 
+    @Override
     public JobInfo getCompletedJobForId(String id, File file) {
         for (JobInfo jobInfo : getCompletedJobs(file).getJobInfoList()) {
             if (jobInfo.jobId.equals(id)) {
                 return jobInfo;
             }
-
         }
         return null;
-    }
-
-    @Override
-    public JobInfo getCompletedJobForId(String id) {
-        return getCompletedJobForId(id, getJobsFile());
     }
 
     /**
@@ -174,7 +194,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
      * @param id
      * @return true if id is in use
      */
-    private boolean idInUse(String id) {
+    private boolean isIdInUse(String id) {
         return jobRegistry.containsKey(id) || completedJobsInfo.containsKey(id) || retryableJobsInfo.containsKey(id);
     }
 
@@ -185,20 +205,16 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
      * @throws IllegalArgumentException
      */
     @Override
-    public synchronized void registerJob(Job job) throws IllegalArgumentException {
+    public synchronized void registerJob(AdminCommandJob job) throws IllegalArgumentException {
         if (job == null) {
-            throw new IllegalArgumentException(adminStrings.getLocalString("job.cannot.be.null", "Job cannot be null"));
+            throw new IllegalArgumentException(I18N.getLocalString("job.cannot.be.null", "Job cannot be null"));
         }
         if (jobRegistry.containsKey(job.getId())) {
-            throw new IllegalArgumentException(adminStrings.getLocalString("job.id.in.use", "Job id is already in use."));
+            throw new IllegalArgumentException(I18N.getLocalString("job.id.in.use", "Job id is already in use."));
         }
 
         retryableJobsInfo.remove(job.getId());
         jobRegistry.put(job.getId(), job);
-
-        if (job.getState() == State.PREPARED && (job instanceof AdminCommandInstanceImpl)) {
-            ((AdminCommandInstanceImpl) job).setState(AdminCommandState.State.RUNNING);
-        }
     }
 
     /**
@@ -207,18 +223,12 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
      * @return The iterator of jobs
      */
     @Override
-    public Iterator<Job> getJobs() {
+    public Iterator<AdminCommandJob> getJobs() {
         return jobRegistry.values().iterator();
     }
 
-    /**
-     * This will return a job associated with the id
-     *
-     * @param id The job whose id matches
-     * @return
-     */
     @Override
-    public Job get(String id) {
+    public AdminCommandJob get(String id) {
         return jobRegistry.get(id);
     }
 
@@ -227,184 +237,73 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
      *
      * @return list of jobs to be purged
      */
-    public ArrayList<JobInfo> getExpiredJobs(File file) {
-        ArrayList<JobInfo> expiredJobs = new ArrayList<>();
-        synchronized (file) {
-            JobInfos jobInfos = getCompletedJobs(file);
-            for (JobInfo job : jobInfos.getJobInfoList()) {
-
-                long executedTime = job.commandExecutionDate;
-                long currentTime = System.currentTimeMillis();
-
-                long jobsRetentionPeriod = 86400000;
-
-                managedJobConfig = domain.getExtensionByType(ManagedJobConfig.class);
-                jobsRetentionPeriod = convert(managedJobConfig.getJobRetentionPeriod());
-
-                if (currentTime - executedTime > jobsRetentionPeriod && (job.state.equals(AdminCommandState.State.COMPLETED.name())
-                        || job.state.equals(AdminCommandState.State.REVERTED.name()))) {
-                    expiredJobs.add(job);
-                }
+    public ArrayList<JobInfo> getExpiredJobs(File jobsFile) {
+        final ArrayList<JobInfo> expiredJobs = new ArrayList<>();
+        final long currentTime = System.currentTimeMillis();
+        final ManagedJobConfig managedJobConfig = domain.getExtensionByType(ManagedJobConfig.class);
+        final long jobsRetentionPeriod = parseJobRetentionPeriodToMillis(managedJobConfig.getJobRetentionPeriod());
+        for (JobInfo job : getCompletedJobs(jobsFile).getJobInfoList()) {
+            if (currentTime - job.commandExecutionDate > jobsRetentionPeriod
+                && (job.state.equals(State.COMPLETED.name()) || job.state.equals(State.REVERTED.name()))) {
+                expiredJobs.add(job);
             }
         }
         return expiredJobs;
     }
 
-    public long convert(String input) {
+    public static long parseJobRetentionPeriodToMillis(String input) {
         String period = input.substring(0, input.length() - 1);
         long timeInterval = Long.parseLong(period);
-        String s = input.toLowerCase(Locale.US);
-        long milliseconds = 86400000;
-        if (s.indexOf("s") > 0) {
-            milliseconds = timeInterval * 1000;
-        } else if (s.indexOf("h") > 0) {
-            milliseconds = timeInterval * 3600 * 1000;
-
-        } else if (s.indexOf("m") > 0) {
-            milliseconds = timeInterval * 60 * 1000;
+        char unit = Character.toLowerCase(input.charAt(input.length() - 1));
+        if (unit == 's') {
+            return timeInterval * 1000;
+        } else if (unit == 'h') {
+            return timeInterval * 3600 * 1000;
+        } else if (unit == 'm') {
+            return timeInterval * 60 * 1000;
+        } else {
+            return DAY_IN_MILLIS;
         }
-        return milliseconds;
     }
 
-    /**
-     * This will remove the job from the registry
-     *
-     * @param id The job id of the job to be removed
-     */
     @Override
-    public synchronized void purgeJob(final String id) {
+    public void purgeJob(final String id) {
         Job job = jobRegistry.remove(id);
-        logger.fine(adminStrings.getLocalString("removed.expired.job", "Removed expired job ", job));
+        if (job != null) {
+            LOG.log(DEBUG, "Removed job from the cache: {0}", job);
+        }
     }
 
     public void deleteCheckpoint(final File parentDir, final String jobId) {
         // list all related files
-        File[] toDelete = parentDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.startsWith(jobId + ".") || name.startsWith(jobId + "-");
-            }
-        });
+        File[] toDelete = parentDir
+            .listFiles((dir, name) -> name.startsWith(jobId + ".") || name.startsWith(jobId + "-"));
         for (File td : toDelete) {
             td.delete();
         }
     }
 
-    public ExecutorService getThreadPool() {
-        return pool;
-    }
-
-    /**
-     * This will load the jobs which have already completed and persisted in the jobs.xml
-     *
-     * @return JobsInfos which contains information about completed jobs
-     */
     @Override
-    public JobInfos getCompletedJobs(File jobsFile) {
-        synchronized (jobsFile) {
-            try {
-                if (jaxbContext == null) {
-                    jaxbContext = JAXBContext.newInstance(JobInfos.class);
-                }
-                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-                if (jobsFile.exists()) {
-                    JobInfos jobInfos = (JobInfos) unmarshaller.unmarshal(jobsFile);
-                    return jobInfos;
-                }
-            } catch (JAXBException e) {
-                throw new RuntimeException(adminStrings.getLocalString("error.reading.completed.jobs", "Error reading completed jobs ",
-                        e.getLocalizedMessage()), e);
-            }
-            return null;
-        }
-    }
-
-    /**
-     * This method looks for the completed jobs and purges a job which is marked with the jobId
-     *
-     * @param jobId the job to purge
-     * @return the new list of completed jobs
-     */
-
-    public JobInfos purgeCompletedJobForId(String jobId, File file) {
-        JobInfos completedJobInfos = getCompletedJobs(file);
-        synchronized (file) {
-            CopyOnWriteArrayList<JobInfo> jobList = new CopyOnWriteArrayList<>();
-
-            if (completedJobInfos != null) {
-                jobList.addAll(completedJobInfos.getJobInfoList());
-
-                for (JobInfo jobInfo : jobList) {
-                    if (jobInfo.jobId.equals(jobId)) {
-                        jobList.remove(jobInfo);
-                    }
-
-                }
-            }
-
-            JobInfos jobInfos = new JobInfos();
-            // if (jobList.size() > 0) {
-            try {
-                if (jaxbContext == null) {
-                    jaxbContext = JAXBContext.newInstance(JobInfos.class);
-                }
-
-                jobInfos.setJobInfoList(jobList);
-                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-                jaxbMarshaller.marshal(jobInfos, file);
-            } catch (JAXBException e) {
-                throw new RuntimeException(adminStrings.getLocalString("error.purging.completed.job", "Error purging completed job ", jobId,
-                        e.getLocalizedMessage()), e);
-            }
-            // }
-            return jobInfos;
-        }
-
+    public void start(AsyncAdminCommandExecution command) {
+        pool.execute(command);
+        LOG.log(DEBUG, "Job {0} was submitted to pool {1}", command, pool);
     }
 
     @Override
-    public JobInfos purgeCompletedJobForId(String id) {
-        return purgeCompletedJobForId(id, getJobsFile());
+    public JobInfos getCompletedJobs(File jobsFile) {
+        return jobPersistence.load(jobsFile);
     }
 
     @Override
-    public void postConstruct() {
-        jobsFile = new File(serverEnvironment.getConfigDirPath(), JOBS_FILE);
-
-        pool = executorFactory.provide();
-
-        Set<File> persistedJobFiles = jobFileScanner.getJobFiles();
-        persistedJobFiles.add(jobsFile);
-
-        // Check if there are jobs.xml files which have completed jobs so that
-        // unique ids get generated
-        for (File jobfile : persistedJobFiles) {
-            if (jobfile != null) {
-                reapCompletedJobs(jobfile);
-                boolean dropInterruptedCommands = Boolean.valueOf(System.getProperty(SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS));
-                Collection<CheckpointFilename> listed = checkpointHelper.listCheckpoints(jobfile.getParentFile());
-                for (CheckpointFilename cf : listed) {
-                    if (dropInterruptedCommands) {
-                        logger.info("Dropping checkpoint: " + cf.getFile());
-                        deleteCheckpoint(cf.getParentDir(), cf.getJobId());
-                    } else {
-                        this.retryableJobsInfo.put(cf.getJobId(), cf);
-                    }
-                }
-            }
-        }
-        events.register(this);
+    public JobInfos purgeCompletedJobForId(JobInfo job) {
+        removeFromCompletedJobs(job.jobId);
+        return jobPersistence.remove(job);
     }
 
-    @Override
-    public File getJobsFile() {
-        return jobsFile;
-    }
-
-    public void addToCompletedJobs(CompletedJob job) {
-        completedJobsInfo.put(job.getId(), job);
-
+    public void moveToCompletedJobs(JobInfo job) {
+        purgeJob(job.jobId);
+        completedJobsInfo.put(job.jobId, new CompletedJob(job.jobId, job.commandCompletionDate, job.getJobsFile()));
+        jobPersistence.add(job);
     }
 
     public void removeFromCompletedJobs(String id) {
@@ -432,45 +331,38 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
         if (!StringUtils.ok(context.getJobId())) {
             throw new IllegalArgumentException("Command is not managed");
         }
-        Job job = get(context.getJobId());
-        if (job.getJobsFile() == null) {
-            job.setJobsFile(getJobsFile());
-        }
-        Checkpoint chkp = new Checkpoint(job, command, context);
+        AdminCommandJob job = get(context.getJobId());
+        Checkpoint<AdminCommandJob> chkp = new Checkpoint(job, command, context);
         checkpointHelper.save(chkp);
-        if (job instanceof AdminCommandInstanceImpl) {
-            ((AdminCommandInstanceImpl) job).setState(AdminCommandState.State.RUNNING_RETRYABLE);
-        }
+        job.setState(State.RUNNING_RETRYABLE);
     }
 
     public void checkpointAttachement(String jobId, String attachId, Serializable data) throws IOException {
-        Job job = get(jobId);
-        if (job.getJobsFile() == null) {
-            job.setJobsFile(getJobsFile());
-        }
+        AdminCommandJob job = get(jobId);
         checkpointHelper.saveAttachment(data, job, attachId);
     }
 
-    public <T extends Serializable> T loadCheckpointAttachement(String jobId, String attachId) throws IOException, ClassNotFoundException {
-        Job job = get(jobId);
-        if (job.getJobsFile() == null) {
-            job.setJobsFile(getJobsFile());
-        }
+
+    public <T extends Serializable> T loadCheckpointAttachement(String jobId, String attachId)
+        throws IOException, ClassNotFoundException {
+        AdminCommandJob job = get(jobId);
         return checkpointHelper.loadAttachment(job, attachId);
     }
 
     @Override
-    public Serializable loadCheckpointData(String jobId) throws IOException, ClassNotFoundException {
+    public AdminCommandJob loadCheckpointData(String jobId) throws IOException, ClassNotFoundException {
         return loadCheckpointAttachement(jobId, CHECKPOINT_MAINDATA);
     }
 
-    public Checkpoint loadCheckpoint(String jobId, Payload.Outbound outbound) throws IOException, ClassNotFoundException {
-        Job job = get(jobId);
+
+    public Checkpoint<AdminCommandJob> loadCheckpoint(String jobId, Payload.Outbound outbound)
+        throws IOException, ClassNotFoundException {
+        AdminCommandJob job = get(jobId);
         CheckpointFilename cf = null;
         if (job == null) {
             cf = getRetryableJobsInfo().get(jobId);
             if (cf == null) {
-                cf = CheckpointFilename.createBasic(jobId, getJobsFile());
+                cf = CheckpointFilename.createBasic(jobId, defaultJobsFile.getFile());
             }
         } else {
             cf = CheckpointFilename.createBasic(job);
@@ -478,15 +370,18 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
         return loadCheckpoint(cf, outbound);
     }
 
-    private Checkpoint loadCheckpoint(CheckpointFilename cf, Payload.Outbound outbound) throws IOException, ClassNotFoundException {
-        Checkpoint result = checkpointHelper.load(cf, outbound);
-        if (result != null) {
-            serviceLocator.inject(result.getJob());
-            serviceLocator.postConstruct(result.getJob());
-            if (result.getCommand() != null) {
-                serviceLocator.inject(result.getCommand());
-                serviceLocator.postConstruct(result.getCommand());
-            }
+
+    private Checkpoint<AdminCommandJob> loadCheckpoint(CheckpointFilename cf, Payload.Outbound outbound)
+        throws IOException, ClassNotFoundException {
+        Checkpoint<AdminCommandJob> result = checkpointHelper.load(cf, outbound);
+        if (result == null) {
+            return null;
+        }
+        serviceLocator.inject(result.getJob());
+        serviceLocator.postConstruct(result.getJob());
+        if (result.getCommand() != null) {
+            serviceLocator.inject(result.getCommand());
+            serviceLocator.postConstruct(result.getCommand());
         }
         return result;
     }
@@ -496,13 +391,12 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
      * for faster access
      */
     protected void reapCompletedJobs(File file) {
-        if (file != null && file.exists()) {
-            JobInfos jobInfos = getCompletedJobs(file);
-            if (jobInfos != null) {
-                for (JobInfo jobInfo : jobInfos.getJobInfoList()) {
-                    addToCompletedJobs(new CompletedJob(jobInfo.jobId, jobInfo.commandCompletionDate, jobInfo.getJobsFile()));
-                }
-            }
+        if (file == null || !file.exists()) {
+            return;
+        }
+        for (JobInfo jobInfo : getCompletedJobs(file).getJobInfoList()) {
+            CompletedJob job = new CompletedJob(jobInfo.jobId, jobInfo.commandCompletionDate, jobInfo.getJobsFile());
+            completedJobsInfo.put(jobInfo.jobId, job);
         }
     }
 
@@ -510,37 +404,49 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
         if (event.is(EventTypes.SERVER_READY)) {
             if (!retryableJobsInfo.isEmpty()) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        logger.fine("Restarting retryable jobs");
-                        for (CheckpointFilename cf : retryableJobsInfo.values()) {
-                            reexecuteJobFromCheckpoint(cf);
-                        }
+                Runnable runnable = () -> {
+                    LOG.log(DEBUG, "Restarting retryable jobs");
+                    for (CheckpointFilename cf : retryableJobsInfo.values()) {
+                        reexecuteJobFromCheckpoint(cf);
                     }
                 };
-                new Thread(runnable).start();
+                pool.submit(runnable);
             } else {
-                logger.fine("No retryable job found");
+                LOG.log(DEBUG, "No retryable job found");
             }
         }
     }
 
+
     private void reexecuteJobFromCheckpoint(CheckpointFilename cf) {
-        Checkpoint checkpoint = null;
+        Checkpoint<AdminCommandJob> checkpoint = null;
         try {
             RestPayloadImpl.Outbound outbound = new RestPayloadImpl.Outbound(true);
             checkpoint = loadCheckpoint(cf, outbound);
         } catch (Exception ex) {
-            logger.log(Level.WARNING, KernelLoggerInfo.exceptionLoadCheckpoint, ex);
+            LOG.log(WARNING, "Unable to load checkpoint", ex);
         }
         if (checkpoint != null) {
-            logger.log(Level.INFO, KernelLoggerInfo.checkpointAutoResumeStart, new Object[] { checkpoint.getJob().getName() });
-            commandRunner.executeFromCheckpoint(checkpoint, false, new AdminCommandEventBrokerImpl());
-            ActionReport report = checkpoint.getContext().getActionReport();
-            logger.log(Level.INFO, KernelLoggerInfo.checkpointAutoResumeDone,
-                    new Object[] { checkpoint.getJob().getName(), report.getActionExitCode(), report.getTopMessagePart() });
+            final AdminCommandJob job = checkpoint.getJob();
+            final AdminCommandContext context = checkpoint.getContext();
+            final ActionReport report = context.getActionReport();
+            LOG.log(INFO, "Resuming command {0} from its last checkpoint.", job);
+            CommandRunnerExecutionContext ec = new CommandRunnerExecutionContext(job.getScope(), job.getName(),
+                report, context.getSubject(), false, false, serviceLocator.getService(CommandRunnerImpl.class));
+            ec.executeFromCheckpoint(checkpoint, false);
+            LOG.log(INFO, "Automatically resumed command {0} finished with exit code {1}. \nMessage: {2}",
+                checkpoint.getJob().getName(), report.getActionExitCode(), report.getTopMessagePart());
         }
     }
 
+
+    private static Set<File> locateJobFiles(File defaultJobsFile, ServiceLocator serviceLocator) {
+        Collection<JobLocator> services = serviceLocator.getAllServices(JobLocator.class);
+        Set<File> persistedJobFiles = new HashSet<>();
+        for (JobLocator locator : services) {
+            persistedJobFiles.addAll(locator.locateJobXmlFiles());
+        }
+        persistedJobFiles.add(defaultJobsFile);
+        return persistedJobFiles;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -491,13 +491,6 @@ public class GlassFishLogHandler extends Handler implements ExternallyManagedLog
         private LoggingPump(String threadName, LogRecordBuffer buffer) {
             super(threadName, buffer);
         }
-
-
-        @Override
-        protected boolean isShutdownRequested() {
-            return !configuration.isEnabled() || !isReady();
-        }
-
 
         @Override
         protected int getFlushFrequency() {

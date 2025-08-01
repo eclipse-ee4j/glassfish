@@ -29,8 +29,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+
 /**
- *
  * @author Byron Nevins
  */
 class GFEmbeddedLauncher extends GFLauncher {
@@ -47,13 +48,12 @@ class GFEmbeddedLauncher extends GFLauncher {
     private static final String GFE_RUNSERVER_CLASS = "GFE_RUNSERVER_CLASS";
     private static final String GFE_JAR = "GFE_JAR";
     private static final String INSTALL_HOME = "S1AS_HOME";
-    private static final String JAVA_HOME = "JAVA_HOME";
     private static final String GENERAL_MESSAGE = " *********  GENERAL MESSAGE ********\n"
             + "You must setup four different environmental variables to run embedded with asadmin."
             + " They are\n"
             + "GFE_JAR - path to the embedded jar\n"
             + "S1AS_HOME - path to installation directory. This can be empty or not exist yet.\n"
-            + "JAVA_HOME - path to a JDK installation. JRE installation is generally not good enough\n"
+            + JAVA_HOME.getEnvName() + " - path to a JDK installation. JRE installation is generally not good enough\n"
             + "GFE_DEBUG_PORT - optional debugging port. It will start suspended.\n"
             + "\n*********  SPECIFIC MESSAGE ********\n";
 
@@ -71,6 +71,11 @@ class GFEmbeddedLauncher extends GFLauncher {
         } catch (Exception ex) {
             throw new GFLauncherException(ex);
         }
+    }
+
+    @Override
+    List<File> getMainModulepath() throws GFLauncherException {
+        return List.of();
     }
 
     @Override
@@ -176,6 +181,9 @@ class GFEmbeddedLauncher extends GFLauncher {
         CommandLine cmdLine = new CommandLine(CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe.toPath());
         addThreadDump(cmdLine);
+        if (getModulepath().length > 0) {
+            cmdLine.appendModulePath(getModulepath());
+        }
         if (getClasspath().length > 0) {
             cmdLine.appendClassPath(getClasspath());
         }
@@ -222,6 +230,7 @@ class GFEmbeddedLauncher extends GFLauncher {
         setupDomainDir();
         setupJavaDB();
         setClasspath();
+        setModulepath();
     }
 
     private void setupDomainDir() throws GFLauncherException {
@@ -237,10 +246,10 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     private void setupJDK() throws GFLauncherException {
-        String err = "You must set the environmental variable JAVA_HOME to point"
-            + " at a valid JDK. <jdk>/bin/javac[.exe] must exist.";
+        String err = "You must set the environmental variable " + JAVA_HOME.getEnvName() + " to point"
+            + " at a valid JDK.  <jdk>/bin/javac[.exe] must exist.";
 
-        String jdkDirName = System.getenv(JAVA_HOME);
+        String jdkDirName = System.getenv(JAVA_HOME.getEnvName());
         if (!ok(jdkDirName)) {
             throw new GFLauncherException(err);
         }

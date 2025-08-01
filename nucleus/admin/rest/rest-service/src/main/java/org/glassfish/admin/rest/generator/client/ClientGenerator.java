@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.client.RestClientBase;
 import org.glassfish.admin.rest.client.RestLeaf;
 import org.glassfish.admin.rest.client.RestLeafCollection;
@@ -180,7 +180,7 @@ public abstract class ClientGenerator {
 
     protected CommandModel getCommandModel(String commandName) {
         CommandRunner cr = getBaseServiceLocator().getService(CommandRunner.class);
-        return cr.getModel(commandName, RestLogging.restLogger);
+        return cr.getModel(commandName);
     }
 
     protected Set<String> processElements(ClientClassWriter writer, ConfigModel model) {

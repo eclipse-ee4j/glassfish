@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -62,20 +63,22 @@ import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.kernel.event.EventsImpl;
 import org.glassfish.main.core.apiexporter.APIExporterImpl;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.glassfish.tests.utils.mock.TestServerEnvironment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static java.util.Collections.singletonList;
 import static org.glassfish.api.admin.ServerEnvironment.Status.starting;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
 import static org.glassfish.api.event.EventTypes.SERVER_READY;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 import static org.glassfish.api.event.EventTypes.SERVER_STARTUP;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.hk2.runlevel.RunLevel.RUNLEVEL_MODE_META_TAG;
 import static org.glassfish.hk2.runlevel.RunLevel.RUNLEVEL_VAL_META_TAG;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -96,6 +99,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Tom Beerbower
  */
+@ExtendWith(KernelJUnitExtension.class)
 public class AppServerStartupTest {
 
     /**
@@ -139,13 +143,13 @@ public class AppServerStartupTest {
         descriptor.addContractType(ModulesRegistry.class);
         config.addActiveDescriptor(descriptor);
 
-        descriptor = BuilderHelper.createConstantDescriptor(new ExecutorServiceFactory().provide());
+        descriptor = BuilderHelper.createConstantDescriptor(Executors.newCachedThreadPool());
         descriptor.addContractType(ExecutorService.class);
         config.addActiveDescriptor(descriptor);
 
         final Properties startupContextProperties = new Properties();
         final String rootPath = AppServerStartupTest.class.getResource("/").getPath();
-        startupContextProperties.setProperty(INSTALL_ROOT_PROP_NAME, rootPath);
+        startupContextProperties.setProperty(INSTALL_ROOT.getPropertyName(), rootPath);
         StartupContext startupContext = new StartupContext(startupContextProperties);
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new EventsImpl()));
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new Version()));

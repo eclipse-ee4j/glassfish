@@ -17,8 +17,6 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -311,12 +309,6 @@ public interface ConnectorConstants extends ResourceConstants {
     String SEC = "Security";
     String RA = "ResourceAdapter";
     String JDBC = "Jdbc";
-
-    /**
-     * @deprecated Duplicates SystemPropertyConstants.INSTALL_ROOT_PROPERTY
-     */
-    @Deprecated(forRemoval = true, since = "7.0.25")
-    String INSTALL_ROOT = SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 
     String DB_VENDOR_MAPPING_ROOT = "org.glassfish.connectors.dbVendorMappingRoot";
 

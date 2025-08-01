@@ -44,6 +44,7 @@ import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.FailurePolicy;
@@ -343,7 +344,7 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
             // disable the application first for non-DAS target
             if (env.isDas() && !DeploymentUtils.isDASTarget(target)) {
                 ActionReport subReport = report.addSubActionsReport();
-                CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("disable", subReport, context.getSubject());
+                CommandInvocation inv = commandRunner.getCommandInvocation("disable", subReport, context.getSubject());
 
                 try {
                     final ParameterMapExtractor extractor = new ParameterMapExtractor(this);

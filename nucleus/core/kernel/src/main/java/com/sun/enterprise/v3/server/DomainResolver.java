@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +28,8 @@ import java.util.logging.Level;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 /**
  * DTD resolver used when parsing the domain.xml and resolve to local DTD copies
  *
@@ -41,7 +44,7 @@ public class DomainResolver implements EntityResolver {
         if (systemId.startsWith("http://www.sun.com/software/appserver/")) {
             // return a special input source
             String fileName = systemId.substring("http://www.sun.com/software/appserver/".length());
-            File f = new File(System.getProperty("com.sun.aas.installRoot"));
+            File f = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
             f = new File(f, "lib");
             f = new File(f, fileName.replace('/', File.separatorChar));
             if (f.exists()) {

@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.net.URL;
@@ -33,12 +32,14 @@ import java.util.logging.Level;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Implementation for the CLI command verify-domain-xml Verifies the content of the domain.xml file
@@ -71,7 +72,7 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
         try {
             // get the list of JAR files from the modules directory
             ArrayList<URL> urls = new ArrayList<>();
-            File idir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+            File idir = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
             File mdir = new File(idir, "modules");
             File[] files = mdir.listFiles();
             if (files != null) {

@@ -17,12 +17,17 @@ Starts a {productName} instance on the host where the subcommand is run
 
 [source]
 ----
-asadmin [asadmin-options] start-local-instance [--help]
-[--nodedir node-dir] [--node node]
-[--debug={false|true}] [--dry-run={true|false}]
-[--sync={normal|full|none}]
-[--verbose={false|true}] [--watchdog={true|false}]
-[instance-name]
+asadmin start-local-instance
+[--debug|-d[=<debug(default:false)>]]
+[--dry-run|-n[=<dry-run(default:false)>]]
+[--help|-?]
+[--node <node>]
+[--nodedir <nodedir>]
+[--sync <sync(default:normal)>]
+[--timeout <timeout>]
+[--verbose|-v[=<verbose(default:false)>]]
+[--watchdog|-w[=<watchdog(default:false)>]]
+[instance_name]
 ----
 
 === Description
@@ -57,14 +62,6 @@ asadmin-options::
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-`--nodedir`::
-  Specifies the directory that contains the instance's node directory.
-  The instance's files are stored in the instance's node directory. The
-  default is as-install``/nodes``.
-`--node`::
-  Specifies the node on which the instance resides. This option may be
-  omitted only if the directory that the `--nodedir` option specifies
-  contains only one node directory. Otherwise, this option is required.
 `--debug`::
 `-d`::
   Specifies whether the instance is started with
@@ -88,6 +85,14 @@ Possible values are as follows:
   be useful when troubleshooting startup issues. +
   The default value is `false`.
 
+`--node`::
+  Specifies the node on which the instance resides. This option may be
+  omitted only if the directory that the `--nodedir` option specifies
+  contains only one node directory. Otherwise, this option is required.
+`--nodedir`::
+  Specifies the directory that contains the instance's node directory.
+  The instance's files are stored in the instance's node directory. The
+  default is as-install``/nodes``.
 `--sync`::
   The type of synchronization between the DAS and the instance's files
   when the instance is started. +
@@ -130,6 +135,11 @@ cache, the subcommand fails and the instance cannot be restarted
 until it is resynchronized with the DAS.
 ====
 
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The instance status is unknown
+  in such case.
 `--verbose`::
 `-v`::
   Specifies whether detailed information about the instance is displayed

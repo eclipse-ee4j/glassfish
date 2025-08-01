@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
 Internal debug facility.  For development use only.
@@ -259,7 +261,7 @@ public final class AMXDebug
 
         if (value == null)
         {
-            final String instanceRoot = System.getProperty("com.sun.aas.instanceRoot");
+            final String instanceRoot = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
             File parentDir = instanceRoot == null ? FileUtils.USER_HOME : new File(instanceRoot);
             debugDir = new File(parentDir, AMX_DEBUG_SUBDIR);
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,11 +33,17 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 
 public class PropertiesFactory implements Serializable, ObjectFactory {
+
     public static final String filePropertyName = "org.glassfish.resources.custom.factory.PropertiesFactory.fileName";
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
-        Reference ref = (Reference)obj;
+
+    @Override
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+        throws Exception {
+        Reference ref = (Reference) obj;
         Enumeration<RefAddr> refAddrs = ref.getAll();
 
         String fileName = null;
@@ -55,37 +62,33 @@ public class PropertiesFactory implements Serializable, ObjectFactory {
             }
         }
 
-            if(fileName != null){
-                File file = new File(fileName);
-                if(!file.isAbsolute()){
-                    file = new File(System.getProperty("com.sun.aas.installRoot")+File.separator+fileName);
-                }
-                try{
-                    if(file.exists()){
-                        FileInputStream fis = null;
-                        try{
-
-                            fis = new FileInputStream(file);
-                            if(fileName.toUpperCase(Locale.getDefault()).endsWith("XML")){
-                                fileProperties.loadFromXML(fis);
-                            }else{
-                                fileProperties.load(fis);
-                            }
-
-                        }catch(IOException ioe){
-                            throw new IOException("IO Exception during properties load : " + file.getAbsolutePath());
-                        } finally {
-                            fis.close();
+        if (fileName != null) {
+            File file = new File(fileName);
+            if (!file.isAbsolute()) {
+                file = new File(
+                    System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator + fileName);
+            }
+            try {
+                if (file.exists()) {
+                    try (FileInputStream fis = new FileInputStream(file)) {
+                        if (fileName.toUpperCase(Locale.getDefault()).endsWith("XML")) {
+                            fileProperties.loadFromXML(fis);
+                        } else {
+                            fileProperties.load(fis);
                         }
-                    } else {
-                        throw new FileNotFoundException("File not found : " + file.getAbsolutePath());
+
+                    } catch (IOException ioe) {
+                        throw new IOException("IO Exception during properties load : " + file.getAbsolutePath());
                     }
-                }catch(FileNotFoundException fnfe){
+                } else {
                     throw new FileNotFoundException("File not found : " + file.getAbsolutePath());
                 }
+            } catch (FileNotFoundException fnfe) {
+                throw new FileNotFoundException("File not found : " + file.getAbsolutePath());
             }
-            fileProperties.putAll(properties);
+        }
+        fileProperties.putAll(properties);
 
-            return fileProperties;
+        return fileProperties;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,9 +25,7 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.ServerDirs;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -48,8 +46,15 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.kernel.KernelLoggerInfo;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.INFO;
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Init run level service to take care of vm related tasks.
@@ -83,12 +88,18 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
 
     @Override
     public void postConstruct() {
+        if (env.isEmbedded()) {
+            initEmbeddedSystemOptions();
+            LOG.log(INFO, "Loaded embedded server named: {0}", server.getName());
+            return;
+        }
         setVersion();
         setSystemPropertiesFromEnv();
         setSystemPropertiesFromDomainXml();
         resolveJavaConfig();
-        LOG.log(Level.FINE, "SystemTasks: loaded server named: {0}", server.getName());
+        LOG.log(INFO, "Loaded server named: {0}", server.getName());
     }
+
 
     @Override
     public void writePidFile() {
@@ -104,20 +115,22 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         }
     }
 
-    private void setVersion() {
-        System.setProperty("glassfish.version", Version.getProductIdInfo());
+    /**
+     * In embedded environment, we don't have a domain.xml, but we still have defaults.
+     * System properties should be set from the outside except few.
+     */
+    private void initEmbeddedSystemOptions() {
+        // JMS may not be available.
+        setProperty("org.glassfish.jms.InitializeOnDemand", "true", false);
     }
 
-    /**
-     * Here is where we make the change Post-TP2 to *not* use JVM System Properties
-     */
-    private void setSystemProperty(String name, String value) {
-        System.setProperty(name, value);
+    private void setVersion() {
+        setProperty("glassfish.version", Version.getProductIdInfo(), true);
     }
 
     private void setSystemPropertiesFromEnv() {
         // adding our version of some system properties.
-        setSystemProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY, System.getProperty("java.home"));
+        setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()), true);
         String hostname = "localhost";
         try {
             // canonical name checks to make sure host is proper
@@ -126,7 +139,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
         }
         if (hostname != null) {
-            setSystemProperty(SystemPropertyConstants.HOST_NAME_PROPERTY, hostname);
+            setProperty(HOST_NAME.getSystemPropertyName(), hostname, false);
         }
     }
 
@@ -183,8 +196,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
                 if (m.matches()) {
                     String name = m.group(1);
                     String value = TranslatedConfigView.expandValue(m.group(2));
-                    LOG.log(Level.FINEST, "Setting {0}={1}", new Object[] {name, value});
-                    setSystemProperty(name, value);
+                    setProperty(name, value, true);
                 }
             }
         }
@@ -196,7 +208,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             String value = sp.getValue();
 
             if (ok(name)) {
-                setSystemProperty(name, value);
+                setProperty(name, value, true);
             }
         }
     }

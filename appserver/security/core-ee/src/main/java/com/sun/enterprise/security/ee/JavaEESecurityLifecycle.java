@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +38,7 @@ import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
 import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.annotations.Service;
 
 import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY;
@@ -102,7 +103,7 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
 
         Security.addProvider(provider);
 
-        System.setProperty("config.parser", ConfigDomainParser.class.getName());
+        SystemProperties.setProperty("config.parser", ConfigDomainParser.class.getName(), true);
     }
 
     private void initializeJakartaAuthorization() {

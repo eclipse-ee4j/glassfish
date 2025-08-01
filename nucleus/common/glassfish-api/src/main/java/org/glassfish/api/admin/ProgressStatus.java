@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +16,6 @@
  */
 
 package org.glassfish.api.admin;
-
-import java.io.Serializable;
 
 /**
  * API for providing information about work progress in {@link AdminCommand} implementations.
@@ -173,7 +171,7 @@ import java.io.Serializable;
  * @see Progress
  * @author mmares
  */
-public interface ProgressStatus extends Serializable {
+public interface ProgressStatus extends ProgressEvent {
 
     /**
      * Number of steps necessary to complete the operation. Value is used to determine percentage of work completed. This

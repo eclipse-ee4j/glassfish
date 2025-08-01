@@ -42,7 +42,7 @@
             </roles>
         </developer>
     </developers>
-
+<!-- VYHODIT?-->
     <build>
         <plugins>
             <plugin>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,6 @@ import com.sun.enterprise.config.serverbeans.ServerTags;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Iterator;
 
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.config.support.PropertyResolver;
@@ -41,12 +41,24 @@ import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
 import org.glassfish.loadbalancer.admin.cli.transform.InstanceVisitor;
 import org.glassfish.loadbalancer.admin.cli.transform.Visitor;
 
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
+
 /**
  * Provides instance information relavant to Load balancer tier.
  *
  * @author Kshitiz Saxena
  */
 public class InstanceReaderImpl implements InstanceReader {
+
+    private final Domain _domain;
+    private ServerRef _serverRef;
+    private final Server _server;
+    private static final String HTTP_PROTO = "http://";
+    private static final String HTTPS_PROTO = "https://";
+    private static final String AJP_PROTO = "ajp://";
+    private static final String ADMIN_LISTENER = ServerTags.ADMIN_LISTENER_ID;
+    private static final String BIND_TO_ANY = "0.0.0.0";
+    private static final String LOCALHOST = "localhost";
 
     /**
      * Constructor
@@ -80,7 +92,7 @@ public class InstanceReaderImpl implements InstanceReader {
     @Override
     public boolean getLbEnabled() throws LbReaderException {
         if(_serverRef != null){
-            return Boolean.valueOf(_serverRef.getLbEnabled()).booleanValue();
+            return Boolean.parseBoolean(_serverRef.getLbEnabled());
         }
         return LoadbalancerReader.LBENABLED_VALUE;
     }
@@ -117,18 +129,15 @@ public class InstanceReaderImpl implements InstanceReader {
      */
     @Override
     public String getListeners() throws LbReaderException {
-        StringBuffer listenerStr = new StringBuffer();
+        StringBuilder listenerStr = new StringBuilder();
 
         Config config = _domain.getConfigNamed(_server.getConfigRef());
         NetworkConfig networkConfig = config.getNetworkConfig();
         Protocols protocols = networkConfig.getProtocols();
         NetworkListeners nls = networkConfig.getNetworkListeners();
-        Iterator<NetworkListener> listenerIter = nls.getNetworkListener().iterator();
-
         int i = 0;
         PropertyResolver resolver = new PropertyResolver(_domain, _server.getName());
-        while (listenerIter.hasNext()) {
-            NetworkListener listener = listenerIter.next();
+        for (NetworkListener listener : nls.getNetworkListener()) {
             NetworkListener rawListener = GlassFishConfigBean.getRawView(listener);
             if (rawListener.getName().equals(ADMIN_LISTENER)) {
                 continue;
@@ -142,14 +151,14 @@ public class InstanceReaderImpl implements InstanceReader {
             }
             i++;
 
-            if (Boolean.valueOf(protocol.getHttp().getJkEnabled())){
+            if (Boolean.parseBoolean(protocol.getHttp().getJkEnabled())){
                 listenerStr.append(AJP_PROTO);
             } else {
-            if (Boolean.valueOf(protocol.getSecurityEnabled()).booleanValue()) {
-                listenerStr.append(HTTPS_PROTO);
-            } else {
-                listenerStr.append(HTTP_PROTO);
-            }
+                if (Boolean.parseBoolean(protocol.getSecurityEnabled())) {
+                    listenerStr.append(HTTPS_PROTO);
+                } else {
+                    listenerStr.append(HTTP_PROTO);
+                }
             }
             String hostName = getResolvedHostName(rawListener.getAddress());
             listenerStr.append(hostName);
@@ -202,16 +211,6 @@ public class InstanceReaderImpl implements InstanceReader {
         if (node.getNodeHost() != null && !node.getNodeHost().equals(LOCALHOST)) {
             return node.getNodeHost();
         }
-        return System.getProperty("com.sun.aas.hostName");
+        return System.getProperty(HOST_NAME.getSystemPropertyName());
     }
-    // --- PRIVATE VARS -------
-    private Domain _domain = null;
-    private ServerRef _serverRef = null;
-    private Server _server = null;
-    private static final String HTTP_PROTO = "http://";
-    private static final String HTTPS_PROTO = "https://";
-    private static final String AJP_PROTO = "ajp://";
-    private static final String ADMIN_LISTENER = ServerTags.ADMIN_LISTENER_ID;
-    private static final String BIND_TO_ANY = "0.0.0.0";
-    private static final String LOCALHOST = "localhost";
 }

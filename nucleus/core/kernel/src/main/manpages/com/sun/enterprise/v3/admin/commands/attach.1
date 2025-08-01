@@ -5,8 +5,10 @@ NAME
        --detach or that contain progress information
 
 SYNOPSIS
-           attach  [--help]
-           job_id
+        attach
+        [--help|-?]
+        [--timeout <timeout>]
+        job_id
 
 DESCRIPTION
        The attach subcommand attaches to subcommands that were started using
@@ -24,6 +26,12 @@ DESCRIPTION
 OPTIONS
        --help, -?
            Displays the help text for the subcommand.
+
+       --timeout
+           Specifies timeout in seconds to evaluate the expected result.
+           If the timeout is exceeded, the command fails - however it does
+           not mean it did not make any changes. The job status is unknown
+           in such case.
 
 OPERANDS
        job_id
@@ -52,4 +60,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         12 Jan 2013                        attach(1)
+Jakarta EE 10                         26 Jun 2025                        attach(1)

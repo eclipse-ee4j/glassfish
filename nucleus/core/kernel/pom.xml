@@ -72,6 +72,10 @@
             <artifactId>hk2</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
@@ -111,6 +115,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
             <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
@@ -118,6 +127,11 @@
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>glassfish</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.core</groupId>
+            <artifactId>glassfish-osgi-bootstrap</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.connectors.jms.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
@@ -29,13 +28,15 @@ import com.sun.enterprise.connectors.jms.inflow.MdbContainerProps;
 import com.sun.enterprise.connectors.jms.system.MQAddressList;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.zip.ZipFile;
 import com.sun.enterprise.util.zip.ZipFileException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -46,16 +47,23 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.config.types.Property;
 
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_JMS_ADAPTER;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 public class JmsRaUtil {
 
     private final static String MQ_RAR = "imqjmsra.rar";
 
-    private final String SYSTEM_APP_DIR =
-        "lib" + File.separator + "install" + File.separator + "applications";
+    /** lib/install/applications */
+    private static final Path SYSTEM_APP_DIR = Path.of("lib", "install", "applications");
 
-    private final String MQ_RAR_MANIFEST =
-        ConnectorConstants.DEFAULT_JMS_ADAPTER + File.separator + "META-INF"
-        + File.separator + "MANIFEST.MF";
+    /** META-INF/MANIFEST.MF */
+    private static final Path MQ_RAR_MANIFEST = Path.of("META-INF", "MANIFEST.MF");
 
     // Manifest version tag.
     private final static String MANIFEST_TAG = "Implementation-Version";
@@ -79,10 +87,10 @@ public class JmsRaUtil {
 
     private int reconnectDelayInSeconds = DEFAULT_RECONNECT_DELAY;
     private int reconnectMaxRetries = DEFAULT_RECONNECT_RETRIES;
-    private boolean reconnectEnabled = false;
+    private boolean reconnectEnabled;
 
-    JmsService js = null;
-    MQAddressList list = null;
+    JmsService js;
+    MQAddressList list;
 
     private static final Logger _logger = JMSLoggerInfo.getLogger();
 
@@ -90,12 +98,13 @@ public class JmsRaUtil {
         this(null);
     }
 
+
     public JmsRaUtil(JmsService js) throws ConnectorRuntimeException {
         try {
             if (js != null) {
-            this.js = js;
+                this.js = js;
             } else {
-                  this.js = Globals.get(JmsService.class);
+                this.js = Globals.get(JmsService.class);
             }
             list = new MQAddressList(this.js);
 //            if (isClustered() && ! this.js.getType().equals(
@@ -109,34 +118,39 @@ public class JmsRaUtil {
         }
     }
 
-    public void setupAddressList() throws ConnectorRuntimeException{
-      try {
-    list.setup();
-    } catch (Exception e) {
-        throw handleException(e);
+
+    public void setupAddressList() throws ConnectorRuntimeException {
+        try {
+            list.setup();
+        } catch (Exception e) {
+            throw handleException(e);
+        }
     }
-    }
+
 
     public String getUrl() {
-    try {
+        try {
             return list.toString();
-    } catch (Exception e) {
-        return null;
-    }
+        } catch (Exception e) {
+            return null;
+        }
     }
 
+
     public static boolean isClustered(List clusters, String instanceName) {
-              return (enableClustering() && isServerClustered(clusters,
-                instanceName));
-     }
-      /**
-     * Return true if the given server instance is part of a cluster.
+        return (enableClustering() && isServerClustered(clusters, instanceName));
+    }
+
+
+    /**
+     * @return true if the given server instance is part of a cluster.
      */
-    public static boolean isServerClustered(List clusters, String instanceName)
-    {
+    public static boolean isServerClustered(List clusters, String instanceName) {
         return (getClusterForServer(clusters, instanceName) != null);
     }
-    public static Cluster getClusterForServer(List clusters, String instanceName){
+
+
+    public static Cluster getClusterForServer(List clusters, String instanceName) {
         //Return the server only if it is part of a cluster (i.e. only if a cluster
         //has a reference to it).
         for (Object cluster : clusters) {
@@ -159,15 +173,15 @@ public class JmsRaUtil {
                * this flag is set to false. Default is true.
                */
             String enablecluster = System.getProperty(ENABLE_AUTO_CLUSTERING);
-            _logger.log(Level.FINE, "Sun MQ Auto cluster system property " + enablecluster);
+            _logger.log(FINE, "Sun MQ Auto cluster system property " + enablecluster);
             if ((enablecluster != null) && (enablecluster.trim().equals("false"))){
-                _logger.log(Level.FINE, "Disabling Sun MQ Auto Clustering");
+                _logger.log(FINE, "Disabling Sun MQ Auto Clustering");
                 return false;
             }
         } catch (Exception e) {
 
         }
-        _logger.log(Level.FINE, "Enabling Sun MQ Auto Clustering");
+        _logger.log(FINE, "Enabling Sun MQ Auto Clustering");
         return true;
     }
 
@@ -202,14 +216,11 @@ public class JmsRaUtil {
     public void setMdbContainerProperties(){
         MdbContainer mdbc = null;
         try {
-
             mdbc = Globals.get(MdbContainer.class);
-
-        }
-        catch (Exception e) {
-            _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION, new Object[]{e.getMessage()});
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, e.getClass().getName(), e);
+        } catch (Exception e) {
+            _logger.log(WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION, new Object[] {e.getMessage()});
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, e.getClass().getName(), e);
             }
         }
 
@@ -231,7 +242,7 @@ public class JmsRaUtil {
                                 continue;
                             }
                             reconnectEnabled =
-                                Boolean.valueOf(p.getValue()).booleanValue();
+                                Boolean.parseBoolean(p.getValue());
                         }
                         else if (name.equals
                                  (propName_reconnect_delay_in_seconds)) {
@@ -239,7 +250,7 @@ public class JmsRaUtil {
                                 reconnectDelayInSeconds =
                                     Integer.parseInt(p.getValue());
                             } catch (Exception e) {
-                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
+                                _logger.log(WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                         new Object[]{e.getMessage()});
                             }
                         }
@@ -248,7 +259,7 @@ public class JmsRaUtil {
                                 reconnectMaxRetries =
                                     Integer.parseInt(p.getValue());
                             } catch (Exception e) {
-                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
+                                _logger.log(WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                         new Object[]{e.getMessage()});
                             }
                         }
@@ -258,15 +269,15 @@ public class JmsRaUtil {
                                 cmtMaxRuntimeExceptions =
                                     Integer.parseInt(p.getValue());
                             } catch (Exception e) {
-                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
+                                _logger.log(WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                     new Object[]{e.getMessage()});
                             }
                         }
                     } catch (Exception e) {
-                        _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
+                        _logger.log(WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                 new Object[]{e.getMessage()});
-                        if (_logger.isLoggable(Level.FINE)) {
-                            _logger.log(Level.FINE, e.getClass().getName(), e);
+                        if (_logger.isLoggable(FINE)) {
+                            _logger.log(FINE, e.getClass().getName(), e);
                         }
                     }
                 }
@@ -278,8 +289,8 @@ public class JmsRaUtil {
         if (reconnectMaxRetries < 0) {
             reconnectMaxRetries = DEFAULT_RECONNECT_RETRIES;
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE,
                 propName_reconnect_delay_in_seconds+"="+
                 reconnectDelayInSeconds +", "+
                 propName_reconnect_max_retries+ "="+reconnectMaxRetries + ", "+
@@ -295,20 +306,18 @@ public class JmsRaUtil {
     }
 
     public void configureDescriptor(ConnectorDescriptor cd) {
-
         Object[] envProps = cd.getConfigProperties().toArray();
 
         for (Object envProp2 : envProps) {
-            ConnectorConfigProperty  envProp = (ConnectorConfigProperty ) envProp2;
+            ConnectorConfigProperty envProp = (ConnectorConfigProperty) envProp2;
             String name = envProp.getName();
-        if (!name.equals("ConnectionURL")) {
-            continue;
-        }
+            if (!name.equals("ConnectionURL")) {
+                continue;
+            }
             String userValue = getUrl();
             if (userValue != null) {
                 cd.removeConfigProperty(envProp);
-                cd.addConfigProperty(new ConnectorConfigProperty (
-                              name, userValue, userValue, envProp.getType()));
+                cd.addConfigProperty(new ConnectorConfigProperty(name, userValue, userValue, envProp.getType()));
             }
 
         }
@@ -321,107 +330,90 @@ public class JmsRaUtil {
      * directory.
      */
     public void upgradeIfNecessary() {
-
-        String installedMqVersion = null;
-        String deployedMqVersion = null;
-
-        try {
-           installedMqVersion = getInstalledMqVersion();
-           _logger.log(Level.FINE,"installedMQVersion :: " + installedMqVersion);
-           deployedMqVersion =  getDeployedMqVersion();
-           _logger.log(Level.FINE,"deployedMQVersion :: " + deployedMqVersion);
-        }catch (Exception e) {
-        return;
+        String imqLibPath = System.getProperty(IMQ_LIB.getSystemPropertyName());
+        if (imqLibPath == null) {
+            _logger.log(Level.SEVERE, "IMQ lib root system property not set: " + IMQ_LIB.getSystemPropertyName());
+            return;
         }
 
-        String deployed_dir =
-           java.lang. System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)
-           + File.separator + SYSTEM_APP_DIR + File.separator
-           + ConnectorConstants.DEFAULT_JMS_ADAPTER;
+        String installRoot = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
+        if (installRoot == null) {
+            _logger.log(Level.SEVERE, "Install root system property not set: " + INSTALL_ROOT.getSystemPropertyName());
+            return;
+        }
+
+        final Path imqLib = new File(imqLibPath).toPath();
+        final Path deployedDir = new File(installRoot).toPath().resolve(SYSTEM_APP_DIR).resolve(DEFAULT_JMS_ADAPTER);
+        final File imqLibRar = imqLib.resolve(MQ_RAR).toFile();
+        final String installedMqVersion;
+        final String deployedMqVersion;
+        try {
+            installedMqVersion = getInstalledMqVersion(imqLibRar);
+            _logger.log(FINE, "installedMQVersion: {0}", installedMqVersion);
+            deployedMqVersion = getDeployedMqVersion(deployedDir);
+            _logger.log(FINE, "deployedMQVersion: {0}", deployedMqVersion);
+        } catch (Exception e) {
+            throw new IllegalStateException("Upgrade failed - could not resolve deployed and installed version.", e);
+        }
+
+        if (installedMqVersion == null) {
+            _logger.log(INFO, "No JMS RA installation RAR found on path {0}. Nothing for upgrade.", imqLibRar);
+            return;
+        }
 
         // If the Manifest entry has different versions, then attempt to
         // explode the MQ resource adapter.
-        if (!installedMqVersion.equals(deployedMqVersion)) {
-           try {
-               _logger.log(Level.INFO, JMSLoggerInfo.JMSRA_UPGRADE_STARTED);
-           ZipFile rarFile = new ZipFile(System.getProperty
-                                 (SystemPropertyConstants.IMQ_LIB_PROPERTY) +
-                                 File.separator + MQ_RAR, deployed_dir);
-               rarFile.explode();
-               _logger.log(Level.INFO, JMSLoggerInfo.JMSRA_UPGRADE_COMPLETED);
-       } catch(ZipFileException ze) {
-               _logger.log(Level.SEVERE, JMSLoggerInfo.JMSRA_UPGRADE_FAILED,
-                       new Object[]{ze.getMessage()});
-           }
+        if (!Objects.equals(installedMqVersion, deployedMqVersion)) {
+            try {
+                _logger.log(INFO, JMSLoggerInfo.JMSRA_UPGRADE_STARTED,
+                    new Object[] {deployedMqVersion, installedMqVersion});
+                FileUtils.whack(deployedDir.toFile());
+                ZipFile rarFile = new ZipFile(imqLibRar, deployedDir.toFile());
+                rarFile.explode();
+                _logger.log(INFO, JMSLoggerInfo.JMSRA_UPGRADE_COMPLETED);
+            } catch (ZipFileException e) {
+                _logger.log(Level.SEVERE, "Upgrading a MQ resource adapter failed", e);
+            }
         }
-
     }
 
-    private String getInstalledMqVersion() throws Exception {
-       String ver = null;
-       // Full path of installed Mq Client library
-       String installed_dir =
-           System.getProperty(SystemPropertyConstants.IMQ_LIB_PROPERTY);
-       String jarFile = installed_dir + File.separator + MQ_RAR;
-       _logger.log(Level.FINE,"Installed MQ JAR " + jarFile);
-    JarFile jFile = null;
-       try {
-       if ((new File(jarFile)).exists()) {
-        /* This is for a file based install
-           * RAR has to be present in this location
-           * ASHOME/imq/lib
-           */
-        jFile = new JarFile(jarFile);
-       } else {
-        /* This is for a package based install
-           * RAR has to be present in this location
-           * /usr/lib
-           */
-        jFile = new JarFile(installed_dir + File.separator + ".." + File.separator + MQ_RAR);
-       }
-           Manifest mf = jFile.getManifest();
-           ver = mf.getMainAttributes().getValue(MANIFEST_TAG);
-           return ver;
-       } catch (Exception e) {
-           _logger.log(Level.WARNING, JMSLoggerInfo.JMSRA_UPGRADE_CHECK_FAILED,
-                   new Object[]{e.getMessage() + ":" + jarFile});
-           throw e;
-       } finally {
-           if (jFile != null) {
-               jFile.close();
-           }
-       }
+
+    /** Full path of installed Mq Client library */
+    private String getInstalledMqVersion(final File imqLibRar) throws Exception {
+        // This is for a file based install RAR has to be present in this location
+        // AS_INSTALL/../imq/lib, but ca be set also to another place.
+        if (!imqLibRar.exists()) {
+            return null;
+        }
+        _logger.log(FINEST, "Found installation JMS RAR: {0}", imqLibRar);
+        try (JarFile jFile = new JarFile(imqLibRar)) {
+            Manifest mf = jFile.getManifest();
+            return mf.getMainAttributes().getValue(MANIFEST_TAG);
+        }
     }
 
-    private String getDeployedMqVersion() throws Exception {
-       String ver = null;
-        // Full path of Mq client library that is deployed in appserver.
-       String deployed_dir =
-           System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)
-           + File.separator + SYSTEM_APP_DIR;
-       String manifestFile = deployed_dir + File.separator +
-                             MQ_RAR_MANIFEST;
-       _logger.log(Level.FINE,"Deployed MQ version Manifest file" + manifestFile);
-       try (FileInputStream fis = new FileInputStream(manifestFile)) {
-           Manifest mf = new Manifest(fis);
-           ver = mf.getMainAttributes().getValue(MANIFEST_TAG);
-           return ver;
-       } catch (Exception e) {
-           _logger.log(Level.WARNING, JMSLoggerInfo.JMSRA_UPGRADE_CHECK_FAILED,
-                   new Object[]{e.getMessage() + ":" + manifestFile});
-           throw e;
-       }
-   }
+    /** Full path of Mq client library that is deployed in appserver. */
+    private String getDeployedMqVersion(Path deployedDir) throws Exception {
+        File manifestFile = deployedDir.resolve(MQ_RAR_MANIFEST).toFile();
+        if (!manifestFile.exists()) {
+            return null;
+        }
+        _logger.log(FINEST, "Found deployed JMS RA Manifest file {0}", manifestFile);
+        try (FileInputStream fis = new FileInputStream(manifestFile)) {
+            Manifest mf = new Manifest(fis);
+            return mf.getMainAttributes().getValue(MANIFEST_TAG);
+        }
+    }
 
-   private static ConnectorRuntimeException handleException(Exception e) {
-        ConnectorRuntimeException cre =
-             new ConnectorRuntimeException(e.getMessage());
+
+    private static ConnectorRuntimeException handleException(Exception e) {
+        ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
         cre.initCause(e);
         return cre;
     }
 
-    public static String getJMSPropertyValue(Server as){
 
+    public static String getJMSPropertyValue(Server as) {
         SystemProperty sp = as.getSystemProperty("JMS_PROVIDER_PORT");
         if (sp != null) {
             return sp.getValue();
@@ -447,16 +439,16 @@ public class JmsRaUtil {
         return null;
     }
 
-    public static String getUnAliasedPwd(String alias){
-        try{
+
+    public static String getUnAliasedPwd(String alias) {
+        try {
             String unalisedPwd = RelativePathResolver.getRealPasswordFromAlias(alias);
             if (unalisedPwd != null && "".equals(unalisedPwd)) {
                 return unalisedPwd;
             }
-
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
-         return alias;
+        return alias;
     }
 }

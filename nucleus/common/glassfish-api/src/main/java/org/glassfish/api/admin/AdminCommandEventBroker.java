@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +25,13 @@ package org.glassfish.api.admin;
  */
 public interface AdminCommandEventBroker<T> {
 
-    /**
-     * Local events are not transfered to remote listener using SSE
-     */
+    /** Local events are not transfered to remote listener using SSE */
     String LOCAL_EVENT_PREFIX = "local/";
+    /** Local register listener event */
+    String EVENT_NAME_LISTENER_REG = LOCAL_EVENT_PREFIX + "listener/register";
+    /** Local unregister listener event */
+    String EVENT_NAME_LISTENER_UNREG = LOCAL_EVENT_PREFIX + "listener/unregister";
+
 
     /**
      * Fire event under defined name. Any object can be event.
@@ -57,44 +61,22 @@ public interface AdminCommandEventBroker<T> {
      *
      * @param listener Listener to remove
      */
-    void unregisterListener(AdminCommandListener listener);
+    void unregisterListener(AdminCommandListener<T> listener);
 
-    /**
-     * Returns true if exist exists registered listener for given eventName
-     */
-    boolean listening(String eventName);
-
-    /**
-     * Pack of utility methods related to this instance of event broker.
-     */
-    EventBrokerUtils getUtils();
-
-    /**
-     * Place relevant for utility methods
-     */
-    public interface EventBrokerUtils {
-
-        String USER_MESSAGE_NAME = "usermessage";
-
-        void sendMessage(String message);
-
-    }
 
     /**
      * Listener for AdminCommand events.
      *
      * @param <T> Type of event
      */
+    @FunctionalInterface
     public interface AdminCommandListener<T> {
 
+        /** Handle admin command event. */
         void onAdminCommandEvent(String name, T event);
-
     }
 
     public static class BrokerListenerRegEvent {
-        public static final String EVENT_NAME_LISTENER_REG = LOCAL_EVENT_PREFIX + "listener/register";
-        public static final String EVENT_NAME_LISTENER_UNREG = LOCAL_EVENT_PREFIX + "listener/unregister";
-
         private final AdminCommandEventBroker broker;
         private final AdminCommandListener listener;
 
@@ -110,7 +92,5 @@ public interface AdminCommandEventBroker<T> {
         public AdminCommandListener getListener() {
             return listener;
         }
-
     }
-
 }

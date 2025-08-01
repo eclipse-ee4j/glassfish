@@ -188,7 +188,7 @@ public class MonitoringReporter extends V2DottedNameSupport {
 
         List<Server> allServers = targetService.getAllInstances();
         for (Server server : allServers) {
-            if (server.isRunning()) {
+            if (server.isListeningOnAdminPort()) {
                 num++;
             }
         }
@@ -281,7 +281,7 @@ public class MonitoringReporter extends V2DottedNameSupport {
         String instanceListStr = "";
         i = 0;
         for (Server server : allServers) {
-            if (server.isRunning()) {
+            if (server.isListeningOnAdminPort()) {
                 if (i == 0) {
                     instanceListStr = server.getName();
                 } else {

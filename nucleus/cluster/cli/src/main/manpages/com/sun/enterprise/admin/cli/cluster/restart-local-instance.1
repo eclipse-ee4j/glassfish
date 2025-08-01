@@ -5,11 +5,15 @@ NAME
        on the host where the subcommand is run
 
 SYNOPSIS
-           restart-local-instance [--help]
-           [--nodedir nodedir] [--node node]
-           [--debug={false|true}]
-           [--force={true|false}] [--kill={false|true}]
-           [instance-name]
+        restart-local-instance
+        [--debug[=<debug(default:false)>]]
+        [--force[=<force(default:true)>]]
+        [--help|-?]
+        [--kill[=<kill(default:false)>]]
+        [--node <node>]
+        [--nodedir <nodedir>]
+        [--timeout <timeout>]
+        [instance_name]
 
 DESCRIPTION
        The restart-local-instance subcommand restarts a GlassFish Server
@@ -57,20 +61,6 @@ DESCRIPTION
        instance with the DAS, this subcommand must be run in remote mode.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
-       --nodedir
-           Specifies the directory that contains the instance's node
-           directory. The instance's files are stored in the instance's node
-           directory. The default is as-install/nodes.
-
-       --node
-           Specifies the node on which the instance resides. This option may
-           be omitted only if the directory that the --nodedir option
-           specifies contains only one node directory. Otherwise, this option
-           is required.
-
        --debug
            Specifies whether the instance is restarted with Java Platform
            Debugger Architecture (JPDA)
@@ -105,6 +95,9 @@ OPTIONS
                The subcommand waits until all threads that are associated with
                the instance are exited before stopping the instance.
 
+       --help, -?
+           Displays the help text for the subcommand.
+
        --kill
            Specifies whether the instance is killed before it is restarted by
            using functionality of the operating system to terminate the
@@ -120,6 +113,23 @@ OPTIONS
            true
                The instance is killed. The subcommand uses functionality of
                the operating system to terminate the instance process.
+
+       --node
+           Specifies the node on which the instance resides. This option may
+           be omitted only if the directory that the --nodedir option
+           specifies contains only one node directory. Otherwise, this option
+           is required.
+
+       --nodedir
+           Specifies the directory that contains the instance's node
+           directory. The instance's files are stored in the instance's node
+           directory. The default is as-install/nodes.
+
+        --timeout
+           Specifies timeout in seconds to evaluate the expected result.
+           If the timeout is exceeded, the command fails - however it does
+           not mean it did not make any changes. The instance status is unknown
+           in such case.
 
 OPERANDS
        instance-name
@@ -152,4 +162,4 @@ SEE ALSO
        Java Platform Debugger Architecture (JPDA)
        (https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
 
-Jakarta EE 10                   21 Aug 2017            restart-local-instance(1)
+Jakarta EE 10                   26 Jun 2026            restart-local-instance(1)

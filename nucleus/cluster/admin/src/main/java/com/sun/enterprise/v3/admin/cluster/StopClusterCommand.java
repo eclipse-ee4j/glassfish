@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +22,7 @@ import com.sun.enterprise.config.serverbeans.Domain;
 
 import jakarta.inject.Inject;
 
+import java.time.Duration;
 import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
@@ -40,6 +41,9 @@ import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.v3.admin.cluster.ClusterCommandHelper.getTimeout;
+import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
 
 @I18n("stop.cluster.command")
 @Service(name="stop-cluster")
@@ -74,6 +78,9 @@ public class StopClusterCommand implements AdminCommand {
     @Param(optional = true, defaultValue = "false")
     private boolean verbose;
 
+    @Param(optional = true)
+    private Integer timeout;
+
     @Override
     public void execute(AdminCommandContext context) {
 
@@ -91,9 +98,7 @@ public class StopClusterCommand implements AdminCommand {
             return;
         }
 
-        ClusterCommandHelper clusterHelper = new ClusterCommandHelper(domain,
-                runner);
-
+        ClusterCommandHelper clusterHelper = new ClusterCommandHelper(domain, runner);
         ParameterMap map = null;
         if (kill) {
             map = new ParameterMap();
@@ -102,14 +107,13 @@ public class StopClusterCommand implements AdminCommand {
         try {
             // Run start-instance against each instance in the cluster
             String commandName = "stop-instance";
-            clusterHelper.runCommand(commandName, map, clusterName, context, false,
-                    verbose);
+            Duration cmdTimeout = getTimeout(timeout, TIMEOUT_STOP_SERVER);
+            clusterHelper.runCommand(commandName, map, clusterName, context, false, verbose, cmdTimeout);
         } catch (CommandException e) {
             String msg = e.getLocalizedMessage();
             logger.warning(msg);
             report.setActionExitCode(ExitCode.FAILURE);
             report.setMessage(msg);
-            return;
         }
     }
 }

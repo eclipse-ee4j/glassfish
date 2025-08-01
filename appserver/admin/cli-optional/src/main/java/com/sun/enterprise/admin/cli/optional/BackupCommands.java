@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.optional;
 
 import com.sun.enterprise.admin.servermgmt.cli.LocalDomainCommand;
 import com.sun.enterprise.backup.BackupRequest;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.ObjectAnalyzer;
 
 import java.io.File;
@@ -28,6 +27,7 @@ import java.io.IOException;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static com.sun.enterprise.util.io.DomainDirs.getDefaultDomainsDir;

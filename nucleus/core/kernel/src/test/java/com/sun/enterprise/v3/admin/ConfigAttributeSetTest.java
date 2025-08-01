@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
@@ -130,7 +130,8 @@ public class ConfigAttributeSetTest {
             parameters.set("DEFAULT", propertyName + "=" + propertyValue);
             // execute the set command.
             PlainTextActionReporter reporter = new PlainTextActionReporter();
-            CommandInvocation invocation = runner.getCommandInvocation("set", reporter, adminSubject).parameters(parameters);
+            CommandInvocation<AdminCommandJob> invocation = runner.getCommandInvocation("set", reporter, adminSubject)
+                .parameters(parameters);
             invocation.execute();
 
             assertEquals(ExitCode.SUCCESS, reporter.getActionExitCode());

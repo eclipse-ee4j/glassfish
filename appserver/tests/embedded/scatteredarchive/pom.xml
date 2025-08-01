@@ -32,6 +32,7 @@
     <artifactId>scatteredarchive</artifactId>
     <name>Scattered Archive Test</name>
     <packaging>war</packaging>
+
     <build>
         <finalName>scatteredarchive</finalName>
         <plugins>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package org.glassfish.main.admin.test.progress;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
@@ -28,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import static java.util.function.Function.identity;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
@@ -42,6 +44,8 @@ public class JobTestExtension implements BeforeAllCallback, AfterAllCallback {
     private static final String ORIG_RETENTION_PERIOD = "origRetentionPeriod";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
+    /** This is a trick to cause the change propagation every time we execute the command */
+    private static final AtomicInteger POLL_CHANGER = new AtomicInteger(100);
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
@@ -50,23 +54,13 @@ public class JobTestExtension implements BeforeAllCallback, AfterAllCallback {
         store.put(ORIG_RETENTION_PERIOD, ASADMIN.getValue("managed-job-config.job-retention-period", identity()).getValue());
         store.put(ORIG_INITIAL_DELAY, ASADMIN.getValue("managed-job-config.initial-delay", identity()).getValue());
         store.put(ORIG_POLL_INTERVAL, ASADMIN.getValue("managed-job-config.poll-interval", identity()).getValue());
+        doAndDisableJobCleanup();
     }
+
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        waitForCompletition();
-
-        // minimal possible values.
-        assertThat(ASADMIN.exec("configure-managed-jobs",
-            "--job-retention-period=1s",
-            "--cleanup-initial-delay=1s",
-            "--cleanup-poll-interval=1s"), asadminOK());
-
-        Thread.sleep(1100L);
-        // cleanup should be finished.
-        AsadminResult result = ASADMIN.exec("list-jobs");
-        assertThat(result.getOutput(), stringContainsInOrder("Nothing to list"));
-
+        doAndDisableJobCleanup();
         Namespace namespaceClass = Namespace.create(context.getRequiredTestClass());
         Store store = context.getStore(namespaceClass);
         // reset original configuration
@@ -76,21 +70,60 @@ public class JobTestExtension implements BeforeAllCallback, AfterAllCallback {
             "--cleanup-poll-interval=" + store.get(ORIG_POLL_INTERVAL)), asadminOK());
     }
 
+    /**
+     * Sets the retention period to 0 s to clean up all jobs.
+     * Sets cleanup initial delay to 0 s to do the cleanup immediately.
+     * Sets cleanup interval to always changing number to make it a change,
+     * so JobCleanupService will get the change, but the job will not be scheduled
+     * before we end tests.
+     *
+     * @throws Exception
+     */
+    public static void doAndDisableJobCleanup() throws Exception {
+        assertThat(ASADMIN.exec("configure-managed-jobs",
+            "--job-retention-period=0s",
+            "--cleanup-initial-delay=0s",
+            "--cleanup-poll-interval=" + POLL_CHANGER.incrementAndGet() + "m"), asadminOK());
+        waitForJobCleanup(1);
+    }
 
-    private void waitForCompletition() throws Exception {
-        final long start = System.currentTimeMillis();
+
+    /**
+     * Expectation: the initial delay and retention are always zero
+     *
+     * @param cleanupPeriod the period in seconds of the job cleanup
+     */
+    public static void waitForJobCleanup(long cleanupPeriod) {
+        //  the configured period plus reserve time
+        final long maxEnd = System.currentTimeMillis() + cleanupPeriod * 1000L + 10000L;
+        while (true) {
+            AsadminResult result = ASADMIN.exec("list-jobs");
+            assertThat(result, asadminOK());
+            if (result.getStdOut().contains("Nothing to list")) {
+                return;
+            }
+            if (System.currentTimeMillis() > maxEnd) {
+                fail("Timed out waiting for cleanup of all jobs.");
+            }
+        }
+    }
+
+
+    /**
+     * @param timeout seconds to wait for the job to complete
+     */
+    public static void waitForAllJobCompleted(long timeout) {
+        //  the configured period plus reserve time
+        final long maxEnd = System.currentTimeMillis() + timeout * 10000L;
         while (true) {
             AsadminResult result = ASADMIN.exec("list-jobs");
             assertThat(result, asadminOK());
             if (!result.getStdOut().contains("RUNNING")) {
                 return;
             }
-            if (System.currentTimeMillis() > start + 10000L) {
-                fail("Timed out waiting for completition of all jobs.");
+            if (System.currentTimeMillis() > maxEnd) {
+                fail("Timed out waiting for cleanup of all jobs.");
             }
-            Thread.sleep(500);
         }
     }
-
-
 }

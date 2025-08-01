@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.main.test.app.security.jmac.https;
 
 import java.io.File;
@@ -37,9 +36,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
-import org.glassfish.main.itest.tools.KeyTool;
 import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.jdke.security.KeyTool;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -49,6 +48,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
@@ -64,7 +65,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JmacHttpsTest {
-    private static final String MYKS_PASSWORD = UUID.randomUUID().toString();
+    private static final char[] MYKS_PASSWORD = UUID.randomUUID().toString().toCharArray();
 
     private static final Logger LOG = System.getLogger(JmacHttpsTest.class.getName());
 
@@ -72,26 +73,23 @@ public class JmacHttpsTest {
     private static final String AUTH_MODULE_NAME = "httpsTestAuthModule";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
-    private static final KeyTool KEYTOOL = GlassFishTestEnvironment.getKeyTool();
 
     @TempDir
     private static File tempDir;
     private static File myKeyStore;
     private static File warFile;
     private static File loginModuleFile;
+    private static KeyTool myKeyStoreTool;
 
 
     @BeforeAll
     public static void prepareDeployment() throws Exception {
-        myKeyStore = new File(tempDir, "httpstest.jks");
-        KEYTOOL.exec("-genkey", "-alias", "httpstest", "-keyalg", "RSA", "-dname",
-            "CN=HTTPSTEST, OU=Eclipse GlassFish Tests, O=Eclipse Foundation, L=Brussels, ST=Belgium, C=Belgium",
-            "-validity", "7", "-keypass", MYKS_PASSWORD, "-keystore", myKeyStore.getAbsolutePath(), "-storepass",
-            MYKS_PASSWORD);
+        myKeyStore = new File(tempDir, "httpstest.p12");
+        myKeyStoreTool = new KeyTool(myKeyStore, MYKS_PASSWORD);
+        myKeyStoreTool.generateKeyPair("httpstest", "CN=HTTPSTEST,OU=Eclipse GlassFish Tests", "RSA", 7);
 
-        KEYTOOL.exec("-importkeystore", "-srckeystore", myKeyStore.getAbsolutePath(), "-srcstorepass", MYKS_PASSWORD,
-            "-destkeystore", GlassFishTestEnvironment.getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"))
-                .toFile().getAbsolutePath(), "-deststorepass", "changeit");
+        File cacertsFile = getDomain1Directory().resolve(Paths.get("config", TRUSTSTORE_FILENAME_DEFAULT)).toFile();
+        myKeyStoreTool.copyCertificate("httpstest", cacertsFile, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
 
         // Default is false, required to set the client certificate to the context.
         ASADMIN.exec("set", "configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl.client-auth-enabled=true");
@@ -138,7 +136,7 @@ public class JmacHttpsTest {
         HttpsURLConnection connection = openConnection(true, 8181, "/" + APP_NAME + "/index.jsp");
         SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        keyManagerFactory.init(KeyTool.loadKeyStore(myKeyStore, MYKS_PASSWORD.toCharArray()), MYKS_PASSWORD.toCharArray());
+        keyManagerFactory.init(myKeyStoreTool.loadKeyStore(), MYKS_PASSWORD);
         sslContext.init(keyManagerFactory.getKeyManagers(), new TrustManager[] {new TestTrustManager()}, null);
         SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
         connection.setSSLSocketFactory(sslSocketFactory);

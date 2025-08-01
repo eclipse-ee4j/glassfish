@@ -290,7 +290,7 @@ public class IiopFolbGmsClient implements CallBack {
         }
 
         if (!assumeInstanceIsRunning) {
-            if (!server.isRunning()) {
+            if (!server.isListeningOnAdminPort()) {
                 return null;
             }
         }

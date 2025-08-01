@@ -122,7 +122,7 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
                     "Unable to parse the input entity. Please check the syntax.");
             throw new WebApplicationException(ResourceUtil.getResponse(400, /*parsing error*/ errorMessage, requestHeaders, uriInfo));
         }
-        return super.executeCommandAsSse(preprocessData(data));
+        return super.executeSseCommand(preprocessData(data));
     }
 
     @POST

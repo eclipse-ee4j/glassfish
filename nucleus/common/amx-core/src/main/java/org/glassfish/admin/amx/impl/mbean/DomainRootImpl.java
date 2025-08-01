@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,6 +53,9 @@ import org.glassfish.admin.amx.util.MapUtil;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.server.ServerEnvironmentImpl;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  */
 public class DomainRootImpl extends AMXImplBase // implements DomainRoot
@@ -60,13 +63,13 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
 
     private final String mAppserverDomainName;
     private final File mInstanceRoot;
-    private volatile ComplianceMonitor mCompliance = null;
+    private volatile ComplianceMonitor mCompliance;
 
     private static final Logger logger = AMXLoggerInfo.getLogger();
 
     public DomainRootImpl() {
         super(null, DomainRoot.class);
-        mInstanceRoot = new File(System.getProperty("com.sun.aas.instanceRoot"));
+        mInstanceRoot = new File(System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
         mAppserverDomainName = mInstanceRoot.getName();
     }
 
@@ -225,7 +228,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
     }
 
     public String getInstanceRoot() {
-        return SmartFile.sanitize("" + System.getProperty("com.sun.aas.instanceRoot"));
+        return SmartFile.sanitize(System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
     }
 
     public String getDomainDir() {
@@ -237,7 +240,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
     }
 
     public String getInstallDir() {
-        return SmartFile.sanitize("" + System.getProperty("com.sun.aas.installRoot"));
+        return SmartFile.sanitize(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
     }
 
     public Object[] getUptimeMillis() {

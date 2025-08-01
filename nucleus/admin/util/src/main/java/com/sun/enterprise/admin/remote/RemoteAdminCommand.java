@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,6 @@ import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.HttpConnectorAddress;
 import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
@@ -76,6 +75,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.HttpParser;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -574,7 +574,7 @@ public class RemoteAdminCommand {
                 if (inboundPayload == null) {
                     throw new IOException(strings.get("NoPayloadSupport", responseContentType));
                 }
-                PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, logger,
+                PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null,
                     new PayloadFilesManager.ActionReportHandler() {
 
                         @Override

@@ -17,9 +17,12 @@ Stops a running {productName} instance
 
 [source]
 ----
-asadmin [asadmin-options] stop-instance [--help]
-[--force={false|true}] [--kill={false|true}]
-instance-name
+asadmin stop-instance
+[--force[=<force(default:true)>]]
+[--help|-?]
+[--kill[=<kill(default:false)>]]
+[--timeout <timeout>]
+instancename
 ----
 
 === Description
@@ -62,6 +65,12 @@ asadmin-options::
   `true`;;
     The instance is killed. The subcommand uses functionality of the
     operating system to terminate the instance process.
+
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The instance status is unknown
+  in such case.
 
 === Operands
 

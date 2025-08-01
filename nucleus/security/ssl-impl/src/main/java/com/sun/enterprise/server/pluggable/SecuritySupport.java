@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,8 +25,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -60,6 +62,17 @@ import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.security.common.MasterPassword;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
+
 
 /**
  * SecuritySupport is part of PluggableFeature that provides access to internal services managed by application server.
@@ -69,15 +82,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @Singleton
 public class SecuritySupport {
-
-    public static final String KEY_STORE_PROP = "javax.net.ssl.keyStore";
-    public static final String KEYSTORE_PASS_PROP = "javax.net.ssl.keyStorePassword";
-    public static final String KEYSTORE_TYPE_PROP = "javax.net.ssl.keyStoreType";
-
-    public static final String TRUST_STORE_PROP = "javax.net.ssl.trustStore";
-    public static final String TRUSTSTORE_PASS_PROP = "javax.net.ssl.trustStorePassword";
-    public static final String TRUSTSTORE_TYPE_PROP = "javax.net.ssl.trustStoreType";
-
 
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "com.sun.enterprise.server.pluggable.LogMessages";
@@ -93,9 +97,6 @@ public class SecuritySupport {
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
     private static final Logger LOG = Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
-
-    private static final String DEFAULT_KEYSTORE_PASS = "changeit";
-    private static final String DEFAULT_TRUSTSTORE_PASS = "changeit";
 
     private final List<KeyStore> keyStores = new ArrayList<>();
     private final List<KeyStore> trustStores = new ArrayList<>();
@@ -113,8 +114,8 @@ public class SecuritySupport {
 
     @PostConstruct
     private void init() {
-        String keyStoreFileName = System.getProperty(KEY_STORE_PROP);
-        String trustStoreFileName = System.getProperty(TRUST_STORE_PROP);
+        String keyStoreFileName = System.getProperty(KEYSTORE_FILE.getSystemPropertyName());
+        String trustStoreFileName = System.getProperty(TRUSTSTORE_FILE.getSystemPropertyName());
         char[] keyStorePass = masterPassword.getMasterPassword();
         char[] trustStorePass = keyStorePass;
 
@@ -124,12 +125,14 @@ public class SecuritySupport {
         // Always do so for the app client case whether the passwords have been
         // found from master password helper or not.
         if (keyStorePass == null || isAcc) {
-            final String keyStorePassOverride = System.getProperty(KEYSTORE_PASS_PROP, DEFAULT_KEYSTORE_PASS);
+            final String keyStorePassOverride = System.getProperty(KEYSTORE_PASSWORD.getSystemPropertyName(),
+                KEYSTORE_PASSWORD_DEFAULT);
             if (keyStorePassOverride != null) {
                 keyStorePass = keyStorePassOverride.toCharArray();
             }
 
-            final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASS_PROP, DEFAULT_TRUSTSTORE_PASS);
+            final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASSWORD.getSystemPropertyName(),
+                KEYSTORE_PASSWORD_DEFAULT);
             if (trustStorePassOverride != null) {
                 trustStorePass = trustStorePassOverride.toCharArray();
             }
@@ -138,9 +141,9 @@ public class SecuritySupport {
         loadStores(
             null, null,
             keyStoreFileName, keyStorePass,
-            System.getProperty(KEYSTORE_TYPE_PROP, KeyStore.getDefaultType()),
+            System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT),
             trustStoreFileName, trustStorePass,
-            System.getProperty(TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType()));
+            System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT));
         Arrays.fill(keyStorePass, ' ');
         Arrays.fill(trustStorePass, ' ');
     }
@@ -222,7 +225,7 @@ public class SecuritySupport {
         for (int i = 0; i < kstores.length; i++) {
             checkCertificateDates(kstores[i], initDate);
             KeyManagerFactory kmf = KeyManagerFactory
-                .getInstance((algorithm != null) ? algorithm : KeyManagerFactory.getDefaultAlgorithm());
+                .getInstance(algorithm == null ? KeyManagerFactory.getDefaultAlgorithm() : algorithm);
             kmf.init(kstores[i], keyStorePasswords.get(i));
             KeyManager[] kmgrs = kmf.getKeyManagers();
             if (kmgrs != null) {
@@ -248,7 +251,7 @@ public class SecuritySupport {
         for (KeyStore tstore : tstores) {
             checkCertificateDates(tstore, initDate);
             TrustManagerFactory tmf = TrustManagerFactory
-                .getInstance((algorithm != null) ? algorithm : TrustManagerFactory.getDefaultAlgorithm());
+                .getInstance(algorithm == null ? TrustManagerFactory.getDefaultAlgorithm() : algorithm);
             tmf.init(tstore);
             TrustManager[] tmgrs = tmf.getTrustManagers();
             if (tmgrs != null) {
@@ -303,12 +306,11 @@ public class SecuritySupport {
     }
 
 
-    private void loadStores(String tokenName, Provider provider, String keyStoreFile, char[] keyStorePass,
-        String keyStoreType, String trustStoreFile, char[] trustStorePass, String trustStoreType) {
-
+    private void loadStores(String tokenName, Provider provider, String keyStoreFilePath, char[] keyStorePass,
+        String keyStoreType, String trustStoreFilePath, char[] trustStorePass, String trustStoreType) {
         try {
-            KeyStore keyStore = loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
-            KeyStore trustStore = loadKS(trustStoreType, provider, trustStoreFile, trustStorePass);
+            KeyStore keyStore = getKeyStore(keyStoreType, provider, keyStoreFilePath, keyStorePass);
+            KeyStore trustStore = getKeyStore(trustStoreType, provider, trustStoreFilePath, trustStorePass);
             keyStores.add(keyStore);
             trustStores.add(trustStore);
             keyStorePasswords.add(Arrays.copyOf(keyStorePass, keyStorePass.length));
@@ -325,30 +327,50 @@ public class SecuritySupport {
      *
      * @param keyStoreType
      * @param provider
-     * @param keyStoreFile
+     * @param keyStoreFilePath
      * @param keyStorePass
      * @retun keystore loaded, never null.
      */
-    private static KeyStore loadKS(String keyStoreType, Provider provider, String keyStoreFile, char[] keyStorePass) throws Exception {
-        final KeyStore keyStore;
-        if (provider == null) {
-            keyStore = KeyStore.getInstance(keyStoreType);
-        } else {
-            keyStore = KeyStore.getInstance(keyStoreType, provider);
-        }
+    private static KeyStore getKeyStore(String keyStoreType, Provider provider, String keyStoreFilePath, char[] keyStorePass) throws Exception {
+        final File keyStoreFile = keyStoreFilePath == null ? null : new File(keyStoreFilePath);
         if (keyStoreFile == null) {
-            keyStore.load(null, keyStorePass);
-            return keyStore;
+            return createEmptyKeyStore(keyStoreType, provider, keyStorePass);
         }
+        if (!keyStoreFile.exists()) {
+            LOG.log(WARNING, "Keystore file does not exist: {0}. Generating default empty keystore.", keyStoreFile);
+            return createEmptyKeyStore(keyStoreType, provider, keyStorePass);
+        }
+        return loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
+    }
+
+
+    private static KeyStore loadKS(String keyStoreType, Provider provider, File keyStoreFile, char[] keyStorePass)
+        throws Exception {
+        final KeyStore keyStore = createKeyStore(keyStoreType, provider);
         try (FileInputStream istream = new FileInputStream(keyStoreFile);
             BufferedInputStream bstream = new BufferedInputStream(istream)) {
-            LOG.log(Level.FINE, "Loading keystoreFile = {0}, keystorePass is null = {1}",
-                new Object[] {keyStoreFile, keyStorePass == null});
+            LOG.log(FINE, "Loading keystoreFile = {0}", keyStoreFile);
             keyStore.load(bstream, keyStorePass);
         }
-
         return keyStore;
     }
+
+
+    private static KeyStore createEmptyKeyStore(String keyStoreType, Provider provider, char[] keyStorePass)
+        throws IOException, GeneralSecurityException {
+        final KeyStore keyStore = createKeyStore(keyStoreType, provider);
+        keyStore.load(null, keyStorePass);
+        return keyStore;
+    }
+
+
+    private static KeyStore createKeyStore(String keyStoreType, Provider provider) throws KeyStoreException {
+        if (provider == null) {
+            return KeyStore.getInstance(keyStoreType);
+        }
+        return KeyStore.getInstance(keyStoreType, provider);
+    }
+
 
     /**
      * Check X509 certificates in a store for expiration.

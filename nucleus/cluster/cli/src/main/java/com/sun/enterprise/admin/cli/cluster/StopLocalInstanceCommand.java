@@ -24,6 +24,7 @@ import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
 import java.net.ConnectException;
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.logging.Level;
 
@@ -50,6 +51,8 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
     private String userArgInstanceName;
     @Param(optional = true, defaultValue = "false")
     private Boolean kill;
+    @Param(optional = true)
+    private Integer timeout;
 
 
     @Override
@@ -63,6 +66,13 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
         // we definitely do NOT want dirs created for this instance if
         // they don't exist!
         return false;
+    }
+
+    /**
+     * @return timeout set as a parameter
+     */
+    protected Duration getTimeout() {
+        return timeout == null ?  null : Duration.ofSeconds(timeout);
     }
 
     /**
@@ -111,7 +121,7 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
         if (kill) {
             try {
                 File lastPid = getServerDirs().getLastPidFile();
-                ProcessUtils.kill(lastPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
+                ProcessUtils.kill(lastPid, getStopTimeout(), !programOpts.isTerse());
             } catch (KillNotPossibleException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
                 return -1;
@@ -152,7 +162,6 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
 
         final Long pid = getServerPid();
         final boolean printDots = !programOpts.isTerse();
-        final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
         final RemoteCLICommand cmd = new RemoteCLICommand("_stop-instance", programOpts, env);
         try {
             try {
@@ -172,9 +181,10 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             if (printDots) {
                 System.out.print(Strings.get("StopInstance.waitForDeath") + " ");
             }
-            final boolean dead = pid == null || ProcessUtils.waitWhileIsAlive(pid, timeout, printDots);
+            final boolean dead = pid == null || ProcessUtils.waitWhileIsAlive(pid, getStopTimeout(), printDots);
             if (!dead) {
-                throw new CommandException(Strings.get("StopInstance.instanceNotDead", DEATH_TIMEOUT_MS / 1000));
+                throw new CommandException(MessageFormat
+                    .format("Timed out {0} seconds waiting for the instance to stop.", getStopTimeout().toSeconds()));
             }
         } catch (Exception e) {
             // The server may have died so fast we didn't have time to
@@ -183,7 +193,7 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             if (kill) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    ProcessUtils.kill(prevPid, timeout, printDots);
+                    ProcessUtils.kill(prevPid, getStopTimeout(), printDots);
                     return;
                 } catch (Exception ex) {
                     e.addSuppressed(ex);
@@ -191,5 +201,13 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             }
             throw e;
         }
+    }
+
+    /**
+     * @return timeout for the command
+     */
+    private Duration getStopTimeout() {
+        final Duration parameter = getTimeout();
+        return parameter == null ? DEATH_TIMEOUT_MS : parameter;
     }
 }

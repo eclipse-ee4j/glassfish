@@ -14,7 +14,7 @@ prev=preface.html
 == 1 Installing {productName} 7
 
 This chapter provides instructions for installing {productName} 7
-software on Solaris, Linux, Mac OS X, and Windows systems.
+software on Linux, Mac OS X, and Windows systems.
 
 The following topics are addressed here:
 
@@ -36,8 +36,8 @@ does not meet release requirements. Also see "xref:release-notes.adoc#GSRLN00253
 Issues]" in {productName} Release Notes for known
 issues related to installation.
 
-* On Solaris, Linux, macOS and Windows systems, JDK software is available from the
-https://www.oracle.com/java/technologies/downloads/[Java SE downloads page].
+* On Linux, macOS and Windows systems, JDK software is available from the
+https://adoptium.net/temurin/releases[Eclipse Temurin JDK downloads page].
 
 [[javassist-library-license-notice]]
 
@@ -581,8 +581,7 @@ available by download from the
 https://glassfish.org/download.html[{productName} Downloads]
 page.
 
-{productName} 7 is also part of the Jakarta EE SDK
-distributions. The specifications are available from
+The Jakarta EE specifications are available from
 https://jakarta.ee/specifications/[Jakarta EE specifications page]
 and are not described in this document.
 
@@ -598,8 +597,8 @@ installation instructions for each method.
 ====
 Before performing any {productName} installation, ensure that your
 environment adheres to the JDK guidelines in
-"https://github.com/eclipse-ee4j/glassfishdoc/5.0/release-notes.pdf[Paths and
-Environment Settings for the JDK Software]" in {productName} Release Notes.
+"xref:release-notes.adoc#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]"
+in {productName} Release Notes.
 ====
 
 

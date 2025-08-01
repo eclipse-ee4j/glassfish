@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.servermgmt.cli.LocalServerCommand;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.InstanceDirs;
 import com.sun.enterprise.util.io.ServerDirs;
@@ -42,6 +41,11 @@ import java.util.logging.Level;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 /**
  * A base class for local commands that manage a local server instance.
@@ -428,12 +432,10 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @throws CommandException if the GlassFish install root is not found
      */
     protected String getInstallRootPath() throws CommandException {
-        String installRootPath = getSystemProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installRootPath = getSystemProperty(INSTALL_ROOT.getPropertyName());
 
         if (!StringUtils.ok(installRootPath)) {
-            installRootPath = System.getProperty(
-                    SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            installRootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         }
 
         if (!StringUtils.ok(installRootPath)) {
@@ -453,12 +455,10 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @throws CommandException if the GlassFish install root is not found
      */
     protected String getProductRootPath() throws CommandException {
-        String productRootPath = getSystemProperty(
-                SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+        String productRootPath = getSystemProperty(PRODUCT_ROOT.getPropertyName());
 
         if (!StringUtils.ok(productRootPath)) {
-            productRootPath = System.getProperty(
-                    SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
+            productRootPath = System.getProperty(PRODUCT_ROOT.getSystemPropertyName());
         }
 
         if (!StringUtils.ok(productRootPath)) {
@@ -649,8 +649,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @throws CommandException if the GlassFish install root is not found
      */
     private String getNodeDirRootDefault() throws CommandException {
-        String nodeDirDefault = getSystemProperty(
-                SystemPropertyConstants.AGENT_ROOT_PROPERTY);
+        String nodeDirDefault = getSystemProperty(NODES_ROOT.getSystemPropertyName());
 
         if (StringUtils.ok(nodeDirDefault)) {
             return nodeDirDefault;
@@ -667,7 +666,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             return null;
         }
 
-        File mp = new File(new File(nodeDirChild,"agent"), "master-password");
+        File mp = new File(new File(nodeDirChild,"agent"), MASTER_PASSWORD_FILENAME);
         if (!mp.canRead()) {
             return null;
         }

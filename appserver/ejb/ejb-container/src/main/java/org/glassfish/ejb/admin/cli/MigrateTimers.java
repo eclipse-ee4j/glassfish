@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -148,7 +149,7 @@ public class MigrateTimers implements AdminCommand {
         if(target.equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
             List<Server> instances = fromServerCluster.getInstances();
             for(Server instance : instances) {
-                if(instance.isRunning()) {
+                if(instance.isListeningOnAdminPort()) {
                     target = instance.getName();
                     needRedirect = true;
                 }
@@ -177,7 +178,7 @@ public class MigrateTimers implements AdminCommand {
 
     private boolean isServerRunning(String serverName) {
         Server server = domain.getServerNamed(serverName);
-        return (server == null) ? false : server.isRunning();
+        return server == null ? false : server.isListeningOnAdminPort();
     }
 
     private int migrateTimers( String serverId ) {

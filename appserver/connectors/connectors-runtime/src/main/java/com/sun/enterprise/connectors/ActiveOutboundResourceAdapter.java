@@ -143,8 +143,8 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
      * @throws ConnectorRuntimeException when unable to support any of the requested work-context type.
      */
     private void validateWorkContextSupport(ConnectorDescriptor desc) throws ConnectorRuntimeException {
-        Set workContexts = desc.getRequiredWorkContexts();
-        Iterator workContextsIterator = workContexts.iterator();
+        Set<?> workContexts = desc.getRequiredWorkContexts();
+        Iterator<?> workContextsIterator = workContexts.iterator();
 
         WorkContextHandler workContextHandler = connectorRuntime_.getWorkContextHandler();
         workContextHandler.init(moduleName_, jcl_);
@@ -266,7 +266,6 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
         }
     }
 
-
     /**
      * Remove all the proxy objects (Work-Manager) from connector registry
      *
@@ -275,7 +274,6 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
     private void removeProxiesFromRegistry(String moduleName_) {
         ConnectorRuntime.getRuntime().removeWorkManagerProxy(moduleName_);
     }
-
 
     /**
      * Creates an instance of <code>ManagedConnectionFactory</code>

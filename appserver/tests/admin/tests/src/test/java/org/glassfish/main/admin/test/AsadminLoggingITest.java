@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,6 +43,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getDomain1Directory;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.glassfish.tests.utils.junit.matcher.DirectoryMatchers.hasEntryCount;
@@ -58,6 +59,7 @@ import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author David Matejcek
@@ -70,7 +72,7 @@ public class AsadminLoggingITest {
     @BeforeAll
     public static void fillUpServerLog() {
         // Fill up the server log.
-        AsadminResult result = ASADMIN.exec(60_000, "restart-domain");
+        AsadminResult result = ASADMIN.exec("restart-domain", "--timeout", "60");
         assertThat(result, asadminOK());
     }
 
@@ -79,9 +81,10 @@ public class AsadminLoggingITest {
     public void collectLogFiles() {
         AsadminResult result = ASADMIN.exec("collect-log-files");
         assertThat(result, asadminOK());
-        String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".\n");
+        String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".zip.") + ".zip";
         assertNotNull(path, () -> "zip file path parsed from " + result.getStdOut());
         File zipFile = new File(path);
+        assertTrue(zipFile.exists(), () -> "zip file exists: " + zipFile);
         assertAll(
             () -> assertThat(zipFile.length(), greaterThan(2_000L)),
             () -> assertThat(zipFile.getName(), endsWith(".zip"))
@@ -147,7 +150,7 @@ public class AsadminLoggingITest {
                 + "org.glassfish.main.jul.handler.GlassFishLogHandler,"
                 + "org.glassfish.main.jul.handler.SyslogHandler>")),
             () -> assertThat(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
-                equalTo("<${com.sun.aas.instanceRoot}/logs/server.log>"))
+                equalTo("<" + INSTANCE_ROOT.toExpression() + "/logs/server.log>"))
         );
     }
 

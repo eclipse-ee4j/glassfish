@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.admin.servermgmt.KeystoreManager;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
@@ -41,6 +41,12 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 
 
 /**
@@ -87,9 +93,7 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
     private String RENDEZVOUS_DOTTED_NAME;
     private boolean _rendezvousOccurred;
     private String _node;
-    private static final String DEFAULT_MASTER_PASSWORD = KeystoreManager.DEFAULT_MASTER_PASSWORD;
     private ParamModelData masterPasswordOption;
-    private static final String MASTER_PASSWORD_ALIAS="master-password";
 
     /**
      */
@@ -154,10 +158,11 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
         int exitCode = -1;
 
         if (node == null) {
-            if(nodeDirChild == null)
+            if(nodeDirChild == null) {
                 throw new CommandException(Strings.get("internal.error",
                         "nodeDirChild was null.  The Base Class is supposed to "
                         + "guarantee that this won't happen"));
+            }
             _node = nodeDirChild.getName();
             String nodeHost = getInstanceHostName(true);
             createNodeImplicit(_node, getProductRootPath(), nodeHost);
@@ -205,8 +210,9 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
         RemoteCLICommand rc = new RemoteCLICommand("list-instances", this.programOpts, this.env);
         String returnOutput =
                 rc.executeAndReturnOutput("list-instances", "--nostatus", _node);
-        if (returnOutput == null)
+        if (returnOutput == null) {
             return;
+        }
         String[] registeredInstanceNamesOnThisNode = returnOutput.split("\r?\n");
         for (String registeredInstanceName : registeredInstanceNamesOnThisNode) {
             File instanceListDir = new File(nodeDirChild, registeredInstanceName);
@@ -245,25 +251,25 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
      * @throws CommandException
      */
     private void saveMasterPassword() throws CommandException {
-        masterPasswordOption = new ParamModelData(CLIConstants.MASTER_PASSWORD,
-                String.class, false, null);
+        masterPasswordOption = new ParamModelData(CLIConstants.MASTER_PASSWORD, String.class, false, null);
         masterPasswordOption.prompt = Strings.get("MasterPassword");
         masterPasswordOption.promptAgain = Strings.get("MasterPasswordAgain");
         masterPasswordOption.param._password = true;
-        if (saveMasterPassword)
+        if (saveMasterPassword) {
             useMasterPassword = true;
-        if (useMasterPassword)
-            masterPassword = getPassword(masterPasswordOption,
-                    DEFAULT_MASTER_PASSWORD, true) != null ? new String(getPassword(masterPasswordOption,
-                DEFAULT_MASTER_PASSWORD, true)) : null;
-        if (masterPassword == null)
-            masterPassword = DEFAULT_MASTER_PASSWORD;
+        }
+        if (useMasterPassword) {
+            char[] password = getPassword(masterPasswordOption, KEYSTORE_PASSWORD_DEFAULT, true);
+            masterPassword = password == null ? null : new String(password);
+        }
+        if (masterPassword == null) {
+            masterPassword = KEYSTORE_PASSWORD_DEFAULT;
+        }
 
         if (saveMasterPassword) {
-            File mp = new File(new File(getServerDirs().getServerDir(), "config"), "keystore.jks");
+            File mp = new File(new File(getServerDirs().getServerDir(), "config"), KEYSTORE_FILENAME_DEFAULT);
             if (mp.canRead()) {
                 if (verifyMasterPassword(masterPassword)) {
-
                     createMasterPasswordFile(masterPassword);
                 } else {
                     logger.info(Strings.get("masterPasswordIncorrect"));
@@ -283,10 +289,10 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
      * @throws CommandException
      */
     protected void createMasterPasswordFile(String masterPassword) throws CommandException {
-        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_ALIAS);
+        final File pwdFile = new File(this.getServerDirs().getAgentDir(), MASTER_PASSWORD_FILENAME);
         try {
             PasswordAdapter p = new PasswordAdapter(pwdFile.getAbsolutePath(),
-                MASTER_PASSWORD_ALIAS.toCharArray());
+                MASTER_PASSWORD_PASSWORD.toCharArray());
             p.setPasswordForAlias(MASTER_PASSWORD_ALIAS, masterPassword.getBytes());
             chmod("600", pwdFile);
         } catch (Exception ex) {
@@ -297,14 +303,17 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
 
     protected void chmod(String args, File file) throws IOException {
         if (OS.isUNIX()) {
-            if (!file.exists()) throw new IOException(Strings.get("fileNotFound", file.getAbsolutePath()));
+            if (!file.exists()) {
+                throw new IOException(Strings.get("fileNotFound", file.getAbsolutePath()));
+            }
 
             // " +" regular expression for 1 or more spaces
             final String[] argsString = args.split(" +");
             List<String> cmdList = new ArrayList<String>();
             cmdList.add("/bin/chmod");
-            for (String arg : argsString)
+            for (String arg : argsString) {
                 cmdList.add(arg);
+            }
             cmdList.add(file.getAbsolutePath());
             new ProcessBuilder(cmdList).start();
         }

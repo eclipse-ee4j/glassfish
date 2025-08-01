@@ -869,6 +869,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>config-api</artifactId>
             <version>${project.version}</version>
@@ -982,6 +988,12 @@
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>glassfish</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.core</groupId>
+            <artifactId>glassfish-osgi-bootstrap</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -1163,7 +1175,7 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>soteria</artifactId>
@@ -1184,7 +1196,7 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <optional>true</optional>
         </dependency>
-       
+
 
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
@@ -1686,15 +1698,9 @@
         </dependency>
     </dependencies>
 
-   <build>
+    <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -1722,6 +1728,7 @@
                             <includeScope>runtime</includeScope>
                             <includeTypes>jar,glassfish-jar</includeTypes>
                             <includes>**/*.class</includes>
+                            <excludes>module-info.class,META-INF/versions/*/module-info.class</excludes>
                         </configuration>
                     </execution>
                     <execution>
@@ -1834,7 +1841,7 @@
         </plugins>
     </build>
 
-   <profiles>
+    <profiles>
         <profile>
             <!-- generate empty javadoc jar -->
             <id>release-phase2</id>

@@ -27,7 +27,7 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 /**
  * Builds up a {@link ClassLoader}.

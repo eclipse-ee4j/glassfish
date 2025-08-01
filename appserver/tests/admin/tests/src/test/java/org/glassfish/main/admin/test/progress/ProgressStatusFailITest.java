@@ -22,6 +22,7 @@ import java.util.List;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -39,6 +40,11 @@ public class ProgressStatusFailITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);
 
+    @AfterAll
+    public static void waitForJobsToFinish() {
+        JobTestExtension.waitForAllJobCompleted(10);
+    }
+
     @Test
     public void failDuringExecution() {
         AsadminResult result = ASADMIN.exec("progress-fail-in-half");
@@ -48,13 +54,17 @@ public class ProgressStatusFailITest {
         assertEquals(50, messages.get(messages.size() - 1).getValue());
     }
 
+    /**
+     * This tests that we receive output even for job executed synchronously (not detached)
+     * but timing out. This is possible because we use the SSE (Server Sent Events for the
+     * communication between the asadmin command and the server.
+     */
     @Test
     public void timeout() {
-        AsadminResult result = ASADMIN.exec(6_000, "progress-custom", "3x1", "1x8", "2x1");
+        AsadminResult result = ASADMIN.exec(2_000, "progress-custom", "1x1", "1x2", "1x1");
         assertThat(result, not(asadminOK()));
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
-        assertFalse(prgs.isEmpty());
-        assertEquals(50, prgs.get(prgs.size() - 1).getValue());
+        assertFalse(prgs.isEmpty(), "progress messages empty");
+        assertEquals(33, prgs.get(prgs.size() - 1).getValue());
     }
-
 }

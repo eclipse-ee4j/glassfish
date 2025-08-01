@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,6 +46,7 @@ import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_CREATE_LOG_PROPS;
 import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_UPDATE_LOG_PROPS;
 import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_UPGRADE_LOG_SERVICE;
 import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * Startup service to update existing domain.xml to move log-service entries to logging.properties file.
@@ -59,6 +61,7 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
     @Inject
     LoggingConfigImpl logConfig;
 
+    @Override
     public void postConstruct() {
         for (Config config : configs.getConfig()) {
             doUpgrade(config);
@@ -72,8 +75,10 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
 
         // check if null and exit
         if (logService == null)
+         {
             return;
         // get a copy of the logging.properties file
+        }
 
         try {
             RepositoryConfig rc = new RepositoryConfig();
@@ -82,8 +87,9 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
             PEFileLayout layout = new PEFileLayout(rc);
             File src = new File(layout.getTemplatesDir(), PEFileLayout.LOGGING_PROPERTIES_FILE);
             File dest = new File(configDir, PEFileLayout.LOGGING_PROPERTIES_FILE);
-            if (!dest.exists())
+            if (!dest.exists()) {
                 FileUtils.copy(src, dest);
+            }
 
         } catch (IOException ioe) {
             getLogger().log(Level.SEVERE, FAIL_CREATE_LOG_PROPS, ioe);
@@ -95,9 +101,9 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
 
             Map<String, String> logLevels = mll.getAllLogLevels();
             String file = logService.getFile();
-            String instanceRoot = System.getProperty("com.sun.aas.instanceRoot");
+            String instanceRoot = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
             if (file.contains(instanceRoot)) {
-                file = file.replace(instanceRoot, "${com.sun.aas.instanceRoot}");
+                file = file.replace(instanceRoot, "${" + INSTANCE_ROOT.getSystemPropertyName() + "}");
             }
             logLevels.put("file", file);
             logLevels.put("use-system-logging", logService.getUseSystemLogging());
@@ -109,9 +115,10 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
             logLevels.put("log-rotation-timelimit-in-minutes", logService.getLogRotationTimelimitInMinutes());
             logLevels.put("alarms", logService.getAlarms());
             logLevels.put("retain-error-statistics-for-hours", logService.getRetainErrorStatisticsForHours());
-            final Map<String, String> m = new HashMap<String, String>(logLevels);
+            final Map<String, String> m = new HashMap<>(logLevels);
 
             ConfigSupport.apply(new SingleConfigCode<Config>() {
+                @Override
                 public Object run(Config c) throws PropertyVetoException, TransactionFailure {
 
                     try {

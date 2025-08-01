@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -98,16 +99,15 @@ public class GMSAnnounceBeforeStartClusterCommand implements AdminCommand {
     @Inject
     GMSAdapterService gmsAdapterService;
 
-    private GroupManagementService gms = null;
-    private boolean gmsStartCluster = false;
-    private List<String> clusterMembers = EMPTY_LIST;
-    private GMSAdapter gmsadapter = null;
-
     static final private List<String> EMPTY_LIST = new LinkedList<String>();
 
 
     @Override
     public void execute(AdminCommandContext context) {
+        GroupManagementService gms = null;
+        GMSAdapter gmsadapter = null;
+        boolean gmsStartCluster = false;
+        List<String> clusterMembers = EMPTY_LIST;
         ActionReport report = context.getActionReport();
         try {
             if (gmsAdapterService.isGmsEnabled()) {

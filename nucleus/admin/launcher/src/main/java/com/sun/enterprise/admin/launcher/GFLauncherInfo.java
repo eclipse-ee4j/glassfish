@@ -44,12 +44,12 @@ public class GFLauncherInfo {
     private final static String CONFIG_FILENAME = "domain.xml";
 
     // Set by contructor
-    private RuntimeType type;
+    private final RuntimeType type;
 
     /**
      * Incoming arguments from caller
      */
-    private List<String> argsRaw = new ArrayList<>();
+    private final List<String> argsRaw = new ArrayList<>();
 
     /**
      * Intermediate map form of arguments from caller
@@ -352,8 +352,8 @@ public class GFLauncherInfo {
         return map;
     }
 
-    public void setRespawnInfo(String classname, String classpath, String[] args) {
-        respawnInfo = new RespawnInfo(classname, classpath, args);
+    public void setRespawnInfo(String classname, String modulePath, String classpath, String[] args) {
+        respawnInfo = new RespawnInfo(classname, modulePath, classpath, args);
     }
 
     /**

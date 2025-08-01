@@ -29,6 +29,7 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -131,7 +132,7 @@ public abstract class AbstractListCommandProxy
         fillParameterMap(params);
         CommandRunner runner = serviceLocator.getService(CommandRunner.class);
         ActionReport subReport = context.getActionReport().addSubActionsReport();
-        CommandRunner.CommandInvocation inv = runner.getCommandInvocation(commandName, subReport, context.getSubject());
+        CommandInvocation inv = runner.getCommandInvocation(commandName, subReport, context.getSubject());
         inv.parameters(params);
         inv.execute();
 

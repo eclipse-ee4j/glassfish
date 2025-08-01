@@ -19,4 +19,4 @@
 AS_CONFIG="$(dirname "$(realpath "$0")")/../config"
 AS_CONFIG_SH="${AS_CONFIG}/config.sh"
 source "${AS_CONFIG_SH}" "$AS_CONFIG" || { echo "${AS_CONFIG_SH} not found" >&2; exit 1; }
-eval "`"${JAVA}" -Dorg.glassfish.appclient.shell $cygwinProp -classpath "${AS_INSTALL}/lib/gf-client.jar" org.glassfish.appclient.client.CLIBootstrap "$@"`"
+eval "`"${JAVA}" -Dorg.glassfish.appclient.shell $cygwinProp --module-path "${AS_INSTALL}/lib/bootstrap" --add-modules ALL-MODULE-PATH -classpath "${AS_INSTALL}/lib/gf-client.jar" org.glassfish.appclient.client.acc.agent.CLIBootstrap "$@"`"

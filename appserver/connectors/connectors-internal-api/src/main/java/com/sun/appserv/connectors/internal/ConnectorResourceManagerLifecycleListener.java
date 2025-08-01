@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 import javax.naming.NamingException;
 
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -258,7 +259,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
                     PoolInfo poolInfo = ResourceUtil.getPoolInfo(pool);
                     CommandRunner commandRunner = commandRunnerProvider.get();
                     ActionReport report = actionReportProvider.get();
-                    CommandRunner.CommandInvocation invocation = commandRunner
+                    CommandInvocation invocation = commandRunner
                         .getCommandInvocation("ping-connection-pool", report, internalSystemAdministrator.getSubject());
                     ParameterMap params = new ParameterMap();
                     params.add("appname",poolInfo.getApplicationName());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,13 +19,13 @@ package com.sun.enterprise.admin.cli;
 
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -82,7 +82,7 @@ public class VersionCommand extends CLICommand {
 
         logger.info(terse ? fv : strings.get("version.local", fv));
         if (verbose) {
-            logger.info(strings.get("version.local.java", System.getProperty("java.version")));
+            logger.info(strings.get("version.local.java", Runtime.version()));
         }
     }
 

@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -95,9 +96,7 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
 
     @Override
     public void store(final LoginInfo login, boolean overwrite) throws StoreException {
-        if (login == null) {
-            throw new IllegalArgumentException("null_arg");
-        }
+        Objects.requireNonNull(login, "login");
         final String host = login.getHost();
         final int port    = login.getPort();
         if (!overwrite && this.exists(host, port)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,10 +38,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.Payload.Inbound;
@@ -65,12 +61,11 @@ public class PayloadFilesManagerTest {
      */
     @Test
     public void testGetOutputFileURI() throws Exception {
-        PayloadFilesManager.Temp instance = new PayloadFilesManager.Temp(Logger.getAnonymousLogger());
+        PayloadFilesManager.Temp instance = new PayloadFilesManager.Temp();
         try {
             String originalPath = "way/over/there/myApp.ear";
             Part testPart = PayloadImpl.Part.newInstance("text/plain", originalPath, null, "random content");
             URI result = instance.getOutputFileURI(testPart, testPart.getName());
-            ////System.out.println("  " + originalPath + " -> " + result);
             assertTrue(result.toASCIIString().endsWith("/myApp.ear"));
         } finally {
             instance.cleanup();
@@ -85,12 +80,10 @@ public class PayloadFilesManagerTest {
         tmpDir.mkdir();
 
         try {
-            final PayloadFilesManager instance = new PayloadFilesManager.Perm(tmpDir,
-                    null, Logger.getAnonymousLogger());
+            final PayloadFilesManager instance = new PayloadFilesManager.Perm(tmpDir, null);
             final String originalPath = "some/path";
             final Part testPart = PayloadImpl.Part.newInstance("text/plain", originalPath, null, "random content");
             final URI result = instance.getOutputFileURI(testPart, testPart.getName());
-            ////System.out.println("  " + originalPath + " -> " + result);
             assertFalse(result.toASCIIString().contains("{"));
         } finally {
             PayloadFilesManagerTest.cleanup(tmpDir);
@@ -381,9 +374,7 @@ public class PayloadFilesManagerTest {
                     ob.writeTo(baos);
                     baos.close();
 
-                    final PayloadFilesManager remover =
-                            new PayloadFilesManager.Perm(instance.getTargetDir(), null,
-                            Logger.getAnonymousLogger());
+                    final PayloadFilesManager remover = new PayloadFilesManager.Perm(instance.getTargetDir(), null);
 
                     final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
                     Payload.Inbound removerIB = PayloadImpl.Inbound.newInstance("application/zip", bais);
@@ -496,9 +487,7 @@ public class PayloadFilesManagerTest {
                     ob.writeTo(baos);
                     baos.close();
 
-                    final PayloadFilesManager remover =
-                            new PayloadFilesManager.Perm(instance.getTargetDir(), null,
-                            debugLogger());
+                    final PayloadFilesManager remover = new PayloadFilesManager.Perm(instance.getTargetDir(), null);
 
                     final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
                     Payload.Inbound removerIB = PayloadImpl.Inbound.newInstance("application/zip", bais);
@@ -1082,9 +1071,8 @@ public class PayloadFilesManagerTest {
 
         @Override
         protected PayloadFilesManager instance() throws IOException {
-            final PayloadFilesManager.Temp tempInstance = new PayloadFilesManager.Temp(Logger.getAnonymousLogger());
+            final PayloadFilesManager.Temp tempInstance = new PayloadFilesManager.Temp();
             tempInstances.add(tempInstance);
-//            System.err.println("** Temp recording " + tempInstance.getTargetDir().getAbsolutePath());
             return tempInstance;
         }
 
@@ -1092,7 +1080,6 @@ public class PayloadFilesManagerTest {
         protected void cleanup() {
             doCleanup();
             for (PayloadFilesManager.Temp tempInstance : tempInstances) {
-//                System.err.println("** Temp cleaning " + tempInstance.getTargetDir().getAbsolutePath());
                 tempInstance.cleanup();
             }
         }
@@ -1105,9 +1092,8 @@ public class PayloadFilesManagerTest {
         protected File myTargetDir;
 
         protected CommonPermTest init(final File targetDir) {
-            permInstance = new PayloadFilesManager.Perm(targetDir, null, debugLogger());
+            permInstance = new PayloadFilesManager.Perm(targetDir, null);
             myTargetDir = targetDir;
-//            System.err.println("** Perm creating " + permInstance.getTargetDir().getAbsolutePath());
             return this;
         }
 
@@ -1116,42 +1102,4 @@ public class PayloadFilesManagerTest {
             return permInstance;
         }
     }
-
-    /**
-     * Makes it easy to turn on or off FINE-level logging in the PayloadFilesManager
-     * during the tests.
-     * <p>
-     * Uncomment the comment lines below to turn on FINE logging for the test.
-     *
-     *
-     * @return
-     */
-    private static Logger debugLogger() {
-        final Logger logger = Logger.getAnonymousLogger();
-        logger.setLevel(Level.FINE);
-        logger.addHandler(new Handler() {
-
-                        {
-//                            this.setLevel(Level.INFO);
-                            this.setLevel(Level.FINE);
-                        }
-
-                        @Override
-                        public void publish(LogRecord record) {
-                            //System.out.println(record.getMessage());
-                        }
-
-                        @Override
-                        public void flush() {
-                            //System.out.flush();
-                        }
-
-                        @Override
-                        public void close() throws SecurityException {
-                            // no-op
-                        }
-                    });
-        return logger;
-    }
-
 }

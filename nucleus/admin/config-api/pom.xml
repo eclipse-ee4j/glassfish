@@ -64,12 +64,17 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
-            <artifactId>common-util</artifactId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

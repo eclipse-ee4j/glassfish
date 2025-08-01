@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.deployment.common.DeploymentProperties;
@@ -220,9 +221,9 @@ public class DynamicReloader implements Runnable {
         deployParam.set(DeploymentProperties.PATH, appInfo.getApplicationDirectory().getCanonicalPath());
         deployParam.set(DeploymentProperties.NAME, appInfo.getApplication().getName());
         deployParam.set(DeploymentProperties.KEEP_REPOSITORY_DIRECTORY, "true");
-        commandRunner.getCommandInvocation("deploy", new XMLActionReporter(), kernelSubject).parameters(deployParam).execute();
-
-
+        CommandInvocation invocation = commandRunner
+            .getCommandInvocation("deploy", new XMLActionReporter(), kernelSubject).parameters(deployParam);
+        invocation.execute();
         appInfo.recordLoad();
     }
 

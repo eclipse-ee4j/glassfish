@@ -1,17 +1,11 @@
 
 name: Build on Windows
-
 on:
   pull_request:
-    branches:
-    - "master"
-    - "8.0"
-
+    branches: [ "master", "7.0", "8.0" ]
 jobs:
   build:
-
     runs-on: windows-2025
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK
@@ -23,4 +17,12 @@ jobs:
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
-      run: mvn -B --no-transfer-progress -e clean install -Pstaging -Pqa '-Dcheckstyle.skip=true'
+      run: mvn -B -e -ntp install -Pstaging -Pqa '-Dcheckstyle.skip=true'
+    - name: Upload server logs
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: server-logs
+        path: '**/server.log*'
+        retention-days: 3
+

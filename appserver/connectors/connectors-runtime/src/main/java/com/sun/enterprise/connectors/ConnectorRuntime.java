@@ -131,7 +131,6 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isModuleSco
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isStandAloneRA;
 import static com.sun.logging.LogDomains.RSR_LOGGER;
 
-
 /**
  * This class is the entry point to connector backend module. It exposes different API's called by external entities
  * like JPA, admin to perform various connector backend related operations. It delegates calls to various connetcor
@@ -462,7 +461,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * Returns the MCF instances in scenarions where a pool has to return multiple mcfs. Should be used only during JMS RA
+     * Returns the MCF instances in scenarios where a pool has to return multiple mcfs. Should be used only during JMS RA
      * recovery.
      *
      * @param poolInfo Name of the pool.MCFs pertaining to this pool is created/returned.
@@ -474,7 +473,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * provides connection manager for a pool
+     * Provides connection manager for a pool
      *
      * @param poolInfo pool name
      * @param forceNoLazyAssoc when set to true, lazy association feature will be turned off (even if it is ON via pool
@@ -552,7 +551,6 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
         return serverEnvironmentImpl.isDas();
     }
 
-
     /**
      * Get a wrapper datasource specified by the jdbcjndi name This API is intended to be used in the DAS. The motivation
      * for having this API is to provide the CMP backend/ JPA-Java2DB a means of acquiring a connection during the codegen
@@ -573,7 +571,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * Get a sql connection from the DataSource specified by the jdbcJndiName. This API is intended to be used in the DAS.
+     * Get an sql connection from the DataSource specified by the jdbcJndiName. This API is intended to be used in the DAS.
      * The motivation for having this API is to provide the CMP backend a means of acquiring a connection during the codegen
      * phase. If a user is trying to deploy an app on a remote server, without this API, a resource reference has to be
      * present both in the DAS and the server instance. This makes the deployment more complex for the user since a resource
@@ -592,7 +590,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * Get a sql connection from the DataSource specified by the jdbcJndiName. This API is intended to be used in the DAS.
+     * Get an sql connection from the DataSource specified by the jdbcJndiName. This API is intended to be used in the DAS.
      * The motivation for having this API is to provide the CMP backend a means of acquiring a connection during the codegen
      * phase. If a user is trying to deploy an app on a remote server, without this API, a resource reference has to be
      * present both in the DAS and the server instance. This makes the deployment more complex for the user since a resource
@@ -796,7 +794,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * Checks if a conncetor connection pool has been deployed to this server instance
+     * Checks if a connector connection pool has been deployed to this server instance
      *
      * @param poolInfo connection pool name
      * @return boolean indicating whether the resource is deployed or not
@@ -840,7 +838,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      * @param connectionDefinitionName Connection definition name against which connection pool is being created
      * @param rarName Name of the resource adapter
      * @param props Properties of MCF which are present in domain.xml These properties override the ones present in ra.xml
-     * @param securityMaps Array fo security maps.
+     * @param securityMaps List with security maps.
      * @throws ConnectorRuntimeException When creation of pool fails.
      */
     public void createConnectorConnectionPool(ConnectorConnectionPool ccp, String connectionDefinitionName, String rarName,
@@ -1007,7 +1005,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * unregister the connector naming event listner
+     * unregister the connector naming event listener
      *
      * @param listener connector-naming-event-listener
      */

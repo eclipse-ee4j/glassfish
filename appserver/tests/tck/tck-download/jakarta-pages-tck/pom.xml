@@ -30,15 +30,14 @@
     <name>TCK: Install Jakarta Pages TCK</name>
 
     <properties>
-        <tck.test.pages.file>jakarta-pages-tck-${tck.test.pages.version}.zip</tck.test.pages.file>
-        <tck.test.pages.url>https://download.eclipse.org/jakartaee/pages/4.0/${tck.test.pages.file}</tck.test.pages.url>
-        <tck.test.pages.version>4.0.0</tck.test.pages.version>
+        <tck.artifactFileName>jakarta-pages-tck-4.0.0.zip</tck.artifactFileName>
+        <tck.artifactUrl>https://download.eclipse.org/jakartaee/pages/4.0/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <configuration>
                     <url>${tck.test.pages.url}</url>
@@ -47,37 +46,22 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>download-pages-tck</id>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
+                        <id>download-tck</id>
                         <phase>generate-resources</phase>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-pages-tck-jar</id>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <file>${project.build.directory}/pages-tck/artifacts/jakarta-pages-tck-4.0.0.jar</file>
-                            <groupId>jakarta.tck</groupId>
-                            <artifactId>jakarta-pages-tck</artifactId>
-                            <version>${tck.test.pages.version}</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
+                        <id>attach-tck</id>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
-
 </project>

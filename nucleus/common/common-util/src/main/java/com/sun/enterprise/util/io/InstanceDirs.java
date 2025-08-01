@@ -18,13 +18,15 @@
 package com.sun.enterprise.util.io;
 
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
 import org.glassfish.api.admin.CommandException;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 
 /**
  * A class for keeping track of the directories that an instance lives in and under.
@@ -154,8 +156,7 @@ public final class InstanceDirs {
      * @throws CommandException if the GlassFish install root is not found
      */
     private String getNodeDirRootDefault() throws IOException {
-        String nodeDirDefault = System.getProperty(
-                SystemPropertyConstants.AGENT_ROOT_PROPERTY);
+        String nodeDirDefault = System.getProperty(NODES_ROOT.getPropertyName());
 
         if (StringUtils.ok(nodeDirDefault)) {
             return nodeDirDefault;
@@ -172,8 +173,7 @@ public final class InstanceDirs {
      * @throws IOException if the GlassFish install root is not found
      */
     protected String getInstallRootPath() throws IOException {
-        String installRootPath = System.getProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installRootPath = System.getProperty(INSTALL_ROOT.getPropertyName());
 
         if (!StringUtils.ok(installRootPath)) {
             throw new IOException("noInstallDirPath");

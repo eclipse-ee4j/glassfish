@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +35,7 @@ import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.deployment.common.DeploymentUtils;
@@ -53,7 +54,7 @@ import org.jvnet.hk2.annotations.Service;
 public class VersioningService {
 
     @Inject
-    private CommandRunner commandRunner;
+    private CommandRunner<?> commandRunner;
     @Inject
     private Domain domain;
 
@@ -89,7 +90,7 @@ public class VersioningService {
     public Map<String, Set<String>> getEnabledVersionInReferencedTargetsForExpression(String versionExpression)
             throws VersioningSyntaxException {
 
-        Map<String,Set<String>> enabledVersionsInTargets = Collections.EMPTY_MAP;
+        Map<String,Set<String>> enabledVersionsInTargets = Collections.emptyMap();
         List<String> matchedVersions = getMatchedVersions(versionExpression, "domain");
 
         for (String matchedVersion : matchedVersions) {
@@ -251,8 +252,7 @@ public class VersioningService {
 
                 ActionReport subReport = report.addSubActionsReport();
 
-                CommandRunner.CommandInvocation inv =
-                        commandRunner.getCommandInvocation("disable", subReport, subject);
+                CommandInvocation<?> inv = commandRunner.getCommandInvocation("disable", subReport, subject);
                 inv.parameters(parameters).execute();
             }
         }

@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.IOException;
 import java.net.URI;
@@ -37,7 +36,9 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.xml.sax.SAXException;
 
 
@@ -75,8 +76,7 @@ public class UndeployedLaunchable implements Launchable {
          */
         Archivist<?> archivist = af.getArchivist("car", classLoader);
         if (archivist == null) {
-            throw new UserError(localStrings.get("appclient.invalidArchive",
-                    ra.getURI().toASCIIString()));
+            throw new UserError(localStrings.get("appclient.invalidArchive", ra.getURI().toASCIIString()));
         }
 
         final ArchiveType moduleType = archivist.getModuleType();
@@ -225,7 +225,7 @@ public class UndeployedLaunchable implements Launchable {
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         this.classLoader = loader;
         if (acDesc == null) {
-            final AppClientArchivist _archivist = getArchivist(new ACCClassLoader(loader.getURLs(), loader.getParent()));
+            final AppClientArchivist _archivist = getArchivist(new TransformingClassLoader(loader.getURLs(), loader.getParent()));
 
             _archivist.setAnnotationProcessingRequested(true);
             acDesc = _archivist.open(clientRA);

@@ -5,10 +5,14 @@ NAME
        where the subcommand is run
 
 SYNOPSIS
-           stop-local-instance [--help]
-           [--nodedir node-dir] [--node node]
-           [--force={true|false}] [--kill={false|true}]
-           [instance-name]
+        stop-local-instance
+        [--force[=<force(default:true)>]]
+        [--help|-?]
+        [--kill[=<kill(default:false)>]]
+        [--node <node>]
+        [--nodedir <nodedir>]
+        [--timeout <timeout>]
+        [instance_name]
 
 DESCRIPTION
        The stop-local-instance subcommand stops a GlassFish Server instance on
@@ -29,20 +33,6 @@ DESCRIPTION
        This subcommand is supported in local mode.
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
-       --nodedir
-           Specifies the directory that contains the instance's node
-           directory. The instance's files are stored in the instance's node
-           directory. The default is as-install/nodes.
-
-       --node
-           Specifies the node on which the instance resides. This option may
-           be omitted only if the directory that the --nodedir option
-           specifies contains only one node directory. Otherwise, this option
-           is required.
-
        --force
            Specifies whether the instance is forcibly stopped immediately.
 
@@ -54,6 +44,9 @@ OPTIONS
            false
                The subcommand waits until all threads that are associated with
                the instance are exited before stopping the instance.
+
+       --help, -?
+           Displays the help text for the subcommand.
 
        --kill
            Specifies whether the instance is killed by using functionality of
@@ -69,6 +62,23 @@ OPTIONS
            true
                The instance is killed. The subcommand uses functionality of
                the operating system to terminate the instance process.
+
+       --node
+           Specifies the node on which the instance resides. This option may
+           be omitted only if the directory that the --nodedir option
+           specifies contains only one node directory. Otherwise, this option
+           is required.
+
+       --nodedir
+           Specifies the directory that contains the instance's node
+           directory. The instance's files are stored in the instance's node
+           directory. The default is as-install/nodes.
+
+       --timeout
+           Specifies timeout in seconds to evaluate the expected result.
+           If the timeout is exceeded, the command fails - however it does
+           not mean it did not make any changes. The instance status is unknown
+           in such case.
 
 OPERANDS
        instance-name
@@ -97,4 +107,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         11 Feb 2011           stop-local-instance(1)
+Jakarta EE 10                         26 Jun 2025           stop-local-instance(1)

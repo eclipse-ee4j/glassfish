@@ -35,8 +35,8 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -268,7 +268,7 @@ public abstract class CreateRemoteNodeCommand implements AdminCommand {
         if (logger.isLoggable(Level.INFO)) {
             logger.info("Running command on DAS: " + commandListToString(fullcommand));
         }
-        pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
+        pm.setTimeout(DEFAULT_TIMEOUT_MSEC);
 
         if (logger.isLoggable(Level.FINER)) {
             pm.setEcho(true);

@@ -2,26 +2,29 @@
 
 ## Eclipse GlassFish 7.x
 
-Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the Jakarta EE 10 specification, which is a major new feature release. Jakarta EE 10 requires JDK 11 as a minimum, but also works on JDK 17 and JDK 21.
+Eclipse GlassFish is an application server, implementing [Jakarta EE](https://jakarta.ee/about).
+This release is corresponding with the [Jakarta EE 10](https://jakarta.ee/specifications/platform/10) specification, which is a major feature release.
 
-GlassFish 7.0.24 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 24. MicroProfile support requires JDK 17 or higher.
+GlassFish 7.0.25 is a final release, containing final Jakarta EE 10 APIs.
+It is tested with Java 11, 17 and 21, experimentally can be used also with newer or non LTS version.
+MicroProfile support requires JDK 17 or higher.
 
-This release marks an important step forward by introducing support for JDK 24 in GlassFish 7 — a capability that had previously only been available in milestone builds of GlassFish 8. Achieving this required new versions of CORBA, ORB, and PFL, the result of many months of dedicated work by the team.
-
-The team also undertook a significant revision of how scripts are used across the project. All Linux scripts now consistently use Bash, and a unified method has been adopted for resolving the AS_INSTALL path across all platforms. Additionally, an issue on Windows related to the %t placeholder—used in JDK log formatting—was resolved by ensuring it is properly escaped.
-
-Faster Deployment was achieved by improved file handling; the team replaced custom file discovery with Files.walkFileTree and switched from URI to Path, also adopting try-with-resources for better resource management. On Windows 11, deployment time for specifically selected huge applications dropped from 110s to 100s, with potential for 92s using caching. YourKit profiling showed a 19s improvement in FileSystem.hasBooleanAttributes.
+This update emphasizes major cleanups, system optimizations, and prepares the codebase for easier future maintenance, notably in anticipation of the upcoming 7.1.0 release.
 
 Download:
 
-* [Eclipse GlassFish 7.0.24, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.24.zip)
-* [Eclipse GlassFish 7.0.24, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.24.zip)
-* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Platform, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.24)
-* [Eclipse GlassFish Embedded 7.0.24, Jakarta EE Web Profile, 10](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.24)
+* [Eclipse GlassFish 7.0.25, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.25.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/7.0.25)
+* [Eclipse GlassFish 7.0.25, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.25.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/7.0.25)
+* [Eclipse GlassFish Embedded 7.0.25, Jakarta EE Platform, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/7.0.25/glassfish-embedded-all-7.0.25.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.25)
+* [Eclipse GlassFish Embedded 7.0.25, Jakarta EE Web Profile, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/7.0.25/glassfish-embedded-web-7.0.25.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.25)
 
 More details:
 
-* [Eclipse GlassFish 7.0.24 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.24)
+* [Eclipse GlassFish 7.0.25 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.25)
 * [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 

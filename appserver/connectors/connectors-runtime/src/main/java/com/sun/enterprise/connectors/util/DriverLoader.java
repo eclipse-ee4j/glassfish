@@ -50,9 +50,9 @@ import java.util.logging.Logger;
 
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTANCE_ROOT_PROP_NAME;
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
  * Driver Loader to load the jdbc drivers and get driver/datasource classnames
@@ -108,7 +108,7 @@ public class DriverLoader implements ConnectorConstants {
         if (connDbVendorMappingRoot != null) {
             return connDbVendorMappingRoot;
         }
-        File installRoot = getSystemPropertyAsFile(INSTALL_ROOT_PROP_NAME);
+        File installRoot = getSystemPropertyAsFile(INSTALL_ROOT.getSystemPropertyName());
         if (installRoot == null) {
             return null;
         }
@@ -551,15 +551,15 @@ public class DriverLoader implements ConnectorConstants {
 
     private List<File> getJdbcDriverLocations() {
         List<File> jarFileLocations = new ArrayList<>();
-        File derby = getLocation(DERBY_ROOT_PROP_NAME);
+        File derby = getLocation(DERBY_ROOT.getSystemPropertyName());
         if (derby != null) {
             jarFileLocations.add(derby);
         }
-        File installRoot = getLocation(INSTALL_ROOT_PROP_NAME);
+        File installRoot = getLocation(INSTALL_ROOT.getSystemPropertyName());
         if (installRoot != null) {
             jarFileLocations.add(installRoot);
         }
-        File instanceRoot = getLocation(INSTANCE_ROOT_PROP_NAME);
+        File instanceRoot = getLocation(INSTANCE_ROOT.getSystemPropertyName());
         if (instanceRoot != null) {
             jarFileLocations.add(instanceRoot);
         }

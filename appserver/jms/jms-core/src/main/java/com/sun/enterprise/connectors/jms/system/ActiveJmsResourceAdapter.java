@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,6 +65,7 @@ import jakarta.inject.Singleton;
 import jakarta.resource.spi.ActivationSpec;
 import jakarta.resource.spi.BootstrapContext;
 import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterInternalException;
 
 import java.io.File;
@@ -122,14 +123,14 @@ import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_BIN;
+import static org.glassfish.embeddable.GlassFishVariable.IMQ_LIB;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
- * Represents an active JMS resource adapter. This does
- * additional configuration to ManagedConnectionFactory
- * and ResourceAdapter java beans.
- *
- * XXX: For code management reasons, think about splitting this
- * to a preHawk and postHawk RA (with postHawk RA extending preHawk RA).
+ * Represents an active JMS resource adapter.
+ * This does additional configuration to {@link ManagedConnectionFactory} and
+ * {@link ResourceAdapter} java beans.
  *
  * @author Satish Kumar
  */
@@ -974,22 +975,20 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
 
     private String getBrokerLibDir() {
-        String brokerLibDir = System.getProperty(SystemPropertyConstants.IMQ_LIB_PROPERTY);
+        String brokerLibDir = System.getProperty(IMQ_LIB.getSystemPropertyName());
         LOG.log(FINE, "Broker lib dir from system property {0}", brokerLibDir);
         return brokerLibDir;
     }
 
     private String getBrokerHomeDir() {
-        // If the property was not specified, then look for the
-        // imqRoot as defined by the com.sun.aas.imqRoot property
-        String brokerBinDir = System.getProperty(SystemPropertyConstants.IMQ_BIN_PROPERTY);
+        String brokerBinDir = System.getProperty(IMQ_BIN.getSystemPropertyName());
         LOG.log(FINEST, "Broker bin dir from system property {0}", brokerBinDir);
 
         // Finally if all else fails (though this should never happen)
         // look for IMQ relative to the installation directory
         final String brokerHomeDir;
         if (brokerBinDir == null) {
-            brokerHomeDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)).toPath()
+            brokerHomeDir = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toPath()
                 .resolve(Path.of("..", "mq")).normalize().toFile().getAbsolutePath();
         } else {
             brokerHomeDir = new File(brokerBinDir).getParentFile().getAbsolutePath();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,8 @@
  */
 package org.glassfish.commandrecorder.admingui;
 
+import com.sun.enterprise.v3.admin.AdminCommandJob;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
@@ -23,6 +25,7 @@ import jakarta.inject.Named;
 import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.extras.commandlogger.AdminCommandLogger;
@@ -35,7 +38,7 @@ import static org.glassfish.extras.commandlogger.AdminCommandLogger.LogMode.WRIT
 public class CommandRecorder {
 
     @Inject
-    Instance<CommandRunner> commandRunnerProvider;
+    Instance<CommandRunner<AdminCommandJob>> commandRunnerProvider;
 
     @Inject
     Instance<ActionReport> actionReportProvider;
@@ -55,8 +58,10 @@ public class CommandRecorder {
         }
     }
 
+
     private void setSystemProperty(AdminCommandLogger.LogMode propertyValue) {
-        final CommandRunner.CommandInvocation commandInvocation = commandRunnerProvider.get().getCommandInvocation("create-system-properties", actionReportProvider.get(), subjectProvider.get());
+        final CommandInvocation<?> commandInvocation = commandRunnerProvider.get()
+            .getCommandInvocation("create-system-properties", actionReportProvider.get(), subjectProvider.get());
         commandInvocation.parameters(parameters(propertyValue)).execute();
     }
 

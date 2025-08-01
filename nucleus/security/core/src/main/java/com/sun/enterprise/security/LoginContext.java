@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,8 @@ import com.sun.enterprise.security.common.SecurityConstants;
 
 import javax.security.auth.callback.CallbackHandler;
 
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
+
 /**
  * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:
  *
@@ -36,8 +38,7 @@ import javax.security.auth.callback.CallbackHandler;
  * } catch (LoginException le) {
  *     le.printStackTrace();
  * }
- *
- * </PRE>
+ * </pre>
  *
  * Ideally the login should be done with the system property -Dj2eelogin.name and -Dj2eelogin.password
  *
@@ -46,26 +47,25 @@ import javax.security.auth.callback.CallbackHandler;
 
 public final class LoginContext {
 
-    private boolean guiAuth;
-
     // declaring this different from the Appcontainer as
     // this will be called from standalone clients.
-    public CallbackHandler handler;
+    private final CallbackHandler handler;
 
     /**
      * Creates the LoginContext with the defauly callback handler
      */
     public LoginContext() {
-        handler = new LoginCallbackHandler(guiAuth);
+        this.handler = new LoginCallbackHandler(false);
     }
 
     /**
      * Login method to login username and password
+     * @deprecated Sets password as a system property
      */
+    @Deprecated(forRemoval = true, since = "7.1.0")
     public void login(String username, String password) throws LoginException {
-        System.setProperty(ClientPasswordLoginModule.LOGIN_NAME, username);
-        System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password);
-
+        setProperty(ClientPasswordLoginModule.LOGIN_NAME, username, false);
+        setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password, false);
         // Since this is  a private api and the user is not supposed to use
         // this. We use the default the LoginCallbackHandler.
         LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD, handler);
@@ -77,5 +77,4 @@ public final class LoginContext {
     public void login(String username, byte[] authData) throws LoginException {
         // do nothing
     }
-
 }

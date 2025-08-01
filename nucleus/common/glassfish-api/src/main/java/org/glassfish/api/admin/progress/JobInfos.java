@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,16 +32,24 @@ import java.util.List;
 public class JobInfos {
     private List<JobInfo> jobInfoList;
 
+    /**
+     * @return the internal list, never null.
+     */
     @XmlElement(name = "job")
     public List<JobInfo> getJobInfoList() {
-
         return jobInfoList;
     }
 
+    /**
+     * @param jobInfoList can be null, then creates an empty {@link ArrayList}.
+     */
     public void setJobInfoList(List<JobInfo> jobInfoList) {
-        this.jobInfoList = jobInfoList;
+        this.jobInfoList = jobInfoList == null ? new ArrayList<>() : jobInfoList;
     }
 
+    /**
+     * Creates an empty list.
+     */
     public JobInfos() {
         jobInfoList = new ArrayList<>();
     }

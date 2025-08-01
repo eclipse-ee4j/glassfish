@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,30 +18,28 @@
 package com.sun.enterprise.universal.glassfish;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Package private static utility methods
  * @author bnevins
  */
-public class GFLauncherUtils {
+public final class GFLauncherUtils {
 
     private GFLauncherUtils() {
-    // all static methods
+        // all static methods
     }
 
     public static boolean ok(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 
     public static boolean safeExists(File f) {
@@ -51,54 +50,12 @@ public class GFLauncherUtils {
         return f != null && f.isDirectory();
     }
 
-    public static synchronized File getInstallDir() {
-        // if it is already set as a System Property -- skip the huge block below
-        setInstallDirFromSystemProp();
-
-        if(installDir == null)
-        {
-            String resourceName = GFLauncherUtils.class.getName().replace('.', '/') + ".class";
-            URL resource = GFLauncherUtils.class.getClassLoader().getResource(resourceName);
-
-            if (resource == null) {
-                return null;
-            }
-
-            if (!resource.getProtocol().equals("jar")) {
-                return null;
-            }
-
-            try {
-                JarURLConnection c = (JarURLConnection) resource.openConnection();
-                URL jarFile = c.getJarFileURL();
-
-                // important to sanitize it!
-                // unreported bug:
-                // JDK does this:
-                // the parent of "/foo/." is "/foo", not "/" !
-
-
-                File f = SmartFile.sanitize(new File(jarFile.toURI()));
-
-                f = f.getParentFile();  // <install>/modules
-
-                if (f == null) {
-                    return null;
-                }
-
-                f = f.getParentFile(); // <install>/
-
-                if (f == null) {
-                    return null;
-                }
-
-                installDir = SmartFile.sanitize(f);
-            }
-            catch (Exception e) {
-                installDir = null;
-            }
+    public static File getInstallDir() {
+        try {
+            return resolveInstallDir();
+        } catch (IOException | URISyntaxException e) {
+            throw new Error("Cannot resolve install root!", e);
         }
-        return installDir;
     }
 
     public static boolean isWindows() {
@@ -118,22 +75,8 @@ public class GFLauncherUtils {
         return false;
     }
 
-    /**
-     * This method returns the fully qualified name of the host.  If
-     * the name can't be resolved (on windows if there isn't a domain specified), just
-     * host name is returned
-     *
-     * @deprecated
-     * @return
-     * @throws UnknownHostException so it can be handled on a case by case basis
-     */
-    @Deprecated
-    public static String getCanonicalHostName() throws UnknownHostException {
-        return NetUtils.getCanonicalHostName();
-    }
-
     public static String replace(String s, String token, String replace) {
-        if (s == null || s.length() <= 0 || token == null || token.length() <= 0) {
+        if (s == null || s.isEmpty() || token == null || token.isEmpty()) {
             return s;
         }
 
@@ -162,17 +105,13 @@ public class GFLauncherUtils {
     public static boolean isRelativePath(String path) {
         if (!ok(path)) {
             return false;
-        }
-        else if (path.startsWith(".")) {
+        } else if (path.startsWith(".")) {
             return true;
-        }
-        else if (path.indexOf("/.") >= 0) {
+        } else if (path.indexOf("/.") >= 0) {
             return true;
-        }
-        else if (path.indexOf("\\.") >= 0) {
+        } else if (path.indexOf("\\.") >= 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -182,16 +121,16 @@ public class GFLauncherUtils {
      * @param cp The classpath-like string
      * @return the list of File
      */
-    public static List<File> stringToFiles(String cp)
-    {
-        List<File> list = new ArrayList<File>();
+    public static List<File> stringToFiles(String cp) {
+        List<File> list = new ArrayList<>();
 
-        if(ok(cp)) {
+        if (ok(cp)) {
             cp = SmartFile.sanitizePaths(cp);
             String[] ss = cp.split(File.pathSeparator);
 
-            for(String s : ss)
+            for (String s : ss) {
                 list.add(new File(s));
+            }
         }
 
         return list;
@@ -214,27 +153,31 @@ public class GFLauncherUtils {
         return sb.toString();
     }
 
-    private static void setInstallDirFromSystemProp() {
-        // https://embedded-glassfish.dev.java.net/issues/show_bug.cgi?id=54
-        //
-        // For instance if we are called from an Embedded Server then InstallRoot
-        // may already be set as a System Prop -- and the jar we are running from has
-        // nothing whatever to do with the concept of an "install root".
-        // In that case we certainly do not want to wipe out the already set install root.
-
-        // if anything is not kosher simply return w/o setting installDir to anything.
-        String installRootDirName = System.getProperty(INSTALL_ROOT_PROPERTY);
-
-        if(!ok(installRootDirName))
-            return;
-
-        File f = SmartFile.sanitize(new File(installRootDirName));
-
-        if(f.isDirectory()) {
-            installDir = f;
+    private static File resolveInstallDir() throws IOException, URISyntaxException {
+        // Property first, because it could be already set by this JVM and we respect it.
+        String sys = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
+        if (sys != null) {
+            return toValidDirectory(sys);
         }
+        String env = System.getenv(INSTALL_ROOT.getEnvName());
+        if (env != null) {
+            return toValidDirectory(env);
+        }
+        // Expectation: we are running the program using usual directory design of GlassFish.
+        // That means that the common-util jar is in modules directory.
+        return new File(GFLauncherUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+            .getCanonicalFile().getParentFile().getParentFile();
     }
 
-    private static File installDir;
+    private static File toValidDirectory(String value) throws IOException {
+        File file = new File(value).toPath().normalize().toFile();
+        if (!file.isAbsolute()) {
+            throw new IOException("The path to install root is not an absolute path: " + file);
+        }
+        File canonical = file.getCanonicalFile();
+        if (!canonical.isDirectory()) {
+            throw new IOException("The path to install root is not a directory: " + canonical);
+        }
+        return canonical;
+    }
 }
-

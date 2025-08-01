@@ -30,6 +30,8 @@ import java.net.URL;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.server.ServerEnvironmentImpl;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * Embedded domain.xml, can use externally pointed domain.xml
  *
@@ -52,15 +54,13 @@ public class EmbeddedDomainXml extends GFDomainXml {
             // user specified domain.xml
             return URI.create(configFileURI).toURL();
         }
-        String instanceRoot = startupContext.getArguments().getProperty(
-                "com.sun.aas.instanceRoot");
+        String instanceRoot = startupContext.getArguments().getProperty(INSTANCE_ROOT.getSystemPropertyName());
         File domainXml = new File(instanceRoot, "config/domain.xml");
         if (domainXml.exists()) {
             // domain/config/domain.xml, if exists.
             return domainXml.toURI().toURL();
         }
-        return EmbeddedDomainXml.class.getClassLoader().getResource(
-                "org/glassfish/embed/domain.xml");
+        return EmbeddedDomainXml.class.getClassLoader().getResource("org/glassfish/embed/domain.xml");
     }
 
     @Override

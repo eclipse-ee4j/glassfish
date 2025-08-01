@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,12 +50,12 @@ import javax.security.auth.login.LoginException;
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.JobManager.Checkpoint;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.Payload.Inbound;
 import org.glassfish.api.admin.Payload.Outbound;
 import org.glassfish.api.admin.Payload.Part;
 import org.glassfish.common.util.ObjectInputOutputStreamFactory;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.jvnet.hk2.annotations.Service;
 
@@ -89,15 +89,16 @@ public class CheckpointHelper {
 
         private final ExtensionType ext;
         private final String jobId;
-        private String attachmentId;
+        private final String attachmentId;
         private final File parentDir;
 
         private String cachedFileName;
 
-        private CheckpointFilename(String jobId, File parentDir, ExtensionType ext) {
+        private CheckpointFilename(String jobId, File parentDir, ExtensionType ext, String attachmentId) {
             this.ext = ext;
             this.jobId = jobId;
             this.parentDir = parentDir;
+            this.attachmentId = attachmentId;
         }
 
         private CheckpointFilename(CheckpointFilename basic, ExtensionType ext) {
@@ -108,8 +109,7 @@ public class CheckpointHelper {
         }
 
         private CheckpointFilename(Job job, String attachmentId) {
-            this(job.getId(), job.getJobsFile().getParentFile(), ExtensionType.ATTACHMENT);
-            this.attachmentId = attachmentId;
+            this(job.getId(), job.getJobsFile().getParentFile(), ExtensionType.ATTACHMENT, attachmentId);
         }
 
         public CheckpointFilename(File file) throws IOException {
@@ -144,6 +144,7 @@ public class CheckpointHelper {
                 this.attachmentId = name.substring(ind + 1);
             } else {
                 this.jobId = name;
+                this.attachmentId = null;
             }
         }
 
@@ -203,7 +204,7 @@ public class CheckpointHelper {
         }
 
         public static CheckpointFilename createBasic(String jobId, File dir) {
-            return new CheckpointFilename(jobId, dir, ExtensionType.BASIC);
+            return new CheckpointFilename(jobId, dir, ExtensionType.BASIC, null);
         }
 
         public static CheckpointFilename createAttachment(Job job, String attachmentId) {
@@ -215,23 +216,15 @@ public class CheckpointHelper {
     private final static LocalStringManagerImpl strings = new LocalStringManagerImpl(CheckpointHelper.class);
 
     @Inject
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
     @Inject
-    ServiceLocator serviceLocator;
-
-    @Inject
-    ObjectInputOutputStreamFactory factory;
+    private ObjectInputOutputStreamFactory factory;
 
     public void save(JobManager.Checkpoint checkpoint) throws IOException {
         CheckpointFilename cf = CheckpointFilename.createBasic(checkpoint.getJob());
-        ObjectOutputStream oos = null;
-        FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(cf.getFile());
-            oos = factory.createObjectOutputStream(fos);
-            oos.writeObject(checkpoint);
-            oos.close();
+            serializeToFile(checkpoint, cf.getFile());
             Outbound outboundPayload = checkpoint.getContext().getOutboundPayload();
             if (outboundPayload != null && outboundPayload.isDirty()) {
                 saveOutbound(outboundPayload, cf.getForPayload(false).getFile());
@@ -241,10 +234,6 @@ public class CheckpointHelper {
                 saveInbound(inboundPayload, cf.getForPayload(true).getFile());
             }
         } catch (IOException e) {
-            try {oos.close();} catch (Exception ex) {
-            }
-            try {fos.close();} catch (Exception ex) {
-            }
             File file = cf.getFile();
             if (file.exists()) {
                 file.delete();
@@ -262,35 +251,13 @@ public class CheckpointHelper {
     }
 
     public void saveAttachment(Serializable data, Job job, String attachmentId) throws IOException {
-        ObjectOutputStream oos = null;
-        FileOutputStream fos = null;
         CheckpointFilename cf = CheckpointFilename.createAttachment(job, attachmentId);
-        try {
-            fos = new FileOutputStream(cf.getFile());
-            oos = factory.createObjectOutputStream(fos);
-            oos.writeObject(data);
-        } finally {
-            try {oos.close();} catch (Exception ex) {
-            }
-            try {fos.close();} catch (Exception ex) {
-            }
-        }
+        serializeToFile(data, cf.getFile());
     }
 
-    public JobManager.Checkpoint load(CheckpointFilename cf, Outbound outbound) throws IOException, ClassNotFoundException {
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        JobManager.Checkpoint checkpoint;
-        try {
-            fis = new FileInputStream(cf.getFile());
-            ois = factory.createObjectInputStream(fis);
-            checkpoint = (JobManager.Checkpoint) ois.readObject();
-        } finally {
-            try {ois.close();} catch (Exception ex) {
-            }
-            try {fis.close();} catch (Exception ex) {
-            }
-        }
+    public Checkpoint<AdminCommandJob> load(CheckpointFilename cf, Outbound outbound) throws IOException, ClassNotFoundException {
+        Checkpoint<AdminCommandJob> checkpoint;
+        checkpoint = deserializeFromFile(cf.getFile());
         if (outbound != null) {
             loadOutbound(outbound, cf.getForPayload(false).getFile());
             checkpoint.getContext().setOutboundPayload(outbound);
@@ -299,31 +266,37 @@ public class CheckpointHelper {
         checkpoint.getContext().setInboundPayload(inbound);
         try {
             String username = checkpoint.getJob().getSubjectUsernames().get(0);
-            Subject subject = authenticationService.impersonate(username, /* groups */ null, /* subject */ null, /* virtual */ false);
+            Subject subject = authenticationService.impersonate(username, /* groups */ null,
+                /* subject */ null, /* virtual */ false);
             checkpoint.getContext().setSubject(subject);
+            return checkpoint;
         } catch (LoginException e) {
             throw new RuntimeException(e);
         }
-        return checkpoint;
     }
 
-    public <T extends Serializable> T loadAttachment(Job job, String attachmentId) throws IOException, ClassNotFoundException {
+    public <T extends Serializable> T loadAttachment(Job job, String attachmentId)
+        throws IOException, ClassNotFoundException {
         CheckpointFilename cf = CheckpointFilename.createAttachment(job, attachmentId);
         File file = cf.getFile();
         if (!file.exists()) {
             return null;
         }
-        ObjectInputStream ois = null;
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(cf.getFile());
-            ois = factory.createObjectInputStream(fis);
+        return deserializeFromFile(file);
+    }
+
+    private void serializeToFile(Serializable data, File filePath) throws IOException {
+        try (OutputStream fos = new FileOutputStream(filePath);
+            ObjectOutputStream os = factory.createObjectOutputStream(fos)) {
+            os.writeObject(data);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T deserializeFromFile(File filePath) throws IOException, ClassNotFoundException {
+        try (FileInputStream fis = new FileInputStream(filePath);
+            ObjectInputStream ois = factory.createObjectInputStream(fis)) {
             return (T) ois.readObject();
-        } finally {
-            try {ois.close();} catch (Exception ex) {
-            }
-            try {fis.close();} catch (Exception ex) {
-            }
         }
     }
 
@@ -376,7 +349,6 @@ public class CheckpointHelper {
             }
             outbound.addPart(part.getContentType(), part.getName(), part.getProperties(), new FileInputStream(sourceFile));
         }
-
         outbound.resetDirty();
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,21 +21,16 @@ import java.io.File;
 
 /**
  * This class stores some data about long running jobs which have completed
- * It stores job,id,the time of completion
- * the location of the jobs file
+ * It stores job id, the time of completion, the location of the jobs file
  * @author Bhakti Mehta
  */
 public class CompletedJob {
 
     private final String id;
-
     private final long  completionTime;
-
     private final File jobsFile;
 
-
     public CompletedJob(String id, long completionTime, File jobsFile) {
-
         this.completionTime = completionTime;
         this.jobsFile = jobsFile;
         this.id = id;
@@ -50,5 +46,10 @@ public class CompletedJob {
 
     public File getJobsFile() {
         return jobsFile;
+    }
+
+    @Override
+    public String toString() {
+        return "CompletedJob[id=" + id + ", completitionTime=" + completionTime + ", jobsFile=" + jobsFile + "]";
     }
 }

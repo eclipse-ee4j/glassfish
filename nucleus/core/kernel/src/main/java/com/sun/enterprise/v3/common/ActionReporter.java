@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +22,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -35,18 +36,15 @@ import org.glassfish.api.ActionReport;
  */
 public abstract class ActionReporter extends ActionReport {
 
-    protected Throwable exception = null;
-    protected String actionDescription = null;
-    protected List<ActionReporter> subActions = new ArrayList<>();
-    protected ExitCode exitCode = ExitCode.SUCCESS;
-    protected MessagePart topMessage = new MessagePart();
-    protected String contentType = "text/html; charset=utf-8";
-
     public static final String EOL_MARKER = "%%%EOL%%%";
 
-    /** Creates a new instance of HTMLActionReporter */
-    public ActionReporter() {
-    }
+    private static final long serialVersionUID = -472074342932691854L;
+
+    private Throwable exception;
+    private String actionDescription;
+    private ExitCode exitCode = ExitCode.SUCCESS;
+    private final List<ActionReporter> subActions = Collections.synchronizedList(new ArrayList<>());
+
 
     public void setFailure() {
         setActionExitCode(ExitCode.FAILURE);
@@ -73,70 +71,48 @@ public abstract class ActionReporter extends ActionReport {
     }
 
     @Override
-    public void setActionDescription(String message) {
+    public final void setActionDescription(String message) {
         this.actionDescription = message;
     }
 
-    public String getActionDescription() {
+    public final String getActionDescription() {
         return actionDescription;
     }
 
     @Override
-    public void setFailureCause(Throwable t) {
+    public final void setFailureCause(Throwable t) {
         this.exception = t;
     }
     @Override
-    public Throwable getFailureCause() {
+    public final Throwable getFailureCause() {
         return exception;
     }
 
     @Override
-    public MessagePart getTopMessagePart() {
-        return topMessage;
-    }
-
-    @Override
-    public ActionReport addSubActionsReport() {
+    public final ActionReport addSubActionsReport() {
         ActionReporter subAction;
         try {
-            subAction = this.getClass().newInstance();
-        } catch (IllegalAccessException ex) {
-            return null;
-        } catch (InstantiationException ex) {
-            return null;
+            subAction = this.getClass().getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException ex) {
+            throw new IllegalStateException("Failed to create subAction of type " + this.getClass().getName(), ex);
         }
         subActions.add(subAction);
         return subAction;
     }
 
     @Override
-    public List<ActionReporter> getSubActionsReport() {
+    public final List<ActionReporter> getSubActionsReport() {
         return subActions;
     }
 
     @Override
-    public void setActionExitCode(ExitCode exitCode) {
+    public final void setActionExitCode(ExitCode exitCode) {
         this.exitCode = exitCode;
     }
 
     @Override
-    public ExitCode getActionExitCode() {
+    public final ExitCode getActionExitCode() {
         return exitCode;
-    }
-
-    @Override
-    public void setMessage(String message) {
-        topMessage.setMessage(message);
-    }
-
-    @Override
-    public void appendMessage(String message) {
-        topMessage.appendMessage(message);
-    }
-
-    @Override
-    public String getMessage() {
-        return topMessage.getMessage();
     }
 
     /**
@@ -149,7 +125,7 @@ public abstract class ActionReporter extends ActionReport {
      */
     @Override
     public String getContentType() {
-        return contentType;
+        return "text/html; charset=utf-8";
     }
 
     /** Returns combined messages. Meant mainly for long running
@@ -195,7 +171,7 @@ public abstract class ActionReporter extends ActionReport {
                 sb.append(failMsg);
             }
         }
-        for (ActionReporter sub : aReport.subActions) {
+        for (ActionReporter sub : aReport.getSubActionsReport()) {
             getCombinedMessages(sub, sb);
         }
     }
@@ -215,19 +191,19 @@ public abstract class ActionReporter extends ActionReport {
         return has(this,ExitCode.FAILURE);
     }
 
-    private static boolean has(ActionReporter ar, ExitCode value) {
-        if (null != ar.exitCode && ar.exitCode.equals(value)) {
+    private static boolean has(ActionReporter reporter, ExitCode value) {
+        if (reporter.getActionExitCode() != null && reporter.getActionExitCode().equals(value)) {
             return true;
         }
-        Queue<ActionReporter> q = new LinkedList<>();
-        q.addAll(ar.subActions);
-        while (!q.isEmpty()) {
-            ActionReporter lar = q.remove();
+        Queue<ActionReporter> workingCopy = new LinkedList<>();
+        workingCopy.addAll(reporter.getSubActionsReport());
+        while (!workingCopy.isEmpty()) {
+            ActionReporter lar = workingCopy.remove();
             ExitCode ec = lar.getActionExitCode();
             if (ec != null && ec.equals(value)) {
                 return true;
             }
-            q.addAll(lar.subActions);
+            workingCopy.addAll(lar.getSubActionsReport());
         }
         return false;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -98,9 +99,7 @@ public class FlashlightProbe
         }
     }
 
-    public synchronized boolean addInvoker(ProbeClientInvoker invoker) {
-            boolean isFirst = (invokers.isEmpty() && firstTransform);
-
+    public synchronized void addInvoker(ProbeClientInvoker invoker) {
         if(invokers.putIfAbsent(invoker.getId(), invoker) != null) {
             if (logger.isLoggable(Level.FINE))
                 logger.fine("Adding an invoker that already exists: " + invoker.getId() +  "  &&&&&&&&&&");
@@ -113,10 +112,8 @@ public class FlashlightProbe
             logger.fine("Total invokers = " + invokers.size());
         }
         listenerEnabled.set(true);
-        firstTransform = false;
 
         initInvokerList();
-        return isFirst;
     }
 
     public synchronized boolean removeInvoker(ProbeClientInvoker invoker) {
@@ -401,7 +398,6 @@ public class FlashlightProbe
     private Method  dtraceMethod;
     private boolean hasSelf;
     private boolean hidden;
-    private boolean firstTransform = true;
     private ConcurrentMap<Integer, ProbeClientInvoker> invokers = new ConcurrentHashMap<Integer, ProbeClientInvoker>();
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
     public final static LocalStringManagerImpl localStrings =

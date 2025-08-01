@@ -77,9 +77,6 @@ Embedded {productName} comes with the following flavours:
   Contains classes needed for deploying Jakarta EE web applications.
   Download this file from
   `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web`.
-`glassfish-embedded-nucleus.jar`::
-  Corresponds to the nucleus distribution. Download this file from
-  `https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-nucleus`.
 `glassfish-embedded-static-shell.jar`::
   Contains references to classes needed for deploying Jakarta EE
   applications. Must be used with a non-embedded installation of
@@ -160,7 +157,7 @@ xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configu
 
 [NOTE]
 ====
-The built-in `domain.xml` file used by default by Embedded {productName} can be found in the Embedded {productName} JAR files, in path 
+The built-in `domain.xml` file used by default by Embedded {productName} can be found in the Embedded {productName} JAR files, in path
 `org/glassfish/embed/domain.xml`. You can customize this
 file and pass it in using the `setConfigFileURI` method while creating
 an Embedded {productName}.
@@ -181,10 +178,6 @@ java -jar glassfish-embedded-web.jar
 ```
 
 ```
-java -jar glassfish-embedded-nucleus.jar
-```
-
-```
 java -jar ${as-install}/lib/embedded/glassfish-embedded-static-shell.jar
 ```
 
@@ -194,24 +187,24 @@ For description of all the JAR files, see xref:#editions[Embedded {productName} 
 
 This starts the server and configures it according to the given arguments or
 configuration files.
-   
+
 If executed without arguments or if no application is deployed, the server
-is started and waits for further admin commands in a loop. The server can 
+is started and waits for further admin commands in a loop. The server can
 be terminated with the `exit` or `quit` commands or pressing Ctrl+C.
 
 If `glassfish.properties` file exists in the current directory, properties
 in this file are set as if the `--properties=glassfish.properties` argument
 was defined on the command line.
 
-If `autodeploy` directory exists in the current directory, files and 
+If `autodeploy` directory exists in the current directory, files and
 directories in that directory are deployed as applications on startup.
 
 If `glassfish-domain` directory exists in the current directory, it will be
-used as the domain directory unless specified explicitly with 
+used as the domain directory unless specified explicitly with
 `--domainDir=DIRECTORY`
 
 If `domain.xml` file exists in the current directory, it will be
-used as the domain configuration file unless specified explicitly with 
+used as the domain configuration file unless specified explicitly with
 `--domainConfigFile=FILE`
 
 By default, {productName} Embedded is started with the following configuration:
@@ -231,7 +224,7 @@ Nnote that this way of starting will require some `--add-opens` and `--add-expor
 
 === Examples of Running Embedded {productName} from Command Line
 
-==== Example 1: Run an application from command line    
+==== Example 1: Run an application from command line
 
 On port 8080 and root context by default:
 
@@ -266,12 +259,12 @@ java -jar glassfish-embedded-all.jar app1.war app2.war
 === Command-line Arguments Supported by Embedded {productName}
 
 ```
-java -jar glassfish-embedded-all.jar [--properties=FILE] 
-    [-p=PORT, --httpPort=PORT, --port=PORT] [--httpsPort=PORT_NUMBER] 
-    [--domainConfigFile=FILE] 
-    [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY] 
-    [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--logLevel=LEVEL] 
-    [--logProperties=FILE] [--noInfo] [--shut-down, --shutdown, --stop] 
+java -jar glassfish-embedded-all.jar [--properties=FILE]
+    [-p=PORT, --httpPort=PORT, --port=PORT] [--httpsPort=PORT_NUMBER]
+    [--domainConfigFile=FILE]
+    [--domainDir=DIRECTORY, --instanceRoot=DIRECTORY]
+    [--noListener, --noPort] [--autoDeployDir=DIRECTORY] [--logLevel=LEVEL]
+    [--logProperties=FILE] [--noInfo] [--shut-down, --shutdown, --stop]
     [--help] [applications or admin commands...]
 ```
 
@@ -280,60 +273,60 @@ java -jar glassfish-embedded-all.jar [--properties=FILE]
 
 `--properties=FILE`
 
-Load properties from a file. This option can be repeated to 
-load properties from multiple files. The propertes in the file can be 
+Load properties from a file. This option can be repeated to
+load properties from multiple files. The propertes in the file can be
 any of the following:
 
     - Any properties supported by Embedded ${productName}. See xref:#supported-properties[Configuration properties supported by Embedded {productName}].
-    - Any command line options with the name of the option as the key, 
+    - Any command line options with the name of the option as the key,
 without the initial hyphens, and the value of the option as the value.
-    - Keys that start with the "command." prefix, followed by any text. 
+    - Keys that start with the "command." prefix, followed by any text.
 The value will be treated as a command to execute at startup.
-    - Keys that start with the "deploy." prefix, followed by any text. The 
-value will be treated as an application to deploy at startup, as if it 
+    - Keys that start with the "deploy." prefix, followed by any text. The
+value will be treated as an application to deploy at startup, as if it
 was specified on the command line.
-For example, the ${productName} domain directory can be specified with the 
-usual Embedded ${productName} property 
-"glassfish.embedded.tmpdir=myDomainDir", as well as with the property 
-"domainDir=myDomainDir" that represents the "--domainDir=myDomainDir" 
-command-line option. A command to deploy an application can be specified 
-via a property key "command.deploy.app=deploy --contextroot=app 
-myapp.war". An application to deploy at startup with the default deploy 
-behavior can be specified via a property key "deploy.app=myapp.war". The 
-property "properties" can also be defined in this file, pointing to 
-another file. In that case, properties will be loaded also from that 
+For example, the ${productName} domain directory can be specified with the
+usual Embedded ${productName} property
+"glassfish.embedded.tmpdir=myDomainDir", as well as with the property
+"domainDir=myDomainDir" that represents the "--domainDir=myDomainDir"
+command-line option. A command to deploy an application can be specified
+via a property key "command.deploy.app=deploy --contextroot=app
+myapp.war". An application to deploy at startup with the default deploy
+behavior can be specified via a property key "deploy.app=myapp.war". The
+property "properties" can also be defined in this file, pointing to
+another file. In that case, properties will be loaded also from that
 file.
 
 `-p=PORT, --httpPort=PORT, --port=PORT`
-    
-Bind the HTTP listener to the specified port. If not set, the HTTP 
-listener binds to port 8080 by default, unless it's disabled by the 
+
+Bind the HTTP listener to the specified port. If not set, the HTTP
+listener binds to port 8080 by default, unless it's disabled by the
 --noListener argument.
 
 `--httpsPort=PORT_NUMBER`
 
-Bind the HTTPS listener to the specified port. If not set, the HTTPS 
+Bind the HTTPS listener to the specified port. If not set, the HTTPS
 listener is disabled by default.
 
 `--domainConfigFile=FILE`
 
-Set the location of domain configuration file (i.e., domain.xml) using 
+Set the location of domain configuration file (i.e., domain.xml) using
 which Embedded {productName} should run.
 
 `--domainDir=DIRECTORY, --instanceRoot=DIRECTORY`
 
-Set the instance root (a.k.a. domain dir) using which Embedded {productName}  should 
+Set the instance root (a.k.a. domain dir) using which Embedded {productName}  should
 run.
 
 `--noListener, `--noPort`
 
-Disable the HTTP listener, which is by default enabled and bound to 
+Disable the HTTP listener, which is by default enabled and bound to
 port 8080.
 
 `--autoDeployDir=DIRECTORY`
 
-Files and directories in this directory will be deployed as 
-applications (in random order), as if they were specified on the command 
+Files and directories in this directory will be deployed as
+applications (in random order), as if they were specified on the command
 line. The default directory name is 'autodeploy'.
 
 `--logLevel=LEVEL`
@@ -350,12 +343,12 @@ Disable printing information about deployed applications after startup
 
 `--shut-down, --shutdown, --stop`
 
-Shut down GlassFish and the whole JVM process after server is started 
-and initialized. This is useful to start the server, perform some action 
-during startup (e.g. during application deployment), and shut down the 
-application cleanly. Also useful for Class Data Sharing and similar 
-startup optimizations - to start the server, get it to a ready state 
-(applications deployed, etc.), and then shut down cleanly, so that the 
+Shut down GlassFish and the whole JVM process after server is started
+and initialized. This is useful to start the server, perform some action
+during startup (e.g. during application deployment), and shut down the
+application cleanly. Also useful for Class Data Sharing and similar
+startup optimizations - to start the server, get it to a ready state
+(applications deployed, etc.), and then shut down cleanly, so that the
 JVM can store the cached data.
 
 `--prompt`
@@ -375,7 +368,7 @@ Any argument that doesn't start with a hyphen (-), is treated as follows:
   Otherwise it's deployed under the context root derived from the name of the file
   or deployment descriptors.
 - In all other cases, the argument is executed as a {productName}  admin command.
-  Individual commands must be enclosed in quotes if they contain spaces. {productName} 
+  Individual commands must be enclosed in quotes if they contain spaces. {productName}
   admin commands are the same commands supported by {productName} Server's "asadmin"
   command line tool or by the "CommandRunner" Java class in the {productName} Simple Public API.
 
@@ -2095,7 +2088,7 @@ supports only these features of nonembedded {productName}:
 
 ** Jakarta Pages
 
-** Jakarta Faces 
+** Jakarta Faces
 * JDBC connection pooling
 * Jakarta Persistence API
 * Jakarta Transaction API

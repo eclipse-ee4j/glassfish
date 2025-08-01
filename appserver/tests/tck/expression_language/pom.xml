@@ -34,20 +34,24 @@
     <description>Aggregates dependencies and runs the Expression Language TCK using jars from GlassFish</description>
 
     <properties>
-        <!-- 
-            GlassFish properties 
-            
-            Note M6 still has some failures, future M7 passes all
-        -->
-         
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
+        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
+
+        <tck.home>${project.build.directory}/expression-language-tck</tck.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+
+        <glassfish.modules>${glassfish.home}/glassfish/modules</glassfish.modules>
+
+        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <type>zip</type>
+        </dependency>
 
-        <!-- Jakarta Expression Language TCK -->
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>expression-language-tck</artifactId>
@@ -70,7 +74,6 @@
                         <goals>
                             <goal>unpack</goal>
                         </goals>
-                        <phase>pre-integration-test</phase>
                         <configuration>
                             <artifactItems>
                                 <artifactItem>

@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.remote.Metrix;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
@@ -51,6 +50,7 @@ import org.jvnet.hk2.config.InjectionResolver;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.logging.Level.FINER;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * This exists mainly due performance reason. After construct it starts hk2 descriptors parsing because is is
@@ -121,8 +121,8 @@ final class CLIContainer {
                 result.add(file);
             }
         }
-        File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-        File adminCliJar = new File(new File(inst, "modules"), "admin-cli.jar");
+        File inst = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
+        File adminCliJar = new File(inst, "admin-cli.jar");
         if (!adminCliJar.exists()) {
             throw new IOException(adminCliJar.getAbsolutePath());
         }

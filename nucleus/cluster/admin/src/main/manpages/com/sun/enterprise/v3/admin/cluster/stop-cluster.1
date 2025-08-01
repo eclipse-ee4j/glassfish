@@ -4,11 +4,11 @@ NAME
        stop-cluster - stops a GlassFish Server cluster
 
 SYNOPSIS
-           stop-cluster [--help]
-           [--verbose={false|true}]
-           [--kill={false|true}]
-           [--autohadboverride={true|false}]
-           cluster-name
+        stop-cluster
+        [--help|-?]
+        [--kill[=<kill(default:false)>]]
+        [--timeout <timeout>]
+        clustername
 
 DESCRIPTION
        The stop-cluster subcommand stops a GlassFish Server cluster by
@@ -50,12 +50,11 @@ OPTIONS
                Each instance is killed. The subcommand uses functionality of
                the operating system to terminate each instance process.
 
-       --autohadboverride
-           Do not specify this option. This option is retained for
-           compatibility with earlier releases. If you specify this option, a
-           syntax error does not occur. Instead, the subcommand runs
-           successfully and displays a warning message that the option is
-           ignored.
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The status of instances is
+            unknown in such case.
 
 OPERANDS
        cluster-name
@@ -88,4 +87,4 @@ SEE ALSO
 
        asadmin(1M)
 
-Jakarta EE 10                         16 Dec 2010                  stop-cluster(1)
+Jakarta EE 10                         26 Jun 2025                  stop-cluster(1)

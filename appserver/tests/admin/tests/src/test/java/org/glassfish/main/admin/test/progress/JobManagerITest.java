@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,10 +58,14 @@ public class JobManagerITest {
     @Test
     @Order(2)
     public void jobSurvivesRestart() throws Exception {
+        assertThat(ASADMIN.exec("configure-managed-jobs",
+            "--job-retention-period=1h",
+            "--cleanup-initial-delay=0s",
+            "--cleanup-poll-interval=0s"), asadminOK());
         assertThat(ASADMIN.exec(COMMAND_PROGRESS_SIMPLE), asadminOK());
-        assertThat(ASADMIN.exec("stop-domain"), asadminOK());
-        assertThat(ASADMIN.exec("start-domain"), asadminOK());
+        assertThat(ASADMIN.exec("restart-domain", "--timeout", "60"), asadminOK());
         assertThat(ASADMIN.exec("list-jobs").getStdOut(), stringContainsInOrder(COMMAND_PROGRESS_SIMPLE, "COMPLETED"));
+        JobTestExtension.doAndDisableJobCleanup();
     }
 
 
@@ -73,8 +77,8 @@ public class JobManagerITest {
         assertThat(ASADMIN.exec("list-jobs", detached.getJobId()).getStdOut(), stringContainsInOrder(COMMAND_PROGRESS_SIMPLE));
         assertThat(ASADMIN.exec("attach", detached.getJobId()), asadminOK());
 
-        // list-jobs and it should be purged since the user
-        // starting is the same as the user who attached to it
+        JobTestExtension.doAndDisableJobCleanup();
+
         assertThat(ASADMIN.exec("list-jobs", detached.getJobId()).getOutput(), stringContainsInOrder("Nothing to list"));
     }
 
@@ -85,10 +89,13 @@ public class JobManagerITest {
         assertThat(ASADMIN.exec(COMMAND_PROGRESS_SIMPLE), asadminOK());
         assertThat(ASADMIN.exec("list-jobs").getStdOut(), stringContainsInOrder(COMMAND_PROGRESS_SIMPLE));
 
-        assertThat(ASADMIN.exec("configure-managed-jobs", "--job-retention-period=1s", "--cleanup-initial-delay=1s",
-            "--cleanup-poll-interval=1s"), asadminOK());
-        Thread.sleep(1100L);
-        assertThat("Completed jobs should be removed", ASADMIN.exec("list-jobs").getOutput(),
+        assertThat(ASADMIN.exec("configure-managed-jobs",
+            "--job-retention-period=0s",
+            "--cleanup-initial-delay=1s",
+            "--cleanup-poll-interval=60s"), asadminOK());
+
+        Thread.sleep(1500L);
+        assertThat("Completed jobs should be removed after delay", ASADMIN.exec("list-jobs").getOutput(),
             stringContainsInOrder("Nothing to list"));
     }
 }

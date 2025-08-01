@@ -46,11 +46,11 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -149,6 +149,7 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.runningDefaultC
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Upgrade service to add the default-config if it doesn't exist. 3.0.1 and v2.x developer profile do not have
@@ -166,7 +167,6 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
 
     private static final String DEFAULT_CONFIG = "default-config";
-    private static final String INSTALL_ROOT = "com.sun.aas.installRoot";
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DefaultConfigUpgrade.class);
     private static final Logger logger = ConfigApiLoggerInfo.getLogger();
 
@@ -189,24 +189,25 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
             return;
         }
 
-        String installRoot = System.getProperty(INSTALL_ROOT);
-        if (installRoot == null) {
+        String installRootProperty = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
+        if (installRootProperty == null) {
             logger.log(Level.INFO, installRootIsNull);
             return;
         }
-
+        Path installRoot = Path.of(installRootProperty);
         logger.log(Level.INFO, runningDefaultConfigUpgrade);
 
+        String templatefilename = Version.getDomainTemplateDefaultJarFileName();
+        Path templatefile = installRoot.resolve(Path.of("common", "templates", "gf", templatefilename));
         InputStream template = null;
         ZipFile templatezip = null;
-        String templatefilename = Version.getDomainTemplateDefaultJarFileName();
-        File templatefile = new File(new File(new File(new File(installRoot, "common"), "templates"), "gf"), templatefilename);
         try {
-            templatezip = new ZipFile(templatefile);
+            templatezip = new ZipFile(templatefile.toFile());
             ZipEntry domEnt = templatezip.getEntry("config/domain.xml");
             if (domEnt == null) {
-                throw new RuntimeException(localStrings.getLocalString("DefaultConfigUpgrade.cannotGetDomainXmlTemplate",
-                        "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0}", templatefile.getAbsolutePath()));
+                throw new RuntimeException(
+                    localStrings.getLocalString("DefaultConfigUpgrade.cannotGetDomainXmlTemplate",
+                        "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0}", templatefile));
             }
             template = templatezip.getInputStream(domEnt);
 
@@ -243,7 +244,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
             logger.log(Level.SEVERE, defaultConfigUpgradeFailure, ex);
         } catch (IOException ex) {
             throw new RuntimeException(localStrings.getLocalString("DefaultConfigUpgrade.cannotGetDomainXmlTemplate",
-                    "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0}", templatefile.getAbsolutePath()), ex);
+                    "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0}", templatefile), ex);
         } finally {
             try {
                 if (parser != null) {

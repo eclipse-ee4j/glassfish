@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,16 +17,21 @@
 
 -->
 
-<suite name="MicroProfile Rest Client TCK" verbose="2" configfailurepolicy="continue" >
-
+<suite name="MicroProfile Rest Client TCK" verbose="2" configfailurepolicy="skip" >
     <listeners>
-        <listener class-name="org.glassfish.microprofile.rest.client.tck.client.ProgressListener"/>
+        <listener class-name="org.glassfish.microprofile.rest.client.tck.client.ProgressListener" />
     </listeners>
-
-    <test name="MicroProfile Rest Client TCK">
+    <!-- Separated because they sometimes broke when running in the main block -->
+    <test name="MicroProfile Rest Client TCK - ASYNC Tests">
         <packages>
-            <package name="org.eclipse.microprofile.rest.client.tck.*" />
+            <package name="org.eclipse.microprofile.rest.client.tck.asynctests.*" />
         </packages>
     </test>
-
+    <test name="MicroProfile Rest Client TCK - Common Tests">
+        <packages>
+            <package name="org.eclipse.microprofile.rest.client.tck.*">
+                <exclude name="org.eclipse.microprofile.rest.client.tck.asynctests.*" />
+            </package>
+        </packages>
+    </test>
 </suite>

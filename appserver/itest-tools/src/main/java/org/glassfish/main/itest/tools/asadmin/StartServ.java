@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * Tool for executing startserv command.
@@ -122,7 +125,7 @@ public class StartServ {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeoutMsec(timeout);
+        processManager.setTimeout(timeout, false);
         processManager.setEcho(false);
         processManager.setTextToWaitFor(textToWaitFor);
         for (Entry<String, String> env : this.environment.entrySet()) {
@@ -132,8 +135,8 @@ public class StartServ {
             processManager.setEnvironment("AS_TRACE", "true");
         }
         // override any env property to what is used by tests
-        processManager.setEnvironment("JAVA_HOME", System.getProperty("java.home"));
-        processManager.setEnvironment("AS_JAVA", System.getProperty("java.home"));
+        processManager.setEnvironment(JAVA_HOME.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
+        processManager.setEnvironment(JAVA_ROOT.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
 
         int exitCode;
         String asadminErrorMessage = "";
@@ -149,8 +152,7 @@ public class StartServ {
         }
 
         final String stdErr = processManager.getStderr() + '\n' + asadminErrorMessage;
-        final AsadminResult result;
-        result = new AsadminResult(this.getCommandName(), exitCode, processManager.getStdout(), stdErr);
+        final AsadminResult result = new AsadminResult(getCommandName(), exitCode, processManager.getStdout(), stdErr);
         if (!result.getStdOut().isEmpty()) {
             System.out.println(result.getStdOut());
         }
@@ -158,6 +160,12 @@ public class StartServ {
             System.err.println(result.getStdErr());
         }
         return result;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.startServ.toString();
     }
 
 }

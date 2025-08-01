@@ -542,12 +542,12 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
             // Try a random instance in a cluster
             int useInstance = random.nextInt(instances.size());
             Server s0 = instances.get(useInstance);
-            if (s0.isRunning()) {
+            if (s0.isListeningOnAdminPort()) {
                 return s0.getName();
             } else {
                 // Pick the first running instead
                 for (Server s : instances) {
-                    if (s.isRunning()) {
+                    if (s.isListeningOnAdminPort()) {
                         return s.getName();
                     }
                 }

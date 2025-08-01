@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024,  Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,7 @@ import javax.security.auth.Subject;
 
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.api.StartupRunLevel;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.container.EndpointRegistrationException;
@@ -78,12 +79,11 @@ public class JerseyContainerCommandService implements PostConstruct {
         if (Boolean.parseBoolean(System.getenv("AS_INIT_REST_EAGER"))) {
             ExecutorService executor = Executors.newFixedThreadPool(8);
             this.future = executor.submit(() -> {
-                JerseyContainer result = exposeContext();
-                return result;
+                return exposeContext();
             });
             executor.execute(() -> {
-                CommandRunner cr = serviceLocator.getService(CommandRunner.class);
-                final CommandRunner.CommandInvocation invocation = cr.getCommandInvocation("uptime",
+                CommandRunner<?> cr = serviceLocator.getService(CommandRunner.class);
+                final CommandInvocation<?> invocation = cr.getCommandInvocation("uptime",
                     new PropsFileActionReporter(), kernelIdentity.getSubject());
                 invocation.parameters(new ParameterMap());
                 invocation.execute();

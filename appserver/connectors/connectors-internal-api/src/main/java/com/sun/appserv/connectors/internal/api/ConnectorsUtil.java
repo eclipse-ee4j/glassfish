@@ -82,8 +82,8 @@ import org.jvnet.hk2.config.types.PropertyBag;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * Util class for connector related classes
@@ -145,7 +145,7 @@ public class ConnectorsUtil {
      * @return directory location
      */
     public static String getSystemModuleLocation(String moduleName) {
-        String j2eeModuleDirName = System.getProperty(INSTALL_ROOT_PROPERTY) +
+        String j2eeModuleDirName = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) +
                 File.separator + "lib" +
                 File.separator + "install" +
                 File.separator + "applications" +

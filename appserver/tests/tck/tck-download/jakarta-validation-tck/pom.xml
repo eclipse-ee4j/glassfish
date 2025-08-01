@@ -40,8 +40,13 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
+                <configuration>
+                    <url>${tck.test.validation.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <id>download-validation-tck</id>
@@ -51,13 +56,8 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <url>${tck.test.validation.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
@@ -90,7 +90,7 @@
                             <packaging>jar</packaging>
                          </configuration>
                     </execution>
-                    
+
                     <execution>
                         <id>install-test-suite-xml</id>
                         <phase>process-resources</phase>

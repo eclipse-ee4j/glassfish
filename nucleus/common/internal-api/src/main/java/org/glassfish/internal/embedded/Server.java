@@ -39,6 +39,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.annotations.Contract;
 
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+
 
 
 /**
@@ -181,7 +183,7 @@ public class Server {
     private static final Logger logger = Logger.getAnonymousLogger();
 
     private void setBootstrapProperties(BootstrapProperties props, EmbeddedFileSystem fs) {
-        props.setProperty("GlassFish_Platform", "Embedded");
+        props.setProperty(OSGI_PLATFORM.getPropertyName(), "Embedded");
         if (fs != null) {
             String instanceRoot = fs.instanceRoot != null ? fs.instanceRoot.getAbsolutePath() : null;
             String installRoot = fs.installRoot != null ? fs.installRoot.getAbsolutePath() : instanceRoot;

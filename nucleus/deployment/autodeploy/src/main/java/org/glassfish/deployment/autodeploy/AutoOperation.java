@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +29,9 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.deployment.autodeploy.AutoDeployer.AutodeploymentStatus;
 import org.glassfish.hk2.api.PerLookup;
@@ -84,7 +87,7 @@ public abstract class AutoOperation {
     private AdminCommand command;
 
     @Inject
-    private CommandRunner commandRunner;
+    private CommandRunner<Job> commandRunner;
 
     @Inject
     private AutodeployRetryManager retryManager;
@@ -133,23 +136,22 @@ public abstract class AutoOperation {
     final AutodeploymentStatus run() throws AutoDeploymentException {
         try {
             ParameterMap p = new ParameterMap();
-            for (Map.Entry<Object,Object> entry : props.entrySet())
+            for (Map.Entry<Object,Object> entry : props.entrySet()) {
                 p.set((String)entry.getKey(), (String)entry.getValue());
+            }
             ActionReport report = commandRunner.getActionReport("hk2-agent");
-            CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation(commandName, report, internalSystemAdministrator.getSubject());
+            CommandInvocation<Job> inv = commandRunner.getCommandInvocation(commandName, report,
+                internalSystemAdministrator.getSubject());
             inv.parameters(p).execute(command);
             AutodeploymentStatus ds = AutodeploymentStatus.forExitCode(report.getActionExitCode());
             if (ds.status) {
-              deplLogger.log(Level.INFO,
-                             INFO_MSG,
-                             getMessageString(ds, file));
+                deplLogger.log(Level.INFO, INFO_MSG, getMessageString(ds, file));
             } else {
-                if(report.getMessage() != null){
+                if (report.getMessage() == null) {
+                    deplLogger.log(Level.WARNING, WARNING_MSG, getMessageString(ds, file));
+                } else {
                     deplLogger.log(Level.WARNING, WARNING_MSG, report.getMessage());
                 }
-              deplLogger.log(Level.WARNING,
-                             WARNING_MSG,
-                             getMessageString(ds, file));
             }
             markFiles(ds, file);
             /*
@@ -162,17 +164,14 @@ public abstract class AutoOperation {
             /*
              * Log and continue.
              */
-            deplLogger.log(Level.SEVERE,
-                           EXCEPTION_OCCURRED,
-                           ex);
+            deplLogger.log(Level.SEVERE, EXCEPTION_OCCURRED, ex);
             return AutodeploymentStatus.FAILURE;
         }
     }
 
     private File getSuffixedFile(File f, String suffix) {
         String absPath = f.getAbsolutePath();
-        File ret = new File(absPath + suffix);
-        return ret;
+        return new File(absPath + suffix);
     }
 
     /**
@@ -220,16 +219,14 @@ public abstract class AutoOperation {
         try {
             for (String suffix : autoDeployFileSuffixes) {
                 final File suffixedFile = getSuffixedFile(f, suffix);
-                if(suffixedFile.exists()){
-                    if ( ! suffixedFile.delete()) {
-                        deplLogger.log(Level.WARNING,
-                                       DELETE_FAILED,
-                                       suffixedFile.getAbsolutePath());
+                if (suffixedFile.exists()) {
+                    if (!suffixedFile.delete()) {
+                        deplLogger.log(Level.WARNING, DELETE_FAILED, suffixedFile.getAbsolutePath());
                     }
                 }
             }
         } catch (Exception e) {
-            //ignore
+            // ignore
         }
     }
 

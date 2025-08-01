@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +18,13 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 
 /**
  * This class defines the keys that are used to create the domain config object. Almost all the methods of
@@ -81,7 +83,7 @@ public class DomainConfig extends RepositoryConfig {
             ASenvPropertyReader pr = new ASenvPropertyReader();
             Map<String, String> envProperties = pr.getProps();
             if (envProperties != null) {
-                put(K_HOST_NAME, envProperties.get(SystemPropertyConstants.HOST_NAME_PROPERTY));
+                put(K_HOST_NAME, envProperties.get(HOST_NAME.getPropertyName()));
             }
         } catch (Exception ex) {
             throw new DomainException(ex);

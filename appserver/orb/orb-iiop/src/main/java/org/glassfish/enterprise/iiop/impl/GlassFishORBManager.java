@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,6 +55,8 @@ import org.glassfish.orb.admin.config.IiopService;
 import org.glassfish.orb.admin.config.Orb;
 import org.jvnet.hk2.config.types.Property;
 
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
+
 /**
  * This class initializes the ORB with a list of (standard) properties
  * and provides a few convenience methods to get the ORB etc.
@@ -69,10 +71,6 @@ public final class GlassFishORBManager {
     // by the ORB.
     private static final String ORB_CLASS = ORBImpl.class.getName();
     private static final String ORB_SINGLETON_CLASS = ORBSingleton.class.getName();
-
-    // FIXME: Doesn't exist in JDK9+
-    private static final String ORB_SE_CLASS = "com.sun.corba.se.impl.orb.ORBImpl";
-    private static final String ORB_SE_SINGLETON_CLASS = "com.sun.corba.se.impl.orb.ORBSingleton";
 
     private static final String PEORB_CONFIG_CLASS = PEORBConfigurator.class.getName();
     private static final String IIOP_SSL_SOCKET_FACTORY_CLASS = IIOPSSLSocketFactory.class.getName();
@@ -264,25 +262,11 @@ public final class GlassFishORBManager {
      * to a different ORB than the RMI-IIOP delegates.
      */
     private void setORBSystemProperties() {
-        java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<Object>() {
-
-            @Override
-            public java.lang.Object run() {
-                if (System.getProperty(OMG_ORB_CLASS_PROPERTY) == null) {
-                    System.setProperty(OMG_ORB_CLASS_PROPERTY, ORB_CLASS);
-                }
-
-                if (System.getProperty(OMG_ORB_SINGLETON_CLASS_PROPERTY) == null) {
-                    System.setProperty(OMG_ORB_SINGLETON_CLASS_PROPERTY, ORB_SINGLETON_CLASS);
-                }
-
-                System.setProperty(ORB_UTIL_CLASS_PROPERTY, RMI_UTIL_CLASS);
-                System.setProperty(RMIIIOP_STUB_DELEGATE_CLASS_PROPERTY, RMI_STUB_CLASS);
-                System.setProperty(RMIIIOP_PRO_DELEGATE_CLASS_PROPERTY, RMI_PRO_CLASS);
-
-                return null;
-            }
-        });
+        setProperty(OMG_ORB_CLASS_PROPERTY, ORB_CLASS, false);
+        setProperty(OMG_ORB_SINGLETON_CLASS_PROPERTY, ORB_SINGLETON_CLASS, false);
+        setProperty(ORB_UTIL_CLASS_PROPERTY, RMI_UTIL_CLASS, true);
+        setProperty(RMIIIOP_STUB_DELEGATE_CLASS_PROPERTY, RMI_STUB_CLASS, true);
+        setProperty(RMIIIOP_PRO_DELEGATE_CLASS_PROPERTY, RMI_PRO_CLASS, true);
     }
 
     /**
@@ -446,7 +430,7 @@ public final class GlassFishORBManager {
             // Can't run with GlassFishORBManager.class.getClassLoader() as the context ClassLoader
 
             // For ORB compatibility with JDK11+ JDKs see https://github.com/eclipse-ee4j/orb-gmbal/issues/22
-            System.setProperty("org.glassfish.gmbal.no.multipleUpperBoundsException", "true");
+            setProperty("org.glassfish.gmbal.no.multipleUpperBoundsException", "true", true);
             orb = ORBFactory.create();
             ORBFactory.initialize(orb, args, orbInitProperties, useOSGI);
 

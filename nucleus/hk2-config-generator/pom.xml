@@ -96,14 +96,13 @@
                     <instructions>
                         <Import-Package>*</Import-Package>
                         <_exportcontents>
-                            org.jvnet.hk2.config;version=${project.osgi.version},
-                            org.jvnet.hk2.config.api;version=${project.osgi.version},
-                            org.jvnet.hk2.config.provider;version=${project.osgi.version},
-                            org.jvnet.hk2.config.provider.internal;version=${project.osgi.version},
-                            org.jvnet.hk2.config.tiger;version=${project.osgi.version}
+                            org.jvnet.hk2.config,
+                            org.jvnet.hk2.config.api,
+                            org.jvnet.hk2.config.provider,
+                            org.jvnet.hk2.config.provider.internal,
+                            org.jvnet.hk2.config.tiger
                         </_exportcontents>
                         <_noimportjava>true</_noimportjava>
-                        <Specification-Version>${project.osgi.version}</Specification-Version>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

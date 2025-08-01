@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
 import com.sun.enterprise.transaction.spi.RecoveryEventListener;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.xml.ws.api.ha.HighAvailabilityProvider;
 import com.sun.xml.ws.tx.dev.WSATRuntimeConfig;
@@ -63,6 +62,8 @@ import org.glassfish.webservices.WebServicesDeployer;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
+
+import static org.glassfish.embeddable.GlassFishVariable.HOST_NAME;
 
 /**
  * @author Marek Potociar
@@ -299,7 +300,7 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
         // this value is calculated from InetAddress.getCanonicalHostName when the AS is
         // installed.  asadmin then passes this value as a system property when the server
         // is started.
-        return System.getProperty(SystemPropertyConstants.HOST_NAME_PROPERTY);
+        return System.getProperty(HOST_NAME.getSystemPropertyName());
     }
 
     /**

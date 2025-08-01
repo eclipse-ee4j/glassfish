@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,6 +54,9 @@ import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * GlassFish implementation of the EJBContainerProvider.
@@ -113,7 +116,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             boolean ok = false;
             Locations l = getLocations(properties);
             try {
-                System.setProperty(IS_EJB_CONTAINER, "true");
+                setProperty(IS_EJB_CONTAINER, "true", true);
                 createContainer(properties, l);
                 Set<DeploymentElement> modules = addModules(properties, l);
                 if (!DeploymentElement.hasEJBModule(modules)) {
@@ -137,7 +140,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                         _logger.info("[EJBContainerProviderImpl] Error cleaning up..." + t1);
                     }
                     container = null;
-                    System.clearProperty(IS_EJB_CONTAINER);
+                    setProperty(IS_EJB_CONTAINER, null, true);
                 }
             }
         }
@@ -145,7 +148,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
         return null; // not this provider
     }
 
-    private Locations createContainer(Map<?, ?> properties, Locations l) throws EJBException {
+    private void createContainer(Map<?, ?> properties, Locations l) throws EJBException {
         synchronized(lock) {
             // if (container == null || !container.isOpen()) {
             try {
@@ -229,8 +232,6 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             }
             // }
         }
-
-        return l;
     }
 
     /**
@@ -238,10 +239,10 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
      * is not specified, from the System classpath. Also adds library references.
      */
     private Set<DeploymentElement> addModules(Map<?, ?> properties, Locations l) {
-        Set<DeploymentElement> modules = new HashSet<DeploymentElement>();
+        Set<DeploymentElement> modules = new HashSet<>();
         Object obj = (properties == null)? null : properties.get(EJBContainer.MODULES);
         boolean skip_module_with_main_class = getBooleanProperty(properties, SKIP_CLIENT_MODULES);
-        Map<String, Boolean> moduleNames = new HashMap<String, Boolean>();
+        Map<String, Boolean> moduleNames = new HashMap<>();
 
         // Check EJBContainer.MODULES setting first - it can have an explicit set of files
         if (obj != null) {
@@ -344,10 +345,12 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
 
             return result;
         } finally {
-            if (archive != null)
+            if (archive != null) {
                 archive.close();
-            if (is != null)
+            }
+            if (is != null) {
                 is.close();
+            }
         }
     }
 
@@ -643,7 +646,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             Object value = properties.get(key);
             if (value != null) {
                 if (value instanceof String) {
-                    result = Boolean.valueOf((String)value);
+                    result = Boolean.parseBoolean((String)value);
                 } else {
                     try {
                         result = (Boolean) value;
@@ -660,7 +663,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
      */
     private void validateInstanceDirectory() {
         // Verify that the instance was created properly
-        File instance_directory = new File(System.getProperty("com.sun.aas.instanceRoot"));
+        File instance_directory = new File(System.getProperty(INSTANCE_ROOT.getSystemPropertyName()));
         if (!instance_directory.exists()) {
             throw new IllegalStateException("Unexpected ERROR: Instance directory " + instance_directory + " does not exist");
         } else if (!instance_directory.isDirectory()) {

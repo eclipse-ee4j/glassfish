@@ -287,7 +287,7 @@ public class ImportSyncBundleCommand extends LocalInstanceCommand {
             throw new CommandException(Strings.get("import.sync.bundle.createDirectoryFailed", targetDir.getPath()));
 
         }
-        Perm perm = new Perm(targetDir, null, logger);
+        Perm perm = new Perm(targetDir, null);
 
         try {
             perm.processParts(payload);

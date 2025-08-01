@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +51,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.objectweb.asm.ClassReader;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
 @Service(name = "generate-domain-schema")
 @PerLookup
 @ExecuteOn(value = { RuntimeType.DAS })
@@ -64,9 +67,9 @@ public class GenerateDomainSchema implements AdminCommand {
     private ServiceLocator habitat;
     @Param(name = "format", defaultValue = "html", optional = true)
     private String format;
-    private static final Logger logger = Logger.getLogger(GenerateDomainSchema.class.getPackage().getName());;
+    private static final Logger logger = Logger.getLogger(GenerateDomainSchema.class.getPackage().getName());
     File docDir;
-    private Map<String, ClassDef> classDefs = new HashMap<String, ClassDef>();
+    private final Map<String, ClassDef> classDefs = new HashMap<>();
     @Param(name = "showSubclasses", defaultValue = "false", optional = true)
     private Boolean showSubclasses;
     @Param(name = "showDeprecated", defaultValue = "false", optional = true)
@@ -77,7 +80,8 @@ public class GenerateDomainSchema implements AdminCommand {
         try {
             URI uri = new URI(System.getProperty("com.sun.aas.instanceRootURI"));
             docDir = new File(new File(uri), "config");
-            findClasses(classDefs, locateJarFiles(System.getProperty("com.sun.aas.installRoot") + "/modules"));
+            findClasses(classDefs,
+                locateJarFiles(System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + "/modules"));
 
             getFormat().output(new Context(classDefs, docDir, showDeprecated, showSubclasses, Domain.class.getName()));
             context.getActionReport().setMessage("Finished generating " + format + " documentation in " + docDir);
@@ -92,7 +96,7 @@ public class GenerateDomainSchema implements AdminCommand {
     }
 
     private List<JarFile> locateJarFiles(String modulesDir) throws IOException {
-        List<JarFile> result = new ArrayList<JarFile>();
+        List<JarFile> result = new ArrayList<>();
         final File[] files = new File(modulesDir).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {

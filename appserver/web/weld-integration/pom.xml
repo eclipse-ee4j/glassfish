@@ -185,6 +185,11 @@
             <artifactId>jta</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -197,18 +202,6 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <type>jar</type>
-            <version>8.0.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.glassfish.main.common</groupId>
-                    <artifactId>internal-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

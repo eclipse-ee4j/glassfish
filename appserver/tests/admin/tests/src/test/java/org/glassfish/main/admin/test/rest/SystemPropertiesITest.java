@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.glassfish.admin.rest.client.utils.MarshallingUtils.buildMapFromDocument;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -34,12 +35,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author jasonlee
  */
 public class SystemPropertiesITest extends RestTestBase {
-    public static final String URL_CONFIG_SYSTEM_PROPERTIES = "/domain/configs/config/%config%/system-properties";
-    public static final String URL_CLUSTER_SYSTEM_PROPERTIES = "/domain/clusters/cluster/%clusterName%/system-properties";
-    public static final String URL_INSTANCE_SYSTEM_PROPERTIES = "/domain/servers/server/%instanceName%/system-properties";
-    public static final String URL_DAS_SYSTEM_PROPERTIES = URL_INSTANCE_SYSTEM_PROPERTIES.replaceAll("%instanceName%", "server");
-    public static final String URL_CREATE_INSTANCE = "/domain/create-instance";
-    public static final String PROP_VALUE = "${com.sun.aas.instanceRoot}/foo";
+    private static final String URL_CONFIG_SYSTEM_PROPERTIES = "/domain/configs/config/%config%/system-properties";
+    private static final String URL_CLUSTER_SYSTEM_PROPERTIES = "/domain/clusters/cluster/%clusterName%/system-properties";
+    private static final String URL_INSTANCE_SYSTEM_PROPERTIES = "/domain/servers/server/%instanceName%/system-properties";
+    private static final String URL_DAS_SYSTEM_PROPERTIES = URL_INSTANCE_SYSTEM_PROPERTIES.replaceAll("%instanceName%", "server");
+    private static final String URL_CREATE_INSTANCE = "/domain/create-instance";
+    private static final String PROP_VALUE = INSTANCE_ROOT.toExpression() + "/foo";
 
     @Test
     public void getSystemProperties() {

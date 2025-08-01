@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.DomainDirs;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -37,6 +36,10 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.internal.api.RelativePathResolver;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  *  Base class for SSH provisioning commands.
@@ -153,9 +156,8 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                 //i18n
                 char[] mpArr = readPassword(Strings.get("DomainMasterPasswordPrompt", domain));
                 masterPass = mpArr != null ? new String(mpArr) : null;
-            }
-            else {
-                masterPass = "changeit"; //default
+            } else {
+                masterPass = KEYSTORE_PASSWORD_DEFAULT;
             }
         }
         return masterPass;
@@ -187,8 +189,8 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
             // get the list of domains
             File[] files = domainsDirFile.listFiles(File::isDirectory);
             for (File f : files) {
-                //the following property is required for initializing the password helper
-                System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, f.getAbsolutePath());
+                // the following property is required for initializing the password helper
+                setProperty(INSTANCE_ROOT.getSystemPropertyName(), f.getAbsolutePath(), true);
                 try {
                     final PasswordAdapter pa = new PasswordAdapter(null);
                     final boolean exists = pa.aliasExists(alias);

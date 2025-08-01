@@ -25,10 +25,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.osgi.framework.BundleException;
-
 /**
- * Tools for obtaining readable information from the {@link BundleException}
+ * Tools for obtaining readable information from the {@link org.osgi.framework.BundleException}
  */
 public class FelixPrettyPrinter {
 

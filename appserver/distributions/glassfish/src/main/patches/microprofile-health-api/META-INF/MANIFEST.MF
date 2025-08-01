@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-Description: MicroProfile Health :: API
+Bundle-License: Apache License, Version 2.0
+Bundle-SymbolicName: org.eclipse.microprofile.health
+Bnd-LastModified: 1664892780713
+Bundle-ManifestVersion: 2
+Bundle-DocURL: https://microprofile.io/project/eclipse/microprofile-he
+ alth/microprofile-health-api
+Bundle-Vendor: Eclipse Foundation
+Import-Package: jakarta.enterprise.util;version="[3.0,5)",jakarta.inje
+ ct;version="[2.0,4)",org.eclipse.microprofile.health;version="[3.0,5)
+ ",org.eclipse.microprofile.health.spi;version="[1.1,2)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-5.2.0.202010142003
+Export-Package: org.eclipse.microprofile.health;version="3.0";uses:="j
+ akarta.enterprise.util,jakarta.inject,org.eclipse.microprofile.health
+ .spi",org.eclipse.microprofile.health.spi;version="1.1";uses:="org.ec
+ lipse.microprofile.health"
+Bundle-Name: MicroProfile Health Check Bundle
+Bundle-Version: 4.0.1
+Bundle-SCM: url="https://github.com/eclipse/microprofile-health/microp
+ rofile-health-api",connection="scm:git:https://github.com/eclipse/mic
+ roprofile-health.git/microprofile-health-api",developer-connection="s
+ cm:git:git@github.com:eclipse/microprofile-health.git/microprofile-he
+ alth-api",tag="4.0.1"
+Build-Jdk-Spec: 1.8
+Created-By: 1.8.0_292 (AdoptOpenJDK)
+

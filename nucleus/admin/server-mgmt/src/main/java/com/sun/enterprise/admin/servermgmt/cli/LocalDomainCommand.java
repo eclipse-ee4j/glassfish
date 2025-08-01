@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +35,7 @@ import org.glassfish.api.admin.CommandValidationException;
  */
 public abstract class LocalDomainCommand extends LocalServerCommand {
     @Param(name = "domaindir", optional = true)
-    protected String domainDirParam = null;
+    protected String domainDirParam;
     // subclasses decide whether it's optional, required, or not allowed
     //@Param(name = "domain_name", primary = true, optional = true)
     private String userArgDomainName;
@@ -74,11 +75,10 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
 
     protected final String getDomainName() {
         // can't just use "dd" since it may be half-baked right now!
-
-        if (dd != null && dd.isValid())
+        if (dd != null && dd.isValid()) {
             return dd.getDomainName();
-        else // too early!
-            return userArgDomainName; // might be and is ok to be null
+        }
+        return userArgDomainName; // might be and is ok to be null
     }
 
     /**
@@ -95,8 +95,9 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
         try {
             File domainsDirFile = null;
 
-            if (ok(domainDirParam))
+            if (ok(domainDirParam)) {
                 domainsDirFile = new File(domainDirParam);
+            }
 
             dd = new DomainDirs(domainsDirFile, getDomainName());
             setServerDirs(dd.getServerDirs());

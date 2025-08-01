@@ -18,13 +18,13 @@ package com.sun.enterprise.config.util;
 
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.config.TransactionFailure;
 
 import static com.sun.enterprise.config.util.PortConstants.ADMIN;

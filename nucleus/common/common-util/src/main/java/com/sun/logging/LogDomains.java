@@ -113,11 +113,6 @@ public class LogDomains {
     public static final String SAAJ_LOGGER = DOMAIN_ROOT + "enterprise.system.webservices.saaj";
 
     /**
-     * Self Management Logger
-     */
-    public static final String SELF_MANAGEMENT_LOGGER = DOMAIN_ROOT + "enterprise.system.core.selfmanagement";
-
-    /**
      * SQL Tracing Logger
      */
     public static final String SQL_TRACE_LOGGER = DOMAIN_ROOT + "enterprise.resource.sqltrace";

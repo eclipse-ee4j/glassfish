@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,10 @@ import javax.net.ssl.X509KeyManager;
 
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static java.util.Collections.list;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
 /**
  * Handy class containing static functions.
@@ -177,11 +180,11 @@ public final class SSLUtils {
     }
 
     public static String getKeyStoreType() {
-        return System.getProperty(SecuritySupport.KEYSTORE_TYPE_PROP, KeyStore.getDefaultType());
+        return System.getProperty(KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
     }
 
     public static String getTrustStoreType() {
-        return System.getProperty(SecuritySupport.TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType());
+        return System.getProperty(TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
     }
 
     /**
@@ -286,7 +289,7 @@ public final class SSLUtils {
         try {
             mergedStore = securitySupport.loadNullStore("CaseExactJKS", securitySupport.getKeyStores().length - 1);
         } catch (KeyStoreException ex) {
-            mergedStore = securitySupport.loadNullStore("JKS", securitySupport.getKeyStores().length - 1);
+            mergedStore = securitySupport.loadNullStore(KEYSTORE_TYPE_DEFAULT, securitySupport.getKeyStores().length - 1);
         }
 
         String[] tokens = securitySupport.getTokenNames();

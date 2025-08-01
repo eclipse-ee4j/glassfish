@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -83,15 +83,12 @@ public class RecoverTransactionsBase {
     }
 
     private boolean isServerRunning(String serverName) {
-        boolean rs = false;
         for(Server server : servers.getServer()) {
             if(serverName.equals(server.getName())) {
-                rs = server.isRunning();
-                break;
+                return server.isListeningOnAdminPort();
             }
         }
-
-        return rs;
+        return false;
     }
 
 }

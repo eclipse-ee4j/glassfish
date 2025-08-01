@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,12 +24,11 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 /**
- *
  * @author jasonlee
  */
 public class RestActionReporter extends ActionReporter {
+
     public RestActionReporter() {
-        super();
         setExtraProperties(new Properties());
     }
 

@@ -44,14 +44,16 @@
 
         <path id="run.testng.classpath">
             <fileset dir="${glassfish.home}/modules">
-                <include name="**/hk2*.jar" />
-                <include name="**/glassfish-api.jar" />
-                <include name="**/amx-core.jar" />
-                <include name="**/amx-jakartaee.jar" />
-                <include name="**/management-api.jar" />
+                <include name="amx-core.jar" />
+                <include name="amx-jakartaee.jar" />
+                <include name="common-util.jar" />
+                <include name="glassfish-api.jar" />
+                <include name="hk2*.jar" />
+                <include name="management-api.jar" />
+                <include name="webservices-api-osgi.jar" />
             </fileset>
             <fileset dir="${glassfish.home}/lib">
-                <include name="**/gf-client.jar" />
+                <include name="gf-client.jar" />
             </fileset>
             <pathelement path="${plugin_classpath}" />
             <pathelement location="${Java_SE}" />
@@ -433,7 +435,7 @@
                 </linecontainsregexp>
             </filterchain>
         </loadfile>
-        
+
         <echo message="${line.separator}${line.separator}" />
         <echo message="=============================================================================" />
         <echo message="=  R u n n i n g   t h e   f o l l o w i n g    t e s t s:                  =" />
@@ -449,6 +451,10 @@
             <jvmarg value="-DASADMIN=${ASADMIN}" />
             <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
             <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+            <jvmarg value="--add-modules" />
+            <jvmarg value="ALL-MODULE-PATH" />
+            <jvmarg value="--module-path" />
+            <jvmarg value="${env.S1AS_HOME}/lib/bootstrap" />
             <sysproperty key="glassfish.home" value="${glassfish.home}" />
             <sysproperty key="BASEDIR" value="${basedir}" />
             <xmlfileset dir="." includes="${testng.xml}" />
@@ -473,10 +479,10 @@
 
 
     <!--  U N D E P L O Y    T E S T    A R C H I V E S  -->
-    
+
     <target name="undeploy">
          <record name="${basedir}/undeploy.output" action="start" />
-         
+
          <run-quicklook-test path="web/helloworld" target="undeploy" />
          <run-quicklook-test path="web/jsfastrologer" target="undeploy" />
          <run-quicklook-test path="web/jsfinjection" target="undeploy" />
@@ -491,7 +497,7 @@
          <run-quicklook-test path="weld/numberguess" target="undeploy" />
          <run-quicklook-test path="weld/osgiweld" target="undeploy" />
          <run-quicklook-test path="weld/extensions" target="undeploy" />
-         
+         <run-quicklook-test path="jms/injection" target="undeploy" />
          <record name="${basedir}/undeploy.output" action="stop" />
      </target>
 

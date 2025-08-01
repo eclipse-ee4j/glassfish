@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.admin.util.LineTokenReplacer;
 import com.sun.enterprise.admin.util.TokenValue;
 import com.sun.enterprise.admin.util.TokenValueSet;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Scope;
@@ -44,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,8 +53,10 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.glassfish.api.Param;
+import org.glassfish.api.ParamDefaultCalculator;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandModel.ParamModel;
@@ -66,6 +68,7 @@ import org.glassfish.common.util.admin.MapInjectionResolver;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.InjectionManager;
@@ -367,7 +370,7 @@ public abstract class CLICommand implements PostConstruct {
     public String getUsage() {
         String usage;
         if (commandModel != null && ok(usage = commandModel.getUsageText())) {
-            StringBuffer usageText = new StringBuffer();
+            StringBuilder usageText = new StringBuilder();
             usageText.append(strings.get("Usage", strings.get("Usage.brief", programOpts.getCommandName())));
             usageText.append(" ");
             usageText.append(usage);
@@ -382,90 +385,22 @@ public abstract class CLICommand implements PostConstruct {
         usageText.append(strings.get("Usage", strings.get("Usage.brief", programOpts.getCommandName())));
         usageText.append(" ");
         usageText.append(getName());
-        int len = usageText.length();
-        StringBuilder optText = new StringBuilder();
         String lsep = System.lineSeparator();
-        for (ParamModel opt : usageOptions()) {
-            optText.setLength(0);
-            final String optName = lc(opt.getName());
-            // "--terse" is part of asadmin utility options
-            if (optName.equals("terse")) {
+        // It is easier to find something if the options are sorted.
+        Collection<ParamModel> usageOptions = new ArrayList<>(usageOptions());
+        usageOptions.add(new NoValueModel("help", "?", true));
+        List<ParamModel> sorted = usageOptions.stream().sorted(new OptionComparator())
+            .collect(Collectors.toList());
+        for (ParamModel opt : sorted) {
+            String optText = toLine(opt);
+            if (optText == null) {
                 continue;
             }
-            // skip "hidden" options
-            if (optName.startsWith("_")) {
-                continue;
-            }
-            // do not want to display password as an option
-            if (opt.getParam().password()) {
-                continue;
-            }
-            // also do not want to display obsolete options
-            if (opt.getParam().obsolete()) {
-                continue;
-            }
-            // primary parameter is the operand, not an option
-            if (opt.getParam().primary()) {
-                continue;
-            }
-            boolean optional = opt.getParam().optional();
-            String defValue = opt.getParam().defaultValue();
-            if (optional) {
-                optText.append("[");
-            }
-            String sn = opt.getParam().shortName();
-            if (ok(sn)) {
-                optText.append('-').append(sn).append('|');
-            }
-            optText.append("--").append(optName);
-
-            if (opt.getType() == Boolean.class || opt.getType() == boolean.class) {
-                // canonicalize default value
-                if (ok(defValue) && Boolean.parseBoolean(defValue)) {
-                    defValue = "true";
-                } else {
-                    defValue = "false";
-                }
-                optText.append("[=<").append(optName);
-                optText.append(strings.get("Usage.default", defValue));
-                optText.append(">]");
-            } else { // STRING or FILE
-                if (ok(defValue)) {
-                    optText.append(" <").append(optName);
-                    optText.append(strings.get("Usage.default", defValue));
-                    optText.append('>');
-                } else {
-                    optText.append(" <").append(optName).append('>');
-                }
-            }
-            if (optional) {
-                optText.append("]");
-            }
-
-            if (len + 1 + optText.length() > 80) {
-                usageText.append(lsep).append('\t');
-                len = 8;
-            } else {
-                usageText.append(' ');
-                len++;
-            }
-            usageText.append(optText);
-            len += optText.length();
-        }
-
-        // add --help text
-        String helpText = "[-?|--help[=<help(default:false)>]]";
-        if (len + 1 + helpText.length() > 80) {
             usageText.append(lsep).append('\t');
-            len = 8;
-        } else {
-            usageText.append(' ');
-            len++;
+            usageText.append(optText);
         }
-        usageText.append(helpText);
-        len += helpText.length();
 
-        optText.setLength(0);
+        StringBuilder optText = new StringBuilder();
         ParamModel operandParam = getOperandModel();
         String opname = operandParam != null ? lc(operandParam.getName()) : null;
         if (!ok(opname)) {
@@ -492,15 +427,71 @@ public abstract class CLICommand implements PostConstruct {
                 }
             }
         }
-        if (len + 1 + optText.length() > 80) {
-            usageText.append(lsep).append('\t');
-            len = 8;
-        } else {
-            usageText.append(' ');
-            len++;
-        }
+        usageText.append(lsep).append('\t');
         usageText.append(optText);
         return usageText.toString();
+    }
+
+    private String toLine(ParamModel opt) {
+        final String optName = lc(opt.getName());
+        // "--terse" is part of asadmin utility options
+        if (optName.equals("terse")) {
+            return null;
+        }
+        // skip "hidden" options
+        if (optName.startsWith("_")) {
+            return null;
+        }
+        // do not want to display password as an option
+        if (opt.getParam().password()) {
+            return null;
+        }
+        // also do not want to display obsolete options
+        if (opt.getParam().obsolete()) {
+            return null;
+        }
+        // primary parameter is the operand, not an option
+        if (opt.getParam().primary()) {
+            return null;
+        }
+        StringBuilder optText = new StringBuilder();
+        boolean optional = opt.getParam().optional();
+        String defValue = opt.getParam().defaultValue();
+        if (optional) {
+            optText.append("[");
+        }
+        optText.append("--").append(optName);
+        String sn = opt.getParam().shortName();
+        if (ok(sn)) {
+            optText.append('|').append('-').append(sn);
+        }
+
+        if (opt.getType() == Boolean.class || opt.getType() == boolean.class) {
+            // canonicalize default value
+            if (ok(defValue) && Boolean.parseBoolean(defValue)) {
+                defValue = "true";
+            } else {
+                defValue = "false";
+            }
+            optText.append("[=<").append(optName);
+            optText.append(strings.get("Usage.default", defValue));
+            optText.append(">]");
+        } else if (opt.getType() == Void.class) {
+            // Don't add anything, value is always ignored.
+        } else {
+            // STRING or FILE
+            if (ok(defValue)) {
+                optText.append(" <").append(optName);
+                optText.append(strings.get("Usage.default", defValue));
+                optText.append('>');
+            } else {
+                optText.append(" <").append(optName).append('>');
+            }
+        }
+        if (optional) {
+            optText.append("]");
+        }
+        return optText.toString();
     }
 
     /**
@@ -613,7 +604,7 @@ public abstract class CLICommand implements PostConstruct {
             char c = value.charAt(i);
             if (c == '"' || c == '\\' || c == '\r' || c == '\n') {
                 // need to escape them and then quote the whole string
-                StringBuffer sb = new StringBuffer(len + 3);
+                StringBuilder sb = new StringBuilder(len + 3);
                 sb.append('"');
                 sb.append(value.substring(0, i));
                 int lastc = 0;
@@ -639,7 +630,7 @@ public abstract class CLICommand implements PostConstruct {
         }
 
         if (needQuoting) {
-            StringBuffer sb = new StringBuffer(len + 2);
+            StringBuilder sb = new StringBuilder(len + 2);
             sb.append('"').append(value).append('"');
             return sb.toString();
         } else {
@@ -1274,6 +1265,124 @@ public abstract class CLICommand implements PostConstruct {
             }
         } catch (IOException e) {
             throw new IllegalStateException("Could not parse resource file " + file, e);
+        }
+    }
+
+
+    /**
+     * options with short prefix should be before options without short prefix.
+     */
+    private static class OptionComparator implements Comparator<ParamModel> {
+
+        @Override
+        public int compare(ParamModel o1, ParamModel o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
+
+
+    private static class NoValueModel extends ParamModel {
+        private final Param param;
+
+        NoValueModel(String name, String shortName, boolean optional) {
+            this.param = new Param() {
+
+                @Override
+                public Class<? extends Annotation> annotationType() {
+                    return null;
+                }
+
+                @Override
+                public String shortName() {
+                    return shortName;
+                }
+
+                @Override
+                public char separator() {
+                    // no separator for no value
+                    return 0;
+                }
+
+                @Override
+                public boolean primary() {
+                    return false;
+                }
+
+                @Override
+                public boolean password() {
+                    return false;
+                }
+
+                @Override
+                public boolean optional() {
+                    return optional;
+                }
+
+                @Override
+                public boolean obsolete() {
+                    return false;
+                }
+
+                @Override
+                public String name() {
+                    return name;
+                }
+
+                @Override
+                public boolean multiple() {
+                    return false;
+                }
+
+                @Override
+                public String defaultValue() {
+                    return null;
+                }
+
+                @Override
+                public Class<? extends ParamDefaultCalculator> defaultCalculator() {
+                    return null;
+                }
+
+                @Override
+                public String alias() {
+                    return null;
+                }
+
+                @Override
+                public String acceptableValues() {
+                    return null;
+                }
+            };
+        }
+
+        @Override
+        public String getName() {
+            return param.name();
+        }
+
+        @Override
+        public Param getParam() {
+            return param;
+        }
+
+        @Override
+        public String getLocalizedDescription() {
+            return null;
+        }
+
+        @Override
+        public String getLocalizedPrompt() {
+            return null;
+        }
+
+        @Override
+        public String getLocalizedPromptAgain() {
+            return null;
+        }
+
+        @Override
+        public Class<Void> getType() {
+            return Void.class;
         }
     }
 }

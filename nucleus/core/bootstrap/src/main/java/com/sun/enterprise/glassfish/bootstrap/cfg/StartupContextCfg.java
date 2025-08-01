@@ -20,7 +20,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PLATFORM_PROPERTY_KEY;
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 public class StartupContextCfg {
 
@@ -30,7 +30,7 @@ public class StartupContextCfg {
 
 
     public StartupContextCfg(OsgiPlatform platform, ServerFiles files, Properties properties) {
-        properties.setProperty(PLATFORM_PROPERTY_KEY, platform.name());
+        properties.setProperty(OSGI_PLATFORM.getPropertyName(), platform.name());
         this.platform = platform;
         this.properties = properties;
         this.files = files;

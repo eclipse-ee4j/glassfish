@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +40,7 @@ import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.embeddable.Deployer;
@@ -73,7 +74,7 @@ public class DeployerImpl implements Deployer {
      */
 
     @Inject
-    ServiceLocator habitat;
+    private ServiceLocator habitat;
 
     @Inject
     private InternalSystemAdministrator kernelIdentity;
@@ -99,8 +100,8 @@ public class DeployerImpl implements Deployer {
             String command = "deploy";
             ActionReport actionReport = executer.createActionReport();
             ParameterMap commandParams = executer.getParameters(command, newParams);
-            org.glassfish.api.admin.CommandRunner.CommandInvocation inv = executer.getCommandRunner().getCommandInvocation(command,
-                    actionReport, kernelIdentity.getSubject());
+            CommandInvocation<?> inv = executer.getCommandRunner().getCommandInvocation(command, actionReport,
+                kernelIdentity.getSubject());
             inv.parameters(commandParams);
             // set outputbound payload if --retrieve option is specified.
             Payload.Outbound outboundPayload = null;
@@ -217,7 +218,7 @@ public class DeployerImpl implements Deployer {
 
             // Use the temp file's contents as the inbound payload to
             // correctly process the downloaded files.
-            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir, null, logger);
+            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir, null);
             try (FileInputStream payloadInputStream = new FileInputStream(payloadZip)) {
                 PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", payloadInputStream);
                 pfm.processParts(inboundPayload); // explodes the payloadZip.

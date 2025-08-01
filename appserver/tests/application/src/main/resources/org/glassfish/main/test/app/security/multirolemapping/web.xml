@@ -20,7 +20,7 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    
+
     <servlet>
         <servlet-name>WebTest</servlet-name>
         <servlet-class>org.glassfish.main.test.app.security.multirolemapping.WebTest</servlet-class>
@@ -29,7 +29,7 @@
         <servlet-name>WebTest</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-    
+
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

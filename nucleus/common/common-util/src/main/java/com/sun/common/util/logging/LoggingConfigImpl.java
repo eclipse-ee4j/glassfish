@@ -51,6 +51,7 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.ENABLED;
 import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.FORMATTER;
 import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.OUTPUT_FILE;
@@ -68,7 +69,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
     private static final Logger LOG = Logger.getLogger(LoggingConfigImpl.class.getName());
 
-    private static final String DEFAULT_SERVER_LOG_PATH = "${com.sun.aas.instanceRoot}/logs/server.log";
+    private static final String DEFAULT_SERVER_LOG_PATH = INSTANCE_ROOT.toExpression() + "/logs/server.log";
 
     private static final Map<String, String> DEFAULT_LOG_PROPERTIES = new HashMap<>();
     static {

@@ -109,25 +109,25 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                                
+
                                 <!-- Fixes missing osgi import-->
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
-                                
+
                                 <!-- To support Annnotations 4 -->
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
-                                
+
                                 <!-- Path for OSGI locator osgiresourcelocator -->
                                 <jarupdate
                                     basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-common.jar"
                                 />
-                                
+
                                 <!-- To have a manifest at all -->
                                 <jarupdate
                                     basedir="${patches}/jakarta-data-api" includes="META-INF/MANIFEST.MF"

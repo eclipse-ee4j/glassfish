@@ -17,8 +17,6 @@
 
 package com.sun.appserv.server.util;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,6 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * This class provides static methods to make accessible the version as well as
@@ -226,7 +225,7 @@ public class Version {
 
 
     private static Properties loadVersionProp() {
-        String installRoot = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String installRoot = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
         if (installRoot == null) {
             System.out.println("installRoot is null");
             return null;

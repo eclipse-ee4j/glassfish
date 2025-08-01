@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,10 +27,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
@@ -55,17 +57,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunner {
 
     @Inject
-    CommandRunner commandRunner;
+    private CommandRunner<?> commandRunner;
 
     @Inject
-    ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     @Inject
     private EmbeddedSystemAdministrator embeddedSystemAdministrator;
 
     private boolean terse;
-
-    private final Logger logger = Logger.getAnonymousLogger();
 
     @Override
     public CommandResult run(String command, String... args) {
@@ -78,7 +78,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
     }
 
     ParameterMap getParameters(String command, String[] args) throws CommandException {
-        CommandModel commandModel = commandRunner.getModel(command, logger);
+        CommandModel commandModel = commandRunner.getModel(command);
         if (commandModel == null) {
             throw new CommandException("Command lookup failed for command " + command);
         }
@@ -137,15 +137,12 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
      * @return
      * @throws CommandException
      */
-    /* package */ ActionReport executeCommand(String command, String... args) throws CommandException {
+    ActionReport executeCommand(String command, String... args) throws CommandException {
         ParameterMap commandParams = getParameters(command, args);
         final ActionReport actionReport = createActionReport();
-
-        org.glassfish.api.admin.CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation(command, actionReport,
-                embeddedSystemAdministrator.getSubject(), false);
-
+        Subject subject = embeddedSystemAdministrator.getSubject();
+        CommandInvocation<?> inv = commandRunner.getCommandInvocation(command, actionReport, subject);
         inv.parameters(commandParams).execute();
-
         return actionReport;
     }
 
@@ -210,10 +207,10 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
     }
 
     ActionReport createActionReport() {
-        return habitat.getService(ActionReport.class, "plain");
+        return serviceLocator.getService(ActionReport.class, "plain");
     }
 
-    CommandRunner getCommandRunner() {
+    CommandRunner<?> getCommandRunner() {
         return commandRunner;
     }
 

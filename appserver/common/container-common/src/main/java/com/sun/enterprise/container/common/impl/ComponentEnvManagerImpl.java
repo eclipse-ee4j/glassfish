@@ -433,19 +433,19 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     @Override
-    public void unbindFromComponentNamespace(JndiNameEnvironment JndiEnvironment) throws NamingException {
+    public void unbindFromComponentNamespace(JndiNameEnvironment jndiEnvironment) throws NamingException {
         // undeploy all descriptors
-        undeployAllDescriptors(JndiEnvironment);
+        undeployAllDescriptors(jndiEnvironment);
 
         // Unpublish any global entries exported by this environment
         Collection<JNDIBinding> globalBindings = new ArrayList<>();
-        addJNDIBindings(JndiEnvironment, ScopeType.GLOBAL, globalBindings);
+        addJNDIBindings(jndiEnvironment, ScopeType.GLOBAL, globalBindings);
 
         for (JNDIBinding globalBinding : globalBindings) {
             namingManager.unpublishObject(globalBinding.getName());
         }
 
-        Application app = getApplicationFromEnv(JndiEnvironment);
+        Application app = getApplicationFromEnv(jndiEnvironment);
 
         // undeploy data-sources & mail-sessions exposed by app-client descriptors.
         Set<ApplicationClientDescriptor> appClientDescriptors = app.getBundleDescriptors(ApplicationClientDescriptor.class);
@@ -453,9 +453,9 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             undeployAllDescriptors(appClientDescriptor);
         }
 
-        if (!(JndiEnvironment instanceof ApplicationClientDescriptor) && (app.getBundleDescriptors(ApplicationClientDescriptor.class).size() > 0)) {
+        if (!(jndiEnvironment instanceof ApplicationClientDescriptor) && (app.getBundleDescriptors(ApplicationClientDescriptor.class).size() > 0)) {
             Collection<JNDIBinding> appBindings = new ArrayList<>();
-            addJNDIBindings(JndiEnvironment, ScopeType.APP, appBindings);
+            addJNDIBindings(jndiEnvironment, ScopeType.APP, appBindings);
             for (JNDIBinding appBinding : appBindings) {
                 namingManager.unpublishObject(
                     componentNamingUtil.composeInternalGlobalJavaAppName(app.getAppName(), appBinding.getName()));
@@ -463,15 +463,24 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             }
         }
 
-        if (JndiEnvironment instanceof Application) {
-            namingManager.unbindAppObjects(getApplicationName(JndiEnvironment));
+        if (jndiEnvironment instanceof Application) {
+            Application application = (Application)jndiEnvironment;
+            final String applicationName = getApplicationName(application);
+            namingManager.unbindAppObjects(applicationName);
+            unregisterAllEjbs(application);
         } else {
             // Unbind anything in the component namespace
-            String componentEnvId = getComponentEnvId(JndiEnvironment);
+            String componentEnvId = getComponentEnvId(jndiEnvironment);
             namingManager.unbindComponentObjects(componentEnvId);
             this.unregister(componentEnvId);
         }
 
+    }
+
+    private void unregisterAllEjbs(Application application) {
+        application.getEjbDescriptors().stream()
+                .map(this::getComponentEnvId)
+                .forEach(compId2Env::remove);
     }
 
     private void undeployAllDescriptors(JndiNameEnvironment env) {

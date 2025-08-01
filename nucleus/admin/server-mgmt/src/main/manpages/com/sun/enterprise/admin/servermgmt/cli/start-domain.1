@@ -1,14 +1,21 @@
 start-domain(1)           asadmin Utility Subcommands          start-domain(1)
 
 NAME
-       start-domain - starts the DAS of the specified domain
+       start-domain - starts the Domain Administration Server of the specified domain
 
 SYNOPSIS
-           start-domain [--help]
-           [--debug={true|false}] [--domaindir domain-dir]
-           [--dry-run={true|false}] [--upgrade={true|false}]
-           [--verbose={true|false}] [--watchdog={true|false}]
-           [domain-name]
+        start-domain
+        [--debug|-d[=<debug(default:false)>]]
+        [--domaindir <domaindir>]
+        [--drop-interrupted-commands[=<drop-interrupted-commands(default:false)>]]
+        [--dry-run|-n[=<dry-run(default:false)>]]
+        [--help|-?]
+        [--suspend|-s[=<suspend(default:false)>]]
+        [--timeout <timeout>]
+        [--upgrade[=<upgrade(default:false)>]]
+        [--verbose|-v[=<verbose(default:false)>]]
+        [--watchdog|-w[=<watchdog(default:false)>]]
+        [domain_name]
 
 DESCRIPTION
        The start-domain subcommand starts the domain administration server
@@ -52,9 +59,6 @@ DESCRIPTION
            +----------------------------------------+
 
 OPTIONS
-       --help, -?
-           Displays the help text for the subcommand.
-
        --debug, -d
            Specifies whether the domain is started with Java Platform Debugger
            Architecture (JPDA)
@@ -72,6 +76,16 @@ OPTIONS
            false
                The instance is started with JPDA debugging disabled (default).
 
+       --domaindir
+           The domain root directory, which contains the directory of the
+           domain that is to be restarted. If specified, the path must be
+           accessible in the file system. The default location of the domain
+           root directory is as-install/domains.
+
+       --drop-interrupted-commands
+           If you used --detach with commands supporting checkpoints, this
+           option specifies whether to drop the commands that were interrupted.
+
        --dry-run, -n
            Suppresses actual starting of the domain. Instead, start-domain
            displays the full java command that would be used to start the
@@ -80,11 +94,30 @@ OPTIONS
 
            The default value is false.
 
-       --domaindir
-           The domain root directory, which contains the directory of the
-           domain that is to be restarted. If specified, the path must be
-           accessible in the file system. The default location of the domain
-           root directory is as-install/domains.
+       --help, -?
+           Displays the help text for the subcommand.
+
+       --suspend, -s
+           Specifies whether the domain is started with Java Platform Debugger
+           Architecture (JPDA) debugging enabled and suspends the newly started VM
+           before the main class loads.
+           When a debugger connects, it can send a JDWP command to resume the suspended VM.
+           With debugging enabled extra exceptions can be printed.
+
+           Possible values are as follows:
+
+          true
+              The instance is started with JPDA debugging enabled and a suspend policy
+              of `SUSPEND_ALL`. The port number for JPDA debugging is displayed.
+
+          false
+              The instance is started with JPDA debugging disabled (default).
+
+       --timeout
+            Specifies timeout in seconds to evaluate the expected result.
+            If the timeout is exceeded, the command fails - however it does
+            not mean it did not make any changes. The domain status is unknown
+            in such case.
 
        --upgrade
            Specifies whether the configuration of the domain administration
@@ -183,4 +216,4 @@ SEE ALSO
        Java Platform Debugger Architecture (JPDA)
        (https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
 
-Jakarta EE 10                         21 Aug 2017                  start-domain(1)
+Jakarta EE 10                         26 Jun 2025                  start-domain(1)

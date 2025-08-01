@@ -2,6 +2,108 @@
 
 Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Specifications. For each specification we are required by the [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php) to publish a summary of the TCK results.
 
+# Jakarta EE 11.0 Certifications
+
+## Jakarta EE Platform, 11.0, Eclipse GlassFish 8.0.0-M12
+
+* [Jakarta EE Platform 11.0](certifications/jakarta-platform/11/TCK-Results-8.0.0-M12.md)
+* Includes results for
+  * Jakarta Activation 2.1
+  * Jakarta Authentication 3.1
+  * Jakarta Authorization 3.0
+  * Jakarta Batch 2.1
+  * Jakarta Contexts and Dependency Injection 4.1
+  * Jakarta Concurrency 3.1
+  * Jakarta Data 1.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Debugging Support for Other Languages 2.0
+  * Jakarta Faces 4.1
+  * Jakarta JSON Binding 3.0
+  * Jakarta JSON Processing 2.1
+  * Jakarta Mail 2.1
+  * Jakarta Pages 4.0
+  * Jakarta REST 4.0
+  * Jakarta Security
+  * Jakarta Servlet 6.1
+  * Jakarta Validation 3.1
+  * Jakarta WebSocket 2.2
+
+## Jakarta EE Platform Web Profile, 11.0, Eclipse GlassFish Web Profile 8.0.0-M10
+
+* [Jakarta EE, Web Profile 11.0](certifications/jakarta-web-profile/11/TCK-Results-8.0.0-M10.md)
+* Includes results for
+  * Jakarta Authentication 3.1
+  * Jakarta Contexts and Dependency Injection 4.1
+  * Jakarta Concurrency 3.1
+  * Jakarta Data 1.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Debugging Support for Other Languages 2.0 TCK
+  * Jakarta Faces 4.1
+  * Jakarta JSON Binding 3.0 TCK
+  * Jakarta JSON Processing 2.1 TCK
+  * Jakarta Pages 4.0 TCK
+  * Jakarta REST 4.0 TCK
+  * Jakarta Security 4.0
+  * Jakarta Servlet 6.1
+  * Jakarta Validation 3.1
+  * Jakarta WebSocket 2.2
+
+# Jakarta EE 10.0 Certifications
+
+## Jakarta EE Platform, 10.0, Eclipse GlassFish 7.0.0-M8
+* [Jakarta EE Platform 10.0](certifications/jakarta-platform/10/TCK-Results-7.0.0-M8.md)
+* Includes results for
+  * Jakarta Concurrency 3.0
+  * Jakarta JSON Processing 2.1
+  * Jakarta JSON Binding 3.0
+  * Jakarta RESTful Web Services 3.1
+  * Jakarta Security 3.0
+  * Jakarta Authentication 3.0
+  * Jakarta Faces 4.0
+  * Jakarta Contexts and Dependency Injection 4.0
+  * Jakarta Batch 2.1
+  * Jakarta Activation 2.1
+  * Jakarta Mail 2.1
+  * Jakarta XML Binding 4.0
+  * Jakarta Bean Validation 3.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Debugging Support for Other Languages 2.0
+
+## Jakarta EE Platform, 10.0, Eclipse GlassFish 7.0.0-M7
+* [Jakarta EE Platform 10.0](certifications/jakarta-platform/10/TCK-Results-7.0.0-M7.md)
+* Includes results for
+  * Jakarta Concurrency 3.0
+  * Jakarta JSON Processing 2.1
+  * Jakarta JSON Binding 3.0
+  * Jakarta RESTful Web Services 3.1
+  * Jakarta Security 3.0
+  * Jakarta Authentication 3.0
+  * Jakarta Faces 4.0
+  * Jakarta Contexts and Dependency Injection 4.0
+  * Jakarta Batch 2.1
+  * Jakarta Activation 2.1
+  * Jakarta Mail 2.1
+  * Jakarta XML Binding 4.0
+  * Jakarta Bean Validation 3.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Debugging Support for Other Languages 2.0
+
+## Jakarta EE 10.0 Platform Web Profile, 10.0, Eclipse GlassFish Web Profile 7.0.0-M8
+
+* [Jakarta EE, Web Profile 10.0](certifications/jakarta-web-profile/10/TCK-Results-7.0.0-M8.md)
+* Includes results for
+  * Jakarta Concurrency 3.0
+  * Jakarta JSON Processing 2.1
+  * Jakarta JSON Binding 3.0
+  * Jakarta RESTful Web Services 3.1
+  * Jakarta Security 3.0
+  * Jakarta Authentication 3.0
+  * Jakarta Faces 4.0
+  * Jakarta Contexts and Dependency Injection 4.0
+  * Jakarta Bean Validation 3.0
+  * Jakarta Dependency Injection 2.0
+  * Jakarta Debugging Support for Other Languages 2.0
+
 # Jakarta EE 9 Certifications
 
 ## Jakarta EE Platform, 9.1, Eclipse GlassFish 6.1
@@ -14,7 +116,7 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
   * Jakarta Bean Validation 3.0 
   * Jakarta XML Binding 3.0
 
-## Jakarta EE Platform Web Profile, 9.1, Eclipse GlassFish Web Procile 6.1
+## Jakarta EE Platform Web Profile, 9.1, Eclipse GlassFish Web Profile 6.1
 
 * [Jakarta EE, Web Profile 9.1](certifications/jakarta-web-profile/9.1/TCK-Results-6.1)
 * Includes results for

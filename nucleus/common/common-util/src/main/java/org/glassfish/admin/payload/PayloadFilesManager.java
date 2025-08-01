@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,12 +37,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.Payload.Part;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Manages transferred files delivered via the request or response {@link Payload}.
@@ -67,12 +70,11 @@ import org.glassfish.api.admin.Payload.Part;
  * @author tjquinn
  */
 public abstract class PayloadFilesManager {
-
+    private static final Logger LOG = System.getLogger(PayloadFilesManager.class.getName());
     private static final String XFER_DIR_PREFIX = "xfer-";
-    public final static LocalStringManagerImpl strings = new LocalStringManagerImpl(PayloadFilesManager.class);
+    private static final LocalStringManagerImpl strings = new LocalStringManagerImpl(PayloadFilesManager.class);
 
     private final File targetDir;
-    protected final Logger logger;
     private final ActionReport report;
     private final ActionReportHandler reportHandler;
 
@@ -81,19 +83,16 @@ public abstract class PayloadFilesManager {
     private PayloadFilesManager(
             final File targetDir,
             final ActionReport report,
-            final Logger logger,
             final ActionReportHandler reportHandler) {
         this.targetDir = targetDir;
         this.report = report;
-        this.logger = logger;
         this.reportHandler = reportHandler;
     }
 
     private PayloadFilesManager(
             final File targetDir,
-            final ActionReport report,
-            final Logger logger) {
-        this(targetDir, report, logger, null);
+            final ActionReport report) {
+        this(targetDir, report, null);
     }
 
     protected File getTargetDir() {
@@ -166,10 +165,9 @@ public abstract class PayloadFilesManager {
          * will be anchored at the specified target directory.
          * @param targetDir directory under which the payload's files should be stored
          * @param report result report to which extraction results will be appened
-         * @param logger logger to receive messages
          */
-        public Perm(final File targetDir, final ActionReport report, final Logger logger) {
-            this(targetDir, report, logger, null);
+        public Perm(final File targetDir, final ActionReport report) {
+            this(targetDir, report, null);
         }
 
         /**
@@ -177,24 +175,19 @@ public abstract class PayloadFilesManager {
          * the specified target directory.
          * @param targetDir directory under which the payload's files should be stored
          * @param report result report to which extraction results will be appened
-         * @param logger logger to receive messages
          * @param reportHandler handler to invoke for each ActionReport in the payload
          */
-        public Perm(final File targetDir, final ActionReport report,
-                final Logger logger, final ActionReportHandler reportHandler) {
-            super(targetDir != null ? targetDir :
-                    new File(System.getProperty("user.dir")),
-                    report, logger, reportHandler);
+        public Perm(final File targetDir, final ActionReport report, final ActionReportHandler reportHandler) {
+            super(targetDir != null ? targetDir : new File(System.getProperty("user.dir")), report, reportHandler);
         }
 
         /**
          * Creates a new PayloadFilesManager for permanent files anchored at
          * the caller's current directory.
          * @param report result report to which extraction results will be appended
-         * @param logger logger to receive messages
          */
-        public Perm(final ActionReport report, final Logger logger) {
-            this(report, logger, null);
+        public Perm(final ActionReport report) {
+            this(report,  null);
         }
 
 
@@ -202,21 +195,10 @@ public abstract class PayloadFilesManager {
          * Creates a new PayloadFilesManager for permanent files anchored at
          * the caller's current directory.
          * @param report result report to which extraction results will be appened
-         * @param logger logger to receive messages
          * @param reportHandler handler to invoke for each ActionReport in the payload
          */
-        public Perm(final ActionReport report, final Logger logger,
-                final ActionReportHandler reportHandler) {
-            super(new File(System.getProperty("user.dir")), report, logger, reportHandler);
-        }
-
-        /**
-         * Creates a new PayloadFilesManager for permanent files anchored at
-         * the caller's current directory.
-         * @param logger logger to receive messages
-         */
-        public Perm(final Logger logger) {
-            this(null, logger);
+        public Perm(final ActionReport report, final ActionReportHandler reportHandler) {
+            super(new File(System.getProperty("user.dir")), report, reportHandler);
         }
 
         /**
@@ -228,7 +210,7 @@ public abstract class PayloadFilesManager {
         }
 
         public Perm(final ActionReportHandler reportHandler) {
-            this(null, Logger.getLogger(Perm.class.getName()), reportHandler);
+            this(null, reportHandler);
         }
 
         @Override
@@ -238,21 +220,16 @@ public abstract class PayloadFilesManager {
 
         @Override
         protected void postProcessParts() {
-            final boolean isFine = logger.isLoggable(Level.FINE);
             for (Map.Entry<File,Long> entry : dirTimestamps.entrySet()) {
-                if (isFine) {
-                    final Date when = new Date(entry.getValue());
-                    logger.log(Level.FINER, "Setting lastModified for {0} explicitly to {1}", new Object[]{entry.getKey().getAbsolutePath(), when});
-                }
-                if ( ! entry.getKey().setLastModified(entry.getValue())) {
-                    logger.log(Level.WARNING, strings.getLocalString(
-                            "payload.setLatModifiedFailed",
-                            "Attempt to set lastModified for {0} failed; no further information is available.  Continuing.",
-                            entry.getKey().getAbsoluteFile()));
+                final Date when = new Date(entry.getValue());
+                LOG.log(DEBUG, "Setting lastModified for {0} explicitly to {1}", entry.getKey(), when);
+                if (!entry.getKey().setLastModified(entry.getValue())) {
+                    LOG.log(Level.WARNING, strings.getLocalString("payload.setLatModifiedFailed",
+                        "Attempt to set lastModified for {0} failed; no further information is available. Continuing.",
+                        entry.getKey().getAbsoluteFile()));
                 }
             }
         }
-
 
     }
 
@@ -266,28 +243,26 @@ public abstract class PayloadFilesManager {
 
         private boolean isCleanedUp = false;
 
-        public Temp(final File parentDir, final ActionReport report, final Logger logger) throws IOException {
-            super(createTempFolder(parentDir, logger), report, logger);
+        public Temp(final File parentDir, final ActionReport report) throws IOException {
+            super(createTempFolder(parentDir), report);
         }
 
 
         /**
          * Creates a new PayloadFilesManager for temporary files.
          * @param report results report to which extraction results will be appended
-         * @param logger logger to receive messages
          * @throws java.io.IOException
          */
-        public Temp(final ActionReport report, final Logger logger) throws IOException {
-            this(new File(System.getProperty("java.io.tmpdir")), report, logger);
+        public Temp(final ActionReport report) throws IOException {
+            this(new File(System.getProperty("java.io.tmpdir")), report);
         }
 
         /**
          * Creates a new PayloadFilesManager for temporary files.
-         * @param logger logger to receive messages
          * @throws java.io.IOException
          */
-        public Temp(final Logger logger) throws IOException {
-            this(null, logger);
+        public Temp() throws IOException {
+            this(null);
         }
 
         /**
@@ -339,28 +314,22 @@ public abstract class PayloadFilesManager {
     }
 
     private File removeFileWithoutConsumingPartBody(final Payload.Part part) throws IOException {
-        final boolean isFine = logger.isLoggable(Level.FINE);
         File targetFile = new File(getOutputFileURI(part, part.getName()));
         if (targetFile.exists()) {
             final boolean isRemovalRecursive = targetFile.isDirectory() && part.isRecursive();
-            if (isRemovalRecursive ?
-                    FileUtils.whack(targetFile) : targetFile.delete()) {
-                if (isFine) {
-                    logger.log(Level.FINER, "Deleted {0}{1} as requested", new Object[]{targetFile.getAbsolutePath(), isRemovalRecursive ? " recursively" : ""});
-                }
+            if (isRemovalRecursive ? FileUtils.whack(targetFile) : targetFile.delete()) {
+                LOG.log(DEBUG, "Deleted {0}{1} as requested", targetFile.getAbsolutePath(),
+                    isRemovalRecursive ? " recursively" : "");
                 reportDeletionSuccess();
             } else {
-                if (isFine) {
-                    logger.log(Level.FINER, "File {0} ({1}) requested for deletion exists but was not able to be deleted", new Object[]{part.getName(), targetFile.getAbsolutePath()});
-                }
-                reportDeletionFailure(part.getName(),
-                        strings.getLocalString("payload.deleteFailedOnFile",
-                        "Requested deletion of {0} failed; the file was found but the deletion attempt failed - no reason is available"));
+                LOG.log(DEBUG, "File {0} ({1}) requested for deletion exists but was not able to be deleted",
+                    part.getName(), targetFile.getAbsolutePath());
+                reportDeletionFailure(part.getName(), strings.getLocalString("payload.deleteFailedOnFile",
+                    "Requested deletion of {0} failed; the file was found but the deletion attempt failed - no reason is available"));
             }
         } else {
-            if (isFine) {
-                logger.log(Level.FINER, "File {0} ({1}) requested for deletion does not exist.", new Object[]{part.getName(), targetFile.getAbsolutePath()});
-            }
+            LOG.log(DEBUG, "File {0} ({1}) requested for deletion does not exist.", part.getName(),
+                targetFile.getAbsolutePath());
             reportDeletionFailure(part.getName(), new FileNotFoundException(targetFile.getAbsolutePath()));
         }
         return targetFile;
@@ -407,7 +376,7 @@ public abstract class PayloadFilesManager {
             // Create the required directory tree under the target directory.
             File immediateParent = extractedFile.getParentFile();
             if (!immediateParent.exists() && !immediateParent.mkdirs()) {
-                logger.log(Level.WARNING, strings.getLocalString(
+                LOG.log(Level.WARNING, strings.getLocalString(
                         "payload.mkdirsFailed",
                         "Attempt to create directories for {0} failed; no further information is available. Continuing.",
                         immediateParent));
@@ -416,11 +385,11 @@ public abstract class PayloadFilesManager {
                 if (!extractedFile.delete() && !extractedFile.isDirectory()) {
                     // Don't warn if we cannot delete the directory - there
                     // are likely to be files in it preventing its removal.
-                    logger.warning(strings.getLocalString("payload.overwrite",
+                    LOG.log(WARNING, strings.getLocalString("payload.overwrite",
                         "Overwriting previously-uploaded file because the attempt to delete it failed: {0}",
                         extractedFile));
                 } else {
-                    logger.log(Level.FINER, "Deleted pre-existing file {0} before extracting transferred file", extractedFile);
+                    LOG.log(DEBUG, "Deleted pre-existing file {0} before extracting transferred file", extractedFile);
                 }
             }
 
@@ -428,7 +397,7 @@ public abstract class PayloadFilesManager {
             // Part's body but we won't write anything into the directory file.
             if (outputName.endsWith("/")) {
                 if (!extractedFile.exists() && !extractedFile.mkdir()) {
-                    logger.log(Level.WARNING, strings.getLocalString("payload.mkdirsFailed",
+                    LOG.log(Level.WARNING, strings.getLocalString("payload.mkdirsFailed",
                         "Attempt to create directories for {0} failed; no further information is available. Continuing.",
                         extractedFile));
                 }
@@ -448,7 +417,7 @@ public abstract class PayloadFilesManager {
             final long lastModified = lastModifiedString == null ? System.currentTimeMillis() : Long.parseLong(lastModifiedString);
 
             if (!extractedFile.setLastModified(lastModified)) {
-                logger.log(Level.WARNING,
+                LOG.log(Level.WARNING,
                     strings.getLocalString("payload.setLatModifiedFailed",
                         "Attempt to set lastModified for {0} failed; no further information is available.  Continuing.",
                         extractedFile));
@@ -457,7 +426,7 @@ public abstract class PayloadFilesManager {
                 dirTimestamps.put(extractedFile, lastModified);
             }
             postExtract(extractedFile);
-            logger.log(Level.FINER, "Extracted transferred entry {0} of size {1} B to {2}",
+            LOG.log(DEBUG, "Extracted transferred entry {0} of size {1} B to {2}",
                 new Object[] {part.getName(), extractedFile.length(), extractedFile});
             reportExtractionSuccess();
             return extractedFile;
@@ -578,34 +547,27 @@ public abstract class PayloadFilesManager {
      * @return the temporary folder
      * @throws java.io.IOException
      */
-    private static File createTempFolder(final File parent, final String prefix, final Logger logger) throws IOException {
+    private static File createTempFolder(final File parent, final String prefix) throws IOException {
         File result = File.createTempFile(prefix, "", parent);
         try {
-            if ( ! result.delete()) {
-                throw new IOException(
-                        strings.getLocalString(
-                            "payload.command.errorDeletingTempFile",
-                            "Unknown error deleting temporary file {0}",
-                            result.getAbsolutePath()));
+            if (!result.delete()) {
+                throw new IOException(strings.getLocalString("payload.command.errorDeletingTempFile",
+                    "Unknown error deleting temporary file {0}", result.getAbsolutePath()));
             }
-            if ( ! result.mkdir()) {
-                throw new IOException(
-                        strings.getLocalString(
-                            "payload.command.errorCreatingDir",
-                            "Unknown error creating directory {0}",
-                            result.getAbsolutePath()));
+            if (!result.mkdir()) {
+                throw new IOException(strings.getLocalString("payload.command.errorCreatingDir",
+                    "Unknown error creating directory {0}", result.getAbsolutePath()));
             }
-            logger.log(Level.FINER, "Created temporary upload folder {0}", result.getAbsolutePath());
+            LOG.log(Level.DEBUG, "Created temporary upload folder {0}", result.getAbsolutePath());
             return result;
         } catch (Exception e) {
-            throw new IOException(strings.getLocalString(
-                    "payload.command.errorCreatingXferFolder",
-                    "Error creating temporary file transfer folder"), e);
+            throw new IOException(strings.getLocalString("payload.command.errorCreatingXferFolder",
+                "Error creating temporary file transfer folder"), e);
         }
     }
 
-    private static File createTempFolder(final File parent, final Logger logger) throws IOException {
-        return createTempFolder(parent, XFER_DIR_PREFIX, logger);
+    private static File createTempFolder(final File parent) throws IOException {
+        return createTempFolder(parent, XFER_DIR_PREFIX);
     }
 
     /**

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,8 +38,8 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -104,14 +105,17 @@ public abstract class DeleteNodeRemoteCommand implements AdminCommand {
             SshConnector sshC = node.getSshConnector();
             SshAuth sshAuth = sshC.getSshAuth();
 
-            if (sshAuth.getPassword() != null)
+            if (sshAuth.getPassword() != null) {
                 info.add(NodeUtils.PARAM_REMOTEPASSWORD, sshAuth.getPassword());
+            }
 
-            if (sshAuth.getKeyPassphrase() != null)
+            if (sshAuth.getKeyPassphrase() != null) {
                 info.add(NodeUtils.PARAM_SSHKEYPASSPHRASE, sshAuth.getKeyPassphrase());
+            }
 
-            if (sshAuth.getKeyfile() != null)
+            if (sshAuth.getKeyfile() != null) {
                 info.add(NodeUtils.PARAM_SSHKEYFILE, sshAuth.getKeyfile());
+            }
 
             info.add(NodeUtils.PARAM_INSTALLDIR, node.getInstallDir());
             info.add(NodeUtils.PARAM_REMOTEPORT, sshC.getSshPort());
@@ -212,18 +216,20 @@ public abstract class DeleteNodeRemoteCommand implements AdminCommand {
         fullcommand.addAll(cmdLine);
 
         ProcessManager pm = new ProcessManager(fullcommand);
-        if (!pass.isEmpty())
+        if (!pass.isEmpty()) {
             pm.setStdinLines(pass);
+        }
 
         if (logger.isLoggable(Level.INFO)) {
             logger.info("Running command on DAS: " + commandListToString(fullcommand));
         }
-        pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
+        pm.setTimeout(DEFAULT_TIMEOUT_MSEC);
 
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             pm.setEcho(true);
-        else
+        } else {
             pm.setEcho(false);
+        }
 
         try {
             exit = pm.execute();

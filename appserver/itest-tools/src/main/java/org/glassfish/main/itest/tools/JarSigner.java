@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,7 +54,7 @@ public class JarSigner {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeoutMsec(60_000);
+        processManager.setTimeout(60_000);
         processManager.setEcho(true);
 
         int exitCode;

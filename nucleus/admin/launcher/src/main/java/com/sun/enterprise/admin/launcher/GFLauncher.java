@@ -20,7 +20,6 @@ import com.sun.enterprise.admin.launcher.CommandLine.CommandFormat;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
@@ -47,6 +46,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.FLASHLIGHT_AGENT_NAME;
@@ -60,9 +61,6 @@ import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
 import static com.sun.enterprise.util.OS.isDarwin;
 import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
@@ -71,6 +69,9 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
 /**
  * This is the main Launcher class designed for external and internal usage.
@@ -82,10 +83,8 @@ import static java.util.stream.Collectors.toList;
  * @author bnevins
  */
 public abstract class GFLauncher {
-
     private static final LocalStringsImpl I18N = new LocalStringsImpl(GFLauncher.class);
     private static final Logger LOG = System.getLogger(GFLauncher.class.getName(), I18N.getBundle());
-    private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncher.class);
 
     /**
      * Parameters provided by the caller of a launcher, either programmatically
@@ -145,6 +144,7 @@ public abstract class GFLauncher {
     private Map<String, String> domainXMLSystemProperty;
 
     private Path javaExe;
+    private File[] modulepath;
     private File[] classpath;
     private String adminFileRealmKeyFile;
     private boolean secureAdminEnabled;
@@ -223,7 +223,7 @@ public abstract class GFLauncher {
         } catch (GFLauncherException gfe) {
             throw gfe;
         } catch (Exception t) {
-            throw new GFLauncherException(strings.get("unknownError", t.getMessage()), t);
+            throw new GFLauncherException(I18N.get("unknownError", t.getMessage()), t);
         } finally {
             GFLauncherLogger.removeLogFileHandler();
         }
@@ -270,14 +270,14 @@ public abstract class GFLauncher {
         renameOsgiCache();
         setupMonitoring(domainXML);
         domainXMLSystemProperty = domainXML.getSystemProperties();
-        asenvProps.put(INSTANCE_ROOT_PROPERTY, getInfo().getInstanceRootDir().getPath());
+        asenvProps.put(INSTANCE_ROOT.getSystemPropertyName(), getInfo().getInstanceRootDir().getPath());
 
         // Set the config java-home value as the Java home for the environment,
         // unless it is empty or it is already refering to a substitution of
         // the environment variable.
         String javaHome = domainXMLjavaConfig.getJavaHome();
-        if (ok(javaHome) && !javaHome.trim().equals("${" + JAVA_ROOT_PROPERTY + "}")) {
-            asenvProps.put(JAVA_ROOT_PROPERTY, javaHome);
+        if (ok(javaHome) && !javaHome.trim().equals(JAVA_ROOT.toExpression())) {
+            asenvProps.put(JAVA_ROOT.getPropertyName(), javaHome);
         }
 
         domainXMLjavaConfigDebugOptions = getDebugOptionsFromDomainXMLJavaConfig();
@@ -290,6 +290,7 @@ public abstract class GFLauncher {
         GFLauncherLogger.addLogFileHandler(logFilename);
 
         setJavaExecutable();
+        setModulepath();
         setClasspath();
         initCommandLine();
         setJvmOptions();
@@ -381,7 +382,7 @@ public abstract class GFLauncher {
      */
     public String getLogFilename() throws GFLauncherException {
         if (!logFilenameWasFixed) {
-            throw new GFLauncherException(strings.get("internalError") + " call to getLogFilename() before it has been initialized");
+            throw new GFLauncherException(I18N.get("internalError") + " call to getLogFilename() before it has been initialized");
         }
 
         return logFilename;
@@ -546,6 +547,8 @@ public abstract class GFLauncher {
     final long getStartTime() {
         return startTime;
     }
+
+    abstract List<File> getMainModulepath() throws GFLauncherException;
 
     abstract List<File> getMainClasspath() throws GFLauncherException;
 
@@ -733,7 +736,7 @@ public abstract class GFLauncher {
         }
 
         // second choice is from asenv
-        if (!setJavaExecutableIfValid(asenvProps.get(JAVA_ROOT_PROPERTY))) {
+        if (!setJavaExecutableIfValid(asenvProps.get(JAVA_ROOT.getPropertyName()))) {
             throw new GFLauncherException("nojvm");
         }
 
@@ -764,6 +767,10 @@ public abstract class GFLauncher {
         return false;
     }
 
+    void setModulepath() throws GFLauncherException {
+        setModulepath(getMainModulepath().toArray(File[]::new));
+    }
+
     void setClasspath() throws GFLauncherException {
         List<File> mainCP = getMainClasspath();
         List<File> envCP = domainXMLjavaConfig.getEnvClasspath();
@@ -787,6 +794,9 @@ public abstract class GFLauncher {
         final boolean useScript = !getInfo().isVerboseOrWatchdog() && isSurviveWinUserSession();
         final CommandLine cmdLine = new CommandLine(useScript ? CommandFormat.Script : CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe);
+        if (modulepath.length > 0) {
+            cmdLine.appendModulePath(getModulepath());
+        }
         if (classpath.length > 0) {
             cmdLine.appendClassPath(getClasspath());
         }
@@ -891,7 +901,7 @@ public abstract class GFLauncher {
                 // the actual error is wrapped differently depending on
                 // whether the problem was with the source or target
                 Throwable cause = ioe.getCause() == null ? ioe : ioe.getCause();
-                throw new GFLauncherException(strings.get("copy_server_policy_error", cause.getMessage()), ioe);
+                throw new GFLauncherException(I18N.get("copy_server_policy_error", cause.getMessage()), ioe);
             }
         }
     }
@@ -913,7 +923,7 @@ public abstract class GFLauncher {
                 if (FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
                     GFLauncherLogger.fine("rename_osgi_cache_succeeded", osgiCacheDir, backupOsgiCacheDir);
                 } else {
-                    throw new GFLauncherException(strings.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
+                    throw new GFLauncherException(I18N.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
                 }
             }
         }
@@ -956,7 +966,7 @@ public abstract class GFLauncher {
         if (flashlightJarFile.isFile()) {
             return "javaagent:" + flashlightJarFile.toPath().toAbsolutePath().normalize();
         }
-        String msg = strings.get("no_flashlight_agent", flashlightJarFile);
+        String msg = I18N.get("no_flashlight_agent", flashlightJarFile);
         GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
         throw new GFLauncherException(msg);
     }
@@ -964,8 +974,8 @@ public abstract class GFLauncher {
 
     private List<String> getSpecialSystemProperties() throws GFLauncherException {
         Map<String, String> props = new HashMap<>();
-        props.put(INSTALL_ROOT_PROPERTY, getInfo().getInstallDir().getAbsolutePath());
-        props.put(INSTANCE_ROOT_PROPERTY, getInfo().getInstanceRootDir().getAbsolutePath());
+        props.put(INSTALL_ROOT.getSystemPropertyName(), getInfo().getInstallDir().getAbsolutePath());
+        props.put(INSTANCE_ROOT.getSystemPropertyName(), getInfo().getInstanceRootDir().getAbsolutePath());
 
         return propsToJvmOptions(props);
     }
@@ -976,6 +986,14 @@ public abstract class GFLauncher {
 
     final void setClasspath(File... classpath) {
         this.classpath = classpath;
+    }
+
+    File[] getModulepath() {
+        return modulepath;
+    }
+
+    void setModulepath(File... modulepath) {
+        this.modulepath = modulepath;
     }
 
     private List<String> propsToJvmOptions(Map<String, String> map) {
@@ -1208,7 +1226,7 @@ public abstract class GFLauncher {
             return null;
         }
         String output = drainer.getOutErrString();
-        return strings.get("server_process_died", ev, output);
+        return I18N.get("server_process_died", ev, output);
     }
 
 }

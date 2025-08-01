@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package org.glassfish.flashlight.impl.client;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
@@ -32,11 +30,11 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-import static org.objectweb.asm.Opcodes.V17;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.objectweb.asm.Opcodes.V21;
 
 /**
- * @author Mahesh Kannan
- * Started: Jul 20, 2008
+ * @author Mahesh Kannan, Jul 20, 2008
  * @author Byron Nevins, August 2009
  */
 public class BtraceClientGenerator {
@@ -53,8 +51,7 @@ public class BtraceClientGenerator {
 
         //Define the access identifiers for the BTrace Client class
         int access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL;
-        cw.visit(V17, access, generatedClassName, null,
-                "java/lang/Object", null);
+        cw.visit(V21, access, generatedClassName, null, "java/lang/Object", null);
         //Need a @OnMethod annotation, so prepare your Annotation Visitor for that
         cw.visitAnnotation("Lcom/sun/btrace/annotations/BTrace;", true);
 
@@ -105,8 +102,7 @@ public class BtraceClientGenerator {
             //Add the body
             gen.push(probe.getId());
             gen.loadArgArray();
-            gen.invokeStatic(Type.getType(
-                    ProbeRegistry.class), Method.getMethod("void invokeProbe(int, Object[])"));
+            gen.invokeStatic(Type.getType(ProbeRegistry.class), Method.getMethod("void invokeProbe(int, Object[])"));
             gen.returnValue();
             gen.endMethod();
             methodCounter++;
@@ -128,8 +124,8 @@ public class BtraceClientGenerator {
 
         try {
             int index = generatedClassName.lastIndexOf('/');
-            String rootPath = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY) +
-                    File.separator + "lib" + File.separator;
+            String rootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator
+                + "lib" + File.separator;
 
             String fileName = rootPath + generatedClassName.substring(index + 1) + ".class";
             //System.out.println("***ClassFile: " + fileName);

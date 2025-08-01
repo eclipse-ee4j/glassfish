@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,10 +63,10 @@ import org.glassfish.admin.restconnector.RestConfig;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
@@ -76,7 +75,6 @@ import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.AdminAccessController;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.security.services.api.authorization.AuthorizationService;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
@@ -98,6 +96,7 @@ import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
  * @author Rajeshwar Patil
  */
 public class ResourceUtil {
+
     private static final String MESSAGE_PARAMETERS = "messageParameters";
     private static RestConfig restConfig = null;
     // TODO: this is copied from org.jvnet.hk2.config.Dom. If we are not able to encapsulate the conversion in Dom,
@@ -116,19 +115,17 @@ public class ResourceUtil {
     }
 
     protected static byte[] getBytesFromStream(final InputStream is) {
-        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] bytes = null;
         int nRead;
         byte[] data = new byte[16384];
-        try {
+        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
             while ((nRead = is.read(data, 0, data.length)) != -1) {
                 buffer.write(data, 0, nRead);
             }
             buffer.flush();
             bytes = buffer.toByteArray();
-            buffer.close();
         } catch (IOException ex) {
-            RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex.getMessage());
+            RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex);
         }
 
         return bytes;
@@ -204,30 +201,13 @@ public class ResourceUtil {
      * @return
      */
     public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject) {
-        return runCommand(commandName, parameters, subject, false);
-    }
-
-    /**
-     * Executes the specified __asadmin command.
-     *
-     * @param commandName
-     * @param parameters
-     * @param subject
-     * @param managedJob
-     * @return
-     */
-    public static RestActionReporter runCommand(String commandName, ParameterMap parameters, Subject subject, boolean managedJob) {
-
-        CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
-        RestActionReporter ar = new RestActionReporter();
-        final CommandInvocation commandInvocation = cr.getCommandInvocation(commandName, ar, subject);
-        if (managedJob) {
-            commandInvocation.managedJob();
-        }
-        commandInvocation.parameters(parameters).execute();
-        addCommandLog(ar, commandName, parameters);
-
-        return ar;
+        CommandRunner<?> cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
+        RestActionReporter reporter = new RestActionReporter();
+        final CommandInvocation<?> commandInvocation = cr.getCommandInvocation(commandName, reporter, subject);
+        commandInvocation.parameters(parameters);
+        commandInvocation.execute();
+        addCommandLog(reporter, commandName, parameters);
+        return reporter;
     }
 
     /**
@@ -247,24 +227,7 @@ public class ResourceUtil {
         return runCommand(commandName, p, subject);
     }
 
-    public static EventOutput runCommandWithSse(final String commandName, final ParameterMap parameters, final Subject subject,
-            final SseCommandHelper.ActionReportProcessor processor) {
-        CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
-        final RestActionReporter ar = new RestActionReporter();
-        final CommandInvocation commandInvocation = cr.getCommandInvocation(commandName, ar, subject).parameters(parameters);
-        return SseCommandHelper.invokeAsync(commandInvocation, new SseCommandHelper.ActionReportProcessor() {
-            @Override
-            public ActionReport process(ActionReport report, EventOutput ec) {
-                addCommandLog(ar, commandName, parameters);
-                if (processor != null) {
-                    return processor.process(report, ec);
-                }
-                return ar;
-            }
-        });
-    }
-
-    public static void addCommandLog(RestActionReporter ar, String commandName, ParameterMap parameters) {
+    private static void addCommandLog(RestActionReporter ar, String commandName, ParameterMap parameters) {
         List<String> logs = (List<String>) ar.getExtraProperties().get("commandLog");
         if (logs == null) {
             logs = new ArrayList<>();
@@ -522,11 +485,10 @@ public class ResourceUtil {
      *
      * @param commandName the command associated with the resource method
      * @param habitat the habitat
-     * @param logger the logger to use
      * @return Collection the meta-data for the parameter of the resource method.
      */
     public static Collection<CommandModel.ParamModel> getParamMetaData(String commandName, ServiceLocator habitat) {
-        final CommandModel model = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName, RestLogging.restLogger);
+        final CommandModel model = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName);
         if (model == null) {
             return null;
         }
@@ -540,12 +502,11 @@ public class ResourceUtil {
      * @param commandName the command associated with the resource method
      * @param commandParamsToSkip the command parameters for which not to include the meta-data.
      * @param habitat the habitat
-     * @param logger the logger to use
      * @return Collection the meta-data for the parameter of the resource method.
      */
-    public static Collection<CommandModel.ParamModel> getParamMetaData(String commandName, Collection<String> commandParamsToSkip,
-            ServiceLocator habitat) {
-        CommandModel cm = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName, RestLogging.restLogger);
+    public static Collection<CommandModel.ParamModel> getParamMetaData(String commandName,
+        Collection<String> commandParamsToSkip, ServiceLocator habitat) {
+        CommandModel cm = habitat.<CommandRunner>getService(CommandRunner.class).getModel(commandName);
         Collection<String> parameterNames = cm.getParametersNames();
 
         ArrayList<CommandModel.ParamModel> metaData = new ArrayList<>();

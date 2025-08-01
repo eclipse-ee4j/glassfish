@@ -21,10 +21,12 @@ import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -42,6 +44,8 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_START_SERVER;
 
 
 /**
@@ -93,6 +97,9 @@ public class StartInstanceCommand implements AdminCommand {
     @Param(optional = true, obsolete = true)
     private String setenv;
 
+    @Param(optional = true)
+    private Integer timeout;
+
     private Logger logger;
 
     private Node   node;
@@ -100,8 +107,6 @@ public class StartInstanceCommand implements AdminCommand {
     private String nodedir;
     private String nodeHost;
     private Server instance;
-
-    private static final String NL = System.lineSeparator();
 
     /**
      * restart-instance needs to try to start the instance from scratch if it is not
@@ -111,16 +116,18 @@ public class StartInstanceCommand implements AdminCommand {
      * do NOT make this public!!
      * @author Byron Nevins
      */
-    StartInstanceCommand(ServiceLocator habitat_, String iname_, boolean debug_, ServerEnvironment env_) {
-        instanceName = iname_;
-        debug = debug_;
-        locator = habitat_;
-        nodes = locator.getService(Nodes.class);
+    StartInstanceCommand(ServiceLocator locator, String instanceName, boolean debug, Integer timeout,
+        ServerEnvironment environment) {
+        this.instanceName = instanceName;
+        this.debug = debug;
+        this.timeout = timeout;
+        this.locator = locator;
+        this.nodes = locator.getService(Nodes.class);
 
         // env:  neither getByType or getByContract works.  Not worth the effort
         //to find the correct magic incantation for HK2!
-        env = env_;
-        servers = locator.getService(Servers.class);
+        this.env = environment;
+        this.servers = locator.getService(Servers.class);
     }
 
     /**
@@ -151,7 +158,7 @@ public class StartInstanceCommand implements AdminCommand {
             return;
         }
 
-        if (instance.isRunning()) {
+        if (instance.isListeningOnAdminPort()) {
             msg = Strings.get("start.instance.already.running", instanceName);
             logger.info(msg);
             report.setMessage(msg);
@@ -182,20 +189,19 @@ public class StartInstanceCommand implements AdminCommand {
         if(env.isDas()) {
             startInstance(ctx);
         } else {
-            msg = Strings.get("start.instance.notAnInstanceOrDas",
-                    env.getRuntimeType().toString());
+            msg = Strings.get("start.instance.notAnInstanceOrDas", env.getRuntimeType().toString());
             logger.severe(msg);
             report.setMessage(msg);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }
 
         if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
-            // Make sure instance is really up
-            String s = pollForLife(instance);
-            if (s != null) {
-                report.setMessage(s);
-                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            // Make sure instance is listening
+            if (ProcessUtils.waitFor(instance::isListeningOnAdminPort, getTimeout(timeout), false)) {
+                return;
             }
+            report.setMessage(Strings.get("start.instance.timeout", instanceName));
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }
     }
 
@@ -221,6 +227,10 @@ public class StartInstanceCommand implements AdminCommand {
             command.add("--debug");
         }
 
+        // We always set timeout to inherit defaults from the DAS instead of bare shell.
+        command.add("--timeout");
+        command.add(Long.toString(getTimeout(timeout).toSeconds()));
+
         command.add(instanceName);
 
         // Convert the command into a string representing the command
@@ -228,8 +238,7 @@ public class StartInstanceCommand implements AdminCommand {
         humanCommand = makeCommandHuman(command);
 
         // First error message displayed if we fail
-        String firstErrorMessage = Strings.get("start.instance.failed",
-                        instanceName, noderef, nodeHost );
+        String firstErrorMessage = Strings.get("start.instance.failed", instanceName, noderef, nodeHost);
 
         StringBuilder output = new StringBuilder();
 
@@ -239,33 +248,13 @@ public class StartInstanceCommand implements AdminCommand {
         ActionReport report = ctx.getActionReport();
         if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
             // If it was successful say so and display the command output
-            String msg = Strings.get("start.instance.success",
-                    instanceName, nodeHost);
+            String msg = Strings.get("start.instance.success", instanceName, nodeHost);
             if (!terse) {
-                msg = StringUtils.cat(NL, output.toString().trim(), msg);
+                msg = StringUtils.cat(System.lineSeparator(), output.toString().trim(), msg);
             }
             report.setMessage(msg);
         }
 
-    }
-
-    // return null means A-OK
-    private String pollForLife(Server instance) {
-        int counter = 0;  // 120 seconds
-
-        while (++counter < 240) {
-            if (instance.isRunning()) {
-                return null;
-            }
-
-            try {
-                Thread.sleep(500);
-            }
-            catch (Exception e) {
-                // ignore
-            }
-        }
-        return Strings.get("start.instance.timeout", instanceName);
     }
 
     private String makeCommandHuman(List<String> command) {
@@ -283,5 +272,16 @@ public class StartInstanceCommand implements AdminCommand {
         }
 
         return fullCommand.toString();
+    }
+
+    static Duration getTimeout(Integer timeout) {
+        if (timeout == null) {
+            String envValue = System.getenv(TIMEOUT_START_SERVER.getEnvName());
+            if (envValue == null) {
+                return Duration.ofSeconds(60);
+            }
+            return Duration.ofSeconds(Long.parseLong(envValue));
+        }
+        return Duration.ofSeconds(timeout);
     }
 }

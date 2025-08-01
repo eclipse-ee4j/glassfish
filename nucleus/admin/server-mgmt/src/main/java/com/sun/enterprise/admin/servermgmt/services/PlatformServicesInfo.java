@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.Date;
 
 import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICE_NAME_PREFIX;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * A place to keep platform services info...
@@ -140,11 +141,11 @@ public class PlatformServicesInfo {
     }
 
     private void setInstallRootDir() {
-        String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String ir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
 
         if (!StringUtils.ok(ir)) {
-            throw new RuntimeException(
-                    Strings.get("internal.error", "System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+            throw new RuntimeException(Strings.get("internal.error",
+                "System Property not set: " + INSTALL_ROOT.getSystemPropertyName()));
         }
 
         installRootDir = SmartFile.sanitize(new File(ir));

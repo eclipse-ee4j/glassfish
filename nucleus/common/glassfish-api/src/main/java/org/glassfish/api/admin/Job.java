@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,13 +24,19 @@ import java.util.List;
 import org.glassfish.api.ActionReport;
 
 /**
- * Represents running (or finished) command instance.
- *
+ * Represents command instance.
  *
  * @author Martin Mares
  * @author Bhakti Mehta
  */
 public interface Job extends AdminCommandState, Serializable {
+
+    /**
+     * Sets the state.
+     *
+     * @param state must not be null
+     */
+    void setState(State state);
 
     /**
      * Command progress only if it is supported by command
@@ -38,6 +45,12 @@ public interface Job extends AdminCommandState, Serializable {
 
     void setCommandProgress(CommandProgress commandProgress);
 
+    /**
+     * Complete job with the given report and payload.
+     *
+     * @param report
+     * @param outbound
+     */
     void complete(ActionReport report, Payload.Outbound outbound);
 
     /**
@@ -48,8 +61,6 @@ public interface Job extends AdminCommandState, Serializable {
     AdminCommandEventBroker getEventBroker();
 
     List<String> getSubjectUsernames();
-
-    String getName();
 
     long getCommandExecutionDate();
 

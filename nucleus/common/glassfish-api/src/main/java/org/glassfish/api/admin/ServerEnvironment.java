@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +32,7 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface ServerEnvironment {
-    public enum Status {
+    enum Status {
         starting, started, stopping, stopped
     }
 
@@ -88,9 +88,9 @@ public interface ServerEnvironment {
     File getApplicationAltDDPath();
 
     /**
-     * A JCEKS keystore which is locked with a fixed-key. This is the "security-by-obfuscation" carried over from V2.
+     * A keystore which is locked with a fixed-key. This is the "security-by-obfuscation" carried over from V2.
      *
-     * @return File representing the JCEKS store containing the real master password
+     * @return File representing the store containing the real master password
      */
     File getMasterPasswordFile();
 
@@ -109,7 +109,7 @@ public interface ServerEnvironment {
     File getTrustStore();
 
     /**
-     * Gets the server status
+     * @return the server status
      */
     Status getStatus();
 
@@ -127,7 +127,18 @@ public interface ServerEnvironment {
      */
     String getInstanceName();
 
+    /**
+     * @return true if this is a single or clustered instance server managed by DAS, false otherwise.
+     */
     boolean isInstance();
 
+    /**
+     * @return true if this is an domain admin server, false otherwise.
+     */
     boolean isDas();
+
+    /**
+     * @return true if this is an embedded server, false otherwise.
+     */
+    boolean isEmbedded();
 }

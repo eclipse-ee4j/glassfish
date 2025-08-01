@@ -18,7 +18,7 @@
 run_test() {
     local testid=${1}
     local found=false
-    
+
     for runtest in `find . -name run_test\.sh`; do
         for id in `${runtest} list_test_ids`; do
             if [[ "${id}" = "${testid}" ]]; then
@@ -34,7 +34,7 @@ run_test() {
             break
         fi
     done
-    
+
     if [[ "${found}" = false ]]; then
         echo Invalid Test Id.
         exit 1
@@ -42,14 +42,6 @@ run_test() {
 }
 
 if [ ! -z "${JENKINS_HOME}" ] ; then
-
-  # inject internal environment
-  readonly GF_INTERNAL_ENV_SH=$(mktemp -t XXXgf-internal-env)
-  if [ ! -z "${GF_INTERNAL_ENV}" ] ; then
-    echo "${GF_INTERNAL_ENV}" | base64 -d > ${GF_INTERNAL_ENV_SH}
-    . ${GF_INTERNAL_ENV_SH}
-    export MAVEN_OPTS="${MAVEN_OPTS} ${ANT_OPTS}"
-  fi
   export WSIMPORT_OPTS="${ANT_OPTS}"
 
   # setup the local repository

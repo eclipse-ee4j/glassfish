@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -290,15 +290,15 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
             ),
             @PropertyDesc(
                     name = "com.sun.aas.javaRoot",
-                    description = "Operating system dependent. Path to the library directory for the Sun GlassFish Message Queue software"
+                    description = "Operating system dependent. Path to the JDK root directory."
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.imqBin",
+                    description = "Operating system dependent. Path to the bin directory for the IMQ runtime"
             ),
             @PropertyDesc(
                     name = "com.sun.aas.imqLib",
-                    description = "Operating system dependent. Path to the installation directory for the Java runtime"
-            ),
-            @PropertyDesc(
-                    name = "com.sun.aas.imqLib",
-                    description = "Operating system dependent. Path to the installation directory for the Java runtime"
+                    description = "Operating system dependent. Path to the lib directory for the IMQ runtime"
             ),
             @PropertyDesc(
                     name = "com.sun.aas.configName",

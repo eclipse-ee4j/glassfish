@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import org.testcontainers.containers.Network;
 public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
 
     public GlassFishContainer(Network network, String hostname, String logPrefix, String command) {
-        super("eclipse-temurin:24_36-jdk");
+        super("eclipse-temurin:21");
         withNetwork(network)
         .withEnv("TZ", "UTC").withEnv("LC_ALL", "en_US.UTF-8")
         .withStartupAttempts(1)

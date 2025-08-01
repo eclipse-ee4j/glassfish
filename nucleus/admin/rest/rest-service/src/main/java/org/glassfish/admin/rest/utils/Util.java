@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -295,11 +295,11 @@ public class Util {
                 parameters.add("DEFAULT", basePath + entry.getKey() + "=" + entry.getValue());
             }
         }
-        if (!parameters.entrySet().isEmpty()) {
-            return ResourceUtil.runCommand("set", parameters, subject);
-        } else {
-            return new RestActionReporter(); // noop
+        if (parameters.entrySet().isEmpty()) {
+            // noop
+            return new RestActionReporter();
         }
+        return ResourceUtil.runCommand("set", parameters, subject);
     }
 
     private static String getBasePathFromUri(UriInfo uriInfo) {

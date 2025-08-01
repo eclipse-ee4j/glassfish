@@ -17,9 +17,12 @@ Starts a {productName} instance
 
 [source]
 ----
-asadmin [asadmin-options] start-instance [--help]
-[--debug={false|true}] [--sync={normal|full|none}]
-instance-name
+asadmin start-instance
+[--debug[=<debug(default:false)>]]
+[--help|-?]
+[--sync <sync(default:normal)>]
+[--timeout <timeout>]
+instance_name
 ----
 
 === Description
@@ -102,6 +105,12 @@ If a file below a top level subdirectory is changed without a change
     synchronization. This type of synchronization might delay the
     startup of the instance while the DAS updates all files in the
     instance's directories.
+
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The instance status is unknown
+  in such case.
 
 === Operands
 

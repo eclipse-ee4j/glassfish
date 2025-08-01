@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,6 @@ package org.glassfish.enterprise.iiop.impl;
 import com.sun.logging.LogDomains;
 
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
@@ -29,8 +29,11 @@ import org.omg.IOP.CodecFactory;
 import org.omg.IOP.ENCODING_CDR_ENCAPS;
 import org.omg.IOP.Encoding;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
+import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * This file implements an initializer class for all portable interceptors
@@ -41,54 +44,31 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
  * @author Mahesh Kannan
  *
  */
+public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject implements ORBInitializer {
 
-public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject
-        implements ORBInitializer {
-    private static final Logger _logger =
-            LogDomains.getLogger(GlassFishORBInitializer.class, LogDomains.CORBA_LOGGER);
-
-    private static void fineLog( String fmt, Object... args ) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, fmt, args ) ;
-        }
-    }
-
-    public GlassFishORBInitializer() {
-        /*
-        //Ken feels that adding the property to orbInitProperties
-        // is better than setting System properties
-        try {
-            System.setProperty(
-                    com.sun.jts.pi.InterceptorImpl.CLIENT_POLICY_CHECKING,
-                    String.valueOf(false));
-        } catch (Exception ex) {
-            _logger.log(Level.WARNING, "iiop.readproperty_exception", ex);
-        }
-        */
-    }
+    private static final Logger LOG = LogDomains.getLogger(GlassFishORBInitializer.class, LogDomains.CORBA_LOGGER);
 
     /**
      * This method is called during ORB initialization.
      *
-     * @param info object that provides initialization attributes
-     *            and operations by which interceptors are registered.
+     * @param info object that provides initialization attributes and operations by which
+     *            interceptors are registered.
      */
     @Override
-    public void pre_init(org.omg.PortableInterceptor.ORBInitInfo info) {
+    public void pre_init(ORBInitInfo info) {
     }
+
 
     /**
      * This method is called during ORB initialization.
      *
-     * @param info object that provides initialization attributes
-     *            and operations by which interceptors are registered.
+     * @param info object that provides initialization attributes and operations by which
+     *            interceptors are registered.
      */
     @Override
-    public void post_init(org.omg.PortableInterceptor.ORBInitInfo info) {
-        Codec codec = null;
-
-        fineLog( "J2EE Initializer post_init");
-        fineLog( "Creating Codec for CDR encoding");
+    public void post_init(ORBInitInfo info) {
+        LOG.log(FINE, "J2EE Initializer post_init");
+        LOG.log(FINE, "Creating Codec for CDR encoding");
 
         CodecFactory cf = info.codec_factory();
 
@@ -97,36 +77,27 @@ public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject
         Encoding encoding = new Encoding(ENCODING_CDR_ENCAPS.value,
                 major_version, minor_version);
         try {
-            codec = cf.create_codec(encoding);
-
+            Codec codec = cf.create_codec(encoding);
             IIOPUtils iiopUtils = IIOPUtils.getInstance();
-            Collection<IIOPInterceptorFactory> interceptorFactories =
-                    iiopUtils.getAllIIOPInterceptrFactories();
+            Collection<IIOPInterceptorFactory> interceptorFactories = iiopUtils.getAllIIOPInterceptrFactories();
 
             for (IIOPInterceptorFactory factory : interceptorFactories) {
-                fineLog( "Processing interceptor factory: {0}", factory);
+                LOG.log(FINE, "Processing interceptor factory: {0}", factory);
 
-                ClientRequestInterceptor clientReq =
-                        factory.createClientRequestInterceptor(info, codec);
-                ServerRequestInterceptor serverReq =
-                        factory.createServerRequestInterceptor(info, codec);
+                ClientRequestInterceptor clientReq = factory.createClientRequestInterceptor(info, codec);
+                ServerRequestInterceptor serverReq = factory.createServerRequestInterceptor(info, codec);
 
                 if (clientReq != null) {
-                    fineLog( "Registering client interceptor: {0}", clientReq);
+                    LOG.log(FINE, "Registering client interceptor: {0}", clientReq);
                     info.add_client_request_interceptor(clientReq);
                 }
                 if (serverReq != null) {
-                    fineLog( "Registering server interceptor: {0}", serverReq);
+                    LOG.log(FINE, "Registering server interceptor: {0}", serverReq);
                     info.add_server_request_interceptor(serverReq);
                 }
             }
-
         } catch (Exception e) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "Exception registering interceptors", e ) ;
-            }
-            throw new RuntimeException(e.getMessage(), e);
+            throw new RuntimeException("Exception registering interceptors", e);
         }
     }
 }
-

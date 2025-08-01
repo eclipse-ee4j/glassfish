@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,22 +52,21 @@ public class PropsFileActionReporter extends ActionReporter {
 
     @Override
     public void writeReport(OutputStream os) throws IOException {
-
         Manifest out = new Manifest();
         Attributes mainAttr = out.getMainAttributes();
         mainAttr.put(Attributes.Name.SIGNATURE_VERSION, "1.0");
-        mainAttr.putValue("exit-code", exitCode.toString());
+        mainAttr.putValue("exit-code", getActionExitCode().toString());
         mainAttr.putValue("use-main-children-attribute", Boolean.toString(useMainChildrenAttr));
 
-        if (exitCode == ExitCode.FAILURE) {
+        if (getActionExitCode() == ExitCode.FAILURE) {
             writeCause(mainAttr);
         }
 
-        writeReport(null, topMessage, out, mainAttr);
+        writeReport(null, getTopMessagePart(), out, mainAttr);
         out.write(os);
     }
 
-    public void writeReport(String prefix, MessagePart part, Manifest m, Attributes attr) {
+    private void writeReport(String prefix, MessagePart part, Manifest m, Attributes attr) {
         //attr.putValue("message", part.getMessage());
         StringBuilder sb = new StringBuilder();
         getCombinedMessages(this, sb);
@@ -210,9 +209,9 @@ public class PropsFileActionReporter extends ActionReporter {
         return c >= '0' && c <= '9';
     }
     private static String encodeEOL(String m) {
-        if (m != null) {
-            m = m.replace("\n", EOL_MARKER).replace(System.getProperty("line.separator"), EOL_MARKER);
+        if (m == null) {
+            return null;
         }
-        return m;
+        return m.replace(System.lineSeparator(), EOL_MARKER).replace("\n", EOL_MARKER);
     }
 }

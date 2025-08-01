@@ -128,6 +128,15 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -168,7 +177,6 @@
             <!-- Surefire plugin - Entrypoint for Junit5 -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
                 <configuration>
                     <dependenciesToScan>
                         <dependency>jakarta.data:jakarta.data-tck</dependency>
@@ -218,6 +226,26 @@
                     <scope>test</scope>
                 </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <id>in-global-transaction</id>
+            <!-- An alternative way of running the TCK with each test wrapped in a global transaction 
+                 (except those that don't support it) 
+            -->
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <systemPropertyVariables>
+                                    <org.glassfish.data.tck.global-transaction>true</org.glassfish.data.tck.global-transaction>
+                                </systemPropertyVariables>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
         </profile>
         <profile>
             <id>full</id>

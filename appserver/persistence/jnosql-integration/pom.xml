@@ -30,18 +30,18 @@
 
     <name>Eclipse JNoSQL Jakarta Persistence Integration</name>
     
-    <properties>
-        <persistence.osgi.bundle.classpath>${project.build.directory}/dependencies/jnosql-jakarta-persistence-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-core-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-mapping-api-core-${jnosql.version}.jar${path.separator}${project.build.directory}/dependencies/jnosql-communication-core-${jnosql.version}.jar</persistence.osgi.bundle.classpath>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
+
+        <!-- We use the shaded JAR for compilation and tests -->
         <dependency>
             <groupId>ee.omnifish</groupId>
             <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
+            <version>${jnosql.version}</version>
+            <classifier>shaded</classifier>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -49,6 +49,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>
@@ -89,18 +90,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- do not commit the jnosql-jakarta-persistence, it's only for IDE to find the dependency -->
-<!--        <dependency>
-            <groupId>org.eclipse.jnosql.mapping</groupId>
-            <artifactId>jnosql-jakarta-persistence</artifactId>
-            <version>1.1.8-SNAPSHOT</version>
-            <optional>true</optional>
-        </dependency>-->
     </dependencies>
 
     <build>
         <plugins>
-            <!-- add JARs embedded in the OSGi bundle dependency to the compile classpath -->
+            <!-- unpack JARs embedded in the OSGi bundle dependency - they are referenced from system dependencies -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -115,69 +109,8 @@
                             <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>classpath</id>
-                        <goals>
-                            <goal>build-classpath</goal>
-                        </goals>
-                        <configuration>
-                            <includeScope>compile</includeScope>
-                            <outputProperty>compile.classpath</outputProperty>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>testclasspath</id>
-                        <goals>
-                            <goal>build-classpath</goal>
-                        </goals>
-                        <configuration>
-                            <includeScope>test</includeScope>
-                            <outputProperty>test.classpath</outputProperty>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <configuration>
-                            <compilerArgs>
-                                <arg>-cp</arg>
-                                <arg>${test.classpath}${path.separator}${project.build.outputDirectory}${path.separator}${persistence.osgi.bundle.classpath}</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>default-cli</id>
-                        <configuration>
-                            <compilerArgs>
-                                <arg>-cp</arg>
-                                <arg>${test.classpath}${path.separator}${project.build.outputDirectory}${path.separator}${persistence.osgi.bundle.classpath}</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-cp</arg>
-                        <arg>${compile.classpath}${path.separator}${persistence.osgi.bundle.classpath}</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>${project.build.directory}/dependencies/jnosql-jakarta-persistence-${jnosql.version}.jar</additionalClasspathElement>
-                        <additionalClasspathElement>${project.build.directory}/dependencies/jnosql-mapping-core-${jnosql.version}.jar</additionalClasspathElement>
-                        <additionalClasspathElement>${project.build.directory}/dependencies/jnosql-mapping-api-core-${jnosql.version}.jar</additionalClasspathElement>
-                        <additionalClasspathElement>${path.separator}${project.build.directory}/dependencies/jnosql-communication-core-${jnosql.version}.jar</additionalClasspathElement>
-                    </additionalClasspathElements>
-                </configuration>
-             </plugin>
 
             <!-- Creates the OSGi MANIFEST.MF file -->
             <plugin>

@@ -48,10 +48,12 @@ public class JakartaPersistenceProcessor implements ApplicationArchiveProcessor 
                           SignatureTest.class.getPackage(),
                           PluginAPI.class.getPackage(),
                           com.sun.tdk.signaturetest.core.Log.class.getPackage(),
-                          CommandLineParserException.class.getPackage())
-                      .add(
-                          new ClassLoaderAsset("META-INF/services/org.junit.jupiter.api.extension.Extension"),
+                          CommandLineParserException.class.getPackage());
+            if (Boolean.getBoolean("org.glassfish.data.tck.global-transaction")) {
+                 webArchive.add(new ClassLoaderAsset("META-INF/services/org.junit.jupiter.api.extension.Extension"),
                           "WEB-INF/classes/" + "META-INF/services/org.junit.jupiter.api.extension.Extension");
+
+            }
         }
     }
 

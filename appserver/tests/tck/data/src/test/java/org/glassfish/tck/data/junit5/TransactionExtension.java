@@ -27,30 +27,17 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 public class TransactionExtension implements InvocationInterceptor {
 
-    Set<String> targetTestMethodNames = Set.of(
-            "testThirdAndFourthSlicesOf5",
-            "testFirstSliceOf5",
-            "testOrderByHasPrecedenceOverPageRequestSorts",
-            "testStaticMetamodelAscendingSortsPreGenerated",
-            "testFinalSliceOfUpTo5",
-            "testThirdAndFourthPagesOf10",
-            "testSliceOfNothing",
-            "testFindPage",
-            "testPageOfNothing",
-            "testFirstPageOf10",
-            "testBeyondFinalSlice",
-            "testLiteralTrue",
-            "testFinalPageOfUpTo10",
-            "testStaticMetamodelAscendingSorts",
-            "testBeyondFinalPage"
-            );
+    Set<String> excludeTestMethodNames = Set.of(
+            "testVersionedInsertUpdateDelete", // gives timeouts in Derby when run in a global transaction
+            "testCommit", // creates UserTransaction transaction, cannot run in a global transaction
+            "testRollback"); // creates UserTransaction transaction, cannot run in a global transaction
 
     @Override
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-        if (targetTestMethodNames.contains(invocationContext.getExecutable().getName())) {
-            CDI.current().select(TransactionalWrapper.class).get().proceed(invocation);
-        } else {
+        if (excludeTestMethodNames.contains(invocationContext.getExecutable().getName())) {
             invocation.proceed();
+        } else {
+            CDI.current().select(TransactionalWrapper.class).get().proceed(invocation);
         }
     }
 

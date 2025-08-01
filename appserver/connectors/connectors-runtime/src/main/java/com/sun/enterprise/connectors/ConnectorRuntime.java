@@ -651,12 +651,12 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
 
     @Override
     public String[] getConnectionDefinitionNames(String rarName) throws ConnectorRuntimeException {
-        return configParserAdmService.getConnectionDefinitionNames(rarName);
+        return null;
     }
 
     @Override
     public String getSecurityPermissionSpec(String moduleName) throws ConnectorRuntimeException {
-        return configParserAdmService.getSecurityPermissionSpec(moduleName);
+        return null;
     }
 
     @Override

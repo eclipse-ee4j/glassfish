@@ -316,24 +316,7 @@ public class SecurityContext extends AbstractSecurityContext {
         }
 
         boolean permitted = false;
-        try {
-            java.lang.SecurityManager sm = System.getSecurityManager();
-            if (sm != null) {
-                _logger.fine("permission check done to set SecurityContext");
-                sm.checkPermission(doAsPrivilegedPerm);
-            }
-            permitted = true;
-        } catch (java.lang.SecurityException se) {
-            _logger.log(SEVERE, SecurityLoggerInfo.securityContextPermissionError, se);
-        } catch (Throwable t) {
-            _logger.log(SEVERE, SecurityLoggerInfo.securityContextUnexpectedError, t);
-        }
-
-        if (permitted) {
-            currentSecurityContext.set(securityContext);
-        } else {
-            _logger.severe(SecurityLoggerInfo.securityContextNotChangedError);
-        }
+        _logger.severe(SecurityLoggerInfo.securityContextNotChangedError);
     }
 
     public static void setUnauthenticatedContext() {

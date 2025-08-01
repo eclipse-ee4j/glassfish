@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.security.Policy;
 
 import org.glassfish.appclient.client.acc.AppClientContainer;
 import org.glassfish.appclient.client.acc.Util;
@@ -37,25 +35,6 @@ public class LaunchSecurityHelper {
     private static final String SYSTEM_CODEBASE_PROPERTY = "appclient.system.codebase";
     private static final int BUFFER_SIZE = 1024;
 
-    public static void setPermissions() {
-        try {
-            /*
-             * Get the permissions template and write it to a temporary file.
-             */
-            final String permissionsTemplate = loadResource(LaunchSecurityHelper.class, PERMISSIONS_TEMPLATE_NAME);
-
-            /*
-             * The Java security logic will process property references in
-             * the policy file template automatically.
-             */
-            boolean retainTempFiles = Boolean.getBoolean(AppClientContainer.APPCLIENT_RETAIN_TEMP_FILES_PROPERTYNAME);
-            File policyFile = Util.writeTextToTempFile(permissionsTemplate, "jwsacc", ".policy", retainTempFiles);
-            refreshPolicy(policyFile);
-
-        } catch (IOException ioe) {
-            throw new RuntimeException("Error loading permissions template", ioe);
-        }
-    }
 
     /**
      * Retrieves a resource as a String.
@@ -115,11 +94,5 @@ public class LaunchSecurityHelper {
      * as additional policy.
      * @param policyFile the file containing additional policy
      */
-    private static void refreshPolicy(File policyFile) {
-        int idx = firstFreePolicyIndex();
-        URI policyFileURI = policyFile.toURI();
-        java.security.Security.setProperty("policy.url." + idx, policyFileURI.toASCIIString());
-        Policy p = Policy.getPolicy();
-        p.refresh();
-    }
+
 }

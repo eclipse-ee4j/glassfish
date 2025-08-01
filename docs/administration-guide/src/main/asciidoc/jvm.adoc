@@ -104,7 +104,6 @@ asadmin> list-jvm-options
 config.serverbeans.AppserverConfigEnvironmentFactory
 -Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
 -XX:NewRatio=2
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
 -Djdbc.drivers=org.apache.derby.jdbc.ClientDriver
 -Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks
 -client

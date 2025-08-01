@@ -32,10 +32,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +56,6 @@ import org.glassfish.web.LogFacade;
 
 import static com.sun.enterprise.security.integration.SecurityConstants.WEB_PRINCIPAL_CLASS;
 import static com.sun.enterprise.util.Utility.isOneOf;
-import static java.security.Policy.getPolicy;
 import static java.text.MessageFormat.format;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
@@ -258,19 +254,8 @@ public final class EEInstanceListener implements InstanceListener {
         return currentSecurityContext.getCallerPrincipal();
     }
 
-    private static void checkObjectForDoAsPermission(final Object o) throws AccessControlException {
-        if (System.getSecurityManager() != null) {
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                @Override
-                public Void run() {
-                    if (!getPolicy().implies(o.getClass().getProtectionDomain(), doAsPrivilegedPerm)) {
-                        throw new AccessControlException("permission required to override getUserPrincipal", doAsPrivilegedPerm);
-                    }
+    private static void checkObjectForDoAsPermission(final Object o) {
 
-                    return null;
-                }
-            });
-        }
     }
 
     private void handleAfterEvent(InstanceEvent event, InstanceEvent.EventType eventType) {

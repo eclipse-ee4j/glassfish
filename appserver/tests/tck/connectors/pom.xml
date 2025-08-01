@@ -236,12 +236,6 @@
                                             </exec>
                                         </then>
                                     </if>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="create-jvm-options" />
-                                        <arg value="--port=${port.admin}" />
-                                        <arg value="&quot;-Djava.security.manager&quot;" />
-                                    </exec>
 
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                         <env key="AS_JAVA" value="${java.home}"/>

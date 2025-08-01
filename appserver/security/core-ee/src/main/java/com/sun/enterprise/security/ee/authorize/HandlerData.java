@@ -54,34 +54,6 @@ public class HandlerData {
         this.inv = inv;
     }
 
-    public Object get(String key) {
-        if (PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST.equalsIgnoreCase(key)) {
-            return httpReq;
-        }
-        if (PolicyContextHandlerImpl.SUBJECT.equalsIgnoreCase(key)) {
-            return SecurityContext.getCurrent().getSubject();
-        }
-        if (PolicyContextHandlerImpl.REUSE.equalsIgnoreCase(key)) {
-            PermissionCacheFactory.resetCaches();
-            return Integer.valueOf(0);
-        }
-
-        if (inv == null) {
-            return null;
-        }
-
-        if (PolicyContextHandlerImpl.SOAP_MESSAGE.equalsIgnoreCase(key)) {
-            return ejbDelegate != null ? ejbDelegate.getSOAPMessage(inv) : null;
-        }
-        if (PolicyContextHandlerImpl.ENTERPRISE_BEAN.equalsIgnoreCase(key)) {
-            return ejbDelegate != null ? ejbDelegate.getEnterpriseBean(inv) : null;
-        }
-        if (PolicyContextHandlerImpl.EJB_ARGUMENTS.equalsIgnoreCase(key)) {
-            return ejbDelegate != null ? ejbDelegate.getEJbArguments(inv) : null;
-        }
-        return null;
-    }
-
     void reset() {
         httpReq = null;
         inv = null;

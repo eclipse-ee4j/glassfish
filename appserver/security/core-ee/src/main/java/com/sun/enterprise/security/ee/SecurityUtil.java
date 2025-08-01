@@ -28,7 +28,6 @@ import jakarta.security.jacc.PolicyConfiguration;
 import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
 
-import java.security.Policy;
 import java.util.Collection;
 import java.util.logging.Logger;
 
@@ -106,10 +105,7 @@ public class SecurityUtil {
             // find the PolicyConfig and delete it.
             PolicyConfiguration pc = PolicyConfigurationFactory.getPolicyConfigurationFactory().getPolicyConfiguration(contextId, false);
             pc.delete();
-            // Only do refresh policy if the deleted context was in service
-            if (wasInService) {
-                Policy.getPolicy().refresh();
-            }
+
 
         } catch (ClassNotFoundException cnfe) {
             String msg = localStrings.getLocalString("enterprise.security.securityutil.classnotfound",

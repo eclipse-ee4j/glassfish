@@ -86,8 +86,6 @@ public class PermsArchiveDelegate {
     public static void processModuleDeclaredAndEEPemirssions(SMGlobalPolicyUtil.CommponentType type, DeploymentContext context,
             ClassLoader classloader) throws SecurityException {
 
-        if (System.getSecurityManager() != null) {
-
             if (!(classloader instanceof DDPermissionsLoader)) {
                 return;
             }
@@ -107,7 +105,7 @@ public class PermsArchiveDelegate {
             PermissionCollection eePc = processEEPermissions(type, context);
 
             ddcl.addEEPermissions(eePc);
-        }
+
     }
 
     public static class SetPermissionsAction implements PrivilegedExceptionAction<Object> {

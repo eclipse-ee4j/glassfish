@@ -1610,11 +1610,9 @@ specify a custom file for the instance `pmd`.
 [source]
 ----
 asadmin> delete-jvm-options --target pmd
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
 Deleted 1 option(s)
 Command delete-jvm-options executed successfully.
 asadmin> create-jvm-options --target pmd
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/pmd-config/server.policy
 Created 1 option(s)
 Command create-jvm-options executed successfully.
 ----

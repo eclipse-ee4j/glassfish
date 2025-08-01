@@ -30,7 +30,6 @@ import jakarta.inject.Singleton;
 import java.net.Socket;
 import java.security.AccessController;
 import java.security.CodeSource;
-import java.security.Policy;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
@@ -64,7 +63,6 @@ public class SecurityContextUtil implements PostConstruct {
 
 
     private static final String IS_A = "_is_a";
-    private Policy policy;
 
     @Inject
     private GlassFishORBHelper orbHelper;
@@ -78,13 +76,6 @@ public class SecurityContextUtil implements PostConstruct {
 
     @Override
     public void postConstruct() {
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            @Override
-            public Object run() {
-                policy = Policy.getPolicy();
-                return null;
-            }
-        });
     }
 
     /**
@@ -215,11 +206,8 @@ public class SecurityContextUtil implements PostConstruct {
         ProtectionDomain prdm = new ProtectionDomain(cs, null, null, principals);
 
         // Check if policy gives principal the permissions
-        boolean result = policy.implies(prdm, perm);
 
-        LOG.log(Level.FINE, "CORBA Object permission evaluation result={0} for method={1}",
-            new Object[] {result, method});
-        return result;
+        return false;
     }
 
     /**

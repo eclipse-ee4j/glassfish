@@ -33,31 +33,6 @@ public class ClientClassLoaderDelegate {
 
     public ClientClassLoaderDelegate(URLClassLoader cl) {
         this.cl = cl;
-        loadPemissions();
-    }
-
-    private void loadPemissions() {
-        try {
-            processDeclaredPermissions();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void processDeclaredPermissions() throws IOException {
-        if (System.getSecurityManager() == null) {
-            return;
-        }
-
-        PermissionCollection declaredPermissionCollection = PermissionsUtil.getClientDeclaredPermissions(cl);
-
-        PermissionCollection eePc = PermissionsUtil.getClientEEPolicy(cl);
-        PermissionCollection eeRestriction = PermissionsUtil.getClientRestrictPolicy(cl);
-
-        SMGlobalPolicyUtil.checkRestriction(eePc, eeRestriction);
-        SMGlobalPolicyUtil.checkRestriction(declaredPermissionCollection, eeRestriction);
-
-        permHolder = new PermsHolder(eePc, declaredPermissionCollection, eeRestriction);
     }
 
     public PermissionCollection getCachedPerms(CodeSource codesource) {

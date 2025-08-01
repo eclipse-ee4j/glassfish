@@ -21,18 +21,10 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.connectors.util.AdminObjectConfigParser;
 import com.sun.enterprise.connectors.util.ConnectorConfigParser;
 import com.sun.enterprise.connectors.util.ConnectorConfigParserFactory;
-import com.sun.enterprise.connectors.util.MCFConfigParser;
 import com.sun.enterprise.connectors.util.MessageListenerConfigParser;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.SecurityPermission;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
 
 
 /**
@@ -47,106 +39,6 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
      */
      public ConnectorConfigurationParserServiceImpl() {
      }
-
-    /**
-     * Obtains the Permission string that needs to be added to the
-     * to the security policy files. These are the security permissions needed
-     * by the resource adapter implementation classes.
-     * These strings are obtained by parsing the ra.xml
-     *
-     * @param moduleName rar module Name
-     * @return Required policy permissions in server.policy file
-     * @throws ConnectorRuntimeException If rar.xml parsing fails.
-     */
-    public String getSecurityPermissionSpec(String moduleName)
-            throws ConnectorRuntimeException {
-
-        if (moduleName == null) {
-            return null;
-        }
-        String policyString = null;
-
-        //check whether the policy file already has required permissions.
-        String fileName = System.getProperty("java.security.policy");
-        if (fileName != null) {
-            File policyFile = new File(fileName);
-            String policyContent = getFileContent(policyFile);
-
-            ConnectorDescriptor connectorDescriptor = getConnectorDescriptor(moduleName);
-            Set securityPermissions = connectorDescriptor.getSecurityPermissions();
-            Iterator it = securityPermissions.iterator();
-            SecurityPermission secPerm = null;
-            String permissionString = null;
-
-            while (it.hasNext()) {
-                secPerm = (SecurityPermission) it.next();
-                permissionString = secPerm.getPermission();
-                if(permissionString != null) {
-                    int intIndex = policyContent.indexOf(permissionString);
-                    if (intIndex == -1) {
-                        if (policyString != null) {
-                            policyString = policyString + "\n \n" + permissionString;
-                        } else {
-                            policyString = "\n\n" + permissionString;
-                        }
-                    }
-                }
-            }
-
-            //print the missing permissions
-            if (policyString != null) {
-                policyString = CAUTION_MESSAGE + policyString;
-            }
-        }
-        return policyString;
-    }
-
-    /**
-     * Obtain the content of server.policy file
-     *
-     * @param file File server.policy file
-     * @return String content of server.policy file
-     */
-    public String getFileContent(File file) {
-        StringBuilder contents = new StringBuilder();
-        BufferedReader input = null;
-        try {
-            input = new BufferedReader(new FileReader(file));
-            try {
-                String line = null;
-                while ((line = input.readLine()) != null) {
-                    contents.append(line);
-                    contents.append(System.getProperty("line.separator"));
-                }
-            } finally {
-                input.close();
-            }
-        }
-        catch (Exception ex) {
-            _logger.log(Level.WARNING, "Exception while performing resource-adapter's " +
-                    "security permission check : ", ex);
-        }
-        return contents.toString();
-    }
-
-    /** Obtains all the Connection definition names of a rar
-     *  @param rarName rar moduleName
-     *  @return Array of connection definition names.
-     */
-    public String[] getConnectionDefinitionNames(String rarName)
-               throws ConnectorRuntimeException
-    {
-
-        String[] result = new String[0];
-        ConnectorDescriptor desc = getConnectorDescriptor(rarName);
-        if(desc != null) {
-            MCFConfigParser mcfConfigParser = (MCFConfigParser)
-              ConnectorConfigParserFactory.getParser(ConnectorConfigParser.MCF);
-            return mcfConfigParser.getConnectionDefinitionNames(desc);
-        } else {
-            return result;
-        }
-    }
 
     /**
      *  Retrieves the Resource adapter javabean properties with default values.

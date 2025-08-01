@@ -19,24 +19,13 @@ package com.sun.enterprise.security.ee.perms;
 
 import com.sun.logging.LogDomains;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.AllPermission;
-import java.security.CodeSource;
-import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
 import java.security.PermissionCollection;
-import java.security.Policy;
-import java.security.URIParameter;
-import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -89,8 +78,6 @@ public class SMGlobalPolicyUtil {
      */
     public static final String SERVER_ALLOWED_FILE = "restrict.server.policy";
 
-    protected static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
-
     /**
      * Code source URL representing Ejb type
      */
@@ -125,8 +112,6 @@ public class SMGlobalPolicyUtil {
     private static final Map<CommponentType, PermissionCollection> compTypeToServAllowedMap = new HashMap<>();
 
     private static boolean eeGrantedPolicyInitDone = false;
-
-    protected static final String domainCfgFolder = getJavaPolicyFolder() + File.separator;
 
     private static final AllPermission ALL_PERM = new AllPermission();
 
@@ -180,142 +165,7 @@ public class SMGlobalPolicyUtil {
     }
 
     private synchronized static void initDefPolicy() {
-
-        try {
-
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("defGrantedPolicyInitDone= " + eeGrantedPolicyInitDone);
-            }
-
-            if (eeGrantedPolicyInitDone) {
-                return;
-            }
-
-            eeGrantedPolicyInitDone = true;
-
-            loadServerPolicy(PolicyType.EEGranted);
-
-            loadServerPolicy(PolicyType.EERestricted);
-
-            loadServerPolicy(PolicyType.ServerAllowed);
-
-            checkDomainRestrictionsForDefaultPermissions();
-
-        } catch (FileNotFoundException e) {
-            // ignore: the permissions files not exist
-        } catch (IOException | NoSuchAlgorithmException | URISyntaxException e) {
-            logger.warning(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String getJavaPolicyFolder() {
-
-        String policyPath = System.getProperty(SYS_PROP_JAVA_SEC_POLICY);
-
-        if (policyPath == null) {
-            return null;
-        }
-
-        File pf = new File(policyPath);
-
-        return pf.getParent();
-    }
-
-    private static void loadServerPolicy(PolicyType policyType) throws IOException, NoSuchAlgorithmException, URISyntaxException {
-        if (policyType == null) {
-            return;
-        }
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("PolicyType= " + policyType);
-        }
-
-        String policyFilename = null;
-        Map<CommponentType, PermissionCollection> policyMap = null;
-
-        switch (policyType) {
-        case EEGranted:
-            policyFilename = domainCfgFolder + EE_GRANT_FILE;
-            policyMap = compTypeToEEGarntsMap;
-            break;
-        case EERestricted:
-            policyFilename = domainCfgFolder + EE_RESTRICTED_FILE;
-            policyMap = compTypeToEERestrictedMap;
-            break;
-        case ServerAllowed:
-            policyFilename = domainCfgFolder + SERVER_ALLOWED_FILE;
-            policyMap = compTypeToServAllowedMap;
-            break;
-        }
-
-        if (policyFilename == null || policyMap == null) {
-            throw new IllegalArgumentException("Unrecognized policy type: " + policyType);
-        }
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("policyFilename= " + policyFilename);
-        }
-
-
-        File file = new File(policyFilename);
-        if (!file.exists()) {
-            return;
-        }
-
-        URL furl = file.toURI().toURL();
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Loading policy from " + furl);
-        }
-
-        Policy pf = Policy.getInstance("JavaPolicy", new URIParameter(furl.toURI()));
-
-        CodeSource cs = new CodeSource(new URL(EJB_TYPE_CODESOURCE), (Certificate[]) null);
-        PermissionCollection pc = pf.getPermissions(cs);
-        policyMap.put(CommponentType.ejb, pc);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Loaded EJB policy = " + pc);
-        }
-
-        cs = new CodeSource(new URL(WEB_TYPE_CODESOURCE), (Certificate[]) null);
-        pc = pf.getPermissions(cs);
-        policyMap.put(CommponentType.war, pc);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Loaded WEB policy =" + pc);
-        }
-
-        cs = new CodeSource(new URL(RAR_TYPE_CODESOURCE), (Certificate[]) null);
-        pc = pf.getPermissions(cs);
-        policyMap.put(CommponentType.rar, pc);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Loaded rar policy =" + pc);
-        }
-
-        cs = new CodeSource(new URL(CLIENT_TYPE_CODESOURCE), (Certificate[]) null);
-        pc = pf.getPermissions(cs);
-        policyMap.put(CommponentType.car, pc);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Loaded car policy =" + pc);
-        }
-
-        cs = new CodeSource(new URL(EAR_TYPE_CODESOURCE), (Certificate[]) null);
-        pc = pf.getPermissions(cs);
-        policyMap.put(CommponentType.ear, pc);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Loaded ear policy =" + pc);
-        }
-
-    }
-
-    // this checks default permissions against restrictions
-    private static void checkDomainRestrictionsForDefaultPermissions() throws SecurityException {
-
-        checkEETypePermsAgainstServerRestiction(CommponentType.ejb);
-        checkEETypePermsAgainstServerRestiction(CommponentType.war);
-        checkEETypePermsAgainstServerRestiction(CommponentType.rar);
-        checkEETypePermsAgainstServerRestiction(CommponentType.car);
-        checkEETypePermsAgainstServerRestiction(CommponentType.ear);
+        System.out.println("Policy no longer supported");
     }
 
     private static void checkEETypePermsAgainstServerRestiction(CommponentType type) throws SecurityException {

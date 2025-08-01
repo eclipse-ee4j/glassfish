@@ -19,12 +19,10 @@ package com.sun.enterprise.security;
 
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.common.Util;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.event.EventListener;
@@ -35,12 +33,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.security.SecurityLoggerInfo.secMgrDisabled;
-import static com.sun.enterprise.security.SecurityLoggerInfo.secMgrEnabled;
-import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
 import static java.util.logging.Level.INFO;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
-import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup
@@ -55,7 +49,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     private static final String SYS_PROP_LOGIN_CONF = "java.security.auth.login.config";
-    private static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
 
     @Inject
     private PolicyLoader policyLoader;
@@ -76,22 +69,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     private EventListener listener;
 
 
-    public SecurityLifecycle() {
-        try {
-            if (Util.isEmbeddedServer()) {
-                // If the user-defined login.conf/server.policy are set as system properties, then they are given priority
-                setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").toURI().toURL().toExternalForm(), false);
-                setProperty(SYS_PROP_JAVA_SEC_POLICY, writeConfigFileToTempDir("server.policy").getAbsolutePath(), false);
-            }
-
-            // security manager is set here so that it can be accessed from
-            // other lifecycles, like PEWebContainer
-            _logger.info(System.getSecurityManager() == null ? secMgrDisabled : secMgrEnabled);
-        } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "java_security.init_securitylifecycle_fail", ex);
-            throw new RuntimeException(ex.toString(), ex);
-        }
-    }
 
     // override default
     public void onInitialization() {

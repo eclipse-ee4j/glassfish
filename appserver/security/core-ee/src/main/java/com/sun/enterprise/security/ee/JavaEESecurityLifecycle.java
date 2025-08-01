@@ -61,19 +61,6 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
 
     @Override
     public void onInitialization() {
-        java.lang.SecurityManager securityManager = System.getSecurityManager();
-
-        // TODO: need someway to not override the SecMgr if the EmbeddedServer was
-        // run with a different non-default SM.
-        // right now there seems no way to find out if the SM is the VM's default SM.
-        if (securityManager != null && !J2EESecurityManager.class.equals(securityManager.getClass())) {
-            try {
-                System.setSecurityManager(new J2EESecurityManager());
-            } catch (SecurityException ex) {
-                LOG.log(WARNING, "Could not override SecurityManager");
-            }
-        }
-
         initializeJakartaAuthentication();
     }
 

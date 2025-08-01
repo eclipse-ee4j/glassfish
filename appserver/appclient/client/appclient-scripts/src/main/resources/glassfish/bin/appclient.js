@@ -43,7 +43,6 @@ var appcPath = envVars("APPCPATH");
 var accJar=quoteStringIfNeeded(AS_INSTALL + "\\lib\\gf-client.jar");
 
 var jvmArgs="-Dcom.sun.aas.installRoot=" + quoteStringIfNeeded(AS_INSTALL) +
-    " -Djava.security.policy=" + quoteStringIfNeeded(AS_INSTALL + "\\lib\\appclient\\client.policy") +
     " -Djava.system.class.loader=org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader" +
     " -Djava.security.auth.login.config=" + quoteStringIfNeeded(AS_INSTALL + "\\lib\\appclient\\appclientlogin.conf");
 var VMARGS = envVars("VMARGS");

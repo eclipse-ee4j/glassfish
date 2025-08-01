@@ -204,13 +204,6 @@
                                         <env key="AS_JAVA" value="${java.home}"/>
                                     </exec>
 
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" if:set="glassfish.security.manager" failonerror="true">
-                                        <arg value="create-jvm-options" />
-                                        <arg value="--port=${port.admin}" />
-                                        <arg value="&quot;-Djava.security.manager&quot;" />
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-
                                     <if>
                                         <isset property="jacoco.version" />
                                         <then>

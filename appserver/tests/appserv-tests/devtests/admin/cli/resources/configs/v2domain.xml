@@ -185,7 +185,7 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-Djavax.management.builder.initial=com.sun.enterprise.ee.admin.AppServerMBeanServerBuilder</jvm-options>
         <jvm-options>-Dcom.sun.appserv.pluggable.features=com.sun.enterprise.ee.server.pluggable.EEPluggableFeatureImpl</jvm-options>
-        <jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
+
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.client.gcInterval=3600000</jvm-options>
@@ -331,7 +331,7 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-Djavax.management.builder.initial=com.sun.enterprise.ee.admin.AppServerMBeanServerBuilder</jvm-options>
         <jvm-options>-Dcom.sun.appserv.pluggable.features=com.sun.enterprise.ee.server.pluggable.EEPluggableFeatureImpl</jvm-options>
-        <jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
+
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.client.gcInterval=3600000</jvm-options>
@@ -482,7 +482,7 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-Djavax.management.builder.initial=com.sun.enterprise.ee.admin.AppServerMBeanServerBuilder</jvm-options>
         <jvm-options>-Dcom.sun.appserv.pluggable.features=com.sun.enterprise.ee.server.pluggable.EEPluggableFeatureImpl</jvm-options>
-        <jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
+
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.client.gcInterval=3600000</jvm-options>
@@ -633,7 +633,7 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-Djavax.management.builder.initial=com.sun.enterprise.ee.admin.AppServerMBeanServerBuilder</jvm-options>
         <jvm-options>-Dcom.sun.appserv.pluggable.features=com.sun.enterprise.ee.server.pluggable.EEPluggableFeatureImpl</jvm-options>
-        <jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>
+
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.server.gcInterval=3600000</jvm-options>
         <jvm-options>-Dsun.rmi.dgc.client.gcInterval=3600000</jvm-options>

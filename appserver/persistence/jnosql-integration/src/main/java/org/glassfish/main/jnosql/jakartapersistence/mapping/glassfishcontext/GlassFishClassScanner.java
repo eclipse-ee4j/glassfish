@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
@@ -44,8 +45,6 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
-
-import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 
 /**
  *

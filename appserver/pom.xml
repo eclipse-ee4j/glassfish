@@ -342,11 +342,6 @@
                 <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
                 <version>${jnosql.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.eclipse.jnosql.mapping</groupId>
-                <artifactId>jnosql-mapping-api-core</artifactId>
-                <version>${jnosql.version}</version>
-            </dependency>
 
             <!-- Jakarta Persistence -->
             <dependency>

@@ -24,12 +24,12 @@ Please see the Title page for additional license information.
 ====
 
 The Performance Tuning Guide describes how to get the best performance
-with {productName} 7.
+with {productName} {product-majorVersion}.
 
 This preface contains information about and conventions for the entire
 {productName} ({productName}) documentation set.
 
-{productName} 7 is developed through the GlassFish project
+{productName} {product-majorVersion} is developed through the GlassFish project
 open-source community at `http://glassfish.java.net/`. The GlassFish
 project provides a structured process for developing the {productName} platform that makes the new features of the Jakarta EE platform
 available faster, while maintaining the most important feature of Java

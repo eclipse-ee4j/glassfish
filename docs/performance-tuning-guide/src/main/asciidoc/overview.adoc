@@ -28,7 +28,7 @@ The following topics are addressed here:
 
 === Process Overview
 
-The following table outlines the overall {productName} 7
+The following table outlines the overall {productName} {product-majorVersion}
 administration process, and shows where performance tuning fits in the
 sequence.
 
@@ -256,13 +256,13 @@ Security]" in {productName} Security Guide.
 
 ==== High Availability Clustering, Load Balancing, and Failover
 
-{productName} 7 enables multiple {productName} instances to be
+{productName} {product-majorVersion} enables multiple {productName} instances to be
 clustered to provide high availability through failure protection,
 scalability, and load balancing.
 
 High availability applications and services provide their functionality
 continuously, regardless of hardware and software failures. To make such
-reliability possible, {productName} 7 provides mechanisms for
+reliability possible, {productName} {product-majorVersion} provides mechanisms for
 maintaining application state data between clustered {productName}
 instances. Application state data, such as HTTP session data, stateful
 EJB sessions, and dynamic cache information, is replicated in real time
@@ -282,7 +282,7 @@ high availability persistence tuning recommendations.
 See the xref:ha-administration-guide.adoc#GSHAG[{productName} High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
-features in {productName} 7.
+features in {productName} {product-majorVersion}.
 
 [[hardware-resources]]
 

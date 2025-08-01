@@ -9,7 +9,7 @@ prev=part-appendixes.adoc
 == A Subcommands for the `asadmin` Utility
 
 This appendix lists the `asadmin` subcommands that are included with
-this release of the {productName} 7 software.
+this release of the {productName} {product-majorVersion} software.
 
 * <<General Administration Subcommands>>
 * <<Batch Jobs Subcommands>>

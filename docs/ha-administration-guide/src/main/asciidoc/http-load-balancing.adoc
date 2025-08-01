@@ -10,7 +10,7 @@ prev=named-configurations.html
 [[configuring-http-load-balancing]]
 == 7 Configuring HTTP Load Balancing
 
-This chapter describes how to configure HTTP load balancing on {productName} 7.
+This chapter describes how to configure HTTP load balancing on {productName} {product-majorVersion}.
 
 The following topics are addressed here:
 
@@ -56,7 +56,7 @@ HTTP Server and `mod_proxy_ajp`].
 
 ==== Configuring {productName} with Apache HTTP Server and `mod_jk`
 
-{productName} 7 can be configured for load balancing with Apache
+{productName} {product-majorVersion} can be configured for load balancing with Apache
 HTTP Server as a front end by enabling the Apache `mod_jk` connector
 module. To enable the `mod_jk` module in {productName}, set the
 {productName} `jk-enabled` `network-listener` attribute. You can also
@@ -192,7 +192,7 @@ worker.loadbalancer.balance_workers=worker1,worker2
 
 ==== Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`
 
-{productName} 7 can be configured for load balancing with Apache
+{productName} {product-majorVersion} can be configured for load balancing with Apache
 HTTP Server as a front end by enabling the Apache `mod_proxy_ajp`
 connector module. To enable the `mod_proxy_ajp` module in {productName}, set the {productName} `jk-enabled` `network-listener`
 attribute. You can also create `jk-connectors` under different

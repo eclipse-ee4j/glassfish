@@ -26,50 +26,280 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-authorization</artifactId>
+    <artifactId>tck-authorization</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: authorization</name>
-
-
-    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta authorization standalone TCK</description>
+    <name>TCK: Authorization</name>
+    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta Authorization Standalone TCK</description>
 
     <properties>
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
+
+        <tck.version>3.0.0</tck.version>
+        <tck.artifactId>tck-authorization-download</tck.artifactId>
+        <tck.home>${project.build.directory}/authorization-tck-${tck.version}</tck.home>
+        <tck.parentPomFile>${tck.home}/tck/pom.xml</tck.parentPomFile>
+        <tck.signatureTestPomFile>${tck.home}/tck/authorization-signaturetest/pom.xml</tck.signatureTestPomFile>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.main.distributions</groupId>
+                <artifactId>glassfish</artifactId>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.main.tests.tck</groupId>
+                <artifactId>${tck.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.main</groupId>
+                <artifactId>hk2-config-generator</artifactId>
+                <version>${glassfish.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.main.distributions</groupId>
-            <artifactId>glassfish</artifactId>
-            <type>zip</type>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>11.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-authorization-tck</artifactId>
-            <type>zip</type>
-            <version>${project.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>2.0.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <!-- 4 uses char[] instead of String for passwords -->
+            <version>3.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.21.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>2.6</version>
         </dependency>
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <glassfish.home>${glassfish.home}</glassfish.home>
+                            <log.file.location>${log.file.location}</log.file.location>
+                            <glassfish.systemProperties>
+                                log.file.location=${log.file.location}
+                                vendor.jakarta.security.jacc.PolicyConfigurationFactory.provider=org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory
+                            </glassfish.systemProperties>
+                            <glassfish.postBootCommands>
+                                --passwordfile ${maven.multiModuleProjectDirectory}/reza.pass create-file-user --groups foo:bar reza
+                                --passwordfile ${maven.multiModuleProjectDirectory}/javajoe.pass create-file-user --groups Administrator:Manager:Employee javajoe
+                                --passwordfile ${maven.multiModuleProjectDirectory}/javajoe.pass create-file-user --groups Manager:Employee Manager
+                                --passwordfile ${maven.multiModuleProjectDirectory}/j2ee.pass create-file-user --groups Employee j2ee
+                            </glassfish.postBootCommands>
+                        </systemPropertyVariables>
+                    </configuration>
+                    <executions>
+                        <!-- Executes some weird broken variant of the signature test, then passes with another one execution -->
+                        <execution>
+                            <id>integration-test</id>
+                            <phase>disabled</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>io.github.download-maven-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>download-authorization-tck</id>
-                        <phase>generate-resources</phase>
+                        <id>unpack-tck</id>
+                        <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>wget</goal>
+                            <goal>unpack</goal>
                         </goals>
                         <configuration>
-                            <skip>${skipITs}</skip>
-                            <url>${ant.zip.url}</url>
-                            <unpack>true</unpack>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.tests.tck</groupId>
+                                    <artifactId>${tck.artifactId}</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <inherited>false</inherited>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-tck-and-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                     classpathref="maven.plugin.classpath" />
+
+                                <macrodef name="pom-replace">
+                                    <attribute name="file" />
+                                    <attribute name="element" />
+                                    <attribute name="value" />
+                                    <attribute name="replacement" />
+                                    <sequential>
+                                      <replace file="@{file}">
+                                          <replacetoken><![CDATA[<@{element}>@{value}</@{element}]]></replacetoken>
+                                          <replacevalue><![CDATA[<@{element}>@{replacement}</@{element}]]></replacevalue>
+                                      </replace>
+                                    </sequential>
+                                </macrodef>
+
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="groupId" value="org.eclipse.ee4j" replacement="${project.groupId}" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="artifactId" value="project" replacement="${project.artifactId}" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="version" value="1.0.9" replacement="${project.version}" />
+                                <pom-replace file="${tck.parentPomFile}"
+                                    element="version" value="1.4" replacement="${omnifish.arquillian.version}" />
+                                <replace file="${tck.parentPomFile}">
+                                    <replacetoken><![CDATA[<relativePath/>]]></replacetoken>
+                                    <replacevalue><![CDATA[<relativePath>../../..</relativePath>]]></replacevalue>
+                                </replace>
+
+                                <replaceregexp
+                                    flags="gs"
+                                    file="${tck.parentPomFile}"
+                                    match="\s*&lt;dependencyManagement&gt;.*?&lt;/dependencyManagement&gt;"
+                                    replace="">
+                                </replaceregexp>
+                                <replaceregexp
+                                    flags="gs"
+                                    file="${tck.parentPomFile}"
+                                    match="\s*&lt;dependencies&gt;.*?&lt;/dependencies&gt;"
+                                    replace="">
+                                </replaceregexp>
+                                <replaceregexp
+                                    flags="gs"
+                                    file="${tck.parentPomFile}"
+                                    match="\s*&lt;profiles&gt;.*?&lt;/profiles&gt;"
+                                    replace="">
+                                </replaceregexp>
+                                <replaceregexp
+                                    flags="gs"
+                                    file="${tck.signatureTestPomFile}"
+                                    match="\s*&lt;dependencies&gt;.*?&lt;/dependencies&gt;"
+                                    replace="">
+                                </replaceregexp>
+
+                                <replace dir="${tck.home}/tck">
+                                    <include name="**/pom.xml"/>
+                                    <replacetoken><![CDATA[<version>${tck.version}</version>]]></replacetoken>
+                                    <replacevalue><![CDATA[<version>${project.version}</version>]]></replacevalue>
+                                </replace>
+                                <replace dir="${tck.home}/tck">
+                                    <include name="**/pom.xml"/>
+                                    <replacetoken><![CDATA[<groupId>org.omnifaces.arquillian</groupId>]]></replacetoken>
+                                    <replacevalue><![CDATA[<groupId>ee.omnifish.arquillian</groupId>]]></replacevalue>
+                                </replace>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
@@ -78,6 +308,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
@@ -86,20 +317,41 @@
                         </goals>
                         <configuration>
                             <executable>${maven.executable}</executable>
+                            <environmentVariables>
+                                <LC_ALL>C</LC_ALL>
+                            </environmentVariables>
                             <arguments>
                                 <argument>-B</argument>
                                 <argument>-e</argument>
                                 <argument>-s</argument>
                                 <argument>${maven.settings.xml}</argument>
                                 <argument>-f</argument>
-                                <argument>${tck.root}/authorization-tck-3.0.0/tck/pom.xml</argument>
+                                <argument>${tck.home}/tck/pom.xml</argument>
                                 <argument>clean</argument>
                                 <argument>install</argument>
+                                <argument>-Dtest.logLevel=${test.logLevel}</argument>
                                 <argument>-Dglassfish.version=${glassfish.version}</argument>
+                                <argument>-Dglassfish.home=${glassfish.home}</argument>
+                                <argument>-Dlog.file.location=${project.build.directory}</argument>
+                                <argument>-Dsigtest.api.groupId=jakarta.authorization</argument>
+                                <argument>-Dsigtest.api.artifactId=jakarta.authorization-api</argument>
+                                <argument>-Dsigtest.api.version=${jakarta.authorization-api.version}</argument>
+                                <argument>-Domnifish.arquillian.version=${omnifish.arquillian.version}</argument>
+                                <argument>-Dexousia.version=${exousia.version}</argument>
                             </arguments>
-                            <environmentVariables>
-                                <LC_ALL>C</LC_ALL>
-                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>print-count-of tests</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${basedir}/count-tests.sh</executable>
+                            <arguments>
+                                <argument>${tck.home}</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>

@@ -104,7 +104,6 @@ This section lists the requirements that must be met before installing
 The following topics are addressed here:
 
 * xref:#required-jdk-versions[Required JDK Versions]
-* xref:#required-disk-space[Required Disk Space]
 * xref:#required-free-ports[Required Free Ports]
 * xref:#message-queue-broker-requirements[Message Queue Broker Requirements]
 * xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]

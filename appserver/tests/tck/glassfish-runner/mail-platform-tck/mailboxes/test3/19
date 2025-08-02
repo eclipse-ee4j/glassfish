@@ -1,0 +1,55 @@
+From jmk@cochin Thu Feb 12 14:06:34 1998 -0800
+Return-Path: <hae@rex75.West>
+Received: from Eng.Sun.COM by shorter.eng.sun.com (SMI-8.6/SMI-SVR4)
+	id MAA00941; Wed, 6 Aug 1997 12:00:52 -0700
+Received: from cde-serv.Eng.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id LAA26572; Wed, 6 Aug 1997 11:56:32 -0700
+Received: from Eng.Sun.COM by cde-serv.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id MAA07657; Wed, 6 Aug 1997 12:13:36 -0700
+Received: from sunmail1.Sun.COM by Eng.Sun.COM (SMI-8.6/SMI-5.3)
+	id LAA00269; Wed, 6 Aug 1997 11:55:47 -0700
+Received: from West.Sun.COM by sunmail1.Sun.COM (SMI-8.6/SMI-4.1)
+	id LAA04401; Wed, 6 Aug 1997 11:55:48 -0700
+Received: from cypress.West.Sun.COM by West.Sun.COM (SMI-8.6/SMI-5.3)
+	id LAA22257; Wed, 6 Aug 1997 11:55:46 -0700
+Received: from rex.West.Sun.COM (rex70) by cypress.West.Sun.COM (5.0/SMI-SVR4)
+	id AA17268; Wed, 6 Aug 1997 11:55:46 -0700
+Received: from babu.West.Sun.COM by rex.West.Sun.COM (4.1/SMI-4.1-np392)
+	id AA03822; Wed, 6 Aug 97 11:55:45 PDT
+Received: by babu.West.Sun.COM (SMI-8.6/SMI-SVR4)
+	id LAA07360; Wed, 6 Aug 1997 11:52:45 -0700
+Date: Wed, 6 Aug 1997 11:52:45 -0700
+From: hae@rex75.West (Hae Hirdler)
+Message-Id: <199708061852.LAA07360@babu.West.Sun.COM>
+To: cde-interest@Sun.COM
+Subject: screenblank with animated saver
+Cc: hae@babu.West
+X-Sun-Charset: US-ASCII
+Content-Length: 655
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 18
+
+** Hello! I am not in this alias.   Please include me in your reply. **
+
+The dtscreen (-mode option) allows an animated image display like pyro 
+or qix, but it looks like dtscreen is used with a screenlock feature 
+(user locks the screen).
+
+
+My customer is interested in using the same animated image display 
+with a screenblank feature (inactivity auto timeout).  The default
+seems to make the screen go blank.
+
+Is this possible to use an animated image instead of going blank
+with the screenblank, and any tips on how to do it?
+
+I guess what I am really looking for here is a "ScreenAminated with
+a timeout" instead of a screenblank :).
+
+
+Regards,
+
+-hh
+

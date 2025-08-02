@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+  <engine>
+    <property name="deploymentExportPath">target/deployments</property>
+  </engine>
+
+  <extension qualifier="glassfish-descriptors">
+    <property name="descriptorDir">target/</property>
+  </extension>
+
+  <group qualifier="glassfish-servers" default="true">
+    <container qualifier="tck-javatest" default="true">
+        <configuration>
+            <property name="glassFishHome">target/glassfish8</property>
+        </configuration>
+        <protocol type="javatest">
+            <property name="trace">true</property>
+            <property name="workDir">/tmp</property>
+            <property name="tsJteFile">jakartaeetck/bin/ts.jte</property>
+            <property name="tsSqlStmtFile">sql/derby/derby.dml.sql</property>
+            <property name="runClient">true</property>
+            <property name="runAsVehicle">true</property>
+            <property name="clientEarDir">target/appclient</property>
+            <property name="unpackClientEar">true</property>
+            <property name="clientDir">${project.basedir}</property>
+            <property name="clientTimeout">20000</property>
+        </protocol>
+    </container>
+  </group>
+
+
+</arquillian>

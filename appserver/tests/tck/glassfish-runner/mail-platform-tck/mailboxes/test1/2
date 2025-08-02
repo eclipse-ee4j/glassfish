@@ -1,0 +1,48 @@
+From mspivak Thu Nov 21 16:39:49 1996
+Return-Path: <mspivak@localhost>
+Received: from apilon by apilon.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id QAA05238; Thu, 21 Nov 1996 16:39:48 -0800
+Date: Thu, 21 Nov 1996 16:39:48 -0800
+From: mspivak@localhost (Max Spivak)
+Message-Id: <199611220039.QAA05238@apilon.Eng.Sun.COM>
+Subject: Test Msg w/Several Attachments
+To: maxs@apilon
+X-Mailer: HotJava Views MailView V1.0
+Content-Type: multipart/mixed; boundary=84104117327811111832504932495458515758524832808384324957570
+Mime-Version: 1.0
+Content-Length: 707
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 51
+
+--84104117327811111832504932495458515758524832808384324957570
+Content-Type: text/plain; charset=us-ascii
+
+Line1
+Line2
+Line3
+--84104117327811111832504932495458515758524832808384324957570
+Content-Type: text/plain; charset=us-ascii
+
+Hello, I'm an attachment.
+AttachLn2
+AttachLn3
+--84104117327811111832504932495458515758524832808384324957570
+Content-Type: application/x-sun-ae-file; name=CalendarAppointment
+
+
+
+	** Calendar Appointment **
+	Date: 11/21/1996
+	Start: 4:39pm
+	Repeat: One Time
+	What: Max's Text Appt
+
+
+--84104117327811111832504932495458515758524832808384324957570
+Content-Type: text/html
+
+<html><body><h1>Test Data</h1></body></html>
+--84104117327811111832504932495458515758524832808384324957570--
+

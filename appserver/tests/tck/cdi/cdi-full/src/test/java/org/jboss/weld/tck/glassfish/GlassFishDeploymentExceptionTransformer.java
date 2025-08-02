@@ -22,7 +22,7 @@ import jakarta.enterprise.inject.spi.DeploymentException;
 
 import java.util.List;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;
 
 /**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,11 +21,11 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-cdi-parent</artifactId>
+        <artifactId>tck-cdi</artifactId>
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-cdi-signature</artifactId>
+    <artifactId>tck-cdi-signature</artifactId>
 
     <name>CDI TCK Signature runner for Weld (GlassFish)</name>
     <description>Aggregates dependencies and runs the CDI Signature TCK on GlassFish</description>
@@ -33,7 +33,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -48,7 +47,7 @@
                                 <artifactItem>
                                     <groupId>jakarta.enterprise</groupId>
                                     <artifactId>cdi-tck-core-impl</artifactId>
-                                    <version>${cdi.tck-4-1.version}</version>
+                                    <version>${tck.cdi.version}</version>
                                     <type>sig</type>
                                     <classifier>sigtest-jdk17</classifier>
                                     <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
@@ -82,30 +81,30 @@
             </plugin>
 
             <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                    <configuration>
-                        <target>
-                            <!-- API jars from the GlassFish distribution -->
-                            <unzip dest="target/cdi-sigtest-classes">
-                                <fileset dir="${glassfish.home}/glassfish/modules">
-                                    <include name="jakarta.annotation-api.jar" />
-                                    <include name="jakarta.el-api.jar" />
-                                    <include name="jakarta.interceptor-api.jar" />
-                                    <include name="jakarta.inject-api.jar" />
-                                    <include name="jakarta.enterprise.lang-model.jar" />
-                                    <include name="jakarta.enterprise.cdi-api.jar" />
-                                </fileset>
-                            </unzip>
-                        </target>
-                    </configuration>
-                </execution>
-            </executions>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- API jars from the GlassFish distribution -->
+                                <unzip dest="target/cdi-sigtest-classes">
+                                    <fileset dir="${glassfish.home}/glassfish/modules">
+                                        <include name="jakarta.annotation-api.jar" />
+                                        <include name="jakarta.el-api.jar" />
+                                        <include name="jakarta.interceptor-api.jar" />
+                                        <include name="jakarta.inject-api.jar" />
+                                        <include name="jakarta.enterprise.lang-model.jar" />
+                                        <include name="jakarta.enterprise.cdi-api.jar" />
+                                    </fileset>
+                                </unzip>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

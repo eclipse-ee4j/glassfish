@@ -38,10 +38,10 @@
         <module>activation</module>
         <module>authentication</module>
         <module>authorization</module>
+        <module>expression-language</module>
 
         <module>platform-tck-runner</module>
 
-        <module>expression_language</module>
         <module>rest</module>
         <module>rest_cdi</module>
         <module>faces</module>

@@ -21,14 +21,20 @@ import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.DataRepository;
 import jakarta.data.repository.Repository;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.enterprise.util.TypeLiteral;
 import jakarta.persistence.Entity;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
@@ -81,7 +87,8 @@ public class GlassFishClassScannerTest {
 
         Types types = parseClasses(allClasses);
 
-        final GlassFishClassScanner scanner = new GlassFishClassScanner(types);
+        configureCDI(types);
+        final GlassFishClassScanner scanner = new GlassFishClassScanner();
 
         final Set<Class<?>> repositoriesStandardResult = scanner.repositoriesStandard();
         assertTrue(repositoriesStandardResult.equals(standardRepositories), "Standard repositories: " + repositoriesStandardResult);
@@ -89,6 +96,23 @@ public class GlassFishClassScannerTest {
         assertTrue(customRepositoriesResult.equals(customRepositories), "Custom repositories: " + customRepositoriesResult);
         final Set<Class<?>> repositoriesResult = scanner.repositories();
         assertTrue(repositoriesResult.equals(normalRepositories), "Repositories: " + repositoriesResult);
+    }
+
+    private void configureCDI(Types types) {
+        CDI.setCDIProvider(() -> new MockCDI() {
+            @Override
+            public <U> Instance<U> select(Class<U> subtype, Annotation... qualifiers) {
+                return new MockInstance<U>() {
+                    @Override
+                    public U get() {
+                        if (subtype.isAssignableFrom(ApplicationContext.class)) {
+                            return subtype.cast(new ApplicationContext(types));
+                        }
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                };
+            }
+        });
     }
 
     public static Types parseClasses(Collection<Class<?>> classes) throws IOException {
@@ -120,6 +144,119 @@ public class GlassFishClassScannerTest {
 
         // Return the parsed type
         return context.getTypes();
+
+    }
+
+    static class MockCDI extends CDI<Object> {
+
+        @Override
+        public BeanManager getBeanManager() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Instance<Object> select(Annotation... qualifiers) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public <U> Instance<U> select(Class<U> subtype, Annotation... qualifiers) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public <U> Instance<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean isUnsatisfied() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean isAmbiguous() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void destroy(Object instance) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Handle<Object> getHandle() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Iterable<? extends Handle<Object>> handles() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Iterator<Object> iterator() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Object get() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+    }
+
+    static class MockInstance<T> implements Instance<T> {
+
+        @Override
+        public Instance<T> select(Annotation... qualifiers) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public <U extends T> Instance<U> select(Class<U> subtype, Annotation... qualifiers) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public <U extends T> Instance<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean isUnsatisfied() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean isAmbiguous() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void destroy(T instance) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Handle<T> getHandle() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Iterable<? extends Handle<T>> handles() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public T get() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
 
     }
 }

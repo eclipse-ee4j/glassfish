@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.hk2.classmodel.reflect.ExtensibleType;
@@ -56,26 +57,23 @@ public class GlassFishClassScanner implements ClassScanner {
 
     /* TODO: Optimization - initialize all sets returned from methods in the CDI extension and return them directly,
     avoid searching for them each time */
-    Types types;
-
-    public GlassFishClassScanner() {
+    public Types getTypes() {
+        final ServiceLocator locator = Globals.getDefaultHabitat();
         DeploymentContext deploymentContext
-                = Globals.getDefaultHabitat()
-                        .getService(Deployment.class)
-                        .getCurrentDeploymentContext();
+                = locator != null
+                        ? locator
+                                .getService(Deployment.class)
+                                .getCurrentDeploymentContext()
+                        : null;
         if (deploymentContext != null) {
             // During deployment, we can retrieve Types from the context.
             // We can't access CDI context at this point as this class is not in a bean archive.
-            this.types = deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
+            return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
         } else {
             // After deployment, we retrieve types stored in the app context defined in the CDI extension
             final ApplicationContext appContext = CDI.current().select(ApplicationContext.class).get();
-            this.types = appContext.getTypes();
+            return appContext.getTypes();
         }
-    }
-
-    public GlassFishClassScanner(Types types) {
-        this.types = types;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class GlassFishClassScanner implements ClassScanner {
 
     private Set<Class<?>> findClassesWithAnnotation(Class<?> annotation) {
         String annotationClassName = annotation.getName();
-        return types.getAllTypes()
+        return getTypes().getAllTypes()
                 .stream()
                 .filter(type -> type instanceof ClassModel)
                 .filter(type -> null != type.getAnnotation(annotationClassName))
@@ -145,7 +143,7 @@ public class GlassFishClassScanner implements ClassScanner {
 
     private Stream<Class<?>> repositoriesStreamMatching(Predicate<InterfaceModel> predicate) {
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
-        return types.getAllTypes()
+        return getTypes().getAllTypes()
                 .stream()
                 .filter(type -> type instanceof InterfaceModel)
                 .filter(type -> {
@@ -184,6 +182,7 @@ public class GlassFishClassScanner implements ClassScanner {
     }
 
     private boolean directlyImplementsStandardInterface(ParameterizedInterfaceModel interf) {
+        var types = getTypes();
         Type basicRepositoryType = types.getBy(BasicRepository.class.getName());
         Type crudRepositoryType = types.getBy(CrudRepository.class.getName());
         Type dataRepositoryType = types.getBy(DataRepository.class.getName());

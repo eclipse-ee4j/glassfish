@@ -9,18 +9,10 @@ prev=preface.html
 [[GSRLN]]
 == 1 {productName} {product-majorVersion} Release Notes
 
-[CAUTION]
-====
-To Be Done
-
-This page must be updated before the release!
-====
-
 {productName} provides a lightweight, modular server for the
-development of Java Platform Enterprise Edition (Jakarta EE) 8
-applications. It is the Reference Implementation for Jakarta EE. It
-delivers a highly productive platform for developing with the latest
-Jakarta EE technologies.
+development of Jakarta EE 10applications. It is the Reference
+Implementation for Jakarta EE. It delivers a highly productive
+platform for developing with the latest Jakarta EE technologies.
 
 For any issue or information on {productName},
 see the https://glassfish.org/.
@@ -132,24 +124,6 @@ JDK Software] for important JDK configuration instructions.
 It is recommended that any machine that is hosting a {productName}
 DAS or server instance have a minimum of 1 GB RAM.
 ====
-
-[[required-disk-space]]
-
-==== Required Disk Space
-
-The download sizes for {productName} {product-majorVersion} vary depending on the
-package you choose. The following are the approximate sizes of the ZIP
-packages for the Full and Web profiles:
-
-* Full `*.zip`: 114 MB (136 MB unzipped)
-* Web `*.zip`: 64.9 MB (82.9 MB unzipped)
-
-The installation sizes will vary depending on your configuration, but
-the approximate amount of disk space used by {productName} {product-majorVersion} is as
-follows:
-
-* Full: 138 MB
-* Web: 84.4 MB
 
 [[required-free-ports]]
 
@@ -704,7 +678,7 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |Jakarta EE Standard |Version |{productName} {product-majorVersion} Full Platform |{productName} {product-majorVersion} Web Profile
 
 |https://jakarta.ee/specifications/platform/10/[Jakarta EE Specification]
-|10
+|{jakartaee}
 |X
 |X
 
@@ -714,7 +688,7 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |-
 
 |https://jakarta.ee/specifications/security/[Security]
-|3.0
+|{jakarta-security-api-version}
 |X
 |X
 
@@ -729,12 +703,12 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |-
 
 |https://jakarta.ee/specifications/jsonp/[JSON Processing]
-|2.1
+|{jakarta-jsonp-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/jsonb/[JSON Binding]
-|3.0
+|{jakarta-json-bind-api-version}
 |X
 |X
 
@@ -744,17 +718,17 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 
 |https://jakarta.ee/specifications/websocket/[Servlet]
-|6.0
+|{jakarta-servlet-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/pages/[Server Pages]
-|3.1
+|{jakarta-pages-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/expression-language/[Expression Language]
-|5.0
+|{jakarta-el-api-version}
 |X
 |X
 
@@ -764,7 +738,7 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 
 |https://jakarta.ee/specifications/tags/[Standard Tag Library]
-|3.0
+|{jstl-api-version}
 |X
 |X
 
@@ -773,33 +747,33 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 |X
 
-|https://jakarta.ee/specifications/faces/[JavaServer Faces]
-|4.0
+|https://jakarta.ee/specifications/faces/[Java Server Faces]
+|{jakarta-faces-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/annotations/[Annotations]
-|2.1
+|{jakarta-annotation-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/transactions/[Transactions]
-|2.0
+|{jakarta-transaction-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/persistence/[Persistence]
-|3.1
+|{jakarta.persistence-api.version}
 |X
 |X
 
 |https://jakarta.ee/specifications/managedbeans/[Managed Beans]
-|2.0
+|2.1
 |X
 |X
 
 |https://jakarta.ee/specifications/interceptors/[Interceptors]
-|2.0
+|{jakarta-interceptor-api-version}
 |X
 |X
 
@@ -809,32 +783,32 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 
 |https://jakarta.ee/specifications/cdi/[Contexts and Dependency Injection]
-|3.0
+|{jakarta-inject-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/persistence/[Enterprise Beans]
-|4.0
+|{jakarta-ejb-api-version}
 |X
 |-
 
 |https://jakarta.ee/specifications/restful-ws/[RESTful Web Services]
-|4.0
+|{jakarta-rest-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/bean-validation/[Bean Validation]
-|3.0
+|{jakarta-validation-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/connectors/[Connectors]
-|2.1
+|{jakarta.resource-api.version}
 |X
 |X^*^
 
 |https://jakarta.ee/specifications/xml-web-services/[XML Web Services]
-|4.0
+|{jakarta.xml.ws-api.version}
 |X
 |-
 
@@ -844,7 +818,7 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |-
 
 |https://jakarta.ee/specifications/xml-binding/[XML Binding]
-|4.0
+|{jakarta-jaxb-impl-version}
 |X
 |-
 
@@ -859,22 +833,22 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |-
 
 |https://jakarta.ee/specifications/messaging/[Messaging]
-|3.1
+|{jakarta-messaging-api-version}
 |X
 |-
 
 |https://jakarta.ee/specifications/mail/[Mail]
-|2.1
+|{jakarta-mail-api-version}
 |X
 |-
 
 |https://jakarta.ee/specifications/authentication/[Authentication]
-|3.0
+|{jakarta-authentication-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/authorization/[Authorization]
-|2.1
+|{jakarta-authorization-api-version}
 |X
 |-
 
@@ -920,11 +894,15 @@ extensions, including the following:
 If you have problems with {productName} {product-majorVersion}, provide feedback through
 one of the following mechanisms:
 
-* https://javaee.groups.io/g/glassfish[{productName} forum]
-  (`https://javaee.groups.io/g/glassfish`) — A variety of {productName}
+* https://glassfish.org/CONTRIBUTING.html[{productName} Community]
+  (`https://glassfish.org/CONTRIBUTING.html`) — A variety of {productName}
   community for various interests and feedback
-* https://github.com/javaee/glassfish/issues[GlassFish Issue track]er
-  (`https://github.com/javaee/glassfish/issues`) — {productName}
+
+  * https://accounts.eclipse.org/mailing-list/glassfish-dev[{productName} Mailing List]
+    (`https://accounts.eclipse.org/mailing-list/glassfish-dev`) — Subscribe to Mailing List: glassfish-dev
+
+* https://github.com/eclipse-ee4j/glassfish/issues[GlassFish Issue tracker]
+  (`https://github.com/eclipse-ee4j/glassfish/issues`) — {productName}
   project dashboards and issue tracking database
 
 [[additional-resources]]
@@ -933,6 +911,13 @@ one of the following mechanisms:
 
 Useful information can be found at the following locations:
 
-* https://github.com/eclipse-ee4j/glassfish[{productName} Community]
-(`https://github.com/eclipse-ee4j/glassfish`)
+* https://glassfish.org/CONTRIBUTING.html[{productName} Community]
+(`https://glassfish.org/CONTRIBUTING.html`)
+
+* https://glassfish.org[{productName} page]
+(`https://glassfish.org`)
+
+* https://projects.eclipse.org/projects/ee4j.glassfish[Eclipse project page]
+(`https://projects.eclipse.org/projects/ee4j.glassfish`)
+
 

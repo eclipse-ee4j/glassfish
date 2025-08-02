@@ -110,7 +110,6 @@
             </releases>
             <snapshots>
                 <enabled>true</enabled>
-                 <updatePolicy>always</updatePolicy>
                  <checksumPolicy>fail</checksumPolicy>
             </snapshots>
         </repository>
@@ -169,4 +168,24 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <repositories>
+                <repository>
+                    <id>sonatype-oss-snapshots</id>
+                    <url>https://central.sonatype.com/repository/maven-snapshots</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>

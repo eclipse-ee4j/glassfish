@@ -46,7 +46,6 @@
         <dependency>
             <groupId>ee.omnifish</groupId>
              <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
-            <version>1.1.8-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

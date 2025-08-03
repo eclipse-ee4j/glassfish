@@ -5,6 +5,9 @@
 [Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation
 sponsored by the Eclipse Foundation.
 
+### Release Notes
+* You can read about the [release notes here](https://github.com/eclipse-ee4j/glassfish/releases) 
+
 ### Compatibility
 
 * Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21, experimentally also higher versions.

@@ -6,7 +6,7 @@
 sponsored by the Eclipse Foundation.
 
 ### Release Notes
-* You can read about the [release notes here](https://github.com/eclipse-ee4j/glassfish/releases/tag/%7Bproduct-currentVersion%7D) 
+* You can read about the [release notes here](https://github.com/eclipse-ee4j/glassfish/releases) 
 
 ### Compatibility
 

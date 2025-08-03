@@ -10,7 +10,7 @@ prev=preface.html
 == 1 {productName} {product-majorVersion} Release Notes
 
 {productName} provides a lightweight, modular server for the
-development of Jakarta EE 10applications. It is the Reference
+development of Jakarta EE {jakartaee} applications. It is the first Compatible
 Implementation for Jakarta EE. It delivers a highly productive
 platform for developing with the latest Jakarta EE technologies.
 
@@ -895,10 +895,10 @@ one of the following mechanisms:
 
 * https://glassfish.org/CONTRIBUTING.html[{productName} Community]
   (`https://glassfish.org/CONTRIBUTING.html`) — A variety of {productName}
-  community for various interests and feedback
+  community channels for various interests and feedback
 
   * https://accounts.eclipse.org/mailing-list/glassfish-dev[{productName} Mailing List]
-    (`https://accounts.eclipse.org/mailing-list/glassfish-dev`) — Subscribe to Mailing List: glassfish-dev
+    (`https://accounts.eclipse.org/mailing-list/glassfish-dev`) — Subscribe to the {productName} Developer Mailing List `glassfish-dev`
 
 * https://github.com/eclipse-ee4j/glassfish/issues[GlassFish Issue tracker]
   (`https://github.com/eclipse-ee4j/glassfish/issues`) — {productName}
@@ -916,7 +916,7 @@ Useful information can be found at the following locations:
 * https://glassfish.org[{productName} page]
 (`https://glassfish.org`)
 
-* https://projects.eclipse.org/projects/ee4j.glassfish[Eclipse project page]
+* https://projects.eclipse.org/projects/ee4j.glassfish[{productName} project page]
 (`https://projects.eclipse.org/projects/ee4j.glassfish`)
 
 

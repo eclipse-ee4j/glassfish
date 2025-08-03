@@ -34,7 +34,6 @@
 <li><a href="#hardware-and-software-requirements">Hardware and Software Requirements</a>
 <ul class="sectlevel3">
 <li><a href="#required-jdk-versions">Required JDK Versions</a></li>
-<li><a href="#required-disk-space">Required Disk Space</a></li>
 <li><a href="#required-free-ports">Required Free Ports</a></li>
 <li><a href="#message-queue-broker-requirements">Message Queue Broker Requirements</a></li>
 <li><a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the JDK Software</a></li>
@@ -579,29 +578,11 @@ In configuration files, domain-dir is represented as follows:
 <div class="sect1">
 <h2 id="GSRLN"><a class="anchor" href="#GSRLN"></a>1 Eclipse GlassFish 7 Release Notes</h2>
 <div class="sectionbody">
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To Be Done</p>
-</div>
-<div class="paragraph">
-<p>This page must be updated before the release!</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Eclipse GlassFish provides a lightweight, modular server for the
-development of Java Platform Enterprise Edition (Jakarta EE) 8
-applications. It is the Reference Implementation for Jakarta EE. It
-delivers a highly productive platform for developing with the latest
-Jakarta EE technologies.</p>
+development of Jakarta EE 10 applications. It is the first Compatible
+Implementation for Jakarta EE. It delivers a highly productive
+platform for developing with the latest Jakarta EE technologies.</p>
 </div>
 <div class="paragraph">
 <p>For any issue or information on Eclipse GlassFish,
@@ -684,7 +665,7 @@ view the most up-to-date product information.</p>
 <div class="sect2">
 <h3 id="whats-new-in-the-glassfish-server-release"><a class="anchor" href="#whats-new-in-the-glassfish-server-release"></a>What&#8217;s New in the Eclipse GlassFish 7 Release?</h3>
 <div class="paragraph">
-<p>GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE 10
+<p>GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE {jakartaee]
 introduces &#8230;&#8203; To Be Done</p>
 </div>
 <div class="paragraph">
@@ -724,7 +705,7 @@ see <a href="#java-ee-standards-support">Jakarta EE Standards Support</a>.</p>
 <div class="paragraph">
 <p>The main thrust of the Eclipse GlassFish 7 release
 is to provide an application server for developers to explore and begin
-exploiting the new and updated technologies in the Jakarta EE 10 platform.
+exploiting the new and updated technologies in the Jakarta EE {jakartaee] platform.
 Thus, the following features of Eclipse GlassFish were not a focus of
 this release:</p>
 </div>
@@ -746,7 +727,7 @@ this release:</p>
 </div>
 <div class="paragraph">
 <p>These features are included in the release, but they may not function
-properly with some of the new features added in support of the Jakarta EE 10 platform.</p>
+properly with some of the new features added in support of the Jakarta EE {jakartaee] platform.</p>
 </div>
 </td>
 </tr>
@@ -766,9 +747,6 @@ Eclipse GlassFish Release 7 software.</p>
 <ul>
 <li>
 <p><a href="#required-jdk-versions">Required JDK Versions</a></p>
-</li>
-<li>
-<p><a href="#required-disk-space">Required Disk Space</a></p>
 </li>
 <li>
 <p><a href="#required-free-ports">Required Free Ports</a></p>
@@ -805,39 +783,6 @@ DAS or server instance have a minimum of 1 GB RAM.</p>
 </td>
 </tr>
 </table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="required-disk-space"><a class="anchor" href="#required-disk-space"></a>Required Disk Space</h4>
-<div class="paragraph">
-<p>The download sizes for Eclipse GlassFish 7 vary depending on the
-package you choose. The following are the approximate sizes of the ZIP
-packages for the Full and Web profiles:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Full <code>*.zip</code>: 114 MB (136 MB unzipped)</p>
-</li>
-<li>
-<p>Web <code>*.zip</code>: 64.9 MB (82.9 MB unzipped)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The installation sizes will vary depending on your configuration, but
-the approximate amount of disk space used by Eclipse GlassFish 7 is as
-follows:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Full: 138 MB</p>
-</li>
-<li>
-<p>Web: 84.4 MB</p>
-</li>
-</ul>
 </div>
 </div>
 <div class="sect3">
@@ -1700,55 +1645,55 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/security/">Security</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/batch/">Batch</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/concurrency/">Concurrency</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/jsonp/">JSON Processing</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/jsonb/">JSON Binding</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/websocket/">WebSocket</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/websocket/">Servlet</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/pages/">Server Pages</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/expression-language/">Expression Language</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
@@ -1760,49 +1705,49 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/tags/">Standard Tag Library</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/mvc/">MVC</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/faces/">JavaServer Faces</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/faces/">Java Server Faces</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/annotations/">Annotations</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/transactions/">Transactions</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/persistence/">Persistence</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{jakarta.persistence-api.version}</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/managedbeans/">Managed Beans</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/interceptors/">Interceptors</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
@@ -1814,37 +1759,37 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/cdi/">Contexts and Dependency Injection</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.1.MR</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/persistence/">Enterprise Beans</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/restful-ws/">RESTful Web Services</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/bean-validation/">Bean Validation</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/connectors/">Connectors</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{jakarta.resource-api.version}</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X<sup>*</sup></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-web-services/">XML Web Services</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{jakarta.xml.ws-api.version}</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1856,7 +1801,7 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-binding/">XML Binding</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1874,25 +1819,25 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/messaging/">Messaging</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/mail/">Mail</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/authentication/">Authentication</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/authorization/">Authorization</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1957,13 +1902,17 @@ one of the following mechanisms:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://javaee.groups.io/g/glassfish">Eclipse GlassFish forum</a>
-(<code><a href="https://javaee.groups.io/g/glassfish" class="bare">https://javaee.groups.io/g/glassfish</a></code>) — A variety of Eclipse GlassFish
-community for various interests and feedback</p>
+<p><a href="https://glassfish.org/CONTRIBUTING.html">Eclipse GlassFish Community</a>
+(<code><a href="https://glassfish.org/CONTRIBUTING.html" class="bare">https://glassfish.org/CONTRIBUTING.html</a></code>) — A variety of Eclipse GlassFish
+community channels for various interests and feedback</p>
 </li>
 <li>
-<p><a href="https://github.com/javaee/glassfish/issues">GlassFish Issue track</a>er
-(<code><a href="https://github.com/javaee/glassfish/issues" class="bare">https://github.com/javaee/glassfish/issues</a></code>) — Eclipse GlassFish
+<p><a href="https://accounts.eclipse.org/mailing-list/glassfish-dev">Eclipse GlassFish Mailing List</a>
+(<code><a href="https://accounts.eclipse.org/mailing-list/glassfish-dev" class="bare">https://accounts.eclipse.org/mailing-list/glassfish-dev</a></code>) — Subscribe to the Eclipse GlassFish Developer Mailing List <code>glassfish-dev</code></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/glassfish/issues">GlassFish Issue tracker</a>
+(<code><a href="https://github.com/eclipse-ee4j/glassfish/issues" class="bare">https://github.com/eclipse-ee4j/glassfish/issues</a></code>) — Eclipse GlassFish
 project dashboards and issue tracking database</p>
 </li>
 </ul>
@@ -1977,8 +1926,16 @@ project dashboards and issue tracking database</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/eclipse-ee4j/glassfish">Eclipse GlassFish Community</a>
-(<code><a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a></code>)</p>
+<p><a href="https://glassfish.org/CONTRIBUTING.html">Eclipse GlassFish Community</a>
+(<code><a href="https://glassfish.org/CONTRIBUTING.html" class="bare">https://glassfish.org/CONTRIBUTING.html</a></code>)</p>
+</li>
+<li>
+<p><a href="https://glassfish.org">Eclipse GlassFish page</a>
+(<code><a href="https://glassfish.org" class="bare">https://glassfish.org</a></code>)</p>
+</li>
+<li>
+<p><a href="https://projects.eclipse.org/projects/ee4j.glassfish">Eclipse GlassFish project page</a>
+(<code><a href="https://projects.eclipse.org/projects/ee4j.glassfish" class="bare">https://projects.eclipse.org/projects/ee4j.glassfish</a></code>)</p>
 </li>
 </ul>
 </div>
@@ -1988,7 +1945,7 @@ project dashboards and issue tracking database</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-08-01 05:53:53 UTC
+Last updated 2025-08-03 12:24:49 UTC
 </div>
 </div>
 </body>

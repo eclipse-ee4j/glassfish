@@ -10,6 +10,7 @@ prev=toc.adoc
 
 * xref:overview.adoc#gkvay[1-1 Determining if the DAS Requires Restart]
 * xref:overview.adoc#gkvba[1-2 Determining if an Instance Requires Restart]
+  xref:overview.adoc#GSADG1053[1-3 Listing Apache Felix Gogo Remote Shell Commands]
 * xref:overview.adoc#GSADG1054[1-4 Running a Remote Shell Command]
 * xref:overview.adoc#gjkrh[1-5 Determining the Services That an OSGi Bundle Provides]
 * xref:general-administration.adoc#giwdr[2-1 Running an asadmin Utility Subcommand in Single Mode]

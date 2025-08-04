@@ -35,7 +35,9 @@ view the most up-to-date product information.
 * xref:#restrictions-and-deprecated-functionality["Restrictions and Deprecated Functionality"]
 * xref:#documentation-errata["Documentation Errata"]
 * xref:#features-available-only-in-the-full-platform["Features Available Only in the Full Platform"]
-* xref:#java-ee-standards-support["Jakarta EE Standards Support"]
+* xref:#jakarta-ee-support["Jakarta EE Standards Support"]
+* xref:#microprofile-support["MicroProfile Standards Support"]
+* xref:#extensions-support["Extensions to the Standard APIs"]
 * xref:#how-to-report-problems-and-provide-feedback["How to Report Problems and Provide Feedback"]
 * xref:#additional-resources["Additional Resources"]
 
@@ -60,38 +62,41 @@ Table 1-1 Revision History
 
 === What's New in the {productName} {product-majorVersion} Release?
 
-GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE {jakartaee]
-introduces ... To Be Done
+{productName} {product-majorVersion} is the first Compatible Implementation of the Jakarta EE {jakartaee] Platform.
 
-{productName} {product-majorVersion} includes the following new and updated Jakarta EE standards.
+{productName} {product-majorVersion} also introduces the following new features:
 
-New Features
+* https://microprofile.io/specifications/config/[MicroProfile Config]  API
+* https://microprofile.io/specifications/jwt/[MicroProfile JWT] API
+* https://microprofile.io/specifications/rest-client[MicroProfile REST Client] API (since {productName} 7.0.6)
+* https://microprofile.io/specifications/health[MicroProfile Health] API (since {productName} 7.1.0)
+* https://jakarta.ee/specifications/mvc/[Jakarta MVC] API updated to version 2.0
+* xref:embedded-server-guide.adoc#running-from-command-line[Runnable Embedded GlassFish JAR] (since {productName} 7.0.18)
+* xref:administration-guide.adoc#log-executed-admin-commands[Admin Command Logger] (since {productName} 7.0.16)
+* https://github.com/eclipse-ee4j/glassfish/discussions/25343[SSH nodes on Windows] via the native Windows SSH service (since {productName} 7.0.23)
 
-* To Be Done
+For a complete list of the Jakarta EE technologies included in {productName} {product-currentVersion},
+see xref:#jakarta-ee-support[Jakarta EE Standards Support].
 
-Updated
-
-* To Be Done
-
-For a complete list of the Jakarta EE technologies included in {productName} {product-majorVersion},
-see xref:#java-ee-standards-support[Jakarta EE Standards Support].
-
+For a complete list of the MicroProfile technologies included in {productName} {product-currentVersion},
+see xref:#microprofile-support[MicroProfile Standards Support].
 
 [NOTE]
 ====
-The main thrust of the {productName} {product-majorVersion} release
-is to provide an application server for developers to explore and begin
-exploiting the new and updated technologies in the Jakarta EE {jakartaee] platform.
-Thus, the following features of {productName} were not a focus of
-this release:
+While {productName} {product-majorVersion} milestone releases focused on providing an application server for developers to explore and begin
+exploiting the new and updated technologies in the Jakarta EE {jakartaee] platform, the final {productName} {product-majorVersion} version
+focuses on providing a stable and reliable platform for production use.
 
-* Clusters and centralized management of standalone instances
+The following features of {productName} were improved in the {product-majorVersion}.0.0 version or later patch releases:
+
+* Clusters and centralized management of instances
 * High availability features
-* Upgrade
-* Embedded Server
+* Startup time and deployment time
+* Performance and memory usage
+* Security
+* Embedded GlassFish
+* Stability and automated test coverage
 
-These features are included in the release, but they may not function
-properly with some of the new features added in support of the Jakarta EE {jakartaee] platform.
 ====
 
 [[hardware-and-software-requirements]]
@@ -349,8 +354,8 @@ the jars are packaged in GlassFish.
 
 [NOTE]
 ====
-These jars are present only in the full profile of GlassFish and
-not part of web profile.
+These jars are present only in the Full Platform distribution of GlassFish and
+not part of the Web Profile distribution.
 ====
 
 [[workaround]]
@@ -656,25 +661,27 @@ work-management that does not involve inbound communication features are
 supported in the Web Profile. Other connector features are supported
 only in the {productName} {product-majorVersion} full platform.
 
-[[java-ee-standards-support]]
-
-=== Jakarta EE Standards Support
+[[jakarta-ee-support]]
+=== Jakarta EE Standards Support[[java-ee-standards-support]]
 
 xref:#gjxcp[Table 1-4] lists the Jakarta EE standards implemented in
 {productName} {product-majorVersion}. The table also indicates the distributions in
 which the implementation of a standard is available.
 
+[NOTE]
+====
 * X indicates that the implementation is available in the distribution.
 * - indicates that the implementation is not available in the
 distribution.
+====
 
 [[gjxcp]]
 
-Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVersion}
+Table 1-4 Jakarta EE Standards Implementations in {productName} {product-currentVersion}
 
 [width="100%",cols="<48%,<10%,<10%,<10%",options="header",]
 |===
-|Jakarta EE Standard |Version |{productName} {product-majorVersion} Full Platform |{productName} {product-majorVersion} Web Profile
+|Jakarta EE Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile
 
 |https://jakarta.ee/specifications/platform/10/[Jakarta EE Specification]
 |{jakartaee}
@@ -762,7 +769,7 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 
 |https://jakarta.ee/specifications/persistence/[Persistence]
-|{jakarta.persistence-api.version}
+|{jakarta-persistence-api-version}
 |X
 |X
 
@@ -777,12 +784,12 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 
 |https://jakarta.ee/specifications/dependency-injection/[Dependency Injection]
-|2.0
+|{jakarta-inject-api-version}
 |X
 |X
 
 |https://jakarta.ee/specifications/cdi/[Contexts and Dependency Injection]
-|{jakarta-inject-api-version}
+|{jakarta-cdi-api-version}
 |X
 |X
 
@@ -802,12 +809,12 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 |X
 
 |https://jakarta.ee/specifications/connectors/[Connectors]
-|{jakarta.resource-api.version}
+|{jakarta-resource-api-version}
 |X
 |X^*^
 
 |https://jakarta.ee/specifications/xml-web-services/[XML Web Services]
-|{jakarta.xml.ws-api.version}
+|{jakarta-xml-ws-api-version}
 |X
 |-
 
@@ -874,17 +881,85 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-majorVe
 
 ^*^ Standalone Connector 1.7 Container only.
 
-Building on these standards, {productName} {product-majorVersion} provides a number of
-extensions, including the following:
+[[microprofile-support]]
+=== MicroProfile Standards Support
 
-* Ajax (asynchronous JavaScript and XML): Retrieves and displays new
-  data for a portion of a web page without affecting the rest of the page.
-* Metro: A web services stack that implements Java Architecture for XML
-  Binding (JAXB) and Java APIs for XML Web Services 2.3 (JAX-WS 2.3).
-* Grizzly: A framework for building scalable and robust servers using
-  New I/O (NIO) APIs, which make scaling to thousands of users possible.
-  The ability to embed components that support HTTP, Bayeux Protocol, Java
-  Servlet API, and Comet is provided.
+xref:#microprofile-table[Table 1-5] lists the MicroProfile standards implemented in {productName} {product-currentVersion}. The table also indicates the distributions in which the implementation of a standard is available.
+
+[NOTE]
+====
+* X indicates that the implementation is available in the distribution.
+* - indicates that the implementation is not available in the distribution.
+====
+
+[[microprofile-table]]
+
+Table 1-5 MicroProfile Standards Implementations in {productName} {product-currentVersion}
+
+[width="100%",cols="<48%,<10%,<10%,<10%",options="header",]
+|===
+|MicroProfile Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile
+
+|https://microprofile.io/specifications/config/[MicroProfile Config]
+|{microprofile-config-api-version}
+|X
+|-
+
+|https://microprofile.io/specifications/jwt/[MicroProfile JWT Authentication]
+|{microprofile-jwt-auth-api-version}
+|X
+|-
+
+|https://microprofile.io/specifications/rest-client/[MicroProfile REST Client]
+|{microprofile-rest-client-version}
+|X^*^
+|-
+
+|https://microprofile.io/specifications/health/[MicroProfile Health]
+|{microprofile-health-api-version}
+|X^**^
+|-
+|===
+
+^*^ MicroProfile REST Client is supported since {productName} 7.0.6
+
+^**^ MicroProfile Health is supported since {productName} 7.1.0
+
+[[extensions-support]]
+=== Extensions to the Standard APIs
+
+Building on the Jakarta EE and MicroProfile standards, {productName} {product-currentVersion} provides a number of components and extensions, including the following:
+
+Table 1-6 Components and extensions provided by {productName} {product-currentVersion}
+[width="100%",options="header"]
+|===
+|Component |Version |APIs |Description
+
+|Eclipse Angus |{angus-mail-version} |Jakarta Mail {jakarta-mail-api-version} |Provides email services.
+|Eclipse Epicyro |{epicyro-version} |Jakarta Authentication {jakarta-authentication-api-version} |Low-level SPI for authentication mechanisms.
+|Eclipse Exousia |{exousia-version} |Jakarta Authorization {jakarta-authorization-api-version} |Low-level SPI for authorization modules.
+|Eclipse Jersey |{jersey-version} |Jakarta RESTful Web Services {jakarta-rest-api-version}, MicroProfile REST Client {microprofile-rest-client-version} |Framework for RESTful web services and clients.
+|Eclipse Krazo |{krazo-version} |Jakarta MVC {jakarta-mvc-api-version} |MVC framework for web applications.
+|Eclipse Metro |{webservices-version} |JAXB, Jakarta XML Web Services {jakarta-xml-ws-api-version} |Web services stack.
+|Eclipse Mojarra |{mojarra-version} |Jakarta Faces {jakarta-faces-api-version} |Faces implementation with Mojarra extensions.
+|Eclipse OpenMQ |{openmq-version} |Jakarta Messaging {jakarta-messaging-api-version} |Highly available messaging broker.
+|Eclipse Parsson |{parsson-version} |Jakarta JSON Processing {jakarta-jsonp-api-version} |JSON Processing implementation.
+|Eclipse Soteria |{soteria-version} |Jakarta Security {jakarta-security-api-version} |Authentication and authorization services.
+|Eclipse Tyrus |{tyrus-version} |Jakarta WebSocket {jakarta-websocket-api-version} |WebSocket endpoints framework.
+|Eclipse Yasson |{yasson-version} |Jakarta JSON Binding {jakarta-json-bind-api-version} |JSON Binding implementation.
+|Eclipse WaSP |{wasp-version} |Jakarta Pages {jakarta-pages-api-version} |Pages implementation.
+|EclipseLink |{eclipselink-version} |Jakarta Persistence {jakarta-persistence-api-version} |Persistence implementation with extensions.
+|FasterXML Jackson |{jackson-version} | |Alternative JSON processing and binding implementation.
+|GlassFish Concurro |{concurrent-version} |Jakarta Concurrency {jakarta-concurrent-api-version} |Concurrency utilities.
+|GlassFish Grizzly |{grizzly-version} | |Scalable server framework supporting HTTP, Bayeux, Servlet API, Comet.
+|GlassFish HK2 |{hk2-version} | |Dependency injection framework.
+|GlassFish Shoal |{shoal-version} | |Clustering framework for high availability.
+|Helidon Config |{helidon-config-version} |MicroProfile Config {microprofile-config-api-version} |Configuration framework for applications.
+|Hibernate Validator |{hibernate-validator-version} |Jakarta Validation {jakarta-validation-api-version} |Validation implementation.
+|Nimbus JOSE JWT |{nimbus-version} || Handling JSON Web Tokens (JWT) and JSON Object Signing and Encryption (JOSE).
+|OmniFaces MicroProfile JWT |{omnifaces-jwt-auth-version} |MicroProfile JWT Authentication {microprofile-jwt-auth-api-version} |JWT authentication for REST endpoints.
+|Weld |{weld-version} |Jakarta Contexts and Dependency Injection {jakarta-cdi-api-version} |CDI implementation.
+|===
 
 [[how-to-report-problems-and-provide-feedback]]
 
@@ -903,6 +978,10 @@ one of the following mechanisms:
 * https://github.com/eclipse-ee4j/glassfish/issues[GlassFish Issue tracker]
   (`https://github.com/eclipse-ee4j/glassfish/issues`) — {productName}
   project dashboards and issue tracking database
+
+If using {productName} in production, it's strongly recommended contacting companies that specialize on professional support for it. These companies are listed at:
+
+* https://glassfish.org/support.html[Professional Services and Support for {productName}] (`https://glassfish.org/support.html`)
 
 [[additional-resources]]
 

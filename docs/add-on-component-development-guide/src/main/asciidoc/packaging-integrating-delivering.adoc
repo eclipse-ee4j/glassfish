@@ -13,15 +13,12 @@ prev=session-persistence-modules.html
 Packaging an add-on component enables the component to interact with the
 {productName} kernel in the same way as other components. Integrating
 a component with {productName} enables {productName} to discover
-the component at runtime. If an add-on component is an extension or
-update to existing installations of {productName}, deliver the
-component through Update Tool.
+the component at runtime.
 
 The following topics are addressed here:
 
 * xref:#packaging-an-add-on-component[Packaging an Add-On Component]
 * xref:#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}]
-* xref:#delivering-an-add-on-component-through-update-tool[Delivering an Add-On Component Through Update Tool]
 
 [[packaging-an-add-on-component]]
 
@@ -51,16 +48,6 @@ Integrating an add-on component with {productName} enables {productName} to
 discover the component at runtime. To integrate an add-on
 component with {productName}, ensure that the JAR file that contains
 the component is copied to or installed in the as-install``/modules/`` directory.
-
-[[delivering-an-add-on-component-through-update-tool]]
-
-=== Delivering an Add-On Component Through Update Tool
-
-If an add-on component is an extension or update to existing
-installations of {productName}, deliver the component through Update
-Tool. To deliver an add-on component through Update Tool, create an
-Image Packaging System (IPS) package to contain the component and add
-the package to a suitable IPS package repository.
 
 For information about how to create IPS packages, see the
 http://wikis.oracle.com/display/IpsBestPractices/[IPS best practices

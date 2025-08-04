@@ -20,12 +20,11 @@ installation. The Upgrade Tool assists in upgrading the configuration
 and applications from an earlier version of the Application Server or
 {productName} to {productName} {product-majorVersion}.
 
-In addition to Upgrade Tool, there are three Update Center tools that
+In addition to Upgrade Tool, there are two Update Center tools that
 can be used to perform an in-place upgrade to {productName} {product-majorVersion} from
 {productName} 3.1.1, 3.1, 3.0.1, and Enterprise Server v3. These
-three Update Center tools are:
+two Update Center tools are:
 
-* Update Tool
 * Software Update Notifier
 * The `pkg` command-line utility
 
@@ -92,7 +91,7 @@ In-Place::
   installed directly over and into the same directory as the previous
   product release. The existing configuration is reused in the updated
   installation. +
-In this scenario, you simply use Update Tool, the `pkg` utility, or
+In this scenario, you simply use the `pkg` utility or
   the Update Notifier in your old installation to overwrite the old
   installation with the new {productName} {product-majorVersion} product. +
   Performing an in-place upgrade is easier than performing a
@@ -141,7 +140,6 @@ The following topics are addressed here:
 
 * xref:#summary-of-tools-for-performing-an-upgrade[Summary of Tools for Performing an Upgrade]
 * xref:#summary-of-procedure-for-upgrading-with-upgrade-tool[Summary of Procedure for Upgrading With Upgrade Tool]
-* xref:#summary-of-procedure-for-upgrading-with-update-tool[Summary of Procedure for Upgrading With Update Tool]
 * xref:#summary-of-procedure-for-upgrading-with-the-software-update-notifier[Summary of Procedure for Upgrading With the Software Update Notifier]
 * xref:#summary-of-procedure-for-upgrading-with-the-pkg-utility[Summary of Procedure for Upgrading With the `pkg` Utility]
 
@@ -152,7 +150,6 @@ The following topics are addressed here:
 There are several tools you can use to perform an upgrade to {productName} {product-majorVersion} are described below.
 
 * xref:#upgrade-tool[Upgrade Tool]
-* xref:#update-tool-and-the-pkg-utility[Update Tool and the `pkg` Utility]
 * xref:#software-update-notifier[Software Update Notifier]
 
 [[upgrade-tool]]
@@ -181,52 +178,14 @@ See xref:#summary-of-procedure-for-upgrading-with-upgrade-tool[Summary of Proced
 for an overview of the general procedure for performing an upgrade with
 Upgrade Tool.
 
-[[update-tool-and-the-pkg-utility]]
-
-Update Tool and the `pkg` Utility
-
-The {productName} Update Tool is a graphical utility that is
-typically used for the day-to-day maintenance of {productName}
-components and additional features. For example, Update Tool can be used
-to update {productName} components or install additional features
-such as OSGi Admin Console.
-
-The command-line counterpart to Update Tool is the `pkg` utility. While
-the `pkg` utility does not provide exactly the same set of features as
-Update Tool, for the purposes of upgrading to {productName} {product-majorVersion}, the
-`pkg` utility and Update Tool feature sets are almost identical.
-
-In addition to day-to-day maintenance tasks, Update Tool and the `pkg`
-utility can be used to perform an in-place upgrade of an entire
-{productName} 3.0.1 or Enterprise Server v3 installation to the
-{productName} {product-majorVersion} or later release.
-
-In {productName} {product-majorVersion} Update Tool is installed in the
-as-install-parent``/bin`` directory.
-
-[NOTE]
-====
-It is not possible to use Update Tool to upgrade from {productName}
-or Enterprise Server versions prior to 3x. For these older versions, you
-must use the Upgrade Tool, described in xref:#upgrade-tool[Upgrade Tool].
-====
-
-See xref:#summary-of-procedure-for-upgrading-with-update-tool[Summary of Procedure for Upgrading With Update Tool] for
-an overview of the general procedure for performing an upgrade with
-Update Tool. For more information about Update Tool in general, see
-"xref:administration-guide.adoc#GSADG00701[Update Tool]"
-in {productName} Administration Guide.
-
 [[software-update-notifier]]
 
 Software Update Notifier
 
-The {productName} Software Update Notifier is similar to Update Tool
-and the `pkg` utility in that it enables you to perform an in-place
-upgrade from {productName} 3.1.1, 3.1, 3.0.1, or Enterprise Server
-v3. As with Update Tool and the `pkg` utility, you cannot use the
-Software Update tool to upgrade from product releases prior 3.0.1 and
-v3.
+The {productName} Software Update Notifier enables you to perform
+an in-place upgrade from {productName} 3.1.1, 3.1, 3.0.1, or
+Enterprise Server v3. But you cannot use the Software Update Notifier
+to upgrade from product releases prior 3.0.1 and v3.
 
 The Software Update Notifier is distributed as a configuration option
 during {productName} {product-majorVersion}, 3.0.1, and Enterprise Server v3
@@ -262,27 +221,6 @@ as-install``/bin`` directory.
 
 This procedure is described in more detail in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a
 Side-By-Side Upgrade With Upgrade Tool].
-
-[[summary-of-procedure-for-upgrading-with-update-tool]]
-
-===== Summary of Procedure for Upgrading With Update Tool
-
-The general procedure for using Update Tool to perform an upgrade to
-{productName} {product-majorVersion} from {productName} 3.0.1 or Enterprise Server v3
-comprises the following steps:
-
-1. Manually stop all server instances and the domain.
-2. Launch Update Tool by using the as-install-parent`/bin/updatetool`
-command in the older product directory.
-3. In Update Tool, select and install the latest {productName}
-product release. This updates your server to the {product-majorVersion} release.
-4. Upgrade the domain by running the `asadmin start-domain --upgrade`
-subcommand. This performs the upgrade and then shuts down the DAS.
-5. Restart the DAS normally with the with the `asadmin start-domain`
-subcommand.
-
-This procedure is described in more detail in xref:#to-upgrade-using-the-update-tool-gui[To Upgrade
-Using the Update Tool GUI].
 
 [[summary-of-procedure-for-upgrading-with-the-software-update-notifier]]
 
@@ -800,11 +738,10 @@ click the Help button on the Administration Console.
 
 === Performing an In-Place Upgrade With the Update Center Tools
 
-This section explains how to use the three Update Center tools to
-perform an in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1 or Enterprise Server v3. Specifically, the three tools
+This section explains how to use the two Update Center tools to
+perform an in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1 or Enterprise Server v3. Specifically, the two tools
 explained in this section are:
 
-* Update Tool
 * Software Update Notifier
 * The `pkg` command-line utility
 
@@ -820,7 +757,6 @@ Upgrade With Upgrade Tool].
 The following topics are addressed here:
 
 * xref:#update-center-tool-procedures[Update Center Tool Procedures]
-* xref:#to-upgrade-using-the-update-tool-gui[To Upgrade Using the Update Tool GUI]
 * xref:#to-upgrade-using-the-software-update-notifier[To Upgrade Using the Software Update Notifier]
 * xref:#to-upgrade-from-the-command-line-using-the-pkg-utility[To Upgrade From the Command Line Using the `pkg` Utility]
 
@@ -828,8 +764,8 @@ The following topics are addressed here:
 
 ==== Update Center Tool Procedures
 
-Unlike when using Upgrade Tool, when you use the Update Tool, the
-Software Update Notifier, or the `pkg` utility to perform a {productName} {product-majorVersion} upgrade, the older source server directories are overwritten
+Unlike when using Upgrade Tool, when you use the
+Software Update Notifier or the `pkg` utility to perform a {productName} {product-majorVersion} upgrade, the older source server directories are overwritten
 with the new target server directories, and the existing configuration
 and deployed applications are reused in the updated installation.
 
@@ -839,62 +775,10 @@ and writer permissions for the server installation directories.
 You can perform an upgrade using the Update Center tools in the
 following ways:
 
-* xref:#to-upgrade-using-the-update-tool-gui[To Upgrade Using the Update Tool GUI]
 * xref:#to-upgrade-using-the-software-update-notifier[To Upgrade Using the Software Update Notifier]
 * xref:#to-upgrade-from-the-command-line-using-the-pkg-utility[To Upgrade From the Command Line Using the `pkg` Utility]
 
-[[to-upgrade-using-the-update-tool-gui]]
 
-==== To Upgrade Using the Update Tool GUI
-
-This procedure explains how to use the graphical Update Tool to perform
-an in-place upgrade to {productName} {product-majorVersion} from {productName} 3.0.1
-or Enterprise Server v3. Note that it is not possible to use this
-procedure with any other product releases.
-
-1. Ensure that all domains on the source server from which you are
-upgrading are stopped before proceeding.
-
-2. In a command shell for your operating environment, navigate to the
-as-install-parent``/bin`` directory.
-
-3. Use the `updatetool` command to start the Update Tool GUI. +
-The Update Tool main window is displayed.
-
-4. Click on Available Updates.
-
-5. Select all items in the Available Updates list, and then click the
-Install button in the toolbar at the top of the Update Tool main window. +
-When the upgrade is complete, exit Update Tool.
-
-6. Upgrade the domain by starting the DAS with the `--upgrade` option.
-+
-[source]
-----
-as-install/bin/asadmin start-domain --upgrade domain-name
-----
-This upgrades the domain and then shuts down the DAS.
-
-7. Start the DAS normally.
-+
-[source]
-----
-as-install/bin/asadmin start-domain domain-name
-----
-
-
-
-Next Steps
-
-* Browse to the URL `http://localhost:8080` to view the
-domain-dir``/docroot/index.html`` file. This file is brought over during
-the upgrade. You may want to copy the default {productName} {product-majorVersion} file
-from the `domain1.original/docroot` directory and customize it for your
-{productName} {product-majorVersion} installation.
-* To register your installation of {productName} from the
-Administration Console, select the Registration item from the Common
-Tasks page. For step-by-step instructions on the registration process,
-click the Help button on the Administration Console.
 
 [[to-upgrade-using-the-software-update-notifier]]
 

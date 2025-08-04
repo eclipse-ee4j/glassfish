@@ -8,7 +8,6 @@ SYNOPSIS
            [--force={false|true}]
            [--virtualservers virtual_servers]
            [--contextroot context_root]
-           [--verify={false|true}]
            [--precompilejsp={false|true}]
            [--name component-name]
            [--retrieve local_dirpath]
@@ -90,11 +89,6 @@ OPTIONS
            By default this option does not allow the JSP to be precompiled
            during deployment. Instead, JSPs are compiled during runtime.
            Default is false.
-
-       --verify
-           If set to true and the required verifier packages are installed
-           from the Update Tool, the syntax and semantics of the deployment
-           descriptor is verified. Default is false.
 
        --name
            Name of the deployable component.

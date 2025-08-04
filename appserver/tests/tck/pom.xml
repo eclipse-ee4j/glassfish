@@ -40,6 +40,7 @@
         <module>authorization</module>
         <module>cdi</module>
         <module>concurrency</module>
+        <module>connectors</module>
         <module>expression-language</module>
 
         <module>platform-tck-runner</module>
@@ -47,7 +48,6 @@
         <module>rest</module>
         <module>rest_cdi</module>
         <module>faces</module>
-        <module>connectors</module>
         <module>pages</module>
         <module>pages_tags</module>
         <module>pages_debugging</module>
@@ -79,7 +79,7 @@
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
 
-        <omnifish.arquillian.version>2.0.1</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.0.2-SNAPSHOT</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>

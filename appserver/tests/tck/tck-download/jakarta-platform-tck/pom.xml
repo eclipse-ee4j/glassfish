@@ -27,14 +27,13 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jakarta-platform-tck</artifactId>
+    <artifactId>tck-jakartaee-platform-download</artifactId>
     <packaging>pom</packaging>
     <name>TCK: Install Jakarta EE Platform TCK</name>
 
     <properties>
-        <!-- Be patient, it is over 500 MB -->
         <!--
-            TODO I have no idea what is inside
+            Be patient, it is over 500 MB
             Check https://github.com/jakartaee/platform-tck/blob/main/glassfish-runner/pom.xml
         -->
         <tck.artifactFileName>jakarta-jakartaeetck-11.0.1.zip</tck.artifactFileName>

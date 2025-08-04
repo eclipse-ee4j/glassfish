@@ -21,7 +21,6 @@ This chapter contains the following:
 * xref:#eclipse-faqs[Eclipse FAQs]
 * xref:#extensibility-faqs[Extensibility FAQs]
 * xref:#java-persistence-faqs[Java Persistence FAQs]
-* xref:#update-tool-faqs[Update Tool FAQs]
 
 [[administration-faqs]]
 
@@ -116,63 +115,3 @@ See "xref:add-on-component-development-guide.adoc#extending-the-administration-c
 
 See "xref:application-development-guide.adoc#restrictions-and-optimizations[Restrictions and Optimizations]" in {productName} Application Development Guide.
 
-[[update-tool-faqs]]
-
-=== Update Tool FAQs
-
-[[how-do-i-use-update-tool-to-extend-my-glassfish-server-installation]]
-
-==== How Do I Use Update Tool to Extend My {productName} Installation?
-
-Enterprise Server provides an administrative tool called Update Tool
-that enables you to install updates and add-on components to your
-existing Enterprise Server installation.
-
-Update Tool can be accessed as a standalone graphical tool from the
-command line (using the `updatetool` command from
-as-install-parent``/bin``), or as a browser-based graphical tool from the
-Administration Console (using the Update Tool node). For more
-information about Update Tool, see "xref:administration-guide.adoc#GSADG00701[Update Tool]" in
-{productName} Administration Guide.
-
-[NOTE]
-====
-To update or remove installed components, you must use the standalone
-graphical Update Tool, not the Administration Console Update Tool.
-====
-
-A command-line interface is also available for Update Tool. This
-interface uses the `pkg` command and enables you to perform most of the
-tasks provided by the standalone graphical version. For more information
-about the `pkg` command, see "xref:administration-guide.adoc#GSADG00014[Extending and Updating
-{productName}]" in {productName}
-Administration Guide.
-
-[NOTE]
-====
-Update Tool differs from Upgrade Tool, which is used to migrate the
-configuration and deployed applications from an earlier version of
-{productName} to the current version. For more information about
-Upgrade Tool and upgrading, see the xref:upgrade-guide.adoc#GSUPG[{productName} Upgrade Guide].
-====
-
-[[how-do-i-turn-off-the-notifier]]
-
-==== How Do I Turn Off the Notifier?
-
-Update Tool provides automatic notifications of available updates after
-installation. These notifications can be turned off if desired.
-
-[[to-turn-off-the-notifier]]
-
-===== To Turn Off the Notifier
-
-1. Launch the standalone graphical tool using the `updatetool` command:
-+
-[source]
-----
-as-install-parent/bin/updatetool
-----
-2. Click Preferences.
-3. Click the Updates tab.
-4. Deselect Automatically Check for Updates and click OK.

@@ -1,11 +1,12 @@
 
-name: Build on Windows
+name: Build GlassFish on Windows
 on:
   pull_request:
     branches: [ "master", "7.0", "8.0" ]
 jobs:
   build:
     runs-on: windows-2025
+    name: Build GlassFish on Windows
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK

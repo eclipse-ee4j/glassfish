@@ -19,6 +19,7 @@ SYNOPSIS
            [--generatermistubs={false|true}]
            [--contextroot context_root]
            [--precompilejsp={true|false}]
+           [--verify={false|true}]
            [--virtualservers virtual_servers]
            [--availabilityenabled={false|true}]
            [--asyncreplication={true|false}]
@@ -58,6 +59,11 @@ OPTIONS
            By default this option does not allow the JSP to be precompiled
            during deployment. Instead, JSPs are compiled during runtime.
            Default is false.
+
+       --verify
+           If set to true and the required verifier packages are installed
+           from the Update Tool, the syntax and semantics of the deployment
+           descriptor is verified. Default is false.
 
        --name
            Name of the deployable component.

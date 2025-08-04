@@ -49,7 +49,4 @@ discover the component at runtime. To integrate an add-on
 component with {productName}, ensure that the JAR file that contains
 the component is copied to or installed in the as-install``/modules/`` directory.
 
-For information about how to create IPS packages, see the
-http://wikis.oracle.com/display/IpsBestPractices/[IPS best practices
-document] (`http://wikis.oracle.com/display/IpsBestPractices/`).
 

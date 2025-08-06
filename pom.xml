@@ -45,12 +45,27 @@
 
     <properties>
         <project.build.outputTimestamp>2025-04-22T16:51:45Z</project.build.outputTimestamp>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     </properties>
 
     <build>
         <defaultGoal>install</defaultGoal>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>aggregate-sources</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>3.1.4</version>
@@ -113,6 +128,11 @@
                     </execution>
                 </executions>
             </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                </plugin>
         </plugins>
     </build>
 

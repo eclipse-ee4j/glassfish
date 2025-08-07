@@ -2100,7 +2100,6 @@ nonembedded {productName} with these exceptions:
 
 * Installers
 * Administration Console
-* Update Tool
 * Apache Felix OSGi framework
 * The Maven plug-in for embedded {productName} does not support
 application clients.

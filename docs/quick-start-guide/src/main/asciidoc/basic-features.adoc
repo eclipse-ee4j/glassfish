@@ -17,7 +17,6 @@ platform) applications and web technologies based on Java technology.
 * A lightweight and extensible core based on OSGi Alliance standards
 * A web container
 * An easy-to-use Administration Console for configuration and management
-* Update Tool connectivity for updates and add-on components
 * Support for high availability clustering and load balancing
 
 The following topics are addressed here:

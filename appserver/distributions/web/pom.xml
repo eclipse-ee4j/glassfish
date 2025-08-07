@@ -35,6 +35,7 @@
     <properties>
         <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
         <patches>${basedir}/src/main/patches</patches>
+        <maven-javadoc-plugin.version>3.8.0</maven-javadoc-plugin.version>
     </properties>
 
     <dependencies>
@@ -75,6 +76,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

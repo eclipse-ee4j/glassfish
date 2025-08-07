@@ -36,8 +36,6 @@
     <properties>
         <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
         <rar.directory>${project.build.directory}/rars</rar.directory>
-        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     </properties>
 
     <dependencies>
@@ -1390,7 +1388,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
+                <version>3.11.2</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
@@ -1461,7 +1459,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
+                <version>3.3.1</version>
                 <configuration>
                     <skipSource>true</skipSource>
                 </configuration>

@@ -1,11 +1,12 @@
 
-name: Build on Ubuntu
+name: Build GlassFish on Ubuntu
 on:
   pull_request:
     branches: [ "master", "7.0", "8.0" ]
 jobs:
   build:
     runs-on: ubuntu-24.04
+    name: Build on Ubuntu
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK

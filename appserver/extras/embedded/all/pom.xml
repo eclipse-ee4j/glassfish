@@ -36,7 +36,6 @@
    <properties>
         <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
         <rar.directory>${project.build.directory}/rars</rar.directory>
-       <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
     </properties>
 
    <dependencies>
@@ -1694,7 +1693,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
@@ -1712,7 +1710,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>unpack-resources</id>
@@ -1733,7 +1730,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
                 <configuration>
                     <skipSource>true</skipSource>
                 </configuration>
@@ -1741,7 +1737,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.1</version>
                 <executions>
                     <execution>
                         <id>create-sources</id>

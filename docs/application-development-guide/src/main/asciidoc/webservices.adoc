@@ -21,9 +21,8 @@ The following topics are addressed here:
 
 [NOTE]
 ====
-If you installed the Web Profile, web services are not supported unless
-the optional Metro Web Services Stack add-on component is downloaded
-from the Update Tool. Without the Metro add-on component, a servlet or
+If you installed the Web Profile, web services are not supported.
+Without the Metro add-on component, a servlet or
 EJB component cannot be a web service endpoint, and the
 `glassfish-web.xml` and `glassfish-ejb-jar.xml` elements related to web
 services are ignored.

@@ -1612,6 +1612,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             // myfaces-api uses jakarta.faces packages
             return !useMyFaces;
         }
+        if (name.startsWith("META-INF/services/org.glassfish.jersey.client.spi.DefaultSslContextProvider")) {
+            // Jersey Client uses GF cacerts and keystore by default
+            return true;
+        }
         if (DELEGATED_RESOURCE_PATHS.stream().anyMatch(name::startsWith)) {
             return true;
         }

@@ -8,6 +8,7 @@ jobs:
   stale:
 
     runs-on: ubuntu-latest
+    name: Mark stale issues and pull requests
 
     steps:
     - uses: actions/stale@v9

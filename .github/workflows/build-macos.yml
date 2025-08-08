@@ -1,11 +1,12 @@
 
-name: Build on MacOS
+name: Build GlassFish on MacOS
 on:
   pull_request:
     branches: [ "master", "7.0", "8.0" ]
 jobs:
   build:
     runs-on: macos-15
+    name: Build GlassFish on MacOS
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK

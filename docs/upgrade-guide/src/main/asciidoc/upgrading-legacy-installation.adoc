@@ -20,8 +20,8 @@ installation. The Upgrade Tool assists in upgrading the configuration
 and applications from an earlier version of the Application Server or
 {productName} to {productName} {product-majorVersion}.
 
-The Upgrade Tool is explained later in
-this chapter.
+
+The Upgrade Tool is explained later in this chapter.
 
 To view a list of the older versions from which you can upgrade, see
 xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}].

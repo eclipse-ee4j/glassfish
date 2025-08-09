@@ -52,8 +52,6 @@ test_run_cts_smoke(){
   cp ts.jte ts.jte.orig
 
   ${SED} \
-    -e "s@javaee.home=@javaee\.home=${S1AS_HOME}@g" \
-    -e "s@javaee.home.ri=@javaee\.home\.ri=${S1AS_HOME}@g" \
     -e "s/^orb\.host=/orb\.host=localhost/g" \
     -e "s/^mailHost=/mailHost=localhost/g" \
     -e "s/^mailuser1=/mailuser1=${USER:-root}@localhost/g" \

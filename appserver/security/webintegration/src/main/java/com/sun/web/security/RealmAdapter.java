@@ -740,7 +740,6 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
             AccessController.doPrivileged(new PrivilegedAction<Void>() {
                 @Override
                 public Void run() {
-                    webSecurityManager.onLogout();
                     return null;
                 }
             });

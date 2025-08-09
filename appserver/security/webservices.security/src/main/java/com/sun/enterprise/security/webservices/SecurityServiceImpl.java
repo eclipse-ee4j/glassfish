@@ -153,7 +153,6 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public void resetPolicyContext() {
-        PolicyContextHandlerImpl.getInstance().reset();
         PolicyContext.setContextID(null);
     }
 

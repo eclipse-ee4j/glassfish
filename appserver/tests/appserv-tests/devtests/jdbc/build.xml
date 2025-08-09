@@ -312,18 +312,6 @@
         <record name="jdbc-oracle.output" action="stop"/>
     </target>
 
-    <target name="all-with-security-manager">
-        <antcall target="create-jvm-options">
-            <param name="option" value="-Djava.security.manager"/>
-        </antcall>
-        <antcall target="restart-server"/>
-        <antcall target="jdbc-all-security"/>
-        <antcall target="delete-jvm-options">
-            <param name="option" value="-Djava.security.manager"/>
-        </antcall>
-        <antcall target="restart-server"/>
-    </target>
-
     <target name="appauth">
         <record name="appauth.output" action="start"/>
         <ant dir="appauth" target="all"/>

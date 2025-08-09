@@ -34,29 +34,16 @@ public class PolicyContextHandlerImpl implements PolicyContextHandler {
     public static final String ENTERPRISE_BEAN = "jakarta.ejb.EnterpriseBean";
     public static final String EJB_ARGUMENTS = "jakarta.ejb.arguments";
     public static final String SUBJECT = "javax.security.auth.Subject.container";
-    public static final String REUSE = "java.security.Policy.supportsReuse";
 
     private static PolicyContextHandlerImpl pchimpl = null;
 
     private ThreadLocal thisHandlerData = new ThreadLocal();
-
-    private PolicyContextHandlerImpl() {
-    }
 
     private synchronized static PolicyContextHandlerImpl _getInstance() {
         if (pchimpl == null) {
             pchimpl = new PolicyContextHandlerImpl();
         }
         return pchimpl;
-    }
-
-    public static PolicyContextHandlerImpl getInstance() {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new SecurityPermission("setPolicy"));
-        }
-
-        return _getInstance();
     }
 
     @Override
@@ -72,14 +59,13 @@ public class PolicyContextHandlerImpl implements PolicyContextHandler {
 
     @Override
     public String[] getKeys() {
-        String[] s = { HTTP_SERVLET_REQUEST, SOAP_MESSAGE, ENTERPRISE_BEAN, SUBJECT, EJB_ARGUMENTS, REUSE };
+        String[] s = { HTTP_SERVLET_REQUEST, SOAP_MESSAGE, ENTERPRISE_BEAN, SUBJECT, EJB_ARGUMENTS };
         return s;
     }
 
     @Override
     public Object getContext(String key, Object data) {
-        // ignore data Object
-        return getHandlerData().get(key);
+      return null;
     }
 
     public HandlerData getHandlerData() {

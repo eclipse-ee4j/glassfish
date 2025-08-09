@@ -68,8 +68,6 @@
     <target name="run-pcftests" depends="init-common">
         <property name="ISPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=com.sun.s1asdev.security.jaccapi.DummyPolicyConfigurationFactory"/>
         <property name="NOTPCF" value="-Djakarta.security.jacc.PolicyConfigurationFactory.provider=jakarta.security.jacc.PolicyContextException"/>
-        <property name="PFL" value="-Djava.security.policy=${basedir}/config/java.policy"/>
-        <property name="PFL2" value="-Djava.security.policy=${basedir}/config/java.policy2"/>
 
         <java classname="jakarta.security.jacc.TestPCF" fork="yes"
             classpath="${s1astest.classpath}">

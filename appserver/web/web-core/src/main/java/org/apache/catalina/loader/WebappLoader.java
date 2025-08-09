@@ -39,8 +39,6 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -638,7 +636,6 @@ public class WebappLoader
                 classLoader.addRepository(element);
             }
             setRepositories();
-            setPermissions();
             setClassPath();
             startNestedClassLoader();
 
@@ -792,115 +789,6 @@ public class WebappLoader
             log.log(Level.WARNING, neutralizeForLog(msg), t);
         }
     }
-
-
-    /**
-     * Configure associated class loader permissions.
-     */
-    private void setPermissions() {
-
-        if (!Globals.IS_SECURITY_ENABLED) {
-            return;
-        }
-        if (!(container instanceof Context)) {
-            return;
-        }
-
-        try {
-            PrivilegedExceptionAction<Object> action = () -> {
-                setPermissions_priv();
-                return null;
-            };
-            AccessController.doPrivileged(action);
-        } catch (PrivilegedActionException e) {
-            throw (SecurityException) e.getException();
-        }
-    }
-
-
-    private void setPermissions_priv() {
-        classLoader.setPackageDefinitionSecurityEnabled(SecurityUtil.isPackageProtectionEnabled());
-
-        // Tell the class loader the root of the context
-        ServletContext servletContext =
-            ((Context) container).getServletContext();
-
-        // Assigning permissions for the work directory
-        File workDir =
-            (File) servletContext.getAttribute(ServletContext.TEMPDIR);
-        if (workDir != null) {
-            try {
-                String workDirPath = workDir.getCanonicalPath();
-                classLoader.addPermission
-                    (new FilePermission(workDirPath, "read,write"));
-                classLoader.addPermission
-                    (new FilePermission(workDirPath + File.separator + "-",
-                                        "read,write,delete"));
-            } catch (IOException e) {
-                // Ignore
-            }
-        }
-
-        try {
-
-            URL rootURL = servletContext.getResource("/");
-            classLoader.addPermission(rootURL);
-
-            String contextRoot = servletContext.getRealPath("/");
-            if (contextRoot != null) {
-                try {
-                    contextRoot = (new File(contextRoot)).getCanonicalPath();
-                    classLoader.addPermission(contextRoot);
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
-
-            URL classesURL = servletContext.getResource("/WEB-INF/classes/");
-            classLoader.addPermission(classesURL);
-            URL libURL = servletContext.getResource("/WEB-INF/lib/");
-            classLoader.addPermission(libURL);
-
-            if (contextRoot != null) {
-
-                if (libURL != null) {
-                    File rootDir = new File(contextRoot);
-                    File libDir = new File(rootDir, "WEB-INF/lib/");
-                    try {
-                        String path = libDir.getCanonicalPath();
-                        classLoader.addPermission(path);
-                    } catch (IOException e) {
-                    }
-                }
-
-            } else {
-
-                if (workDir != null) {
-                    if (libURL != null) {
-                        File libDir = new File(workDir, "WEB-INF/lib/");
-                        try {
-                            String path = libDir.getCanonicalPath();
-                            classLoader.addPermission(path);
-                        } catch (IOException e) {
-                        }
-                    }
-                    if (classesURL != null) {
-                        File classesDir = new File(workDir, "WEB-INF/classes/");
-                        try {
-                            String path = classesDir.getCanonicalPath();
-                            classLoader.addPermission(path);
-                        } catch (IOException e) {
-                        }
-                    }
-                }
-
-            }
-
-        } catch (MalformedURLException e) {
-        }
-
-    }
-
 
     /**
      * Configure the repositories for our class loader, based on the

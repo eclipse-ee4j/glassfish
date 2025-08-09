@@ -49,7 +49,6 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
     private static Logger logger = LogUtils.getLogger();
     private final WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
 
-    final PolicyContextHandlerImpl pcHandlerImpl = PolicyContextHandlerImpl.getInstance();
 
     private final Map<String, UserPrincipal> adminPrincipals = new ConcurrentHashMap<>();
     private final Map<String, Group> adminGroups = new ConcurrentHashMap<>();

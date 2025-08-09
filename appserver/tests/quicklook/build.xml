@@ -248,7 +248,6 @@
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
-        <antcall target="enable-security-manager" />
         <antcall target="stop-server" />
         <antcall target="start-server-felix" />
         <antcall target="build-deploy" />
@@ -306,7 +305,6 @@
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
-        <antcall target="enable-security-manager" />
         <antcall target="stop-server" />
         <antcall target="start-server-felix" />
     </target>

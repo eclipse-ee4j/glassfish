@@ -42,9 +42,9 @@ public class SecurityTest extends BaseSeleniumTestClass {
             clickAndWait("propertyForm:javaConfigTab:jvmOptions");
             waitForElementPresent("TtlTxt_sun4", "JVM Options");
             sleep(1000);
-            int emptyCount = getTableRowCountByValue("propertyForm:basicTable", "-Djava.security.manager", "col3:col1St", false);
+            int emptyCount = getTableRowCountByValue("propertyForm:basicTable", "col3:col1St", false);
             if (emptyCount != 0 ){
-                String clickId = getTableRowByVal("propertyForm:basicTable", "-Djava.security.manager", "col3:col1St")+"col1:select";
+                String clickId = getTableRowByVal("propertyForm:basicTable", "col3:col1St")+"col1:select";
                 clickByIdAction(clickId);
                 clickByIdAction("propertyForm:basicTable:topActionsGroup1:button1");
                 waitforBtnDisable("propertyForm:basicTable:topActionsGroup1:button1");

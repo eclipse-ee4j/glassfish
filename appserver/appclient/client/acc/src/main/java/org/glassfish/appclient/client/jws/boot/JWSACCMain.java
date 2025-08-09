@@ -29,17 +29,13 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.Policy;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
-import org.glassfish.appclient.client.acc.AppClientContainer;
 import org.glassfish.appclient.client.acc.JWSACCClassLoader;
 
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
@@ -62,9 +58,6 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
  */
 public class JWSACCMain implements Runnable {
 
-    /** name of the permissions template */
-    private static final String PERMISSIONS_TEMPLATE_NAME = "jwsclient.policy";
-
     /** placeholder used in the policy template to substitute dynamically-generated grant clauses */
     private static final String GRANT_CLAUSES_PROPERTY_EXPR = "${grant.clauses}";
 
@@ -78,11 +71,6 @@ public class JWSACCMain implements Runnable {
     private static final String JWSACC_KEEP_JWS_CLASS_LOADER = "KeepJWSClassLoader";
 
     private static final String JWSACC_RUN_ON_SWING_THREAD = "RunOnSwingThread";
-
-    /** grant clause template for dynamically populating the policy */
-    private static final String GRANT_CLAUSE_TEMPLATE = "grant codeBase \"{0}\" '{'\n" +
-    "    permission java.security.AllPermission;\n" +
-        "'}';";
 
     /**
      * request to exit the JVM upon return from the client - should be set (via
@@ -137,12 +125,6 @@ public class JWSACCMain implements Runnable {
             } catch (Throwable thr) {
                 throw new IllegalArgumentException(rb.getString("jwsacc.errorLocJARs"), thr);
             }
-
-            /*
-             *Before creating the new instance of the real ACC main, set permissions
-             *so ACC and the user's app client can function properly.
-             */
-            setPermissions();
 
             /*
              *Make sure that the main ACC class is instantiated and run in the
@@ -274,37 +256,6 @@ public class JWSACCMain implements Runnable {
         }
     }
 
-    private static void setPermissions() {
-        try {
-            /*
-             */
-            String permissionsTemplate = loadResource(JWSACCMain.class, PERMISSIONS_TEMPLATE_NAME);
-
-            /*
-             *Prepare the grant clauses for the downloaded jars and substitute
-             *those clauses into the policy template.
-             */
-            StringBuilder grantClauses = new StringBuilder();
-
-            for (URL url : downloadedJarURLs) {
-                grantClauses.append(MessageFormat.format(GRANT_CLAUSE_TEMPLATE, url.toExternalForm()));
-            }
-
-            for (URL url : persistenceJarURLs) {
-                grantClauses.append(MessageFormat.format(GRANT_CLAUSE_TEMPLATE, url.toExternalForm()));
-            }
-
-            String substitutedPermissionsTemplate = permissionsTemplate.replace(GRANT_CLAUSES_PROPERTY_EXPR, grantClauses.toString());
-            boolean retainTempFiles = Boolean.getBoolean(AppClientContainer.APPCLIENT_RETAIN_TEMP_FILES_PROPERTYNAME);
-            File policyFile = writeTextToTempFile(substitutedPermissionsTemplate, "jwsacc", ".policy", retainTempFiles);
-
-            refreshPolicy(policyFile);
-
-        } catch (IOException ioe) {
-            throw new RuntimeException("Error loading permissions template", ioe);
-        }
-    }
-
     /**
      *Locates the first free policy.url.x setting.
      *@return the int value for the first unused policy setting
@@ -324,13 +275,6 @@ public class JWSACCMain implements Runnable {
      *as additional policy.
      *@param policyFile the file containing additional policy
      */
-    public static void refreshPolicy(File policyFile) {
-        int idx = firstFreePolicyIndex();
-        URI policyFileURI = policyFile.toURI();
-        java.security.Security.setProperty("policy.url." + idx, policyFileURI.toASCIIString());
-        Policy p = Policy.getPolicy();
-        p.refresh();
-    }
 
     /**
      *The methods below are duplicates from the com.sun.enterprise.appclient.jws.Util class.

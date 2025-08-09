@@ -142,9 +142,6 @@ public class WebSecurityManager {
             null);
 
         authorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
-        authorizationService.setRequestSupplier(
-            () -> (HttpServletRequest) webSecurityManagerFactory.pcHandlerImpl.getHandlerData().get(HTTP_SERVLET_REQUEST));
-
         authorizationService.addConstraintsToPolicy(
             getConstraintsFromBundle(webBundleDescriptor),
             webBundleDescriptor.getRoles()
@@ -297,10 +294,6 @@ public class WebSecurityManager {
 
     public void onLogin(HttpServletRequest httpServletRequest) {
         setSecurityInfo(httpServletRequest);
-    }
-
-    public void onLogout() {
-        resetSecurityInfo();
     }
 
     public boolean linkPolicy(String linkedContextId, boolean lastInService) {
@@ -491,15 +484,7 @@ public class WebSecurityManager {
      * @param httpRequest
      */
     private void setSecurityInfo(HttpServletRequest httpRequest) {
-        if (httpRequest != null) {
-            webSecurityManagerFactory.pcHandlerImpl.getHandlerData().setHttpServletRequest(httpRequest);
-        }
-        AuthorizationService.setThreadContextId(contextId);
-    }
 
-    private void resetSecurityInfo() {
-        PolicyContextHandlerImpl.getInstance().reset();
-        PolicyContext.setContextID(null);
     }
 
     /**

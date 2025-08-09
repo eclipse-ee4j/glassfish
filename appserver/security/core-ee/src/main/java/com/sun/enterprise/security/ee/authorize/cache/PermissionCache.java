@@ -28,7 +28,6 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.Policy;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
@@ -47,7 +46,6 @@ import java.util.logging.Logger;
 public class PermissionCache extends Object {
 
     private static final Logger LOG = LogDomains.getLogger(PermissionCache.class, LogDomains.SECURITY_LOGGER, false);
-    private static Policy policy = Policy.getPolicy();
     private static AllPermission allPermission = new AllPermission();
 
     private Permissions cache;
@@ -231,7 +229,6 @@ public class PermissionCache extends Object {
                 setPolicyContextID(this.pcID);
             }
 
-            pc = policy.getPermissions(this.codesource);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
             return false;

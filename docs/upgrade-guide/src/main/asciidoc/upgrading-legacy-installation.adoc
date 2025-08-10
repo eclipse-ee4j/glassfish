@@ -163,7 +163,7 @@ to their corresponding locations in the new {productName} {product-majorVersion}
 installation directories. Note that you should only copy custom or
 third-party libraries here. Do not copy an libraries from the actual
 domain that will be upgraded.
-3. To copy the configuration from the old installation to the new one,
+3. Copy the configuration from the old installation to the new one,
     - copy GlassFish domain directory, e.g. `glassfish/domains/domain1`
     - copy the nodes directory if it exists, e.g. `glassfish/nodes`
 4. Run the `asadmin start-domain --upgrade` command from the new {productName} {product-majorVersion}
@@ -263,8 +263,7 @@ You can perform an upgrade using Upgrade Tool in the following ways:
 ==== Upgrade Tool Functionality
 
 The Upgrade Tool migrates the configurations and deployed applications
-from an earlier version of Sun Java System Application Server or Sun
-GlassFishEnterprise Server to the current version. Database migrations
+from an earlier version of {productName} to the current version. Database migrations
 or conversions are not part of this upgrade process.
 
 Briefly, the Upgrade Tool performs the following steps:
@@ -272,7 +271,7 @@ Briefly, the Upgrade Tool performs the following steps:
 * Copies the older source domain directory to the new target `domains` directory.
 * Calls the `asadmin start-domain --upgrade` command to migrate the
 source configurations to the new target {productName} installation.
-* Sends all `asadmin` command output to the screen and to the
+* Sends all `asadmin start-domain --upgrade` command output to the screen and to the
 `upgrade.log` file, and sends all server output to the `server.log` file.
 
 Additional Upgrade Tool functions are explained in the following sections:
@@ -288,18 +287,22 @@ Additional Upgrade Tool functions are explained in the following sections:
 Application archives (EAR files) and component archives (JAR, WAR, and
 RAR files) that are deployed in the source server do not require any
 modification to run on {productName} {product-majorVersion}.
-Components that may have incompatibilities are deployed on {productName} {product-majorVersion} with the `compatibility` property set to `v2` and will run
-without change on {productName} {product-majorVersion}. You may, however, want to
-consider modifying the applications to conform to Jakarta EE 6 requirements.
+Some components that may have incompatibilities are deployed on {productName} {product-majorVersion}
+with the `compatibility` property set to `v2` and will run
+without change on {productName} {product-majorVersion}. It's, however,
+strongly encouraged to modify the applications to conform to Jakarta EE {jakartaee}
+requirements because the compatibility layer is not being maintained and will likely
+not cover all incompatible applications.
 
-The Jakarta EE 6 platform specification imposes stricter requirements than
-Jakarta EE 5 did on which JAR files can be visible to various modules
+
+Jakarta EE {jakartaee} platform specification has stricter requirements than
+Java EE 5 and earlier version had on which JAR files can be visible to various modules
 within an EAR file. In particular, application clients must not have
 access to EJB JAR files or other JAR files in the EAR file unless they
 use a `Class-Path` header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
 Jakarta EE `library-directory` mechanism. Setting the `library-directory`
-property to `v2` removes these Jakarta EE 6 restrictions.
+property to `v2` removes these restrictions in {productName} {product-majorVersion}.
 
 Applications and components that are deployed in the source server are
 deployed on the target server during the upgrade. Applications that do
@@ -1020,7 +1023,6 @@ The following topics are addressed here:
 
 * xref:#cluster-profile-security-setting[Cluster Profile Security Setting]
 * xref:#cluster-profile-upgrade-on-windows[Cluster Profile Upgrade on Windows]
-* xref:#asupgrade-fails-without-internet-connection[`asadmin start-domain --upgrade` Fails Without Internet Connection]
 
 [[cluster-profile-security-setting]]
 
@@ -1076,24 +1078,3 @@ Fatal error while backing up the domain directory
 
 To resolve this error, look for and remove any hidden files in the
 source domain's directory and re-run Upgrade Tool.
-
-[[asupgrade-fails-without-internet-connection]]
-
-==== `asadmin start-domain --upgrade` Fails Without Internet Connection
-
-This problem only occurs when using {productName} 3.1 Upgrade Tool to
-perform a side-by-side upgrade on a 2.x domain without an Internet
-connection. It does not occur when using {productName} 3.1.1.
-
-The workaround for this issue is as follows:
-
-1. Copy the older source domain to be upgraded to the new target
-domain-dir, the default for which is as-install``/domains``. +
-Rename the target `domain1` directory, if one exists, before proceeding.
-
-2. Run the upgrade.
-+
-[source]
-----
-asadmin> start-domain --upgrade domain-name
-----

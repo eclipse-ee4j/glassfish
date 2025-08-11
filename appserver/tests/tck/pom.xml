@@ -43,6 +43,7 @@
         <module>concurrency</module>
         <module>connectors</module>
         <module>expression-language</module>
+        <module>enterprise-beans</module>
 
         <module>platform-tck-runner</module>
 

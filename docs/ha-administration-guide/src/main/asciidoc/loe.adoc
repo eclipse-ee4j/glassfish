@@ -10,46 +10,31 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* xref:ssh-setup.adoc#ssh-example-2-1[2-1 Creating an Alias for the Windows User's Password]
-* xref:ssh-setup.adoc#ssh-example-2-2[2-2 Testing the Connection Over DCOM to a Remote Host]
-* xref:ssh-setup.adoc#ssh-example-2-3[2-3 Setting the Home Directory for the MKS Toolkit User]
-* xref:ssh-setup.adoc#ssh-example-2-4[2-4 Determining if the sshd Daemon Is Running on an Oracle Solaris System]
-* xref:ssh-setup.adoc#ssh-example-2-5[2-5 Determining if the sshd Daemon Is Running on a Linux System]
-* xref:ssh-setup.adoc#ssh-example-2-6[2-6 Setting Up Public Key Authentication Without Encryption]
-* xref:ssh-setup.adoc#ssh-example-2-7[2-7 Setting Up Encrypted Public Key Authentication]
-* xref:ssh-setup.adoc#ssh-example-2-8[2-8 Creating an Alias for the SSH User's Password]
-* xref:ssh-setup.adoc#ssh-example-2-9[2-9 Copying a {productName} Installation
-to Multiple DCOM-Enabled Hosts]
-* xref:ssh-setup.adoc#ssh-example-2-10[2-10 Copying a {productName}
+* xref:ssh-setup.adoc#ssh-example-2-1[2-1 Setting the Home Directory for the MKS Toolkit User]
+* xref:ssh-setup.adoc#ssh-example-2-2[2-2 Determining if the sshd Daemon Is Running on a Linux System]
+* xref:ssh-setup.adoc#ssh-example-2-3[2-3 Setting Up Public Key Authentication Without Encryption]
+* xref:ssh-setup.adoc#ssh-example-2-4[2-4 Setting Up Encrypted Public Key Authentication]
+* xref:ssh-setup.adoc#ssh-example-2-5[2-5 Creating an Alias for the SSH User's Password]
+* xref:ssh-setup.adoc#ssh-example-2-6[2-6 Copying a {productName}
 Installation to Multiple SSH-Enabled Hosts]
-* xref:ssh-setup.adoc#ssh-example-2-11[2-11 Removing {productName} Software
-From Multiple DCO\M-Enabled Hosts]
-* xref:ssh-setup.adoc#ssh-example-2-12[2-12 Removing {productName} Software
+* xref:ssh-setup.adoc#ssh-example-2-7[2-7 Removing {productName} Software
 From Multiple SSH-Enabled Hosts]
-* xref:nodes.adoc#nodes-example-3-1[3-1 Creating a DCOM Node]
-* xref:nodes.adoc#nodes-example-3-2[3-2 Listing Basic Information About All DCOM
-Nodes in a Domain]
-* xref:nodes.adoc#nodes-example-3-3[3-3 Listing Detailed Information About All
-DCOM Nodes in a Domain]
-* xref:nodes.adoc#nodes-example-3-4[3-4 Testing if a DCOM Node Is Reachable]
-* xref:nodes.adoc#nodes-example-3-5[3-5 Deleting a DCOM Node]
-* xref:nodes.adoc#nodes-example-3-6[3-6 Creating an SSH Node]
-* xref:nodes.adoc#nodes-example-3-7[3-7 Listing Basic Information About All SSH Nodes
+* xref:nodes.adoc#nodes-example-3-1[3-1 Creating an SSH Node]
+* xref:nodes.adoc#nodes-example-3-2[3-2 Listing Basic Information About All SSH Nodes
 in a Domain]
-* xref:nodes.adoc#nodes-example-3-8[3-8 Listing Detailed Information About All SSH
+* xref:nodes.adoc#nodes-example-3-3[3-3 Listing Detailed Information About All SSH
 Nodes in a Domain]
-* xref:nodes.adoc#nodes-example-3-9[3-9 Testing if an SSH Node Is Reachable]
-* xref:nodes.adoc#nodes-example-3-10[3-10 Deleting an SSH Node]
-* xref:nodes.adoc#nodes-example-3-11[3-11 Creating a CONFIG Node]
-* xref:nodes.adoc#nodes-example-3-12[3-12 Listing Basic Information About All CONFIG
+* xref:nodes.adoc#nodes-example-3-4[3-4 Testing if an SSH Node Is Reachable]
+* xref:nodes.adoc#nodes-example-3-5[3-5 Deleting an SSH Node]
+* xref:nodes.adoc#nodes-example-3-6[3-6 Creating a CONFIG Node]
+* xref:nodes.adoc#nodes-example-3-7[3-7 Listing Basic Information About All CONFIG
 Nodes in a Domain]
-* xref:nodes.adoc#nodes-example-3-13[3-13 Listing Detailed Information About All
+* xref:nodes.adoc#nodes-example-3-8[3-8 Listing Detailed Information About All
 CONFIG Nodes in a Domain]
-* xref:nodes.adoc#nodes-example-3-14[3-14 Deleting a CONFIG Node]
-* xref:nodes.adoc#nodes-example-3-15[3-15 Updating a DCOM Node]
-* xref:nodes.adoc#nodes-example-3-16[3-16 Updating an SSH Node]
-* xref:nodes.adoc#nodes-example-3-17[3-17 Updating a CONFIG Node]
-* xref:nodes.adoc#nodes-example-3-18[3-18 Changing a CONFIG Node to an SSH Node]
+* xref:nodes.adoc#nodes-example-3-9[3-9 Deleting a CONFIG Node]
+* xref:nodes.adoc#nodes-example-3-10[3-10 Updating an SSH Node]
+* xref:nodes.adoc#nodes-example-3-11[3-11 Updating a CONFIG Node]
+* xref:nodes.adoc#nodes-example-3-12[3-12 Changing a CONFIG Node to an SSH Node]
 * xref:clusters.adoc#gklgw[4-1 Checking the Health of Instances in a
 Cluster]
 * xref:clusters.adoc#gklhv[4-2 Validating That Multicast Transport Is Available for a Cluster]

@@ -1,7 +1,7 @@
 type=page
 status=published
 title=delete-node-config
-next=delete-node-dcom.html
+next=delete-node-ssh.html
 prev=delete-network-listener.html
 ~~~~~~
 
@@ -25,17 +25,12 @@ node-name
 
 The `delete-node-config` subcommand deletes a node that is not enabled
 for remote communication from the domain. This subcommand does not
-require the Distributed Component Object Model (DCOM) remote protocol or
-secure shell (SSH) to be configured.
+require the secure shell (SSH) to be configured.
 
 This subcommand can delete only a node that is not enabled for remote
 communication.
 The subcommand for deleting other types of nodes depends
 on the type of the node:
-
-* A node that is enabled for remote communication over DCOM must be
-  deleted by using the
-  xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)] subcommand.
 
 * A node that is enabled for remote communication over SSH must be
   deleted by using the
@@ -71,7 +66,7 @@ asadmin-options::
 
 node-name::
   The name of the node to delete. The node must not be enabled for
-  communication over DCOM or SSH. Otherwise, an error occurs.
+  communication over SSH. Otherwise, an error occurs.
 
 === Examples
 
@@ -101,19 +96,15 @@ Command delete-node-config executed successfully.
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
 xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:install-node.adoc#install-node[`install-node`(1)],
-xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
 xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
 xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
-xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)],
 xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)],
 xref:update-node-config.adoc#update-node-config[`update-node-config`(1)],
-xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)],
 xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 

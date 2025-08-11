@@ -10,8 +10,7 @@ prev=overview.html
 [[enabling-centralized-administration-of-glassfish-server-instances]]
 == 2 Enabling Centralized Administration of {productName} Instances
 
-{productName} uses the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to ensure that clusters that span
+{productName} uses the secure shell (SSH) to ensure that clusters that span
 multiple hosts can be administered centrally. To perform administrative
 operations on {productName} instances that are remote from the domain
 administration server (DAS), the DAS must be able to communicate with
@@ -22,16 +21,16 @@ application to the instance.
 
 However, the DAS cannot connect to an instance to perform operations on
 an instance that is not running, such as creating or starting the
-instance. For these operations, the DAS uses DCOM or SSH to contact a
-remote host and administer instances there. DCOM or SSH provides
+instance. For these operations, the DAS uses SSH to contact a
+remote host and administer instances there. SSH provides
 confidentiality and security for data that is exchanged between the DAS
 and remote hosts.
 
 
 [NOTE]
 ====
-The use of DCOM or SSH to enable centralized administration of remote
-instances is optional. If the use of DCOM or SSH is not feasible in your
+The use of SSH to enable centralized administration of remote
+instances is optional. If the use of SSH is not feasible in your
 environment, you can administer remote instances locally.
 ====
 
@@ -39,7 +38,6 @@ environment, you can administer remote instances locally.
 The following topics are addressed here:
 
 * xref:#about-centralized-administration-of-glassfish-server-instances[About Centralized Administration of {productName} Instances]
-* xref:#setting-up-dcom-and-testing-the-dcom-set-up[Setting Up DCOM and Testing the DCOM Set Up]
 * xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
 * xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
 * xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
@@ -51,10 +49,10 @@ The following topics are addressed here:
 
 === About Centralized Administration of {productName} Instances
 
-The use of DCOM or SSH to enable centralized administration of remote
+The use of SSH to enable centralized administration of remote
 instances is optional and is required only for specific operations.
-Instances local to the DAS can be administered without DCOM or SSH. If
-DCOM or SSH is not practicable in your environment, you can administer
+Instances local to the DAS can be administered without SSH. If
+SSH is not practicable in your environment, you can administer
 remote instances locally.
 
 [[determining-whether-to-enable-centralized-administration]]
@@ -83,10 +81,6 @@ for enabling centralized administration, if any.
 |===
 |Protocol |Node Administration Instructions |Instance Administration Instructions
 
-|DCOM
-|xref:nodes.adoc#creating-listing-testing-and-deleting-dcom-nodes[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
-|xref:instances.adoc#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
-
 |SSH
 |xref:nodes.adoc#creating-listing-testing-and-deleting-ssh-nodes[Creating, Listing, Testing, and Deleting `SSH` Nodes]
 |xref:instances.adoc#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
@@ -95,34 +89,6 @@ for enabling centralized administration, if any.
 |xref:nodes.adoc#creating-listing-and-deleting-config-nodes[Creating, Listing, and Deleting `CONFIG` Nodes]
 |xref:instances.adoc#administering-glassfish-server-instances-locally[Administering {productName} Instances Locally]
 |===
-
-
-[[considerations-for-using-dcom-for-centralized-administration]]
-==== Considerations for Using DCOM for Centralized Administration
-
-DCOM enables communications between Windows hosts. In a typical
-{productName} deployment, the DAS acts as a DCOM client, and hosts
-where instances reside act as DCOM servers. To create or start an
-instance on a remote host, the DAS instructs the DCOM server on the host
-to start the `asadmin` utility of {productName}. The `asadmin`
-utility then performs the required operation on the host to create or
-start the instance.
-
-The DCOM service must be running on hosts where instances reside, but is
-not required to be running on the DAS host. The DAS uses its own DCOM
-client for communicating with hosts where instances reside. On Windows
-hosts, the DCOM server is typically running by default as a Windows Service.
-
-DCOM is available only with the Windows operating system. Because DCOM
-is typically installed and preconfigured, minimal additional setup is
-required to use DCOM with {productName}.
-
-Before setting up DCOM, decide which Windows user {productName} will
-use when connecting to remote hosts. For the following reasons,
-administration is simplest if the Windows user is the user that starts the DAS:
-
-* Remote instances are started as the Windows user.
-* By default, the DAS assumes that the Windows user is the user that is running the DAS.
 
 
 [[considerations-for-using-ssh-for-centralized-administration]]
@@ -216,307 +182,6 @@ instances are to be stored. The OS-level administrator has such access
 by default. You can also configure the system to grant such access to
 other users. For more information, see the documentation for the Windows
 operating system.
-
-[[setting-up-dcom-and-testing-the-dcom-set-up]]
-
-=== Setting Up DCOM and Testing the DCOM Set Up
-
-Setting up DCOM on a host involves the following tasks:
-
-* Verifying Windows operating system settings for the host
-* Enabling the Windows user to run scripts on the host
-* Setting up password authentication for the Windows user on the host
-
-Set up DCOM on all hosts where instances in your cluster will reside.
-
-After setting up DCOM on a host, test the connection over DCOM to the
-host.
-
-[[windows-operating-system-settings]]
-
-==== Windows Operating System Settings
-
-To enable access to a host over DCOM, ensure that the following items in
-the Windows operating system are set as follows on the host:
-
-* The following services are in the started state and are set to start automatically:
-
-** Server
-** Remote Registry
-
-* Network Access: Sharing security model for local accounts is set to Classic.
-* The following ports are open:
-
-** DCOM port 135 or 139
-** Windows Shares port 445
-
-[[to-enable-the-windows-user-to-run-scripts-on-a-remote-host]]
-
-==== To Enable the Windows User to Run Scripts on a Remote Host
-
-To run scripts on a remote host, full control over the following Windows
-registry keys must be allowed for the Windows user or the group that
-contains the Windows user:
-
-* One of the following keys, depending on the processor architecture of the host:
-
-** 32-bit architecture: +
-   HKEY_LOCAl_MACHINE\SOFTWARE\Classes\Wow6432Node\CLSID\\{76A64158-CB41-11D1-8B02-00600806D9B6}
-** 64-bit architecture: +
-   HKEY_LOCAl_MACHINE\SOFTWARE\Classes\CLSID\\{76A64158-CB41-11D1-8B02-00600806D9B6}
-
-* HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\\{72C24DD5-D70A-438B-8A42-98424B88AFB8}
-
-In some versions of Windows, only the user `NT SERVICE\TrustedInstaller`
-has full control over these Windows registry keys. If your version of
-Windows is configured in this way, you must modify these keys to allow
-full control over them for the Windows user or the group that contains
-the Windows user.
-
-
-[NOTE]
-====
-Only the operating-system-level administrator user can edit the Windows registry.
-====
-
-
-Perform this procedure for each Windows registry key that you are
-modifying on each host where instances in your cluster will reside.
-
-1. If necessary, start the Registry Editor.
-+
-[source]
-----
-regedit.exe
-----
-The Registry Editor window opens.
-
-2. In the Registry Editor window, navigate to the registry key that you are modifying.
-
-3. Select the key, click mouse button 3, and from the pop-up menu that
-opens, select Permissions.
-+
-The Permissions window for the key opens.
-
-4. Determine whether full control is allowed for the Windows user or
-the group that contains the Windows user.
-* If full control is allowed, no further action is required.
-* If full control is not allowed, allow full control as follows:
-[arabic]
-.. In the Permissions window, click Advanced. +
-The Advanced Security Settings window for the key opens.
-.. In the Advanced Security Settings window, select the Owner tab.
-.. From the Change owner to list, select the Windows user or the group
-that contains the Windows user.
-.. Ensure that the Replace owner on subcontainer and objects option is selected.
-.. Click Apply, then OK. +
-The Advanced Security Settings window closes. The Permissions window
-shows that full control is allowed for the Windows user or the group
-that contains the Windows user.
-
-.. In the Permissions window, click OK. The Permissions window closes.
-
-5. After modifying all the Windows registry keys over which full
-control is required, quit the Registry Editor.
-
-[[GSHAG451]]
-
-Next Steps
-
-Set up password authentication for the Windows user as explained in
-xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password Authentication for the Windows User].
-
-[[to-set-up-password-authentication-for-the-windows-user]]
-
-==== To Set Up Password Authentication for the Windows User
-
-When a {productName} subcommand uses DCOM to log in to a remote host,
-{productName} requires the Windows user's password to authenticate
-the Windows user. To provide this password securely to {productName},
-create a {productName} password alias to represent the password and
-store this alias in a password file that is passed to the
-xref:reference-manual.adoc#asadmin[`asadmin`] utility.
-
-Before You Begin
-
-Ensure that the following prerequisites are met:
-
-* The Windows user is a valid user on the host to which you are testing
-the connection over DCOM.
-* Items in the Windows operating system are set on the host as described
-in xref:#windows-operating-system-settings[Windows Operating System Settings].
-* The Windows user is able to run scripts on the host. For more
-information, see xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run
-Scripts on a Remote Host].
-
-1. Ensure that the DAS is running. +
-Remote subcommands require a running server.
-
-2. [[CEGGAHFH]]
-Create an alias for the Windows user's password.
-+
-[NOTE]
-====
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for creating a password
-alias, see the xref:reference-manual.adoc#create-password-alias[`create-password-alias`(1)] help page.
-====
-+
-[source]
-----
-asadmin> create-password-alias alias-name
-----
-+
-alias-name::
-  Your choice of name for the alias that you are creating.
-+
-The `create-password-alias` subcommand prompts you to type the password
-for which you are creating an alias.
-
-3. In response to the prompt, type the Windows user's password. +
-The `create-password-alias` subcommand prompts you to type the password again.
-
-4. In response to the prompt, type the Windows user's password again.
-
-5. Create a plain text file that contains the following entry for the
-password alias:
-+
-[source]
-----
-AS_ADMIN_WINDOWSPASSWORD=${ALIAS=alias-name}
-----
-alias-name::
-  The alias name that you specified in Step xref:#CEGGAHFH[2].
-+
-
-[NOTE]
-====
-When you create a `DCOM` node, pass this file as the `--passwordfile`
-option of the `asadmin` utility. For more information, see
-xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node].
-====
-
-
-[[ssh-example-2-1]]
-Example 2-1 Creating an Alias for the Windows User's Password
-
-This example creates an alias that is named `winuser-password` for the
-Windows user's password.
-
-[source]
-----
-$ asadmin create-password-alias winuser-password
-Enter the alias password>
-Enter the alias password again>
-Command create-password-alias executed successfully.
-----
-
-The entry in the password file for the `winuser-password` alias is as
-follows:
-
-[source]
-----
-AS_ADMIN_WINDOWSPASSWORD=${ALIAS=winuser-password}
-----
-
-See Also
-
-* xref:reference-manual.adoc#asadmin[`asadmin`(1M)]
-* xref:reference-manual.adoc#create-password-alias[`create-password-alias`(1)]
-
-You can also view the full syntax and options of the subcommand by
-typing `asadmin help create-password-alias` at the command line.
-
-[[GSHAG456]]
-
-Next Steps
-
-Test the DCOM setup as explained in xref:#to-test-the-connection-over-dcom-to-a-remote-host[To Test the
-Connection Over DCOM to a Remote Host].
-
-[[to-test-the-connection-over-dcom-to-a-remote-host]]
-
-==== To Test the Connection Over DCOM to a Remote Host
-
-Testing the connection over DCOM to a remote host verifies that the
-required Windows services are running, the required ports are open, and
-the Windows user has a valid user account on the host.
-
-Before attempting to perform any task that the requires the DAS contact
-the DCOM server on a remote host, test the connection over DCOM to the
-host. If this test fails, any attempt to perform a task that the
-requires the DAS contact the DCOM server on the host will also fail.
-Examples of such tasks are creating a DCOM node to represent the host or
-creating an instance that resides on the host. For more information, see
-xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node] and
-xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally].
-
-If you cannot connect to the host over DCOM, troubleshoot the DCOM setup
-before proceeding.
-
-Before You Begin
-
-Ensure that the following prerequisites are met:
-
-* The Windows user is a valid user on the host to which you are testing
-the connection over DCOM.
-* Items in the Windows operating system are set on the host as described
-in xref:#windows-operating-system-settings[Windows Operating System Settings].
-* The Windows user is able to run scripts on the host. For more
-information, see xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run
-Scripts on a Remote Host].
-* Password authentication is set up for the windows user as explained in
-xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password Authentication for the Windows User].
-
-1. Ensure that the DAS is running. +
-Remote subcommands require a running server.
-
-2. Run the `validate-dcom` subcommand. +
-Specify the file that contains the alias for the Windows user's password
-through the `--passwordfile` option of the `asadmin` utility. For more
-information about this file, see xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password
-Authentication for the Windows User].
-
-[NOTE]
-====
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for configuring the
-node, see the xref:reference-manual.adoc#validate-dcom[`validate-dcom`(1)] help page.
-====
-
-[source]
-----
-C:\>asadmin --passwordfile filename validate-dcom host-name
-----
-filname::
-  The name of the file that contains the alias for the Windows user's
-  password.
-host-name::
-  The name of the host to which you are testing the connection over
-  DCOM.
-
-[[ssh-example-2-2]]
-Example 2-2 Testing the Connection Over DCOM to a Remote Host
-
-This example tests the connection over DCOM to the host `wpmdl2`.
-
-[source]
-----
-C:\> asadmin --passwordfile aspwalias.txt validate-dcom wpmdl2
-Command validate-dcom executed successfully.
-----
-
-See Also
-
-* xref:reference-manual.adoc#asadmin[`asadmin`(1M)]
-* xref:reference-manual.adoc#validate-dcom[`validate-dcom`(1)]
-* xref:#windows-operating-system-settings[Windows Operating System Settings]
-* xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run Scripts on a Remote Host]
-* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
-* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
-
-You can also view the full syntax and options of the subcommand by
-typing `asadmin help validate-dcom` at the command line.
 
 [[setting-up-cygwin-ssh-on-windows]]
 
@@ -856,8 +521,8 @@ user-name::
 5. Confirm that the home directories are the same as explained in
 Step xref:#gkslo[1].
 
-[[ssh-example-2-3]]
-Example 2-3 Setting the Home Directory for the MKS Toolkit User
+[[ssh-example-2-1]]
+Example 2-1 Setting the Home Directory for the MKS Toolkit User
 
 This example sets the home directory for the MKS Toolkit user
 `Administrator` to `C:\Documents and Settings\Administrator`.
@@ -942,57 +607,8 @@ How to set up SSH on UNIX and Linux systems depends on the flavor of the
 operating system that you are running, as explained in the following
 sections:
 
-* xref:#to-set-up-ssh-on-oracle-solaris-systems[To Set Up SSH on Oracle Solaris Systems]
 * xref:#to-set-up-ssh-on-macos-systems[To Set Up SSH on MacOS Systems]
 * xref:#to-set-up-ssh-on-linux-systems[To Set Up SSH on Linux systems]
-
-[[to-set-up-ssh-on-oracle-solaris-systems]]
-
-==== To Set Up SSH on Oracle Solaris Systems
-
-1. Ensure that the following options in the configuration file
-`/etc/ssh/sshd_config` are set to `yes`:
-* `StrictModes`
-* `PubkeyAuthentication`
-2. Determine if the SSH server daemon `sshd` is running.
-+
-[source]
-----
-$ /usr/bin/svcs ssh
-----
-3. If the SSH server daemon `sshd` is not running, start this daemon.
-+
-If the daemon is running, no further action is required.
-+
-[source]
-----
-$ /usr/sbin/svcadm enable ssh
-----
-
-[[ssh-example-2-4]]
-Example 2-4 Determining if the `sshd` Daemon Is Running on an Oracle
-Solaris System
-
-This example confirms that the SSH server daemon `sshd` is running on an
-Oracle Solaris system.
-
-[source]
-----
-$ /usr/bin/svcs ssh
-STATE          STIME    FMRI
-online         Jul_06   svc:/network/ssh:default
-----
-
-See Also
-
-https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
-
-[[GSHAG327]]
-
-Next Steps
-
-After you have completed the setup of SSH on a host, test the setup on
-the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
 [[to-set-up-ssh-on-macos-systems]]
 
@@ -1058,8 +674,8 @@ If the daemon is running, no further action is required.
 $ /sbin/service sshd start
 ----
 
-[[ssh-example-2-5]]
-Example 2-5 Determining if the `sshd` Daemon Is Running on a Linux System
+[[ssh-example-2-2]]
+Example 2-2 Determining if the `sshd` Daemon Is Running on a Linux System
 
 This example confirms that the SSH server daemon `sshd` is running on a
 Linux system.
@@ -1131,7 +747,6 @@ following sections:
 
 * xref:#to-configure-and-start-the-cygwin-ssh-server-daemon-sshd[To Configure and Start the Cygwin SSH Server Daemon `sshd`]
 * xref:#to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd[To Configure and Start the MKS Toolkit SSH Server Daemon `sshd`]
-* xref:#to-set-up-ssh-on-oracle-solaris-systems[To Set Up SSH on Oracle Solaris Systems]
 
 If your connection is accepted, but you cannot log in, ensure that the
 SSH user has a valid user account on the host.
@@ -1253,8 +868,8 @@ for the SSH user's password.
 +
 In response to each prompt for a password, type the SSH user's password.
 
-[[ssh-example-2-6]]
-Example 2-6 Setting Up Public Key Authentication Without Encryption
+[[ssh-example-2-3]]
+Example 2-3 Setting Up Public Key Authentication Without Encryption
 
 This example generates and sets up an SSH key for the user `gfuser` on
 the hosts `sua01` and `sua02`. The command is run by the user `gfuser`.
@@ -1460,8 +1075,8 @@ xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node].
 ====
 
 
-[[ssh-example-2-7]]
-Example 2-7 Setting Up Encrypted Public Key Authentication
+[[ssh-example-2-4]]
+Example 2-4 Setting Up Encrypted Public Key Authentication
 
 This example generates an SSH key pair with an encrypted private key for
 the user `gfadmin` and distributes the public key to the hosts `sj01`
@@ -1600,8 +1215,8 @@ xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node].
 ====
 
 
-[[ssh-example-2-8]]
-Example 2-8 Creating an Alias for the SSH User's Password
+[[ssh-example-2-5]]
+Example 2-5 Creating an Alias for the SSH User's Password
 
 This example creates an alias that is named `ssh-password` for the SSH user's password.
 
@@ -1659,37 +1274,18 @@ The following topics are addressed here:
 
 ==== To Copy a {productName} Installation to Multiple Hosts
 
-Use the `install-node-dcom` subcommand or the `install-node-ssh`
-subcommand in local mode to copy an installation of {productName}
+Use the `install-node-ssh` subcommand in local mode to copy an installation of {productName}
 software to multiple hosts.
 
 Before You Begin
 
-Ensure that DCOM or SSH is set up on the host where you are running the
+Ensure that SSH is set up on the host where you are running the
 subcommand and on each host where you are copying the {productName}
 software.
 
 Run the appropriate subcommand for the protocol that is set up for
 communication between the hosts.
 
-* If DCOM is set up for communication between the hosts, run the
-`install-node-dcom` subcommand.
-+
-[NOTE]
-====
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for copying an
-installation of {productName} software, see the
-xref:reference-manual.adoc#install-node-dcom[`install-node-dcom`(1)] help page.
-====
-+
-[source]
-----
-asadmin> install-node-dcom host-list
-----
-host-list::
-  A space-separated list of the names of the hosts where you are copying
-  the installation of {productName} software.
 * If SSH is set up for communication between the hosts, run the
 `install-node-ssh` subcommand.
 +
@@ -1709,45 +1305,8 @@ host-list::
   A space-separated list of the names of the hosts where you are copying
   the installation of {productName} software.
 
-[[ssh-example-2-9]]
-Example 2-9 Copying a {productName} Installation to Multiple DCOM-Enabled Hosts
-
-This example copies the {productName} software on the host where the
-subcommand is run to the default location on the DCOM-enabled hosts
-`wpmdl1.example.com` and `wpmdl2.example.com`.
-
-Some lines of output are omitted from this example for readability.
-
-[source]
-----
-asadmin> install-node-dcom wpmdl1.example.com wpmdl2.example.com
-Created installation zip C:\glassfish8107276692860773166.zip
-Copying 85760199 bytes..........................................................
-....................................
-WROTE FILE TO REMOTE SYSTEM: C:/glassfish7/glassfish_install.zip and C:/glassfish7/unpack.bat
-Output from Windows Unpacker:
-
-C:\Windows\system32>C:
-
-C:\Windows\system32>cd "C:\glassfish7"
-
-C:\glassfish7>jar xvf glassfish_install.zip
- inflated: bin/asadmin
- inflated: bin/asadmin.bat
- inflated: glassfish/bin/appclient
- inflated: glassfish/bin/appclient.bat
- inflated: glassfish/bin/appclient.js
- inflated: glassfish/bin/asadmin
- inflated: glassfish/bin/asadmin.bat
-...
- inflated: mq/lib/props/broker/default.properties
- inflated: mq/lib/props/broker/install.properties
-
-Command install-node-dcom executed successfully.
-----
-
-[[ssh-example-2-10]]
-Example 2-10 Copying a {productName} Installation to Multiple
+[[ssh-example-2-6]]
+Example 2-6 Copying a {productName} Installation to Multiple
 SSH-Enabled Hosts
 
 This example copies the {productName} software on the host where the
@@ -1777,28 +1336,25 @@ Command install-node-ssh executed successfully
 
 See Also
 
-* xref:reference-manual.adoc#install-node-dcom[`install-node-dcom`(1)]
 * xref:reference-manual.adoc#install-node-ssh[`install-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
 
-* `asadmin help install-node-dcom`
 * `asadmin help install-node-ssh`
 
 [[to-remove-glassfish-server-software-from-multiple-hosts]]
 
 ==== To Remove {productName} Software From Multiple Hosts
 
-Use the `uninstall-node-dcom` subcommand or the `uninstall-node-ssh`
-subcommand in local mode to remove {productName} software from
-multiple hosts.
+Use the `uninstall-node-ssh` subcommand in local mode to remove {productName}
+software from multiple hosts.
 
 Before You Begin
 
 Ensure that the following prerequisites are met:
 
-* DCOM or SSH is set up on the host where you are running the subcommand
+* SSH is set up on the host where you are running the subcommand
 and on each host from which you are removing the {productName} software.
 
 * No process is accessing the parent of the base installation directory
@@ -1807,12 +1363,6 @@ for the {productName} software or any subdirectory of this directory.
 * The parent of the base installation directory for the {productName}
 software is the same on each host from which you are removing the
 {productName} software.
-
-* For hosts that use DCOM for remote communication, the configuration of
-the following items is the same on each host:
-
-** Windows Domain
-** Windows User
 
 * For hosts that use SSH for remote communication, the configuration of
 the following items is the same on each host:
@@ -1824,23 +1374,6 @@ the following items is the same on each host:
 Run the appropriate subcommand for the protocol that is set up for
 communication between the hosts.
 
-* If DCOM is set up for communication between the hosts, run the
-`uninstall-node-dcom` subcommand.
-+
-[NOTE]
-====
-Only the options that are required to complete this task are provided in this step.
-For information about all the options for removing {productName} software, see the
-xref:reference-manual.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)] help page.
-====
-+
-[source]
-----
-asadmin> uninstall-node-dcom host-list
-----
-host-list::
-  A space-separated list of the names of the hosts from which you are
-  removing {productName} software.
 * If SSH is set up for communication between the hosts, run the
 `uninstall-node-ssh` subcommand.
 +
@@ -1859,21 +1392,8 @@ host-list::
   A space-separated list of the names of the hosts from which you are
   removing {productName} software.
 
-[[ssh-example-2-11]]
-Example 2-11 Removing {productName} Software From Multiple
-DCO\M-Enabled Hosts
-
-This example removes {productName} software on the DCOM-enabled hosts
-`wpmdl1.example.com` and `wpmdl2.example.com` from the default location.
-
-[source]
-----
-asadmin> uninstall-node-dcom wpmdl1 wpmdl2
-Command uninstall-node-dcom executed successfully.
-----
-
-[[ssh-example-2-12]]
-Example 2-12 Removing {productName} Software From Multiple
+[[ssh-example-2-7]]
+Example 2-7 Removing {productName} Software From Multiple
 SSH-Enabled Hosts
 
 This example removes {productName} software on the SSH-enabled hosts
@@ -1891,11 +1411,9 @@ Command uninstall-node-ssh executed successfully.
 
 See Also
 
-* xref:reference-manual.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)]
 * xref:reference-manual.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
 
-* `asadmin help uninstall-node-dcom`
 * `asadmin help uninstall-node-ssh`

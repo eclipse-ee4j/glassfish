@@ -337,11 +337,6 @@ The entries in this file that are read by subcommands are as follows:
   * ``AS_ADMIN_MAPPEDPASSWORD=``mapped-password (read by the
   xref:create-connector-security-map.adoc#create-connector-security-map[``create-connector-security-map``(1)]
   subcommand)
-  * ``AS_ADMIN_WINDOWSPASSWORD=``windows-password (read by the
-  xref:create-node-dcom.adoc#create-node-dcom[``create-node-dcom``(1)],
-  xref:install-node-dcom.adoc#install-node-dcom[``install-node-dcom``(1)],
-  and xref:update-node-ssh.adoc#update-node-dcom[``update-node-dcom``(1)]
-  subcommands)
   * ``AS_ADMIN_SSHPASSWORD=``sshd-password (read by the
   xref:create-node-ssh.adoc#create-node-ssh[``create-node-ssh``(1)],
   xref:install-node.adoc#install-node[``install-node``(1)],
@@ -797,12 +792,10 @@ xref:create-connector-security-map.adoc#create-connector-security-map[`create-co
 xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
 xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
 xref:create-jvm-options.adoc#create-jvm-options[`create-jvm-options`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:create-password-alias.adoc#create-password-alias[`create-password-alias`(1)],
 xref:deploy.adoc#deploy[`deploy`(1)],
 xref:install-node.adoc#install-node[`install-node`(1)],
-xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
 xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
 xref:list-applications.adoc#list-applications[`list-applications`(1)],
 xref:list-commands.adoc#list-commands[`list-commands`(1)],
@@ -813,7 +806,6 @@ xref:set.adoc#set[`set`(1)],
 xref:set-web-env-entry.adoc#set-web-env-entry[`set-web-env-entry`(1)],
 xref:start-domain.adoc#start-domain[`start-domain`(1)],
 xref:update-file-user.adoc#update-file-user[`update-file-user`(1)],
-xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)],
 xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]

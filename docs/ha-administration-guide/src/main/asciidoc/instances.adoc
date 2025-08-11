@@ -69,11 +69,10 @@ Clustered instance::
 
 === Administering {productName} Instances Centrally
 
-Centralized administration requires the Distributed Component Object
-Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
-or SSH is set up, you can administer clustered instances without the
+Centralized administration requires the  secure shell (SSH) to be set up. If
+SSH is set up, you can administer clustered instances without the
 need to log in to hosts where remote instances reside. For information
-about setting up DCOM and SSH, see xref:ssh-setup.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling
+about setting up SSH, see xref:ssh-setup.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling
 Centralized Administration of {productName} Instances].
 
 Administering {productName} instances centrally involves the
@@ -114,12 +113,11 @@ Ensure that following prerequisites are met:
 * The node where the instance is to reside is either enabled for remote
 communication or represents the host on which the DAS is running. For
 information about how to create a node that is enabled for remote
-communication, see the following sections:
+communication, see the following section:
 
-** xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
 ** xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 
-* The user of the DAS can use DCOM or SSH to log in to the host for the
+* The user of the DAS can use SSH to log in to the host for the
 node where the instance is to reside.
 
 If any of these prerequisites is not met, create the instance locally as
@@ -231,7 +229,6 @@ Command create-instance executed successfully.
 
 See Also
 
-* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
 * xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 * xref:#to-create-an-instance-locally[To Create an Instance Locally]
 * xref:reference-manual.adoc#create-instance[`create-instance`(1)]
@@ -409,7 +406,7 @@ Ensure that following prerequisites are met:
 * Each node where an instance in the cluster resides is either enabled
 for remote communication or represents the host on which the DAS is
 running.
-* The user of the DAS can use DCOM or SSH to log in to the host for any
+* The user of the DAS can use SSH to log in to the host for any
 node where instances in the cluster reside.
 
 If any of these prerequisites is not met, start the cluster by starting
@@ -511,7 +508,7 @@ Ensure that following prerequisites are met:
 
 * The node where the instance resides is either enabled for remote
 communication or represents the host on which the DAS is running.
-* The user of the DAS can use DCOM or SSH to log in to the host for the
+* The user of the DAS can use SSH to log in to the host for the
 node where the instance resides.
 
 If any of these prerequisites is not met, start the instance locally as
@@ -674,8 +671,8 @@ system to kill the instance process before restarting the instance.
 
 === Administering {productName} Instances Locally
 
-Local administration does not require DCOM or SSH to be set up. If
-neither DCOM nor SSH is set up, you must log in to each host where
+Local administration does not require SSH to be set up. If
+SSH is not set up, you must log in to each host where
 remote instances reside and administer the instances individually.
 
 Administering {productName} instances locally involves the following
@@ -690,7 +687,7 @@ tasks:
 
 [NOTE]
 ====
-Even if neither DCOM nor SSH is set up, you can obtain information about
+Even if SSH is not set up, you can obtain information about
 instances in a domain without logging in to each host where remote
 instances reside. For instructions, see xref:#to-list-all-instances-in-a-domain[To List All
 Instances in a Domain].
@@ -732,7 +729,6 @@ the node is the unqualified name of the host.
 
 For information about how to create a node, see the following sections:
 
-* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
 * xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 * xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
 
@@ -927,7 +923,6 @@ Command create-local-instance executed successfully.
 
 See Also
 
-* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
 * xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 * xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
 * xref:reference-manual.adoc#create-local-instance[`create-local-instance`(1)]
@@ -1400,7 +1395,7 @@ that the instance is not running.
 
 3. If the instance is stopped, start the instance. +
 If the instance is running, no further action is required.
-* If DCOM or SSH is set up, start the instance centrally.
+* If SSH is set up, start the instance centrally.
 +
 If you require full synchronization, set the `--sync` option of the
 `start-instance` subcommand to `full`. If default synchronization is
@@ -1421,7 +1416,7 @@ help page.
 
 instance-name::
   The name of the instance that you are starting.
-* If neither DCOM nor SSH is set up, start the instance locally from the
+* If SSH is not set up, start the instance locally from the
 host where the instance resides.
 +
 If you require full synchronization, set the `--sync` option of the
@@ -1452,8 +1447,8 @@ instance-name::
 Example 5-16 Resynchronizing an Instance and the DAS Online
 
 This example determines that the instance `yml-i1` is stopped and fully
-resynchronizes the instance with the DAS. Because neither DCOM nor SSH
-is set up, the instance is started locally on the host where the
+resynchronizes the instance with the DAS. Because SSH
+is not set up, the instance is started locally on the host where the
 instance resides. In this example, multiple nodes are defined for the
 {productName} installation that is running on the node's host.
 

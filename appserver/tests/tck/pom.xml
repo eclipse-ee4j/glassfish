@@ -78,7 +78,7 @@
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
 
-        <omnifish.arquillian.version>2.0.0</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.1.0</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>

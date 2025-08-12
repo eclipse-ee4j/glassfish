@@ -219,6 +219,6 @@ xref:ping-node-ssh.adoc#ping-node-ssh[`ping-node-ssh`(1)],
 xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
 xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
 xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)],
-xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)]
+xref:update-node-ssh.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 

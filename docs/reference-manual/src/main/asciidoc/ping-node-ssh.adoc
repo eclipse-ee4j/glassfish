@@ -119,7 +119,7 @@ xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
 xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
-xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)],
+xref:update-node-ssh.adoc#update-node-ssh[`update-node-ssh`(1)],
 xref:version.adoc#version[`version`(1)]
 
 

@@ -2,7 +2,7 @@ type=page
 status=published
 title=create-node-ssh
 next=create-password-alias.html
-prev=create-node-dcom.html
+prev=create-node-config.html
 ~~~~~~
 
 = create-node-ssh
@@ -211,7 +211,6 @@ Command create-node-ssh executed successfully.
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:install-node.adoc#install-node[`install-node`(1)],
 xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],

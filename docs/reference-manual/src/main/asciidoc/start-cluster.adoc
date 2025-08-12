@@ -29,16 +29,15 @@ clustername
 
 The `start-cluster` subcommand starts a cluster by starting all
 {productName} instances in the cluster that are not already running.
-This subcommand requires the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to be configured on the host where
+This subcommand requires the secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on all hosts where
 instances in the cluster reside.
 
 [NOTE]
 ====
-If all instances reside on the same host as the DAS, DCOM or SSH is not
+If all instances reside on the same host as the DAS, SSH is not
 required. You might require to start a cluster in which instances reside
-on hosts where DCOM or SSH is not configured that are remote from the
+on hosts where SSH is not configured that are remote from the
 DAS. In this situation, run the
 xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)]
 subcommand for each instance from the host where the instance resides.
@@ -130,7 +129,6 @@ xref:delete-cluster.adoc#delete-cluster[`delete-cluster`(1)],
 xref:list-clusters.adoc#list-clusters[`list-clusters`(1)],
 xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
 xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
-xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)],
-xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)]
+xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)]
 
 

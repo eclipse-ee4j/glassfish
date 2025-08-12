@@ -28,16 +28,15 @@ instance_name
 === Description
 
 The `start-instance` subcommand starts a {productName} instance.
-This subcommand requires the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to be configured on the machine
+This subcommand requires the secure shell (SSH) to be configured on the machine
 where the domain administration server (DAS) is running and on the
 machine where the instance resides.
 
 [NOTE]
 ====
-DCOM or SSH is not required if the instance resides on a node of type
+SSH is not required if the instance resides on a node of type
 `CONFIG` that represents the local host. A node of type `CONFIG` is not
-enabled for remote communication over DCOM or SSH.
+enabled for remote communication over SSH.
 ====
 
 You may run this subcommand from any machine that can contact the DAS.
@@ -183,7 +182,6 @@ xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
 xref:stop-domain.adoc#stop-domain[`stop-domain`(1)],
 xref:stop-instance.adoc#stop-instance[`stop-instance`(1)],
 xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)],
-xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)]
 
 Java Platform Debugger Architecture (JPDA)
 (`https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html`)

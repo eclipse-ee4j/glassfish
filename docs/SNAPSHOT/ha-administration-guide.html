@@ -58,16 +58,7 @@
 <li><a href="#about-centralized-administration-of-glassfish-server-instances">About Centralized Administration of Eclipse GlassFish Instances</a>
 <ul class="sectlevel3">
 <li><a href="#determining-whether-to-enable-centralized-administration">Determining Whether to Enable Centralized Administration</a></li>
-<li><a href="#considerations-for-using-dcom-for-centralized-administration">Considerations for Using DCOM for Centralized Administration</a></li>
 <li><a href="#considerations-for-using-ssh-for-centralized-administration">Considerations for Using SSH for Centralized Administration</a></li>
-</ul>
-</li>
-<li><a href="#setting-up-dcom-and-testing-the-dcom-set-up">Setting Up DCOM and Testing the DCOM Set Up</a>
-<ul class="sectlevel3">
-<li><a href="#windows-operating-system-settings">Windows Operating System Settings</a></li>
-<li><a href="#to-enable-the-windows-user-to-run-scripts-on-a-remote-host">To Enable the Windows User to Run Scripts on a Remote Host</a></li>
-<li><a href="#to-set-up-password-authentication-for-the-windows-user">To Set Up Password Authentication for the Windows User</a></li>
-<li><a href="#to-test-the-connection-over-dcom-to-a-remote-host">To Test the Connection Over DCOM to a Remote Host</a></li>
 </ul>
 </li>
 <li><a href="#setting-up-cygwin-ssh-on-windows">Setting Up Cygwin SSH on Windows</a>
@@ -88,7 +79,6 @@
 </li>
 <li><a href="#setting-up-ssh-on-unix-and-linux-systems">Setting Up SSH on UNIX and Linux Systems</a>
 <ul class="sectlevel3">
-<li><a href="#to-set-up-ssh-on-oracle-solaris-systems">To Set Up SSH on Oracle Solaris Systems</a></li>
 <li><a href="#to-set-up-ssh-on-macos-systems">To Set Up SSH on MacOS Systems</a></li>
 <li><a href="#to-set-up-ssh-on-linux-systems">To Set Up SSH on Linux systems</a></li>
 </ul>
@@ -116,14 +106,6 @@
 <li><a href="#administering-glassfish-server-nodes">3 Administering Eclipse GlassFish Nodes</a>
 <ul class="sectlevel2">
 <li><a href="#types-of-glassfish-server-nodes">Types of Eclipse GlassFish Nodes</a></li>
-<li><a href="#creating-listing-testing-and-deleting-dcom-nodes">Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</a>
-<ul class="sectlevel3">
-<li><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></li>
-<li><a href="#to-list-dcom-nodes-in-a-domain">To List <code>DCOM</code> Nodes in a Domain</a></li>
-<li><a href="#to-test-if-a-dcom-node-is-reachable">To Test if a <code>DCOM</code> Node is Reachable</a></li>
-<li><a href="#to-delete-a-dcom-node">To Delete a <code>DCOM</code> Node</a></li>
-</ul>
-</li>
 <li><a href="#creating-listing-testing-and-deleting-ssh-nodes">Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</a>
 <ul class="sectlevel3">
 <li><a href="#to-create-an-ssh-node">To Create an <code>SSH</code> Node</a></li>
@@ -141,7 +123,6 @@
 </li>
 <li><a href="#updating-and-changing-the-type-of-a-node">Updating and Changing the Type of a Node</a>
 <ul class="sectlevel3">
-<li><a href="#to-update-a-dcom-node">To Update a <code>DCOM</code> Node</a></li>
 <li><a href="#to-update-an-ssh-node">To Update an <code>SSH</code> Node</a></li>
 <li><a href="#to-update-a-config-node">To Update a <code>CONFIG</code> Node</a></li>
 <li><a href="#to-change-the-type-of-a-node">To Change the Type of a Node</a></li>
@@ -1153,8 +1134,7 @@ upgrade components within the Eclipse GlassFish without loss of service.</p>
 <div class="sect4">
 <h5 id="protocols-for-centralized-cluster-administration"><a class="anchor" href="#protocols-for-centralized-cluster-administration"></a>Protocols for Centralized Cluster Administration</h5>
 <div class="paragraph">
-<p>Eclipse GlassFish uses the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to ensure that clusters that span
+<p>Eclipse GlassFish uses the  secure shell (SSH) to ensure that clusters that span
 multiple hosts can be administered centrally. To perform administrative
 operations on Eclipse GlassFish instances that are remote from the domain
 administration server (DAS), the DAS must be able to communicate with
@@ -1166,8 +1146,8 @@ application to the instance.</p>
 <div class="paragraph">
 <p>However, the DAS cannot connect to an instance to perform operations on
 an instance that is not running, such as creating or starting the
-instance. For these operations, the DAS uses DCOM or SSH to contact a
-remote host and administer instances there. DCOM or SSH provides
+instance. For these operations, the DAS uses SSH to contact a
+remote host and administer instances there. SSH provides
 confidentiality and security for data that is exchanged between the DAS
 and remote hosts.</p>
 </div>
@@ -1179,8 +1159,8 @@ and remote hosts.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The use of DCOM or SSH to enable centralized administration of remote
-instances is optional. If the use of DCOM SSH is not feasible in your
+<p>The use of SSH to enable centralized administration of remote
+instances is optional. If the use of SSH is not feasible in your
 environment, you can administer remote instances locally.</p>
 </div>
 </td>
@@ -1437,8 +1417,7 @@ Guide</a>, which discusses topics such as:</p>
 <h2 id="enabling-centralized-administration-of-glassfish-server-instances"><a class="anchor" href="#enabling-centralized-administration-of-glassfish-server-instances"></a>2 Enabling Centralized Administration of Eclipse GlassFish Instances</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse GlassFish uses the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to ensure that clusters that span
+<p>Eclipse GlassFish uses the secure shell (SSH) to ensure that clusters that span
 multiple hosts can be administered centrally. To perform administrative
 operations on Eclipse GlassFish instances that are remote from the domain
 administration server (DAS), the DAS must be able to communicate with
@@ -1450,8 +1429,8 @@ application to the instance.</p>
 <div class="paragraph">
 <p>However, the DAS cannot connect to an instance to perform operations on
 an instance that is not running, such as creating or starting the
-instance. For these operations, the DAS uses DCOM or SSH to contact a
-remote host and administer instances there. DCOM or SSH provides
+instance. For these operations, the DAS uses SSH to contact a
+remote host and administer instances there. SSH provides
 confidentiality and security for data that is exchanged between the DAS
 and remote hosts.</p>
 </div>
@@ -1463,8 +1442,8 @@ and remote hosts.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The use of DCOM or SSH to enable centralized administration of remote
-instances is optional. If the use of DCOM or SSH is not feasible in your
+<p>The use of SSH to enable centralized administration of remote
+instances is optional. If the use of SSH is not feasible in your
 environment, you can administer remote instances locally.</p>
 </div>
 </td>
@@ -1478,9 +1457,6 @@ environment, you can administer remote instances locally.</p>
 <ul>
 <li>
 <p><a href="#about-centralized-administration-of-glassfish-server-instances">About Centralized Administration of Eclipse GlassFish Instances</a></p>
-</li>
-<li>
-<p><a href="#setting-up-dcom-and-testing-the-dcom-set-up">Setting Up DCOM and Testing the DCOM Set Up</a></p>
 </li>
 <li>
 <p><a href="#setting-up-cygwin-ssh-on-windows">Setting Up Cygwin SSH on Windows</a></p>
@@ -1505,10 +1481,10 @@ environment, you can administer remote instances locally.</p>
 <div class="sect2">
 <h3 id="about-centralized-administration-of-glassfish-server-instances"><a class="anchor" href="#about-centralized-administration-of-glassfish-server-instances"></a>About Centralized Administration of Eclipse GlassFish Instances</h3>
 <div class="paragraph">
-<p>The use of DCOM or SSH to enable centralized administration of remote
+<p>The use of SSH to enable centralized administration of remote
 instances is optional and is required only for specific operations.
-Instances local to the DAS can be administered without DCOM or SSH. If
-DCOM or SSH is not practicable in your environment, you can administer
+Instances local to the DAS can be administered without SSH. If
+SSH is not practicable in your environment, you can administer
 remote instances locally.</p>
 </div>
 <div class="sect3">
@@ -1556,11 +1532,6 @@ for enabling centralized administration, if any.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">DCOM</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#creating-listing-testing-and-deleting-dcom-nodes">Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#administering-glassfish-server-instances-centrally">Administering Eclipse GlassFish Instances Centrally</a></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SSH</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#creating-listing-testing-and-deleting-ssh-nodes">Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#administering-glassfish-server-instances-centrally">Administering Eclipse GlassFish Instances Centrally</a></p></td>
@@ -1572,44 +1543,6 @@ for enabling centralized administration, if any.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect3">
-<h4 id="considerations-for-using-dcom-for-centralized-administration"><a class="anchor" href="#considerations-for-using-dcom-for-centralized-administration"></a>Considerations for Using DCOM for Centralized Administration</h4>
-<div class="paragraph">
-<p>DCOM enables communications between Windows hosts. In a typical
-Eclipse GlassFish deployment, the DAS acts as a DCOM client, and hosts
-where instances reside act as DCOM servers. To create or start an
-instance on a remote host, the DAS instructs the DCOM server on the host
-to start the <code>asadmin</code> utility of Eclipse GlassFish. The <code>asadmin</code>
-utility then performs the required operation on the host to create or
-start the instance.</p>
-</div>
-<div class="paragraph">
-<p>The DCOM service must be running on hosts where instances reside, but is
-not required to be running on the DAS host. The DAS uses its own DCOM
-client for communicating with hosts where instances reside. On Windows
-hosts, the DCOM server is typically running by default as a Windows Service.</p>
-</div>
-<div class="paragraph">
-<p>DCOM is available only with the Windows operating system. Because DCOM
-is typically installed and preconfigured, minimal additional setup is
-required to use DCOM with Eclipse GlassFish.</p>
-</div>
-<div class="paragraph">
-<p>Before setting up DCOM, decide which Windows user Eclipse GlassFish will
-use when connecting to remote hosts. For the following reasons,
-administration is simplest if the Windows user is the user that starts the DAS:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Remote instances are started as the Windows user.</p>
-</li>
-<li>
-<p>By default, the DAS assumes that the Windows user is the user that is running the DAS.</p>
-</li>
-</ul>
-</div>
 </div>
 <div class="sect3">
 <h4 id="considerations-for-using-ssh-for-centralized-administration"><a class="anchor" href="#considerations-for-using-ssh-for-centralized-administration"></a>Considerations for Using SSH for Centralized Administration</h4>
@@ -1730,511 +1663,6 @@ by default. You can also configure the system to grant such access to
 other users. For more information, see the documentation for the Windows
 operating system.</p>
 </div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="setting-up-dcom-and-testing-the-dcom-set-up"><a class="anchor" href="#setting-up-dcom-and-testing-the-dcom-set-up"></a>Setting Up DCOM and Testing the DCOM Set Up</h3>
-<div class="paragraph">
-<p>Setting up DCOM on a host involves the following tasks:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Verifying Windows operating system settings for the host</p>
-</li>
-<li>
-<p>Enabling the Windows user to run scripts on the host</p>
-</li>
-<li>
-<p>Setting up password authentication for the Windows user on the host</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Set up DCOM on all hosts where instances in your cluster will reside.</p>
-</div>
-<div class="paragraph">
-<p>After setting up DCOM on a host, test the connection over DCOM to the
-host.</p>
-</div>
-<div class="sect3">
-<h4 id="windows-operating-system-settings"><a class="anchor" href="#windows-operating-system-settings"></a>Windows Operating System Settings</h4>
-<div class="paragraph">
-<p>To enable access to a host over DCOM, ensure that the following items in
-the Windows operating system are set as follows on the host:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The following services are in the started state and are set to start automatically:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Server</p>
-</li>
-<li>
-<p>Remote Registry</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Network Access: Sharing security model for local accounts is set to Classic.</p>
-</li>
-<li>
-<p>The following ports are open:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>DCOM port 135 or 139</p>
-</li>
-<li>
-<p>Windows Shares port 445</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-enable-the-windows-user-to-run-scripts-on-a-remote-host"><a class="anchor" href="#to-enable-the-windows-user-to-run-scripts-on-a-remote-host"></a>To Enable the Windows User to Run Scripts on a Remote Host</h4>
-<div class="paragraph">
-<p>To run scripts on a remote host, full control over the following Windows
-registry keys must be allowed for the Windows user or the group that
-contains the Windows user:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>One of the following keys, depending on the processor architecture of the host:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>32-bit architecture:<br>
-HKEY_LOCAl_MACHINE\SOFTWARE\Classes\Wow6432Node\CLSID\{76A64158-CB41-11D1-8B02-00600806D9B6}</p>
-</li>
-<li>
-<p>64-bit architecture:<br>
-HKEY_LOCAl_MACHINE\SOFTWARE\Classes\CLSID\{76A64158-CB41-11D1-8B02-00600806D9B6}</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{72C24DD5-D70A-438B-8A42-98424B88AFB8}</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In some versions of Windows, only the user <code>NT SERVICE\TrustedInstaller</code>
-has full control over these Windows registry keys. If your version of
-Windows is configured in this way, you must modify these keys to allow
-full control over them for the Windows user or the group that contains
-the Windows user.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the operating-system-level administrator user can edit the Windows registry.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Perform this procedure for each Windows registry key that you are
-modifying on each host where instances in your cluster will reside.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>If necessary, start the Registry Editor.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>regedit.exe</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The Registry Editor window opens.</p>
-</div>
-</li>
-<li>
-<p>In the Registry Editor window, navigate to the registry key that you are modifying.</p>
-</li>
-<li>
-<p>Select the key, click mouse button 3, and from the pop-up menu that
-opens, select Permissions.</p>
-<div class="paragraph">
-<p>The Permissions window for the key opens.</p>
-</div>
-</li>
-<li>
-<p>Determine whether full control is allowed for the Windows user or
-the group that contains the Windows user.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>If full control is allowed, no further action is required.</p>
-</li>
-<li>
-<p>If full control is not allowed, allow full control as follows:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In the Permissions window, click Advanced.<br>
-The Advanced Security Settings window for the key opens.</p>
-</li>
-<li>
-<p>In the Advanced Security Settings window, select the Owner tab.</p>
-</li>
-<li>
-<p>From the Change owner to list, select the Windows user or the group
-that contains the Windows user.</p>
-</li>
-<li>
-<p>Ensure that the Replace owner on subcontainer and objects option is selected.</p>
-</li>
-<li>
-<p>Click Apply, then OK.<br>
-The Advanced Security Settings window closes. The Permissions window
-shows that full control is allowed for the Windows user or the group
-that contains the Windows user.</p>
-</li>
-<li>
-<p>In the Permissions window, click OK. The Permissions window closes.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>After modifying all the Windows registry keys over which full
-control is required, quit the Registry Editor.</p>
-</li>
-</ol>
-</div>
-<div id="GSHAG451" class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="paragraph">
-<p>Set up password authentication for the Windows user as explained in
-<a href="#to-set-up-password-authentication-for-the-windows-user">To Set Up Password Authentication for the Windows User</a>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-set-up-password-authentication-for-the-windows-user"><a class="anchor" href="#to-set-up-password-authentication-for-the-windows-user"></a>To Set Up Password Authentication for the Windows User</h4>
-<div class="paragraph">
-<p>When a Eclipse GlassFish subcommand uses DCOM to log in to a remote host,
-Eclipse GlassFish requires the Windows user&#8217;s password to authenticate
-the Windows user. To provide this password securely to Eclipse GlassFish,
-create a Eclipse GlassFish password alias to represent the password and
-store this alias in a password file that is passed to the
-<a href="reference-manual.html#asadmin"><code>asadmin</code></a> utility.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that the following prerequisites are met:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The Windows user is a valid user on the host to which you are testing
-the connection over DCOM.</p>
-</li>
-<li>
-<p>Items in the Windows operating system are set on the host as described
-in <a href="#windows-operating-system-settings">Windows Operating System Settings</a>.</p>
-</li>
-<li>
-<p>The Windows user is able to run scripts on the host. For more
-information, see <a href="#to-enable-the-windows-user-to-run-scripts-on-a-remote-host">To Enable the Windows User to Run
-Scripts on a Remote Host</a>.</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running.<br>
-Remote subcommands require a running server.</p>
-</li>
-<li>
-<p><a id="CEGGAHFH"></a>
-Create an alias for the Windows user&#8217;s password.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the options that are required to complete this task are provided in
-this step. For information about all the options for creating a password
-alias, see the <a href="reference-manual.html#create-password-alias"><code>create-password-alias</code>(1)</a> help page.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; create-password-alias alias-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">alias-name</dt>
-<dd>
-<p>Your choice of name for the alias that you are creating.</p>
-<div class="paragraph">
-<p>The <code>create-password-alias</code> subcommand prompts you to type the password
-for which you are creating an alias.</p>
-</div>
-</dd>
-</dl>
-</div>
-</li>
-<li>
-<p>In response to the prompt, type the Windows user&#8217;s password.<br>
-The <code>create-password-alias</code> subcommand prompts you to type the password again.</p>
-</li>
-<li>
-<p>In response to the prompt, type the Windows user&#8217;s password again.</p>
-</li>
-<li>
-<p>Create a plain text file that contains the following entry for the
-password alias:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>AS_ADMIN_WINDOWSPASSWORD=${ALIAS=alias-name}</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">alias-name</dt>
-<dd>
-<p>The alias name that you specified in Step <a href="#CEGGAHFH">2</a>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>When you create a <code>DCOM</code> node, pass this file as the <code>--passwordfile</code>
-option of the <code>asadmin</code> utility. For more information, see
-<a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</dd>
-</dl>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div id="ssh-example-2-1" class="paragraph">
-<p>Example 2-1 Creating an Alias for the Windows User&#8217;s Password</p>
-</div>
-<div class="paragraph">
-<p>This example creates an alias that is named <code>winuser-password</code> for the
-Windows user&#8217;s password.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>$ asadmin create-password-alias winuser-password
-Enter the alias password&gt;
-Enter the alias password again&gt;
-Command create-password-alias executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The entry in the password file for the <code>winuser-password</code> alias is as
-follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>AS_ADMIN_WINDOWSPASSWORD=${ALIAS=winuser-password}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a></p>
-</li>
-<li>
-<p><a href="reference-manual.html#create-password-alias"><code>create-password-alias</code>(1)</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help create-password-alias</code> at the command line.</p>
-</div>
-<div id="GSHAG456" class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="paragraph">
-<p>Test the DCOM setup as explained in <a href="#to-test-the-connection-over-dcom-to-a-remote-host">To Test the
-Connection Over DCOM to a Remote Host</a>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-test-the-connection-over-dcom-to-a-remote-host"><a class="anchor" href="#to-test-the-connection-over-dcom-to-a-remote-host"></a>To Test the Connection Over DCOM to a Remote Host</h4>
-<div class="paragraph">
-<p>Testing the connection over DCOM to a remote host verifies that the
-required Windows services are running, the required ports are open, and
-the Windows user has a valid user account on the host.</p>
-</div>
-<div class="paragraph">
-<p>Before attempting to perform any task that the requires the DAS contact
-the DCOM server on a remote host, test the connection over DCOM to the
-host. If this test fails, any attempt to perform a task that the
-requires the DAS contact the DCOM server on the host will also fail.
-Examples of such tasks are creating a DCOM node to represent the host or
-creating an instance that resides on the host. For more information, see
-<a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a> and
-<a href="#to-create-an-instance-centrally">To Create an Instance Centrally</a>.</p>
-</div>
-<div class="paragraph">
-<p>If you cannot connect to the host over DCOM, troubleshoot the DCOM setup
-before proceeding.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that the following prerequisites are met:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The Windows user is a valid user on the host to which you are testing
-the connection over DCOM.</p>
-</li>
-<li>
-<p>Items in the Windows operating system are set on the host as described
-in <a href="#windows-operating-system-settings">Windows Operating System Settings</a>.</p>
-</li>
-<li>
-<p>The Windows user is able to run scripts on the host. For more
-information, see <a href="#to-enable-the-windows-user-to-run-scripts-on-a-remote-host">To Enable the Windows User to Run
-Scripts on a Remote Host</a>.</p>
-</li>
-<li>
-<p>Password authentication is set up for the windows user as explained in
-<a href="#to-set-up-password-authentication-for-the-windows-user">To Set Up Password Authentication for the Windows User</a>.</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running.<br>
-Remote subcommands require a running server.</p>
-</li>
-<li>
-<p>Run the <code>validate-dcom</code> subcommand.<br>
-Specify the file that contains the alias for the Windows user&#8217;s password
-through the <code>--passwordfile</code> option of the <code>asadmin</code> utility. For more
-information about this file, see <a href="#to-set-up-password-authentication-for-the-windows-user">To Set Up Password
-Authentication for the Windows User</a>.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the options that are required to complete this task are provided in
-this step. For information about all the options for configuring the
-node, see the <a href="reference-manual.html#validate-dcom"><code>validate-dcom</code>(1)</a> help page.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>C:\&gt;asadmin --passwordfile filename validate-dcom host-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">filname</dt>
-<dd>
-<p>The name of the file that contains the alias for the Windows user&#8217;s
-password.</p>
-</dd>
-<dt class="hdlist1">host-name</dt>
-<dd>
-<p>The name of the host to which you are testing the connection over
-DCOM.</p>
-</dd>
-</dl>
-</div>
-<div id="ssh-example-2-2" class="paragraph">
-<p>Example 2-2 Testing the Connection Over DCOM to a Remote Host</p>
-</div>
-<div class="paragraph">
-<p>This example tests the connection over DCOM to the host <code>wpmdl2</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>C:\&gt; asadmin --passwordfile aspwalias.txt validate-dcom wpmdl2
-Command validate-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a></p>
-</li>
-<li>
-<p><a href="reference-manual.html#validate-dcom"><code>validate-dcom</code>(1)</a></p>
-</li>
-<li>
-<p><a href="#windows-operating-system-settings">Windows Operating System Settings</a></p>
-</li>
-<li>
-<p><a href="#to-enable-the-windows-user-to-run-scripts-on-a-remote-host">To Enable the Windows User to Run Scripts on a Remote Host</a></p>
-</li>
-<li>
-<p><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></p>
-</li>
-<li>
-<p><a href="#to-create-an-instance-centrally">To Create an Instance Centrally</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help validate-dcom</code> at the command line.</p>
 </div>
 </div>
 </div>
@@ -2812,8 +2240,8 @@ Step <a href="#gkslo">1</a>.</p>
 </li>
 </ol>
 </div>
-<div id="ssh-example-2-3" class="paragraph">
-<p>Example 2-3 Setting the Home Directory for the MKS Toolkit User</p>
+<div id="ssh-example-2-1" class="paragraph">
+<p>Example 2-1 Setting the Home Directory for the MKS Toolkit User</p>
 </div>
 <div class="paragraph">
 <p>This example sets the home directory for the MKS Toolkit user
@@ -2940,83 +2368,12 @@ sections:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#to-set-up-ssh-on-oracle-solaris-systems">To Set Up SSH on Oracle Solaris Systems</a></p>
-</li>
-<li>
 <p><a href="#to-set-up-ssh-on-macos-systems">To Set Up SSH on MacOS Systems</a></p>
 </li>
 <li>
 <p><a href="#to-set-up-ssh-on-linux-systems">To Set Up SSH on Linux systems</a></p>
 </li>
 </ul>
-</div>
-<div class="sect3">
-<h4 id="to-set-up-ssh-on-oracle-solaris-systems"><a class="anchor" href="#to-set-up-ssh-on-oracle-solaris-systems"></a>To Set Up SSH on Oracle Solaris Systems</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the following options in the configuration file
-<code>/etc/ssh/sshd_config</code> are set to <code>yes</code>:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>StrictModes</code></p>
-</li>
-<li>
-<p><code>PubkeyAuthentication</code></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Determine if the SSH server daemon <code>sshd</code> is running.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>$ /usr/bin/svcs ssh</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>If the SSH server daemon <code>sshd</code> is not running, start this daemon.</p>
-<div class="paragraph">
-<p>If the daemon is running, no further action is required.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>$ /usr/sbin/svcadm enable ssh</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div id="ssh-example-2-4" class="paragraph">
-<p>Example 2-4 Determining if the <code>sshd</code> Daemon Is Running on an Oracle
-Solaris System</p>
-</div>
-<div class="paragraph">
-<p>This example confirms that the SSH server daemon <code>sshd</code> is running on an
-Oracle Solaris system.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>$ /usr/bin/svcs ssh
-STATE          STIME    FMRI
-online         Jul_06   svc:/network/ssh:default</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="paragraph">
-<p><a href="https://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1svcs-1"><code>svcs</code>(1)</a></p>
-</div>
-<div id="GSHAG327" class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="paragraph">
-<p>After you have completed the setup of SSH on a host, test the setup on
-the host as explained in <a href="#testing-the-ssh-setup-on-a-host">Testing the SSH Setup on a Host</a>.</p>
-</div>
 </div>
 <div class="sect3">
 <h4 id="to-set-up-ssh-on-macos-systems"><a class="anchor" href="#to-set-up-ssh-on-macos-systems"></a>To Set Up SSH on MacOS Systems</h4>
@@ -3121,8 +2478,8 @@ the host as explained in <a href="#testing-the-ssh-setup-on-a-host">Testing the 
 </li>
 </ol>
 </div>
-<div id="ssh-example-2-5" class="paragraph">
-<p>Example 2-5 Determining if the <code>sshd</code> Daemon Is Running on a Linux System</p>
+<div id="ssh-example-2-2" class="paragraph">
+<p>Example 2-2 Determining if the <code>sshd</code> Daemon Is Running on a Linux System</p>
 </div>
 <div class="paragraph">
 <p>This example confirms that the SSH server daemon <code>sshd</code> is running on a
@@ -3219,9 +2576,6 @@ following sections:</p>
 </li>
 <li>
 <p><a href="#to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd">To Configure and Start the MKS Toolkit SSH Server Daemon <code>sshd</code></a></p>
-</li>
-<li>
-<p><a href="#to-set-up-ssh-on-oracle-solaris-systems">To Set Up SSH on Oracle Solaris Systems</a></p>
 </li>
 </ul>
 </div>
@@ -3429,8 +2783,8 @@ for the SSH user&#8217;s password.</p>
 </li>
 </ul>
 </div>
-<div id="ssh-example-2-6" class="paragraph">
-<p>Example 2-6 Setting Up Public Key Authentication Without Encryption</p>
+<div id="ssh-example-2-3" class="paragraph">
+<p>Example 2-3 Setting Up Public Key Authentication Without Encryption</p>
 </div>
 <div class="paragraph">
 <p>This example generates and sets up an SSH key for the user <code>gfuser</code> on
@@ -3767,8 +3121,8 @@ option of the <code>asadmin</code> utility. For more information, see
 </li>
 </ul>
 </div>
-<div id="ssh-example-2-7" class="paragraph">
-<p>Example 2-7 Setting Up Encrypted Public Key Authentication</p>
+<div id="ssh-example-2-4" class="paragraph">
+<p>Example 2-4 Setting Up Encrypted Public Key Authentication</p>
 </div>
 <div class="paragraph">
 <p>This example generates an SSH key pair with an encrypted private key for
@@ -3992,8 +3346,8 @@ option of the <code>asadmin</code> utility. For more information, see
 </tr>
 </table>
 </div>
-<div id="ssh-example-2-8" class="paragraph">
-<p>Example 2-8 Creating an Alias for the SSH User&#8217;s Password</p>
+<div id="ssh-example-2-5" class="paragraph">
+<p>Example 2-5 Creating an Alias for the SSH User&#8217;s Password</p>
 </div>
 <div class="paragraph">
 <p>This example creates an alias that is named <code>ssh-password</code> for the SSH user&#8217;s password.</p>
@@ -4084,15 +3438,14 @@ from multiple hosts in a single operation. For more information, see
 <div class="sect3">
 <h4 id="to-copy-a-glassfish-server-installation-to-multiple-hosts"><a class="anchor" href="#to-copy-a-glassfish-server-installation-to-multiple-hosts"></a>To Copy a Eclipse GlassFish Installation to Multiple Hosts</h4>
 <div class="paragraph">
-<p>Use the <code>install-node-dcom</code> subcommand or the <code>install-node-ssh</code>
-subcommand in local mode to copy an installation of Eclipse GlassFish
+<p>Use the <code>install-node-ssh</code> subcommand in local mode to copy an installation of Eclipse GlassFish
 software to multiple hosts.</p>
 </div>
 <div class="paragraph">
 <p>Before You Begin</p>
 </div>
 <div class="paragraph">
-<p>Ensure that DCOM or SSH is set up on the host where you are running the
+<p>Ensure that SSH is set up on the host where you are running the
 subcommand and on each host where you are copying the Eclipse GlassFish
 software.</p>
 </div>
@@ -4102,41 +3455,6 @@ communication between the hosts.</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p>If DCOM is set up for communication between the hosts, run the
-<code>install-node-dcom</code> subcommand.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the options that are required to complete this task are provided in
-this step. For information about all the options for copying an
-installation of Eclipse GlassFish software, see the
-<a href="reference-manual.html#install-node-dcom"><code>install-node-dcom</code>(1)</a> help page.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; install-node-dcom host-list</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">host-list</dt>
-<dd>
-<p>A space-separated list of the names of the hosts where you are copying
-the installation of Eclipse GlassFish software.</p>
-</dd>
-</dl>
-</div>
-</li>
 <li>
 <p>If SSH is set up for communication between the hosts, run the
 <code>install-node-ssh</code> subcommand.</p>
@@ -4174,47 +3492,8 @@ the installation of Eclipse GlassFish software.</p>
 </li>
 </ul>
 </div>
-<div id="ssh-example-2-9" class="paragraph">
-<p>Example 2-9 Copying a Eclipse GlassFish Installation to Multiple DCOM-Enabled Hosts</p>
-</div>
-<div class="paragraph">
-<p>This example copies the Eclipse GlassFish software on the host where the
-subcommand is run to the default location on the DCOM-enabled hosts
-<code>wpmdl1.example.com</code> and <code>wpmdl2.example.com</code>.</p>
-</div>
-<div class="paragraph">
-<p>Some lines of output are omitted from this example for readability.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; install-node-dcom wpmdl1.example.com wpmdl2.example.com
-Created installation zip C:\glassfish8107276692860773166.zip
-Copying 85760199 bytes..........................................................
-....................................
-WROTE FILE TO REMOTE SYSTEM: C:/glassfish7/glassfish_install.zip and C:/glassfish7/unpack.bat
-Output from Windows Unpacker:
-
-C:\Windows\system32&gt;C:
-
-C:\Windows\system32&gt;cd &quot;C:\glassfish7&quot;
-
-C:\glassfish7&gt;jar xvf glassfish_install.zip
- inflated: bin/asadmin
- inflated: bin/asadmin.bat
- inflated: glassfish/bin/appclient
- inflated: glassfish/bin/appclient.bat
- inflated: glassfish/bin/appclient.js
- inflated: glassfish/bin/asadmin
- inflated: glassfish/bin/asadmin.bat
-...
- inflated: mq/lib/props/broker/default.properties
- inflated: mq/lib/props/broker/install.properties
-
-Command install-node-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div id="ssh-example-2-10" class="paragraph">
-<p>Example 2-10 Copying a Eclipse GlassFish Installation to Multiple
+<div id="ssh-example-2-6" class="paragraph">
+<p>Example 2-6 Copying a Eclipse GlassFish Installation to Multiple
 SSH-Enabled Hosts</p>
 </div>
 <div class="paragraph">
@@ -4249,9 +3528,6 @@ Command install-node-ssh executed successfully</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="reference-manual.html#install-node-dcom"><code>install-node-dcom</code>(1)</a></p>
-</li>
-<li>
 <p><a href="reference-manual.html#install-node-ssh"><code>install-node-ssh</code>(1)</a></p>
 </li>
 </ul>
@@ -4263,9 +3539,6 @@ typing the following commands at the command line:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>asadmin help install-node-dcom</code></p>
-</li>
-<li>
 <p><code>asadmin help install-node-ssh</code></p>
 </li>
 </ul>
@@ -4274,9 +3547,8 @@ typing the following commands at the command line:</p>
 <div class="sect3">
 <h4 id="to-remove-glassfish-server-software-from-multiple-hosts"><a class="anchor" href="#to-remove-glassfish-server-software-from-multiple-hosts"></a>To Remove Eclipse GlassFish Software From Multiple Hosts</h4>
 <div class="paragraph">
-<p>Use the <code>uninstall-node-dcom</code> subcommand or the <code>uninstall-node-ssh</code>
-subcommand in local mode to remove Eclipse GlassFish software from
-multiple hosts.</p>
+<p>Use the <code>uninstall-node-ssh</code> subcommand in local mode to remove Eclipse GlassFish
+software from multiple hosts.</p>
 </div>
 <div class="paragraph">
 <p>Before You Begin</p>
@@ -4287,7 +3559,7 @@ multiple hosts.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>DCOM or SSH is set up on the host where you are running the subcommand
+<p>SSH is set up on the host where you are running the subcommand
 and on each host from which you are removing the Eclipse GlassFish software.</p>
 </li>
 <li>
@@ -4298,20 +3570,6 @@ for the Eclipse GlassFish software or any subdirectory of this directory.</p>
 <p>The parent of the base installation directory for the Eclipse GlassFish
 software is the same on each host from which you are removing the
 Eclipse GlassFish software.</p>
-</li>
-<li>
-<p>For hosts that use DCOM for remote communication, the configuration of
-the following items is the same on each host:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Windows Domain</p>
-</li>
-<li>
-<p>Windows User</p>
-</li>
-</ul>
-</div>
 </li>
 <li>
 <p>For hosts that use SSH for remote communication, the configuration of
@@ -4338,40 +3596,6 @@ communication between the hosts.</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p>If DCOM is set up for communication between the hosts, run the
-<code>uninstall-node-dcom</code> subcommand.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the options that are required to complete this task are provided in this step.
-For information about all the options for removing Eclipse GlassFish software, see the
-<a href="reference-manual.html#uninstall-node-dcom"><code>uninstall-node-dcom</code>(1)</a> help page.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; uninstall-node-dcom host-list</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">host-list</dt>
-<dd>
-<p>A space-separated list of the names of the hosts from which you are
-removing Eclipse GlassFish software.</p>
-</dd>
-</dl>
-</div>
-</li>
 <li>
 <p>If SSH is set up for communication between the hosts, run the
 <code>uninstall-node-ssh</code> subcommand.</p>
@@ -4408,22 +3632,8 @@ removing Eclipse GlassFish software.</p>
 </li>
 </ul>
 </div>
-<div id="ssh-example-2-11" class="paragraph">
-<p>Example 2-11 Removing Eclipse GlassFish Software From Multiple
-DCO\M-Enabled Hosts</p>
-</div>
-<div class="paragraph">
-<p>This example removes Eclipse GlassFish software on the DCOM-enabled hosts
-<code>wpmdl1.example.com</code> and <code>wpmdl2.example.com</code> from the default location.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; uninstall-node-dcom wpmdl1 wpmdl2
-Command uninstall-node-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div id="ssh-example-2-12" class="paragraph">
-<p>Example 2-12 Removing Eclipse GlassFish Software From Multiple
+<div id="ssh-example-2-7" class="paragraph">
+<p>Example 2-7 Removing Eclipse GlassFish Software From Multiple
 SSH-Enabled Hosts</p>
 </div>
 <div class="paragraph">
@@ -4446,9 +3656,6 @@ Command uninstall-node-ssh executed successfully.</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="reference-manual.html#uninstall-node-dcom"><code>uninstall-node-dcom</code>(1)</a></p>
-</li>
-<li>
 <p><a href="reference-manual.html#uninstall-node-ssh"><code>uninstall-node-ssh</code>(1)</a></p>
 </li>
 </ul>
@@ -4459,9 +3666,6 @@ typing the following commands at the command line:</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p><code>asadmin help uninstall-node-dcom</code></p>
-</li>
 <li>
 <p><code>asadmin help uninstall-node-ssh</code></p>
 </li>
@@ -4489,9 +3693,6 @@ host such as the name of the host and the location where the Eclipse GlassFish i
 <p><a href="#types-of-glassfish-server-nodes">Types of Eclipse GlassFish Nodes</a></p>
 </li>
 <li>
-<p><a href="#creating-listing-testing-and-deleting-dcom-nodes">Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</a></p>
-</li>
-<li>
 <p><a href="#creating-listing-testing-and-deleting-ssh-nodes">Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</a></p>
 </li>
 <li>
@@ -4509,18 +3710,6 @@ host such as the name of the host and the location where the Eclipse GlassFish i
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>DCOM</code></dt>
-<dd>
-<p>A <code>DCOM</code> node supports communication over the Distributed Component
-Object Model (DCOM) remote protocol. The DCOM remote protocol is
-available only on Windows systems. If DCOM is set up and you plan to
-administer your Eclipse GlassFish instances centrally, the instances
-must reside on <code>DCOM</code> nodes.<br>
-A <code>DCOM</code> node&#8217;s configuration contains the information that is
-required to connect to the host through DCOM. This information
-includes, for example, the user name of the Windows user and the port
-number for DCOM connections to the host.</p>
-</dd>
 <dt class="hdlist1"><code>SSH</code></dt>
 <dd>
 <p>An <code>SSH</code> node supports communication over secure shell (SSH). If SSH
@@ -4533,8 +3722,8 @@ number for SSH connections to the host.</p>
 </dd>
 <dt class="hdlist1"><code>CONFIG</code></dt>
 <dd>
-<p>A <code>CONFIG</code> node does not support remote communication. If neither DCOM
-nor SSH is set up and you plan to administer your instances locally,
+<p>A <code>CONFIG</code> node does not support remote communication. If SSH is not set up
+and you plan to administer your instances locally,
 the instances can reside on <code>CONFIG</code> nodes. You cannot use <code>CONFIG</code>
 nodes for instances that you plan to administer centrally.<br>
 Each domain contains a predefined <code>CONFIG</code> node that is named
@@ -4546,468 +3735,6 @@ node represents the local host.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="creating-listing-testing-and-deleting-dcom-nodes"><a class="anchor" href="#creating-listing-testing-and-deleting-dcom-nodes"></a>Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</h3>
-<div class="paragraph">
-<p>A <code>DCOM</code> node supports communication over DCOM. If DCOM is set up and
-you plan to administer your Eclipse GlassFish instances centrally, the
-instances must reside on <code>DCOM</code> nodes. For information about setting up
-DCOM, see <a href="#enabling-centralized-administration-of-glassfish-server-instances">Enabling Centralized Administration
-of Eclipse GlassFish Instances</a>.</p>
-</div>
-<div class="paragraph">
-<p>Eclipse GlassFish enables you to create <code>DCOM</code> nodes for use by
-instances, obtain information about <code>DCOM</code> nodes, test if <code>DCOM</code> nodes
-are reachable, and delete <code>DCOM</code> nodes that are no longer required.</p>
-</div>
-<div class="paragraph">
-<p>The following topics are addressed here:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></p>
-</li>
-<li>
-<p><a href="#to-list-dcom-nodes-in-a-domain">To List <code>DCOM</code> Nodes in a Domain</a></p>
-</li>
-<li>
-<p><a href="#to-test-if-a-dcom-node-is-reachable">To Test if a <code>DCOM</code> Node is Reachable</a></p>
-</li>
-<li>
-<p><a href="#to-delete-a-dcom-node">To Delete a <code>DCOM</code> Node</a></p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="to-create-a-dcom-node"><a class="anchor" href="#to-create-a-dcom-node"></a>To Create a <code>DCOM</code> Node</h4>
-<div class="paragraph">
-<p>Use the <code>create-node-dcom</code> subcommand in remote mode to create a <code>DCOM</code> node.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that the Windows user can use DCOM to connect to the host that
-the node will represent. By default, the <code>create-node-dcom</code> subcommand
-validates the node&#8217;s parameters and the DCOM connection to the host.
-If the Windows user cannot use DCOM to connect to the host, the validation fails.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>For information about how to determine whether the Windows user can use
-DCOM to connect to the host, see <a href="#to-test-the-connection-over-dcom-to-a-remote-host">To Test the
-Connection Over DCOM to a Remote Host</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running. Remote subcommands require a running server.</p>
-</li>
-<li>
-<p>Run the <code>create-node-dcom</code> subcommand.<br>
-Specify the file that contains the alias for the Windows user&#8217;s password
-through the <code>--passwordfile</code> option of the <code>asadmin</code> utility. For more
-information about this file, see <a href="#to-set-up-password-authentication-for-the-windows-user">To Set Up
-Password Authentication for the Windows User</a>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the options that are required to complete this task are provided in
-this step. For information about all the options for configuring the
-node, see the <a href="reference-manual.html#create-node-dcom"><code>create-node-dcom</code>(1)</a> help page.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>C:\&gt; asadmin --passwordfile filename create-node-dcom
---nodehost node-host [--installdir install-dir ]
-node-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">filname</dt>
-<dd>
-<p>The name of the file that contains the alias for the Windows user&#8217;s
-password.</p>
-</dd>
-<dt class="hdlist1">node-host</dt>
-<dd>
-<p>The name of the host that the node represents. The name of the host
-must be specified. Otherwise, an error occurs.</p>
-</dd>
-<dt class="hdlist1">install-dir</dt>
-<dd>
-<p>The full path to the parent of the base installation directory of the
-Eclipse GlassFish software on the host, for example, <code>C:\glassfish7</code>.
-If the Eclipse GlassFish software is installed in the same directory on
-the node&#8217;s host and the DAS host, you can omit this option.</p>
-</dd>
-<dt class="hdlist1">node-name</dt>
-<dd>
-<p>Your choice of name for the node that you are creating.</p>
-</dd>
-</dl>
-</div>
-</li>
-</ol>
-</div>
-<div id="nodes-example-3-1" class="paragraph">
-<p>Example 3-1 Creating a <code>DCOM</code> Node</p>
-</div>
-<div class="paragraph">
-<p>This example creates the <code>DCOM</code> node <code>wpmdl1</code> to represent the host
-<code>wpmdl1.example.com</code>. The Eclipse GlassFish software is installed in the
-same directory on the DAS host and on the host <code>wpmdl1.example.com</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>C:\&gt; asadmin --passwordfile aspwalias.txt create-node-dcom
---nodehost wpmdl1.example.com wpmdl1
-Command create-node-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a></p>
-</li>
-<li>
-<p><a href="reference-manual.html#create-node-dcom"><code>create-node-dcom</code>(1)</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help create-node-dcom</code> at the command line.</p>
-</div>
-<div id="GSHAG468" class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="paragraph">
-<p>After creating a node, you can create instances on the node as explained
-in the following sections:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#to-create-an-instance-centrally">To Create an Instance Centrally</a></p>
-</li>
-<li>
-<p><a href="#to-create-an-instance-locally">To Create an Instance Locally</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-list-dcom-nodes-in-a-domain"><a class="anchor" href="#to-list-dcom-nodes-in-a-domain"></a>To List <code>DCOM</code> Nodes in a Domain</h4>
-<div class="paragraph">
-<p>Use the <code>list-nodes-dcom</code> subcommand in remote mode to obtain
-information about existing <code>DCOM</code> nodes in a domain.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To obtain information about all existing nodes in a domain, use the
-<a href="reference-manual.html#list-nodes"><code>list-nodes</code></a> subcommand.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running. Remote subcommands require a running server.</p>
-</li>
-<li>
-<p>Run the <a href="reference-manual.html#list-nodes-dcom"><code>list-nodes-dcom</code></a> subcommand.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-dcom</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div id="nodes-example-3-2" class="paragraph">
-<p>Example 3-2 Listing Basic Information About All <code>DCOM</code> Nodes in a Domain</p>
-</div>
-<div class="paragraph">
-<p>This example lists the name, type, and host of all <code>DCOM</code> nodes in the
-current domain.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-dcom
-xkyd  DCOM  xkyd.example.com
-wpmdl2  DCOM  wpmdl2.example.com
-wpmdl1  DCOM  wpmdl1.example.com
-Command list-nodes-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div id="nodes-example-3-3" class="paragraph">
-<p>Example 3-3 Listing Detailed Information About All <code>DCOM</code> Nodes in a
-Domain</p>
-</div>
-<div class="paragraph">
-<p>This example lists detailed information about all <code>DCOM</code> nodes in the
-current domain.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-dcom --long=true
-NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
-Command list-nodes-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="reference-manual.html#list-nodes"><code>list-nodes</code>(1)</a></p>
-</li>
-<li>
-<p><a href="reference-manual.html#list-nodes-dcom"><code>list-nodes-dcom</code>(1)</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommands by
-typing the following commands at the command line:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>asadmin help list-nodes</code></p>
-</li>
-<li>
-<p><code>asadmin help list-nodes-dcom</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-test-if-a-dcom-node-is-reachable"><a class="anchor" href="#to-test-if-a-dcom-node-is-reachable"></a>To Test if a <code>DCOM</code> Node is Reachable</h4>
-<div class="paragraph">
-<p>Use the <code>ping-node-dcom</code> subcommand in remote mode to test if a <code>DCOM</code>
-node is reachable.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that DCOM is configured on the host where the DAS is running and
-on the host that the node represents.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running. Remote subcommands require a running server.</p>
-</li>
-<li>
-<p>Run the <code>ping-node-dcom</code> subcommand.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Only the options that are required to complete this task are provided in
-this step. For information about all the options for testing the node,
-see the <a href="reference-manual.html#ping-node-dcom"><code>ping-node-dcom</code>(1)</a> help page.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; ping-node-dcom node-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">node-name</dt>
-<dd>
-<p>The name of the node to test.</p>
-</dd>
-</dl>
-</div>
-</li>
-</ol>
-</div>
-<div id="nodes-example-3-4" class="paragraph">
-<p>Example 3-4 Testing if a <code>DCOM</code> Node Is Reachable</p>
-</div>
-<div class="paragraph">
-<p>This example tests if the <code>DCOM</code> node <code>wpmdl2</code> is reachable.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; ping-node-dcom wpmdl2
-Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
-Command ping-node-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="paragraph">
-<p><a href="reference-manual.html#ping-node-dcom"><code>ping-node-dcom</code>(1)</a></p>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help ping-node-dcom</code> at the command line.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-delete-a-dcom-node"><a class="anchor" href="#to-delete-a-dcom-node"></a>To Delete a <code>DCOM</code> Node</h4>
-<div class="paragraph">
-<p>Use the <code>delete-node-dcom</code> subcommand in remote mode to delete a <code>DCOM</code> node.</p>
-</div>
-<div class="paragraph">
-<p>Deleting a node removes the node from the configuration of the DAS. The
-node&#8217;s directories and files are deleted when the last Eclipse GlassFish
-instance that resides on the node is deleted.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that no Eclipse GlassFish instances reside on the node that you
-are deleting. For information about how to delete an instance, see the
-following sections.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#to-delete-an-instance-centrally">To Delete an Instance Centrally</a></p>
-</li>
-<li>
-<p><a href="#to-delete-an-instance-locally">To Delete an Instance Locally</a></p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running. Remote subcommands require a running server.</p>
-</li>
-<li>
-<p>Confirm that no instances reside on the node that you are deleting.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-dcom --long=true</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Run the <a href="reference-manual.html#delete-node-dcom"><code>delete-node-dcom</code></a> subcommand.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; delete-node-dcom node-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">node-name</dt>
-<dd>
-<p>The name of the node that you are deleting.</p>
-</dd>
-</dl>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div id="nodes-example-3-5" class="paragraph">
-<p>Example 3-5 Deleting a <code>DCOM</code> Node</p>
-</div>
-<div class="paragraph">
-<p>This example confirms that no instances reside on the <code>DCOM</code> node <code>xkyd</code>
-and deletes the node <code>xkyd</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-dcom --long=true
-NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
-Command list-nodes-dcom executed successfully.
-asadmin&gt; delete-node-dcom xkyd
-Command delete-node-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#to-delete-an-instance-centrally">To Delete an Instance Centrally</a></p>
-</li>
-<li>
-<p><a href="#to-delete-an-instance-locally">To Delete an Instance Locally</a></p>
-</li>
-<li>
-<p><a href="reference-manual.html#delete-node-dcom"><code>delete-node-dcom</code>(1)</a></p>
-</li>
-<li>
-<p><a href="reference-manual.html#list-nodes-dcom"><code>list-nodes-dcom</code>(1)</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommands by
-typing the following commands at the command line:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>asadmin help delete-node-dcom</code></p>
-</li>
-<li>
-<p><code>asadmin help list-nodes-dcom</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="creating-listing-testing-and-deleting-ssh-nodes"><a class="anchor" href="#creating-listing-testing-and-deleting-ssh-nodes"></a>Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</h3>
 <div class="paragraph">
 <p>An <code>SSH</code> node supports communication over SSH. If SSH is set up and you
@@ -5015,20 +3742,6 @@ plan to administer your Eclipse GlassFish instances centrally, the
 instances must reside on <code>SSH</code> nodes. For information about setting up
 SSH, see <a href="#enabling-centralized-administration-of-glassfish-server-instances">Enabling Centralized Administration of
 Eclipse GlassFish Instances</a>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Windows systems also support communications over DCOM as an alternative to SSH.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>Eclipse GlassFish enables you to create <code>SSH</code> nodes for use by instances,
@@ -5129,8 +3842,8 @@ omit this option.</p>
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-6" class="paragraph">
-<p>Example 3-6 Creating an <code>SSH</code> Node</p>
+<div id="nodes-example-3-1" class="paragraph">
+<p>Example 3-1 Creating an <code>SSH</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example creates the <code>SSH</code> node <code>sj01</code> to represent the host
@@ -5223,8 +3936,8 @@ about existing <code>SSH</code> nodes in a domain.</p>
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-7" class="paragraph">
-<p>Example 3-7 Listing Basic Information About All <code>SSH</code> Nodes in a Domain</p>
+<div id="nodes-example-3-2" class="paragraph">
+<p>Example 3-2 Listing Basic Information About All <code>SSH</code> Nodes in a Domain</p>
 </div>
 <div class="paragraph">
 <p>This example lists the name, type, and host of all <code>SSH</code> nodes in the
@@ -5238,8 +3951,8 @@ sj02  SSH  sj02.example.com
 Command list-nodes-ssh executed successfully.</code></pre>
 </div>
 </div>
-<div id="nodes-example-3-8" class="paragraph">
-<p>Example 3-8 Listing Detailed Information About All <code>SSH</code> Nodes in a
+<div id="nodes-example-3-3" class="paragraph">
+<p>Example 3-3 Listing Detailed Information About All <code>SSH</code> Nodes in a
 Domain</p>
 </div>
 <div class="paragraph">
@@ -5335,8 +4048,8 @@ see the <a href="reference-manual.html#ping-node-ssh"><code>ping-node-ssh</code>
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-9" class="paragraph">
-<p>Example 3-9 Testing if an <code>SSH</code> Node Is Reachable</p>
+<div id="nodes-example-3-4" class="paragraph">
+<p>Example 3-4 Testing if an <code>SSH</code> Node Is Reachable</p>
 </div>
 <div class="paragraph">
 <p>This example tests if the <code>SSH</code> node <code>sj01</code> is reachable.</p>
@@ -5399,7 +4112,7 @@ following sections.</p>
 </div>
 </li>
 <li>
-<p>Run the <a href="reference-manual.html#delete-node-dcom"><code>delete-node-ssh</code></a> subcommand.</p>
+<p>Run the <a href="reference-manual.html#delete-node-ssh"><code>delete-node-ssh</code></a> subcommand.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; delete-node-ssh node-name</code></pre>
@@ -5419,8 +4132,8 @@ following sections.</p>
 </li>
 </ul>
 </div>
-<div id="nodes-example-3-10" class="paragraph">
-<p>Example 3-10 Deleting an <code>SSH</code> Node</p>
+<div id="nodes-example-3-5" class="paragraph">
+<p>Example 3-5 Deleting an <code>SSH</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example confirms that no instances reside on the <code>SSH</code> node <code>sj01</code>
@@ -5475,8 +4188,8 @@ typing the following commands at the command line:</p>
 <div class="sect2">
 <h3 id="creating-listing-and-deleting-config-nodes"><a class="anchor" href="#creating-listing-and-deleting-config-nodes"></a>Creating, Listing, and Deleting <code>CONFIG</code> Nodes</h3>
 <div class="paragraph">
-<p>A <code>CONFIG</code> node does not support remote communication. If neither DCOM
-nor SSH is set up and you plan to administer your instances locally, the
+<p>A <code>CONFIG</code> node does not support remote communication. If SSH is not set up
+and you plan to administer your instances locally, the
 instances can reside on <code>CONFIG</code> nodes. You cannot use <code>CONFIG</code> nodes
 for instances that you plan to administer centrally.</p>
 </div>
@@ -5578,8 +4291,8 @@ created.</p>
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-11" class="paragraph">
-<p>Example 3-11 Creating a <code>CONFIG</code> Node</p>
+<div id="nodes-example-3-6" class="paragraph">
+<p>Example 3-6 Creating a <code>CONFIG</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example creates the <code>CONFIG</code> node <code>cfg01</code>. The host that the node
@@ -5650,8 +4363,8 @@ information about existing <code>CONFIG</code> nodes in a domain.</p>
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-12" class="paragraph">
-<p>Example 3-12 Listing Basic Information About All <code>CONFIG</code> Nodes in a
+<div id="nodes-example-3-7" class="paragraph">
+<p>Example 3-7 Listing Basic Information About All <code>CONFIG</code> Nodes in a
 Domain</p>
 </div>
 <div class="paragraph">
@@ -5667,8 +4380,8 @@ cfg02  CONFIG  cfg02.example.com
 Command list-nodes-config executed successfully.</code></pre>
 </div>
 </div>
-<div id="nodes-example-3-13" class="paragraph">
-<p>Example 3-13 Listing Detailed Information About All <code>CONFIG</code> Nodes in a
+<div id="nodes-example-3-8" class="paragraph">
+<p>Example 3-8 Listing Detailed Information About All <code>CONFIG</code> Nodes in a
 Domain</p>
 </div>
 <div class="paragraph">
@@ -5764,8 +4477,8 @@ Instance Locally</a>.</p>
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-14" class="paragraph">
-<p>Example 3-14 Deleting a <code>CONFIG</code> Node</p>
+<div id="nodes-example-3-9" class="paragraph">
+<p>Example 3-9 Deleting a <code>CONFIG</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example confirms that no instances reside on the <code>CONFIG</code> node
@@ -5827,9 +4540,6 @@ node and to change the type of a node.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#to-update-a-dcom-node">To Update a <code>DCOM</code> Node</a></p>
-</li>
-<li>
 <p><a href="#to-update-an-ssh-node">To Update an <code>SSH</code> Node</a></p>
 </li>
 <li>
@@ -5839,84 +4549,6 @@ node and to change the type of a node.</p>
 <p><a href="#to-change-the-type-of-a-node">To Change the Type of a Node</a></p>
 </li>
 </ul>
-</div>
-<div class="sect3">
-<h4 id="to-update-a-dcom-node"><a class="anchor" href="#to-update-a-dcom-node"></a>To Update a <code>DCOM</code> Node</h4>
-<div class="paragraph">
-<p>Use the <code>update-node-dcom</code> subcommand in remote mode to update a <code>DCOM</code> node.</p>
-</div>
-<div class="paragraph">
-<p>Options of this subcommand specify the new values of the node&#8217;s configuration data.
-If you omit an option, the existing value is unchanged.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that the following prerequisites are met:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>DCOM is configured on the host where the DAS is running and on the
-host that the node represents.</p>
-</li>
-<li>
-<p>The node that you are updating exists.</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS is running. Remote subcommands require a running server.</p>
-</li>
-<li>
-<p>Run the <code>update-node-dcom</code> subcommand.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; update-node-dcom options node-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">options</dt>
-<dd>
-<p>Options of the <code>update-node-dcom</code> subcommand for changing the node&#8217;s
-configuration data. For information about these options, see the
-<a href="reference-manual.html#update-node-dcom"><code>update-node-dcom</code>(1)</a> help page.</p>
-</dd>
-<dt class="hdlist1">node-name</dt>
-<dd>
-<p>The name of the <code>DCOM</code> node to update.</p>
-</dd>
-</dl>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div id="nodes-example-3-15" class="paragraph">
-<p>Example 3-15 Updating a <code>DCOM</code> Node</p>
-</div>
-<div class="paragraph">
-<p>This example updates the host that the node <code>wpmdl1</code> represents to <code>wj01</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; update-node-dcom --nodehost wj01 wpmdl1
-Command update-node-dcom executed successfully.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See Also</p>
-</div>
-<div class="paragraph">
-<p><a href="reference-manual.html#update-node-dcom"><code>update-node-dcom</code>(1)</a></p>
-</div>
-<div class="paragraph">
-<p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help update-node-dcom</code> at the command line.</p>
-</div>
 </div>
 <div class="sect3">
 <h4 id="to-update-an-ssh-node"><a class="anchor" href="#to-update-an-ssh-node"></a>To Update an <code>SSH</code> Node</h4>
@@ -5973,8 +4605,8 @@ configuration data. For information about these options, see the
 </li>
 </ul>
 </div>
-<div id="nodes-example-3-16" class="paragraph">
-<p>Example 3-16 Updating an <code>SSH</code> Node</p>
+<div id="nodes-example-3-10" class="paragraph">
+<p>Example 3-10 Updating an <code>SSH</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example updates the host that the node <code>sj01</code> represents to
@@ -6043,8 +4675,8 @@ configuration data. For information about these options, see the
 </li>
 </ol>
 </div>
-<div id="nodes-example-3-17" class="paragraph">
-<p>Example 3-17 Updating a <code>CONFIG</code> Node</p>
+<div id="nodes-example-3-11" class="paragraph">
+<p>Example 3-11 Updating a <code>CONFIG</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example updates the host that the node <code>cfg02</code> represents to
@@ -6081,9 +4713,6 @@ over which the node is enabled for remote communication:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>A <code>DCOM</code> node is enabled for communication over DCOM.</p>
-</li>
-<li>
 <p>An <code>SSH</code> node is enabled for communication over SSH.</p>
 </li>
 </ul>
@@ -6100,20 +4729,6 @@ the following situations:</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p>Any of the following options of the <code>update-node-dcom</code> subcommand is
-omitted:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>--windowsuser</code></p>
-</li>
-<li>
-<p><code>--windowsdomain</code></p>
-</li>
-</ul>
-</div>
-</li>
 <li>
 <p>Any of the following options of the <code>update-node-ssh</code> subcommand is omitted:</p>
 <div class="ulist">
@@ -6140,8 +4755,7 @@ omitted:</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Changing a <code>DCOM</code> node or an <code>SSH</code> node to a <code>CONFIG</code> node disables
-remote communication for the node.</p>
+<p>Changing an <code>SSH</code> node to a <code>CONFIG</code> node disables remote communication for the node.</p>
 </div>
 </td>
 </tr>
@@ -6156,7 +4770,7 @@ remote communication for the node.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>SSH or DCOM is configured on the host where the DAS is running and on
+<p>SSH is configured on the host where the DAS is running and on
 the host that the node represents.</p>
 </li>
 <li>
@@ -6172,34 +4786,11 @@ type of the node after the change.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>To change the type of a node to <code>DCOM</code>, run the <code>update-node-dcom</code>
-subcommand on the node.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; update-node-dcom [options] config-or-ssh-node-name</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">options</dt>
-<dd>
-<p>Options of the <code>update-node-dcom</code> subcommand for changing the node&#8217;s
-configuration data. For information about these options, see the
-<a href="reference-manual.html#update-node-dcom"><code>update-node-dcom</code>(1)</a> help page.</p>
-</dd>
-<dt class="hdlist1">config-or-ssh-node-name</dt>
-<dd>
-<p>The name of the <code>CONFIG</code> node or the <code>SSH</code> node to change.</p>
-</dd>
-</dl>
-</div>
-</li>
-<li>
 <p>To change the type of a node to <code>SSH</code>, run the <code>update-node-ssh</code>
 subcommand on the node.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; update-node-ssh [options] config-or-dcom-node-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin&gt; update-node-ssh [options] config-node-name</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -6210,9 +4801,9 @@ subcommand on the node.</p>
 configuration data. For information about these options, see the
 <a href="reference-manual.html#update-node-ssh"><code>update-node-ssh</code>(1)</a> help page.</p>
 </dd>
-<dt class="hdlist1">config-or-dcom-node-name</dt>
+<dt class="hdlist1">config-node-name</dt>
 <dd>
-<p>The name of the <code>CONFIG</code> node or the <code>DCOM</code> node to change.</p>
+<p>The name of the <code>CONFIG</code> node to change.</p>
 </dd>
 </dl>
 </div>
@@ -6222,7 +4813,7 @@ configuration data. For information about these options, see the
 subcommand on the node.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; update-node-config [options] dcom-or-ssh-node-name</code></pre>
+<pre class="CodeRay highlight"><code>asadmin&gt; update-node-config [options] ssh-node-name</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -6233,9 +4824,9 @@ subcommand on the node.</p>
 configuration data. For information about these options, see the
 <a href="reference-manual.html#update-node-config"><code>update-node-config</code>(1)</a> help page.</p>
 </dd>
-<dt class="hdlist1">dcom-or-ssh-node-name</dt>
+<dt class="hdlist1">ssh-node-name</dt>
 <dd>
-<p>The name of the <code>DCOM</code> node or the <code>SSH</code> node to change.</p>
+<p>The name of the <code>SSH</code> node to change.</p>
 </dd>
 </dl>
 </div>
@@ -6248,8 +4839,8 @@ configuration data. For information about these options, see the
 </li>
 </ul>
 </div>
-<div id="nodes-example-3-18" class="paragraph">
-<p>Example 3-18 Changing a <code>CONFIG</code> Node to an <code>SSH</code> Node</p>
+<div id="nodes-example-3-12" class="paragraph">
+<p>Example 3-12 Changing a <code>CONFIG</code> Node to an <code>SSH</code> Node</p>
 </div>
 <div class="paragraph">
 <p>This example changes the <code>CONFIG</code> node <code>cfg02</code> to an <code>SSH</code> node.</p>
@@ -6269,9 +4860,6 @@ Command update-node-ssh executed successfully.</code></pre>
 <p><a href="reference-manual.html#update-node-config"><code>update-node-config</code>(1)</a></p>
 </li>
 <li>
-<p><a href="reference-manual.html#update-node-dcom"><code>update-node-dcom</code>(1)</a></p>
-</li>
-<li>
 <p><a href="reference-manual.html#update-node-ssh"><code>update-node-ssh</code>(1)</a></p>
 </li>
 </ul>
@@ -6284,9 +4872,6 @@ typing the following commands at the command line.</p>
 <ul>
 <li>
 <p><code>asadmin help update-node-config</code></p>
-</li>
-<li>
-<p><code>asadmin help update-node-dcom</code></p>
 </li>
 <li>
 <p><code>asadmin help update-node-ssh</code></p>
@@ -8281,11 +6866,10 @@ shared instances are unclustered server instances.</p>
 <div class="sect2">
 <h3 id="administering-glassfish-server-instances-centrally"><a class="anchor" href="#administering-glassfish-server-instances-centrally"></a>Administering Eclipse GlassFish Instances Centrally</h3>
 <div class="paragraph">
-<p>Centralized administration requires the Distributed Component Object
-Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
-or SSH is set up, you can administer clustered instances without the
+<p>Centralized administration requires the  secure shell (SSH) to be set up. If
+SSH is set up, you can administer clustered instances without the
 need to log in to hosts where remote instances reside. For information
-about setting up DCOM and SSH, see <a href="#enabling-centralized-administration-of-glassfish-server-instances">Enabling
+about setting up SSH, see <a href="#enabling-centralized-administration-of-glassfish-server-instances">Enabling
 Centralized Administration of Eclipse GlassFish Instances</a>.</p>
 </div>
 <div class="paragraph">
@@ -8353,12 +6937,9 @@ the changes. For information about GMS, see
 <p>The node where the instance is to reside is either enabled for remote
 communication or represents the host on which the DAS is running. For
 information about how to create a node that is enabled for remote
-communication, see the following sections:</p>
+communication, see the following section:</p>
 <div class="ulist">
 <ul>
-<li>
-<p><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></p>
-</li>
 <li>
 <p><a href="#to-create-an-ssh-node">To Create an <code>SSH</code> Node</a></p>
 </li>
@@ -8366,7 +6947,7 @@ communication, see the following sections:</p>
 </div>
 </li>
 <li>
-<p>The user of the DAS can use DCOM or SSH to log in to the host for the
+<p>The user of the DAS can use SSH to log in to the host for the
 node where the instance is to reside.</p>
 </li>
 </ul>
@@ -8541,9 +7122,6 @@ Command create-instance executed successfully.</code></pre>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></p>
-</li>
 <li>
 <p><a href="#to-create-an-ssh-node">To Create an <code>SSH</code> Node</a></p>
 </li>
@@ -8826,7 +7404,7 @@ for remote communication or represents the host on which the DAS is
 running.</p>
 </li>
 <li>
-<p>The user of the DAS can use DCOM or SSH to log in to the host for any
+<p>The user of the DAS can use SSH to log in to the host for any
 node where instances in the cluster reside.</p>
 </li>
 </ul>
@@ -8979,7 +7557,7 @@ individual instance centrally.</p>
 communication or represents the host on which the DAS is running.</p>
 </li>
 <li>
-<p>The user of the DAS can use DCOM or SSH to log in to the host for the
+<p>The user of the DAS can use SSH to log in to the host for the
 node where the instance resides.</p>
 </li>
 </ul>
@@ -9211,8 +7789,8 @@ system to kill the instance process before restarting the instance.</p>
 <div class="sect2">
 <h3 id="administering-glassfish-server-instances-locally"><a class="anchor" href="#administering-glassfish-server-instances-locally"></a>Administering Eclipse GlassFish Instances Locally</h3>
 <div class="paragraph">
-<p>Local administration does not require DCOM or SSH to be set up. If
-neither DCOM nor SSH is set up, you must log in to each host where
+<p>Local administration does not require SSH to be set up. If
+SSH is not set up, you must log in to each host where
 remote instances reside and administer the instances individually.</p>
 </div>
 <div class="paragraph">
@@ -9246,7 +7824,7 @@ tasks:</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Even if neither DCOM nor SSH is set up, you can obtain information about
+<p>Even if SSH is not set up, you can obtain information about
 instances in a domain without logging in to each host where remote
 instances reside. For instructions, see <a href="#to-list-all-instances-in-a-domain">To List All
 Instances in a Domain</a>.</p>
@@ -9302,9 +7880,6 @@ the node is the unqualified name of the host.</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></p>
-</li>
 <li>
 <p><a href="#to-create-an-ssh-node">To Create an <code>SSH</code> Node</a></p>
 </li>
@@ -9582,9 +8157,6 @@ Command create-local-instance executed successfully.</code></pre>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p><a href="#to-create-a-dcom-node">To Create a <code>DCOM</code> Node</a></p>
-</li>
 <li>
 <p><a href="#to-create-an-ssh-node">To Create an <code>SSH</code> Node</a></p>
 </li>
@@ -10329,7 +8901,7 @@ If the instance is running, no further action is required.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>If DCOM or SSH is set up, start the instance centrally.</p>
+<p>If SSH is set up, start the instance centrally.</p>
 <div class="paragraph">
 <p>If you require full synchronization, set the <code>--sync</code> option of the
 <code>start-instance</code> subcommand to <code>full</code>. If default synchronization is
@@ -10367,7 +8939,7 @@ help page.</p>
 </div>
 </li>
 <li>
-<p>If neither DCOM nor SSH is set up, start the instance locally from the
+<p>If SSH is not set up, start the instance locally from the
 host where the instance resides.</p>
 <div class="paragraph">
 <p>If you require full synchronization, set the <code>--sync</code> option of the
@@ -10421,8 +8993,8 @@ node&#8217;s host, you may omit this option.</p>
 </div>
 <div class="paragraph">
 <p>This example determines that the instance <code>yml-i1</code> is stopped and fully
-resynchronizes the instance with the DAS. Because neither DCOM nor SSH
-is set up, the instance is started locally on the host where the
+resynchronizes the instance with the DAS. Because SSH
+is not set up, the instance is started locally on the host where the
 instance resides. In this example, multiple nodes are defined for the
 Eclipse GlassFish installation that is running on the node&#8217;s host.</p>
 </div>
@@ -15381,7 +13953,7 @@ container running in a cluster.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-08-08 17:44:05 UTC
+Last updated 2025-08-12 11:36:16 UTC
 </div>
 </div>
 </body>

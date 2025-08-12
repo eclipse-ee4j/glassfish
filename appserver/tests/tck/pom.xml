@@ -35,9 +35,10 @@
 
     <modules>
         <module>tck-download</module>
+        <module>activation</module>
+        <module>authentication</module>
         <module>platform-tck-runner</module>
 
-        <module>activation</module>
         <module>expression_language</module>
         <module>rest</module>
         <module>rest_cdi</module>
@@ -47,7 +48,6 @@
         <module>pages_tags</module>
         <module>pages_debugging</module>
         <module>servlet</module>
-        <module>authentication</module>
         <module>authorization</module>
         <module>cdi</module>
         <module>microprofile</module>

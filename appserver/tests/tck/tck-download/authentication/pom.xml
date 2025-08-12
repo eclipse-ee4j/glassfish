@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,12 +27,12 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jakarta-authentication-tck</artifactId>
+    <artifactId>tck-authentication-download</artifactId>
     <packaging>pom</packaging>
-    <name>TCK: Install Jakarta Authentication TCK</name>
+    <name>TCK Download: Install Jakarta Authentication</name>
 
     <properties>
-        <tck.artifactFileName>jakarta-authentication-tck-3.1.0.zip</tck.artifactFileName>
+        <tck.artifactFileName>jakarta-authentication-tck-3.1.1.zip</tck.artifactFileName>
         <tck.artifactUrl>https://download.eclipse.org/jakartaee/authentication/3.1/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 

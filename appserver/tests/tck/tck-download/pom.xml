@@ -41,6 +41,7 @@
     <modules>
         <module>jakarta-platform-tck</module>
         <module>activation</module>
+        <module>authentication</module>
         <module>jakarta-rest-tck</module>
         <module>jakarta-faces-tck</module>
         <module>jakarta-connectors-tck</module>
@@ -48,7 +49,6 @@
         <module>jakarta-pages-tags-tck</module>
         <module>jakarta-pages-debugging-tck</module>
         <module>jakarta-servlet-tck</module>
-        <module>jakarta-authentication-tck</module>
         <module>jakarta-authorization-tck</module>
         <module>jakarta-expression-language-tck</module>
         <module>jakarta-websocket-tck</module>

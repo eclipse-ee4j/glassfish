@@ -34,12 +34,14 @@
     <name>TCK: Parent</name>
 
     <modules>
+        <module>glassfish-runner</module>
         <module>tck-download</module>
         <module>activation</module>
         <module>authentication</module>
         <module>authorization</module>
         <module>cdi</module>
         <module>concurrency</module>
+        <module>connectors</module>
         <module>expression-language</module>
 
         <module>platform-tck-runner</module>
@@ -47,7 +49,6 @@
         <module>rest</module>
         <module>rest_cdi</module>
         <module>faces</module>
-        <module>connectors</module>
         <module>pages</module>
         <module>pages_tags</module>
         <module>pages_debugging</module>

@@ -201,7 +201,7 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
         try (BufferedReader helpReader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = helpReader.readLine()) != null) {
-                System.err.println(line);
+                System.out.println(line);
             }
         } finally {
             System.exit(0);

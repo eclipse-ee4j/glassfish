@@ -29,12 +29,15 @@ call "%AS_CONFIG_BAT%" || (
     echo Error: Cannot load config file
     exit /B 1
 )
-set ARGS=%*
+
+REM This is used in CLIBootstrap to generate the final command and avoid issues with bat files.
+set APPCLIENT_WINDOWS_ARGS=%*
 
 REM Execute CLIBootstrap with the arguments passed to this script
 REM to retrieve the command to execute.
 REM FOR /F - processes command output line by line
 REM "delims=" - treats each line as a whole (no delimiter)
 REM %%i - loop variable for batch files, would be %i on command line
-FOR /F "delims=" %%i IN ("%JAVA%" --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.acc.agent.CLIBootstrap %*) DO set CMD=%%i
-%CMD% %ARGS%
+FOR /F "usebackq delims=" %%i IN (`^""%JAVA%" --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.acc.agent.CLIBootstrap^"`) DO set CMD=%%i
+%CMD%
+

@@ -32,6 +32,7 @@ import org.glassfish.embeddable.client.ApplicationClientCLIEncoding;
 import org.glassfish.embeddable.client.UserError;
 
 import static java.lang.System.arraycopy;
+import static org.glassfish.appclient.client.acc.agent.ClassPathUtils.getClassPathForGfClient;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 
@@ -289,6 +290,10 @@ public class CLIBootstrap {
         command.append(' ').append("--module-path ").append(quote(gfBootstrapLibs.toString()));
         command.append(' ').append("--add-modules ALL-MODULE-PATH");
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
+        if (userVMArgs.evJVMValuedOptions.values.isEmpty()) {
+            // Even to print help we need this jar on classpath
+            command.append(' ').append("-cp ").append(gfInfo.agentJarPath());
+        }
         command.append(' ').append("-Xshare:off");
         command.append(' ').append(SYSPROP_SYSTEM_CLASS_LOADER).append("org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader");
         command.append(' ').append("-D").append(INSTALL_ROOT.getSystemPropertyName()).append('=').append(quote(gfInfo.home().getAbsolutePath()));
@@ -754,8 +759,7 @@ public class CLIBootstrap {
             // Make sure there is a next item and that it
             if (args[slot].charAt(0) != '-') {
                 values.add("-classpath");
-                values.add(gfInfo.agentJarPath() + File.pathSeparatorChar
-                    + ClassPathUtils.getClassPathForGfClient("."));
+                values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient("."));
                 final int result = super.processValue(args, slot);
                 String className = values.get(values.size() - 1);
                 agentArgs.add("client=class=" + className);
@@ -785,8 +789,7 @@ public class CLIBootstrap {
                 } else if (clientJarPath.endsWith(".jar")) {
                     introducer = null;
                     values.add("-classpath");
-                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar
-                        + ClassPathUtils.getClassPathForGfClient(clientJarPath));
+                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient(clientJarPath));
                     String mainClass = ClassPathUtils.getMainClass(clientJarFile);
                     values.add(mainClass == null ? "" : mainClass);
                 } else {

@@ -54,7 +54,7 @@ public class AppClientTest {
 
 
     private String readOutput(Process process) throws IOException {
-        try (InputStream output = process.getErrorStream()) {
+        try (InputStream output = process.getInputStream()) {
             return new String(output.readAllBytes(), Charset.defaultCharset());
         }
     }

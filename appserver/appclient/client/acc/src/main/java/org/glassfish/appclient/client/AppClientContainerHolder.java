@@ -188,7 +188,7 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
     }
 
     private static void usage(final int exitStatus) {
-        System.err.println(getUsage());
+        System.out.println(getUsage());
         System.exit(exitStatus);
     }
 

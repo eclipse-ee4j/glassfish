@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getGlassFishDirectory;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +36,7 @@ public class AppClientTest {
 
     @Test
     void noArgsAndHelp() throws Exception {
-        File appclient = new File(getGlassFishDirectory(), "bin/appclient");
+        File appclient = GlassFishTestEnvironment.getAppClient();
         assertTrue(appclient.canExecute(), "appclient executable");
         Process processNoArgs = new ProcessBuilder(appclient.getAbsolutePath()).start();
         Process processUsage = new ProcessBuilder(appclient.getAbsolutePath(), "-usage").start();

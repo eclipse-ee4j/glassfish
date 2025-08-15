@@ -44,12 +44,12 @@
         <module>connectors</module>
         <module>expression-language</module>
         <module>enterprise-beans</module>
+        <module>faces</module>
 
         <module>platform-tck-runner</module>
 
         <module>rest</module>
         <module>rest_cdi</module>
-        <module>faces</module>
         <module>pages</module>
         <module>pages_tags</module>
         <module>pages_debugging</module>

@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.lang.System.Logger;
 
-import org.glassfish.api.admin.Job;
+import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.ProgressEvent;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
@@ -31,15 +31,15 @@ import static java.lang.System.Logger.Level.TRACE;
 import static org.glassfish.api.admin.AdminCommandState.EVENT_STATE_CHANGED;
 
 /**
- * A special {@link EventOutput} for sending Server Side Events related to the {@link Job}.
+ * A special {@link EventOutput} for sending Server Side Events related to the {@link AdminCommandState}.
  */
 public class SseEventOutput extends EventOutput {
     private static final Logger LOG = System.getLogger(SseEventOutput.class.getName());
 
-    private final Job job;
+    private final AdminCommandState state;
 
-    SseEventOutput(Job job) {
-        this.job = job;
+    SseEventOutput(AdminCommandState state) {
+        this.state = state;
     }
 
     void write(String eventName, ProgressEvent event) {
@@ -50,7 +50,7 @@ public class SseEventOutput extends EventOutput {
 
     void write() {
         if (!isClosed()) {
-            writeJson(EVENT_STATE_CHANGED, job);
+            writeJson(EVENT_STATE_CHANGED, state);
         }
     }
 

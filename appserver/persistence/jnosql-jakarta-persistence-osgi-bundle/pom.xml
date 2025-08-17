@@ -84,11 +84,12 @@
                             !org.eclipse.jnosql.mapping.reflection.*,
                             *
                         </Import-Package>
-                        <!-- TODO: import antlr runtime instead of bundling it -->
                         <Embed-Dependency>
                             !jakarta.data-api.*,
                             !jakarta.persistence-api.*,
                             !jakarta.validation-api.*,
+                            !jakarta.nosql-api.*,
+                            !antlr4-runtime.*,
                             !jnosql-mapping-reflection,
                             !classgraph,
                             *;scope=compile|runtime

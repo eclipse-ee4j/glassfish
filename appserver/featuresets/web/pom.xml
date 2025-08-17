@@ -43,17 +43,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>ee.omnifish</groupId>
-             <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- Jakarta Faces -->
        <dependency>
            <groupId>org.glassfish</groupId>
@@ -1457,12 +1446,29 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-       </dependency>
-       <!-- TMP -->
-       <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.179</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main.persistence</groupId>
+            <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Jakarta Persistence -->

@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    name: Build on Ubuntu
+    name: Build GlassFish on Ubuntu
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK

@@ -35,21 +35,21 @@
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
-
-        <!-- We use the shaded JAR for compilation and tests -->
         <dependency>
-            <groupId>ee.omnifish</groupId>
-            <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
+            <groupId>org.eclipse.jnosql.mapping</groupId>
+            <artifactId>jnosql-jakarta-persistence</artifactId>
             <version>${jnosql.version}</version>
-            <classifier>shaded</classifier>
             <exclusions>
                 <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
+                    <groupId>org.eclipse.jnosql.mapping</groupId>
+                    <artifactId>jnosql-jakarta-persistence-scanner</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jnosql.mapping</groupId>
+                    <artifactId>jnosql-mapping-reflection</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>

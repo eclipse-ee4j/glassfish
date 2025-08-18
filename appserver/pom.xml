@@ -100,10 +100,10 @@
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <soteria.version>3.0.3</soteria.version>
+        <soteria.version>3.0.4</soteria.version>
         <exousia.version>2.1.3</exousia.version>
         <epicyro.version>3.0.0</epicyro.version>
-        <nimbus.version>9.47</nimbus.version>
+        <nimbus.version>10.4.2</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -164,7 +164,7 @@
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
-        <omnifaces-jwt-auth.version>2.0.2</omnifaces-jwt-auth.version>
+        <omnifaces-jwt-auth.version>2.0.3</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
         <microprofile.rest-client.version>3.0.1</microprofile.rest-client.version>

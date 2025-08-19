@@ -102,7 +102,7 @@
                 </dependencies>
                 <executions>
                     <execution>
-                        <id>do stuff</id>
+                        <id>apply-patches</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
@@ -116,16 +116,17 @@
                                     <attribute name="includes"/>
                                     <attribute name="destfile"/>
                                     <sequential>
-                                        <echo>PATCHING</echo>
+                                        <local name="destfile.filename"/>
+                                        <basename property="destfile.filename" file="@{destfile}"/>
+                                        <echo>${line.separator}PATCHING ${destfile.filename}${line.separator}</echo>
                                         <zip destfile="@{destfile}.tmp">
                                             <zipfileset src="@{destfile}" excludes="@{includes}"/>
                                         </zip>
                                         <move file="@{destfile}.tmp" tofile="@{destfile}" />
-                                        
-                                        <loadfile property="message" srcFile="@{basedir}/@{includes}"/>
-                                        
-                                        <echo>${message}</echo>
-                                        
+                                        <local name="includes.content"/>
+                                        <loadfile property="includes.content" srcFile="@{basedir}/@{includes}"/>
+                                        <echo>${line.separator}New contents of @{includes}:${line.separator}${line.separator}</echo>
+                                        <echo>${includes.content}</echo>
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.9</version>
+        <relativePath />
+    </parent>
+
+    <artifactId>cdi-tck-install</artifactId>
+    <packaging>pom</packaging>
+    <version>4.1.0-SNAPSHOT</version>
+    <name>TCK: Install Jakarta CDI TCK</name>
+
+    <properties>
+        <tck.test.cdi.file>cdi-tck-${tck.test.cdi.version}-dist.zip</tck.test.cdi.file>
+        <tck.test.cdi.url>https://download.eclipse.org/ee4j/cdi/4.1/${tck.test.cdi.file}</tck.test.cdi.url>
+        <tck.test.cdi.version>4.1.0</tck.test.cdi.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.13.0</version>
+                <configuration>
+                    <url>${tck.test.cdi.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-cdi-tck</id>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-tck-parent</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jakarta.enterprise</groupId>
+                            <artifactId>cdi-tck-parent</artifactId>
+                            <version>4.1.0</version>
+                            <packaging>pom</packaging>
+                            <file>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-parent-4.1.0.pom</file>
+                            <generatePom>false</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-cdi-tck-api</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jakarta.enterprise</groupId>
+                            <artifactId>cdi-tck-api</artifactId>
+                            <version>4.1.0</version>
+                            <packaging>jar</packaging>
+                            <file>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-api-4.1.0.jar</file>
+                            <javadoc>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-api-4.1.0-javadoc.jar</javadoc>
+                            <sources>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-api-4.1.0-sources.jar</sources>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-cdi-tck-ext-lib</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jakarta.enterprise</groupId>
+                            <artifactId>cdi-tck-ext-lib</artifactId>
+                            <version>4.1.0</version>
+                            <packaging>jar</packaging>
+                            <file>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-ext-lib-4.1.0.jar</file>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-cdi-tck-core-impl</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jakarta.enterprise</groupId>
+                            <artifactId>cdi-tck-core-impl</artifactId>
+                            <version>4.1.0</version>
+                            <packaging>jar</packaging>
+                            <file>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-core-impl-4.1.0.jar</file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-cdi-core-tck-suite</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jakarta.enterprise</groupId>
+                            <artifactId>cdi-tck-core-impl</artifactId>
+                            <version>4.1.0</version>
+                            <packaging>xml</packaging>
+                            <classifier>suite</classifier>
+                            <file>${project.build.directory}/cdi-tck-4.1.0/artifacts/cdi-tck-core-impl-4.1.0-suite.xml</file>
+                            <generatePom>false</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

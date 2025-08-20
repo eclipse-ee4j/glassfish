@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2022,2023 Contributors to the Eclipse Foundation
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.hibernate</groupId>
+    <artifactId>hiberate-data-tck-web-glassfish-runner</artifactId>
+    <version>1.0</version>
+    <name>Hibernate Jakarta Data TCK Web Runner for GlassFish</name>
+    <properties>
+        <maven.dep.plugin.version>3.3.0</maven.dep.plugin.version>
+        <maven.comp.plugin.version>3.10.1</maven.comp.plugin.version>
+        <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+
+        <arquillian.version>1.8.0.Final</arquillian.version>
+        <jakarta.data.version>1.0.0</jakarta.data.version>
+        <junit.version>5.10.2</junit.version>
+        <sigtest.version>2.3</sigtest.version>
+        <hibernate.data.version>6.6.0.Alpha1</hibernate.data.version>
+        <weld.version>5.1.2.Final</weld.version>
+        <weld-junit.version>4.0.2.Final</weld-junit.version>
+        <h2.version>2.1.214</h2.version>
+        <glassfish.web.bundle>${project.build.directory}/glassfish-8.0.0-JDK17-M6.zip</glassfish.web.bundle>
+        <glassfish.arquillian.version>1.4</glassfish.arquillian.version>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
+    </properties>
+
+    <!-- The Junit5 test frameworks -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Runtime Dependencies -->
+    <dependencies>
+        <!-- The TCK -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-data-tck-tests</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The API -->
+        <dependency>
+            <groupId>org.glassfish.data</groupId>
+            <artifactId>data-osgi-bundle</artifactId>
+            <version>${jakarta.data.version}</version>
+        </dependency>
+        <!-- TODO add your implementation of the Jakarta Data API -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.data.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-lite-extension-translator</artifactId>
+            <version>${weld.version}</version>
+        </dependency>
+        <!-- Junit5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <!-- Signature Test Plugin -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <!-- APIs referenced by TCK that do not require implementations for standalone
+         tests -->
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <version>${glassfish.arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-rest-jakarta</artifactId>
+            <version>${arquillian.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+            <!-- Copy hibernate ORM and H2 dependencies into GF domain lib dir -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includeGroupIds>org.hibernate,org.glassfish,io.smallrye,net.bytebuddy,org.antlr,com.h2database</includeGroupIds>
+                    <includeArtifactIds>hibernate-core,hibernate-commons-annotations,data-osgi-bundle,jandex,byte-buddy,antlr4-runtime,h2</includeArtifactIds>
+                    <outputDirectory>${glassfish.home}/glassfish/domains/domain1/lib/</outputDirectory>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>false</overWriteSnapshots>
+                    <overWriteIfNewer>true</overWriteIfNewer>
+                </configuration>
+            </plugin>
+            <!-- Surefire plugin - Entrypoint for Junit5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <dependenciesToScan>
+                        <dependency>org.hibernate:hibernate-data-tck-tests</dependency>
+                    </dependenciesToScan>
+                    <groups><![CDATA[web & persistence]]></groups>
+                    <!-- If running back-to-back tests at different levels
+                     use this to distinguish the results -->
+                    <reportNameSuffix>core</reportNameSuffix>
+                    <systemPropertyVariables>
+                        <jimage.dir>target/jimage</jimage.dir>
+                        <jakarta.tck.profile>core</jakarta.tck.profile>
+                        <signature.sigTestClasspath>${project.build.directory}/glassfish8/glassfish/domains/domain1/lib/data-osgi-bundle-1.0.0.jar</signature.sigTestClasspath>
+                        <java.util.logging.config.file>target/test-classes/logging.properties</java.util.logging.config.file>
+                        <maven.repo.local>${settings.localRepository}</maven.repo.local>
+                        <glassfish.home>${glassfish.home}</glassfish.home>
+                        <glassfish.enableDerby>true</glassfish.enableDerby>
+                        <arquillian.launch>glassfish</arquillian.launch>
+                        <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
+                        <!--glassfish.postBootCommands>
+                        </glassfish.postBootCommands-->
+                    </systemPropertyVariables>
+                    <environmentVariables>
+
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Install glassfish to target/glassfish -->
+        <profile>
+            <id>install-glassfish</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>install-glassfish</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo message="Downloading GlassFish" />
+                                        <get src="https://github.com/eclipse-ee4j/glassfish/releases/download/8.0.0-M6/glassfish-8.0.0-JDK17-M6.zip"
+                                             dest="${project.build.directory}"
+                                             verbose="false"
+                                             usetimestamp="true"/>
+                                        <echo message="Installing GlassFish"/>
+                                        <!-- Using an ant task to deflate webinstaller.zip -->
+                                        <unzip src="${glassfish.web.bundle}" dest="${basedir}/target"/>
+                                        <!-- -->
+                                        <echo message="GlassFish installed"/>
+                                        <echo message="Starting GlassFish"/>
+                                        <exec executable="/bin/bash">
+                                            <arg value="${basedir}/target/glassfish8/bin/asadmin"/>
+                                            <arg value="start-domain"/>
+                                        </exec>
+                                        <echo message="Configuring H2Pool JDBC Pool"/>
+                                        <exec executable="/bin/bash">
+                                            <arg value="${basedir}/target/glassfish8/bin/asadmin"/>
+                                            <arg value="create-jdbc-connection-pool"/>
+                                            <arg value="--datasourceclassname"/>
+                                            <arg value="org.h2.jdbcx.JdbcDataSource"/>
+                                            <arg value="--property"/>
+                                            <arg value="url=jdbc\:h2\:/tmp/h2temp"/>
+                                            <arg value="H2Pool"/>
+                                        </exec>
+                                        <echo message="Configuring H2Pool JNDI Binding"/>
+                                        <exec executable="/bin/bash">
+                                            <arg value="${basedir}/target/glassfish8/bin/asadmin"/>
+                                            <arg value="create-jdbc-resource"/>
+                                            <arg value="--connectionpoolid"/>
+                                            <arg value="H2Pool"/>
+                                            <arg value="jdbc/DataTCK"/>
+                                        </exec>
+                                        <echo message="Listing JDBC Pools"/>
+                                        <exec executable="/bin/bash">
+                                            <arg value="${basedir}/target/glassfish8/bin/asadmin"/>
+                                            <arg value="list"/>
+                                            <arg value="resources.jdbc-connection-pool.*"/>
+                                        </exec>
+
+                                        <echo message="Stopping GlassFish"/>
+                                        <exec executable="/bin/bash">
+                                            <arg value="${basedir}/target/glassfish8/bin/asadmin"/>
+                                            <arg value="stop-domain"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- This profile enables consuming artifacts from the Jakarta staging repository -->
+        <profile>
+            <id>staging</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</project>

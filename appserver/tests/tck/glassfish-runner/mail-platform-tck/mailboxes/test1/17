@@ -1,0 +1,64 @@
+From demo@labyrinth.Eng.Sun.COM Mon Oct 14 18:04:49 1996
+Return-Path: <demo@labyrinth.Eng.Sun.COM>
+Received: from makai.Eng.Sun.COM by homey.Eng.Sun.COM (SMI-8.6/SMI-SVR4)
+	id SAA02171; Mon, 14 Oct 1996 18:04:48 -0700
+Received: from makai (localhost) by makai.Eng.Sun.COM (5.x/SMI-SVR4)
+	id AA07582; Mon, 14 Oct 1996 18:03:48 -0700
+Sender: tester@labyrinth.Eng.Sun.COM
+Message-Id: <3262E2F4.2F64@labyrinth.eng.sun.com>
+Date: Mon, 14 Oct 1996 18:03:48 -0700
+From: Demo Account <demo@labyrinth.Eng.Sun.COM>
+Organization: Sun Microsystems
+X-Mailer: Mozilla 3.0b6Gold (X11; I; SunOS 5.4 sun4m)
+Mime-Version: 1.0
+To: tester@homey
+Subject: key settings
+Content-Type: multipart/mixed; boundary="------------71D3762944B1"
+X-Lines: 43
+Content-Length: 1012
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 136
+
+--------------71D3762944B1
+Content-Type: text/plain; charset="us-ascii"
+X-Sun-Content-Length: 43
+
+Here are the mappings for your keyboard...
+
+--------------71D3762944B1
+Content-Type: text/plain; charset="us-ascii"; name=".vts_motifbind"
+Content-Disposition: inline; filename=".vts_motifbind"
+X-Sun-Content-Length: 663
+
+! xxxxxxxxxx xxxxx xxx xxxxxxxx 
+! 	@(#).xxxxxxxxx	1.7     Xxxx:12/20/91                        
+xxxXxxXxxx	: <Xxx>X2
+xxxXxxxxXxxx	: <Xxx>X5
+xxxXxxxxx	: Xxxx <Xxx>X1
+xxxXxxx		: <Xxx>Xxxx
+xxxXx		: <Xxx>Xx
+xxxXxxxx	: <Xxx>Xxxxx
+xxxXxxx		: <Xxx>Xxxx
+xxxXxxxXx	: Xxx1 <Xxx>x
+xxxXxxxXxxx	: Xxx1 <Xxx>x
+xxxXxxxXxxxx	: <Xxx>X1
+xxxXxxxxx	: <Xxx>X8
+xxxXxxxxx	: Xxx1 <Xxx>x
+xxxXxxXxxx	: Xxxxx <Xxx>X8
+xxxXxxx		: Xxxxx <Xxx>X9
+xxxXxxx		: <Xxx>X9
+xxxXxxxXxx	: Xxxxx <Xxx>X10
+xxxXxxxxx	: <Xxx>X6
+xxxXxxxxxxx	: <Xxx>X7
+xxxXxxxxxxXxxxx	: <Xxx>X4
+xxxXxxxxXxxxx	: Xxx1 <Xxx>x
+xxxXxxx		: <Xxx>X3
+xxxXxx		: Xxx1 <Xxx>x
+xxxXxxxx	: <Xxx>X12
+xxxXxxxx	: <Xxx>X10
+xxxXxxx		: Xxx1 <Xxx>x
+
+--------------71D3762944B1--
+

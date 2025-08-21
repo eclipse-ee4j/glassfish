@@ -15,38 +15,27 @@
  */
 package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
 
+import jakarta.inject.Inject;
 import jakarta.interceptor.InvocationContext;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 
 /**
  *
  * @author Ondro Mihalyi
  */
-@MethodInterceptor.SaveEntity
-public class EntityValidator implements MethodInterceptor {
+public class GlassFishRepositoryInterceptor implements MethodInterceptor {
+
+    @Inject
+    EnsureTransactionInterceptor ensureTransactionInterceptor = new EnsureTransactionInterceptor();
+
+    EntityValidatorInterceptor entityValidator = new EntityValidatorInterceptor();
 
     @Override
     public Object intercept(InvocationContext context) throws Exception {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        final Set<ConstraintViolation<Object>> violations = new HashSet<>();
-        for (Object entity : context.getParameters()) {
-             violations.addAll(validator.validate(entity));
-        }
-        if (violations.isEmpty()) {
-            return context.proceed();
-        }
-        throw new ConstraintViolationException(violations);
+        return entityValidator.intercept(
+                new ChainedInvocationContext(ensureTransactionInterceptor, context));
     }
 
 }

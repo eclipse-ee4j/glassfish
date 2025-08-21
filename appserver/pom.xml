@@ -113,7 +113,7 @@
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
         <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
-        <jnosql.version>1.1.8-SNAPSHOT</jnosql.version>
+        <jnosql.version>1.1.10</jnosql.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
@@ -346,11 +346,6 @@
             <dependency>
                 <groupId>ee.omnifish</groupId>
                 <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
-                <version>${jnosql.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jnosql.mapping</groupId>
-                <artifactId>jnosql-mapping-api-core</artifactId>
                 <version>${jnosql.version}</version>
             </dependency>
 

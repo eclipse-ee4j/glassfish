@@ -1,0 +1,9 @@
+org.eclipse.jnosql.mapping.core.repository.returns.InstanceRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.ListRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.OptionalRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.PageRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.QueueRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.SetRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.SortedSetRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.StreamRepositoryReturn
+org.eclipse.jnosql.mapping.core.repository.returns.ArrayRepositoryReturn

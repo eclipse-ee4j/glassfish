@@ -96,6 +96,13 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
             <id>sonatype-oss-snapshots</id>
             <url>https://central.sonatype.com/repository/maven-snapshots</url>
             <releases>
@@ -103,6 +110,7 @@
             </releases>
             <snapshots>
                 <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
             </snapshots>
         </repository>
     </repositories>
@@ -167,4 +175,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <repositories>
+                <repository>
+                    <id>sonatype-oss-snapshots</id>
+                    <url>https://central.sonatype.com/repository/maven-snapshots</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>

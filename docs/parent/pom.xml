@@ -42,6 +42,7 @@
         <html.rel.file.prefix></html.rel.file.prefix>
         <mq.docs.url>https://eclipse-ee4j.github.io/openmq/guides/</mq.docs.url>
         <bookDirectory>${project.build.directory}/book</bookDirectory>
+        <product.currentVersion>${project.version}</product.currentVersion>
     </properties>
 
     <build>
@@ -173,6 +174,25 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="productMajorVersion" value="${product.majorVersion}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
@@ -191,6 +211,16 @@
                             </artifacts>
                         </configuration>
                     </execution>
+                        <execution>
+                            <id>parse-version</id>
+                            <goals>
+                                <goal>parse-version</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <propertyPrefix>product</propertyPrefix>
+                            </configuration>
+                        </execution>
                 </executions>
             </plugin>
             <plugin>

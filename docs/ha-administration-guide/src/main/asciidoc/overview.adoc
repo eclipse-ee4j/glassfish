@@ -10,7 +10,7 @@ prev=preface.html
 [[high-availability-in-glassfish-server]]
 == 1 High Availability in {productName}
 
-This chapter describes the high availability features in {productName} 7.
+This chapter describes the high availability features in {productName} {product-majorVersion}.
 
 The following topics are addressed here:
 
@@ -44,7 +44,7 @@ minimum application downtime and enhanced transactional security.
 
 ==== Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
 
-A common load balancing configuration for {productName} 7 is to use
+A common load balancing configuration for {productName} {product-majorVersion} is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 `mod_jk` or `mod_proxy_ajp` module as the connector between the web
 server and {productName}. See
@@ -168,7 +168,7 @@ information. {productName} supports in-memory session replication on
 other servers in the cluster for maintaining HTTP session and stateful
 session bean data.
 
-In-memory session replication is implemented in {productName} 7 as
+In-memory session replication is implemented in {productName} {product-majorVersion} as
 an OSGi module. Internally, the replication module uses a consistent
 hash algorithm to pick a replica server instance within a cluster of
 instances. This allows the replication module to easily locate the
@@ -238,8 +238,7 @@ upgrade components within the {productName} without loss of service.
 
 ===== Protocols for Centralized Cluster Administration
 
-{productName} uses the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to ensure that clusters that span
+{productName} uses the  secure shell (SSH) to ensure that clusters that span
 multiple hosts can be administered centrally. To perform administrative
 operations on {productName} instances that are remote from the domain
 administration server (DAS), the DAS must be able to communicate with
@@ -250,16 +249,16 @@ application to the instance.
 
 However, the DAS cannot connect to an instance to perform operations on
 an instance that is not running, such as creating or starting the
-instance. For these operations, the DAS uses DCOM or SSH to contact a
-remote host and administer instances there. DCOM or SSH provides
+instance. For these operations, the DAS uses SSH to contact a
+remote host and administer instances there. SSH provides
 confidentiality and security for data that is exchanged between the DAS
 and remote hosts.
 
 
 [NOTE]
 ====
-The use of DCOM or SSH to enable centralized administration of remote
-instances is optional. If the use of DCOM SSH is not feasible in your
+The use of SSH to enable centralized administration of remote
+instances is optional. If the use of SSH is not feasible in your
 environment, you can administer remote instances locally.
 ====
 

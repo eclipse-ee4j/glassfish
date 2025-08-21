@@ -188,7 +188,7 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
     }
 
     private static void usage(final int exitStatus) {
-        System.err.println(getUsage());
+        System.out.println(getUsage());
         System.exit(exitStatus);
     }
 
@@ -201,7 +201,7 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
         try (BufferedReader helpReader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = helpReader.readLine()) != null) {
-                System.err.println(line);
+                System.out.println(line);
             }
         } finally {
             System.exit(0);

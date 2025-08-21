@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -504,7 +504,6 @@ public abstract class AdminBaseDevTest extends BaseDevTest implements Runnable {
 
     /**
      * Remove SSH related passwords from the asadmin password file id == "SSH"
-     * or "DCOM"
      */
     void removePasswords(String id) {
         final File f = new File(pFile);

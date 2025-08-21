@@ -10,7 +10,7 @@ prev=overview.html
 [[specific-issues]]
 == 2 Specific Issues
 
-This chapter lists problems that you might encounter when using {productName} 7. The following topics are addressed:
+This chapter lists problems that you might encounter when using {productName} {product-majorVersion}. The following topics are addressed:
 
 * xref:#cannot-access-local-server-httplocalhost8080[Cannot Access Local Server (`http://localhost:8080`)]
 * xref:#cannot-access-remote-server[Cannot Access Remote Server]
@@ -664,38 +664,6 @@ inability to stop the domain.
 [[issues-related-to-installation]]
 
 === Issues Related to Installation
-
-[[installation-hangs-during-update-tool-configuration]]
-
-==== Installation Hangs During Update Tool Configuration
-
-[[description-16]]
-
-===== Description
-
-Installation hangs more than five minutes during Update Tool configuration.
-
-[[solution-13]]
-
-===== Solution
-
-Cancel the installation and run the installation program again, but this
-time deselect the Install Update Tool check box. Update Tool can be
-installed later from as-install``/bin/``. For more information about
-Update Tool, see "xref:administration-guide.adoc#GSADG00701[Update Tool]"
-in {productName} Administration Guide. For general information about
-{productName}installation, see the xref:installation-guide.adoc#GSING[
-{productName} Installation Guide].
-
-
-[NOTE]
-====
-Update Tool differs from Upgrade Tool, which is used to migrate the
-configuration and deployed applications from an earlier version of
-{productName} to the current version.
-For more information about Upgrade Tool and upgrading, see the
-xref:upgrade-guide.adoc#GSUPG[{productName} Upgrade Guide].
-====
 
 
 [[glassfish-server-components-not-removed-during-uninstallation]]

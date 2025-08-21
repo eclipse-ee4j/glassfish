@@ -79,6 +79,9 @@
     </scm>
 
     <properties>
+        <!-- Jakarta EE platform -->
+        <jakartaee>11</jakartaee>
+
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
@@ -103,7 +106,7 @@
         <exousia.version>3.0.0-M3</exousia.version>
         <epicyro.version>3.1.0</epicyro.version>
         <!-- Dependencies -->
-        <nimbus.version>10.4</nimbus.version>
+        <nimbus.version>10.4.2</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->

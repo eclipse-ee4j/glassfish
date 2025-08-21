@@ -54,6 +54,7 @@
         <module>pages_tags</module>
         <module>pages_debugging</module>
         <module>servlet</module>
+        <module>security</module>
         <module>microprofile</module>
         <module>validation</module>
         <module>websocket</module>
@@ -62,6 +63,9 @@
     </modules>
 
     <properties>
+        <maven.executable>${maven.home}/bin/mvn${file.executable.suffix}</maven.executable>
+        <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
+
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.directoryName>glassfish8</glassfish.directoryName>

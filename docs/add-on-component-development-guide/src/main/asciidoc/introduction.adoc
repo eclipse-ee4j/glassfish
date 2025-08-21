@@ -246,9 +246,7 @@ Persistence Module].
 Packaging an add-on component enables the component to interact with the
 {productName} kernel in the same way as other components. Integrating
 a component with {productName} enables {productName} to discover
-the component at runtime. If an add-on component is an extension or
-update to existing installations of {productName}, deliver the
-component through Update Tool.
+the component at runtime.
 
 For more information, see
 xref:packaging-integrating-delivering.adoc#packaging-integrating-and-delivering-an-add-on-component[Packaging, Integrating,

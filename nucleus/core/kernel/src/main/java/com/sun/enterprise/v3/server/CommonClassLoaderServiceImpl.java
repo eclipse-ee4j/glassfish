@@ -190,7 +190,7 @@ public class CommonClassLoaderServiceImpl {
         Path derbyHome = getDerbyDir(installDir, startupCtxArgs);
         LOG.log(CONFIG, "Using derby home: {0}", derbyHome);
         if (derbyHome == null) {
-            LOG.info(KernelLoggerInfo.cantFindDerby);
+            LOG.log(INFO, KernelLoggerInfo.cantFindDerby, "DerbyDB home is not set");
             return Collections.emptyList();
         }
         final File derbyLib = derbyHome.resolve("lib").toFile();

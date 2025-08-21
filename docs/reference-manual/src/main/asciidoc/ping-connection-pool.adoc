@@ -1,7 +1,7 @@
 type=page
 status=published
 title=ping-connection-pool
-next=ping-node-dcom.html
+next=ping-node-ssh.html
 prev=osgi-shell.html
 ~~~~~~
 

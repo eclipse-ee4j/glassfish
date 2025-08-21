@@ -9,7 +9,7 @@ prev=part-res-and-svcs-admin.adoc
 == 11 Administering Database Connectivity
 
 This chapter provides procedures for performing database connectivity
-tasks in the {productName} 7 environment by
+tasks in the {productName} {product-majorVersion} environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -983,7 +983,7 @@ typing `asadmin help delete-jdbc-resource` at the command line.
 
 ==== Enabling the `jdbc/__default` Resource in a Clustered Environment
 
-{productName} 7 includes a preconfigured JDBC resource with the
+{productName} {product-majorVersion} includes a preconfigured JDBC resource with the
 JNDI name `jdbc/__default`. This `jdbc/__default` resource is not
 enabled by default, so you need to explicitly enable it if you want to
 use it in a cluster.

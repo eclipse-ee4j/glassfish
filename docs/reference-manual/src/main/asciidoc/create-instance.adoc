@@ -29,17 +29,16 @@ instance-name
 === Description
 
 The `create-instance` subcommand creates a {productName} instance.
-This subcommand requires the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to be configured on the host where
+This subcommand requires secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on the host that
 is represented by the node where the instance is to reside.
 
 
 [NOTE]
 ====
-DCOM or SSH is not required if the instance is to reside on a node of
+SSH is not required if the instance is to reside on a node of
 type `CONFIG` that represents the local host. A node of type `CONFIG` is
-not enabled for remote communication over DCOM or SSH.
+not enabled for remote communication over SSH.
 ====
 
 
@@ -374,7 +373,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)],
 xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],

@@ -1,9 +1,9 @@
-title={productName} Administration Guide, Release 7
+title={productName} Administration Guide, Release {product-majorVersion}
 next=preface.adoc
 ~~~~~~
 
 
-= {productName} Administration Guide, Release 7
+= {productName} Administration Guide, Release {product-majorVersion}
 
 
 [[eclipse-glassfish-server]]
@@ -11,18 +11,18 @@ next=preface.adoc
 
 Administration Guide
 
-Release 7
+Release {product-majorVersion}
 
 Contributed 2018 - 2024
 
-{productName} 7 Administration Guide provides
+{productName} {product-majorVersion} Administration Guide provides
 instructions for configuring and administering {productName}.
 
 [[sthref1]]
 
 '''''
 
-{productName} Administration Guide, Release 7
+{productName} Administration Guide, Release {product-majorVersion}
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

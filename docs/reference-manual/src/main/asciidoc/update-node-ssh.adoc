@@ -2,7 +2,7 @@ type=page
 status=published
 title=update-node-ssh
 next=update-password-alias.html
-prev=update-node-dcom.html
+prev=update-node-config.html
 ~~~~~~
 
 = update-node-ssh
@@ -194,20 +194,15 @@ Command update-node-ssh executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:delete-node-config.adoc#delete-node-config[`delete-node-config`(1)],
-xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:install-node.adoc#install-node[`install-node`(1)],
-xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
 xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
 xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
-xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)],
 xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)],
-xref:update-node-config.adoc#update-node-config[`update-node-config`(1)],
-xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)]
+xref:update-node-config.adoc#update-node-config[`update-node-config`(1)]
 
 

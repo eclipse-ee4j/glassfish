@@ -46,7 +46,7 @@ administration values.
 
 [NOTE]
 ====
-For the zip bundle of {productName} 7, the default administrator
+For the zip bundle of {productName} {product-majorVersion}, the default administrator
 login is `admin`, with no password, which means that no login is
 required.
 ====

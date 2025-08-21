@@ -157,6 +157,13 @@ public class GlassFishTestEnvironment {
     }
 
     /**
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static File getAppClient() {
+        return new File(getGlassFishDirectory(), isWindows() ? "bin/appclient.bat" : "bin/appclient");
+    }
+
+    /**
      * @return project's target directory.
      */
     public static File getTargetDirectory() {

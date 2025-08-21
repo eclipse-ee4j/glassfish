@@ -2,7 +2,7 @@ type=page
 status=published
 title=validate-multicast
 next=verify-domain-xml.html
-prev=validate-dcom.html
+prev=uptime.html
 ~~~~~~
 
 = validate-multicast

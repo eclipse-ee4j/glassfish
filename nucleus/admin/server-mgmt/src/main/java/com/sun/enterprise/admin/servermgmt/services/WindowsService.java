@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +46,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  *
  * @author Byron Nevins
  */
-public class WindowsService extends NonSMFServiceAdapter {
+public class WindowsService extends ServiceAdapter {
+
     static boolean apropos() {
         return OS.isWindowsForSure();
     }

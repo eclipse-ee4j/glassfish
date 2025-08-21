@@ -34,8 +34,7 @@ asadmin start-local-instance
 
 The `start-local-instance` subcommand starts a {productName}
 instance on the host where the subcommand is run. This subcommand does
-not require the Distributed Component Object Model (DCOM) remote
-protocol or secure shell (SSH) to be configured. You must run this
+not require the secure shell (SSH) to be configured. You must run this
 command from the host where the instance resides.
 
 The subcommand can start any {productName} instance, regardless of

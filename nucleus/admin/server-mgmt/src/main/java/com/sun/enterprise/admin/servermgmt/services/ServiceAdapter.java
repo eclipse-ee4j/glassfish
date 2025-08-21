@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.admin.servermgmt.services;
 
+import com.sun.enterprise.universal.PropertiesDecoder;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.io.ServerDirs;
@@ -34,7 +35,6 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.CREDENTIALS
 import static com.sun.enterprise.admin.servermgmt.services.Constants.DATE_CREATED_TN;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.DRYRUN_PREPEND;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.ENTITY_NAME_TN;
-import static com.sun.enterprise.admin.servermgmt.services.Constants.FQSN_TN;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.LOCATION_ARGS_RESTART_TN;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.LOCATION_ARGS_START_TN;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.LOCATION_ARGS_STOP_TN;
@@ -53,9 +53,44 @@ public abstract class ServiceAdapter implements Service {
 
     private final Map<String, String> tokenMap = new HashMap<>();
     final PlatformServicesInfo info;
+    private String flattenedServicePropertes;
+    private File templateFile;
 
     ServiceAdapter(ServerDirs serverDirs, AppserverServiceType type) {
         info = new PlatformServicesInfo(serverDirs, type);
+    }
+
+    @Override
+    public final String getServiceProperties() {
+        return flattenedServicePropertes;
+    }
+
+    /*
+     * @author Byron Nevins
+     * 11/14/11
+     * The --serviceproperties option was being completely ignored!
+     * The existing structure is brittle, hard to understand, and has wired-in
+     * the implementation details to the interface.  I.e. there are tons of problems
+     * maintaining the code.
+     * What I'm doing here is taking the map with all of the built-in values and
+     * overlaying it with name-value pairs that the user specified.
+     * I discovered the original problem by trying to change the display name, "ENTITY_NAME"
+     * at the command line as a serviceproperty.  It was completely ignored!!
+     */
+    final Map<String, String> getFinalTokenMap() {
+        Map<String, String> map = getTokenMap();
+        map.putAll(tokensAndValues());
+        return map;
+    }
+
+    @Override
+    public final void setServiceProperties(String cds) {
+        flattenedServicePropertes = cds;
+    }
+
+    @Override
+    public final Map<String, String> tokensAndValues() {
+        return PropertiesDecoder.unflatten(flattenedServicePropertes);
     }
 
     @Override
@@ -115,15 +150,11 @@ public abstract class ServiceAdapter implements Service {
         getTokenMap().put(START_COMMAND_TN, info.type.startCommand());
         getTokenMap().put(RESTART_COMMAND_TN, info.type.restartCommand());
         getTokenMap().put(STOP_COMMAND_TN, info.type.stopCommand());
-        getTokenMap().put(FQSN_TN, info.fqsn);
         getTokenMap().put(OS_USER_TN, info.osUser);
 
         if (OS.isWindowsForSure()) {
             // Windows doesn't respond well to slashes in the name!!
             getTokenMap().put(SERVICE_NAME_TN, info.serviceName);
-            getTokenMap().put(ENTITY_NAME_TN, serverName);
-        } else {
-            getTokenMap().put(SERVICE_NAME_TN, info.smfFullServiceName);
         }
 
         getTokenMap().put(AS_ADMIN_PATH_TN, info.asadminScript.getPath().replace('\\', '/'));
@@ -233,5 +264,13 @@ public abstract class ServiceAdapter implements Service {
                 }
             }
         }
+    }
+
+    File getTemplateFile() {
+        return templateFile;
+    }
+
+    void setTemplateFile(String name) {
+        templateFile = new File(info.libDir, "install/templates/" + name);
     }
 }

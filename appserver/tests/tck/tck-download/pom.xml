@@ -51,6 +51,7 @@
         <module>jakarta-pages-tck</module>
         <module>jakarta-pages-tags-tck</module>
         <module>jakarta-pages-debugging-tck</module>
+        <module>jakarta-security-tck</module>
         <module>jakarta-servlet-tck</module>
         <module>jakarta-websocket-tck</module>
     </modules>

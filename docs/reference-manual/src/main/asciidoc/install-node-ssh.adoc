@@ -2,7 +2,7 @@ type=page
 status=published
 title=install-node-ssh
 next=jms-ping.html
-prev=install-node-dcom.html
+prev=install-node.html
 ~~~~~~
 
 = install-node-ssh
@@ -38,11 +38,7 @@ software is being installed.
 [NOTE]
 ====
 This subcommand is equivalent to the
-xref:install-node.adoc#install-node[`install-node`(1)] subcommand. To
-install {productName} software on hosts that use the Distributed
-Component Object Model (DCOM) remote protocol, use the
-xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)]
-subcommand.
+xref:install-node.adoc#install-node[`install-node`(1)] subcommand.
 ====
 
 If necessary, the subcommand creates a ZIP archive of the
@@ -208,7 +204,6 @@ Command install-node-ssh executed successfully
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:install-node.adoc#install-node[`install-node`(1)],
-xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
 xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
 xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 

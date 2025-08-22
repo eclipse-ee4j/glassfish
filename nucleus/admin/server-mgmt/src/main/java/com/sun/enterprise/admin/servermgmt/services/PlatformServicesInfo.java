@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,7 @@ import com.sun.enterprise.util.io.ServerDirs;
 import java.io.File;
 import java.util.Date;
 
-import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICE_NAME_PREFIX;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * A place to keep platform services info...
@@ -39,13 +39,11 @@ public class PlatformServicesInfo {
     final ServerDirs serverDirs;
     final AppserverServiceType type;
     // accessed by classes in this package
-    String fqsn;
     String serviceName;
     boolean dryRun;
     String osUser;
     boolean trace;
     File libDir;
-    String smfFullServiceName;
     File asadminScript;
     boolean force;
     String serviceUser;
@@ -79,9 +77,6 @@ public class PlatformServicesInfo {
         setLibDir();
         setAsadmin();
         osUser = System.getProperty("user.name");
-        // used by SMF only
-        fqsn = serverDirs.getServerName() + serverDirs.getServerParentDir().getPath().replace('/', '_');
-        smfFullServiceName = SERVICE_NAME_PREFIX + serviceName;
     }
 
     /**
@@ -140,11 +135,11 @@ public class PlatformServicesInfo {
     }
 
     private void setInstallRootDir() {
-        String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        String ir = System.getProperty(INSTALL_ROOT.getSystemPropertyName());
 
         if (!StringUtils.ok(ir)) {
-            throw new RuntimeException(
-                    Strings.get("internal.error", "System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+            throw new RuntimeException(Strings.get("internal.error",
+                "System Property not set: " + INSTALL_ROOT.getSystemPropertyName()));
         }
 
         installRootDir = SmartFile.sanitize(new File(ir));

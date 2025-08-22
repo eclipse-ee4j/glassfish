@@ -55,8 +55,13 @@ import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
+import org.glassfish.main.jdke.security.KeyTool;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -80,13 +85,14 @@ public class GlassFishTestEnvironment {
 
     private static final File ASADMIN = findAsadmin();
     private static final File STARTSERV = findStartServ();
-    private static final File KEYTOOL = findKeyTool();
     private static final File JARSIGNER = findJarSigner();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
-    private static final int ASADMIN_START_DOMAIN_TIMEOUT = 30_000;
-    private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 300_000;
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT = 60_000;
+    /** 1 day. Useful for debugging */
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 1000 * 60 * 60 * 24;
+
     private static HttpClient client = null;
 
     static {
@@ -97,17 +103,11 @@ public class GlassFishTestEnvironment {
             getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
         });
         Runtime.getRuntime().addShutdownHook(hook);
-        Asadmin asadmin = getAsadmin().withEnv(ADMIN_USER, ADMIN_PASSWORD);
-        if (System.getenv("AS_START_TIMEOUT") == null) {
-            // AS_START_TIMEOUT for the detection that "the server is running!"
-            // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
-            asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
-        }
         final int timeout = isStartDomainSuspendEnabled()
                 ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
         // This is the absolutely first start - if it fails, all other starts will fail too.
         // Note: --suspend implicitly enables --debug
-        assertThat(asadmin.exec(timeout,"start-domain",
+        assertThat(getAsadmin().exec(timeout,"start-domain",
                 isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
     }
 
@@ -152,13 +152,15 @@ public class GlassFishTestEnvironment {
     }
 
 
-    public static KeyTool getKeyTool() {
-        return new KeyTool(KEYTOOL);
-    }
-
-
     public static JarSigner getJarSigner() {
         return new JarSigner(JARSIGNER);
+    }
+
+    /**
+     * @return {@link Asadmin} command api for tests.
+     */
+    public static File getAppClient() {
+        return new File(getGlassFishDirectory(), isWindows() ? "bin/appclient.bat" : "bin/appclient");
     }
 
     /**
@@ -178,14 +180,22 @@ public class GlassFishTestEnvironment {
 
 
     public static KeyStore getDomain1KeyStore() {
-        Path keystore = getDomain1Directory().resolve(Paths.get("config", "keystore.jks"));
-        return KeyTool.loadKeyStore(keystore.toFile(), "changeit".toCharArray());
+        Path keystore = getDomain1Directory().resolve(Paths.get("config", KEYSTORE_FILENAME_DEFAULT));
+        try {
+            return new KeyTool(keystore.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 
     public static KeyStore getDomain1TrustStore() {
-        Path cacerts = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"));
-        return KeyTool.loadKeyStore(cacerts.toFile(), "changeit".toCharArray());
+        Path cacerts = getDomain1Directory().resolve(Paths.get("config", TRUSTSTORE_FILENAME_DEFAULT));
+        try {
+            return new KeyTool(cacerts.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 
@@ -372,13 +382,8 @@ public class GlassFishTestEnvironment {
         return new File(GF_ROOT, isWindows() ? prefix + "bin/startserv.bat" : prefix + "bin/startserv");
     }
 
-
-    private static File findKeyTool() {
-        return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.exe" : "bin/keytool");
-    }
-
     private static File findJarSigner() {
-        return new File(System.getProperty("java.home"), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
+        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
     }
 
     private static boolean isWindows() {

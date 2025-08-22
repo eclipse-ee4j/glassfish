@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>8.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>tck-expression-language</artifactId>
+    <packaging>jar</packaging>
+
+    <name>TCK: Expression Language</name>
+    <description>Expression Language TCK</description>
+
+    <properties>
+        <tck.artifactId>tck-expression-language-download</tck.artifactId>
+        <tck.home>${project.build.directory}/expression-language-tck</tck.home>
+        <glassfish.modules>${glassfish.home}/glassfish/modules</glassfish.modules>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>tck-expression-language-download</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>2.0.17</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>unpack-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <dependenciesToScan>org.glassfish.main.tests.tck:tck-expression-language-download</dependenciesToScan>
+                    <systemPropertyVariables>
+                        <variable.mapper>org.glassfish.expressly.lang.VariableMapperImpl</variable.mapper>
+                        <!-- signature test properties-->
+                        <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
+                        <el.classes>${glassfish.modules}/jakarta.el-api.jar:${glassfish.modules}/expressly.jar</el.classes>
+                        <sigTestClasspath>${glassfish.modules}/jakarta.el-api.jar:${glassfish.modules}/expressly.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</sigTestClasspath>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

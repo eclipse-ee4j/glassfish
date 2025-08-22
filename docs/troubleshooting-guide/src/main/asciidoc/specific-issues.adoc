@@ -10,7 +10,7 @@ prev=overview.html
 [[specific-issues]]
 == 2 Specific Issues
 
-This chapter lists problems that you might encounter when using {productName} 7. The following topics are addressed:
+This chapter lists problems that you might encounter when using {productName} {product-majorVersion}. The following topics are addressed:
 
 * xref:#cannot-access-local-server-httplocalhost8080[Cannot Access Local Server (`http://localhost:8080`)]
 * xref:#cannot-access-remote-server[Cannot Access Remote Server]
@@ -340,7 +340,7 @@ You experience JDK-related issues in a variety of circumstances.
 
 ==== Solution
 
-{productName} 7 requires JDK 11, so check your system for that dependency.
+{productName} 7.1 requires JDK 17, so check your system for that dependency.
 
 Ensure that the required JDK software is installed and that the
 `JAVA_HOME` environment variable points to the JDK installation
@@ -590,7 +590,7 @@ profilers also stop tracing as soon as they reach a class object or
 classloader.
 
 One diagnostic approach involves undeploying the application and
-triggering a memory dump using the JDK 11 `jcmd` tool.
+triggering a memory dump using the JDK 17 `jcmd` tool.
 The simplest analysis is to list all instances of `java.lang.Class`
 and look for class objects that have many instances.
 This is a sign that the class has been loaded
@@ -664,38 +664,6 @@ inability to stop the domain.
 [[issues-related-to-installation]]
 
 === Issues Related to Installation
-
-[[installation-hangs-during-update-tool-configuration]]
-
-==== Installation Hangs During Update Tool Configuration
-
-[[description-16]]
-
-===== Description
-
-Installation hangs more than five minutes during Update Tool configuration.
-
-[[solution-13]]
-
-===== Solution
-
-Cancel the installation and run the installation program again, but this
-time deselect the Install Update Tool check box. Update Tool can be
-installed later from as-install``/bin/``. For more information about
-Update Tool, see "xref:administration-guide.adoc#GSADG00701[Update Tool]"
-in {productName} Administration Guide. For general information about
-{productName}installation, see the xref:installation-guide.adoc#GSING[
-{productName} Installation Guide].
-
-
-[NOTE]
-====
-Update Tool differs from Upgrade Tool, which is used to migrate the
-configuration and deployed applications from an earlier version of
-{productName} to the current version.
-For more information about Upgrade Tool and upgrading, see the
-xref:upgrade-guide.adoc#GSUPG[{productName} Upgrade Guide].
-====
 
 
 [[glassfish-server-components-not-removed-during-uninstallation]]

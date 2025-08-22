@@ -1,31 +1,31 @@
 type=page
 status=published
-title={productName} Quick Start Guide, Release 7
+title={productName} Quick Start Guide, Release {product-majorVersion}
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= {productName} Quick Start Guide, Release 7
+= {productName} Quick Start Guide, Release {product-majorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Quick Start Guide
 
-Release 7
+Release {product-majorVersion}
 
 Contributed 2018 - 2024
 
 This book demonstrates key features of the {productName} product and
 enables you to quickly learn the basics. Step-by-step procedures
-introduce you to product features and {productName} 7 Quick Start Guide {productName} 7
+introduce you to product features and {productName} {product-majorVersion} Quick Start Guide {productName} {product-majorVersion}
 Quick Start Guide you to use them immediately.
 
 [[sthref1]]
 
 '''''
 
-{productName} Quick Start Guide, Release 7
+{productName} Quick Start Guide, Release {product-majorVersion}
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

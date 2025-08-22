@@ -20,7 +20,7 @@
 
 <sun-application>
 
-    <!-- See readme for an explanation of all the security role mappings 
+    <!-- See readme for an explanation of all the security role mappings
         in this file and the ejb and web module files. -->
     <security-role-mapping>
         <role-name>role1</role-name>

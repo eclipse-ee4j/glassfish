@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * The one and only type of Exception that will be thrown out of this package. I18N is wired in. If a String message is

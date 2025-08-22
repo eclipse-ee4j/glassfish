@@ -94,7 +94,7 @@ public class CreateProfilerTest {
 
         adminSubject = mockGenerator.createAsadminSubject();
         context = new AdminCommandContextImpl(
-            LogDomains.getLogger(CreateProfilerTest.class, LogDomains.ADMIN_LOGGER),
+            LogDomains.getLogger(CreateProfilerTest.class, LogDomains.ADMIN_LOGGER, false),
             locator.<ActionReport>getService(PlainTextActionReporter.class));
     }
 

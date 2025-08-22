@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,12 +35,21 @@
     <description>Aggregates dependencies and runs the Servlet TCK on GlassFish</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <tck.home>${project.build.directory}/servlet-tck</tck.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
 
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+
+        <port.admin>14848</port.admin>
+        <port.derby>11527</port.derby>
+        <port.http>18080</port.http>
+        <port.https>18181</port.https>
+        <port.jms>17676</port.jms>
+        <port.jmx>18686</port.jmx>
+        <port.orb>13700</port.orb>
+        <port.orb.mutual>13920</port.orb.mutual>
+        <port.orb.ssl>13820</port.orb.ssl>
+        <port.harness.log>12000</port.harness.log>
     </properties>
 
     <dependencyManagement>
@@ -58,50 +67,9 @@
     <dependencies>
         <!-- Jakarta EE APIs -->
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-        </dependency>
-
-        <!-- Dependencies for our archive enhancer (org.glassfish.servlet.tck.WebArchiveUpdater) to compile -->
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-spi</artifactId>
-        </dependency>
-         <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-impl-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.14</version>
-        </dependency>
-
-        <!-- Jakarta Servlet TCK -->
-        <dependency>
-            <groupId>jakarta.tck</groupId>
-            <artifactId>servlet-tck-runtime</artifactId>
-            <version>6.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.tck</groupId>
-            <artifactId>servlet-tck-util</artifactId>
-            <version>6.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Junit 5 -->
-        <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-container</artifactId>
-            <scope>test</scope>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -121,27 +89,10 @@
             <version>2.2</version>
             <scope>test</scope>
         </dependency>
-
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
-        <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.6</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>

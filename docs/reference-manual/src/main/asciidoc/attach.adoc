@@ -18,7 +18,9 @@ that contain progress information
 
 [source]
 ----
-asadmin [asadmin-options] attach [--help]
+asadmin attach
+[--help|-?]
+[--timeout <timeout>]
 job_id
 ----
 
@@ -46,6 +48,11 @@ asadmin-options::
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The job status is unknown
+  in such case.
 
 === Operands
 
@@ -68,6 +75,33 @@ progress, the output displays the current status, for example,
 asadmin> attach 20
 Finished execution of deploy
 Command attach executed successfully.
+----
+
+[[CBHDFEGC]]
+
+==== Example 2   Usage in scripts
+
+This example deploys an ear file while we continue configuring the domain.
+Then attaches to the `deploy` subcommand and shows that the job is finished.
+As showing progress is not useful in scripts, we use `--terse` to wait
+for the result.
+
+Note: Don't execute it on command line, failure would exit your active shell!
+
+[source]
+----
+#!/bin/bash
+set -e
+jobid=$(asadmin --terse --detach deploy ./application.ear)
+echo $jobid
+1
+# Here you can add other commands
+asadmin ...
+result="$(asadmin --terse attach ${jobid})"
+if [[ $result =~ "FAILURE" ]]; then
+   echo "${result}"
+   exit 1;
+fi
 ----
 
 === Exit Status

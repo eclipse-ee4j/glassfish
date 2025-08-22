@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.admin.AdminConsoleConfigUpgrade;
 
 import jakarta.annotation.PostConstruct;
@@ -72,6 +71,7 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.types.Property;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * An HK-2 Service that provides the functionality so that admin console access is handled properly.
@@ -467,17 +467,18 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
 
         Property locationProperty = adminService.getProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION);
         if (locationProperty == null || locationProperty.getValue() == null || locationProperty.getValue().isEmpty()) {
-            warFile = Path.of(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY),
-                    "lib/install/applications/admingui.war");
+            warFile = Path.of(System.getProperty(INSTALL_ROOT.getSystemPropertyName()),
+                "lib/install/applications/admingui.war");
             writeAdminServiceProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION,
-                    "${" + SystemPropertyConstants.INSTALL_ROOT_PROPERTY + "}/lib/install/applications/admingui.war");
+                INSTALL_ROOT.toExpression() + "/lib/install/applications/admingui.war");
         } else {
             // For any non-absolute path, we start from the installation, ie glassfish8
             // eg, v3 prelude upgrade, where the location property was "glassfish/lib..."
             String locationValue = locationProperty.getValue();
             warFile = Path.of(locationValue);
             if (!warFile.isAbsolute()) {
-                warFile = Path.of(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)).resolveSibling(locationValue);
+                warFile = Path.of(System.getProperty(INSTALL_ROOT.getSystemPropertyName()))
+                    .resolveSibling(locationValue);
             }
         }
 

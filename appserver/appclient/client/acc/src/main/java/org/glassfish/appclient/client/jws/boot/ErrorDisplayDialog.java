@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.glassfish.appclient.client.acc.UserError;
+import org.glassfish.embeddable.client.UserError;
 
 /**
  * Displays errors detected after Java Web Start has launched the

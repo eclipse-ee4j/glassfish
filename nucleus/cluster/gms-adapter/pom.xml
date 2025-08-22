@@ -93,16 +93,6 @@
                     </instructions>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Class-Path>shoal-gms-impl.jar</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

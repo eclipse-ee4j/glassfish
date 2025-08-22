@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -73,4 +74,8 @@ public class ProgressStatusEventComplete extends ProgressStatusEvent implements 
         return true;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[id=" + getSourceId() + ", message=" + getMessage() + ']';
+    }
 }

@@ -39,7 +39,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.glassfish.weld.connector.WeldUtils;
 import org.glassfish.weld.connector.WeldUtils.BDAType;
 import org.glassfish.weld.ejb.EjbDescriptorImpl;

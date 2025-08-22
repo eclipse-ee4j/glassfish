@@ -85,8 +85,11 @@
        <echo message="Running with ${embedded.classpath} in classpath"/>
        <java  fork="on"
               failonerror="true"
+              modulepath="${env.S1AS_HOME}/lib/bootstrap"
               classpath="${assemble.dir}/${appname}-all.jar:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}"
               classname="${se.client}">
+           <jvmarg value="--add-modules" />
+           <jvmarg value="ALL-MODULE-PATH" />
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
            <arg line="${appname}-all"/>

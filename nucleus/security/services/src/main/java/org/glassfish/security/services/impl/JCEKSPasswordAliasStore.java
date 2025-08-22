@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.security.services.impl;
 
 import com.sun.enterprise.security.store.PasswordAdapter;
@@ -21,7 +21,6 @@ import com.sun.enterprise.util.Utility;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -32,6 +31,8 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 
 import org.glassfish.api.admin.PasswordAliasStore;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Provides the PasswordAliasStore behavior using a JCEKS keystore.
@@ -59,9 +60,7 @@ import org.glassfish.api.admin.PasswordAliasStore;
  */
 public class JCEKSPasswordAliasStore implements PasswordAliasStore {
 
-    private final static Charset utf8 = Charset.forName("UTF-8");
-
-    private PasswordAdapter pa = null;
+    private PasswordAdapter pa;
     private String pathToAliasStore;
     private char[] storePassword;
 
@@ -101,7 +100,7 @@ public class JCEKSPasswordAliasStore implements PasswordAliasStore {
     @Override
     public void put(String alias, char[] password) {
         final CharBuffer charBuffer = CharBuffer.wrap(password);
-        final ByteBuffer byteBuffer = utf8.encode(charBuffer);
+        final ByteBuffer byteBuffer = UTF_8.encode(charBuffer);
         try {
             pa().setPasswordForAlias(alias, Utility.toByteArray(byteBuffer));
         } catch (Exception ex) {
@@ -150,7 +149,7 @@ public class JCEKSPasswordAliasStore implements PasswordAliasStore {
         try {
             final SecretKey secretKey = pa().getPasswordSecretKeyForAlias(alias);
             final ByteBuffer byteBuffer = ByteBuffer.wrap(secretKey.getEncoded());
-            return Utility.toCharArray(utf8.decode(byteBuffer));
+            return Utility.toCharArray(UTF_8.decode(byteBuffer));
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

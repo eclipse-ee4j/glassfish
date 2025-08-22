@@ -115,6 +115,7 @@
         <fileset dir="${s1as.home}/modules">
             <include name="**/*.jar" />
         </fileset>
+        <pathelement location="${s1as.home}/lib/appclient/weld-se-shaded.jar" />
     </path>
 
     <path id="test.compile.classpath">

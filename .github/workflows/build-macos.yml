@@ -1,16 +1,12 @@
-name: Build on MacOS
 
+name: Build GlassFish on MacOS
 on:
   pull_request:
-    branches:
-    - "master"
-    - "8.0"
-
+    branches: [ "master", "7.0", "8.0" ]
 jobs:
   build:
-
     runs-on: macos-15
-
+    name: Build GlassFish on MacOS
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK
@@ -25,3 +21,11 @@ jobs:
       run: mvn -B -e -ntp install -Pstaging -Pqa '-Dcheckstyle.skip=true' -Pfastest
     - name: Test Starts
       run: mvn -B -e -ntp install -Pstaging '-Dcheckstyle.skip=true' -pl :glassfish-itest-tools
+    - name: Upload server logs
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: server-logs
+        path: '**/server.log*'
+        retention-days: 3
+

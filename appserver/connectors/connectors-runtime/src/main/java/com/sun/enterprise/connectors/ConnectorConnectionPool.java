@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,26 +48,26 @@ public class ConnectorConnectionPool implements Serializable {
 
     private static final Logger LOG = LogDomains.getLogger(ConnectorConnectionPool.class, LogDomains.RSR_LOGGER);
 
-    protected ConnectorDescriptorInfo connectorDescriptorInfo_;
+    protected ConnectorDescriptorInfo connectorDescriptorInfo;
 
-    protected String steadyPoolSize_;
-    protected String maxPoolSize_;
-    protected String maxWaitTimeInMillis_;
-    protected String poolResizeQuantity_;
-    protected String idleTimeoutInSeconds_;
-    protected boolean failAllConnections_;
+    protected String steadyPoolSize;
+    protected String maxPoolSize;
+    protected String maxWaitTimeInMillis;
+    protected String poolResizeQuantity;
+    protected String idleTimeoutInSeconds;
+    protected boolean failAllConnections;
     //This property will *always* initially be set to:
     // true - by ConnectorConnectionPoolDeployer
     // false - by JdbcConnectionPoolDeployer
-    protected boolean matchConnections_;
+    protected boolean matchConnections;
 
-    protected int transactionSupport_;
-    protected boolean isConnectionValidationRequired_;
+    protected int transactionSupport;
+    protected boolean isConnectionValidationRequired;
 
 
-    private boolean lazyConnectionAssoc_;
-    private boolean lazyConnectionEnlist_;
-    private boolean associateWithThread_;
+    private boolean lazyConnectionAssoc;
+    private boolean lazyConnectionEnlist;
+    private boolean associateWithThread;
     private boolean partitionedPool;
     private boolean poolingOn = true;
     private boolean pingDuringPoolCreation;
@@ -75,13 +75,13 @@ public class ConnectorConnectionPool implements Serializable {
     private String poolWaitQueue;
     private String dataStructureParameters;
     private String resourceGatewayClass;
-    private boolean nonTransactional_;
-    private boolean nonComponent_;
+    private boolean nonTransactional;
+    private boolean nonComponent;
 
     private long dynamicReconfigWaitTimeout;
 
     private ConnectorSecurityMap[] securityMaps;
-    private boolean isAuthCredentialsDefinedInPool_;
+    private boolean isAuthCredentialsDefinedInPool;
 
     private String maxConnectionUsage;
 
@@ -92,15 +92,15 @@ public class ConnectorConnectionPool implements Serializable {
     private boolean validateAtmostEveryIdleSecs;
     //This property will be set by ConnectorConnectionPoolDeployer or
     //JdbcConnectionPoolDeployer.
-    private boolean preferValidateOverRecreate_;
+    private boolean preferValidateOverRecreate;
 
-    private String validateAtmostOncePeriod_;
+    private String validateAtmostOncePeriod;
 
-    private String conCreationRetryAttempts_;
-    private String conCreationRetryInterval_;
+    private String conCreationRetryAttempts;
+    private String conCreationRetryInterval;
 
-    private String connectionLeakTracingTimeout_;
-    private boolean connectionReclaim_;
+    private String connectionLeakTracingTimeout;
+    private boolean connectionReclaim;
 
     private final SimpleJndiName name;
     private String applicationName;
@@ -122,16 +122,13 @@ public class ConnectorConnectionPool implements Serializable {
         this.applicationName = applicationName;
     }
 
-
     public String getModuleName() {
         return moduleName;
     }
 
-
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
     }
-
 
     public boolean isApplicationScopedResource() {
         return applicationName != null;
@@ -147,20 +144,24 @@ public class ConnectorConnectionPool implements Serializable {
      * @param enabled enables/disables ping during creation.
      */
     public void setPingDuringPoolCreation(boolean enabled) {
-        pingDuringPoolCreation = enabled;
+        this.pingDuringPoolCreation = enabled;
     }
 
+    /**
+     * Getter of "--pooling, pooling" attribute
+     * @return true if pooling is on, otherwise false
+     */
     public boolean isPoolingOn() {
         return poolingOn;
     }
 
     /**
-     * Setter method of pooling attribute
+     * Setter method of "--pooling, pooling" attribute
      *
      * @param enabled enables/disables pooling
      */
     public void setPooling(boolean enabled) {
-        poolingOn = enabled;
+        this.poolingOn = enabled;
     }
 
     public SimpleJndiName getName() {
@@ -168,178 +169,163 @@ public class ConnectorConnectionPool implements Serializable {
     }
 
     public void setAuthCredentialsDefinedInPool(boolean authCred) {
-        this.isAuthCredentialsDefinedInPool_ = authCred;
+        this.isAuthCredentialsDefinedInPool = authCred;
     }
 
     public boolean getAuthCredentialsDefinedInPool() {
-        return this.isAuthCredentialsDefinedInPool_;
+        return this.isAuthCredentialsDefinedInPool;
     }
 
     /**
      * Getter method of ConnectorDescriptorInfo which contains some the ra.xml
-     * values pertainining to managed connection factory
+     * values pertaining to managed connection factory
      *
      * @return ConnectorDescriptorInfo which contains ra.xml values
      *         pertaining to managed connection factory
      */
-
     public ConnectorDescriptorInfo getConnectorDescriptorInfo() {
-        return connectorDescriptorInfo_;
+        return connectorDescriptorInfo;
     }
 
     /**
      * Setter method of ConnectorDescriptorInfo which contains some the ra.xml
-     * values pertainining to managed connection factory
+     * values pertaining to managed connection factory
      *
      * @param connectorDescriptorInfo which contains ra.xml values
      *                                pertaining to managed connection factory
      */
-
     public void setConnectorDescriptorInfo(
             ConnectorDescriptorInfo connectorDescriptorInfo) {
-        connectorDescriptorInfo_ = connectorDescriptorInfo;
+        this.connectorDescriptorInfo = connectorDescriptorInfo;
     }
 
-
     /**
-     * Getter method of SteadyPoolSize property
+     * Getter method of "--steadypoolsize, steady-pool-size" property
      *
      * @return Steady Pool Size value
      */
-
     public String getSteadyPoolSize() {
-        return steadyPoolSize_;
+        return steadyPoolSize;
     }
 
     /**
-     * Setter method of SteadyPoolSize property
+     * Setter method of "--steadypoolsize, steady-pool-size" property
      *
      * @param steadyPoolSize Steady pool size value
      */
 
     public void setSteadyPoolSize(String steadyPoolSize) {
-        steadyPoolSize_ = steadyPoolSize;
+        this.steadyPoolSize = steadyPoolSize;
     }
 
     /**
-     * Getter method of MaxPoolSize property
+     * Getter method of "--maxpoolsize, max-pool-size" property
      *
      * @return maximum Pool Size value
      */
-
     public String getMaxPoolSize() {
-        return maxPoolSize_;
+        return maxPoolSize;
     }
 
     /**
-     * Setter method of MaxPoolSize property
+     * Setter method of "--maxpoolsize, max-pool-size" property
      *
      * @param maxPoolSize maximum pool size value
      */
-
     public void setMaxPoolSize(String maxPoolSize) {
-        maxPoolSize_ = maxPoolSize;
+        this.maxPoolSize = maxPoolSize;
     }
 
     /**
-     * Getter method of MaxWaitTimeInMillis property
+     * Getter method of "--maxwait, max-wait-time-in-millis" property
      *
-     * @return maximum wait time in milli value
+     * @return maximum wait time in milliseconds
      */
-
     public String getMaxWaitTimeInMillis() {
-        return maxWaitTimeInMillis_;
+        return maxWaitTimeInMillis;
     }
 
     /**
-     * Setter method of MaxWaitTimeInMillis property
+     * Setter method of "--maxwait, max-wait-time-in-millis" property
      *
      * @param maxWaitTimeInMillis maximum wait time in millis value
      */
-
     public void setMaxWaitTimeInMillis(String maxWaitTimeInMillis) {
-        maxWaitTimeInMillis_ = maxWaitTimeInMillis;
+        this.maxWaitTimeInMillis = maxWaitTimeInMillis;
     }
 
     /**
-     * Getter method of PoolResizeQuantity property
+     * Getter method of "--poolresize, pool-resize-quantity" property
      *
      * @return pool resize quantity value
      */
-
     public String getPoolResizeQuantity() {
-        return poolResizeQuantity_;
+        return poolResizeQuantity;
     }
 
     /**
-     * Setter method of PoolResizeQuantity property
+     * Setter method of "--poolresize, pool-resize-quantity" property
      *
      * @param poolResizeQuantity pool resize quantity value
      */
 
     public void setPoolResizeQuantity(String poolResizeQuantity) {
-        poolResizeQuantity_ = poolResizeQuantity;
+        this.poolResizeQuantity = poolResizeQuantity;
     }
 
     /**
-     * Getter method of IdleTimeoutInSeconds property
+     * Getter method of "--idletimeout, idle-timeout-in-seconds" property
      *
      * @return idle Timeout in seconds value
      */
-
     public String getIdleTimeoutInSeconds() {
-        return idleTimeoutInSeconds_;
+        return idleTimeoutInSeconds;
     }
 
     /**
-     * Setter method of IdleTimeoutInSeconds property
+     * Setter method of "--idletimeout, idle-timeout-in-seconds" property
      *
      * @param idleTimeoutInSeconds Idle timeout in seconds value
      */
-
     public void setIdleTimeoutInSeconds(String idleTimeoutInSeconds) {
-        idleTimeoutInSeconds_ = idleTimeoutInSeconds;
+        this.idleTimeoutInSeconds = idleTimeoutInSeconds;
     }
 
     /**
-     * Getter method of FailAllConnections property
+     * Getter method of "--failconnection, fail-all-connections" property
      *
      * @return whether to fail all connections or not
      */
-
     public boolean isFailAllConnections() {
-        return failAllConnections_;
+        return failAllConnections;
     }
 
     /**
-     * Setter method of FailAllConnections property
+     * Setter method of "--failconnection, fail-all-connections" property
      *
      * @param failAllConnections fail all connections value
      */
-
     public void setFailAllConnections(boolean failAllConnections) {
-        failAllConnections_ = failAllConnections;
+        this.failAllConnections = failAllConnections;
     }
 
     /**
-     * Getter method of matchConnections property
+     * Getter method of "--matchconnections, match-connections" property
      *
      * @return whether to match connections always with resource adapter
      *         or not
      */
-
     public boolean matchConnections() {
-        return matchConnections_;
+        return matchConnections;
     }
 
     /**
-     * Setter method of matchConnections property
+     * Setter method of "--matchconnections, match-connections" property
      *
      * @param matchConnections fail all connections value
      */
-
     public void setMatchConnections(boolean matchConnections) {
-        matchConnections_ = matchConnections;
+        this.matchConnections = matchConnections;
     }
 
     /**
@@ -354,11 +340,12 @@ public class ConnectorConnectionPool implements Serializable {
      * @return the transaction support level for this pool
      */
     public int getTransactionSupport() {
-        return transactionSupport_;
+        return transactionSupport;
     }
 
     /**
-     * Sets the transaction support level for this pool
+     * Sets the transaction support level for this pool.<br>
+     * Property: "--transactionsupport, transaction-support"<br>
      * The valid values are<br>
      *
      * @param transactionSupport int representing transaction support<br>
@@ -369,159 +356,155 @@ public class ConnectorConnectionPool implements Serializable {
      *                           </ul>
      */
     public void setTransactionSupport(int transactionSupport) {
-        transactionSupport_ = transactionSupport;
+        this.transactionSupport = transactionSupport;
     }
 
     /**
-     * Sets the connection-validation-required pool attribute
+     * Sets the "--isconnectvalidatereq, is-connection-validation-required" pool attribute
      *
      * @param validation boolean representing validation requirement
      */
     public void setConnectionValidationRequired(boolean validation) {
-        isConnectionValidationRequired_ = validation;
+        isConnectionValidationRequired = validation;
     }
 
     /**
-     * Queries the connection-validation-required pool attribute
+     * Queries the "--isconnectvalidatereq, is-connection-validation-required" pool attribute
      *
      * @return boolean representing validation requirement
      */
     public boolean isIsConnectionValidationRequired() {
-        return isConnectionValidationRequired_;
+        return isConnectionValidationRequired;
     }
 
     /**
-     * Queries the lazy-connection-association pool attribute
+     * Queries the "--lazyconnectionassociation, lazy-connection-association" pool attribute
      *
      * @return boolean representing lazy-connection-association status
      */
     public boolean isLazyConnectionAssoc() {
-        return lazyConnectionAssoc_;
+        return lazyConnectionAssoc;
     }
 
     /**
-     * Setter method of lazyConnectionAssociation attribute
+     * Setter method of "--lazyconnectionassociation, lazy-connection-association" attribute
      *
      * @param enabled enables/disables lazy-connection-association
      */
     public void setLazyConnectionAssoc(boolean enabled) {
-        lazyConnectionAssoc_ = enabled;
+        this.lazyConnectionAssoc = enabled;
     }
 
     /**
-     * Queries the lazy-connection-enlistment pool attribute
+     * Queries the "--lazyconnectionenlistment, lazy-connection-enlistment" pool attribute
      *
      * @return boolean representing lazy-connection-enlistment status
      */
     public boolean isLazyConnectionEnlist() {
-        return lazyConnectionEnlist_;
+        return lazyConnectionEnlist;
     }
 
     /**
-     * Setter method of lazy-connection-enlistment attribute
+     * Setter method of "--lazyconnectionenlistment, lazy-connection-enlistment" attribute
      *
      * @param enabled enables/disables lazy-connection-enlistment
      */
     public void setLazyConnectionEnlist(boolean enabled) {
-        lazyConnectionEnlist_ = enabled;
+        this.lazyConnectionEnlist = enabled;
     }
 
     /**
-     * Queries the associate-with-thread pool attribute
+     * Queries the "--associatewiththread, associate-with-thread" pool attribute
      *
      * @return boolean representing associate-with-thread status
      */
     public boolean isAssociateWithThread() {
-        return associateWithThread_;
+        return associateWithThread;
     }
 
     /**
-     * Setter method of associate-with-thread attribute
+     * Setter method of "--associatewiththread, associate-with-thread" attribute
      *
      * @param enabled enables/disables associate-with-thread
      */
     public void setAssociateWithThread(boolean enabled) {
-        associateWithThread_ = enabled;
+        this.associateWithThread = enabled;
     }
 
     /**
-     * Queries the non-transactional pool attribute
+     * Queries the "--nontransactionalconnections, non-transactional-connections" pool attribute
      *
      * @return boolean representing non-transactional status
      */
     public boolean isNonTransactional() {
-        return nonTransactional_;
+        return nonTransactional;
     }
 
     /**
-     * Setter method of non-transactional attribute
+     * Setter method of "--nontransactionalconnections, non-transactional-connections" attribute
      *
      * @param enabled enables/disables non-transactional status
      */
     public void setNonTransactional(boolean enabled) {
-        nonTransactional_ = enabled;
+        this.nonTransactional = enabled;
     }
 
     /**
-     * Queries the non-component pool attribute
+     * Queries the "--allownoncomponentcallers, allow-non-component-callers" pool attribute
      *
      * @return boolean representing non-component status
      */
     public boolean isNonComponent() {
-        return nonComponent_;
+        return nonComponent;
     }
 
     /**
-     * Setter method of non-component attribute
+     * Setter method of "--allownoncomponentcallers, allow-non-component-callers" attribute
      *
      * @param enabled enables/disables non-component status
      */
     public void setNonComponent(boolean enabled) {
-        nonComponent_ = enabled;
+        this.nonComponent = enabled;
     }
 
     /**
-     * Queries the connection-leak-tracing-timeout pool attribute
+     * Queries the "--leaktimeout, connection-leak-timeout-in-seconds" pool attribute
      *
      * @return boolean representing connection-leak-tracing-timeout status
      */
     public String getConnectionLeakTracingTimeout() {
-        return connectionLeakTracingTimeout_;
+        return connectionLeakTracingTimeout;
     }
 
     /**
-     * Setter method of connection-leak-tracing-timeout attribute
+     * Setter method of "--leaktimeout, connection-leak-timeout-in-seconds" attribute
      *
      * @param timeout value after which connection is assumed to be leaked.
      */
     public void setConnectionLeakTracingTimeout(String timeout) {
-        connectionLeakTracingTimeout_ = timeout;
+        this.connectionLeakTracingTimeout = timeout;
     }
 
-
     /**
-     * Setter method for Security Maps
+     * Setter method for "security-map" pool attributes
      *
      * @param securityMapArray SecurityMap[]
      */
-
     public void setSecurityMaps(ConnectorSecurityMap[] securityMapArray) {
         this.securityMaps = securityMapArray;
     }
 
     /**
-     * Getter method for Security Maps
+     * Getter method for "security-map" pool attributes
      *
      * @return SecurityMap[]
      */
-
     public ConnectorSecurityMap[] getSecurityMaps() {
         return this.securityMaps;
     }
 
-
     /**
-     * Queries the validate-atmost-every-idle-seconds pool attribute
+     * Queries the "--validateatmostonceperiod, validate-atmost-once-period-in-seconds" pool attribute
      *
      * @return boolean representing validate-atmost-every-idle-seconds
      *         status
@@ -531,7 +514,7 @@ public class ConnectorConnectionPool implements Serializable {
     }
 
     /**
-     * Setter method of validate-atmost-every-idle-seconds pool attribute
+     * Setter method of "--validateatmostonceperiod, validate-atmost-once-period-in-seconds" pool attribute
      *
      * @param enabled enables/disables validate-atmost-every-idle-seconds
      *                property
@@ -541,16 +524,16 @@ public class ConnectorConnectionPool implements Serializable {
     }
 
     /**
-     * Setter method of max-connection-usage pool attribute
+     * Setter method of "--maxconnectionusagecount, max-connection-usage-count" pool attribute
      *
-     * @param count max-connection-usage count
+     * @param count value for max-connection-usage-count
      */
     public void setMaxConnectionUsage(String count) {
-        maxConnectionUsage = count;
+        this.maxConnectionUsage = count;
     }
 
     /**
-     * Queries the max-connection-usage pool attribute
+     * Queries the "--maxconnectionusagecount, max-connection-usage-count" pool attribute
      *
      * @return boolean representing max-connection-usage count
      */
@@ -559,81 +542,81 @@ public class ConnectorConnectionPool implements Serializable {
     }
 
     /**
-     * Queries the connection-creation-retry-interval pool attribute
+     * Queries the "--creationretryinterval, connection-creation-retry-interval-in-seconds" pool attribute
      *
      * @return boolean representing connection-creation-retry-interval
      *         duration
      */
     public String getConCreationRetryInterval() {
-        return conCreationRetryInterval_;
+        return conCreationRetryInterval;
     }
 
     /**
-     * Setter method of connection-creation-retry-interval attribute
+     * Setter method of "--creationretryinterval, connection-creation-retry-interval-in-seconds" attribute
      *
      * @param retryInterval connection-creation-retry-interval  duration
      */
     public void setConCreationRetryInterval(String retryInterval) {
-        this.conCreationRetryInterval_ = retryInterval;
+        this.conCreationRetryInterval = retryInterval;
     }
 
     /**
-     * Queries the connection-creation-retry-attempt pool attribute
+     * Queries the "--creationretryattempts, connection-creation-retry-attempts" pool attribute
      *
      * @return boolean representing connection-creation-retry-attempt count
      */
     public String getConCreationRetryAttempts() {
-        return conCreationRetryAttempts_;
+        return conCreationRetryAttempts;
     }
 
     /**
-     * Setter method of connection-creation-retry-attempt attribute
+     * Setter method of "--creationretryattempts, connection-creation-retry-attempts" attribute
      *
      * @param retryAttempts connection-creation-retry-attempt interval
      *                      duration
      */
     public void setConCreationRetryAttempts(String retryAttempts) {
-        this.conCreationRetryAttempts_ = retryAttempts;
+        this.conCreationRetryAttempts = retryAttempts;
     }
 
     /**
-     * Queries the validate-atmost-period pool attribute
+     * Queries the "--validateatmostonceperiod, validate-atmost-once-period-in-seconds" pool attribute
      *
      * @return boolean representing validate-atmost-period duration
      */
     public String getValidateAtmostOncePeriod() {
-        return validateAtmostOncePeriod_;
+        return validateAtmostOncePeriod;
     }
 
     /**
-     * Setter method of validate-atmost-period attribute
+     * Setter method of "--validateatmostonceperiod, validate-atmost-once-period-in-seconds" attribute
      *
      * @param validateAtmostOncePeriod validate-atmost-period duration
      */
     public void setValidateAtmostOncePeriod(String validateAtmostOncePeriod) {
-        this.validateAtmostOncePeriod_ = validateAtmostOncePeriod;
+        this.validateAtmostOncePeriod = validateAtmostOncePeriod;
     }
 
     /**
-     * Queries the connection-reclaim attribute
+     * Queries the "--leakreclaim, connection-leak-reclaim" attribute
      *
      * @return boolean representing connection-reclaim status
      */
     public boolean isConnectionReclaim() {
-        return connectionReclaim_;
+        return connectionReclaim;
     }
 
     /**
-     * Setter method of connection-reclaim attribute
+     * Setter method of "--leakreclaim, connection-leak-reclaim" attribute
      *
      * @param connectionReclaim onnection-reclaim status
      */
     public void setConnectionReclaim(boolean connectionReclaim) {
-        this.connectionReclaim_ = connectionReclaim;
+        this.connectionReclaim = connectionReclaim;
     }
 
     /**
-     * return the String representation of the pool.
+     * Return the String representation of the pool.
      *
      * @return String representation of pool
      */
@@ -656,57 +639,57 @@ public class ConnectorConnectionPool implements Serializable {
             sb.append("\nfailAllConnections: ");
             sb.append(isFailAllConnections());
             sb.append("\nTransaction Support Level: ");
-            sb.append(transactionSupport_);
-            sb.append("\nisConnectionValidationRequired_ ");
-            sb.append(isConnectionValidationRequired_);
-            sb.append("\npreferValidateOverRecreate_ ");
-            sb.append(preferValidateOverRecreate_);
+            sb.append(transactionSupport);
+            sb.append("\nisConnectionValidationRequired ");
+            sb.append(isConnectionValidationRequired);
+            sb.append("\npreferValidateOverRecreate ");
+            sb.append(preferValidateOverRecreate);
 
-            sb.append("\nmatchConnections_ ");
-            sb.append(matchConnections_);
-            sb.append("\nassociateWithThread_ ");
-            sb.append(associateWithThread_);
-            sb.append("\nlazyConnectionAssoc_ ");
-            sb.append(lazyConnectionAssoc_);
-            sb.append("\nlazyConnectionEnlist_ ");
-            sb.append(lazyConnectionEnlist_);
-            sb.append("\nmaxConnectionUsage_ ");
+            sb.append("\nmatchConnections ");
+            sb.append(matchConnections);
+            sb.append("\nassociateWithThread ");
+            sb.append(associateWithThread);
+            sb.append("\nlazyConnectionAssoc ");
+            sb.append(lazyConnectionAssoc);
+            sb.append("\nlazyConnectionEnlist ");
+            sb.append(lazyConnectionEnlist);
+            sb.append("\nmaxConnectionUsage ");
             sb.append(maxConnectionUsage);
 
-            sb.append("\npingPoolDuringCreation_ ");
+            sb.append("\npingPoolDuringCreation ");
             sb.append(pingDuringPoolCreation);
 
-            sb.append("\npoolingOn_ ");
+            sb.append("\npoolingOn ");
             sb.append(poolingOn);
 
-            sb.append("\nvalidateAtmostOncePeriod_ ");
-            sb.append(validateAtmostOncePeriod_);
+            sb.append("\nvalidateAtmostOncePeriod ");
+            sb.append(validateAtmostOncePeriod);
 
-            sb.append("\nconnectionLeakTracingTimeout_");
-            sb.append(connectionLeakTracingTimeout_);
-            sb.append("\nconnectionReclaim_");
-            sb.append(connectionReclaim_);
+            sb.append("\nconnectionLeakTracingTimeout");
+            sb.append(connectionLeakTracingTimeout);
+            sb.append("\nconnectionReclaim");
+            sb.append(connectionReclaim);
 
-            sb.append("\nconnectionCreationRetryAttempts_");
-            sb.append(conCreationRetryAttempts_);
-            sb.append("\nconnectionCreationRetryIntervalInMilliSeconds_");
-            sb.append(conCreationRetryInterval_);
+            sb.append("\nconnectionCreationRetryAttempts");
+            sb.append(conCreationRetryAttempts);
+            sb.append("\nconnectionCreationRetryIntervalInMilliSeconds");
+            sb.append(conCreationRetryInterval);
 
-            sb.append("\nnonTransactional_ ");
-            sb.append(nonTransactional_);
-            sb.append("\nnonComponent_ ");
-            sb.append(nonComponent_);
+            sb.append("\nnonTransactional ");
+            sb.append(nonTransactional);
+            sb.append("\nnonComponent ");
+            sb.append(nonComponent);
 
             sb.append("\nConnectorDescriptorInfo -> ");
             sb.append("\nrarName: ");
-            if (connectorDescriptorInfo_ != null) {
-                sb.append(connectorDescriptorInfo_.getRarName());
+            if (connectorDescriptorInfo != null) {
+                sb.append(connectorDescriptorInfo.getRarName());
                 sb.append("\nresource adapter class: ");
-                sb.append(connectorDescriptorInfo_.getResourceAdapterClassName());
+                sb.append(connectorDescriptorInfo.getResourceAdapterClassName());
                 sb.append("\nconnection def name: ");
-                sb.append(connectorDescriptorInfo_.getConnectionDefinitionName());
+                sb.append(connectorDescriptorInfo.getConnectionDefinitionName());
                 sb.append("\nMCF Config properties-> ");
-                for (Object o : connectorDescriptorInfo_.getMCFConfigProperties()) {
+                for (Object o : connectorDescriptorInfo.getMCFConfigProperties()) {
                     ConnectorConfigProperty  ep = (ConnectorConfigProperty) o;
                     sb.append(ep.getName());
                     sb.append(":");
@@ -774,11 +757,11 @@ public class ConnectorConnectionPool implements Serializable {
     }
 
     public boolean isPreferValidateOverRecreate() {
-        return preferValidateOverRecreate_;
+        return preferValidateOverRecreate;
     }
 
     public void setPreferValidateOverRecreate(boolean preferValidateOverRecreate) {
-        preferValidateOverRecreate_ = preferValidateOverRecreate;
+        this.preferValidateOverRecreate = preferValidateOverRecreate;
     }
 
     public long getDynamicReconfigWaitTimeout() {
@@ -788,7 +771,6 @@ public class ConnectorConnectionPool implements Serializable {
     public void setDynamicReconfigWaitTimeout(long dynamicReconfigWaitTimeout) {
         this.dynamicReconfigWaitTimeout = dynamicReconfigWaitTimeout;
     }
-
 
     public PoolInfo getPoolInfo() {
         return new PoolInfo(name, applicationName, moduleName);

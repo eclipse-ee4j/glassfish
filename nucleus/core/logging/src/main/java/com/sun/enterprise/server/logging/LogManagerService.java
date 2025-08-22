@@ -21,7 +21,6 @@ import com.sun.appserv.server.util.Version;
 import com.sun.common.util.logging.LoggingConfigImpl;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.annotation.PostConstruct;
@@ -64,10 +63,10 @@ import org.glassfish.main.jul.env.LoggingSystemEnvironment;
 import org.glassfish.main.jul.handler.GlassFishLogHandler;
 import org.glassfish.main.jul.handler.GlassFishLogHandlerConfiguration;
 import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
-import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.JVM_OPT_LOGGING_CFG_FILE;
 import static org.glassfish.main.jul.handler.GlassFishLogHandler.createGlassFishLogHandlerConfiguration;
 import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.MINIMUM_ROTATION_LIMIT_MB;
@@ -283,7 +282,7 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
             if (configuredFile.exists()) {
                 return configuredFile;
             }
-            final String rootFolder = env.getProps().get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            final String rootFolder = env.getProps().get(INSTALL_ROOT.getPropertyName());
             final String templateDir = rootFolder + File.separator + "lib" + File.separator + "templates";
             final File src = new File(templateDir, ServerEnvironmentImpl.kLoggingPropertiesFileName);
             final File dest = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kLoggingPropertiesFileName);
@@ -323,7 +322,6 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
 
 
     private void reconfigure(final File configFile) {
-        GlassFishLoggingTracer.trace(getClass(), () -> "reconfigure(" + configFile + ")");
         LOG.info(() -> "Using property file: " + configFile);
         if (!GlassFishLogManager.isGlassFishLogManager()) {
             try (FileInputStream configuration = new FileInputStream(configFile)) {
@@ -337,7 +335,6 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
         try {
             final GlassFishLogManagerConfiguration cfg = getRuntimeConfiguration();
             if (cfg == null) {
-                GlassFishLoggingTracer.error(getClass(), "Logging configuration is not available!");
                 return;
             }
             final ReconfigurationAction reconfig = new ReconfigurationAction(cfg);

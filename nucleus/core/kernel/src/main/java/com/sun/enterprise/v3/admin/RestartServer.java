@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,9 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
  * For non-verbose mode: Stop this server, spawn a new JVM that will wait for this JVM to die. The new JVM then starts
@@ -50,11 +51,13 @@ public class RestartServer {
     private Properties props;
     private Logger logger;
     private boolean verbose;
+    private String modulepath;
     private String classpath;
     private String classname;
     private String argsString;
     private String[] args;
     private String serverName = "";
+
     private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
     private static final String AS_RESTART_PID = "-DAS_RESTART=" + ProcessHandle.current().pid();
     private static final String[] normalProps = { AS_RESTART_PID };
@@ -133,25 +136,27 @@ public class RestartServer {
 
     private void scheduleReincarnation() throws RDCException {
         try {
-            Runtime.getRuntime().addShutdownHook(new StartServerShutdownHook(classpath, normalProps, classname, args));
+            Runtime.getRuntime()
+                .addShutdownHook(new StartServerShutdownHook(modulepath, classpath, normalProps, classname, args));
         } catch (Exception e) {
             throw new RDCException(e);
         }
     }
 
     private boolean setupReincarnationWithAsadmin() throws RDCException {
-        classpath = props.getProperty("-asadmin-classpath");
-        classname = props.getProperty("-asadmin-classname");
-        argsString = props.getProperty("-asadmin-args");
+        modulepath = props.getProperty(BootstrapKeys.ASADMIN_MP);
+        classpath = props.getProperty(BootstrapKeys.ASADMIN_CP);
+        classname = props.getProperty(BootstrapKeys.ASADMIN_CN);
+        argsString = props.getProperty(BootstrapKeys.ASADMIN_ARGS);
 
         return verify("restart.server.asadminError");
     }
 
     private boolean setupReincarnationWithOther() throws RDCException {
-
-        classpath = props.getProperty("-startup-classpath");
-        classname = props.getProperty("-startup-classname");
-        argsString = props.getProperty("-startup-args");
+        modulepath = props.getProperty(BootstrapKeys.ORIGINAL_MP);
+        classpath = props.getProperty(BootstrapKeys.ORIGINAL_CP);
+        classname = props.getProperty(BootstrapKeys.ORIGINAL_CN);
+        argsString = props.getProperty(BootstrapKeys.ORIGINAL_ARGS);
 
         return verify("restart.server.nonAsadminError");
     }
@@ -162,12 +167,12 @@ public class RestartServer {
         // 1) true
         // 2) false
         // 3) RDCException
-        if (classpath == null && classname == null && argsString == null) {
+        if (classpath == null && modulepath == null && classname == null && argsString == null) {
             return false;
         }
 
         // now that at least one is set -- demand that ALL OF THEM be set...
-        if (!ok(classpath) || !ok(classname) || argsString == null) {
+        if (!ok(classpath) || !ok(modulepath) || !ok(classname) || argsString == null) {
             throw new RDCException(strings.get(errorStringKey));
         }
 
@@ -264,7 +269,7 @@ public class RestartServer {
     }
 
     private boolean ok(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 
     // We use this simply to tell the difference between fatal errors and other

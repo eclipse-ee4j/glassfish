@@ -70,7 +70,7 @@
 
 <target name="compile-client">
     <javac srcdir="." destdir="${env.APS_HOME}/build/module/classes"
-        includes="${client-src-name}"
+        includes="${client-src-name}" debug="true"
     >
         <classpath refid="classpath" />
     </javac>

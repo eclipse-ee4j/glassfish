@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,22 +18,27 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-cdi-parent</artifactId>
+        <artifactId>tck-cdi</artifactId>
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-cdi-model</artifactId>
+    <artifactId>tck-cdi-model</artifactId>
 
-    <name>CDI TCK Model runner 4.0 for Weld (GlassFish)</name>
+    <name>CDI TCK Model runner for Weld (GlassFish)</name>
     <description>Aggregates dependencies and runs the CDI Lang Model TCK on GlassFish</description>
 
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -46,7 +51,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
-            <version>${cdi.tck-4-1.version}</version>
+            <version>${tck.cdi.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -56,26 +61,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.4</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <!-- Disable annotation processor for test sources -->
-                    <testCompilerArgument>-proc:none</testCompilerArgument>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -94,7 +91,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -120,14 +117,12 @@
                      </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-Xmx768m</argLine>
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
-                    <!-- System Properties -->
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableAssertions>:org.jboss.cdi...</glassfish.enableAssertions>
@@ -156,7 +151,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>full</id>

@@ -53,7 +53,7 @@ public class TemplateCommandGetResource extends TemplateExecCommand {
     @GET
     @Produces(SseFeature.SERVER_SENT_EVENTS + ";qs=0.5")
     public Response processSseGet() {
-        return executeCommandAsSse(prepareParameters());
+        return executeSseCommand(prepareParameters());
     }
 
     private ParameterMap prepareParameters() {

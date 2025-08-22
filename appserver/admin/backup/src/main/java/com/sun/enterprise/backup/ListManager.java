@@ -22,7 +22,6 @@
 
 package com.sun.enterprise.backup;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.ColumnFormatter;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -32,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
+
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 
 /**

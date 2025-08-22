@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -178,7 +179,7 @@ public class DeleteSystemProperty implements AdminCommand, AdminCommandSecurity.
                     }
                 }
             }
-            String sysPropName = SystemPropertyConstants.getPropertyAsValue(propName);
+            String sysPropName = getPropertyAsValue(propName);
             for (Dom d : doms) {
                 listRefs(d, sysPropName, refs);
             }
@@ -273,5 +274,20 @@ public class DeleteSystemProperty implements AdminCommand, AdminCommandSecurity.
                 }
             }
         }
+    }
+
+    /**
+     * A method that returns the passed String as a property that can be replaced at run time.
+     *
+     * @param name String that represents a property, e.g INSTANCE_ROOT_PROPERTY in this class. The String may not be null.
+     * @return a String that represents the replaceable value of passed String. Generally speaking it will be decorated with
+     * a pair of braces with $ in the front (e.g. "a" will be returned as "${a}").
+     * @throws IllegalArgumentException if the passed String is null
+     */
+    private static String getPropertyAsValue(final String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("property");
+        }
+        return new StringBuilder().append("${").append(name).append('}').toString();
     }
 }

@@ -78,7 +78,7 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
     public void undeployResource(AdminObjectResource resource, String applicationName, String moduleName) throws Exception {
         SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
         ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
-        deleteAdminObjectResource(resource, resourceInfo);
+        deleteAdminObjectResource(resourceInfo);
     }
 
 
@@ -86,10 +86,10 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
     public synchronized void undeployResource(AdminObjectResource resource) throws Exception {
         final AdminObjectResource aor = resource;
         ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(aor);
-        deleteAdminObjectResource(aor, resourceInfo);
+        deleteAdminObjectResource(resourceInfo);
     }
 
-    private void deleteAdminObjectResource(AdminObjectResource adminObject, ResourceInfo resourceInfo)
+    private void deleteAdminObjectResource(ResourceInfo resourceInfo)
             throws ConnectorRuntimeException {
         LOG.log(Level.FINE, "Calling backend to delete adminObject: {0}", resourceInfo);
         runtime.deleteAdminObject(resourceInfo);

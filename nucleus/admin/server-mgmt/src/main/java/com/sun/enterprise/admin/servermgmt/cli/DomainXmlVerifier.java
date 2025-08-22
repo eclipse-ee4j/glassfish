@@ -18,7 +18,6 @@ package com.sun.enterprise.admin.servermgmt.cli;
 
 // config imports
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.Result;
 
 import java.io.PrintStream;
@@ -29,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Dom;
 

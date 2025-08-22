@@ -44,8 +44,8 @@ public class PasswordAliasTest {
 
     @BeforeAll
     public static void createStore() throws Exception {
-        storeFile = File.createTempFile("pwAliasStore", "jks");
-        final KeyStore ks = KeyStore.getInstance("JCEKS");
+        storeFile = File.createTempFile("pwAliasStore", ".p12");
+        final KeyStore ks = KeyStore.getInstance("PKCS12");
         ks.load(null, TEST_STORE_PW);
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(storeFile))) {
             ks.store(os, TEST_STORE_PW);

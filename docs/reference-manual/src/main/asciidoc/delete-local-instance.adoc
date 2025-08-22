@@ -26,8 +26,7 @@ asadmin [asadmin-options] delete-local-instance [--help]
 
 The `delete-local-instance` subcommand deletes a {productName}
 instance on the machine where the subcommand is run. This subcommand
-does not require the Distributed Component Object Model (DCOM) remote
-protocol or secure shell (SSH) to be configured. You must run this
+does not require the secure shell (SSH) to be configured. You must run this
 command from the machine where the instance resides.
 
 The subcommand can delete any {productName} instance, regardless of

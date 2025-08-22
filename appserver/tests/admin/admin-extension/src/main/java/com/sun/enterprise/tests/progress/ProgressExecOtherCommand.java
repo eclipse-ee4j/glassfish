@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,7 +42,7 @@ import org.jvnet.hk2.annotations.Service;
 public class ProgressExecOtherCommand implements AdminCommand {
 
     @Inject
-    CommandRunner commandRunner;
+    CommandRunner<?> commandRunner;
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -60,7 +60,7 @@ public class ProgressExecOtherCommand implements AdminCommand {
         commandRunner.getCommandInvocation("progress-simple",
             context.getActionReport().addSubActionsReport(),
             context.getSubject())
-        .progressStatusChild(progressStatus.createChild("subcommand", 20)).execute();
+        .progressStatus(progressStatus.createChild("subcommand", 20)).execute();
 
         // Do some after logic
         progressStatus.progress("Finishing outer command");

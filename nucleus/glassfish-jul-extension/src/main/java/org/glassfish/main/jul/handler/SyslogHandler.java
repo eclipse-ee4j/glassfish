@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -126,12 +126,6 @@ public class SyslogHandler extends Handler {
 
         private LoggingPump(final String threadName, final LogRecordBuffer buffer) {
             super(threadName, buffer);
-        }
-
-
-        @Override
-        protected boolean isShutdownRequested() {
-            return pump == null;
         }
 
 

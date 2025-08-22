@@ -44,6 +44,7 @@ import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
@@ -132,7 +133,7 @@ public class GetApplicationLaunchURLsCommand implements AdminCommand, AdminComma
     }
 
     private void getLBLaunchURLInformation(String appName, ActionReport report, final Subject subject){
-        CommandRunner.CommandInvocation invocation =
+        CommandInvocation invocation =
                 commandRunner.getCommandInvocation("_get-lb-launch-urls", report, subject);
         if(invocation != null){
             ParameterMap map = new ParameterMap();

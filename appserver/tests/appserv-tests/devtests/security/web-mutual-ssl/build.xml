@@ -136,14 +136,14 @@
 
 <!-- server side -->
     <exec executable="${java.home}/bin/keytool" failonerror="false">
-        <arg line="-delete -alias testca -keystore ${admin.domain.dir}/${admin.domain}/config/cacerts.jks -storepass ${ssl.password}"/>
+        <arg line="-delete -alias testca -keystore ${admin.domain.dir}/${admin.domain}/config/cacerts.p12 -storepass ${ssl.password}"/>
     </exec>
     <exec executable="${java.home}/bin/keytool" failonerror="true">
         <arg line="-import -trustcacerts -alias testca -storepass '${ssl.password}' -noprompt "/>
         <arg value="-file"/>
         <arg file="${env.APS_HOME}/devtests/security/web-mutual-ssl/certificate/testca.rfc"/>
         <arg value="-keystore"/>
-        <arg file="${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
+        <arg file="${admin.domain.dir}/${admin.domain}/config/cacerts.p12"/>
     </exec>
 </target>
 

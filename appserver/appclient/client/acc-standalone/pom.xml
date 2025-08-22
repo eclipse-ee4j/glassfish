@@ -17,14 +17,15 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.glassfish.main.appclient</groupId>
         <artifactId>client</artifactId>
         <version>8.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>gf-client</artifactId>
@@ -35,9 +36,9 @@
         This module builds the free-standing JAR file for the app client
         container which can be run without using an OSGi implementation.
 
-        This module contains little source of its own but mostly packages a JAR
-        with a manifest Class-Path that specifies all the OSGi JARs on which
-        it directly or indirectly depends.
+        However it still depends on many of jars in the modules directory.
+        The class loader hierarchy tries to reduce efforts required to run
+        the Application Client especially related to the classpath.
     </description>
 
     <developers>
@@ -53,63 +54,21 @@
         </developer>
     </developers>
 
-    <properties>
-        <path.lib>../lib</path.lib>
-        <path.apps>${path.lib}/install/applications</path.apps>
-        <path.appclient>${path.lib}/appclient</path.appclient>
-        <path.derby>../../javadb/lib</path.derby>
-        <path.mq>../../mq/lib</path.mq>
-
-        <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
-        <classpath.jaxrra>${path.apps}/jaxr-ra/jaxr-ra.jar</classpath.jaxrra>
-        <classpath.jdbcra>${path.apps}/__ds_jdbc_ra/jdbc-ra-ds.jar ${path.apps}/__cp_jdbc_ra/jdbc-ra-cp.jar ${path.apps}/__xa_jdbc_ra/jdbc-ra-xa.jar ${path.apps}/__dm_jdbc_ra/jdbc-ra-dm.jar</classpath.jdbcra>
-        <classpath.mq>${path.mq}/imq.jar ${path.mq}/imqadmin.jar ${path.mq}/imqutil.jar ${path.mq}/fscontext.jar ${path.apps}/jmsra/imqjmsra.jar</classpath.mq>
-        <classpath.weld>${path.appclient}/weld-se-shaded.jar</classpath.weld>
-
-        <classpath.additions>${path.lib}/bootstrap/glassfish-jul-extension.jar ${classpath.mq} ${classpath.derby} ${classpath.jaxrra} ${classpath.jdbcra} ${classpath.weld}</classpath.additions>
-    </properties>
-
     <dependencies>
-        <!-- Dependencies are used just to generate the Class-Path attribute of the manifest -->
         <dependency>
-            <groupId>org.glassfish.main.appclient</groupId>
-            <artifactId>gf-client-module</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion><!-- weld-se-shaded has an explicit path, would cause redundant line -->
-                    <groupId>org.jboss.weld.se</groupId>
-                    <artifactId>weld-se-shaded</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.jdbc</groupId>
-            <artifactId>jdbc-runtime</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.resources</groupId>
-            <artifactId>resources-runtime</artifactId>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.persistence</groupId>
-            <artifactId>entitybean-container</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-osgi-bundle</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -133,16 +92,11 @@
                         <manifest>
                             <mainClass>org.glassfish.appclient.client.AppClientFacade</mainClass>
                             <packageName>org.glassfish.appclient.client.acc</packageName>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>../modules/</classpathPrefix>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</customClasspathLayout>
                         </manifest>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                         <manifestEntries>
                             <PreMain-Class>org.glassfish.appclient.client.acc.agent.AppClientContainerAgent</PreMain-Class>
                             <GlassFish-ServerExcluded>true</GlassFish-ServerExcluded>
-                            <Class-Path>${classpath.additions}</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

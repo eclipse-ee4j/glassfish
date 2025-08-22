@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +20,17 @@ package org.glassfish.api.admin;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.System.Logger;
 import java.util.Iterator;
 
+import javax.security.auth.Subject;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
 import org.jvnet.hk2.annotations.Contract;
+
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * This is the contract for the JobManagerService The JobManager will be responsible for 1. generating unique ids for
@@ -33,26 +41,26 @@ import org.jvnet.hk2.annotations.Contract;
  */
 
 @Contract
-public interface JobManager {
+public interface JobManager<T extends Job> {
 
     /**
      * Container for checkpoint related objects
      */
-    public class Checkpoint implements Serializable {
+    public class Checkpoint<T extends Job> implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
-        private Job job;
+        private T job;
         private AdminCommand command;
         private AdminCommandContext context;
 
-        public Checkpoint(Job job, AdminCommand command, AdminCommandContext context) {
+        public Checkpoint(T job, AdminCommand command, AdminCommandContext context) {
             this.job = job;
             this.command = command;
             this.context = context;
         }
 
-        public Job getJob() {
+        public T getJob() {
             return job;
         }
 
@@ -79,22 +87,22 @@ public interface JobManager {
      * @param instance job to be registered
      * @throws IllegalArgumentException
      */
-    void registerJob(Job instance) throws IllegalArgumentException;
+    void registerJob(T instance) throws IllegalArgumentException;
 
     /**
      * This method will return the list of jobs in the job registry
      *
      * @return list of jobs
      */
-    Iterator<Job> getJobs();
+    Iterator<T> getJobs();
 
     /**
      * This method is used to get a job by its id
      *
      * @param id The id to look up the job in the job registry
-     * @return the Job
+     * @return the Job or null
      */
-    Job get(String id);
+    T get(String id);
 
     /**
      * This will purge the job associated with the id from the registry
@@ -106,7 +114,7 @@ public interface JobManager {
     /**
      * This will get the list of jobs from the job registry which have completed
      *
-     * @return the details of all completed jobs using JobInfos
+     * @return the details of all completed jobs using JobInfos. Never null.
      */
     JobInfos getCompletedJobs(File jobs);
 
@@ -116,22 +124,15 @@ public interface JobManager {
      * @param id the completed Job whose id needs to be looked up
      * @return the completed Job
      */
-    Object getCompletedJobForId(String id);
+    JobInfo getCompletedJobForId(String id, File jobsFile);
 
     /**
-     * This is used to purge a completed job whose id is provided
+     * This is used to purge a completed job.
      *
-     * @param id the id of the Job which needs to be purged
+     * @param job the info about Job
      * @return the new list of completed jobs
      */
-    Object purgeCompletedJobForId(String id);
-
-    /**
-     * This is used to get the jobs file for a job
-     *
-     * @return the location of the job file
-     */
-    File getJobsFile();
+    JobInfos purgeCompletedJobForId(JobInfo job);
 
     /**
      * Stores current command state.
@@ -146,6 +147,42 @@ public interface JobManager {
     /**
      * Load checkpoint related data.
      */
-    <T extends Serializable> T loadCheckpointData(String jobId) throws IOException, ClassNotFoundException;
+    T loadCheckpointData(String jobId) throws IOException, ClassNotFoundException;
 
+    /**
+     * This will create a new job with the name of command and a new unused id for the job
+     *
+     * @param scope The scope of the command or null if there is no scope
+     * @param name The name of the command
+     * @return a newly created job
+     */
+    T createJob(String scope, String name, Subject subject, boolean isManagedJob, ParameterMap parameters,
+        ActionReport report);
+
+    /**
+     * Starts the command asynchronously
+     *
+     * @param command
+     */
+    void start(AsyncAdminCommandExecution command);
+
+
+    @FunctionalInterface
+    interface AsyncAdminCommandExecution extends Runnable {
+        static final Logger LOG = System.getLogger(AsyncAdminCommandExecution.class.getName());
+
+        void execute();
+
+        @Override
+        default void run() {
+            try {
+                LOG.log(TRACE, () -> "Command execution started. " + this);
+                execute();
+                LOG.log(TRACE, () -> "Command execution succeeded. " + this);
+            } catch (Throwable t) {
+                LOG.log(TRACE, () -> "Command execution failed. " + this, t);
+                throw t;
+            }
+        }
+    }
 }

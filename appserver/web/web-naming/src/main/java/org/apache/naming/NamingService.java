@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -28,13 +29,14 @@ import javax.management.NotificationBroadcasterSupport;
 import javax.management.ObjectName;
 import javax.naming.Context;
 
+import org.glassfish.main.jdke.props.SystemProperties;
+
 /**
  * Implementation of the NamingService JMX MBean.
  *
  * @author <a href="mailto:remm@apache.org">Remy Maucherat</a>
  * @version $Revision: 1.3 $
  */
-
 public final class NamingService
     extends NotificationBroadcasterSupport
     implements NamingServiceMBean, MBeanRegistration {
@@ -66,23 +68,28 @@ public final class NamingService
 
     // ---------------------------------------------- MBeanRegistration Methods
 
+    @Override
     public ObjectName preRegister(MBeanServer server, ObjectName name)
         throws Exception {
         return new ObjectName(OBJECT_NAME);
     }
 
 
+    @Override
     public void postRegister(Boolean registrationDone) {
-        if (!registrationDone.booleanValue())
+        if (!registrationDone.booleanValue()) {
             destroy();
+        }
     }
 
 
+    @Override
     public void preDeregister()
         throws Exception {
     }
 
 
+    @Override
     public void postDeregister() {
         destroy();
     }
@@ -94,6 +101,7 @@ public final class NamingService
     /**
      * Retruns the Catalina component name.
      */
+    @Override
     public String getName() {
         return NAME;
     }
@@ -102,6 +110,7 @@ public final class NamingService
     /**
      * Returns the state.
      */
+    @Override
     public State getState() {
         return state;
     }
@@ -112,41 +121,38 @@ public final class NamingService
     /**
      * Start the servlet container.
      */
+    @Override
     public void start()
         throws Exception {
 
         Notification notification = null;
 
-        if (state != State.STOPPED)
+        if (state != State.STOPPED) {
             return;
+        }
 
         state = State.STARTING;
 
         // Notifying the MBEan server that we're starting
-
-        notification = new AttributeChangeNotification
-            (this, sequenceNumber++, System.currentTimeMillis(),
-             "Starting " + NAME, "State", "org.apache.naming.NamingServiceMBean$State",
-             State.STOPPED, State.STARTING);
+        notification = new AttributeChangeNotification(this, sequenceNumber++, System.currentTimeMillis(),
+            "Starting " + NAME, "State", "org.apache.naming.NamingServiceMBean$State", State.STOPPED, State.STARTING);
         sendNotification(notification);
 
         try {
-
             String value = "org.apache.naming";
             String oldValue = System.getProperty(Context.URL_PKG_PREFIXES);
             if (oldValue != null) {
                 oldUrlValue = oldValue;
                 value = oldValue + ":" + value;
             }
-            System.setProperty(Context.URL_PKG_PREFIXES, value);
+            SystemProperties.setProperty(Context.URL_PKG_PREFIXES, value, true);
 
             oldValue = System.getProperty(Context.INITIAL_CONTEXT_FACTORY);
             if (oldValue != null) {
                 oldIcValue = oldValue;
             } else {
-                System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-                                   Constants.Package
-                                   + ".java.javaURLContextFactory");
+                SystemProperties.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+                    Constants.Package + ".java.javaURLContextFactory", true);
             }
 
         } catch (Throwable t) {
@@ -171,12 +177,14 @@ public final class NamingService
     /**
      * Stop the servlet container.
      */
+    @Override
     public void stop() {
 
         Notification notification = null;
 
-        if (state != State.STARTED)
+        if (state != State.STARTED) {
             return;
+        }
 
         state = State.STOPPING;
 
@@ -187,8 +195,8 @@ public final class NamingService
         sendNotification(notification);
 
         try {
-            System.setProperty(Context.URL_PKG_PREFIXES, oldUrlValue);
-            System.setProperty(Context.INITIAL_CONTEXT_FACTORY, oldIcValue);
+            SystemProperties.setProperty(Context.URL_PKG_PREFIXES, oldUrlValue, true);
+            SystemProperties.setProperty(Context.INITIAL_CONTEXT_FACTORY, oldIcValue, true);
         } catch (Throwable t) {
             log.log(Level.WARNING, LogFacade.UNABLE_TO_RESTORE_ORIGINAL_SYS_PROPERTIES, t);
         }
@@ -207,10 +215,12 @@ public final class NamingService
     /**
      * Destroy servlet container (if any is running).
      */
+    @Override
     public void destroy() {
 
-        if (getState() != State.STOPPED)
+        if (getState() != State.STOPPED) {
             stop();
+        }
 
     }
 

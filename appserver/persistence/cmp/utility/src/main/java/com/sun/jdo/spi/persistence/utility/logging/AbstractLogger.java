@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,6 +40,8 @@ import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 
+import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+
 /**
  * This class provides a default implementation of the
  * com.sun.jdo.spi.persistence.utility.logging.Logger interface which
@@ -77,15 +80,15 @@ abstract public class AbstractLogger implements Logger
     static
     {
         _levelNamesToValues = new HashMap();
-        _levelNamesToValues.put("ALL", new Integer(ALL));        // NOI18N
-        _levelNamesToValues.put("FINEST", new Integer(FINEST));    // NOI18N
-        _levelNamesToValues.put("FINER", new Integer(FINER));    // NOI18N
-        _levelNamesToValues.put("FINE", new Integer(FINE));        // NOI18N
-        _levelNamesToValues.put("CONFIG", new Integer(CONFIG));    // NOI18N
-        _levelNamesToValues.put("INFO", new Integer(INFO));        // NOI18N
-        _levelNamesToValues.put("WARNING", new Integer(WARNING)); // NOI18N
-        _levelNamesToValues.put("SEVERE", new Integer(SEVERE));    // NOI18N
-        _levelNamesToValues.put("OFF", new Integer(OFF));        // NOI18N
+        _levelNamesToValues.put("ALL", Integer.valueOf(ALL));        // NOI18N
+        _levelNamesToValues.put("FINEST", Integer.valueOf(FINEST));    // NOI18N
+        _levelNamesToValues.put("FINER", Integer.valueOf(FINER));    // NOI18N
+        _levelNamesToValues.put("FINE", Integer.valueOf(FINE));        // NOI18N
+        _levelNamesToValues.put("CONFIG", Integer.valueOf(CONFIG));    // NOI18N
+        _levelNamesToValues.put("INFO", Integer.valueOf(INFO));        // NOI18N
+        _levelNamesToValues.put("WARNING", Integer.valueOf(WARNING)); // NOI18N
+        _levelNamesToValues.put("SEVERE", Integer.valueOf(SEVERE));    // NOI18N
+        _levelNamesToValues.put("OFF", Integer.valueOf(OFF));        // NOI18N
     }
 
     /** Creates a new AbstractLogger.  The supplied class loader or the
@@ -115,17 +118,17 @@ abstract public class AbstractLogger implements Logger
         if (_hasLoggingProperties && (_loggingProperties == null))
         {
             String fileName =
-                System.getProperty("java.util.logging.config.file"); // NOI18N
+                System.getProperty("java.util.logging.config.file");
 
             if (fileName == null)
             {
-                fileName = System.getProperty("java.home");    // NOI18N
+                fileName = System.getProperty(JAVA_HOME.getSystemPropertyName());
 
                 if (fileName != null)
                 {
-                    File file = new File(fileName, "lib");    // NOI18N
+                    File file = new File(fileName, "lib");
 
-                    file = new File(file, "logging.properties");    // NOI18N
+                    file = new File(file, "logging.properties");
 
                     try
                     {
@@ -170,9 +173,9 @@ abstract public class AbstractLogger implements Logger
                         }
                     }
                 }
-            }
-            else
+            } else {
                 _hasLoggingProperties = false;
+            }
         }
 
         return _loggingProperties;
@@ -238,9 +241,9 @@ abstract public class AbstractLogger implements Logger
             value = value.trim();
             lookupValue = getLevelNameMap().get(value);
 
-            if (lookupValue != null)
+            if (lookupValue != null) {
                 level = ((Integer)lookupValue).intValue();
-            else        // maybe a number was specified
+            } else        // maybe a number was specified
             {
                 try
                 {
@@ -277,9 +280,9 @@ abstract public class AbstractLogger implements Logger
                 {
                     loggerName = ((lastIndex == -1) ? "" :        // NOI18N
                         loggerName.substring(0, lastIndex));
-                }
-                else
+                } else {
                     return value;
+                }
             }
         }
 
@@ -293,6 +296,7 @@ abstract public class AbstractLogger implements Logger
      * reasons.
      * @return whether logging is enabled at the fine level.
      */
+    @Override
     public boolean isLoggable () { return (FINE >= getLevel()); }
 
     /**
@@ -303,6 +307,7 @@ abstract public class AbstractLogger implements Logger
      * @return true if the given message level is currently being logged.
      * @param levelValue the level to check
      */
+    @Override
     public boolean isLoggable (int levelValue)
     {
         return (levelValue >= getLevel());
@@ -318,6 +323,7 @@ abstract public class AbstractLogger implements Logger
      * @param sourceClass name of class that issued the logging request
      * @param sourceMethod name of method that is being entered
      */
+    @Override
     public void entering (String sourceClass, String sourceMethod)
     {
         entering(sourceClass, sourceMethod, (Object[])null);
@@ -335,11 +341,13 @@ abstract public class AbstractLogger implements Logger
      * @param sourceMethod name of method that is being entered
      * @param param1 parameter to the method being entered
      */
+    @Override
     public void entering (String sourceClass, String sourceMethod,
         Object param1)
     {
-        if (isLoggable(FINER))
+        if (isLoggable(FINER)) {
             entering(sourceClass, sourceMethod, new Object[]{param1});
+        }
     }
 
     /**
@@ -355,6 +363,7 @@ abstract public class AbstractLogger implements Logger
      * @param sourceMethod name of method that is being entered
      * @param params array of parameters to the method being entered
      */
+    @Override
     public void entering (String sourceClass, String sourceMethod,
         Object params[])
     {
@@ -392,6 +401,7 @@ abstract public class AbstractLogger implements Logger
      * @param sourceClass name of class that issued the logging request
      * @param sourceMethod name of the method
      */
+    @Override
     public void exiting (String sourceClass, String sourceMethod)
     {
         exiting(sourceClass, sourceMethod, null);
@@ -409,6 +419,7 @@ abstract public class AbstractLogger implements Logger
      * @param sourceMethod name of the method
      * @param result Object that is being returned
      */
+    @Override
     public void exiting (String sourceClass, String sourceMethod, Object result)
     {
         if (isLoggable(FINER))
@@ -455,6 +466,7 @@ abstract public class AbstractLogger implements Logger
      * @param sourceMethod name of the method.
      * @param thrown The Throwable that is being thrown.
      */
+    @Override
     public void throwing (String sourceClass, String sourceMethod,
         Throwable thrown)
     {
@@ -477,6 +489,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void severe (String msg) { log(SEVERE, msg); }
 
     /**
@@ -488,6 +501,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void warning (String msg) { log(WARNING, msg); }
 
     /**
@@ -499,6 +513,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void info (String msg) { log(INFO, msg); }
 
     /**
@@ -510,6 +525,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void config (String msg) { log(CONFIG, msg); }
 
     /**
@@ -522,10 +538,12 @@ abstract public class AbstractLogger implements Logger
      * @param level The level for this message
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void log (int level, String msg)
     {
-        if (isLoggable(level))
+        if (isLoggable(level)) {
             logInternal(level, getMessage(msg));
+        }
     }
 
     /**
@@ -539,10 +557,12 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o1 A parameter to be inserted into the message
      */
+    @Override
     public void log (int level, String msg, Object o1)
     {
-        if (isLoggable(level))
+        if (isLoggable(level)) {
             log(level, msg, new Object[]{o1});
+        }
     }
 
     /**
@@ -556,6 +576,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o Objects to be inserted into the message
      */
+    @Override
     public void log (int level, String msg, Object[] o)
     {
         if (isLoggable(level))
@@ -568,11 +589,12 @@ abstract public class AbstractLogger implements Logger
                 MessageFormat messageFormat =
                     new MessageFormat(getBundle().getString(msg));
 
-                if (messageFormat != null)
+                if (messageFormat != null) {
                     formattedMessage = messageFormat.format(o);
-            }
-            else
+                }
+            } else {
                 formattedMessage = getMessage(msg);
+            }
 
             logInternal(level, formattedMessage);
         }
@@ -590,10 +612,12 @@ abstract public class AbstractLogger implements Logger
      * @param o1 A parameter to be inserted into the message
      * @param o2 A parameter to be inserted into the message
      */
+    @Override
     public void log (int level, String msg, Object o1, Object o2)
     {
-        if (isLoggable(level))
+        if (isLoggable(level)) {
             log(level, msg, new Object[]{o1, o2});
+        }
     }
 
     /**
@@ -609,10 +633,12 @@ abstract public class AbstractLogger implements Logger
      * @param o2 A parameter to be inserted into the message
      * @param o3 A parameter to be inserted into the message
      */
+    @Override
     public void log (int level, String msg, Object o1, Object o2, Object o3)
     {
-        if (isLoggable(level))
+        if (isLoggable(level)) {
             log(level, msg, new Object[]{o1, o2, o3});
+        }
     }
 
     /**
@@ -627,6 +653,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param thrown The exception to log
      */
+    @Override
     abstract public void log (int level, String msg, Throwable thrown);
 
     /**
@@ -638,6 +665,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void fine (String msg) { log(FINE, msg); }
 
     /**
@@ -650,6 +678,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o1 A parameter to be inserted into the message
      */
+    @Override
     public void fine (String msg, Object o1) { log(FINE, msg, o1); }
 
     /**
@@ -662,6 +691,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o Objects to be inserted into the message
      */
+    @Override
     public void fine (String msg, Object[] o) { log(FINE, msg, o); }
 
     /**
@@ -675,6 +705,7 @@ abstract public class AbstractLogger implements Logger
      * @param o1 A parameter to be inserted into the message
      * @param o2 A parameter to be inserted into the message
      */
+    @Override
     public void fine (String msg, Object o1, Object o2)
     {
         log(FINE, msg, o1, o2);
@@ -692,6 +723,7 @@ abstract public class AbstractLogger implements Logger
      * @param o2 A parameter to be inserted into the message
      * @param o3 A parameter to be inserted into the message
      */
+    @Override
     public void fine (String msg, Object o1, Object o2, Object o3)
     {
         log(FINE, msg, o1, o2, o3);
@@ -706,6 +738,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void finer (String msg) { log(FINER, msg); }
 
     /**
@@ -718,6 +751,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o Objects to be inserted into the message
      */
+    @Override
     public void finer (String msg, Object[] o) { log(FINER, msg, o); }
 
     /**
@@ -730,6 +764,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o1 A parameter to be inserted into the message
      */
+    @Override
     public void finer (String msg, Object o1) { log(FINER, msg, o1); }
 
     /**
@@ -743,6 +778,7 @@ abstract public class AbstractLogger implements Logger
      * @param o1 A parameter to be inserted into the message
      * @param o2 A parameter to be inserted into the message
      */
+    @Override
     public void finer (String msg, Object o1, Object o2)
     {
         log(FINER, msg, o1, o2);
@@ -760,6 +796,7 @@ abstract public class AbstractLogger implements Logger
      * @param o2 A parameter to be inserted into the message
      * @param o3 A parameter to be inserted into the message
      */
+    @Override
     public void finer (String msg, Object o1, Object o2, Object o3)
     {
         log(FINER, msg, o1, o2, o3);
@@ -774,6 +811,7 @@ abstract public class AbstractLogger implements Logger
      * <p>
      * @param msg The string message (or a key in the message catalog)
      */
+    @Override
     public void finest (String msg) { log(FINEST, msg); }
 
     /**
@@ -786,6 +824,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o Objects to be inserted into the message
      */
+    @Override
     public void finest (String msg, Object[] o) { log(FINEST, msg, o); }
 
     /**
@@ -798,6 +837,7 @@ abstract public class AbstractLogger implements Logger
      * @param msg The string message (or a key in the message catalog)
      * @param o1 A parameter to be inserted into the message
      */
+    @Override
     public void finest (String msg, Object o1) { log(FINEST, msg, o1); }
 
     /**
@@ -811,6 +851,7 @@ abstract public class AbstractLogger implements Logger
      * @param o1 A parameter to be inserted into the message
      * @param o2 A parameter to be inserted into the message
      */
+    @Override
     public void finest (String msg, Object o1, Object o2)
     {
         log(FINEST, msg, o1, o2);
@@ -828,6 +869,7 @@ abstract public class AbstractLogger implements Logger
      * @param o2 A parameter to be inserted into the message
      * @param o3 A parameter to be inserted into the message
      */
+    @Override
     public void finest (String msg, Object o1, Object o2, Object o3)
     {
         log(FINEST, msg, o1, o2, o3);
@@ -837,11 +879,13 @@ abstract public class AbstractLogger implements Logger
      * Get the name for this logger.
      * @return logger name.  Will be null for anonymous Loggers.
      */
+    @Override
     public String getName () { return _loggerName; }
 
     /** Prepare a printable version of this instance.
      * @return the String representation of this object
      */
+    @Override
     public String toString ()
     {
         StringBuffer buffer = new StringBuffer(getClass().getName());

@@ -20,14 +20,14 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.lang.Runtime.Version;
 import java.net.ConnectException;
+import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.time.Instant;
@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -49,33 +50,28 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.AsadminInput;
+import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.main.jul.GlassFishLogManager;
 import org.glassfish.main.jul.GlassFishLogManagerInitializer;
 import org.glassfish.main.jul.cfg.GlassFishLogManagerConfiguration;
-import org.glassfish.main.jul.cfg.GlassFishLoggingConstants;
 import org.glassfish.main.jul.cfg.LoggingProperties;
-import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
+import org.glassfish.main.jul.formatter.GlassFishLogFormatter;
+import org.glassfish.main.jul.handler.BlockingExternallyManagedLogHandler;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * The admin main program (nadmin).
  */
 public class AdminMain {
-    private static final LoggingProperties LOGGING_CFG;
-    static {
-        GlassFishLoggingTracer.trace(AdminMain.class, "Preconfiguring logging for asadmin.");
-        // The logging is explicitly configured in doMain method
-        LOGGING_CFG = new LoggingProperties();
-        LOGGING_CFG.setProperty("handlers", GlassFishLoggingConstants.CLASS_HANDLER_BLOCKING);
-        if (!GlassFishLogManagerInitializer.tryToSetAsDefault(LOGGING_CFG)) {
-            throw new IllegalStateException("GlassFishLogManager is not set as the default LogManager!");
-        }
-    }
     private static final Environment env = new Environment();
     private static final int SUCCESS = 0;
     private static final int ERROR = 1;
@@ -85,22 +81,25 @@ public class AdminMain {
     private static final String ADMIN_CLI_LOGGER = "com.sun.enterprise.admin.cli";
 
     private static final String[] SYS_PROPERTIES_TO_SET_FROM_ASENV = {
-        SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
-        SystemPropertyConstants.CONFIG_ROOT_PROPERTY,
-        SystemPropertyConstants.PRODUCT_ROOT_PROPERTY
+        INSTALL_ROOT.getSystemPropertyName(),
+        CONFIG_ROOT.getSystemPropertyName(),
+        PRODUCT_ROOT.getSystemPropertyName()
     };
     private static final LocalStringsImpl strings = new LocalStringsImpl(AdminMain.class);
 
     static {
+        GlassFishLogManagerInitializer.tryToSetAsDefault();
         Map<String, String> systemProps = new ASenvPropertyReader().getProps();
         for (String prop : SYS_PROPERTIES_TO_SET_FROM_ASENV) {
             String val = systemProps.get(prop);
             if (isNotEmpty(val)) {
-                System.setProperty(prop, val);
+                setProperty(prop, val, true);
             }
         }
     }
 
+    private final Path installRoot;
+    private String modulePath;
     private String classPath;
     private String className;
     private String command;
@@ -108,13 +107,22 @@ public class AdminMain {
     private CLIContainer cliContainer;
     private Logger logger;
 
+
+    public AdminMain() {
+        this.installRoot = GFLauncherUtils.getInstallDir().toPath();
+    }
+
+    protected Path getInstallRoot() {
+        return this.installRoot;
+    }
+
     /**
      * Get the class loader that is used to load local commands.
      *
      * @return a class loader used to load local commands
      */
     private ClassLoader getExtensionClassLoader(final Set<File> extensions) {
-        final ClassLoader ecl = AdminMain.class.getClassLoader();
+        final ClassLoader ecl = getClass().getClassLoader();
         if (extensions == null || extensions.isEmpty()) {
             return ecl;
         }
@@ -122,15 +130,14 @@ public class AdminMain {
             try {
                 return new DirectoryClassLoader(extensions, ecl);
             } catch (final RuntimeException ex) {
-                // any failure here is fatal
-                logger.info(strings.get("ExtDirFailed", ex));
+                throw new Error(strings.get("ExtDirFailed", extensions), ex);
             }
-            return ecl;
         };
         return AccessController.doPrivileged(action);
     }
 
-    /** Get set of JAR files that is used to locate local commands (CLICommand).
+    /**
+     * Get set of JAR files that is used to locate local commands (CLICommand).
      * Results can contain JAR files or directories where all JAR files are
      * used. It must return all JARs or directories
      * with acceptable CLICommands excluding admin-cli.jar.
@@ -139,73 +146,36 @@ public class AdminMain {
      * @return set of JAR files or directories with JAR files
      */
     protected Set<File> getExtensions() {
-        final Set<File> result = new HashSet<>();
-        final File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-        final File ext = new File(new File(inst, "lib"), "asadmin");
-        if (ext.exists() && ext.isDirectory()) {
-            result.add(ext);
+        final Set<File> locations = new HashSet<>();
+        final File ext = installRoot.resolve(Path.of("lib", "asadmin")).toFile();
+        if (ext.isDirectory()) {
+            locations.add(ext);
         } else {
-            if (logger.isLoggable(FINER)) {
-                logger.finer(strings.get("ExtDirMissing", ext));
+            throw new Error(strings.get("ExtDirMissing", ext));
+        }
+        final String envClasspath = System.getenv("ASADMIN_CLASSPATH");
+        if (envClasspath == null) {
+            System.err.println(
+                "The ASADMIN_CLASSPATH environment variable is not set. Adding whole modules directory as a default.");
+            final File modules = getInstallRoot().resolve("modules").toFile();
+            if (modules.isDirectory()) {
+                locations.add(modules);
+            }
+        } else {
+            for (String path : envClasspath.split(File.pathSeparator)) {
+                File file = new File(path);
+                // nucleus doesn't contain some files, ie. backup.jar
+                if (file.exists()) {
+                    locations.add(file);
+                }
             }
         }
-        result.add(new File(new File(inst, "modules"), "admin-cli.jar"));
-        return result;
+        return locations;
     }
 
 
     protected String getCommandName() {
         return "nadmin";
-    }
-
-    /**
-     * A ConsoleHandler that prints all non-SEVERE messages to System.out and
-     * all SEVERE messages to System.err.
-     */
-    private static class CLILoggerHandler extends ConsoleHandler {
-
-        private CLILoggerHandler(final Formatter formatter) {
-            setFormatter(formatter);
-        }
-
-        @Override
-        public void publish(LogRecord logRecord) {
-            if (!isLoggable(logRecord)) {
-                return;
-            }
-            @SuppressWarnings("resource")
-            final PrintStream ps = logRecord.getLevel() == SEVERE ? System.err : System.out;
-            ps.print(getFormatter().format(logRecord));
-            ps.flush();
-        }
-    }
-
-
-    private static class CLILoggerFormatter extends SimpleFormatter {
-        private static final boolean TRACE = env.trace();
-
-        @Override
-        public synchronized String format(LogRecord record) {
-            // this formatter adds blank lines between records
-            if (record.getThrown() == null) {
-                return formatMessage(record) + System.lineSeparator();
-            }
-            // Some messages use exception as a parameter.
-            // If we don't print stacktraces, the cause would be lost.
-            final Object[] parameters;
-            if (record.getParameters() == null) {
-                parameters = new Object[] {record.getThrown()};
-            } else {
-                parameters = new Object[record.getParameters().length + 1];
-                System.arraycopy(record.getParameters(), 0, parameters, 0, parameters.length - 1);
-                parameters[parameters.length - 1] = record.getThrown();
-            }
-            record.setParameters(parameters);
-            if (TRACE) {
-                return super.format(record) + System.lineSeparator();
-            }
-            return formatMessage(record) + " " + record.getThrown().getLocalizedMessage() + System.lineSeparator();
-        }
     }
 
     public static void main(String[] args) {
@@ -214,16 +184,21 @@ public class AdminMain {
         System.exit(code);
     }
 
-    protected int doMain(String[] args) {
+    protected final int doMain(String[] args) {
         Version version = Runtime.version();
         if (version.feature() < 21) {
             System.err.println(strings.get("OldJdk", 21, version));
             return ERROR;
         }
 
-        System.setProperty(WALL_CLOCK_START_PROP, Instant.now().toString());
-        GlassFishLogManager.getLogManager().reconfigure(new GlassFishLogManagerConfiguration(LOGGING_CFG),
-            this::reconfigureLogging, null);
+        setProperty(WALL_CLOCK_START_PROP, Instant.now().toString(), true);
+        final LoggingProperties logging = new LoggingProperties();
+        logging.setProperty("handlers", BlockingExternallyManagedLogHandler.class.getName());
+        if (isClassAndMethodDetectionRequired()) {
+            logging.setProperty("org.glassfish.main.jul.classAndMethodDetection.enabled", "true");
+        }
+        GlassFishLogManager.getLogManager().reconfigure(new GlassFishLogManagerConfiguration(logging),
+            this::configureLogging, null);
 
         // Set the thread's context class loader so that everyone can load from our extension directory.
         Set<File> extensions = getExtensions();
@@ -241,10 +216,12 @@ public class AdminMain {
         cliContainer = new CLIContainer(ecl, extensions, logger);
 
         classPath = SmartFile.sanitizePaths(System.getProperty("java.class.path"));
+        modulePath = SmartFile.sanitize(System.getProperty("jdk.module.path"));
         className = AdminMain.class.getName();
 
-        if (logger.isLoggable(FINER)) {
-            logger.log(FINER, "Classpath: {0}\nArguments: {1}", new Object[] {classPath, Arrays.toString(args)});
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, getClass() + "\nModulePath: {0}\nClasspath: {1}\nExtensions: {2}\nArguments: {3}",
+                new Object[] {modulePath, classPath, ecl, Arrays.toString(args)});
         }
 
         if (args.length == 0) {
@@ -287,6 +264,15 @@ public class AdminMain {
     }
 
 
+    private boolean isClassAndMethodDetectionRequired() {
+        Formatter formatter = env.getLogFormatter();
+        if (formatter instanceof GlassFishLogFormatter) {
+            GlassFishLogFormatter gfFormatter = (GlassFishLogFormatter) formatter;
+            return gfFormatter.isPrintSource();
+        }
+        return false;
+    }
+
     public int executeCommand(String[] argv) {
         CLICommand cmd = null;
         try {
@@ -299,11 +285,12 @@ public class AdminMain {
                 po = new ProgramOptions(params, env);
                 readAndMergeOptionsFromAuxInput(po);
                 List<String> operands = rcp.getOperands();
-                argv = operands.toArray(new String[operands.size()]);
+                argv = operands.toArray(String[]::new);
             } else {
                 po = new ProgramOptions(env);
             }
             po.toEnvironment(env);
+            po.setModulePath(modulePath);
             po.setClassPath(classPath);
             po.setClassName(className);
             po.setCommandName(getCommandName());
@@ -321,17 +308,18 @@ public class AdminMain {
             cmd = CLICommand.getCommand(cliContainer, command);
             return cmd.execute(argv);
         } catch (CommandValidationException cve) {
-            logger.log(SEVERE, cve.getMessage(), cve);
-            if (cmd == null) // error parsing program options
-            {
+            logError(cve);
+            if (cmd == null) {
+                // error parsing program options
                 printUsage();
             } else {
                 logger.severe(cmd.getUsage());
+
             }
             return ERROR;
         } catch (InvalidCommandException ice) {
+            logError(ice);
             // find closest match with local or remote commands
-            logger.log(SEVERE, ice.getMessage(), ice);
             try {
                 po.setEcho(false);
                 CLIUtil.displayClosestMatch(command,
@@ -342,9 +330,9 @@ public class AdminMain {
             }
             return ERROR;
         } catch (CommandException ce) {
+            logError(ce);
             if (ce.getCause() instanceof ConnectException) {
                 // find closest match with local commands
-                logger.log(SEVERE, ce.getMessage(), ce);
                 try {
                     CLIUtil.displayClosestMatch(command,
                         CLIUtil.getLocalCommands(cliContainer),
@@ -352,15 +340,12 @@ public class AdminMain {
                 } catch (InvalidCommandException e) {
                     logger.info(strings.get("InvalidRemoteCommand", command));
                 }
-            } else {
-                logger.log(SEVERE, ce.getMessage(), ce);
             }
             return ERROR;
         }
     }
 
-    private void reconfigureLogging() {
-        GlassFishLoggingTracer.trace(AdminMain.class, "Configuring logging for asadmin.");
+    private void configureLogging() {
         boolean trace = env.trace();
         boolean debug = env.debug();
 
@@ -368,31 +353,48 @@ public class AdminMain {
         // admin commands to share. Only this logger and its children obey the
         // conventions that map terse=false to the INFO level and terse=true to
         // the FINE level.
-        logger = Logger.getLogger(ADMIN_CLI_LOGGER);
+        final Logger cliLogger = Logger.getLogger(ADMIN_CLI_LOGGER);
         if (trace) {
-            logger.setLevel(FINEST);
+            cliLogger.setLevel(FINEST);
         } else if (debug) {
-            logger.setLevel(FINER);
+            cliLogger.setLevel(FINER);
         } else {
-            logger.setLevel(FINE);
+            cliLogger.setLevel(FINE);
         }
-        logger.setUseParentHandlers(false);
+        cliLogger.setUseParentHandlers(false);
         Formatter formatter = env.getLogFormatter();
         Handler cliHandler = new CLILoggerHandler(formatter == null ? new CLILoggerFormatter() : formatter);
-        cliHandler.setLevel(logger.getLevel());
-        logger.addHandler(cliHandler);
+        cliHandler.setLevel(cliLogger.getLevel());
+        cliLogger.addHandler(cliHandler);
 
         // make sure the root logger uses our handler as well
         Logger rootLogger = Logger.getLogger("");
         rootLogger.setUseParentHandlers(false);
         if (trace) {
-            rootLogger.setLevel(logger.getLevel());
+            rootLogger.setLevel(cliLogger.getLevel());
         }
         for (Handler handler : rootLogger.getHandlers()) {
             rootLogger.removeHandler(handler);
             handler.close();
         }
         rootLogger.addHandler(cliHandler);
+        this.logger = cliLogger;
+    }
+
+    private void logError(Exception e) {
+        if (env.trace() || env.debug()) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        } else {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+    }
+
+    /**
+     * Print usage message for the admin command. XXX - should be derived from
+     * ProgramOptions.
+     */
+    private void printUsage() {
+        logger.severe(strings.get("Usage.full", getCommandName()));
     }
 
     private static void readAndMergeOptionsFromAuxInput(final ProgramOptions progOpts) {
@@ -417,15 +419,56 @@ public class AdminMain {
         }
     }
 
-    /**
-     * Print usage message for the admin command. XXX - should be derived from
-     * ProgramOptions.
-     */
-    private void printUsage() {
-        logger.severe(strings.get("Usage.full", getCommandName()));
-    }
-
     private static boolean isNotEmpty(String s) {
         return s != null && !s.isEmpty();
+    }
+
+
+    /**
+     * A ConsoleHandler that prints all non-SEVERE messages to System.out and
+     * all SEVERE messages to System.err.
+     */
+    private static class CLILoggerHandler extends ConsoleHandler {
+
+        private CLILoggerHandler(final Formatter formatter) {
+            setFormatter(formatter);
+        }
+
+        @Override
+        public void publish(LogRecord logRecord) {
+            if (!isLoggable(logRecord)) {
+                return;
+            }
+            final PrintStream ps = logRecord.getLevel() == SEVERE ? System.err : System.out;
+            ps.print(getFormatter().format(logRecord));
+            ps.flush();
+        }
+    }
+
+    private static class CLILoggerFormatter extends SimpleFormatter {
+        private static final boolean TRACE = env.trace();
+
+        @Override
+        public synchronized String format(LogRecord record) {
+            // this formatter adds blank lines between records
+            if (record.getThrown() == null) {
+                return formatMessage(record) + System.lineSeparator();
+            }
+            // Some messages use exception as a parameter.
+            // If we don't print stacktraces, the cause would be lost.
+            final Object[] parameters;
+            if (record.getParameters() == null) {
+                parameters = new Object[] {record.getThrown()};
+            } else {
+                parameters = new Object[record.getParameters().length + 1];
+                System.arraycopy(record.getParameters(), 0, parameters, 0, parameters.length - 1);
+                parameters[parameters.length - 1] = record.getThrown();
+            }
+            record.setParameters(parameters);
+            if (TRACE) {
+                return super.format(record) + System.lineSeparator();
+            }
+            return formatMessage(record) + " " + record.getThrown().getLocalizedMessage() + System.lineSeparator();
+        }
     }
 }

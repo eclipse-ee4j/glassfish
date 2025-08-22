@@ -24,12 +24,12 @@
         <artifactId>persistence</artifactId>
         <version>8.0.0-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>jnosql-jakarta-persistence-integration</artifactId>
     <packaging>glassfish-jar</packaging>
 
     <name>Eclipse JNoSQL Jakarta Persistence Integration</name>
-    
+
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -120,7 +120,7 @@
                     <instructions>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-17</_runee>
-                        
+
                         <Import-Package>
                             org.eclipse.jnosql.communication,
                             *
@@ -144,7 +144,6 @@
             <!-- Adds the manifest file created by the org.apache.felix:maven-bundle-plugin -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>

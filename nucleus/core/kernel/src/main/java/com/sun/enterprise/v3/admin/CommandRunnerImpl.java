@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,7 +61,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -70,28 +69,28 @@ import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
-import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
-import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandLock;
 import org.glassfish.api.admin.AdminCommandLockException;
 import org.glassfish.api.admin.AdminCommandLockTimeoutException;
 import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.ClusterExecutor;
+import org.glassfish.api.admin.CommandAspect;
+import org.glassfish.api.admin.CommandAspectFacade;
+import org.glassfish.api.admin.CommandAspectImpl;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandModelProvider;
 import org.glassfish.api.admin.CommandParameters;
 import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.CommandSupport;
 import org.glassfish.api.admin.FailurePolicy;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobManager;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -136,11 +135,13 @@ import static org.glassfish.common.util.Constants.PASSWORD_ATTRIBUTE_NAMES;
  * @author Bill Shannon
  */
 @Service
-public class CommandRunnerImpl implements CommandRunner {
+public class CommandRunnerImpl implements CommandRunner<AdminCommandJob> {
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
 
     private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CommandRunnerImpl.class);
+
+    // FIXME: global variable initialized from instance method!!!
     private static volatile Validator beanValidator;
 
     // This is used only for backword compatibility with old behavior
@@ -149,7 +150,7 @@ public class CommandRunnerImpl implements CommandRunner {
     private static final InjectionManager injectionMgr = new InjectionManager();
 
     @Inject
-    ServiceLocator serviceLocator;
+    private ServiceLocator serviceLocator;
 
     @Inject
     private ServerContext serverContext;
@@ -169,14 +170,18 @@ public class CommandRunnerImpl implements CommandRunner {
     @Inject
     private AdminCommandLock adminLock;
 
-    @Inject @Named("SupplementalCommandExecutorImpl")
-    SupplementalCommandExecutor supplementalExecutor;
+    @Inject
+    @Named("SupplementalCommandExecutorImpl")
+    private SupplementalCommandExecutor supplementalExecutor;
 
     @Inject
     private CommandSecurityChecker commandSecurityChecker;
 
     @Inject
     private InvokeEventService eventService;
+
+    @Inject
+    private JobManager<AdminCommandJob> jobManager;
 
     /**
      * Returns an initialized ActionReport instance for the passed type or
@@ -194,25 +199,23 @@ public class CommandRunnerImpl implements CommandRunner {
      * Returns the command model for a command name.
      *
      * @param commandName command name
-     * @param logger logger to log any error messages
      * @return model for this command (list of parameters,etc...),
      *          or null if command is not found
      */
     @Override
-    public CommandModel getModel(String commandName, Logger logger) {
-        return getModel(null, commandName, logger);
+    public CommandModel getModel(String commandName) {
+        return getModel(null, commandName);
     }
 
     /**
      * Returns the command model for a command name.
      *
      * @param commandName command name
-     * @param logger logger to log any error messages
      * @return model for this command (list of parameters,etc...),
      *          or null if command is not found
      */
     @Override
-    public CommandModel getModel(String scope, String commandName, Logger logger) {
+    public CommandModel getModel(String scope, String commandName) {
         AdminCommand command;
         try {
             String commandServiceName = (scope != null) ? scope + commandName : commandName;
@@ -257,12 +260,11 @@ public class CommandRunnerImpl implements CommandRunner {
      *
      * @param commandName command name as typed by users
      * @param report report used to communicate command status back to the user
-     * @param logger logger to log
      * @return command registered under commandName or null if not found
      */
     @Override
-    public AdminCommand getCommand(String commandName, ActionReport report, Logger logger) {
-        return getCommand(null, commandName, report, logger);
+    public AdminCommand getCommand(String commandName, ActionReport report) {
+        return getCommand(null, commandName, report);
     }
 
 
@@ -282,11 +284,10 @@ public class CommandRunnerImpl implements CommandRunner {
      *
      * @param commandName command name as typed by users
      * @param report report used to communicate command status back to the user
-     * @param logger logger to log
      * @return command registered under commandName or null if not found
      */
     @Override
-    public AdminCommand getCommand(String scope, String commandName, ActionReport report, Logger logger) {
+    public AdminCommand getCommand(String scope, String commandName, ActionReport report) {
         AdminCommand command = null;
         String commandServiceName = scope == null ? commandName : scope + commandName;
         try {
@@ -348,31 +349,6 @@ public class CommandRunnerImpl implements CommandRunner {
         return command;
     }
 
-    @Override
-    public CommandInvocation getCommandInvocation(String name, ActionReport report, Subject subject) {
-        return getCommandInvocation(name,report,subject,false);
-    }
-
-    @Override
-    public CommandInvocation getCommandInvocation(String scope, String name, ActionReport report, Subject subject) {
-        return getCommandInvocation(scope,name,report,subject,false);
-    }
-
-    /**
-     * Obtain a new command invocation object for the null scope.
-     * Command invocations can be configured and used
-     * to trigger a command execution.
-     *
-     * @param name name of the requested command to invoke
-     * @param report where to place the status of the command execution
-     * @param subject the Subject under which to execute the command
-     * @return a new command invocation for that command name
-     */
-    @Override
-    public CommandInvocation getCommandInvocation(String name, ActionReport report, Subject subject, boolean isNotify) {
-        return getCommandInvocation(null, name, report, subject,false);
-    }
-
     /**
      * Obtain a new command invocation object.
      * Command invocations can be configured and used
@@ -382,17 +358,20 @@ public class CommandRunnerImpl implements CommandRunner {
      * @param name name of the requested command to invoke
      * @param report where to place the status of the command execution
      * @param subject the Subject under which to execute the command
-     * @param isNotify  Should notification be enabled
+     * @param notify  Should notification be enabled
      * @return a new command invocation for that command name
      */
     @Override
-    public CommandInvocation getCommandInvocation(String scope, String name, ActionReport report, Subject subject,
-        boolean isNotify) {
-        return new CommandRunnerExecutionContext(scope, name, report, subject, isNotify, this);
+    public CommandInvocation<AdminCommandJob> getCommandInvocation(String scope, String name, ActionReport report,
+        Subject subject, boolean notify, boolean detach) {
+        return new CommandRunnerExecutionContext(scope, name, report, subject, notify, detach, this);
     }
 
+    JobManager<AdminCommandJob> getJobManager() {
+        return jobManager;
+    }
 
-    public static boolean injectParameters(final CommandModel model, final Object injectionTarget,
+    private static boolean injectParameters(final CommandModel model, final Object injectionTarget,
         final InjectionResolver<Param> injector, final ActionReport report) {
         if (injectionTarget instanceof GenericCrudCommand) {
             GenericCrudCommand c = GenericCrudCommand.class.cast(injectionTarget);
@@ -443,8 +422,7 @@ public class CommandRunnerImpl implements CommandRunner {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(errorMsg);
             report.setFailureCause(e);
-            ActionReport.MessagePart childPart =
-                    report.getTopMessagePart().addChild();
+            ActionReport.MessagePart childPart = report.getTopMessagePart().addChild();
             childPart.setMessage(usage);
             return false;
         }
@@ -541,7 +519,8 @@ public class CommandRunnerImpl implements CommandRunner {
      * @param command the command service to execute
      * @param context the AdminCommandcontext that has the payload and report
      */
-    private ActionReport doCommand(final CommandModel model, final AdminCommand command, final AdminCommandContext context, final CommandRunnerProgressHelper progressHelper) {
+    private void doCommand(final CommandModel model, final AdminCommand command,
+        final AdminCommandContext context, final CommandRunnerProgressHelper progressHelper) {
         ActionReport report = context.getActionReport();
         report.setActionDescription(model.getCommandName() + " AdminCommand");
 
@@ -552,6 +531,7 @@ public class CommandRunnerImpl implements CommandRunner {
         final ClassLoader ccl = serverContext.getCommonClassLoader();
 
         AdminCommand wrappedCommand = new WrappedAdminCommand(command) {
+
             @Override
             public void execute(final AdminCommandContext context) {
                 try {
@@ -562,8 +542,7 @@ public class CommandRunnerImpl implements CommandRunner {
                      * Execute the command in the security context of the
                      * previously-authenticated subject.
                      */
-                    Subject.doAs(context.getSubject(),
-                            new PrivilegedAction<Void> () {
+                    Subject.doAs(context.getSubject(), new PrivilegedAction<Void>() {
 
                         @Override
                         public Void run() {
@@ -581,28 +560,27 @@ public class CommandRunnerImpl implements CommandRunner {
         };
 
         // look for other wrappers using CommandAspect annotation
-        final AdminCommand otherWrappedCommand = CommandSupport.createWrappers(serviceLocator, model, wrappedCommand, report);
+        final AdminCommand otherWrappedCommand = createWrappers(serviceLocator, model, wrappedCommand, report);
 
         try {
-            Subject.doAs(context.getSubject(),
-                            new PrivilegedAction<Void> () {
+            Subject.doAs(context.getSubject(), new PrivilegedAction<Void>() {
 
-                        @Override
-                        public Void run() {
-                            try {
-                                if (origCL != ccl) {
-                                    thread.setContextClassLoader(ccl);
-                                }
-                                otherWrappedCommand.execute(progressHelper.wrapContext4MainCommand(context));
-                                return null;
-                            } finally {
-                                if (origCL != ccl) {
-                                    thread.setContextClassLoader(origCL);
-                                }
-                            }
+                @Override
+                public Void run() {
+                    try {
+                        if (origCL != ccl) {
+                            thread.setContextClassLoader(ccl);
                         }
+                        otherWrappedCommand.execute(progressHelper.wrapContext4MainCommand(context));
+                        return null;
+                    } finally {
+                        if (origCL != ccl) {
+                            thread.setContextClassLoader(origCL);
+                        }
+                    }
+                }
 
-                    });
+            });
 
         } catch (Throwable e) {
             logger.log(SEVERE, KernelLoggerInfo.invocationException, e);
@@ -610,8 +588,6 @@ public class CommandRunnerImpl implements CommandRunner {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
         }
-
-        return context.getActionReport();
     }
 
     /**
@@ -624,17 +600,14 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return usagetext
      */
     static String getUsageText(CommandModel model) {
-        StringBuilder usageText = new StringBuilder();
-
-        String usage;
-        if (ok(usage = model.getUsageText())) {
-            usageText.append(
-                    adminStrings.getLocalString("adapter.usage", "Usage: "));
+        String usage = model.getUsageText();
+        if (ok(usage)) {
+            StringBuilder usageText = new StringBuilder();
+            usageText.append(adminStrings.getLocalString("adapter.usage", "Usage: "));
             usageText.append(usage);
             return usageText.toString();
-        } else {
-            return generateUsageText(model);
         }
+        return generateUsageText(model);
     }
 
     /**
@@ -644,16 +617,14 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return generated usagetext
      */
     private static String generateUsageText(CommandModel model) {
-        StringBuffer usageText = new StringBuffer();
-        usageText.append(
-                adminStrings.getLocalString("adapter.usage", "Usage: "));
+        StringBuilder usageText = new StringBuilder();
+        usageText.append(adminStrings.getLocalString("adapter.usage", "Usage: "));
         usageText.append(model.getCommandName());
         usageText.append(" ");
-        StringBuffer operand = new StringBuffer();
+        StringBuilder operand = new StringBuilder();
         for (CommandModel.ParamModel pModel : model.getParameters()) {
             final Param param = pModel.getParam();
-            final String paramName =
-                    pModel.getName().toLowerCase(Locale.ENGLISH);
+            final String paramName = pModel.getName().toLowerCase(Locale.ENGLISH);
             // skip "hidden" options
 
             // do not want to display password as an option
@@ -846,8 +817,7 @@ public class CommandRunnerImpl implements CommandRunner {
         if (report instanceof XMLContentActionReporter) {
             getMetadata(command, model, report);
         } else {
-            report.setMessage(model.getCommandName() + " - "
-                    + model.getLocalizedDescription());
+            report.setMessage(model.getCommandName() + " - " + model.getLocalizedDescription());
             report.getTopMessagePart().addProperty("SYNOPSIS",
                     encodeManPage(new BufferedReader(new StringReader(
                     getUsageText(model)))));
@@ -898,8 +868,8 @@ public class CommandRunnerImpl implements CommandRunner {
             ppart.addProperty("name", p.getName());
             ppart.addProperty("type", typeOf(p));
             ppart.addProperty("optional", Boolean.toString(param.optional()));
-            if (param.obsolete()) // don't include it if it's false
-            {
+            if (param.obsolete()) {
+                // don't include it if it's false
                 ppart.addProperty("obsolete", "true");
             }
             String paramDesc = p.getLocalizedDescription();
@@ -928,10 +898,8 @@ public class CommandRunnerImpl implements CommandRunner {
             primpart.setChildrenType("operand");
             primpart.addProperty("name", primary.getName());
             primpart.addProperty("type", typeOf(primary));
-            primpart.addProperty("min",
-                    primary.getParam().optional() ? "0" : "1");
-            primpart.addProperty("max", primary.getParam().multiple()
-                    ? "unlimited" : "1");
+            primpart.addProperty("min", primary.getParam().optional() ? "0" : "1");
+            primpart.addProperty("max", primary.getParam().multiple() ? "unlimited" : "1");
             String desc = primary.getLocalizedDescription();
             if (ok(desc)) {
                 primpart.addProperty("description", desc);
@@ -948,7 +916,7 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return        the string representation of the asadmin type
      */
     private static String typeOf(CommandModel.ParamModel p) {
-        Class t = p.getType();
+        Class<?> t = p.getType();
         if (t == Boolean.class || t == boolean.class) {
             return "BOOLEAN";
         } else if (t == File.class || t == File[].class) {
@@ -965,8 +933,8 @@ public class CommandRunnerImpl implements CommandRunner {
     /**
      * Return an InputStream for the man page for the named command.
      */
-    public static BufferedReader getManPage(String commandName, CommandModel model) {
-        Class clazz = model.getCommandClass();
+    private static BufferedReader getManPage(String commandName, CommandModel model) {
+        Class<?> clazz = model.getCommandClass();
         if (clazz == null) {
             return null;
         }
@@ -1021,7 +989,8 @@ public class CommandRunnerImpl implements CommandRunner {
 
             // to do, we should validate meta-options differently.
             // help and Xhelp are meta-options that are handled specially
-            if (key.equals("DEFAULT") || key.equals("help") || key.equals("Xhelp") || key.equals("notify")) {
+            if (key.equals("DEFAULT") || key.equals("help") || key.equals("Xhelp")
+                || key.equals("notify") || key.equals("detach")) {
                 continue;
             }
 
@@ -1119,18 +1088,17 @@ public class CommandRunnerImpl implements CommandRunner {
 
         if (command instanceof CommandModelProvider) {
             return ((CommandModelProvider) command).getModel();
-        } else {
-            return new CommandModelImpl(command.getClass());
         }
+        return new CommandModelImpl(command.getClass());
     }
 
     /**
      * Called from ExecutionContext.execute.
      */
-    void doCommand(CommandRunnerExecutionContext inv, AdminCommand command,
-            final Subject subject, final Job job) {
-
-        publishCommandInvokedEvent(inv, subject);
+    @Override
+    public void doCommand(CommandInvocation<AdminCommandJob> ctx, AdminCommand command, final Subject subject,
+        final AdminCommandJob job) {
+        publishCommandInvokedEvent(ctx, subject);
 
         boolean fromCheckpoint = job != null &&
                 (job.getState() == AdminCommandState.State.REVERTING ||
@@ -1143,14 +1111,14 @@ public class CommandRunnerImpl implements CommandRunner {
             model = new CommandModelImpl(command.getClass());
         }
         UploadedFilesManager ufm = null;
-        ActionReport report = inv.report();
+        ActionReport report = ctx.report();
         if (!fromCheckpoint) {
             report.setActionDescription(model.getCommandName() + " command");
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         }
         ParameterMap parameters;
         final AdminCommandContext context = new AdminCommandContextImpl(
-                logger, report, inv.inboundPayload(), inv.outboundPayload(),
+                logger, report, ctx.inboundPayload(), ctx.outboundPayload(),
                 job.getEventBroker(),
                 job.getId());
         context.setSubject(subject);
@@ -1160,12 +1128,12 @@ public class CommandRunnerImpl implements CommandRunner {
         ActionReport.ExitCode preSupplementalReturn = ActionReport.ExitCode.SUCCESS;
         ActionReport.ExitCode postSupplementalReturn = ActionReport.ExitCode.SUCCESS;
         CommandRunnerProgressHelper progressHelper =
-                new CommandRunnerProgressHelper(command, model.getCommandName(), job, inv.progressStatusChild);
+            new CommandRunnerProgressHelper(command, model.getCommandName(), job, ctx.progressStatus());
 
         // If this glassfish installation does not have stand alone instances / clusters at all, then
         // lets not even look Supplemental command and such. A small optimization
         boolean doReplication = false;
-        if ((domain.getServers().getServer().size() > 1) || (!domain.getClusters().getCluster().isEmpty())) {
+        if (domain.getServers().getServer().size() > 1 || !domain.getClusters().getCluster().isEmpty()) {
             doReplication = true;
         } else {
             logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.devmode",
@@ -1173,43 +1141,35 @@ public class CommandRunnerImpl implements CommandRunner {
         }
         try {
             //Get list of suplemental commands
-            Collection<SupplementalCommand> suplementalCommands =
-                    supplementalExecutor.listSuplementalCommands(model.getCommandName());
+            Collection<SupplementalCommand> suplementalCommands = supplementalExecutor
+                .listSuplementalCommands(model.getCommandName());
             try {
                 /*
                  * Extract any uploaded files and build a map from parameter names
                  * to the corresponding extracted, uploaded file.
                  */
-                ufm = new UploadedFilesManager(inv.report, logger,
-                        inv.inboundPayload());
+                ufm = new UploadedFilesManager(ctx.report(), ctx.inboundPayload(), domain.getApplicationRoot());
 
-                if (inv.typedParams() != null) {
+                if (ctx.typedParams() != null) {
                     logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.delegatedcommand",
                             "This command is a delegated command. Dynamic reconfiguration will be bypassed"));
-                    InjectionResolver<Param> injectionTarget =
-                            new DelegatedInjectionResolver(model, inv.typedParams(),
-                            ufm.optionNameToFileMap());
+                    InjectionResolver<Param> injectionTarget = new DelegatedInjectionResolver(model, ctx.typedParams(),
+                        ufm.optionNameToFileMap());
                     if (injectParameters(model, command, injectionTarget, report)) {
-                        inv.setReport(doCommand(model, command, context, progressHelper));
+                        doCommand(model, command, context, progressHelper);
                     }
                     return;
                 }
 
-                parameters = inv.parameters();
-                if (parameters == null) {
-                    // no parameters, pass an empty collection
-                    parameters = new ParameterMap();
-                }
-
+                parameters = ctx.parameters();
                 if (isSet(parameters, "help") || isSet(parameters, "Xhelp")) {
                     BufferedReader in = getManPage(model.getCommandName(), model);
                     String manPage = encodeManPage(in);
 
                     if (manPage != null && isSet(parameters, "help")) {
-                        inv.report().getTopMessagePart().addProperty("MANPAGE", manPage);
+                        ctx.report().getTopMessagePart().addProperty("MANPAGE", manPage);
                     } else {
-                        report.getTopMessagePart().addProperty(
-                                AdminCommandResponse.GENERATED_HELP, "true");
+                        report.getTopMessagePart().addProperty(AdminCommandResponse.GENERATED_HELP, "true");
                         getHelp(command, report);
                     }
                     return;
@@ -1238,22 +1198,20 @@ public class CommandRunnerImpl implements CommandRunner {
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setMessage(exception.getMessage());
                     report.setFailureCause(exception);
-                    ActionReport.MessagePart childPart =
-                            report.getTopMessagePart().addChild();
+                    ActionReport.MessagePart childPart = report.getTopMessagePart().addChild();
                     childPart.setMessage(getUsageText(model));
                     return;
                 }
 
                 // initialize the injector and inject
-                MapInjectionResolver injectionMgr =
-                        new MapInjectionResolver(model, parameters,
-                        ufm.optionNameToFileMap());
+                MapInjectionResolver injectionMgr = new MapInjectionResolver(model, parameters,
+                    ufm.optionNameToFileMap());
                 injectionMgr.setContext(context);
                 if (!injectParameters(model, command, injectionMgr, report)) {
                     return;
                 }
 
-                CommandSupport.init(serviceLocator, command, context, job);
+                init(serviceLocator, command, context, job);
 
                 /*
                  * Now that parameters have been injected into the command object,
@@ -1264,7 +1222,7 @@ public class CommandRunnerImpl implements CommandRunner {
                  */
                 final Map<String,Object> env = buildEnvMap(parameters);
                 try {
-                    if ( ! commandSecurityChecker.authorize(context.getSubject(), env, command, context)) {
+                    if (!commandSecurityChecker.authorize(context.getSubject(), env, command, context)) {
                         /*
                          * If the command class tried to prepare itself but
                          * could not then the return is false and the command has
@@ -1276,14 +1234,14 @@ public class CommandRunnerImpl implements CommandRunner {
                 } catch (SecurityException ex) {
                     report.setFailureCause(ex);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    report.setMessage(adminStrings.getLocalString("commandrunner.noauth",
-                            "User is not authorized for this command"));
+                    report.setMessage(
+                        adminStrings.getLocalString("commandrunner.noauth", "User is not authorized for this command"));
                     return;
                 } catch (Exception ex) {
                     report.setFailureCause(ex);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    report.setMessage(adminStrings.getLocalString("commandrunner.errAuth",
-                            "Error during authorization"));
+                    report
+                        .setMessage(adminStrings.getLocalString("commandrunner.errAuth", "Error during authorization"));
                     return;
                 }
 
@@ -1441,7 +1399,8 @@ public class CommandRunnerImpl implements CommandRunner {
                     if (command instanceof UndoableCommand) {
                         UndoableCommand uCmd = (UndoableCommand) command;
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.prepareunodable",
-                                "Command execution stage 1 : Calling prepare for undoable command {0}", inv.name()));
+                            "Command execution stage 1 : Calling prepare for undoable command {0}",
+                            ctx.getCommandName()));
                         if (!uCmd.prepare(context, parameters).equals(ActionReport.ExitCode.SUCCESS)) {
                             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                             report.setMessage(adminStrings.getLocalString("commandrunner.executor.errorinprepare",
@@ -1456,7 +1415,8 @@ public class CommandRunnerImpl implements CommandRunner {
                     // Run Supplemental commands that have to run before this command on this instance type
                     if (!fromCheckpoint) {
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.presupplemental",
-                                "Command execution stage 2 : Call pre supplemental commands for {0}", inv.name()));
+                            "Command execution stage 2 : Call pre supplemental commands for {0}",
+                            ctx.getCommandName()));
                         preSupplementalReturn = supplementalExecutor.execute(suplementalCommands,
                                 Supplemental.Timing.Before, context, parameters, ufm.optionNameToFileMap());
                         if (preSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
@@ -1476,9 +1436,9 @@ public class CommandRunnerImpl implements CommandRunner {
                             || runtimeTypes.contains(RuntimeType.SINGLE_INSTANCE)
                             || (serverEnvironment.isInstance() && runtimeTypes.contains(RuntimeType.INSTANCE))) {
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.maincommand",
-                                "Command execution stage 3 : Calling main command implementation for {0}", inv.name()));
-                        report = doCommand(model, command, context, progressHelper);
-                        inv.setReport(report);
+                            "Command execution stage 3 : Calling main command implementation for {0}",
+                            ctx.getCommandName()));
+                        doCommand(model, command, context, progressHelper);
                     }
 
 
@@ -1487,7 +1447,8 @@ public class CommandRunnerImpl implements CommandRunner {
                             report.getActionExitCode()).equals(ActionReport.ExitCode.FAILURE)) {
                         //Run Supplemental commands that have to be run after this command on this instance type
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.postsupplemental",
-                                "Command execution stage 4 : Call post supplemental commands for {0}", inv.name()));
+                            "Command execution stage 4 : Call post supplemental commands for {0}",
+                            ctx.getCommandName()));
                         postSupplementalReturn = supplementalExecutor.execute(suplementalCommands,
                                 Supplemental.Timing.After, context, parameters, ufm.optionNameToFileMap());
                         if (postSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
@@ -1516,9 +1477,7 @@ public class CommandRunnerImpl implements CommandRunner {
                             + "a user on {0}.", lockTime);
 
                     if (lockMsg != null && !lockMsg.isEmpty()) {
-                        msg += " "
-                                + adminStrings.getLocalString("lock.reason", "Reason:")
-                                + " " + lockMsg;
+                        msg += " " + adminStrings.getLocalString("lock.reason", "Reason:") + " " + lockMsg;
                     }
 
                     report.setMessage(msg);
@@ -1535,8 +1494,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(ex.getMessage());
                 report.setFailureCause(ex);
-                ActionReport.MessagePart childPart =
-                        report.getTopMessagePart().addChild();
+                ActionReport.MessagePart childPart = report.getTopMessagePart().addChild();
                 childPart.setMessage(getUsageText(model));
                 return;
             }
@@ -1581,8 +1539,10 @@ public class CommandRunnerImpl implements CommandRunner {
                     } else {
                         if (!FailurePolicy.applyFailurePolicy(fp,
                                 report.getActionExitCode()).equals(ActionReport.ExitCode.FAILURE)) {
-                            logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.afterreplsupplemental",
-                                    "Command execution stage 5 : Call post-replication supplemental commands for {0}", inv.name()));
+                            logger.fine(
+                                adminStrings.getLocalString("dynamicreconfiguration.diagnostics.afterreplsupplemental",
+                                    "Command execution stage 5 : Call post-replication supplemental commands for {0}",
+                                    ctx.getCommandName()));
                             ActionReport.ExitCode afterReplicationSupplementalReturn = supplementalExecutor.execute(suplementalCommands,
                                     Supplemental.Timing.AfterReplication, context, parameters, ufm.optionNameToFileMap());
                             if (afterReplicationSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
@@ -1600,7 +1560,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 if (command instanceof UndoableCommand) {
                     UndoableCommand uCmd = (UndoableCommand) command;
                     logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.undo",
-                            "Command execution failed; calling undo() for command {0}", inv.name()));
+                            "Command execution failed; calling undo() for command {0}", ctx.getCommandName()));
                     uCmd.undo(context, parameters, ClusterOperationUtil.getCompletedInstances());
                 }
             } else {
@@ -1630,36 +1590,25 @@ public class CommandRunnerImpl implements CommandRunner {
         return result;
     }
 
-    public void executeFromCheckpoint(JobManager.Checkpoint checkpoint, boolean revert, AdminCommandEventBroker eventBroker) {
-        CommandRunnerExecutionContext ec = new CommandRunnerExecutionContext(null, null, null, null,false, this);
-        ec.executeFromCheckpoint(checkpoint, revert, eventBroker);
-    }
 
-    private void publishCommandInvokedEvent(CommandRunnerExecutionContext invocation, Subject subject) {
-        final ParameterMap parameters = Objects.requireNonNullElseGet(invocation.parameters(), ParameterMap::new);
-        final ParameterMap maskedMap = parameters.getMaskedMap(PASSWORD_ATTRIBUTE_NAMES);
-        final CommandInvokedEvent event = new CommandInvokedEvent(
-                invocation.name(), maskedMap,
-                subject);
-        eventService.getCommandInvokedTopic()
-                .publish(event);
+    private void publishCommandInvokedEvent(CommandInvocation<?> invocation, Subject subject) {
+        final ParameterMap parameters = invocation.parameters().getMaskedMap(PASSWORD_ATTRIBUTE_NAMES);
+        final CommandInvokedEvent event = new CommandInvokedEvent(invocation.getCommandName(), parameters, subject);
+        eventService.getCommandInvokedTopic().publish(event);
     }
 
 
     /**
-     * An InjectionResolver that uses an Object as the source of
-     * the data to inject.
+     * An InjectionResolver that uses an Object as the source of the data to inject.
      */
-    private static class DelegatedInjectionResolver
-            extends InjectionResolver<Param> {
+    private static class DelegatedInjectionResolver extends InjectionResolver<Param> {
 
         private final CommandModel model;
         private final CommandParameters parameters;
         private final MultiMap<String, File> optionNameToUploadedFileMap;
 
-        public DelegatedInjectionResolver(CommandModel model,
-                CommandParameters parameters,
-                final MultiMap<String, File> optionNameToUploadedFileMap) {
+        public DelegatedInjectionResolver(CommandModel model, CommandParameters parameters,
+            final MultiMap<String, File> optionNameToUploadedFileMap) {
             super(Param.class);
             this.model = model;
             this.parameters = parameters;
@@ -1805,101 +1754,6 @@ public class CommandRunnerImpl implements CommandRunner {
     }
 
     /**
-     * Encapsulates handling of files uploaded to the server in the payload
-     * of the incoming HTTP request.
-     * <p>
-     * Extracts any such files from the payload into a temporary directory
-     * under the domain's applications directory.  (Putting them there allows
-     * the deployment processing to rename the uploaded archive to another location
-     * under the applications directory, rather than having to copy them.)
-     */
-    private class UploadedFilesManager {
-
-        private final ActionReport report;
-        private final Logger logger;
-        /**
-         * maps option names as sent with each uploaded file to the corresponding
-         * extracted files
-         */
-        private MultiMap<String, File> optionNameToFileMap;
-
-        /*
-         * PFM needs to be a field so it is not gc-ed before the
-         * UploadedFilesManager is closed.
-         */
-        private PayloadFilesManager.Temp payloadFilesMgr = null;
-
-        private UploadedFilesManager(final ActionReport report,
-                final Logger logger,
-                final Payload.Inbound inboundPayload) throws IOException, Exception {
-            this.logger = logger;
-            this.report = report;
-            extractFiles(inboundPayload);
-        }
-
-        private MultiMap<String, File> optionNameToFileMap() {
-            return optionNameToFileMap;
-        }
-
-        private void close() {
-            if (payloadFilesMgr != null) {
-                payloadFilesMgr.cleanup();
-            }
-        }
-
-        private void extractFiles(final Payload.Inbound inboundPayload)
-                throws Exception {
-            if (inboundPayload == null) {
-                return;
-            }
-
-            final File uniqueSubdirUnderApplications = chooseTempDirParent();
-            payloadFilesMgr = new PayloadFilesManager.Temp(
-                    uniqueSubdirUnderApplications,
-                    report,
-                    logger);
-
-            /*
-             * Extract the files into the temp directory.
-             */
-            final Map<File, Properties> payloadFiles =
-                    payloadFilesMgr.processPartsExtended(inboundPayload);
-
-            /*
-             * Prepare the map of command options names to corresponding
-             * uploaded files.
-             */
-            optionNameToFileMap = new MultiMap<>();
-            for (Map.Entry<File, Properties> e : payloadFiles.entrySet()) {
-                final String optionName = e.getValue().getProperty("data-request-name");
-                if (optionName != null) {
-                    logger.finer("UploadedFilesManager: map " + optionName
-                            + " to " + e.getKey());
-                    optionNameToFileMap.add(optionName, e.getKey());
-                }
-            }
-        }
-
-        private File chooseTempDirParent() throws IOException {
-            final File appRoot = new File(domain.getApplicationRoot());
-
-            /*
-             * Apparently during embedded runs the applications directory
-             * might not be present already.  Create it if needed.
-             */
-            if (!appRoot.isDirectory()) {
-                if (!appRoot.exists() && !appRoot.mkdirs()) {
-                    throw new IOException(adminStrings.getLocalString("commandrunner.errCreDir",
-                            "Could not create the directory {0}; no further information is available.",
-                            appRoot.getAbsolutePath()));
-                }
-            }
-
-            return appRoot;
-        }
-    }
-
-    /**
      * Format the lock acquisition time.
      */
     private String formatSuspendDate(Date lockTime) {
@@ -1907,9 +1761,71 @@ public class CommandRunnerImpl implements CommandRunner {
             String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
             return sdf.format(lockTime);
-        } else {
-            return adminStrings.getLocalString("lock.timeoutunavailable",
-                    "<<Date is unavailable>>");
         }
+        return adminStrings.getLocalString("lock.timeoutunavailable", "<<Date is unavailable>>");
+    }
+
+    /**
+     * Execute aspects when command is just completely initialized, i..e injected with parameters.
+     */
+    private static void init(final ServiceLocator serviceLocator, final AdminCommand command,
+        final AdminCommandContext context, final Job instance) {
+        processAspects(serviceLocator, command, (a, aspect, command1) -> {
+            aspect.init(a, command1, context, instance);
+            return command1;
+        });
+    }
+
+    /**
+     * Execute aspects when command is finished successfully or not.
+     */
+    void done(final AdminCommand command, final Job instance, boolean isNotify) {
+
+        processAspects(serviceLocator, command, (a, aspect, command1) -> {
+            aspect.done(a, command1, instance);
+            return command1;
+        });
+        if (isNotify) {
+            CommandAspectFacade commandAspectFacade = serviceLocator.getService(CommandAspectFacade.class);
+            if (commandAspectFacade != null) {
+                commandAspectFacade.done(command, instance);
+            }
+        }
+    }
+
+    /**
+     * Execute wrapping aspects, see {@link org.glassfish.api.AsyncImpl} for example.
+     */
+    public static AdminCommand createWrappers(final ServiceLocator serviceLocator, final CommandModel model, final AdminCommand command,
+            final ActionReport report) {
+
+        return processAspects(serviceLocator, command, (a, cai, command1) -> cai.createWrapper(a, model, command1, report));
+    }
+
+    private static AdminCommand processAspects(ServiceLocator serviceLocator, AdminCommand command, Function function) {
+
+        Annotation[] annotations = getUnwrappedCommand(command).getClass().getAnnotations();
+        // TODO: annotations from wrapper class
+        for (Annotation a : annotations) {
+            CommandAspect ca = a.annotationType().getAnnotation(CommandAspect.class);
+            if (ca != null) {
+                CommandAspectImpl<Annotation> cai = serviceLocator.<CommandAspectImpl<Annotation>>getService(ca.value());
+                command = function.apply(a, cai, command);
+            }
+        }
+
+        return command;
+    }
+
+    // Get root of wrapped command.
+    private static AdminCommand getUnwrappedCommand(AdminCommand wrappedCommand) {
+        if (wrappedCommand instanceof WrappedAdminCommand) {
+            return ((WrappedAdminCommand) wrappedCommand).getWrappedCommand();
+        }
+        return wrappedCommand;
+    }
+
+    private interface Function {
+        AdminCommand apply(Annotation ca, CommandAspectImpl<Annotation> cai, AdminCommand object);
     }
 }

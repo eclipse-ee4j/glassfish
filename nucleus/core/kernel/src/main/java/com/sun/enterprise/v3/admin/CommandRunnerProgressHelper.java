@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,8 +25,7 @@ import java.util.UUID;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextForInstance;
-import org.glassfish.api.admin.AdminCommandEventBroker;
-import org.glassfish.api.admin.CommandProgress;
+import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.Progress;
 import org.glassfish.api.admin.ProgressProvider;
@@ -35,6 +35,9 @@ import org.glassfish.api.admin.progress.ProgressStatusBase;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 import org.glassfish.config.support.GenericCrudCommand;
+
+import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_CHANGE;
+import static org.glassfish.api.admin.CommandProgress.EVENT_PROGRESSSTATUS_STATE;
 
 /** Helper class for {@code ProgressStatus} manipulation during
  * {@code CommandRunner} execution.<br/><br/>
@@ -64,9 +67,9 @@ class CommandRunnerProgressHelper {
     public CommandRunnerProgressHelper(AdminCommand command, String name, Job job, ProgressStatus clientProgressStatus) {
         if (command instanceof GenericCrudCommand) {
             GenericCrudCommand gcc = (GenericCrudCommand) command;
-            Class decorator = gcc.getDecoratorClass();
+            Class<?> decorator = gcc.getDecoratorClass();
             if (decorator != null) {
-                progressAnnotation = (Progress) decorator.getAnnotation(Progress.class);
+                progressAnnotation = decorator.getAnnotation(Progress.class);
             }
         } else if (command instanceof ProgressProvider) {
             progressAnnotation = ((ProgressProvider) command).getProgress();
@@ -92,18 +95,10 @@ class CommandRunnerProgressHelper {
             return;
         }
         final ProgressStatusClient psc = new ProgressStatusClient(clientProgressStatus);
-        commandInstance.getEventBroker().registerListener(CommandProgress.EVENT_PROGRESSSTATUS_STATE, new AdminCommandEventBroker.AdminCommandListener<ProgressStatusBase>() {
-                    @Override
-                    public void onAdminCommandEvent(String name, ProgressStatusBase event) {
-                        psc.mirror(event);
-                    }
-                });
-        commandInstance.getEventBroker().registerListener(CommandProgress.EVENT_PROGRESSSTATUS_CHANGE, new AdminCommandEventBroker.AdminCommandListener<ProgressStatusEvent>() {
-                    @Override
-                    public void onAdminCommandEvent(String name, ProgressStatusEvent event) {
-                        psc.mirror(event);
-                    }
-                });
+        AdminCommandListener<ProgressStatusBase> progStatListener = (name, event) -> psc.mirror(event);
+        commandInstance.getEventBroker().registerListener(EVENT_PROGRESSSTATUS_STATE, progStatListener);
+        AdminCommandListener<ProgressStatusEvent> progStatEventListener = (name, event) -> psc.mirror(event);
+        commandInstance.getEventBroker().registerListener(EVENT_PROGRESSSTATUS_CHANGE, progStatEventListener);
     }
 
     private String createIdForCommandProgress(Job commandInstance) {

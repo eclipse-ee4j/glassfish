@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -73,7 +73,6 @@ public final class ConnectionPoolObjectsUtils {
         // disallow instantiation
     }
 
-
     /**
      * Creates default ConnectorConnectionPool consisting of default
      * pool values.
@@ -107,13 +106,19 @@ public final class ConnectionPoolObjectsUtils {
      * @param connectorPoolObj Connector Connection Pool
      */
     private static void setDefaultAdvancedPoolAttributes(ConnectorConnectionPool connectorPoolObj) {
-        //Other advanced attributes like connection-leak-reclaim, lazy-connection-enlistment,
-        //lazy-connection-association, associate-with-thread are boolean values which are not required
-        //to be explicitly initialized to default values.
+        // Other advanced attributes like --leakreclaim, --lazyconnectionenlistment,
+        // --lazyconnectionassociation, --associatewiththread are boolean values which are not required
+        // to be explicitly initialized to default values.
+
+        // --matchconnections
         connectorPoolObj.setMaxConnectionUsage(ConnectorConnectionPool.DEFAULT_MAX_CONNECTION_USAGE);
+        // --leaktimeout`
         connectorPoolObj.setConnectionLeakTracingTimeout(ConnectorConnectionPool.DEFAULT_LEAK_TIMEOUT);
+        // --creationretryattempts
         connectorPoolObj.setConCreationRetryAttempts(ConnectorConnectionPool.DEFAULT_CON_CREATION_RETRY_ATTEMPTS);
+        // --creationretryinterval
         connectorPoolObj.setConCreationRetryInterval(ConnectorConnectionPool.DEFAULT_CON_CREATION_RETRY_INTERVAL);
+        // --validateatmostonceperiod
         connectorPoolObj.setValidateAtmostOncePeriod(ConnectorConnectionPool.DEFAULT_VALIDATE_ATMOST_ONCE_PERIOD);
     }
 
@@ -262,7 +267,6 @@ public final class ConnectionPoolObjectsUtils {
         return null;
     }
 
-
     public static String getValueFromMCF(String prop, PoolInfo poolInfo, ManagedConnectionFactory mcf) {
         String result = null;
         try {
@@ -274,9 +278,8 @@ public final class ConnectionPoolObjectsUtils {
         return result == null ? "" : result;
     }
 
-
     public static Subject createSubject(ManagedConnectionFactory managedConnectionFactory, final ResourcePrincipalDescriptor principalDescriptor) {
-        Subject tempSubject = new Subject();
+        final Subject tempSubject = new Subject();
         if (principalDescriptor == null) {
             return tempSubject;
         }
@@ -291,7 +294,6 @@ public final class ConnectionPoolObjectsUtils {
 
         return tempSubject;
     }
-
 
     public static boolean isPoolSystemPool(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp) {
         return isPoolSystemPool(domainCcp.getName());
@@ -331,7 +333,6 @@ public final class ConnectionPoolObjectsUtils {
                 return false;
         }
     }
-
 
     /**
      * Validates and sets the values for LazyConnectionEnlistment and LazyConnectionAssociation.
@@ -385,7 +386,6 @@ public final class ConnectionPoolObjectsUtils {
         }
     }
 
-
     private static boolean toBoolean(Object prop, boolean defaultVal) {
         if (prop == null) {
             return defaultVal;
@@ -393,7 +393,6 @@ public final class ConnectionPoolObjectsUtils {
 
         return Boolean.valueOf(((String) prop).toLowerCase(Locale.getDefault()));
     }
-
 
     public static int getTransactionSupportFromRaXml(String rarName) throws ConnectorRuntimeException {
         ConnectorDescriptor descriptor = ConnectorRuntime.getRuntime().getConnectorDescriptor(rarName);

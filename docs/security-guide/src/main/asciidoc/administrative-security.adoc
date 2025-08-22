@@ -52,6 +52,13 @@ is disabled by default. When secure admin is disabled, {productName}
 does not encrypt administrative communication among the system
 components and does not accept administrative connections from remote hosts.
 
+To keep your environment secure, you should always create new domain
+with a new private key and certificates. You should never use supplied
+domain1 with provided keystore. The general security rule of the private
+key is that once it is generated, it stays with the user or the machine,
+never migrates, never leaves its home, and it has just two states:
+private and compromised.
+
 The following subcommands enable and disable secure admin:
 
 * enable-secure-admin +
@@ -272,31 +279,24 @@ self-signed certificates in the keystore, similar to the following:
 ====
 You can list the contents of the keystore without supplying a password.
 However, for a request that affects the private key, such as the
-keytool.exe `--certreq` option, the keystore password is required. This
+keytool `--certreq` option, the keystore password is required. This
 is the master password and has a default value of changeit unless you
 change it with the `change-master-password` subcommand.
 ====
 
 [source]
 ----
-keytool.exe -list -keystore keystore.jks
+keytool -list -keystore keystore.jks
 Enter keystore password:
-
-*****************  WARNING WARNING WARNING  *****************
-* The integrity of the information stored in your keystore  *
-* has NOT been verified!  In order to verify its integrity, *
-* you must provide your keystore password.                  *
-*****************  WARNING WARNING WARNING  *****************
-
 Keystore type: JKS
 Keystore provider: SUN
 
 Your keystore contains 2 entries
 
-glassfish-instance, Jan 3, 2011, PrivateKeyEntry,
-Certificate fingerprint (MD5): 06:A4:83:84:57:52:9C:2F:E1:FD:08:68:BB:2D:ED:E8
-s1as, Jan 3, 2011, PrivateKeyEntry,
-Certificate fingerprint (MD5): 8B:7D:5A:4A:32:36:1B:5D:6A:29:66:01:B0:A3:CB:85
+glassfish-instance, 16. 6. 2025, PrivateKeyEntry,
+Certificate fingerprint (SHA-256): F1:A6:22:25:2E:1A:15:66:FE:C5:93:87:FE:C9:4A:EF:7F:B1:51:D9:54:C2:7D:19:B3:77:45:D4:75:8A:92:D8
+s1as, 16. 6. 2025, PrivateKeyEntry,
+Certificate fingerprint (SHA-256): 28:D2:74:B2:F0:85:C2:3E:B8:23:77:2C:B9:4B:A9:44:18:04:90:EC:7A:C1:43:A3:74:FA:73:0D:2C:8B:BE:FA
 ----
 
 The `--adminalias` and `--instancealias` values are maintained. Because
@@ -333,65 +333,86 @@ the future. )
 
 [source]
 ----
-D:\glassfish8\glassfish\bin>asadmin enable-secure-admin
+asadmin change-admin-password
+Enter admin user name [default: admin]>
+Enter the admin password>
+Enter the new admin password>
+Enter the new admin password again>
+Command change-admin-password executed successfully.
+
+asadmin enable-secure-admin
 Command enable-secure-admin executed successfully.
 
-
-D:\glassfish8\glassfish\bin>asadmin stop-domain domain1
-Waiting for the domain to stop .......
+asadmin stop-domain domain1
+Waiting for the domain to stop
+Waiting finished after 403 ms.
 Command stop-domain executed successfully.
 
-D:\glassfish8\glassfish\bin>asadmin start-domain domain1
-Waiting for domain1 to start ..............................
+Executing: nohup /usr/lib/jvm/jdk21/bin/java ...
+Please look at the server log for more details...
+Waiting for domain1 to start .
+Waiting finished after 1 830 ms.
 Successfully started the domain : domain1
-domain  Location: D:\glassfish8\glassfish\domains\domain1
-Log File: D:\glassfish8\glassfish\domains\domain1\logs\server.log
-Admin Port: 4848
+domain  Location: glassfish8/glassfish/domains/domain1
+Log File: glassfish8/glassfish/domains/domain1/logs/server.log
+Admin Port: 4 848
 Command start-domain executed successfully.
 
-D:\glassfish8\glassfish\bin>asadmin list-domains
+asadmin --passwordfile passwordfile.txt --host myhost --port 4848 --user admin get '*'
 [
 [
   Version: V3
-  Subject: CN=machine.oracle.com, OU=GlassFish, O=Oracle Corporation, L=San
-ta Clara, ST=California, C=US
-  Signature Algorithm: SHA1withRSA, OID = 1.2.840.113549.1.1.5
+  Subject: CN=myhost, OU=GlassFish, O=Eclipse Foundation
+  Signature Algorithm: SHA384withRSA, OID = 1.2.840.113549.1.1.12
 
-  Key:  Sun RSA public key, 1024 bits
-  modulus: 916043595073784449632358756374297330881618062298549101072702252458856
-74079656358328568800001548507219262910864311924824938195045822088563459253216383
-21100660819657204757523896415606833471499564071226722478056407102318862796797465
-6245090519956376357288295037519504394674686082145398885236913866246525691704749
+  Key:  Sun RSA public key, 3072 bits
+  params: null
+  modulus: 3549735436017293395944399646050811605943532483330731639481598849195313135835601143069278775941912833227184154864170476669765109167152322363083299440076144545884210810695275245235290371125049221504343452636546115539000689261660824058752199649413127695714057216403304620479663537593783643718815826174936353744083157948002549899647579875863433879715246339821979167572445791066895925940334028702098718914449598747058452632825884946661997817063467477967082246499686706849812768296403131210992247963632289343046508299415274685878207623087456003937980779990473138786661103933170076403008263876046472449325091195878634067766001042523423726589500567402223394224478674606376189686528174927512280324403247720016525605021176037293387708549982440787482868276910788669896670774159413950077457746564502690943667525041381015485689956421709895164590278363335180710355827189740931402932913235081939232805280270340849976056857048054492958525153
   public exponent: 65537
-  Validity: [From: Tue Jan 04 14:30:08 EST 2011,
-               To: Fri Jan 01 14:30:08 EST 2021]
-  Issuer: CN=machine.oracle.com, OU=GlassFish, O=Oracle Corporation, L=Sant
-a Clara, ST=California, C=US
-  SerialNumber: [    4d237540]
+  Validity: [From: Mon Jun 16 23:57:45 CEST 2025,
+               To: Thu Jun 14 23:57:45 CEST 2035]
+  Issuer: CN=dmatej-tux, OU=GlassFish, O=Eclipse Foundation
+  SerialNumber: 68:68:c4:b6:10:00:3b:60
 
 Certificate Extensions: 1
 [1]: ObjectId: 2.5.29.14 Criticality=false
 SubjectKeyIdentifier [
 KeyIdentifier [
-0000: AF 8B 90 1E 51 9A 80 1B   EB A4 D9 C6 01 8A A0 FD  ....Q...........
-0010: DE EC 83 8A                                        ....
+0000: DE 76 7A 17 89 52 81 A2   16 D7 98 9A F1 88 E0 77  .vz..R.........w
+0010: B5 35 45 42                                        .5EB
 ]
 ]
 
 ]
-  Algorithm: [SHA1withRSA]
+  Algorithm: [SHA384withRSA]
   Signature:
-0000: 3F 2B 30 CE 97 0B 5E F3   72 0E 60 18 8D 3B 04 DC  ?+0...^.r.`..;..
-0010: 26 E6 7A 6F D0 19 CC 26   1D 90 C0 DE 33 4E 53 FB  &.zo...&....3NS.
-0020: DC E7 AE 78 9E BA EF 14   86 57 36 D4 3E 9B C9 FB  ...x.....W6.>...
-0030: C0 B4 EF 72 27 D9 4F 79   1F 89 91 B8 96 26 33 64  ...r'.Oy.....&3d
-0040: 9F 4B 04 4B 83 B9 BF 4D   54 B4 8F 75 17 1A 51 BD  .K.K...MT..u..Q.
-0050: F3 69 94 CE 90 95 08 55   2C 07 D2 23 AC AE EC 6D  .i.....U,..#...m
-0060: 84 B6 3D 00 FB FE 92 50   37 1A 2D 00 F1 21 5C E6  ..=....P7.-..!\.
-0070: 1F 39 26 B2 5D C1 FD C8   B1 4F CC EE 26 84 B8 B5  .9&.]....O..&...
+0000: 2D FC 98 9B B6 4D 0F 13   89 1B 50 17 FF 46 14 84  -....M....P..F..
+0010: C2 42 42 4C EF DC 2A 49   FC 6C D4 CE E1 78 36 28  .BBL..*I.l...x6(
+0020: CC 24 A1 F0 99 6E 6A 2D   09 A0 C2 56 76 E9 02 0B  .$...nj-...Vv...
+0030: B7 AA 19 FE 95 0A BB 7C   35 C8 23 FE CE 01 A9 CE  ........5.#.....
+0040: 4D 7D A0 90 14 F6 4A C6   74 68 6E 4A 78 40 1F 82  M.....J.thnJx@..
+0050: D0 2D 2D 91 CB 29 B7 14   37 9D B8 4A 41 39 41 63  .--..)..7..JA9Ac
+0060: 21 B9 0D 91 CA 94 70 38   35 F1 5A 94 53 12 03 E3  !.....p85.Z.S...
+0070: 16 73 DE 5A 2A F4 73 80   2D 3A 12 A4 E2 96 8F 4A  .s.Z*.s.-:.....J
+0080: 62 08 E3 CB 2F AE 61 D8   D4 37 14 0D AC 9C D2 38  b.../.a..7.....8
+0090: 6F C6 FF B7 BF B7 B0 EC   D7 78 70 55 24 81 AB D8  o........xpU$...
+00A0: A8 28 65 F6 87 08 BB CE   29 19 66 B0 8E F2 AB D1  .(e.....).f.....
+00B0: B3 12 C1 E9 A5 8C 29 F6   7B 49 B4 77 EA F9 88 D7  ......)..I.w....
+00C0: 56 B6 C1 74 6B F5 71 B3   59 E8 CF B3 3F BA 44 F3  V..tk.q.Y...?.D.
+00D0: DB 00 5F 9C 47 7A 23 A7   F4 CE 35 E4 9D 38 3E 4E  .._.Gz#...5..8>N
+00E0: E8 9F 3F 04 A3 A9 BB 60   B3 7E 76 9D CA DF 82 2C  ..?....`..v....,
+00F0: FE 5C 94 91 0A BA D4 DA   DF ED 92 CE F3 09 7D 8C  .\..............
+0100: 7C 8F 25 C4 87 25 69 34   C5 DF 6B 66 CE F9 51 73  ..%..%i4..kf..Qs
+0110: 9C 40 81 0C 7F 4F FF 9D   E9 F8 A2 24 3F EB 72 5D  .@...O.....$?.r]
+0120: 52 F2 D5 7D ED DA 8B 96   07 AC 66 A3 B8 A7 94 35  R.........f....5
+0130: 64 B7 15 26 B3 D8 5D 30   65 C0 3D A7 C4 BF D2 CB  d..&..]0e.=.....
+0140: 1B E7 2C AB 76 68 72 77   C4 C1 21 69 D0 B8 8F B3  ..,.vhrw..!i....
+0150: 4F 00 09 51 0D BF F3 A8   16 00 73 58 F4 E7 95 CF  O..Q......sX....
+0160: ED 80 65 6E 01 51 3D 09   F7 EB 1A 7A 76 63 7D DD  ..en.Q=....zvc..
+0170: 6D 3D 11 6D 15 01 D6 EC   E4 24 51 9A A5 FC 9C 7E  m=.m.....$Q.....
 
 ]
-Do you trust the above certificate [y|N] -->
+Do you trust the above certificate [y|N] -->y
 ----
 
 `asadmin` saves certificates you accept in the file `.asadmintruststore`
@@ -493,40 +514,75 @@ you can use keytool to display the DN of a certificate:
 
 [source]
 ----
-keytool.exe -v -list -keystore keystore.jks
+keytool -v -list -keystore keystore.jks
 Enter keystore password:
-
 Keystore type: JKS
 Keystore provider: SUN
 
 Your keystore contains 2 entries
 
 Alias name: glassfish-instance
-Creation date: Jul 7, 2011
+Creation date: 16. 6. 2025
 Entry type: PrivateKeyEntry
 Certificate chain length: 1
 Certificate[1]:
-Owner: CN=systemname.amer.oracle.com-instance, OU=GlassFish,
-O=Oracle Corporation, L=Santa Clara, ST=California, C=US
-Issuer: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
- L=Santa Clara, ST=California, C=US
-Serial number: 4e15d6e7
-Valid from: Thu Jul 07 11:55:19 EDT 2011 until: Sun Jul 04 11:55:19 EDT 2021
+Owner: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Serial number: e99681e61da6a953
+Valid from: Mon Jun 16 17:13:17 CEST 2025 until: Thu Jun 14 17:13:17 CEST 2035
 Certificate fingerprints:
-         MD5:  05:6E:01:D6:CE:9D:29:DA:55:D9:10:5E:BE:CC:55:05
-         SHA1: 2A:6D:A2:52:A5:2B:ED:DE:CD:B4:76:4A:65:9D:B5:79:A6:EA:3C:10
-         Signature algorithm name: SHA1withRSA
-         Version: 3
+         SHA1: 37:6D:39:C1:F5:57:86:07:61:2D:0D:6C:93:E6:13:E5:05:CF:4A:5C
+         SHA256: F1:A6:22:25:2E:1A:15:66:FE:C5:93:87:FE:C9:4A:EF:7F:B1:51:D9:54:C2:7D:19:B3:77:45:D4:75:8A:92:D8
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
 
 Extensions:
 
 #1: ObjectId: 2.5.29.14 Criticality=false
 SubjectKeyIdentifier [
 KeyIdentifier [
-0000: 96 99 36 B6 CF 60 1E 8A   AE 25 75 4E C8 34 AA AB  ..6..`...%uN.4..
-0010: E1 3B CF 03                                        .;..
+0000: 83 D4 5A 15 9E 87 E8 B3   5C D3 F9 D3 7F 06 2F D0  ..Z.....\...../.
+0010: CF E5 AB F0                                        ....
 ]
 ]
+
+
+
+*******************************************
+*******************************************
+
+
+Alias name: s1as
+Creation date: 16. 6. 2025
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Serial number: a1cbb63cfa2050c4
+Valid from: Mon Jun 16 17:13:16 CEST 2025 until: Thu Jun 14 17:13:16 CEST 2035
+Certificate fingerprints:
+         SHA1: 59:80:01:EB:F7:99:E8:37:BA:6E:49:D1:B7:2B:74:42:8A:89:23:CE
+         SHA256: 28:D2:74:B2:F0:85:C2:3E:B8:23:77:2C:B9:4B:A9:44:18:04:90:EC:7A:C1:43:A3:74:FA:73:0D:2C:8B:BE:FA
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 16 BE A5 C1 AB A0 66 8B   63 66 64 02 C8 25 7C A9  ......f.cfd..%..
+0010: 0F B1 C8 5E                                        ...^
+]
+]
+
+
+
+*******************************************
+*******************************************
 ----
 
 If you use the "`--alias` aliasname" form, then {productName} looks
@@ -541,35 +597,68 @@ truststore, you can use keytool to display the alias of a certificate:
 
 [source]
 ----
-keytool.exe -v -list -keystore cacerts.jks
+keytool -v -list -keystore cacerts.jks
 Enter keystore password:
-:
-:
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 2 entries
+
 Alias name: glassfish-instance
-Creation date: Jul 7, 2011
+Creation date: 16. 6. 2025
 Entry type: trustedCertEntry
 
-Owner: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
-L=Santa Clara, ST=California, C=US
-Issuer: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
- L=Santa Clara, ST=California, C=US
-Serial number: 4e15d6e7
-Valid from: Thu Jul 07 11:55:19 EDT 2011 until: Sun Jul 04 11:55:19 EDT 2021
+Owner: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Serial number: e99681e61da6a953
+Valid from: Mon Jun 16 17:13:17 CEST 2025 until: Thu Jun 14 17:13:17 CEST 2035
 Certificate fingerprints:
-         MD5:  05:6E:01:D6:CE:9D:29:DA:55:D9:10:5E:BE:CC:55:05
-         SHA1: 2A:6D:A2:52:A5:2B:ED:DE:CD:B4:76:4A:65:9D:B5:79:A6:EA:3C:10
-         Signature algorithm name: SHA1withRSA
-         Version: 3
+         SHA1: 37:6D:39:C1:F5:57:86:07:61:2D:0D:6C:93:E6:13:E5:05:CF:4A:5C
+         SHA256: F1:A6:22:25:2E:1A:15:66:FE:C5:93:87:FE:C9:4A:EF:7F:B1:51:D9:54:C2:7D:19:B3:77:45:D4:75:8A:92:D8
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
 
 Extensions:
 
 #1: ObjectId: 2.5.29.14 Criticality=false
 SubjectKeyIdentifier [
 KeyIdentifier [
-0000: 96 99 36 B6 CF 60 1E 8A   AE 25 75 4E C8 34 AA AB  ..6..`...%uN.4..
-0010: E1 3B CF 03                                        .;..
+0000: 83 D4 5A 15 9E 87 E8 B3   5C D3 F9 D3 7F 06 2F D0  ..Z.....\...../.
+0010: CF E5 AB F0                                        ....
 ]
 ]
+
+*******************************************
+*******************************************
+
+Alias name: s1as
+Creation date: 16. 6. 2025
+Entry type: trustedCertEntry
+
+Owner: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Serial number: a1cbb63cfa2050c4
+Valid from: Mon Jun 16 17:13:16 CEST 2025 until: Thu Jun 14 17:13:16 CEST 2035
+Certificate fingerprints:
+         SHA1: 59:80:01:EB:F7:99:E8:37:BA:6E:49:D1:B7:2B:74:42:8A:89:23:CE
+         SHA256: 28:D2:74:B2:F0:85:C2:3E:B8:23:77:2C:B9:4B:A9:44:18:04:90:EC:7A:C1:43:A3:74:FA:73:0D:2C:8B:BE:FA
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 16 BE A5 C1 AB A0 66 8B   63 66 64 02 C8 25 7C A9  ......f.cfd..%..
+0010: 0F B1 C8 5E                                        ...^
+]
+]
+
+*******************************************
+*******************************************
 ----
 
 When you run `enable-secure-admin`, {productName} automatically
@@ -592,10 +681,7 @@ in secure administration:
 
 [source]
 ----
-asadmin> enable-secure-admin-principal
-"CN=system.amer.oracle.com,OU=GlassFish,
-O=Oracle Corporation,L=Santa Clara,ST=California,C=US"
-
+asadmin enable-secure-admin-principal "CN=myadmin,OU=GlassFish,O=Eclipse Foundation"
 Command enable-secure-admin-principal executed successfully.
 ----
 

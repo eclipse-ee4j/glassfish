@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -209,7 +209,7 @@ public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtensi
 
             @PropertyDesc(
                     name = "proxyHandler",
-                    defaultValue = "com.sun.enterprise.web.web.ProxyHandlerImpl",
+                    defaultValue = "com.sun.enterprise.web.ProxyHandlerImpl",
                     description = "Specifies the fully qualified class name of a custom implementation of "
                     + "com.sun.appserv.ProxyHandler. Only used if authPassthroughEnabled is set to true. "
                     + "Each http-listener can override the setting for itself"

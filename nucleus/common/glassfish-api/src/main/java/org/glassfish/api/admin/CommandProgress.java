@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,11 +45,6 @@ public interface CommandProgress extends ProgressStatus {
      * Creates child for mirroring (supplemental commands)
      */
     ProgressStatusMirroringImpl createMirroringChild(int allocatedSteps);
-
-    /**
-     * Unique id of this command
-     */
-    @Override String getId();
 
     String getName();
 

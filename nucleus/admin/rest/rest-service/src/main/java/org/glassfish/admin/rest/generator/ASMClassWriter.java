@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package org.glassfish.admin.rest.generator;
 
 import com.sun.ejb.codegen.ClassGenerator;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,6 +35,7 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.objectweb.asm.Opcodes.AASTORE;
 import static org.objectweb.asm.Opcodes.ACC_PROTECTED;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
@@ -502,8 +502,8 @@ public class ASMClassWriter implements ClassWriter {
 
         FileOutputStream fos = null;
         try {
-            String rootPath = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY) + File.separator + "lib" + File.separator
-                    + "rest" + File.separator;
+            String rootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator
+                + "lib" + File.separator + "rest" + File.separator;
             File parentDir = new File(rootPath);
             if (!parentDir.exists()) {
                 if (!parentDir.mkdirs()) {

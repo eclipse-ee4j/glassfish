@@ -32,7 +32,7 @@
     <target name="all" depends="clean,build,deploy,run,undeploy,deploy-neg"/>
 
     <target name="clean" depends="init-common">
-      <antcall  target="clean-common"/>
+        <antcall  target="clean-common"/>
     </target>
 
     <target name="compile" depends="clean,precompile">
@@ -49,27 +49,24 @@
     <target name="precompile" depends="init-common">
         <ant dir="${env.APS_HOME}/devtests/admin/cli" target="build"/>
         <copy todir="${build.classes.dir}">
-          <fileset dir="${env.APS_HOME}/devtests/admin/cli/build"/>
+            <fileset dir="${env.APS_HOME}/devtests/admin/cli/build"/>
         </copy>
     </target>
 
     <target name="build" depends="compile">
         <antcall target="ejb-jar-common">
-            <param name="ejbjar.classes"
-              value="**/S*.class" />
+            <param name="ejbjar.classes" value="**/S*.class" />
         </antcall>
         <move file="${assemble.dir}/${appname}-ejb.jar" tofile="${assemble.dir}/${appname}-ejb2.jar"/>
         <antcall target="ejb-jar-common">
-            <param name="ejbjar.classes"
-              value="**/S*.class" />
+            <param name="ejbjar.classes" value="**/S*.class" />
         </antcall>
         <antcall target="ear-common"/>
     </target>
 
     <target name="build-neg">
         <antcall target="ejb-jar-common">
-            <param name="ejbjar.excludes.classes"
-              value="**/S*EJB*.class,**/S*Bean*.class" />
+            <param name="ejbjar.excludes.classes" value="**/S*EJB*.class,**/S*Bean*.class" />
         </antcall>
     </target>
 
@@ -80,36 +77,30 @@
 
     <target name="deploy-neg" depends="init-common">
         <antcall target="build-neg">
-            <param name="ejbjar.classes"
-              value="**/S*.class,**/Neg*1.class" />
+            <param name="ejbjar.classes" value="**/S*.class,**/Neg*1.class" />
         </antcall>
         <antcall target="run">
             <param name="client.type" value="deploy-fail" />
-                                                <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
+            <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
             <param name="index" value="1" />
         </antcall>
         <antcall target="build-neg">
-            <param name="ejbjar.classes"
-              value="**/S*.class,**/Neg*2.class" />
+            <param name="ejbjar.classes" value="**/S*.class,**/Neg*2.class" />
         </antcall>
         <antcall target="run">
             <param name="client.type" value="deploy-fail" />
-                                                <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
+            <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
             <param name="index" value="2" />
         </antcall>
     </target>
 
     <target name="run" depends="init-common">
-       <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${mvn.lib.dir}/report-builder.jar"
-              classname="${se.client}">
-              <arg line="${client.type}"/>
-              <arg line="${ejb.jar}"/>
-              <arg line="${index}"/>
-           <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
-        </java>
+        <antcall target="runclient-own">
+            <param name="appclient.standalone.classpath.ext"
+                value="${assemble.dir}/ejb-stubs-ejbappAppClient/ejb-stubs-ejbapp-clientClient.jar:${mvn.lib.dir}/report-builder.jar" />
+            <param name="mainClass" value="${se.client}" />
+            <param name="args" value="${client.type} ${ejb.jar} ${index}" />
+        </antcall>
     </target>
 
     <target name="undeploy" depends="init-common">

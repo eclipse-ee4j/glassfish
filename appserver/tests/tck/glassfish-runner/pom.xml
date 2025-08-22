@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>8.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>glassfish-runner</artifactId>
+    <name>GlassFish TCK Utilities</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.arquillian.config</groupId>
+            <artifactId>arquillian-config-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.core</groupId>
+            <artifactId>arquillian-core-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.test</groupId>
+            <artifactId>arquillian-test-spi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>tck-porting-lib</artifactId>
+            <version>11.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+            <version>1.2.6</version>
+        </dependency>
+    </dependencies>
+</project>

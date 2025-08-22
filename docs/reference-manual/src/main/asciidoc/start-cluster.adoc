@@ -17,25 +17,27 @@ Starts a cluster
 
 [source]
 ----
-asadmin [asadmin-options] start-cluster [--help]
-[--autohadboverride={true|false}]
-[--verbose={false|true}] cluster-name
+asadmin start-cluster
+[--debug[=<debug(default:false)>]]
+[--help|-?]
+[--timeout <timeout>]
+[--verbose[=<verbose(default:false)>]]
+clustername
 ----
 
 === Description
 
 The `start-cluster` subcommand starts a cluster by starting all
 {productName} instances in the cluster that are not already running.
-This subcommand requires the Distributed Component Object Model (DCOM)
-remote protocol or secure shell (SSH) to be configured on the host where
+This subcommand requires the secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on all hosts where
 instances in the cluster reside.
 
 [NOTE]
 ====
-If all instances reside on the same host as the DAS, DCOM or SSH is not
+If all instances reside on the same host as the DAS, SSH is not
 required. You might require to start a cluster in which instances reside
-on hosts where DCOM or SSH is not configured that are remote from the
+on hosts where SSH is not configured that are remote from the
 DAS. In this situation, run the
 xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)]
 subcommand for each instance from the host where the instance resides.
@@ -53,11 +55,27 @@ asadmin-options::
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-`--autohadboverride`::
-  Do not specify this option. This option is retained for compatibility
-  with earlier releases. If you specify this option, a syntax error does
-  not occur. Instead, the subcommand runs successfully and displays a
-  warning message that the option is ignored.
+`--debug`::
+`-d`::
+  Specifies whether the domain is started with
+  http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
+  Platform Debugger Architecture (JPDA)]
+  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
+  debugging enabled. With debugging enabled extra exceptions can be printed.
+  Possible values are as follows:
+
+  `true`;;
+    The instance is started with JPDA debugging enabled and the port
+    number for JPDA debugging is displayed.
+  `false`;;
+    The instance is started with JPDA debugging disabled (default).
+
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The status of instances is
+  unknown in such case.
+
 `--verbose`::
   Specifies whether additional status information is displayed when the
   cluster is started.
@@ -111,7 +129,6 @@ xref:delete-cluster.adoc#delete-cluster[`delete-cluster`(1)],
 xref:list-clusters.adoc#list-clusters[`list-clusters`(1)],
 xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
 xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
-xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)],
-xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)]
+xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)]
 
 

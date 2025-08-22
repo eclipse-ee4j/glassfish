@@ -39,7 +39,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 @Service

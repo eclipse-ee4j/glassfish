@@ -1,6 +1,6 @@
 @echo off
 REM
-REM  Copyright (c) 2025 Contributors to the Eclipse Foundation
+REM  Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
 REM  Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 REM
 REM  This program and the accompanying materials are made available under the
@@ -29,4 +29,4 @@ call "%AS_CONFIG_BAT%" || (
     echo Error: Cannot load config file
     exit /B 1
 )
-"%JAVA%" -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.packageappclient.PackageAppClient %*
+"%JAVA%" --module-path "%AS_INSTALL%\lib\bootstrap" --add-modules ALL-MODULE-PATH -classpath "%AS_INSTALL%\lib\gf-client.jar" org.glassfish.appclient.client.packageappclient.PackageAppClient %*

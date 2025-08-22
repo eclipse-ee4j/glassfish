@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,110 +19,27 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-     
+
     <parent>
-        <groupId>org.eclipse.ee4j</groupId>
-        <artifactId>project</artifactId>
-        <version>1.0.9</version>
-        <relativePath />
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.glassfish.main.tests.tck</groupId>
     <artifactId>glassfish-external-tck-microprofile</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
-
     <packaging>pom</packaging>
-
     <name>TCK: MicroProfile</name>
-
-    <properties>
-        <maven.compiler.release>21</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-    </properties>
 
     <modules>
         <module>config</module>
-        <module>rest-client</module>
+        <module>health</module>
         <module>jwt</module>
+        <module>rest-client</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>1.9.3.Final</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-core-impl</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.distributions</groupId>
-            <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
-            <type>zip</type>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Arquillian -->
-        <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>glassfish-client-ee11</artifactId>
-            <version>1.7.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-spi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.core</groupId>
-            <artifactId>arquillian-core-spi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-impl-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-api-maven</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-spi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <version>3.2.0</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Unpack the GF install -->
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <executions>
@@ -130,20 +47,30 @@
                             <id>unpack-glassfish</id>
                             <phase>process-test-classes</phase>
                             <goals>
-                                <goal>unpack-dependencies</goal>
+                                <goal>unpack</goal>
                             </goals>
                             <configuration>
-                                <includeArtifactIds>glassfish</includeArtifactIds>
                                 <outputDirectory>${project.build.directory}</outputDirectory>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>org.glassfish.main.distributions</groupId>
+                                        <artifactId>glassfish</artifactId>
+                                        <version>${glassfish.version}</version>
+                                        <type>zip</type>
+                                    </artifactItem>
+                                </artifactItems>
                             </configuration>
                         </execution>
                     </executions>
                 </plugin>
-                
+
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.5.2</version>
                     <configuration>
+                        <environmentVariables>
+                            <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
+                        </environmentVariables>
                         <systemPropertyVariables>
                             <glassfish.home>${glassfish.home}</glassfish.home>
 
@@ -185,11 +112,11 @@
         </pluginManagement>
 
         <plugins>
+            <!-- We want to do that in all children, but not here -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <inherited>false</inherited>
                 <executions>
-                    <!-- Unpack the GF install -->
                     <execution>
                         <id>unpack-glassfish</id>
                         <phase>none</phase>

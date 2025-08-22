@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.uberjar.activator;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.util.Properties;
@@ -30,6 +29,8 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.launch.Framework;
+
+import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 
 /**
  * This is an activator to allow just dropping the uber jar into a running OSGi environment.
@@ -52,7 +53,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
     private void privilegedStart(final BundleContext bundleContext) throws Exception {
         try {
             Properties props = new Properties();
-            props.setProperty(BootstrapKeys.PLATFORM_PROPERTY_KEY, OsgiPlatform.Felix.name());
+            props.setProperty(OSGI_PLATFORM.getPropertyName(), OsgiPlatform.Felix.name());
 
             logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() + ", classloader = "
                     + getClass().getClassLoader());

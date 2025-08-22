@@ -43,6 +43,7 @@ import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
@@ -356,7 +357,7 @@ public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity
         }
         if (application != null) {
             ActionReport subReport = report.addSubActionsReport();
-            CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("_list-resources", subReport, subject);
+            CommandInvocation inv = commandRunner.getCommandInvocation("_list-resources", subReport, subject);
             final ParameterMap parameters = new ParameterMap();
             parameters.add("appname", application.getName());
             inv.parameters(parameters).execute();
@@ -372,7 +373,7 @@ public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity
     private void displaySubComponents(String appName, ActionReport report,
         ActionReport.MessagePart part, final Subject subject) {
         ActionReport subReport = report.addSubActionsReport();
-        CommandRunner.CommandInvocation inv = commandRunner.getCommandInvocation("list-sub-components", subReport, subject);
+        CommandInvocation inv = commandRunner.getCommandInvocation("list-sub-components", subReport, subject);
 
         final ParameterMap parameters = new ParameterMap();
         parameters.add("DEFAULT", appName);

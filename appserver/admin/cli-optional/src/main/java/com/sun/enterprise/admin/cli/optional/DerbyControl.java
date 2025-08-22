@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +29,7 @@ import org.glassfish.api.admin.CommandException;
 
 import static com.sun.enterprise.util.Utility.isAllNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * This class uses Java reflection to invoke Derby NetworkServerControl class.
@@ -125,10 +126,10 @@ public final class DerbyControl {
 
         // Do not set derby.system.home if derbyHome is empty
         if (!isEmpty(derbyHome)) {
-            System.setProperty("derby.system.home", derbyHome);
+            setProperty("derby.system.home", derbyHome, true);
         }
         // Set the property to not overwrite log file
-        System.setProperty("derby.infolog.append", "true");
+        setProperty("derby.infolog.append", "true", true);
     }
 
     // constructor

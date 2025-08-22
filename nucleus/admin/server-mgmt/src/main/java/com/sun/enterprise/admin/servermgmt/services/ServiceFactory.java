@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +26,6 @@ public final class ServiceFactory {
         // the order matters!
         if (OS.isLinux()) {
             return new LinuxService(dirs, type);
-        }
-        if (SMFService.apropos()) {
-            return new SMFService(dirs, type);
         }
         if (WindowsService.apropos()) {
             return new WindowsService(dirs, type);

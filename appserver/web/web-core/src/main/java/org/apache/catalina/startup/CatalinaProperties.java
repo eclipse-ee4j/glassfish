@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.catalina.LogFacade;
+import org.glassfish.main.jdke.props.SystemProperties;
 
 /**
  * Utility class to read the bootstrap Catalina configuration.
@@ -136,7 +137,7 @@ public class CatalinaProperties {
             String name = (String) enumeration.nextElement();
             String value = properties.getProperty(name);
             if (value != null) {
-                System.setProperty(name, value);
+                SystemProperties.setProperty(name, value, true);
             }
         }
 
@@ -147,8 +148,7 @@ public class CatalinaProperties {
      * Get the value of the catalina.home environment variable.
      */
     private static String getCatalinaHome() {
-        return System.getProperty("catalina.home",
-                                  System.getProperty("user.dir"));
+        return System.getProperty("catalina.home", System.getProperty("user.dir"));
     }
 
 

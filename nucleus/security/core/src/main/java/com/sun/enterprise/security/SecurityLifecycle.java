@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,6 @@ package com.sun.enterprise.security;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
 import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.ssl.SSLUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -32,13 +32,15 @@ import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.security.SecurityLoggerInfo.secMgrDisabled;
+import static com.sun.enterprise.security.SecurityLoggerInfo.secMgrEnabled;
 import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
 import static java.util.logging.Level.INFO;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup
@@ -56,19 +58,7 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     private static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
 
     @Inject
-    private ServerContext serverContext;
-
-    @Inject
     private SecurityServicesUtil securityServicesUtil;
-
-    @Inject
-    private Util util;
-
-    @Inject
-    private SSLUtils sslUtils;
-
-    @Inject
-    private SecurityConfigListener configListener;
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -87,24 +77,13 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
         try {
             if (Util.isEmbeddedServer()) {
                 // If the user-defined login.conf/server.policy are set as system properties, then they are given priority
-                if (System.getProperty(SYS_PROP_LOGIN_CONF) == null) {
-                    System.setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").getAbsolutePath());
-                }
-                if (System.getProperty(SYS_PROP_JAVA_SEC_POLICY) == null) {
-                    System.setProperty(SYS_PROP_JAVA_SEC_POLICY, writeConfigFileToTempDir("server.policy").getAbsolutePath());
-                }
+                setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").toURI().toURL().toExternalForm(), false);
+                setProperty(SYS_PROP_JAVA_SEC_POLICY, writeConfigFileToTempDir("server.policy").getAbsolutePath(), false);
             }
 
             // security manager is set here so that it can be accessed from
             // other lifecycles, like PEWebContainer
-            java.lang.SecurityManager secMgr = System.getSecurityManager();
-            if (_logger.isLoggable(INFO)) {
-                if (secMgr != null) {
-                    _logger.info(SecurityLoggerInfo.secMgrEnabled);
-                } else {
-                    _logger.info(SecurityLoggerInfo.secMgrDisabled);
-                }
-            }
+            _logger.info(System.getSecurityManager() == null ? secMgrDisabled : secMgrEnabled);
         } catch (Exception ex) {
             _logger.log(Level.SEVERE, "java_security.init_securitylifecycle_fail", ex);
             throw new RuntimeException(ex.toString(), ex);
@@ -116,10 +95,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
         try {
             _logger.log(INFO, SecurityLoggerInfo.secServiceStartupEnter);
 
-            // TODO:V3 LoginContextDriver has a static variable dependency on BaseAuditManager
-            // And since LoginContextDriver has too many static methods that use BaseAuditManager
-            // we have to make this workaround here.
-
             realmsManager.createRealms();
 
             // Start the audit mechanism
@@ -129,14 +104,7 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
             // Audit the server started event
             auditManager.serverStarted();
 
-            // initRoleMapperFactory is in J2EEServer.java and not moved to here
-            // this is because a DummyRoleMapperFactory is register due
-            // to invocation of ConnectorRuntime.createActiveResourceAdapter
-            // initRoleMapperFactory is called after it
-            // initRoleMapperFactory();
-
             _logger.log(INFO, SecurityLoggerInfo.secServiceStartupExit);
-
         } catch (Exception ex) {
             throw new SecurityLifecycleException(ex);
         }

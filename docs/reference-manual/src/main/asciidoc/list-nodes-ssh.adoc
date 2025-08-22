@@ -2,7 +2,7 @@ type=page
 status=published
 title=list-nodes-ssh
 next=list-password-aliases.html
-prev=list-nodes-dcom.html
+prev=list-nodes-config.html
 ~~~~~~
 
 = list-nodes-ssh
@@ -132,14 +132,11 @@ Command list-nodes-ssh executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:delete-node-config.adoc#delete-node-config[`delete-node-config`(1)],
-xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
-xref:list-nodes-config.adoc#list-nodes-config[`list-nodes-config`(1)],
-xref:list-nodes-dcom.adoc#list-nodes-dcom[`list-nodes-dcom`(1)]
+xref:list-nodes-config.adoc#list-nodes-config[`list-nodes-config`(1)]
 
 

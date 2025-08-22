@@ -46,7 +46,7 @@ administration values.
 
 [NOTE]
 ====
-For the zip bundle of {productName} 7, the default administrator
+For the zip bundle of {productName} {product-majorVersion}, the default administrator
 login is `admin`, with no password, which means that no login is
 required.
 ====
@@ -109,6 +109,7 @@ The following topics are addressed here:
 
 * <<Initial Configuration Tasks>>
 * <<How Dotted Names Work for Configuration>>
+* <<Variable references in Configuration>>
 * <<Configuration Files>>
 * <<Impact of Configuration Changes>>
 
@@ -293,6 +294,48 @@ to true:
 ----
 asadmin> set server.http-service.http-listener.http-listener-1.security-enabled = true
 ----
+
+[[variable-references-in-configuration]]
+
+==== Variable references in Configuration
+
+Instead of using hard-coded textual values in configuration files, you can use
+variable references. Variable references are used to refer to values that are either repeatedly used through the configuration (e.g. a path to a directory), or values that should be different for different instances that share the same configuration (e.g. a port number), or values that are not known at the time of configuration. Variable references cannot be used for properties that expect a number or another non-textual value.
+
+You can specify variable reference as `${variable}`, where `variable` is the name of the variable. The value of the variable can contain another variable reference, which is resolved recursively. Variable reference can be used together with other textual values or variable references, for example, `${variable}/path/to/${filename}`.
+
+Variables are resolved from the following sources, in the order of precedence:
+
+* System properties. They can be specified either using a `-D` JVM option, or as a system property for a target using the xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`] command. It's also possible to reference any existing JVM system property, including standard Java properties like `java.home`
+* Environment variables. They can be either with the exact same name, or name with non-alphanumeric characters replaced with `_`, or additionally with alphanumeric characters in uppercase. For example, if the variable reference is ${my.variable}, it will be first resolved against `my.variable`, then against `my_variable`, then against `MY_VARIABLE`. This allows defining variables that are not valid environment variable identifiers, such as those containing a hyphen (`-`) or a dot (`.`)
+
+If a variable reference is not resolved, the reference will not be replaced. So, if a variable `variable` is not defined, the value `${variable}` will simply remain `${variable}`.
+
+**System properties that adjust variable resolution:**
+
+* `org.glassfish.variableexpansion.envvars.disabled` -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of {productName}
+* `org.glassfish.variableexpansion.envvars.preferred` - changes the priority - values are resolved first from environment variables and then from system properties
+
+The following is a list of variables defined by {productName} that can be used in variable references:
+
+[width="100%",cols="30%,30%,40%",options="header",]
+|===
+|Variable | Description | Example value
+| `com.sun.aas.agentRoot` | The root directory for (remote) nodes | `/path/to/glassfish_installation/glassfish/nodes`
+| `com.sun.aas.configRoot` | The config directory in the domain | `/path/to/glassfish_installation/glassfish/config`
+| `com.sun.aas.derbyRoot` | The root directory for the Apache Derby database | `/path/to/glassfish_installation/javadb`
+| `com.sun.aas.domainsRoot` | The root directory for domains | `/path/to/glassfish_installation/glassfish/domains`
+| `com.sun.aas.hostName` | The host name of the server | `192.168.0.1`
+| `com.sun.aas.imqBin` | The directory where the Message Queue binaries are located | `/path/to/glassfish_installation/mq/bin`
+| `com.sun.aas.imqLib` | The directory where the Message Queue libraries are located | `/path/to/glassfish_installation/mq/lib`
+| `com.sun.aas.installRoot` | The `glassfish` directory in the {productName} installation | `/path/to/glassfish_installation/glassfish`
+| `com.sun.aas.installRootURI` | The URI of the `glassfish` directory in the {productName} installation | `file:/path/to/glassfish_installation/glassfish/`
+| `com.sun.aas.instanceName` | The name of the server instance | `server`
+| `com.sun.aas.instanceRoot` | The root directory of the domain configuration | `/path/to/glassfish_installation/glassfish/domains/domain1`
+| `com.sun.aas.instanceRootURI` | The URI of the domain configuration root | `file:/path/to/glassfish_installation/glassfish/domains/domain1/`
+| `com.sun.aas.javaRoot` | The root directory of the Java installation used to run the current JVM | `/path/to/java_installation`
+| `com.sun.aas.productRoot` | The root directory of the {productName} installation | `/path/to/glassfish_installation`
+|===
 
 [[configuration-files]]
 

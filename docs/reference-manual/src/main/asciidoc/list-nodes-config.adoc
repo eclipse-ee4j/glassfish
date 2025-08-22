@@ -1,7 +1,7 @@
 type=page
 status=published
 title=list-nodes-config
-next=list-nodes-dcom.html
+next=list-nodes-ssh.html
 prev=list-nodes.html
 ~~~~~~
 
@@ -134,13 +134,10 @@ Command list-nodes-config executed successfully.
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:delete-node-config.adoc#delete-node-config[`delete-node-config`(1)],
-xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
-xref:list-nodes-dcom.adoc#list-nodes-dcom[`list-nodes-dcom`(1)],
 xref:list-nodes-ssh.adoc#list-nodes-ssh[`list-nodes-ssh`(1)]
 
 

@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.glassfish.embeddable.client.UserError;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

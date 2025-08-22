@@ -1,0 +1,52 @@
+<arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.org/schema/arquillian https://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    <engine>
+        <property name="deploymentExportPath">${project.build.directory}/deployments</property>
+    </engine>
+    <container default="true" qualifier="tck-appclient">
+        <protocol type="appclient" default="true">
+            <property name="runClient">true</property>
+            <property name="runAsVehicle">true</property>
+            <property name="clientEarDir">target/appclient</property>
+            <property name="unpackClientEar">true</property>
+            <!-- Need to populate from ts.jte command.testExecuteAppClient setting for glassfish -->
+            <property name="clientCmdLineString">${env.JAVA_HOME}/bin/java \
+                --add-opens \
+                java.base/java.lang=ALL-UNNAMED \
+                --module-path \
+                ${glassfish.lib.dir}/bootstrap \
+                --add-modules ALL-MODULE-PATH \
+                -cp \
+                ${glassfish.lib.dir}/gf-client.jar:${clientStubJar} \
+                -Djava.system.class.loader=org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader \
+                -Dcom.sun.aas.configRoot=${glassfish.home}/glassfish/config \
+                -Dcts.tmp=${ts.home}/tmp \
+                -Doracle.jdbc.J2EE13Compliant=true \
+                -Doracle.jdbc.mapDateToTimestamp \
+                -Dlog.file.location=${glassfish.domain.dir}/logs \
+                -Dri.log.file.location=${glassfish.domain.dir}/logs \
+                -DwebServerHost.2=localhost \
+                -DwebServerPort.2=8080 \
+                -javaagent:${glassfish.lib.dir}/gf-client.jar=arg=-configxml,arg=${glassfish.domain.dir}/config/glassfish-acc.xml,client=jar=${clientStubJar},arg=-name,arg=${clientAppArchiveName} \
+                org.glassfish.appclient.client.AppClientGroupFacade
+            </property>
+            <property name="cmdLineArgSeparator">\\</property>
+            <!-- Pass ENV vars here -->
+            <property name="clientEnvString">PATH=${env.PATH};LD_LIBRARY_PATH=${glassfish.lib.dir};AS_DEBUG=true;
+                APPCPATH=${clientEarLibClasspath}:${glassfish.home}/glassfish/modules/security.jar</property>
+            <property name="clientDir">${project.basedir}</property>
+            <property name="clientStubsCmdLine">${glassfish.home}/bin/asadmin \
+                get-client-stubs \
+                --appName \
+                ${deploymentName} \
+                target
+            </property>
+            <property name="clientStubsJarSuffix">Client</property>
+            <property name="clientDir">${tck.clientDirectory}</property>
+            <property name="workDir">${tck.workDirectory}</property>
+            <property name="tsJteFile">${tck.tsjte}</property>
+            <property name="tsSqlStmtFile">${tck.tssql}</property>
+            <property name="trace">true</property>
+            <property name="clientTimeout">20000</property>
+        </protocol>
+    </container>
+</arquillian>

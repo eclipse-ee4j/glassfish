@@ -17,11 +17,18 @@ Starts the DAS of the specified domain
 
 [source]
 ----
-asadmin [asadmin-options] start-domain [--help]
-[--debug={true|false}] [--suspend={true|false}] [--domaindir domain-dir]
-[--dry-run={true|false}] [--upgrade={true|false}]
-[--verbose={true|false}] [--watchdog={true|false}]
-[domain-name]
+asadmin start-domain
+[--debug|-d[=<debug(default:false)>]]
+[--domaindir <domaindir>]
+[--drop-interrupted-commands[=<drop-interrupted-commands(default:false)>]]
+[--dry-run|-n[=<dry-run(default:false)>]]
+[--help|-?]
+[--suspend|-s[=<suspend(default:false)>]]
+[--timeout <timeout>]
+[--upgrade[=<upgrade(default:false)>]]
+[--verbose|-v[=<verbose(default:false)>]]
+[--watchdog|-w[=<watchdog(default:false)>]]
+[domain_name]
 ----
 
 === Description
@@ -76,6 +83,24 @@ asadmin-options::
   `false`;;
     The instance is started with JPDA debugging disabled (default).
 
+`--domaindir`::
+  The domain root directory, which contains the directory of the domain
+  that is to be restarted. If specified, the path must be accessible in
+  the file system. The default location of the domain root directory is
+  as-install``/domains``.
+
+`--drop-interrupted-commands`::
+  If you used --detach with commands supporting checkpoints, this
+  option specifies whether to drop the commands that were interrupted.
+
+`--dry-run`::
+`-n`::
+  Suppresses actual starting of the domain. Instead, `start-domain`
+  displays the full java command that would be used to start the domain,
+  including all options. Reviewing this command can be useful to confirm
+  JVM options and when troubleshooting startup issues. +
+  The default value is `false`.
+
 `--suspend`::
 `-s`::
   Specifies whether the domain is started with
@@ -93,18 +118,12 @@ asadmin-options::
   `false`;;
     The instance is started with JPDA debugging disabled (default).
 
-`--dry-run`::
-`-n`::
-  Suppresses actual starting of the domain. Instead, `start-domain`
-  displays the full java command that would be used to start the domain,
-  including all options. Reviewing this command can be useful to confirm
-  JVM options and when troubleshooting startup issues. +
-  The default value is `false`.
-`--domaindir`::
-  The domain root directory, which contains the directory of the domain
-  that is to be restarted. If specified, the path must be accessible in
-  the file system. The default location of the domain root directory is
-  as-install``/domains``.
+`--timeout`::
+  Specifies timeout in seconds to evaluate the expected result.
+  If the timeout is exceeded, the command fails - however it does
+  not mean it did not make any changes. The domain status is unknown
+  in such case.
+
 `--upgrade`::
   Specifies whether the configuration of the domain administration
   server (DAS) is upgraded to the current release. Normally, if the

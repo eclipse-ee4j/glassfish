@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,8 +67,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static java.util.logging.Level.INFO;
 
@@ -690,7 +690,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
             return defineClass(name, bytes, 0, bytes.length, classData.pd);
         } catch (UnsupportedClassVersionError ucve) {
             throw new UnsupportedClassVersionError(
-                sm.getString("ejbClassLoader.unsupportedVersion", name, System.getProperty("java.version")));
+                sm.getString("ejbClassLoader.unsupportedVersion", name, Runtime.version()));
         }
     }
 
@@ -1312,7 +1312,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
                 return clazz;
             } catch (UnsupportedClassVersionError ucve) {
                 throw new UnsupportedClassVersionError(
-                    sm.getString("ejbClassLoader.unsupportedVersion", name, System.getProperty("java.version")));
+                    sm.getString("ejbClassLoader.unsupportedVersion", name, Runtime.version()));
             }
         }
 

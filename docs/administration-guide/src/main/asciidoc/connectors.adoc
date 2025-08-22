@@ -9,7 +9,7 @@ prev=jdbc.adoc
 == 12 Administering EIS Connectivity
 
 This chapter provides information and procedures for administering
-connections to enterprise information system (EIS) data in the {productName} 7 environment by using the `asadmin` command-line utility.
+connections to enterprise information system (EIS) data in the {productName} {product-majorVersion} environment by using the `asadmin` command-line utility.
 
 
 [NOTE]

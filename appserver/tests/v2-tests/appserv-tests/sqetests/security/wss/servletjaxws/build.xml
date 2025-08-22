@@ -219,7 +219,7 @@
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
 
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks  -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks -Djavax.net.ssl.trustStorePassword=${master.password}" />
+        <env key="VMARGS" value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12  -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12 -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}-client.jar"/>
@@ -245,7 +245,7 @@
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
 
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.jks -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks -Djavax.net.ssl.trustStorePassword=changeit" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.p12 -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12 -Djavax.net.ssl.trustStorePassword=changeit" />
         <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}-client.jar"/>

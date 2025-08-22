@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,14 +34,11 @@ class Constants {
     static final String CFG_LOCATION_TN = "LOCATION";
     static final String ENTITY_NAME_TN = "ENTITY_NAME";
     static final String DISPLAY_NAME_TN = "DISPLAY_NAME";
-    static final String FQSN_TN = "FQSN";
     static final String AS_ADMIN_USER_TN = "AS_ADMIN_USER";
     static final String AS_ADMIN_PASSWORD_TN = "AS_ADMIN_PASSWORD";
     static final String AS_ADMIN_MASTERPASSWORD_TN = "AS_ADMIN_MASTERPASSWORD";
     //static final String PASSWORD_FILE_PATH_TN        = "PASSWORD_FILE_PATH";
-    static final String TIMEOUT_SECONDS_TN = "TIMEOUT_SECONDS";
     static final String OS_USER_TN = "OS_USER";
-    static final String PRIVILEGES_TN = "PRIVILEGES";
     static final String START_COMMAND_TN = "START_COMMAND";
     static final String RESTART_COMMAND_TN = "RESTART_COMMAND";
     static final String STOP_COMMAND_TN = "STOP_COMMAND";
@@ -62,7 +59,6 @@ class Constants {
     static final String TRACE_PREPEND = "TRACE:  ";
     static final String DRYRUN_PREPEND = "DRYRUN:  ";
     static final String README = "PlatformServices.log";
-    static final String SERVICE_NAME_PREFIX = "application/GlassFish/";
     static final String ETC = "/etc";
     static final String INITD = "/etc/init.d";
     static final String REGEXP_PATTERN_BEGIN = "[KS][0-9][0-9]?";

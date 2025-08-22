@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,48 +27,21 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-concurrency</artifactId>
+    <artifactId>tck-concurrency</artifactId>
 
     <name>TCK: Concurrency</name>
     <description>Aggregates dependencies and runs the Concurrency TCK on GlassFish</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <glassfish.version>${project.version}</glassfish.version>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>1.8.0.Final</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <!-- Jakarta EE APIs -->
         <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>11.0.0</version>
+            <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.ejb</groupId>
-            <artifactId>jakarta.ejb-api</artifactId>
-        </dependency>
-
-        <!--  The TCK  -->
+        <!--  The TCK -->
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
@@ -76,55 +49,36 @@
             <scope>test</scope>
         </dependency>
 
-
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
         <dependency>
-            <groupId>org.omnifaces.arquillian</groupId>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.5</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!--  Signature Test Plugin  -->
-        <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.7</version>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>2.0.17</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -152,59 +106,26 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>-Xmx768m</argLine>
-
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
                     </dependenciesToScan>
-
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
-                        <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-
-                        <glassfish.systemProperties>
-                            jimage.dir=${project.build.directory}/jimage
-                        </glassfish.systemProperties>
-
+                        <glassfish.systemProperties>jimage.dir=${project.build.directory}/jimage</glassfish.systemProperties>
                         <glassfish.postBootCommands>
-                            create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
-                            create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
+                            --passwordfile ${project.build.directory}/test-classes/j2ee.pass create-file-user --groups staff:mgr j2ee
+                            --passwordfile ${project.build.directory}/test-classes/javajoe.pass create-file-user --groups Manager javajoe
                         </glassfish.postBootCommands>
-                        
-                             
                         <jimage.dir>${project.build.directory}/jimage</jimage.dir>
                     </systemPropertyVariables>
-               
-                    <!-- Groups to include i.e. web/platform -->
-                    <groups>${jakarta.tck.platform}</groups>
-                    <reportNameSuffix>${jakarta.tck.platform}</reportNameSuffix>
-                    <testSourceDirectory>${basedir}/src/main/java/</testSourceDirectory>
+                    <includes>
+                        <include>**/*.class</include>
+                    </includes>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>full</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
-                <jakarta.tck.platform>platform</jakarta.tck.platform>
-            </properties>
-        </profile>
-        <profile>
-            <id>web</id>
-            <properties>
-                <glassfish-artifact-id>web</glassfish-artifact-id>
-                <jakarta.tck.platform.tck.platform>web</jakarta.tck.platform.tck.platform>
-            </properties>
-        </profile>
-    </profiles>
 </project>

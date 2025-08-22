@@ -1,0 +1,15 @@
+<arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.org/schema/arquillian https://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    <engine>
+        <property name="deploymentExportPath">${project.build.directory}/deployments</property>
+    </engine>
+
+    <container default="true" qualifier="tck-javatest">
+        <protocol type="javatest">
+            <property name="workDir">${tck.workDirectory}</property>
+            <property name="tsJteFile">${tck.tsjte}</property>
+            <property name="tsSqlStmtFile">${tck.tssql}</property>
+            <property name="trace">true</property>
+            <property name="clientTimeout">20000</property>
+        </protocol>
+    </container>
+</arquillian>

@@ -700,7 +700,7 @@ The following topics are addressed here:
 * <<To Configure a DAS or an Instance for Automatic Restart on Windows>>
 * <<To Configure a DAS or an Instance for Automatic Restart on Linux>>
 * <<To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris>>
-* <<To Prevent Service Shutdown When a User Logs Out on Windows>>
+* <<To Prevent Shutdown When a User Logs Out on Windows>>
 
 [[to-configure-a-das-or-an-instance-for-automatic-restart-on-windows]]
 
@@ -926,11 +926,8 @@ See Also
 For information about administering the service, see the following
 Oracle Solaris documentation:
 
-* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing
-Services (Overview)]" in System Administration Guide: Basic
-Administration
-* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
-Services (Tasks)]" in System Administration Guide: Basic Administration
+* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing Services (Overview)]" in System Administration Guide: Basic Administration
+* "https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing Services (Tasks)]" in System Administration Guide: Basic Administration
 * https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)]
 * https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
 * https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1Msvcadm-1m[`svcadm`(1M)]
@@ -940,45 +937,26 @@ Services (Tasks)]" in System Administration Guide: Basic Administration
 * https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5rbac-5[`rbac`(5)]
 * https://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5smf-security-5[`smf_security`(5)]
 
-[[to-prevent-service-shutdown-when-a-user-logs-out-on-windows]]
+[[to-prevent-shutdown-when-a-user-logs-out-on-windows]]
 
-==== To Prevent Service Shutdown When a User Logs Out on Windows
+==== To Prevent Shutdown When a User Logs Out on Windows
 
-By default, the Java Virtual Machine (VM) receives signals from Windows
-that indicate that Windows is shutting down, or that a user is logging
-out of Windows, which causes the system to shut itself down cleanly.
-This behavior causes the {productName} service to shut down. To
-prevent the service from shutting down when a user logs out, you must
-set the `-Xrs` Java VM option
-(`https://github.com/eclipse-ee4j/glassfishdocumentation`).
+On old distributions of Windows operating systems (before Windows 7) it was possible
+to limit signal set accepted by the JVM using the `-Xrs` JVM option and that
+effectively prevented killing of the JVM.
 
-1. Ensure that the DAS is running.
+This does not work any more, even worse, the JVM even doesn't execute shutdown hooks
+and behaves as if user would use the SIGKILL signal on Linux.
 
-2. Set the `-Xrs` Java VM option for the DAS.
-Use the xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`] subcommand for this purpose.
-+
-[source]
-----
-asadmin> create-jvm-options -Xrs
-----
+The problem is registered by several issues reported to OpenJDK:
 
-3. Set the `-Xrs` Java VM option for the Java VM within which the `asadmin` utility runs.
-To set this option, edit the `asadmin.bat` file to add the `-Xrs` option
-to the line that runs the `admin-cli.jar` file.
-..  In the as-install``\bin\asadmin.bat`` file, edit the line to read as follows:
-+
-[source]
-----
-%JAVA% -Xrs -jar "%~dp0..\modules\admin-cli.jar" %*
-----
-.. In the as-install-parent``\bin\asadmin.bat`` file, edit the line to read as follows:
-+
-[source]
-----
-%JAVA% -Xrs -jar "%~dp0..\glassfish\modules\admin-cli.jar" %*
-----
+* "https://bugs.openjdk.org/browse/JDK-8253445[OpenJDK Bug 8253445 - Java applications on Windows do not execute shutdown hooks on system reboot/shutdown or user log-off]"
 
-4. If the {productName} service is running, restart the service for your changes to take effect.
+To prevent killing of GlassFish instances you have two options, for both user needs special permissions:
+
+* To create a service using the xref:reference-manual.adoc#create-service[`create-service`] command.
+* To use Windows Scheduler to start the instance. We use this way to manage SSH Nodes too.
+  See "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtask[Microsoft PowerShell: New-ScheduledTask]"
 
 [[backing-up-and-restoring-a-domain]]
 
@@ -1270,7 +1248,7 @@ typing `asadmin help uptime` at the command line.
 
 ==== To Switch a Domain to Another Supported Java Version
 
-{productName} 7 requires Java SE 11 as the underlying virtual
+{productName} {product-majorVersion} requires Java SE 11 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
 
 [NOTE]

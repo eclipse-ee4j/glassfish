@@ -18,8 +18,7 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="QuickLookTests" verbose="2">
-
+<suite name="QuickLookTests" verbose="-1">
     <parameter name="admin.url" value="http://localhost:4848/__asadmin" />
     <parameter name="admin.user" value="admin" />
     <parameter name="admin.password" value="" />
@@ -121,7 +120,7 @@
             <class name="test.CmpRosterTestNG" />
         </classes>
     </test>
-    
+
     <!-- MDB tests parameters -->
     <parameter name="MDB_APP_DIR" value="./dist/mdb/" />
     <parameter name="BATCH_FILE1"

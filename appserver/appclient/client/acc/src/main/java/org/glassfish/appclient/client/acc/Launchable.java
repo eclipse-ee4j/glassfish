@@ -33,6 +33,7 @@ import java.net.URLClassLoader;
 import javax.xml.stream.XMLStreamException;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.embeddable.client.UserError;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
 
@@ -103,9 +104,9 @@ interface Launchable {
                  * ACCClassLoader instance yet.  Create one if needed
                  * before proceeding.
                  */
-                ACCClassLoader cl = ACCClassLoader.instance();
+                TransformingClassLoader cl = TransformingClassLoader.instance();
                 if (cl == null) {
-                    cl = ACCClassLoader.newInstance(Thread.currentThread().getContextClassLoader(), false);
+                    cl = TransformingClassLoader.newInstance(Thread.currentThread().getContextClassLoader(), false);
                 }
                 cl.appendURL(clientOrFacadeURL);
             }
@@ -121,7 +122,7 @@ interface Launchable {
                 final ReadableArchive facadeRA,
                 final ReadableArchive clientRA) throws IOException, SAXException {
             archivist.setAnnotationProcessingRequested(true);
-            final ACCClassLoader tempLoader = new ACCClassLoader(loader.getURLs(), loader.getParent());
+            final TransformingClassLoader tempLoader = new TransformingClassLoader(loader.getURLs(), loader.getParent());
             archivist.setClassLoader(tempLoader);
 
             final ApplicationClientDescriptor acDesc = archivist.open(facadeRA, clientRA);

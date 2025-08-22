@@ -48,6 +48,7 @@ import javax.naming.ldap.Rdn;
 import javax.security.auth.login.LoginException;
 
 import org.glassfish.internal.api.RelativePathResolver;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.Utility.isAnyNull;
@@ -262,9 +263,7 @@ public final class LDAPRealm extends Realm {
             if (propName.startsWith("java.naming.") || propName.startsWith("javax.security.") || propName.startsWith("com.sun.jndi.ldap.")) {
                 ldapBindProps.setProperty(propName, props.getProperty(propName));
             } else if (propName.startsWith(SUN_JNDI_POOL_) && !SUN_JNDI_POOL_MAXSIZE.equals(propName)) {
-                if (System.getProperty(propName) == null) {
-                    System.setProperty(propName, props.getProperty(propName));
-                }
+                SystemProperties.setProperty(propName, props.getProperty(propName), false);
             }
         }
 
@@ -277,9 +276,7 @@ public final class LDAPRealm extends Realm {
         } catch (Exception ex) {
             sunPoolSizeStr = poolSize;
         }
-        if (System.getProperty(SUN_JNDI_POOL_MAXSIZE) == null) {
-            System.setProperty(SUN_JNDI_POOL_MAXSIZE, sunPoolSizeStr);
-        }
+        SystemProperties.setProperty(SUN_JNDI_POOL_MAXSIZE, sunPoolSizeStr, false);
         setProperty(PARAM_POOLSIZE, sunPoolSizeStr);
 
         String usePool = props.getProperty(SUN_JNDI_POOL, "true");
@@ -287,9 +284,7 @@ public final class LDAPRealm extends Realm {
 
         if (url.startsWith(LDAPS_URL)) {
             ldapBindProps.setProperty(LDAP_SOCKET_FACTORY, DEFAULT_SSL_LDAP_SOCKET_FACTORY);
-            if (System.getProperty(SUN_JNDI_POOL_PROTOCOL) == null) {
-                System.setProperty(SUN_JNDI_POOL_PROTOCOL, DEFAULT_POOL_PROTOCOL);
-            }
+            SystemProperties.setProperty(SUN_JNDI_POOL_PROTOCOL, DEFAULT_POOL_PROTOCOL, false);
             _logger.log(FINE, "LDAPRealm : Using custom socket factory for SSL with pooling");
         }
 

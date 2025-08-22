@@ -19,6 +19,7 @@ package com.sun.enterprise.v3.server;
 
 import com.sun.enterprise.util.io.FileUtils;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 import java.io.File;
@@ -40,15 +41,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.DERBY_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INSTALL_ROOT_PROP_NAME;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.DERBY_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
  * This class is responsible for setting up Common Class Loader. As the
@@ -73,15 +74,10 @@ import static java.util.logging.Level.WARNING;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 @Service
-public class CommonClassLoaderServiceImpl implements PostConstruct {
+public class CommonClassLoaderServiceImpl {
 
     private static final Logger LOG = KernelLoggerInfo.getLogger();
     private static final String SERVER_EXCLUDED_ATTR_NAME = "GlassFish-ServerExcluded";
-
-    /**
-     * The common classloader.
-     */
-    private GlassfishUrlClassLoader commonClassLoader;
 
     @Inject
     APIClassLoaderServiceImpl acls;
@@ -89,12 +85,16 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     @Inject
     private ServerEnvironment env;
 
+    /**
+     * The common classloader.
+     */
+    private GlassfishUrlClassLoader commonClassLoader;
     private ClassLoader apiClassLoader;
     private String commonClassPath;
 
 
-    @Override
-    public void postConstruct() {
+    @PostConstruct
+    void postConstruct() {
         this.apiClassLoader = Objects.requireNonNull(acls.getAPIClassLoader(), "API ClassLoader is null!");
         final List<URL> urls = toUrls(createClasspathElements(env));
         this.commonClassPath = urlsToClassPath(urls.stream());
@@ -134,9 +134,9 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     private static List<File> createClasspathElements(ServerEnvironment env) {
         final Properties startupCtxArgs = env.getStartupContext().getArguments();
         final List<File> cpElements = new ArrayList<>();
-        final String installRoot = startupCtxArgs.getProperty(INSTALL_ROOT_PROP_NAME);
+        final String installRoot = startupCtxArgs.getProperty(INSTALL_ROOT.getPropertyName());
         if (installRoot == null) {
-            LOG.log(WARNING, "The startup context property is not set: " + INSTALL_ROOT_PROP_NAME);
+            LOG.log(WARNING, "The startup context property is not set: " + INSTALL_ROOT.getPropertyName());
         } else {
             final File installDir = new File(installRoot);
             LOG.log(CONFIG, "Using install root: {0}", installRoot);
@@ -190,12 +190,12 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         Path derbyHome = getDerbyDir(installDir, startupCtxArgs);
         LOG.log(CONFIG, "Using derby home: {0}", derbyHome);
         if (derbyHome == null) {
-            LOG.info(KernelLoggerInfo.cantFindDerby);
+            LOG.log(INFO, KernelLoggerInfo.cantFindDerby, "DerbyDB home is not set");
             return Collections.emptyList();
         }
         final File derbyLib = derbyHome.resolve("lib").toFile();
         if (!derbyLib.exists()) {
-            LOG.info(KernelLoggerInfo.cantFindDerby);
+            LOG.log(INFO, KernelLoggerInfo.cantFindDerby, derbyLib);
             return Collections.emptyList();
         }
         return Arrays
@@ -203,11 +203,11 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     }
 
     private static Path getDerbyDir(File installDir, Properties startupCtxArgs) {
-        String derbyHomePropertyCtx = startupCtxArgs.getProperty(DERBY_ROOT_PROP_NAME);
+        String derbyHomePropertyCtx = startupCtxArgs.getProperty(DERBY_ROOT.getPropertyName());
         if (derbyHomePropertyCtx != null) {
             return new File(derbyHomePropertyCtx).toPath();
         }
-        String derbyHomeProperty = System.getProperty(DERBY_ROOT_PROP_NAME);
+        String derbyHomeProperty = System.getProperty(DERBY_ROOT.getSystemPropertyName());
         if (derbyHomeProperty != null) {
             return new File(derbyHomeProperty).toPath();
         }

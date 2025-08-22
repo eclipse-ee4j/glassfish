@@ -21,7 +21,7 @@
 <web-app>
     <display-name>security-defaultp2r</display-name>
     <distributable></distributable>
-    
+
     <servlet>
         <servlet-name>TestServlet</servlet-name>
         <servlet-class>org.glassfish.main.test.app.security.defaultp2r.DefaultP2RTestServlet</servlet-class>

@@ -21,7 +21,7 @@
 
 <ejb-jar>
     <display-name>Ejb1</display-name>
-    
+
     <enterprise-beans>
         <session>
             <display-name>jsp2sful</display-name>

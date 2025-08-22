@@ -187,7 +187,7 @@
       <property name="fedtax-endpoint-url"
             value="http://${http.host}:${http.port}/TaxCalWSServlet/fedtaxservlet"/>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value="-Djavax.net.ssl.keyStore=&quot;${admin.domain.dir}/${admin.domain}/config/keystore.jks&quot; -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/cacerts.jks&quot; -Djavax.net.ssl.trustStorePassword=${master.password}"/>
+        <env key="VMARGS" value="-Djavax.net.ssl.keyStore=&quot;${admin.domain.dir}/${admin.domain}/config/keystore.p12&quot; -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/cacerts.p12&quot; -Djavax.net.ssl.trustStorePassword=${master.password}"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -214,7 +214,7 @@
       <property name="fedtax-endpoint-url"
             value="http://${http.host}:${http.port}/TaxCalWSServlet/fedtaxservlet"/>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.jks -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks&quot;" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.p12 -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12&quot;" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -245,7 +245,7 @@
       <property name="fedtax-endpoint-url"
             value="http://${http.host}:${http.port}/TaxCalWSServlet/fedtaxservlet"/>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks -Djavax.net.ssl.trustStorePassword=${master.password}"/>
+        <env key="VMARGS" value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12 -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12 -Djavax.net.ssl.trustStorePassword=${master.password}"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -272,7 +272,7 @@
       <property name="fedtax-endpoint-url"
             value="http://${http.host}:${http.port}/TaxCalWSServlet/fedtaxservlet"/>
       <exec executable="${APPCLIENT}">
-        <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.jks -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks" />
+        <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.p12 -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.p12" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <!-- dummy user added as appclient throwing login window -->

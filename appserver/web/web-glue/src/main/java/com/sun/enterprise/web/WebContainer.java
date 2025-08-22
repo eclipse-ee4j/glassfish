@@ -143,6 +143,7 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.web.LogFacade.DEFAULT_WEB_MODULE_CONFLICT;
 import static org.glassfish.web.LogFacade.DUPLICATE_CONTEXT_ROOT;
 import static org.glassfish.web.LogFacade.INVALID_ENCODED_CONTEXT_ROOT;
@@ -1486,7 +1487,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                         if (ctx != null) {
                             ctx.setAvailable(false);
                         }
-                        results.add(new Result<WebModule>(t));
+                        results.add(new Result<>(t));
                     }
                 }
             }
@@ -1610,7 +1611,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
         File docBase = null;
         if (JWS_APPCLIENT_MODULE_NAME.equals(webModuleName)) {
-            docBase = new File(System.getProperty("com.sun.aas.installRoot"));
+            docBase = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
         } else {
             docBase = webModuleConfig.getLocation();
         }

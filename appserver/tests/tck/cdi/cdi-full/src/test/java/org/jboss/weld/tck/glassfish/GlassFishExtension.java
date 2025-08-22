@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,13 +27,9 @@ import org.jboss.arquillian.core.spi.LoadableExtension;
  */
 public class GlassFishExtension implements LoadableExtension {
 
-    private static final String GLASSFISH_CLIENTUTILS_CLASS = "org.omnifaces.arquillian.container.glassfish.clientutils.GlassFishClientUtil";
-
     @Override
     public void register(ExtensionBuilder builder) {
-        if (Validate.classExists(GLASSFISH_CLIENTUTILS_CLASS)) {
-            builder.service(DeploymentExceptionTransformer.class, GlassFishDeploymentExceptionTransformer.class);
-        }
+        builder.service(DeploymentExceptionTransformer.class, GlassFishDeploymentExceptionTransformer.class);
     }
 
 }

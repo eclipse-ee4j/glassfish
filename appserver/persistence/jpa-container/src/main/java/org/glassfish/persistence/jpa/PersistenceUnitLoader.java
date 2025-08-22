@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.main.jdke.props.SystemProperties;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessorFactory;
 
@@ -137,14 +138,7 @@ public class PersistenceUnitLoader {
     }
 
     private void setSystemPropertyToEnableDoPrivilegedInEclipseLink() {
-        final String PROPERTY_NAME = "eclipselink.security.usedoprivileged";
-        // Need not invoke in doPrivileged block as the whole call stack consist of
-        // trusted code when this code
-        // is invoked
-        if (System.getProperty(PROPERTY_NAME) == null) {
-            // property not set. Set it to true
-            System.setProperty(PROPERTY_NAME, String.valueOf(Boolean.TRUE));
-        }
+        SystemProperties.setProperty("eclipselink.security.usedoprivileged", Boolean.TRUE.toString(), false);
     }
 
     /**

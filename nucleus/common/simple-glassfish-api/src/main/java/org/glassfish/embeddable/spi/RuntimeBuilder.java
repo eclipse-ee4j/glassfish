@@ -24,7 +24,7 @@ import org.glassfish.embeddable.GlassFishRuntime;
 
 /**
  * This is an SPI for plugging in a GlassFishRuntime.
- * <p/>
+ * <p>
  * By default different implementations exist to provide different runtime
  * enviornment such as Felix/Equinox based or non-OSGi based runtime.
  */
@@ -34,7 +34,7 @@ public interface RuntimeBuilder {
      * Builds a custom GlassFishRuntime with the supplied bootstrap options
      *
      * @param options
-     * @return
+     * @return {@link GlassFishRuntime}
      * @throws GlassFishException
      */
     default GlassFishRuntime build(BootstrapProperties options) throws GlassFishException {
@@ -42,15 +42,21 @@ public interface RuntimeBuilder {
     }
 
 
+    /**
+     * Builds a custom GlassFishRuntime with the supplied bootstrap options
+     *
+     * @param options
+     * @param classloader
+     * @return {@link GlassFishRuntime}
+     * @throws GlassFishException
+     */
     GlassFishRuntime build(BootstrapProperties options, ClassLoader classloader) throws GlassFishException;
 
 
     /**
-     * Returns true if this RuntimeBuilder is capable of creating a GlassFishRuntime
-     * for the supplied BootstrapProperties
-     *
      * @param options
-     * @return
+     * @return Returns true if this RuntimeBuilder is capable of creating a GlassFishRuntime
+     *         for the supplied BootstrapProperties
      */
     boolean handles(BootstrapProperties options);
 

@@ -86,7 +86,7 @@ public interface PoolManager extends TransactedPoolManager {
      * maximum number of connections
      * @throws PoolingException when unable to create/initialize pool
      */
-    void createEmptyConnectionPool(PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException;
+    void createEmptyConnectionPool(PoolInfo poolInfo, PoolType poolType, Hashtable<?, ?> env) throws PoolingException;
 
     /**
      * Returns the resource back to the pool IF errorOccurred is false. If errorOccurred is true the resource is removed

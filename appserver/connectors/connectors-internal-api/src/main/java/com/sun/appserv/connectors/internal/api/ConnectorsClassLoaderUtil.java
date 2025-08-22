@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,9 +41,9 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.belongsToSystemRA;
-import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 
 /**
@@ -145,7 +145,7 @@ public class ConnectorsClassLoaderUtil {
         if (processEnvironment.getProcessType().isEmbedded() && !rarsInitializedInEmbeddedServerMode) {
             synchronized (ConnectorsClassLoaderUtil.class) {
                 if (!rarsInitializedInEmbeddedServerMode) {
-                    String installDir = System.getProperty(INSTALL_ROOT_PROPERTY) + File.separator;
+                    String installDir = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator;
                     for (String jdbcRarName : ConnectorConstants.jdbcSystemRarNames) {
                         String rarPath = ConnectorsUtil.getSystemModuleLocation(jdbcRarName);
                         File rarDir = new File(rarPath);

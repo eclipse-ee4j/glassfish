@@ -1,7 +1,7 @@
 type=page
 status=published
 title=update-node-config
-next=update-node-dcom.html
+next=update-node-ssh.html
 prev=update-file-user.html
 ~~~~~~
 
@@ -36,8 +36,7 @@ Options of this subcommand specify the new values of the node's
 configuration data. The default for these options is to leave the
 existing value unchanged.
 
-This subcommand does not require the Distributed Component Object Model
-(DCOM) remote protocol or secure shell (SSH) to be configured to update
+This subcommand does not require the secure shell (SSH) to be configured to update
 the node. You may run this subcommand from any host that can contact the DAS.
 
 This subcommand is supported in remote mode only.
@@ -97,19 +96,14 @@ Command update-node-config executed successfully.
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:delete-node-config.adoc#delete-node-config[`delete-node-config`(1)],
-xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:install-node.adoc#install-node[`install-node`(1)],
-xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
 xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
 xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
-xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)],
 xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)],
-xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)],
-xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)]
+xref:update-node-ssh.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 

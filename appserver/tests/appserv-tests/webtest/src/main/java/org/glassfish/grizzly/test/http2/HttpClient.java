@@ -58,8 +58,8 @@ public class HttpClient implements AutoCloseable {
     private int port = 8080;
     private boolean secure = true;
     private String[] ciphers = new String[] { "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" };
-    private String keyStore = System.getProperty("S1AS_HOME") + "/domains/domain1/config/keystore.jks";
-    private String trustStore = System.getProperty("S1AS_HOME") + "/domains/domain1/config/cacerts.jks";
+    private String keyStore = System.getProperty("S1AS_HOME") + "/domains/domain1/config/keystore.p12";
+    private String trustStore = System.getProperty("S1AS_HOME") + "/domains/domain1/config/cacerts.p12";
     private TCPNIOTransport clientTransport;
     private Connection connection;
     private final BlockingQueue<HttpContentInfo> resultQueue = new LinkedTransferQueue<>();

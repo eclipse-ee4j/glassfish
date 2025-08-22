@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+
 /**
  * The RepositoryManager serves as a common base class for the following PEDomainsManager,
  * PEInstancesManager, AgentManager (the SE Node Agent).
@@ -291,9 +293,9 @@ public class RepositoryManager extends MasterPasswordFileManager {
         s += "\nrepdir exists: " + regex + ", canon exists: " + canex + ", parent exists: " + parentex + ", reg is dir: " + regdir
                 + ", canon isdir: " + candir + ", parent is dir: " + parentdir;
         s += "\nInstance root sys property (";
-        s += SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
+        s += INSTANCE_ROOT.getSystemPropertyName();
         s += "): ";
-        s += System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+        s += System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
 
         return s;
     }
@@ -325,25 +327,6 @@ public class RepositoryManager extends MasterPasswordFileManager {
      */
     protected void deleteRepository(RepositoryConfig config, boolean deleteJMSProvider) throws RepositoryException {
         checkRepository(config, true);
-
-        //Ensure that the entity to be deleted is stopped
-        // commenting out status check for now
-        /*
-         * final int status = getInstancesManager(config).getInstanceStatus();
-         * if (status != Status.kInstanceNotRunningCode) { throw new
-         * RepositoryException(
-         * getMessages().getCannotDeleteInstanceInvalidState(
-         * config.getDisplayName(), Status.getStatusString(status))); }
-         */
-        // FIXME: This is set temporarily so the instances that are deleted
-        // don't require domain.xml (instance may never have been started) and it
-        // also removes the dependencey on imqadmin.jar.
-        // This should ne move in some way to PEDomainsManager since
-        // JMS providers are really only present in the domain and not node agent
-        // or server instance.
-        //if (deleteJMSProvider) {
-        //    deleteJMSProviderInstance(config);
-        //}
 
         //Blast the directory
         File repository = getRepositoryDir(config);
@@ -390,25 +373,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         }
         return dirs;
     }
-    /*
-     * public InstancesManager getInstancesManager(RepositoryConfig config) {
-     * return new PEInstancesManager(config); }
-     */
 
-    /**
-     * Return all repositories (domains, node agents, server instances) and their corresponding status (e.g. running or
-     * stopped) in string form.
-     */
-    /*
-     * protected String[] listDomainsAndStatusAsString( RepositoryConfig config)
-     * throws RepositoryException { try { RuntimeStatusList statusList =
-     * getRuntimeStatus(config); RuntimeStatus status = null; String[] result =
-     * new String[statusList.size()]; for (int i = 0; i < statusList.size();
-     * i++) { status = statusList.getStatus(i); result[i] =
-     * getMessages().getListRepositoryElementMessage( status.getName(),
-     * status.toShortString()); } return result; } catch (Exception e) { throw
-     * new RepositoryException(e); } }
-     */
     protected RepositoryConfig getConfigForRepositoryStatus(RepositoryConfig config, String repository) {
         //The repository here corresponds to either the domain or node agent name
         return new RepositoryConfig(repository, config.getRepositoryRoot());
@@ -456,40 +421,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
             return null;
         }
     }
-    /*
-     * public void validateAdminUserAndPassword(RepositoryConfig config, String
-     * user, String password) throws RepositoryException { try { //Read in
-     * domain.xml. This will fail with a ConfigException if there is no
-     * domain.xml final PEFileLayout layout = getFileLayout(config);
-     * ConfigContext configContext = getConfigContext(config); //Fetch the name
-     * of the realm for the DAS system jmx connector String dasName =
-     * ServerHelper.getDAS(configContext).getName(); JmxConnector conn =
-     * ServerHelper.getServerSystemConnector(configContext, dasName); String
-     * realmName = conn.getAuthRealmName(); SecurityService security =
-     * ServerHelper.getConfigForServer(configContext,
-     * dasName).getSecurityService(); //Load in the file realm //Before loading
-     * the realm, we must ensure that com.sun.aas.instanceRoot //is set
-     * correcty, since the keyfile is most likely referenced using this. //In
-     * addition java.security.auth.login.config must be setup. String oldRoot =
-     * System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
-     * String oldConf = System.getProperty("java.security.auth.login.config");
-     * GFSystem.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
-     * layout.getRepositoryDir().getAbsolutePath());
-     * GFSystem.setProperty("java.security.auth.login.config",
-     * layout.getLoginConf().getAbsolutePath());
-     * RealmConfig.createRealms(realmName, new AuthRealm[]
-     * {security.getAuthRealmByName(realmName)}); //Restore previous values just
-     * in case. if (oldRoot != null) {
-     * GFSystem.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
-     * oldRoot); } if (oldConf != null) {
-     * GFSystem.setProperty("java.security.auth.login.config", oldConf); }
-     * //Finally do the authentication of user and password final
-     * ASJMXAuthenticator authenticator = new ASJMXAuthenticator();
-     * authenticator.setRealmName(realmName); authenticator.setLoginDriver(new
-     * ASLoginDriverImpl()); authenticator.authenticate(new String[] {user,
-     * password}); } catch (Exception ex) { throw new RepositoryException(
-     * _strMgr.getString("couldNotValidateMasterPassword", user), ex); } }
-     */
+
 
     /**
      * Change the password protecting the password alias keystore
@@ -543,64 +475,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         }
     }
 
-    /**
-     * A ConfigContext is maintained. The resetConfigContext method can be called to reset the ConfigContext, causing
-     * getConfigContext() to reread the config contex from disk.
-     */
-    /*
-     * protected synchronized void resetConfigContext() { _configContext = null;
-     * }
-     *
-     * protected synchronized ConfigContext getConfigContext(RepositoryConfig
-     * config) throws ConfigException { if (_configContext == null) { final
-     * PEFileLayout layout = getFileLayout(config); _configContext =
-     * ConfigFactory.createConfigContext(
-     * layout.getDomainConfigFile().getAbsolutePath()); } return _configContext;
-     * }
-     *
-     * protected boolean domainUsesNSS(final RepositoryConfig rc) { try { final
-     * ConfigContext cc = getConfigContext(rc); final String sn =
-     * SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME; final boolean
-     * useNSS = ServerHelper.serverUsesNss(cc, sn); return ( useNSS ); } catch
-     * (final Exception e) { throw new RuntimeException(e); //can't recover :) }
-     * }
-     */
-    /**
-     * Cleans the mq broker instances created for all the server instances that are managed by this domain. This method is
-     * added to this class for the following reasons 1) Depends on the preConditions of the deleteRespository method - like
-     * instance not running. 2) Requires the repository to exist.
-     *
-     * @param config
-     * @throws RepositoryException
-     */
-    /*
-     * void deleteJMSProviderInstance(RepositoryConfig config) throws
-     * RepositoryException { final PEFileLayout layout = getFileLayout(config);
-     * final String repositoryName = config.getRepositoryName(); try { final
-     * JMSAdmin jmsAdmin = IASJmsUtil.getJMSAdminFactory(). getJMSAdmin(); final
-     * ConfigContext ctx = getConfigContext(config); final Server[] servers =
-     * getServers(ctx); for (int i = 0; i < servers.length; i++) { final String
-     * mqInstanceName = IASJmsUtil.getBrokerInstanceName( repositoryName,
-     * servers[i].getName(), getJmsService(servers[i], ctx)); final String
-     * javaHome = getJavaHome(servers[i], ctx);
-     *
-     * try { String iMQBin = System.getProperty(
-     * SystemPropertyConstants.IMQ_BIN_PROPERTY,
-     * layout.getImqBinDir().getAbsolutePath()); String iMQInstances =
-     * layout.getRepositoryDir() + File.separator + IASJmsUtil.MQ_DIR_NAME;
-     * String[] optArgs = new String[4];
-     *
-     * optArgs[0] = "-javahome"; optArgs[1] = javaHome; optArgs[2] = "-varhome";
-     * optArgs[3] = iMQInstances;
-     *
-     * //4966940 jmsAdmin.deleteProviderInstance( iMQBin, optArgs,
-     * mqInstanceName); //4966940 } catch (JMSException jmse) { //Eating the
-     * exception for now. This exception will //be thrown even in cases whre the
-     * broker instance //was not yet created (broker instance is created //only
-     * during server startup). } } } catch (Exception e) { throw new
-     * RepositoryException(
-     * _strMgr.getString("cannotDeleteJmsProviderInstance"), e); } }
-     */
+
     protected String[] getInteractiveOptions(String user, String password, String masterPassword, HashMap<Object, Object> extraPasswords) {
         int numKeys = extraPasswords == null ? 0 : extraPasswords.size();
         String[] options = new String[3 + numKeys];
@@ -616,21 +491,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         }
         return options;
     }
-    /*
-     * private static Server[] getServers(ConfigContext ctx) throws
-     * ConfigException { return ServerHelper.getServersInDomain(ctx); }
-     *
-     * private static String getJavaHome(Server server, ConfigContext ctx)
-     * throws ConfigException { final JavaConfig javaConfig = getConfig(server,
-     * ctx).getJavaConfig(); return javaConfig.getJavaHome(); }
-     *
-     * private static JmsService getJmsService(Server server, ConfigContext ctx)
-     * throws ConfigException { return getConfig(server, ctx).getJmsService(); }
-     *
-     * private static Config getConfig(Server server, ConfigContext ctx) throws
-     * ConfigException { return ServerHelper.getConfigForServer(ctx,
-     * server.getName()); }
-     */
+
 
     /**
      * Determines if the NSS support is available in this installation. The check involves availability of the

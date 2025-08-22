@@ -34,7 +34,6 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.Payload;
 import org.junit.jupiter.api.AfterEach;
@@ -262,10 +261,8 @@ public class PayloadImplTest {
         }
     }
 
-    private Map<File,Properties> preparePFM(final File zipFile) throws FileNotFoundException, IOException, Exception {
-
-        PayloadFilesManager.Perm pfm = new PayloadFilesManager.Perm(
-                workingDir, null /* actionReporter */, Logger.getAnonymousLogger());
+    private Map<File, Properties> preparePFM(final File zipFile) throws FileNotFoundException, IOException, Exception {
+        PayloadFilesManager.Perm pfm = new PayloadFilesManager.Perm(workingDir, null);
 
         final InputStream is = new BufferedInputStream(new FileInputStream(zipFile));
         Payload.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", is);

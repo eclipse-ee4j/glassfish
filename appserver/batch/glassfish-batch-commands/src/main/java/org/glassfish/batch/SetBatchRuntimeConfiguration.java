@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +34,7 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandInvocation;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
@@ -155,9 +157,9 @@ public class SetBatchRuntimeConfiguration
 
     public void validateDataSourceLookupName(AdminCommandContext context, String targetName, String dsLookupName) {
         try {
-            CommandRunner runner = serviceLocator.getService(CommandRunner.class);
+            CommandRunner<?> runner = serviceLocator.getService(CommandRunner.class);
             ActionReport subReport = context.getActionReport().addSubActionsReport();
-            CommandRunner.CommandInvocation inv = runner.getCommandInvocation("list-jdbc-resources", subReport, context.getSubject());
+            CommandInvocation<?> inv = runner.getCommandInvocation("list-jdbc-resources", subReport, context.getSubject());
 
             ParameterMap params = new ParameterMap();
             params.add("target", targetName);
@@ -186,9 +188,9 @@ public class SetBatchRuntimeConfiguration
             return;
         }
         try {
-            CommandRunner runner = serviceLocator.getService(CommandRunner.class);
+            CommandRunner<?> runner = serviceLocator.getService(CommandRunner.class);
             ActionReport subReport = context.getActionReport().addSubActionsReport();
-            CommandRunner.CommandInvocation inv = runner.getCommandInvocation("list-managed-executor-services", subReport, context.getSubject());
+            CommandInvocation<?> inv = runner.getCommandInvocation("list-managed-executor-services", subReport, context.getSubject());
 
             ParameterMap params = new ParameterMap();
             params.add("target", targetName);

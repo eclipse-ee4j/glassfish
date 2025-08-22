@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,8 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.v3.admin.AdminCommandJob;
+import com.sun.enterprise.v3.admin.AsyncAdminCommandInvoker;
 
 import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Produces;
@@ -26,11 +28,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,12 +50,19 @@ import org.glassfish.admin.rest.composite.metadata.RestResourceMetadata;
 import org.glassfish.admin.rest.provider.MethodMetaData;
 import org.glassfish.admin.rest.results.ActionReportResult;
 import org.glassfish.admin.rest.results.OptionsResult;
+import org.glassfish.admin.rest.utils.DetachedSseAdminCommandInvoker;
 import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.admin.rest.utils.SseAdminCommandInvoker;
 import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandInvocation;
+import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.jersey.media.sse.EventOutput;
+import org.glassfish.internal.api.Globals;
+
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
  * @author ludo
@@ -119,20 +128,28 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
         }
     }
 
-    protected Response executeCommandAsSse(ParameterMap data) {
-        EventOutput ec = ResourceUtil.runCommandWithSse(commandName, data, null, null);
-        return Response.status(HttpURLConnection.HTTP_OK).entity(ec).build();
+    protected final Response executeSseCommand(ParameterMap params) {
+        final boolean notify = params == null ? false : params.containsKey("notify");
+        final boolean detach = params == null ? false : params.containsKey("detach");
+        final CommandRunner<AdminCommandJob> commandRunner = Globals.getDefaultHabitat().getService(CommandRunner.class);
+        final CommandInvocation<AdminCommandJob> invocation = commandRunner
+            .getCommandInvocation(null, commandName, new RestActionReporter(), null, notify, detach).parameters(params);
+        final ResponseBuilder builder = Response.status(HTTP_OK);
+        final AsyncAdminCommandInvoker<Response> invoker = detach
+            ? new DetachedSseAdminCommandInvoker(invocation, builder)
+            : new SseAdminCommandInvoker(invocation, builder);
+        return invoker.start();
     }
 
     protected Response executeCommandLegacyFormat(ParameterMap data) {
         RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
         final ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
-        final int status = (exitCode == ActionReport.ExitCode.FAILURE) ? HttpURLConnection.HTTP_INTERNAL_ERROR : HttpURLConnection.HTTP_OK;
+        final int status = exitCode == ActionReport.ExitCode.FAILURE ? HTTP_INTERNAL_ERROR : HTTP_OK;
         ActionReportResult option = optionsLegacyFormat();
         ActionReportResult results = new ActionReportResult(commandName, actionReport, option.getMetaData());
         results.getActionReport().getExtraProperties().putAll(option.getActionReport().getExtraProperties());
         results.setCommandDisplayName(commandDisplayName);
-        // GLASSFISH-21582: removed setting of error messasge because ActionReportResult object is used for constructing the response(with error message)
+        // GLASSFISH-21582: removed setting of error message because ActionReportResult object is used for constructing the response(with error message)
         // setting error message again is showing error two times on GUI.
         return Response.status(status).entity(results).build();
     }

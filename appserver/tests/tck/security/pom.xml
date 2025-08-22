@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>8.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>glassfish-external-tck-security</artifactId>
+    <packaging>pom</packaging>
+
+    <name>TCK: Security</name>
+
+    <properties>
+        <tck.home>${project.build.directory}/security-tck-4.0.1/tck</tck.home>
+        <tck.old.glassfish.home>${tck.home}/old-tck/run/target/glassfish8</tck.old.glassfish.home>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>jakarta-security-tck</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unpack-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>glassfish</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-tck</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>jakarta-security-tck</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${maven.executable}</executable>
+                            <arguments>
+                                <argument>-B</argument>
+                                <argument>-e</argument>
+                                <argument>-s</argument>
+                                <argument>${maven.settings.xml}</argument>
+                                <argument>-f</argument>
+                                <argument>${tck.home}/pom.xml</argument>
+                                <argument>clean</argument>
+                                <argument>install</argument>
+                                <argument>-Pglassfish-ci-managed</argument>
+                                <argument>-Dglassfish.home=${glassfish.home}</argument>
+                                <argument>-Dglassfish.version=${glassfish.version}</argument>
+                                <argument>-Dglassfish.arquillian.version=${omnifish.arquillian.version}</argument>
+                                <argument>-DtrustStore.suffix=p12</argument>
+                            </arguments>
+                            <commandlineArgs>${tck.args}</commandlineArgs>
+                        </configuration>
+                    </execution>
+                    <!-- TCK old doesn't properly stop -->
+                    <execution>
+                        <id>stop-domain</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${glassfish.home}/bin/asadmin</executable>
+                            <arguments>
+                                <argument>stop-domain</argument>
+                                <argument>--kill</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-database</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${tck.old.glassfish.home}/bin/asadmin</executable>
+                            <arguments>
+                                <argument>stop-database</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>print-warning</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>/bin/echo</executable>
+                            <arguments>
+                                <argument>
+                                WARNING: This TCK leaves few processes running, we tried out best, but you probably will have to stop them manually: GlassFish, LDAP, Derby.
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

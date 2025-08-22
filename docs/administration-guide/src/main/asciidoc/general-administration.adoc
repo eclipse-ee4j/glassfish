@@ -9,7 +9,7 @@ prev=part-runtime-admin.adoc
 == 2 General Administration
 
 This chapter provides instructions for performing general administration
-tasks in the {productName} 7 environment by
+tasks in the {productName} {product-majorVersion} environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -3160,9 +3160,9 @@ specify the type through the `-H` option as follows:
 * For form URL encoded, specify `-H "Content-type: application/x-www-form-urlencoded"`.
 
 [[log-executed-admin-commands]]
-=== Log executed admin commands
+=== Admin Command Logger - log executed admin commands
 
-It's possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.
+The Admin Command Logger makes it possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.
 
 To enable this logging, set the system property `glassfish.commandlogger.logmode` on the DAS server to one of the following values:
 

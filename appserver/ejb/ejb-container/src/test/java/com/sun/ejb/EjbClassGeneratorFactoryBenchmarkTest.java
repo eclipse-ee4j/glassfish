@@ -18,6 +18,7 @@ package com.sun.ejb;
 
 import com.sun.ejb.codegen.EjbClassGeneratorFactory;
 
+import java.lang.System.Logger;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
+import static java.lang.System.Logger.Level.INFO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThan;
@@ -49,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @TestMethodOrder(OrderAnnotation.class)
 public class EjbClassGeneratorFactoryBenchmarkTest {
+    private static final Logger LOG = System.getLogger(EjbClassGeneratorFactoryBenchmarkTest.class.getName());
 
     /**
      * The value shall be high enough to pass on all standard environments,
@@ -78,7 +81,9 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
         Collection<RunResult> results = new Runner(options).run();
         assertThat(results, hasSize(1));
         Result<?> primaryResult = results.iterator().next().getPrimaryResult();
-        assertThat(primaryResult.getScore(), lessThan(firstRunScore / 3));
+        double ratio = primaryResult.getScore() / firstRunScore;
+        LOG.log(INFO, "Score: {0}, firstRunScore: {1}, ratio: {2}", primaryResult.getScore(), firstRunScore, ratio);
+        assertThat("Expected ration", ratio, lessThan(1 / 3d));
     }
 
 
@@ -100,7 +105,7 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
         } else {
             builder.warmupIterations(0);
         }
-        builder.forks(1).threads(100).shouldFailOnError(true)
+        builder.forks(1).threads(Runtime.getRuntime().availableProcessors() * 4).shouldFailOnError(true)
             .measurementIterations(1)
             .measurementTime(TimeValue.milliseconds(measurementTime)).timeout(TimeValue.seconds(5L))
             .timeUnit(TimeUnit.MICROSECONDS).mode(mode);

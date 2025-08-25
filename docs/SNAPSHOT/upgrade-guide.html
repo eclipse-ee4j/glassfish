@@ -71,14 +71,6 @@
 <li><a href="#upgrade-tool-summary">Upgrade Tool Summary</a></li>
 <li><a href="#upgrade-tool-functionality">Upgrade Tool Functionality</a></li>
 <li><a href="#to-upgrade-from-the-command-line-using-upgrade-tool">To Upgrade From the Command Line Using Upgrade Tool</a></li>
-<li><a href="#to-upgrade-using-the-upgrade-tool-wizard">To Upgrade Using the Upgrade Tool Wizard</a></li>
-</ul>
-</li>
-<li><a href="#performing-an-in-place-upgrade-with-the-update-center-tools">Performing an In-Place Upgrade With the Update Center Tools</a>
-<ul class="sectlevel3">
-<li><a href="#update-center-tool-procedures">Update Center Tool Procedures</a></li>
-<li><a href="#to-upgrade-using-the-software-update-notifier">To Upgrade Using the Software Update Notifier</a></li>
-<li><a href="#to-upgrade-from-the-command-line-using-the-pkg-utility">To Upgrade From the Command Line Using the <code>pkg</code> Utility</a></li>
 </ul>
 </li>
 <li><a href="#upgrading-installations-that-use-nss-cryptographic-tokens">Upgrading Installations That Use NSS Cryptographic Tokens</a>
@@ -99,7 +91,6 @@
 <ul class="sectlevel3">
 <li><a href="#cluster-profile-security-setting">Cluster Profile Security Setting</a></li>
 <li><a href="#cluster-profile-upgrade-on-windows">Cluster Profile Upgrade on Windows</a></li>
-<li><a href="#asupgrade-fails-without-internet-connection"><code>asupgrade</code> Fails Without Internet Connection</a></li>
 </ul>
 </li>
 </ul>
@@ -2612,24 +2603,7 @@ and applications from an earlier version of the Application Server or
 Eclipse GlassFish to Eclipse GlassFish 7.</p>
 </div>
 <div class="paragraph">
-<p>In addition to Upgrade Tool, there are two Update Center tools that
-can be used to perform an in-place upgrade to Eclipse GlassFish 7 from
-Eclipse GlassFish 3.1.1, 3.1, 3.0.1, and Enterprise Server v3. These
-two Update Center tools are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Software Update Notifier</p>
-</li>
-<li>
-<p>The <code>pkg</code> command-line utility</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Upgrade Tool and the three Update Center tools are explained later in
-this chapter.</p>
+<p>The Upgrade Tool is explained later in this chapter.</p>
 </div>
 <div class="paragraph">
 <p>To view a list of the older versions from which you can upgrade, see
@@ -2645,10 +2619,6 @@ this chapter.</p>
 </li>
 <li>
 <p><a href="#performing-a-side-by-side-upgrade-with-upgrade-tool">Performing a Side-By-Side Upgrade With Upgrade Tool</a></p>
-</li>
-<li>
-<p><a href="#performing-an-in-place-upgrade-with-the-update-center-tools">Performing an In-Place Upgrade With the Update Center
-Tools</a></p>
 </li>
 <li>
 <p><a href="#upgrading-installations-that-use-nss-cryptographic-tokens">Upgrading Installations That Use NSS Cryptographic Tokens</a></p>
@@ -2712,8 +2682,9 @@ In this scenario, you perform the following steps:</p>
 other than the one being used for the older product.</p>
 </li>
 <li>
-<p>Use Upgrade Tool to migrate the old configurations and
-applications to the new Eclipse GlassFish 7 directories.</p>
+<p>Copy the configuration from old installation to the new one.
+While initially the Upgrade Tool would copy the configuration from the old installation to the new one,
+currently, this must be done manually.</p>
 </li>
 <li>
 <p>Test the new Eclipse GlassFish installation to make sure everything
@@ -2730,27 +2701,6 @@ modify your production environment to use the new installation.</p>
   environments because it allows you to thoroughly test the new
   Eclipse GlassFish installation before bringing it into production.</p>
 </div>
-</dd>
-<dt class="hdlist1">In-Place</dt>
-<dd>
-<p>  An in-place upgrade means that the new Eclipse GlassFish release is
-  installed directly over and into the same directory as the previous
-  product release. The existing configuration is reused in the updated
-  installation.<br>
-In this scenario, you simply use the <code>pkg</code> utility or
-  the Update Notifier in your old installation to overwrite the old
-  installation with the new Eclipse GlassFish 7 product.<br>
-  Performing an in-place upgrade is easier than performing a
-  side-by-side upgrade, but you lose the ability to switch back and
-  forth between the old and new installations. There is also no way to
-  revert an in-place upgrade back to the previous product version.
-  Because of these limitations, in-place upgrades are typically only
-  used by developers and for non-production Eclipse GlassFish
-  deployments.<br>
-  Note also that it is only possible to perform an in-place upgrade when
-  upgrading from Eclipse GlassFish 3.1.1, 3.1, 3.0.1, or v3. If you are
-  upgrading from product versions prior to 3x, you must perform a
-  side-by-side upgrade.</p>
 </dd>
 </dl>
 </div>
@@ -2805,26 +2755,17 @@ on which tool you use and the product version from which you are upgrading.</p>
 <li>
 <p><a href="#summary-of-procedure-for-upgrading-with-upgrade-tool">Summary of Procedure for Upgrading With Upgrade Tool</a></p>
 </li>
-<li>
-<p><a href="#summary-of-procedure-for-upgrading-with-the-software-update-notifier">Summary of Procedure for Upgrading With the Software Update Notifier</a></p>
-</li>
-<li>
-<p><a href="#summary-of-procedure-for-upgrading-with-the-pkg-utility">Summary of Procedure for Upgrading With the <code>pkg</code> Utility</a></p>
-</li>
 </ul>
 </div>
 <div class="sect4">
-<h5 id="summary-of-tools-for-performing-an-upgrade"><a class="anchor" href="#summary-of-tools-for-performing-an-upgrade"></a>Summary of Tools for Performing an Upgrade</h5>
+<h5 id="summary-of-tools-for-performing-an-upgrade"><a class="anchor" href="#summary-of-tools-for-performing-an-upgrade"></a>Summary of the Upgrade Tool Performing an Upgrade</h5>
 <div class="paragraph">
-<p>There are several tools you can use to perform an upgrade to Eclipse GlassFish 7 are described below.</p>
+<p>Currently, There is only one tool you can use to perform an upgrade to Eclipse GlassFish 7 as described below.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><a href="#upgrade-tool">Upgrade Tool</a></p>
-</li>
-<li>
-<p><a href="#software-update-notifier">Software Update Notifier</a></p>
 </li>
 </ul>
 </div>
@@ -2843,8 +2784,9 @@ installation. These features are described in more detail in
 <a href="#upgrade-tool-functionality">Upgrade Tool Functionality</a>.</p>
 </div>
 <div class="paragraph">
-<p>In Eclipse GlassFish 7 Upgrade Tool is installed in the
-as-install<code>/bin</code> directory.</p>
+<p>In Eclipse GlassFish 7, the term <em>Upgrade Tool</em> refers
+to the asadmin start-domain --upgrade command of the ASAdmin CLI tool,
+which is installed in as-install/bin directory.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2865,28 +2807,6 @@ Enterprise Server v3.</p>
 <p>See <a href="#summary-of-procedure-for-upgrading-with-upgrade-tool">Summary of Procedure for Upgrading With Upgrade Tool</a>
 for an overview of the general procedure for performing an upgrade with
 Upgrade Tool.</p>
-</div>
-<div id="software-update-notifier" class="paragraph">
-<p>Software Update Notifier</p>
-</div>
-<div class="paragraph">
-<p>The Eclipse GlassFish Software Update Notifier enables you to perform
-an in-place upgrade from Eclipse GlassFish 3.1.1, 3.1, 3.0.1, or
-Enterprise Server v3. But you cannot use the Software Update Notifier
-to upgrade from product releases prior 3.0.1 and v3.</p>
-</div>
-<div class="paragraph">
-<p>The Software Update Notifier is distributed as a configuration option
-during Eclipse GlassFish 7, 3.0.1, and Enterprise Server v3
-installation. If installed and enabled, the Software Update Notifier
-monitors your installation and pops up a notification balloon when
-updates or upgrades are available for your product.</p>
-</div>
-<div class="paragraph">
-<p>See <a href="#summary-of-procedure-for-upgrading-with-the-software-update-notifier">Summary of Procedure for Upgrading With the Software
-Update Notifier</a> for an overview of the general procedure for performing
-an upgrade with the Software Update Notifier. For more information about
-the Update Notifier, refer to the Update Tool online help.</p>
 </div>
 </div>
 <div class="sect4">
@@ -2911,7 +2831,20 @@ third-party libraries here. Do not copy an libraries from the actual
 domain that will be upgraded.</p>
 </li>
 <li>
-<p>Run the <code>asupgrade</code> command from the new Eclipse GlassFish 7
+<p>Copy the configuration from the old installation to the new one,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>copy GlassFish domain directory, e.g. <code>glassfish/domains/domain1</code></p>
+</li>
+<li>
+<p>copy the nodes directory if it exists, e.g. <code>glassfish/nodes</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Run the <code>asadmin start-domain --upgrade</code> command from the new Eclipse GlassFish 7
 as-install<code>/bin</code> directory.</p>
 </li>
 <li>
@@ -2923,76 +2856,6 @@ as-install<code>/bin</code> directory.</p>
 <div class="paragraph">
 <p>This procedure is described in more detail in <a href="#performing-a-side-by-side-upgrade-with-upgrade-tool">Performing a
 Side-By-Side Upgrade With Upgrade Tool</a>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="summary-of-procedure-for-upgrading-with-the-software-update-notifier"><a class="anchor" href="#summary-of-procedure-for-upgrading-with-the-software-update-notifier"></a>Summary of Procedure for Upgrading With the Software Update Notifier</h5>
-<div class="paragraph">
-<p>The general procedure for using the Software Update Notifier to perform
-an upgrade to Eclipse GlassFish 7 from Eclipse GlassFish3.0.1 or
-Enterprise Server v3 comprises the following steps:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Wait for the Software Update Notifier to pop up a notification
-balloon informing you that updates are available.</p>
-</li>
-<li>
-<p>Click the balloon prompt to launch the Software Update GUI.</p>
-</li>
-<li>
-<p>Manually stop all server instances and the domain.</p>
-</li>
-<li>
-<p>Use the Software Update GUI to perform the upgrade. This updates
-your server to the 7 release.</p>
-</li>
-<li>
-<p>Upgrade the domain by running the <code>asadmin start-domain --upgrade</code>
-subcommand. This performs the upgrade and then shuts down the DAS.</p>
-</li>
-<li>
-<p>Restart the upgraded DAS normally with the with the
-<code>asadmin start-domain</code> subcommand.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>This procedure is described in more detail in <a href="#to-upgrade-using-the-software-update-notifier">To Upgrade
-Using the Software Update Notifier</a>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="summary-of-procedure-for-upgrading-with-the-pkg-utility"><a class="anchor" href="#summary-of-procedure-for-upgrading-with-the-pkg-utility"></a>Summary of Procedure for Upgrading With the <code>pkg</code> Utility</h5>
-<div class="paragraph">
-<p>The general procedure for using the <code>pkg</code> utility to perform an upgrade
-to Eclipse GlassFish 7 from Eclipse GlassFish3.0.1 or Enterprise Server
-v3 comprises the following steps:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Manually stop all server instances and the domain.</p>
-</li>
-<li>
-<p>Run the as-install-parent`/bin/pkg` command with the desired options
-in the older product directory. This updates your server to the 7
-release.</p>
-</li>
-<li>
-<p>Upgrade the domain by running the <code>asadmin start-domain --upgrade</code>
-subcommand. This performs the upgrade and then shuts down the DAS.</p>
-</li>
-<li>
-<p>Restart the upgraded DAS normally with the with the
-<code>asadmin start-domain</code> subcommand.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>This procedure is described in more detail in <a href="#to-upgrade-from-the-command-line-using-the-pkg-utility">To Upgrade
-From the Command Line Using the <code>pkg</code> Utility</a>.</p>
 </div>
 </div>
 </div>
@@ -3091,9 +2954,6 @@ upgrade to Eclipse GlassFish 7 from any compatible older product release.</p>
 <li>
 <p><a href="#to-upgrade-from-the-command-line-using-upgrade-tool">To Upgrade From the Command Line Using Upgrade Tool</a></p>
 </li>
-<li>
-<p><a href="#to-upgrade-using-the-upgrade-tool-wizard">To Upgrade Using the Upgrade Tool Wizard</a></p>
-</li>
 </ul>
 </div>
 <div class="sect3">
@@ -3118,9 +2978,6 @@ for the target directory.</p>
 <li>
 <p><a href="#to-upgrade-from-the-command-line-using-upgrade-tool">To Upgrade From the Command Line Using Upgrade Tool</a></p>
 </li>
-<li>
-<p><a href="#to-upgrade-using-the-upgrade-tool-wizard">To Upgrade Using the Upgrade Tool Wizard</a></p>
-</li>
 </ul>
 </div>
 </div>
@@ -3128,8 +2985,7 @@ for the target directory.</p>
 <h4 id="upgrade-tool-functionality"><a class="anchor" href="#upgrade-tool-functionality"></a>Upgrade Tool Functionality</h4>
 <div class="paragraph">
 <p>The Upgrade Tool migrates the configurations and deployed applications
-from an earlier version of Sun Java System Application Server or Sun
-GlassFishEnterprise Server to the current version. Database migrations
+from an earlier version of Eclipse GlassFish to the current version. Database migrations
 or conversions are not part of this upgrade process.</p>
 </div>
 <div class="paragraph">
@@ -3145,7 +3001,7 @@ or conversions are not part of this upgrade process.</p>
 source configurations to the new target Eclipse GlassFish installation.</p>
 </li>
 <li>
-<p>Sends all <code>asadmin</code> command output to the screen and to the
+<p>Sends all <code>asadmin start-domain --upgrade</code> command output to the screen and to the
 <code>upgrade.log</code> file, and sends all server output to the <code>server.log</code> file.</p>
 </li>
 </ul>
@@ -3172,19 +3028,22 @@ source configurations to the new target Eclipse GlassFish installation.</p>
 <p>Application archives (EAR files) and component archives (JAR, WAR, and
 RAR files) that are deployed in the source server do not require any
 modification to run on Eclipse GlassFish 7.
-Components that may have incompatibilities are deployed on Eclipse GlassFish 7 with the <code>compatibility</code> property set to <code>v2</code> and will run
-without change on Eclipse GlassFish 7. You may, however, want to
-consider modifying the applications to conform to Jakarta EE 6 requirements.</p>
+Some components that may have incompatibilities are deployed on Eclipse GlassFish 7
+with the <code>compatibility</code> property set to <code>v2</code> and will run
+without change on Eclipse GlassFish 7. It&#8217;s, however,
+strongly encouraged to modify the applications to conform to Jakarta EE 10
+requirements because the compatibility layer is not being maintained and will likely
+not cover all incompatible applications.</p>
 </div>
 <div class="paragraph">
-<p>The Jakarta EE 6 platform specification imposes stricter requirements than
-Jakarta EE 5 did on which JAR files can be visible to various modules
+<p>Jakarta EE 10 platform specification has stricter requirements than
+Java EE 5 and earlier version had on which JAR files can be visible to various modules
 within an EAR file. In particular, application clients must not have
 access to EJB JAR files or other JAR files in the EAR file unless they
 use a <code>Class-Path</code> header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
 Jakarta EE <code>library-directory</code> mechanism. Setting the <code>library-directory</code>
-property to <code>v2</code> removes these Jakarta EE 6 restrictions.</p>
+property to <code>v2</code> removes these restrictions in Eclipse GlassFish 7.</p>
 </div>
 <div class="paragraph">
 <p>Applications and components that are deployed in the source server are
@@ -3279,47 +3138,13 @@ installation, not the older source installation.</p>
 </tr>
 </table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>On UNIX systems</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>as-install/bin/asupgrade -c</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>On Windows systems</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install\bin\asupgrade.bat -c</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>-c</code> option starts Upgrade Tool in console mode. If <code>-c</code> is omitted,
-Upgrade Tool starts in GUI mode, which is described in <a href="#to-upgrade-using-the-upgrade-tool-wizard">To
-Upgrade Using the Upgrade Tool Wizard</a>.</p>
-</div>
-<div class="paragraph">
-<p>If you start Upgrade Tool with only the <code>-c</code> option, the tool enters
-interactive CLI mode in which you are asked to supply the needed
-options. If you prefer to enter all options directly from the command
-line, you can use the following syntax:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asupgrade
-[-c|--console]
-[-V|--version]
-[-h|--help]
+<pre class="CodeRay highlight"><code>asadmin start-domain --upgrade
 [-s|--source source-domain-directory]
 [-t|--target target-domain-directory]
 [-f|--passwordfile password-file]</code></pre>
 </div>
-</div>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>Explanations of these options are provided at the end of this procedure.</p>
@@ -3392,518 +3217,6 @@ which node agents were used, proceed with the instructions in
 <a href="#upgrading-clusters-and-node-agent-configurations">Upgrading Clusters and Node Agent Configurations</a>.</p>
 </li>
 </ol>
-</div>
-<div id="gktiu" class="paragraph">
-<p>Example 2-1 Using the <code>asupgrade</code> Command Line</p>
-</div>
-<div class="paragraph">
-<p>The following example shows how to use the <code>asupgrade</code> command-line
-utility in non-interactive mode to upgrade an existing Sun GlassFish
-Enterprise Server v2.1 installation to Eclipse GlassFish 7. The
-following command should be entered on a single line.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asupgrade -c -s /home/glassfish/domains/domain1 -f /root/mypassword
--t /home/glassfish7/glassfish/domains</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>asupgrade Command-Line Options</p>
-</div>
-<div class="paragraph">
-<p>Listed below are the <code>asupgrade</code> command-line options, including the
-short form, the long form, and a description of each option.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 26%;">
-<col style="width: 26%;">
-<col style="width: 48%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Short Form</th>
-<th class="tableblock halign-left valign-top">Long Form</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-c</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--console</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Launches the upgrade command line utility.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-V</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--version</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The version of the Eclipse GlassFish.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-h</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--help</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Displays the arguments for launching the upgrade utility.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-s</code> source-domain-directory</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--source</code> source-domain-directory</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The domain-dir directory in the source (older) server installation.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-t</code> target-domains-directory</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--target</code> target-domains-directory</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The desired domain-root-dir directory in the Eclipse GlassFish 7 target
-installation; default is as-install<code>/domains</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-f</code> password-file</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--passwordfile</code> password-file</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The file containing the administration password and the master password.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Browse to the URL <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code> to view the
-domain-dir<code>/docroot/index.html</code> file. This file is brought over during
-the upgrade. You may want to copy the default Eclipse GlassFish 7 file
-from the <code>domain1.original/docroot</code> directory and customize it for your
-Eclipse GlassFish 7 installation.</p>
-</li>
-<li>
-<p>To register your installation of Eclipse GlassFish from the
-Administration Console, select the Registration item from the Common
-Tasks page. For step-by-step instructions on the registration process,
-click the Help button on the Administration Console.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-upgrade-using-the-upgrade-tool-wizard"><a class="anchor" href="#to-upgrade-using-the-upgrade-tool-wizard"></a>To Upgrade Using the Upgrade Tool Wizard</h4>
-<div class="paragraph">
-<p>This procedure explains how to use the graphical Upgrade Tool Wizard to
-upgrade to Eclipse GlassFish 7 from any supported older product release.
-See <a href="#supported-releases-for-upgrade-to-glassfish-server-7">Supported Releases for Upgrade to Eclipse GlassFish 7</a> for a list of supported releases.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that the source domains from which you are upgrading are stopped
-before proceeding.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Download and install Eclipse GlassFish 7 using the Typical Installation path.<br>
-See "<a href="installation-guide.html#GSING00025">
-Installing Eclipse GlassFish From a Self-Extracting Bundle</a>"
-in Eclipse GlassFish Installation Guide for instructions.</p>
-</li>
-<li>
-<p>Copy any custom or third-party libraries that may be located in the
-source as-install<code>/lib</code> directory to the target as-install<code>/lib</code> directory.<br>
-Custom and third-party libraries should normally be located in the
-domain-dir<code>/lib</code> directory. This step is only necessary for custom or
-third-party libraries that may be located in the nonstandard
-as-install<code>/lib</code> directory.</p>
-</li>
-<li>
-<p>Start the Upgrade Tool wizard from a command shell for your
-operating environment.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Use the Upgrade Tool that is located in the target Eclipse GlassFish 7
-installation, not the older source installation.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>On UNIX systems</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install/bin/asupgrade</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>On Windows systems</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install\bin\asupgrade.bat</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>You may find it faster to run the <code>asupgrade</code> command with the <code>s</code>
-source-domain-directory option, which will prefill the Source Domain
-Directory field in the next step.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>In the Source Domain Directory field, type the domain directory of
-the existing installation from which to import the configuration, or
-click Browse.<br>
-For example, you might type <code>c:\glassfish\domains\domain1</code>.</p>
-</li>
-<li>
-<p>In the Target Domains Root Directory field, type the location of the
-Eclipse GlassFish 7 installation to which to transfer the
-configuration, or click Browse.<br>
-The default is the full path name of the <code>domains</code> directory of your
-Eclipse GlassFish 7 installation (for example,
-<code>c:\glassfish7\glassfish\domains</code>).</p>
-</li>
-<li>
-<p>Provide the master password of the source application server.<br>
-The domain will be upgraded using these credentials. If you do not
-specify a password here, the default master password is used.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Eclipse GlassFish 7 does not support NSS authentication. If you are
-upgrading from a Enterprise Profile configuration that uses NSS
-authentication, follow the procedure in <a href="#upgrading-installations-that-use-nss-cryptographic-tokens">Upgrading
-Installations That Use NSS Cryptographic Tokens</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>Click Next.<br>
-If a name used for an older domain that you are upgrading already exists
-in the new target domains directory, Upgrade Tool will ask if you want
-to rename the new directory so the old directory can be copied to the
-new installation.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>If you click OK in response, the directory is renamed
-domain-name<code>.original</code>. If that name already exists, the directory will
-be renamed domain-name<code>.orginal.0</code>. For example, if the old domain
-directory is named <code>domain1</code>, it will be renamed <code>domain1.original</code>, or
-if that name already exists, <code>domain1.original.0</code>.</p>
-</li>
-<li>
-<p>If you click No, you brought back to the main screen.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The domain is upgraded and the Upgrade Results page displays the status
-of the upgrade operation.</p>
-</div>
-</li>
-<li>
-<p>Review the output in the Upgrade Results page to verify that the
-upgrade proceeded correctly.<br>
-If there are any <code>SEVERE</code> or <code>WARNING</code> messages in the <code>server.log</code>
-file, the upgrade output will say
-<code>"Possible error encountered during upgrade. See server log after upgrade process completes."</code></p>
-</li>
-<li>
-<p>Click Finish to exit the Upgrade Tool when the upgrade process is
-complete.</p>
-</li>
-<li>
-<p>Start the upgraded Eclipse GlassFish 7 domain.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin start-domain domain-name</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>If you are upgrading a clustered configuration or a configuration in
-which node agents were used, proceed with the instructions in
-<a href="#upgrading-clusters-and-node-agent-configurations">Upgrading Clusters and Node Agent Configurations</a>.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Browse to the URL <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code> to view the
-domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default Eclipse GlassFish 7 file
-from the <code>domain1.original/docroot</code> directory and customize it for your
-Eclipse GlassFish 7 installation.</p>
-</li>
-<li>
-<p>To register your installation of Eclipse GlassFish from the
-Administration Console, select the Registration item from the Common
-Tasks page. For step-by-step instructions on the registration process,
-click the Help button on the Administration Console.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="performing-an-in-place-upgrade-with-the-update-center-tools"><a class="anchor" href="#performing-an-in-place-upgrade-with-the-update-center-tools"></a>Performing an In-Place Upgrade With the Update Center Tools</h3>
-<div class="paragraph">
-<p>This section explains how to use the two Update Center tools to
-perform an in-place upgrade to Eclipse GlassFish 7 from Eclipse GlassFish 3.0.1 or Enterprise Server v3. Specifically, the two tools
-explained in this section are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Software Update Notifier</p>
-</li>
-<li>
-<p>The <code>pkg</code> command-line utility</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Eclipse GlassFish 3.0.1 and Enterprise Server v3 are the only product
-releases that can be upgraded to the 7 release with the Update Center
-tools. If you are upgrading from any other product release, you must use
-Upgrade Tool, as described in <a href="#performing-a-side-by-side-upgrade-with-upgrade-tool">Performing a Side-By-Side
-Upgrade With Upgrade Tool</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The following topics are addressed here:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#update-center-tool-procedures">Update Center Tool Procedures</a></p>
-</li>
-<li>
-<p><a href="#to-upgrade-using-the-software-update-notifier">To Upgrade Using the Software Update Notifier</a></p>
-</li>
-<li>
-<p><a href="#to-upgrade-from-the-command-line-using-the-pkg-utility">To Upgrade From the Command Line Using the <code>pkg</code> Utility</a></p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="update-center-tool-procedures"><a class="anchor" href="#update-center-tool-procedures"></a>Update Center Tool Procedures</h4>
-<div class="paragraph">
-<p>Unlike when using Upgrade Tool, when you use the
-Software Update Notifier or the <code>pkg</code> utility to perform a Eclipse GlassFish 7 upgrade, the older source server directories are overwritten
-with the new target server directories, and the existing configuration
-and deployed applications are reused in the updated installation.</p>
-</div>
-<div class="paragraph">
-<p>To perform the upgrade, the user who runs the upgrade needs to have read
-and writer permissions for the server installation directories.</p>
-</div>
-<div class="paragraph">
-<p>You can perform an upgrade using the Update Center tools in the
-following ways:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#to-upgrade-using-the-software-update-notifier">To Upgrade Using the Software Update Notifier</a></p>
-</li>
-<li>
-<p><a href="#to-upgrade-from-the-command-line-using-the-pkg-utility">To Upgrade From the Command Line Using the <code>pkg</code> Utility</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-upgrade-using-the-software-update-notifier"><a class="anchor" href="#to-upgrade-using-the-software-update-notifier"></a>To Upgrade Using the Software Update Notifier</h4>
-<div class="paragraph">
-<p>This procedure explains how to use the Software Update Notifier to
-perform an in-place upgrade to Eclipse GlassFish 7 from Eclipse GlassFish 3.0.1 or Enterprise Server v3. Note that it is not possible to
-use this procedure with any other product releases.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>The Software Update Notifier must be installed and enabled on the
-Eclipse GlassFish or Enterprise Server release from which you are
-upgrading. Software Update Notifier installation is typically performed
-during the initial Eclipse GlassFish or Enterprise Server installation.
-The Software Update Notifier can also be installed later using Update
-Tool. For more information about the Update Notifier, refer to the
-Update Tool online help.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Wait for the Software Update Notifier to pop up a notification
-balloon informing you that updates are available.</p>
-</li>
-<li>
-<p>Click the balloon prompt to open the Software Update GUI.</p>
-</li>
-<li>
-<p>Manually stop all domains and server instances.</p>
-</li>
-<li>
-<p>Using the Software Update GUI, select the items you want to upgrade
-and start the installation.<br>
-Ensure that Eclipse GlassFish 7 is one of the items you select for
-upgrade. This upgrades the server and selected components to the latest
-available versions.</p>
-</li>
-<li>
-<p>Upgrade the domain by starting the DAS with the <code>--upgrade</code> option.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-domain --upgrade domain-name</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This upgrades the domain and then shuts down the DAS.</p>
-</div>
-</li>
-<li>
-<p>Start the DAS normally.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-domain domain-name</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Browse to the URL <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code> to view the
-domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default Eclipse GlassFish 7 file
-from the <code>domain1.original/docroot</code> directory and customize it for your
-Eclipse GlassFish 7 installation.</p>
-</li>
-<li>
-<p>To register your installation of Eclipse GlassFish from the
-Administration Console, select the Registration item from the Common
-Tasks page. For step-by-step instructions on the registration process,
-click the Help button on the Administration Console.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="to-upgrade-from-the-command-line-using-the-pkg-utility"><a class="anchor" href="#to-upgrade-from-the-command-line-using-the-pkg-utility"></a>To Upgrade From the Command Line Using the <code>pkg</code> Utility</h4>
-<div class="paragraph">
-<p>This procedure explains how to use the <code>pkg</code> utility to perform an
-in-place upgrade to Eclipse GlassFish 7 from Eclipse GlassFish 3.0.1 or
-Enterprise Server v3. Note that it is not possible to use this procedure
-with any other product releases.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that all domains on the source server from which you are
-upgrading are stopped before proceeding.</p>
-</li>
-<li>
-<p>In a command shell for your operating environment, navigate to the
-as-install-parent<code>/bin</code> directory.</p>
-</li>
-<li>
-<p>Use the <code>pkg image-update</code> command to update your entire Eclipse GlassFish 3.0.1 or Enterprise Server v3 installation to Eclipse GlassFish 7.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>./pkg image-update</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This upgrades the server components to the latest available versions.</p>
-</div>
-</li>
-<li>
-<p>Upgrade the domain by starting the DAS with the <code>--upgrade</code> option.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-domain --upgrade domain-name</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This upgrades the domain and then shuts down the DAS.</p>
-</div>
-</li>
-<li>
-<p>Start the DAS normally.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-domain domain-name</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Browse to the URL <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code> to view the
-domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default Eclipse GlassFish 7 file
-from the <code>domain1.original/docroot</code> directory and customize it for your
-Eclipse GlassFish 7 installation.</p>
-</li>
-<li>
-<p>To register your installation of Eclipse GlassFish from the
-Administration Console, select the Registration item from the Common
-Tasks page. For step-by-step instructions on the registration process,
-click the Help button on the Administration Console.</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -4749,9 +4062,6 @@ Eclipse GlassFish 7.</p>
 <li>
 <p><a href="#cluster-profile-upgrade-on-windows">Cluster Profile Upgrade on Windows</a></p>
 </li>
-<li>
-<p><a href="#asupgrade-fails-without-internet-connection"><code>asupgrade</code> Fails Without Internet Connection</a></p>
-</li>
 </ul>
 </div>
 <div class="sect3">
@@ -4827,41 +4137,13 @@ encounter the following error:</p>
 source domain&#8217;s directory and re-run Upgrade Tool.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="asupgrade-fails-without-internet-connection"><a class="anchor" href="#asupgrade-fails-without-internet-connection"></a><code>asupgrade</code> Fails Without Internet Connection</h4>
-<div class="paragraph">
-<p>This problem only occurs when using Eclipse GlassFish 3.1 Upgrade Tool to
-perform a side-by-side upgrade on a 2.x domain without an Internet
-connection. It does not occur when using Eclipse GlassFish 3.1.1.</p>
-</div>
-<div class="paragraph">
-<p>The workaround for this issue is as follows:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Copy the older source domain to be upgraded to the new target
-domain-dir, the default for which is as-install<code>/domains</code>.<br>
-Rename the target <code>domain1</code> directory, if one exists, before proceeding.</p>
-</li>
-<li>
-<p>Run the upgrade.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; start-domain --upgrade domain-name</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-08-25 16:24:49 UTC
+Last updated 2025-08-25 20:02:00 UTC
 </div>
 </div>
 </body>

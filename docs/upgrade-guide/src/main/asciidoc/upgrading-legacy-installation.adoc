@@ -9,11 +9,6 @@ prev=upgrade-compatibility-issues.html
 [[upgrading-an-installation-of-application-server-or-glassfish-server]]
 == 2 Upgrading an Installation of Application Server or {productName}
 
-[CAUTION]
-====
-This chapter is obsoleted and must be revided.
-====
-
 The Upgrade Tool that is bundled with {productName} {product-majorVersion} replicates
 the configuration of a previously installed server in the target
 installation. The Upgrade Tool assists in upgrading the configuration
@@ -22,9 +17,6 @@ and applications from an earlier version of the Application Server or
 
 
 The Upgrade Tool is explained later in this chapter.
-
-To view a list of the older versions from which you can upgrade, see
-xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}].
 
 The following topics are addressed here:
 
@@ -46,9 +38,6 @@ The following topics are addressed here:
 * xref:#upgrade-paths[Upgrade Paths]
 * xref:#upgrade-terminology[Upgrade Terminology]
 * xref:#summary-of-upgrade-tools-and-procedures[Summary of Upgrade Tools and Procedures]
-* xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}]
-* xref:#GSUPG00063[Upgrading From Version 8.x or Older Product Releases]
-* xref:#upgrading-glassfish-server-inside-a-closed-network[Upgrading {productName} Inside a Closed Network]
 
 [[upgrade-paths]]
 
@@ -76,6 +65,15 @@ Side-by-Side::
 The side-by-side upgrade path is typically used for live production
   environments because it allows you to thoroughly test the new
   {productName} installation before bringing it into production.
+
+In-place::
+  An in-place upgrade means that the current installation itself is upgraded and replaces the older installation. {productName} doesn't support this way of upgrading directly and it requires several manual steps, including a significant downtime of services:
+
+  1. Move the current installation into a different directory
+  2. Perform a basic installation of {productName} {product-majorVersion} in the original location where the older product was installed.
+  3. Copy the configuration from old installation to the new one.
+  4. Start the new {productName} installation. Test it to make sure everything
+  is working properly. If you find issues, copy the older installation over the new one to restore the old installation.
 
 For a more detailed overview, see xref:#summary-of-upgrade-tools-and-procedures[Summary of Upgrade Tools
 and Procedures].
@@ -116,7 +114,7 @@ The following topics are addressed here:
 
 ===== Summary of the Upgrade Tool Performing an Upgrade
 
-Currently, There is only one tool you can use to perform an upgrade to {productName} {product-majorVersion} as described below.
+Currently, there is only one tool you can use to perform an upgrade to {productName} {product-majorVersion} as described below.
 
 * xref:#upgrade-tool[Upgrade Tool]
 
@@ -124,9 +122,7 @@ Currently, There is only one tool you can use to perform an upgrade to {productN
 
 Upgrade Tool
 
-The {productName} Upgrade Tool is tended solely for performing
-side-by-side upgrades from any compatible older product version to
-{productName} {product-majorVersion}.
+The {productName} Upgrade Tool is intended for performing an upgrade of configuration from any compatible older product version to configuration for {productName} {product-majorVersion}. 
 
 Upgrade Tool provides a number of features that aid in the migration of
 older configurations and applications to a new {productName} {product-majorVersion}
@@ -139,8 +135,7 @@ which is installed in as-install/bin directory.
 
 [NOTE]
 ====
-Upgrade Tool is the only tool you can use when upgrading to {productName} {product-majorVersion} from product versions prior to {productName} 3.0.1 or
-Enterprise Server v3.
+Upgrade Tool is the only tool provided by {productName} {product-majorVersion} that you can use when upgrading to {productName} {product-majorVersion} from older versions.
 ====
 
 See xref:#summary-of-procedure-for-upgrading-with-upgrade-tool[Summary of Procedure for Upgrading With Upgrade Tool]
@@ -173,59 +168,6 @@ as-install``/bin`` directory.
 
 This procedure is described in more detail in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a
 Side-By-Side Upgrade With Upgrade Tool].
-
-[[supported-releases-for-upgrade-to-glassfish-server-7]]
-
-==== Supported Releases for Upgrade to {productName} {product-majorVersion}
-
-Upgrades to {productName} {product-majorVersion} are supported from the following
-earlier {productName} product releases:
-
-* Sun GlassFish Enterprise Server v2.1.1
-* Sun GlassFish Enterprise Server v3
-* {productName} 3.0.1
-* {productName} 3.1
-* {productName} 3.1.1
-
-[[GSUPG00063]][[upgrading-from-version-8.x-or-older-product-releases]]
-
-==== Upgrading From Version 8.x or Older Product Releases
-
-It is not possible to upgrade to {productName} {product-majorVersion} directly from Sun
-GlassFish Enterprise Server 8.x or older product releases.
-
-To upgrade from a product release that is older than any of those listed
-in xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}],
-you must first upgrade your older product release to one of the releases
-that are supported for upgrade to {productName} {product-majorVersion}.
-
-For example, to upgrade from any Enterprise Server 8.x release, you
-first need to upgrade that older release to Enterprise Server 2.1.1.
-That is, your upgrade path would be as follows:
-
-Enterprise Server 8.x⇒Enterprise Server 2.1.1⇒{productName} {product-majorVersion}
-
-Sun GlassFish Enterprise Server 2.1.1 is available for download from the
-http://glassfish.java.net/public/downloadsindex.html[GlassFish Community
-Downloads] (`http://glassfish.java.net/public/downloadsindex.html`)
-page. Instructions for upgrading to Enterprise Server 2.1.1 are provided
-in http://download.oracle.com/docs/cd/E19879-01/821-0180/index.html[Sun
-GlassFish Enterprise Server 2.1.1 Upgrade Guide]
-(`http://docs.oracle.com/cd/E19879-01/821-0180/index.html`).
-
-After upgrading your older Enterprise Server installation to Enterprise
-Server 2.1.1, you can proceed normally with the instructions in this
-guide to complete the upgrade to {productName} {product-majorVersion}.
-
-[[upgrading-glassfish-server-inside-a-closed-network]]
-
-==== Upgrading {productName} Inside a Closed Network
-
-For instructions on upgrading a {productName} installation in an
-environment where Internet access is not available, see
-"xref:administration-guide.adoc#GSADG00575[
-Extending and Updating {productName} Inside a Closed Network]"
-in {productName} Administration Guide.
 
 [[performing-a-side-by-side-upgrade-with-upgrade-tool]]
 
@@ -265,14 +207,6 @@ You can perform an upgrade using Upgrade Tool in the following ways:
 The Upgrade Tool migrates the configurations and deployed applications
 from an earlier version of {productName} to the current version. Database migrations
 or conversions are not part of this upgrade process.
-
-Briefly, the Upgrade Tool performs the following steps:
-
-* Copies the older source domain directory to the new target `domains` directory.
-* Calls the `asadmin start-domain --upgrade` command to migrate the
-source configurations to the new target {productName} installation.
-* Sends all `asadmin start-domain --upgrade` command output to the screen and to the
-`upgrade.log` file, and sends all server output to the `server.log` file.
 
 Additional Upgrade Tool functions are explained in the following sections:
 
@@ -326,30 +260,12 @@ and Node Agent Configurations].
 
 [[upgrade-verification]]
 
-===== Upgrade Verification
-
-An upgrade log records the upgrade activity. The upgrade log file is
-named `upgrade.log` and is created in the working directory from which
-the Upgrade Tool is run. Additional information is recorded in the
-server log of the upgraded domain.
-
-You can also use the `asadmin version` subcommand after starting the
-upgraded domain to verify the new {productName} product version; for example:
-
-[source]
-----
-asadmin> version
-Version = Eclipse GlassFish 7.0.0 (build 42)
-Command version executed successfully.
-----
-
 [[to-upgrade-from-the-command-line-using-upgrade-tool]]
 
 ==== To Upgrade From the Command Line Using Upgrade Tool
 
 This procedure explains how to use the Upgrade Tool command line to
-upgrade to {productName} {product-majorVersion} from any supported older product release.
-See xref:#supported-releases-for-upgrade-to-glassfish-server-7[Supported Releases for Upgrade to {productName} {product-majorVersion}] for a list of supported releases.
+upgrade to {productName} {product-majorVersion} from an older version.
 
 Before You Begin
 
@@ -381,36 +297,9 @@ installation, not the older source installation.
 [source]
 ----
 asadmin start-domain --upgrade
-[-s|--source source-domain-directory]
-[-t|--target target-domain-directory]
-[-f|--passwordfile password-file]
 ----
 
-+
-Explanations of these options are provided at the end of this procedure.
-
-4. Follow the prompts to perform the upgrade. +
-If a name used for an older domain that you are upgrading already exists
-in the new target domains directory, Upgrade Tool will ask if you want
-to rename the new directory so the old directory can be copied to the
-new installation.
-* If you type `y` in response, the directory is renamed
-domain-name`.original`. If that name already exists, the directory will
-be renamed domain-name`.orginal.0`. For example, if the old domain
-directory is named `domain1`, it will be renamed `domain1.original`, or
-if that name already exists, `domain1.original.0`.
-* If you type `n`, you are prompted to specify a different directory
-name or quit.
-+
-The domain is upgraded and the results are output to the console.
-
-5. Review the console output to verify that the upgrade proceeded correctly. +
-This output is also written to the `output.log` file for later review. +
-If there are any `SEVERE` or `WARNING` messages in the `server.log`
-file, the upgrade output will say
-`"Possible error encountered during upgrade. See server log after upgrade process completes."`
-
-6. Start the upgraded {productName} {product-majorVersion} domain.
+4. Start the upgraded {productName} {product-majorVersion} domain.
 +
 [source]
 ----
@@ -427,7 +316,7 @@ authentication, follow the procedure in xref:#upgrading-installations-that-use-n
 Installations That Use NSS Cryptographic Tokens].
 ====
 
-7. If you are upgrading a clustered configuration or a configuration in
+5. If you are upgrading a clustered configuration or a configuration in
 which node agents were used, proceed with the instructions in
 xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node Agent Configurations].
 
@@ -1063,18 +952,3 @@ For example:
 ----
 asadmin> set configs.config.server-config.admin-service.jmx-connector.system.security-enabled=false
 ----
-
-[[cluster-profile-upgrade-on-windows]]
-
-==== Cluster Profile Upgrade on Windows
-
-On Windows, when you upgrade cluster profile domains, you could
-encounter the following error:
-
-[source]
-----
-Fatal error while backing up the domain directory
-----
-
-To resolve this error, look for and remove any hidden files in the
-source domain's directory and re-run Upgrade Tool.

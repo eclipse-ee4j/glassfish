@@ -27,11 +27,11 @@ migrated.
 
 Note: The main thrust of the {productName} {product-majorVersion}
 release is to provide an application server for developers to explore
-and begin exploiting the new and updated technologies in the Jakarta EE 10
+and begin exploiting the new and updated technologies in the Jakarta EE {jakartaee}
 platform. Thus, the upgrade feature of {productName} was not a focus
 of this release. The feature is included in the release, but it may not
 function properly with some of the new features added in support of the
-Jakarta EE 10 platform.
+Jakarta EE {jakartaee} platform.
 
 [[sthref1]]
 

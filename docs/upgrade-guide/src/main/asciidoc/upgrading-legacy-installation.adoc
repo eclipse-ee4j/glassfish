@@ -1,821 +1,87 @@
 type=page
 status=published
 title=Upgrading an Installation of Application Server or {productName}
-prev=upgrade-compatibility-issues.html
+next=upgrade-compatibility-issues.html
+prev=preface.html
 ~~~~~~
 
-= Upgrading an Installation of Application Server or {productName}
+= Upgrading to {productName} {product-majorVersion}
 
 [[upgrading-an-installation-of-application-server-or-glassfish-server]]
-== 2 Upgrading an Installation of Application Server or {productName}
+== 1 Upgrading an Installation of Application Server or {productName}
 
-The Upgrade Tool that is bundled with {productName} {product-majorVersion} replicates
-the configuration of a previously installed server in the target
-installation. The Upgrade Tool assists in upgrading the configuration
-and applications from an earlier version of the Application Server or
-{productName} to {productName} {product-majorVersion}.
+This section explains how to upgrade to {productName} {product-majorVersion} from a previous version. The process involves replicating your existing configuration and applications in the new installation.
 
+*Key Topics*
 
-The Upgrade Tool is explained later in this chapter.
-
-The following topics are addressed here:
-
-* xref:#upgrade-overview[Upgrade Overview]
-* xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool]
-* xref:#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading Installations That Use NSS Cryptographic Tokens]
-* xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node Agent Configurations]
-* xref:#correcting-potential-upgrade-problems[Correcting Potential Upgrade Problems]
-
-[[upgrade-overview]]
-
-=== Upgrade Overview
-
-The subsections that follow provide information that you will need when
-you perform an upgrade.
-
-The following topics are addressed here:
-
-* xref:#upgrade-paths[Upgrade Paths]
-* xref:#upgrade-terminology[Upgrade Terminology]
-* xref:#summary-of-upgrade-tools-and-procedures[Summary of Upgrade Tools and Procedures]
+* <<upgrade-paths,Upgrade Paths>>
+* <<upgrade-procedure,Upgrade Procedure>>
+* <<special-cases,Special Cases (Clusters, Node Agents, NSS)>>
+* <<troubleshooting,Troubleshooting>>
 
 [[upgrade-paths]]
+=== Upgrade Paths
+Choose one of the following upgrade paths:
 
-==== Upgrade Paths
+Side-by-Side (Recommended)::
+Installs the new version in a separate directory, allowing you to test before switching to production. +
+**Steps:**
 
-There are two general paths you can use when upgrading to {productName} {product-majorVersion}:
+1. Install {productName} {product-majorVersion} in a new directory.
+2. Manually copy the configuration from the old installation.
+3. Test the new installation.
+4. Update your production environment to use the new installation.
 
-Side-by-Side::
-  A side-by-side upgrade means that the new {productName} release is
-  installed in a different directory than the release from which you are
-  upgrading. +
-  In this scenario, you perform the following steps:
+In-Place (Not Recommended)::
+  Replaces the existing installation. Requires manual steps and significant downtime. +
+  **Steps:**
 
-  1.  Perform a basic installation of {productName} {product-majorVersion} in a location
-  other than the one being used for the older product.
-  2. Copy the configuration from old installation to the new one.
-  While initially the Upgrade Tool would copy the configuration from the old installation to the new one,
-  currently, this must be done manually.
-  3.  Test the new {productName} installation to make sure everything
-  is working properly.
-  4.  When you are satisfied that the new installation works properly,
-  modify your production environment to use the new installation.
+  1. Move the current installation to a backup directory.
+  2. Install {productName} {product-majorVersion} in the original location.
+  3. Manually copy the configuration from the backup.
+  4. Test the new installation. If issues arise, restore the backup.
 
-+
-The side-by-side upgrade path is typically used for live production
-  environments because it allows you to thoroughly test the new
-  {productName} installation before bringing it into production.
+[[upgrade-procedure]]
+=== Upgrade Procedure
+Use the Upgrade Tool (`asadmin start-domain --upgrade`) to migrate configurations and applications.
 
-In-place::
-  An in-place upgrade means that the current installation itself is upgraded and replaces the older installation. {productName} doesn't support this way of upgrading directly and it requires several manual steps, including a significant downtime of services:
+==== Prerequisites
+- Stop all domains on the source server.
+- Install {productName} {product-majorVersion} (see {productName} Installation Guide).
+- Copy custom/third-party libraries from the old installation to the new one.
 
-  1. Move the current installation into a different directory
-  2. Perform a basic installation of {productName} {product-majorVersion} in the original location where the older product was installed.
-  3. Copy the configuration from old installation to the new one.
-  4. Start the new {productName} installation. Test it to make sure everything
-  is working properly. If you find issues, copy the older installation over the new one to restore the old installation.
+==== Steps
+1. **Install {productName} {product-majorVersion}** in a new directory.
+2. **Copy configurations** from the old installation:
+   - Domain directory (e.g., `glassfish/domains/domain1`)
+   - Nodes directory (if applicable, e.g., `glassfish/nodes`)
+3. **Run the Upgrade Tool**: `asadmin start-domain --upgrade``
+4. **Start the upgraded domain**: `asadmin start-domain domain-name``
+5. **Verify the upgrade** by logging into the Admin Console.
 
-For a more detailed overview, see xref:#summary-of-upgrade-tools-and-procedures[Summary of Upgrade Tools
-and Procedures].
-
-[[upgrade-terminology]]
-
-==== Upgrade Terminology
-
-The following are important terms related to the upgrade process.
-
-Source Domain Directory::
-  The directory of the server domain from which you are upgrading to the
-  new version (for example, `c:\glassfish\domains\domain1`).
-Target Root Domain's Directory::
-  The directory where domains are created on the server to which you are
-  upgrading (for example, `c:\glassfish7\glassfish\domains`).
-Master Password::
-  The SSL certificate database password used in operations such as
-  {productName} startup. This term refers to the master password of
-  the installation from which you want to upgrade. You need to specify
-  this password if you have changed it from the default value of
-  `changeit`.
-
-[[summary-of-upgrade-tools-and-procedures]]
-
-==== Summary of Upgrade Tools and Procedures
-
-There are several tools you can use to upgrade from an earlier {productName} or Enterprise Server installation to {productName} {product-majorVersion}. The
-general procedures for upgrading to {productName} {product-majorVersion} vary depending
-on which tool you use and the product version from which you are upgrading.
-
-The following topics are addressed here:
-
-* xref:#summary-of-tools-for-performing-an-upgrade[Summary of Tools for Performing an Upgrade]
-* xref:#summary-of-procedure-for-upgrading-with-upgrade-tool[Summary of Procedure for Upgrading With Upgrade Tool]
-
-[[summary-of-tools-for-performing-an-upgrade]]
-
-===== Summary of the Upgrade Tool Performing an Upgrade
-
-Currently, there is only one tool you can use to perform an upgrade to {productName} {product-majorVersion} as described below.
-
-* xref:#upgrade-tool[Upgrade Tool]
-
-[[upgrade-tool]]
-
-Upgrade Tool
-
-The {productName} Upgrade Tool is intended for performing an upgrade of configuration from any compatible older product version to configuration for {productName} {product-majorVersion}. 
-
-Upgrade Tool provides a number of features that aid in the migration of
-older configurations and applications to a new {productName} {product-majorVersion}
-installation. These features are described in more detail in
-xref:#upgrade-tool-functionality[Upgrade Tool Functionality].
-
-In {productName} {product-majorVersion}, the term _Upgrade Tool_ refers
-to the asadmin start-domain --upgrade command of the ASAdmin CLI tool,
-which is installed in as-install/bin directory.
-
-[NOTE]
-====
-Upgrade Tool is the only tool provided by {productName} {product-majorVersion} that you can use when upgrading to {productName} {product-majorVersion} from older versions.
-====
-
-See xref:#summary-of-procedure-for-upgrading-with-upgrade-tool[Summary of Procedure for Upgrading With Upgrade Tool]
-for an overview of the general procedure for performing an upgrade with
-Upgrade Tool.
-
-[[summary-of-procedure-for-upgrading-with-upgrade-tool]]
-
-===== Summary of Procedure for Upgrading With Upgrade Tool
-
-The general procedure for using Upgrade Tool to perform an upgrade to
-{productName} {product-majorVersion} from any compatible older version of {productName} or Enterprise Server comprises the following steps:
-
-1. Download {productName} {product-majorVersion} and perform a Standard Installation,
-as described in "xref:installation-guide.adoc#GSING00007[
-To Install {productName} Using the Self-Extracting File]"
-in {productName} Installation Guide.
-2. Copy any custom or third-party libraries from the older installation
-to their corresponding locations in the new {productName} {product-majorVersion}
-installation directories. Note that you should only copy custom or
-third-party libraries here. Do not copy an libraries from the actual
-domain that will be upgraded.
-3. Copy the configuration from the old installation to the new one,
-    - copy GlassFish domain directory, e.g. `glassfish/domains/domain1`
-    - copy the nodes directory if it exists, e.g. `glassfish/nodes`
-4. Run the `asadmin start-domain --upgrade` command from the new {productName} {product-majorVersion}
-as-install``/bin`` directory.
-5. Start the new {productName} {product-majorVersion} DAS with the
-`asadmin start-domain` subcommand.
-
-This procedure is described in more detail in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a
-Side-By-Side Upgrade With Upgrade Tool].
-
-[[performing-a-side-by-side-upgrade-with-upgrade-tool]]
-
-=== Performing a Side-By-Side Upgrade With Upgrade Tool
-
-This section explains how to use Upgrade Tool to perform a side-by-side
-upgrade to {productName} {product-majorVersion} from any compatible older product release.
-
-The following topics are addressed here:
-
-* xref:#upgrade-tool-summary[Upgrade Tool Summary]
-* xref:#upgrade-tool-functionality[Upgrade Tool Functionality]
-* xref:#to-upgrade-from-the-command-line-using-upgrade-tool[To Upgrade From the Command Line Using Upgrade Tool]
-
-[[upgrade-tool-summary]]
-
-==== Upgrade Tool Summary
-
-The Upgrade Tool upgrades your domain configurations and deployed
-applications. When you use the Upgrade Tool, the source server and the
-target server are normally installed on the same machine, but under
-different install locations. Both server file systems must be accessible
-from the system on which you perform the upgrade.
-
-To perform the upgrade, the user who runs the upgrade needs to have read
-permissions for the source and target directories and write permission
-for the target directory.
-
-You can perform an upgrade using Upgrade Tool in the following ways:
-
-* xref:#to-upgrade-from-the-command-line-using-upgrade-tool[To Upgrade From the Command Line Using Upgrade Tool]
-
-[[upgrade-tool-functionality]]
-
-==== Upgrade Tool Functionality
-
-The Upgrade Tool migrates the configurations and deployed applications
-from an earlier version of {productName} to the current version. Database migrations
-or conversions are not part of this upgrade process.
-
-Additional Upgrade Tool functions are explained in the following sections:
-
-* xref:#migration-of-deployed-applications[Migration of Deployed Applications]
-* xref:#upgrade-of-clusters[Upgrade of Clusters]
-* xref:#upgrade-verification[Upgrade Verification]
-
-[[migration-of-deployed-applications]]
-
-===== Migration of Deployed Applications
-
-Application archives (EAR files) and component archives (JAR, WAR, and
-RAR files) that are deployed in the source server do not require any
-modification to run on {productName} {product-majorVersion}.
-Some components that may have incompatibilities are deployed on {productName} {product-majorVersion}
-with the `compatibility` property set to `v2` and will run
-without change on {productName} {product-majorVersion}. It's, however,
-strongly encouraged to modify the applications to conform to Jakarta EE {jakartaee}
-requirements because the compatibility layer is not being maintained and will likely
-not cover all incompatible applications.
-
-
-Jakarta EE {jakartaee} platform specification has stricter requirements than
-Java EE 5 and earlier version had on which JAR files can be visible to various modules
-within an EAR file. In particular, application clients must not have
-access to EJB JAR files or other JAR files in the EAR file unless they
-use a `Class-Path` header in the manifest file, or unless references use
-the standard Java SE mechanisms (extensions, for example), or use the
-Jakarta EE `library-directory` mechanism. Setting the `library-directory`
-property to `v2` removes these restrictions in {productName} {product-majorVersion}.
-
-Applications and components that are deployed in the source server are
-deployed on the target server during the upgrade. Applications that do
-not deploy successfully on the target server must be deployed manually
-on the target server by the user.
-
-If a domain contains information about a deployed application and the
-installed application components do not agree with the configuration
-information, the configuration is migrated unchanged, without any
-attempt to reconfigure the incorrect configurations.
+[[special-cases]]
+=== Special Cases
 
 [[upgrade-of-clusters]]
 
-===== Upgrade of Clusters
+==== Upgrade of Clusters
 
 When upgrading from a clustered configuration, the older cluster
 information is retained in a new `domain.xml` file in the {productName} {product-majorVersion} installation directories. However, it is still necessary to
 manually re-create the server instances that are contained in the
-clusters. This procedure is explained in xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters
-and Node Agent Configurations].
+clusters.
 
-[[upgrade-verification]]
+To do that:
 
-[[to-upgrade-from-the-command-line-using-upgrade-tool]]
-
-==== To Upgrade From the Command Line Using Upgrade Tool
-
-This procedure explains how to use the Upgrade Tool command line to
-upgrade to {productName} {product-majorVersion} from an older version.
-
-Before You Begin
-
-Ensure that the domains on the source server from which you are
-upgrading are stopped before proceeding.
-
-1. Download and install {productName} {product-majorVersion} using the Typical
-Installation path. +
-See "xref:installation-guide.adoc#GSING00025[
-Installing {productName} From a Self-Extracting Bundle]"
-in {productName} Installation Guide for instructions.
-
-2. Copy any custom or third-party libraries that may be located in the
-source as-install``/lib`` directory to the target as-install``/lib``
-directory. +
-Custom and third-party libraries should normally be located in the
-domain-dir``/lib`` directory. This step is only necessary for custom or
-third-party libraries that may be located in the nonstandard
-as-install``/lib`` directory.
-
-3. Start Upgrade Tool from a command shell for your operating environment.
-+
-[NOTE]
-====
-Use the Upgrade Tool that is located in the target {productName} {product-majorVersion}
-installation, not the older source installation.
-====
-+
-[source]
-----
-asadmin start-domain --upgrade
-----
-
-4. Start the upgraded {productName} {product-majorVersion} domain.
-+
-[source]
-----
-asadmin start-domain domain-name
-----
-Log in to the Administration Console with the user name and password you
-used in the older server.
-+
-[NOTE]
-====
-{productName} {product-majorVersion} does not support NSS authentication. If you are
-upgrading from a Enterprise Profile configuration that uses NSS
-authentication, follow the procedure in xref:#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading
-Installations That Use NSS Cryptographic Tokens].
-====
-
-5. If you are upgrading a clustered configuration or a configuration in
-which node agents were used, proceed with the instructions in
-xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node Agent Configurations].
-
-[[upgrading-installations-that-use-nss-cryptographic-tokens]]
-
-=== Upgrading Installations That Use NSS Cryptographic Tokens
-
-{productName} v2.x EE (Enterprise Edition) uses Network Security
-Services (NSS) for cryptographic software tokens. {productName} {product-majorVersion}
-does not support NSS, so when performing an upgrade from v2.x EE to 7
-additional manual configuration steps must be performed.
-
-The following topics are addressed here:
-
-* xref:#to-prepare-for-the-upgrade[To Prepare for the Upgrade]
-* xref:#to-perform-post-upgrade-configuration[To Perform Post-Upgrade Configuration]
-* xref:#to-upgrade-pkcs11-hardware-tokens[To Upgrade PKCS#11 Hardware Tokens]
-
-[[to-prepare-for-the-upgrade]]
-
-==== To Prepare for the Upgrade
-
-This procedure explains how to prepare for modifying an NSS-based
-{productName} 2.x installation when upgrading to {productName} {product-majorVersion}.
-
-1. Download and install {productName} {product-majorVersion} using the Typical Installation path. +
-Ensure that you install the new {productName} {product-majorVersion} product in a
-directory that is different than the one used for the older installation
-from which you are upgrading. +
-See "xref:installation-guide.adoc#GSING00025[
-Installing {productName} From a Self-Extracting Bundle]"
-in {productName} Installation Guide for instructions.
-
-2. Rename the new {productName} {product-majorVersion} domain-dir (the default is
-as-install``/domains/domain1``) to a name of your choice. +
-In this procedure, `31domain` is used for the renamed {productName} {product-majorVersion} domain.
-
-3. Copy the older source domain to be upgraded to the new {productName} {product-majorVersion} as-install``/domains`` directory. +
-In this procedure, `domain1` is used for the older source domain that is
-copied to the new {productName} {product-majorVersion} installation.
-+
-[NOTE]
-====
-The remaining steps in this procedure are performed on the copy of your
-source domain that you created in this step, rather than on your
-original source domain. It is strongly recommended that you perform the
-{productName} {product-majorVersion} upgrade on a copy of your old domain rather than on
-the original.
-====
-
-4. Copy the `server.policy`, `keystore.jks`, and `cacerts.jks` files
-from the renamed `./31domain/config` directory to the `./domain1/config`
-directory to be upgraded. +
-For example:
-+
-[source]
-----
-cp as-install/domains/31domain/config/server.policy as-install/domains/domain1/config
-cp as-install/domains/31domain/config/keystore.jks as-install/domains/domain1/config
-cp as-install/domains/31domain/config/cacerts.jks as-install/domains/domain1/config
-----
-This will overwrite the master password for `./domain1` with the
-password used in the `./31domain`.
-
-5. Modify the `domain.xml` file for `./domain1`.
-[arabic]
-.. Add the following `jvm-options` under `server-config` and
-`default-config`:
-+
-[source]
-----
--Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
--Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks
-----
-.. Remove the following `jvm-option` under `server-config` and
-`default-config`:
-+
-[source]
-----
--Dcom.sun.appserv.nss.db=${com.sun.aas.instanceRoot}/config
-----
-
-6. Upgrade `./domain1` by starting the DAS in the new {productName} {product-majorVersion}
-installation with the `--upgrade` option.
-+
-[source]
-----
-as-install/bin/asadmin start-domain --upgrade domain1
-----
-This upgrades the domain and then shuts down the DAS.
-7. Start the upgraded DAS normally.
-+
-[source]
-----
-as-install/bin/asadmin start-domain domain1
-----
-
-[[to-perform-post-upgrade-configuration]]
-
-==== To Perform Post-Upgrade Configuration
-
-These instructions explain the post-upgrade configuration steps that
-must be performed when upgrading from an NSS-based installation to
-{productName} {product-majorVersion}.
-
-Before You Begin
-
-Before proceeding with this procedure, complete the procedure explained
-in xref:#to-prepare-for-the-upgrade[To Prepare for the Upgrade].
-
-1. Start the {productName} {product-majorVersion} domain, if it is not already running,
-and open the {productName} Admin Console in a browser window. +
-The default URL is `https://localhost:4848` +
-As part of the xref:#to-prepare-for-the-upgrade[To Prepare for the Upgrade] procedure, the
-default keystore with a default self-signed key-certificate pair with an
-alias named `s1as` and a keystore password `changeit` was copied into
-the v2.x domain before the upgrade.
-
-2. If your default server alias in the NSS v2.x domain is not `s1as`,
-you can delete this entry using the following command:
-+
-[source]
-----
-keytool -delete -keystore keystore.jks -storepass changeit -alias s1as
-keytool -delete -keystore cacerts.jks -storepass changeit -alias s1as
-----
-
-3. If the master password for the v2.x domain is not the default
-password `changeit`, you need to change the new keystore password to
-match the v2.x master password.
-+
-[source]
-----
-keytool -storepasswd -new v2-master-password \
--keystore keystore.jks -storepass changeit
-keytool -storepasswd -new v2-master-password \
--keystore cacerts.jks -storepass changeit
-----
-
-4. Take note of all the `KeyEntries` that exist in your NSS database.
-+
-These entries must be migrated to the `keystore.jks` in the {productName} {product-majorVersion} domain. The following command can be used to list all the
-`KeyEntries` in the NSS database:
-+
-[source]
-----
-certutil -L -d $AS_NSS_DB
-----
-`AS_NSS_DB` should point to the `${com.sun.aas.instanceRoot}/config` for
-the 7 instance into which the v2.x domain was copied. The listing with
-the attribute combinations `u,u,u` are the `KeyEntries`. +
-For example:
-+
-[source]
-----
-s1as u,u,u
-----
-
-+
-[NOTE]
-====
-To run the `certutil` command, your `LD_LIBRARY_PATH` must point to the
-directory containing NSS library and DLLs.
-====
-
-5. For each `PrivateKey-Certificate` pair (`KeyEntry`) that exists in
-the v2.x NSS database, use the following commands to export them from
-the NSS database and import them into the newly created `keystore.jks` file. +
-Make sure you use the same alias when importing the `KeyEntry` into the
-JKS keystore. For example, if s1as is the only alias present in the NSS
-database, the following command can be used:
-+
-[source]
-----
-> pk12util -o /tmp/s1as_pk.p12 -n s1as -d $AS_NSS_DB
->keytool -importkeystore -srckeystore /tmp/s1as_pk.p12 -destkeystore \
-${com.sun.aas.instanceRoot}/config/keystore.jks -srcstoretype PKCS12 \
--deststoretype JKS -srcstorepass v2-master-password \
--deststorepass v3-master-password -srcalias s1as \
--destalias s1as -srckeypass v2-master-password \
--destkeypass v3-master-password
-----
-+
-[NOTE]
-====
-The reference to v3-master-password could be the same as
-v2-master-password if you intend to retain the same master password for
-the 7 domain after upgrading from v2.x.
-====
-
-6. If the `s1as` alias represents a `KeyEntry` with a self-signed
-certificate, the self-signed certificate must be copied to the
-`truststore`.
-+
-[source]
-----
->certutil -L -n s1as -r -d $AS_NSS_DB> /tmp/s1as.der>keytool -import -keystore cacerts.jks -storepass v3-master-password \
--file /tmp/s1as.der -alias s1as
-----
-7. There is a rare chance that the 2.x NSS database has some CA
-(Certificate Authority) certificates that are absent in the default
-created `truststore`. In such cases, all aliases that are missing in the
-`truststore` (`cacerts.jks`) need to collected.
-[arabic]
-.. `certutil -L -d $AS_NSS_DB` +
-Example output:
-+
-[source]
-----
-verisignc1g1 T,c,c
-verisignc1g2 T,c,c
-verisignc1g3 T,c,c
-----
-.. `keytool -list -keystore cacerts.jks -storepass` v3-master-password +
-Example output:
-+
-[source]
-----
-godaddyclass2ca, Jan 20, 2005, trustedCertEntry,
-Certificate fingerprint (MD5): 91:DE:06:25:AB:DA:FD:32:17:0C:BB:25:17:2A:84:67
-verisignclass1g3ca, Mar 26, 2004, trustedCertEntry,
-Certificate fingerprint (MD5): B1:47:BC:18:57 1:18:A0:78:2D:EC:71:E8:2A:95:73
-secomevrootca1, May 1, 2008, trustedCertEntry,
-Certificate fingerprint (MD5): 22:2D:A6:01:EA:7C:0A:F7:F0:6C:56:43:3F:77:76 3
-----
-
-8. For each of the aliases from the `certutil` output in the preceding
-step that are required but missing in the `truststore` listing, execute
-the following commands to export and import them into the 7 domain's
-`truststore`.
-+
-[source]
-----
->certutil -L -n verisignc1g1 -r -d $AS_NSS_DB> /tmp/verisignc1g1.der>keytool -import -keystore cacerts.jks -storepass v3-master-password \
--file /tmp/verisignc1g1.der -alias verisignc1g1
-----
-
-[NOTE]
-====
-Sometimes just the alias names that are used in the NSS database are
-different, and the same certificate is, in fact, present in the 7
-default `truststore`.
-====
-
-
-[[to-upgrade-pkcs11-hardware-tokens]]
-
-==== To Upgrade PKCS#11 Hardware Tokens
-
-If you are using {productName} v2.x Enterprise Edition with Hardware
-Tokens (for example, FIPS-140 compliant Sun Cryptographic Accelerator
-6000 or other Sun Cryptographic Accelerators) configured by means of
-NSS-PKCS11, then the v2.x EE-to-7 upgrade solution is to directly
-configure the Hardware Token as a PKCS11 token using the JDK-JSSE
-supported mechanisms for configuring PKCS#11 tokens.
-
-1. Set the `javax.net.ssl.keyStoreType` `jvm-options` in {productName} {product-majorVersion} to PKCS11.
-+
-[source,xml]
-----
-<jvm-options>-Djavax.net.ssl.keyStoreType=PKCS11</jvm-options>
-----
-
-2. Set the `javax.net.ssl.keyStore` URL should be set to l since this
-is a hardware token.
-+
-[source,xml]
-----
-<jvm-options>-Djavax.net.ssl.keyStore=NONE</jvm-options>
-----
-
-3. Change the password for the `truststore` and the {productName}
-`MasterPassword` to match the PIN of your `HardwareToken`.
-
-4. Since you are using a Hardware Token, you can delete the
-`keystore.jks` for the migrated domain.
-
-5. Ensure the `token-alias` for the hardware token (private key) that
-you intend to use as the Server's Key for SSL is mentioned in every
-relevant place in the `domain.xml` for the domain. +
-For example, the `cert-nickname` attribute for the `<ssl/>` element
-under the `protocol` configuration.
-
-6. If the Hardware Token is to act as a `TrustStore` as well, remove
-the `cacerts.jks` file from the domain-dir``/config`` directory. +
-Ensure that the following two `jvm-options` are set in the `domain.xml` file:
-+
-[source,xml]
-----
-<jvm-options>-Djavax.net.ssl.trustStore=NONE</jvm-options>
-<jvm-options>-Djavax.net.ssl.trustStoreType=PKCS11</jvm-options>
-----
-
-[[upgrading-clusters-and-node-agent-configurations]]
-
-=== Upgrading Clusters and Node Agent Configurations
-
-This section explains additional steps you need to perform when
-upgrading cluster and node agent configurations from Application Server
-or Enterprise Server to {productName} {product-majorVersion}.
-
-{productName} {product-majorVersion} does not support node agents. As part of the
-upgrade process, any node agent elements in the older source
-configuration are transformed into `CONFIG` node elements in the
-`domain.xml` file for the upgraded DAS. If the source node agent
-configuration is incompatible with your {productName} {product-majorVersion}
-installation, you must correct the node configuration on the upgraded DAS.
-
-In addition, although the source cluster configuration is retained in
-the `domain.xml` file for the upgraded DAS, it is still necessary to
-install {productName} {product-majorVersion} on each node host and manually re-create
-the server instances that are contained in the clusters.
-
-The following topics are addressed here:
-
-* xref:#overview-of-cluster-and-node-agent-upgrade-procedures[Overview of Cluster and Node Agent Upgrade Procedures]
-* xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Configuration of a Node After an Upgrade]
-* xref:#to-re-create-a-cluster[To Re-Create a Cluster]
-
-[[overview-of-cluster-and-node-agent-upgrade-procedures]]
-
-==== Overview of Cluster and Node Agent Upgrade Procedures
-
-The general steps for upgrading a cluster and node agent configuration
-so it will work in {productName} {product-majorVersion} are as follows:
-
-1. Perform a side-by-side upgrade of the DAS. This procedure is
-described in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool].
-
-2. Perform new (not upgrade) {productName} {product-majorVersion} installations on each
+1. Perform new (not upgrade) {productName} {product-majorVersion} installations on each
 node host. {productName} {product-majorVersion} installation instructions are provided
 in the xref:installation-guide.adoc#GSING[
 {productName} Installation Guide].
 
-3. Correct the node configuration on the upgraded DAS, if necessary.
-This procedure is described in xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Configuration
-of a Node After an Upgrade].
+2. Correct the node configuration on the upgraded DAS, if necessary.
+This procedure is described in xref:#correcting-cluster-config[Correcting Cluster configuration].
 
-4. Re-create the clusters and server instances on each {productName} {product-majorVersion} node host.
-This procedure is described in xref:#to-re-create-a-cluster[To Re-Create a Cluster].
-
-[[to-correct-the-configuration-of-a-node-after-an-upgrade]]
-
-==== To Correct the Configuration of a Node After an Upgrade
-
-As part of the upgrade process, node agent elements in the DAS
-configuration are transformed into {productName} node elements of
-type `CONFIG`. This transformation does not affect the node agent
-directories for {productName} instances. To create the equivalent
-directories for {productName} instances after an upgrade, you must
-re-create the instances as explained in xref:#to-re-create-a-cluster[To Re-Create a
-Cluster].
-
-The name of an upgraded node is the name of the node agent from which
-the node is transformed.
-
-The host that the node represents is obtained from the configuration of
-the original node agent or, if not specified, is not set. If the
-configuration of the original node agent did not specify the name of the
-node host, you must update the node to specify the host that the node represents.
-
-Default values are applied to the remainder of the node's configuration data.
-
-The default values of the following items in a node's configuration data
-might not meet your requirements for the upgraded installation of {productName}:
-
-* The parent of the base installation directory of the {productName}
-software on the host, for example, `/export/glassfish7`. +
-The default is the parent of the default base installation directory of
-the {productName} {product-majorVersion} software on the DAS host. If the {productName} software is installed under a different directory on the node
-host, you must update the node's configuration to specify the correct directory.
-
-* The directory that will contain the {productName} instances that
-are to reside on the node. +
-The default is as-install``/nodes``, where as-install is the base
-installation directory of the {productName} software on the host. If
-you require the instances to be contained in a different directory, you
-must update the node's configuration to specify that directory.
-
-If you are using secure shell (SSH) for centralized administration, you
-must also change the type of the node to `SSH` to enable the node for
-remote communication.
-
-For more information about {productName} nodes, see
-"xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
-
-Before You Begin
-
-Ensure that the following prerequisites are met:
-
-* A side-by-side upgrade on the DAS has been performed. For more
-information, see xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool].
-
-* If you are changing the type of the node to `SSH`, ensure that SSH is
-configured on the host where the DAS is running and on the host that the
-node represents. For more information, see
-"xref:ha-administration-guide.adoc#enabling-centralized-administration-of-glassfish-server-instances[
-Setting Up SSH for Centralized Administration]" in
-{productName} High Availability Administration Guide.
-
-* If you are upgrading from an Enterprise Profile configuration that
-uses NSS authentication, ensure that the procedure in
-xref:#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading Installations That Use NSS Cryptographic Tokens]
-has been performed. {productName} {product-majorVersion} does not support NSS authentication.
-
-1. Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2. Update the node's configuration data to specify the correct
-directories and, if necessary, change the type of the node.
-+
-[NOTE]
-====
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for changing the node's
-configuration data, see the xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)] help
-page or the xref:reference-manual.adoc#update-node-config[`update-node-config`(1)] help page.
-====
-
-[source]
-----
-asadmin> node-update-subcommand [--installdir as-install-parent] [--nodedir node-dir]
-[--nodehost node-host] node-name
-----
-node-update-subcommand::
-  The subcommand to run to update the node.
-  * If you are leaving the type of the node as `CONFIG`, run the
-  `update-node-config` subcommand on the node.
-  * If you are changing the type of the node to `SSH`, run the
-  `update-node-ssh` subcommand on the node.
-as-install-parent::
-  The full path to the parent of the base installation directory of the
-  {productName} software on the host, for example,
-  `/export/glassfish7`.
-node-dir::
-  The path to the directory that will contain {productName} instances
-  that are to reside on the node. If a relative path is specified, the
-  path is relative to the as-install directory.
-node-host::
-  The name of the host that the node is to represent after the node is
-  updated.
-node-name::
-  The name of the node to update. This name is the name of the node
-  agent from which the node was transformed.
-
-[[gktoh]]
-Example 2-2 Correcting the Configuration of a Node After an Upgrade
-
-This example updates the path to the directory that will contain
-instances that are to reside on the node `xk01` to
-`/export/home/gf/nodes`. Because this node is transformed from a node
-agent, the type of the node is `CONFIG`. Therefore, type of the node is
-not changed.
-
-[source]
-----
-asadmin> update-node-config --nodedir /export/home/gf/nodes xk01
-Command update-node-config executed successfully.
-----
-
-[[sthref40]]
-
-Next Steps
-
-Re-create the cluster configuration from the older source installation
-in the new {productName} {product-majorVersion} installation in as explained in
-xref:#to-re-create-a-cluster[To Re-Create a Cluster].
-
-See Also
-
-* "xref:ha-administration-guide.adoc#enabling-centralized-administration-of-glassfish-server-instances[
-Setting Up SSH for Centralized Administration]" in
-{productName} High Availability Administration Guide
-* "xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]"
-in {productName} High Availability Administration Guide
-* xref:reference-manual.adoc#update-node-config[`update-node-config`(1)]
-* xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)]
-
-[[to-re-create-a-cluster]]
-
-==== To Re-Create a Cluster
-
-This procedure explains how to re-create a clustered {productName} or
-Enterprise Server configuration for {productName} {product-majorVersion}.
-
-Before proceeding with these instructions, ensure that you have
-completed the following procedures:
---
-* Perform the standard upgrade to {productName} {product-majorVersion} on the DAS, as
-described in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool].
-
-* Perform a new (not upgrade) installation of {productName} {product-majorVersion} on
-each node host. See the xref:installation-guide.adoc#GSING[
-{productName} Installation Guide] for instructions.
-
-* Correct the upgraded node configuration, if necessary, as described
-xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Configuration of a Node After an Upgrade].
---
-
-1. Start the upgraded DAS.
+3. Start the upgraded DAS.
 +
 [source]
 ----
@@ -825,7 +91,7 @@ If the upgrade succeeded, the migrated cluster configuration exists and
 the `get-health` subcommand lists the status of the clustered instances
 as not running.
 
-2. Confirm that the cluster configuration exists and contains all its instances.
+4. Confirm that the cluster configuration exists and contains all its instances.
 +
 [source]
 ----
@@ -841,7 +107,7 @@ instance2 not started
 Command get-health executed successfully.
 ----
 
-3. Re-create the clustered server instances on each instance host. +
+5. Re-create the clustered server instances on each instance host. +
 The specific commands to use depend on your configuration.
 
 * If remote hosts cannot contact the DAS, export and import the
@@ -864,13 +130,13 @@ in {productName} High Availability Administration Guide +
 Note that the node name matches that used for the node agent in the 2.x
 installation. If you get an error stating that some attributes do not
 match the values in the DAS configuration, follow the instructions in
-xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Configuration of a Node After an Upgrade].
+xref:#correcting-cluster-config[Correcting Cluster configuration].
 
-4. After creating the instances, manually copy the instance-dir``/imq``
+6. After creating the instances, manually copy the instance-dir``/imq``
 directory for each instance from the older source installation to the
 target {productName} {product-majorVersion} installation.
 
-5. If necessary, start the cluster. +
+7. If necessary, start the cluster. +
 For example:
 +
 [source]
@@ -903,52 +169,48 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 
 [[correcting-potential-upgrade-problems]]
 
-=== Correcting Potential Upgrade Problems
+[[correcting-cluster-config]]
+==== Correcting Cluster configuration
+{productName} {product-majorVersion} does not support node agents. If you're upgrading from a version that supports them or you have issues in cluster configuration after an upgrade, after upgrading the DAS:
 
-This section addresses issues that can occur during an upgrade to
-{productName} {product-majorVersion}.
+1. **Install {productName} {product-majorVersion} on each node host**.
+2. **Correct node configurations** using `update-node-config` or `update-node-ssh`.
+3. **Re-create clusters and instances**:
+   - Use `create-local-instance` for each instance.
+   - Copy the `imq` directory from the old installation.
 
-The following topics are addressed here:
+[[upgrading-installations-that-use-nss-cryptographic-tokens]]
+==== Upgrading Installations Using NSS Cryptographic Tokens
+{productName} {product-majorVersion} does not support NSS. If you're upgrading from a version that supports them, follow these steps:
 
-* xref:#cluster-profile-security-setting[Cluster Profile Security Setting]
-* xref:#cluster-profile-upgrade-on-windows[Cluster Profile Upgrade on Windows]
+1. **Prepare for Upgrade**:
+   - Install {productName} {product-majorVersion} in a new directory.
+   - Copy the source domain to the new installation.
+   - Update `domain.xml` to remove NSS references and add JKS keystore paths.
+2. **Perform Post-Upgrade Configuration**:
+   - Migrate NSS keys to JKS using `keytool` and `certutil`.
+   - Update the master password if needed.
+3. **Upgrade PKCS#11 Hardware Tokens**:
+   - Configure the token using JDK-JSSE mechanisms.
+   - Update `domain.xml` to reference the hardware token.
 
-[[cluster-profile-security-setting]]
+[[troubleshooting]]
+=== Troubleshooting
 
 ==== Cluster Profile Security Setting
-
-When upgrading a clustered domain configuration from Application Server
-9.1 or Enterprise Server v2 to {productName} {product-majorVersion}, you may encounter
-problems if the `admin-service` element in the DAS `domain.xml` file
-sets both of the following attributes:
-
-* `security-enabled=true`
-* `type=das-and-server`
-
-The `security-enabled` attribute must be set to `false` in the
-`admin-service` element for the DAS when `type` is set to
-`das-and-server`.
-
-You can use the `get` subcommand to determine the values for these two
-attributes. For example:
-
-* To display the value for the `security-enabled` attribute:
-+
+If upgrading from Application Server 9.1 or Enterprise Server v2, ensure the `admin-service` element in `domain.xml` has:
 [source]
 ----
-asadmin> get configs.config.server-config.admin-service.jmx-connector.system.security-enabled
+security-enabled=false
 ----
-* To display the value for the type attribute:
-+
-[source]
-----
-asadmin> get configs.config.server-config.admin-service.type
-----
+when `type=das-and-server`.
 
-If necessary, use the `set` subcommand to set `security-enabled=false`.
-For example:
+==== Common Issues
+- **Cluster Profile Upgrade on Windows**: Ensure file paths use double backslashes (`\\`).
+- **Upgrade Verification**: Check logs for errors and verify deployed applications.
 
-[source]
-----
-asadmin> set configs.config.server-config.admin-service.jmx-connector.system.security-enabled=false
-----
+[[terminology]]
+=== Terminology
+Source Domain Directory:: Directory of the domain being upgraded (e.g., `c:\glassfish\domains\domain1`).
+Target Root Domain's Directory:: Directory where domains are created in the new installation (e.g., `c:\glassfish7\glassfish\domains`).
+Master Password:: SSL certificate database password (default: `changeit`).

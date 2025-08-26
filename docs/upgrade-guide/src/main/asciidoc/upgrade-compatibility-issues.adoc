@@ -1,14 +1,14 @@
 type=page
 status=published
 title={productName} Upgrade Compatibility Issues
-next=upgrading-legacy-installation.html
-prev=preface.html
+prev=upgrading-legacy-installation.html
+next=appendix.html
 ~~~~~~
 
 = {productName} Upgrade Compatibility Issues
 
 [[glassfish-server-upgrade-compatibility-issues]]
-== 1 {productName} Upgrade Compatibility Issues
+== 2 {productName} Upgrade Compatibility Issues
 
 This section describes some compatibility issues between {productName} {product-majorVersion} and earlier product releases. This section also describes
 some compatibility issues that affect Java applications that run on
@@ -164,8 +164,7 @@ clients and servers synchronized and using the same runtime.
 installations of earlier product versions in which node agents were
 configured, the cluster definitions will be migrated, but the clustered
 instances themselves must be manually re-created. See
-xref:upgrading-legacy-installation.adoc#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node
-Agent Configurations] for more information.
+xref:upgrading-legacy-installation.adoc#correcting-cluster-config[Correcting Cluster configuration] for more information.
 
 [[hadb-and-hadbm-command-support]]
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,12 +37,17 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>3.0.1</version>
+            <version>4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext.microprofile</groupId>
             <artifactId>jersey-mp-rest-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -62,11 +67,16 @@
             <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
+            <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.27.2</version>
+            <version>3.13.1</version>
             <!-- Requirement of the wiremock plugin -->
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.11.0</version>
         </dependency>
 
         <dependency>
@@ -94,9 +104,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>uk.co.automatictester</groupId>
+                <groupId>io.buildlogic</groupId>
                 <artifactId>wiremock-maven-plugin</artifactId>
-                <version>7.3.0</version>
+                <version>8.1.0</version>
                 <configuration>
                     <dir>${project.build.directory}/classes</dir>
                     <params>--port=8765 --verbose</params>
@@ -139,6 +149,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
+                    <argLine>-Xmx4G</argLine>
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>

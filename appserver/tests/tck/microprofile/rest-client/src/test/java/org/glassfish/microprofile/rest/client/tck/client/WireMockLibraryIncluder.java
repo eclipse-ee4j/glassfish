@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ public class WireMockLibraryIncluder implements ApplicationArchiveProcessor {
 
     private static final System.Logger LOG = System.getLogger(WireMockLibraryIncluder.class.getName());
 
-    private static final String WIREMOCK_COORDINATES = "com.github.tomakehurst:wiremock";
+    private static final String WIREMOCK_COORDINATES = "org.wiremock:wiremock";
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {

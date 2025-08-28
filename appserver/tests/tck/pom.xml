@@ -65,7 +65,6 @@
         <maven.executable>${maven.home}/bin/mvn${file.executable.suffix}</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
 
-        <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.directoryName>glassfish7</glassfish.directoryName>
         <glassfish.home>${glassfish.root}/${glassfish.directoryName}</glassfish.home>

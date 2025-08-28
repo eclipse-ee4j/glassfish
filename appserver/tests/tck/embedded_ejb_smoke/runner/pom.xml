@@ -104,7 +104,7 @@
                     <systemPropertyVariables>
                         <tck.home>${tck.home}</tck.home>
                         <glassfish.home>${glassfish.home}</glassfish.home>
-                        <glassfish.version>${project.version}</glassfish.version>
+                        <glassfish.version>${glassfish.version}</glassfish.version>
                         <maven.tck.debug>${tck.debug}</maven.tck.debug>
                     </systemPropertyVariables>
                 </configuration>

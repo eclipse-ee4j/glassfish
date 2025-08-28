@@ -286,7 +286,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                     <systemPropertyVariables>
                         <tck.home>${tck.home}</tck.home>
                         <glassfish.home>${glassfish.home}</glassfish.home>
-                        <glassfish.version>${project.version}</glassfish.version>
+                        <glassfish.version>${glassfish.version}</glassfish.version>
                         <maven.tck.debug>${tck.debug}</maven.tck.debug>
                         <standalone>${tck.standalone}</standalone>
                     </systemPropertyVariables>

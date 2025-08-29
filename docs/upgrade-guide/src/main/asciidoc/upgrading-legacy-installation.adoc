@@ -188,7 +188,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
    - Copy the source domain to the new installation.
    - Update `domain.xml` to remove NSS references and add JKS keystore paths.
 2. **Perform Post-Upgrade Configuration**:
-   - Migrate NSS keys to JKS using `keytool` and `certutil`.
+   - Migrate NSS keys to PKCS#12 using `keytool` and `certutil`.
    - Update the master password if needed.
 3. **Upgrade PKCS#11 Hardware Tokens**:
    - Configure the token using JDK-JSSE mechanisms.

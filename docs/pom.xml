@@ -39,6 +39,14 @@
         <glassfish.version.7x>7.0.25</glassfish.version.7x>
         <glassfish.version.latest>${glassfish.version.7x}</glassfish.version.latest>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
+        <microprofile.version.latest>6.1</microprofile.version.latest>
+        <microprofile.release-notes.latest>https://microprofile.io/compatible/6-1/</microprofile.release-notes.latest>
+        <microprofile-config.version.latest>3.1</microprofile-config.version.latest>
+        <microprofile-config.release-notes.latest>https://github.com/eclipse/microprofile-config/releases/tag/3.1</microprofile-config.release-notes.latest>
+        <microprofile-jwt.version.latest>2.1</microprofile-jwt.version.latest>
+        <microprofile-jwt.release-notes.latest>https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1</microprofile-jwt.release-notes.latest>
+        <microprofile-rest-client.version.latest>3.0</microprofile-rest-client.version.latest>
+        <microprofile-rest-client.release-notes.latest>https://github.com/eclipse/microprofile-rest-client/releases/tag/3.0</microprofile-rest-client.release-notes.latest>
     </properties>
 
     <modules>

@@ -28,7 +28,6 @@ Refer to this document prior to installing, configuring, or using
 {productName} {product-majorVersion} software. Consult this document periodically to
 view the most up-to-date product information.
 
-* xref:#revision-history["Revision History"]
 * xref:#whats-new-in-the-glassfish-server-release["What's New in the {productName} {product-majorVersion} Release?"]
 * xref:#hardware-and-software-requirements["Hardware and Software Requirements"]
 * xref:#GSRLN00253["Known Issues in {productName} {product-majorVersion}"]
@@ -43,28 +42,13 @@ view the most up-to-date product information.
 
 [[revision-history]]
 
-=== Revision History
-
-This section lists the revision history for these Release Notes.
-
-[[gabzd]]
-
-Table 1-1 Revision History
-
-[width="100%",options="header",]
-|===
-|Date |Description of Changes
-|September 2022 |{productName} {product-majorVersion}.
-|===
-
-
 [[whats-new-in-the-glassfish-server-release]]
 
 === What's New in the {productName} {product-majorVersion} Release?
 
 {productName} {product-majorVersion} is the first Compatible Implementation of the Jakarta EE {jakartaee] Platform.
 
-{productName} {product-majorVersion} also introduces the following new features:
+{productName} {product-majorVersion} also supports the following new features:
 
 * https://microprofile.io/specifications/config/[MicroProfile Config]  API
 * https://microprofile.io/specifications/jwt/[MicroProfile JWT] API
@@ -80,6 +64,8 @@ see xref:#jakarta-ee-support[Jakarta EE Standards Support].
 
 For a complete list of the MicroProfile technologies included in {productName} {product-currentVersion},
 see xref:#microprofile-support[MicroProfile Standards Support].
+
+For more information about changes in {productName} {product-majorVersion} and all its minor and patch versions, check out the page about https://glassfish.org/download_gf{product-majorVersion}.html[all the {productName} {product-majorVersion} releases].
 
 [NOTE]
 ====

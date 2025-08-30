@@ -32,7 +32,6 @@ view the most up-to-date product information.
 * xref:#hardware-and-software-requirements["Hardware and Software Requirements"]
 * xref:#GSRLN00253["Known Issues in {productName} {product-majorVersion}"]
 * xref:#restrictions-and-deprecated-functionality["Restrictions and Deprecated Functionality"]
-* xref:#documentation-errata["Documentation Errata"]
 * xref:#features-available-only-in-the-full-platform["Features Available Only in the Full Platform"]
 * xref:#jakarta-ee-support["Jakarta EE Standards Support"]
 * xref:#microprofile-support["MicroProfile Standards Support"]
@@ -426,7 +425,6 @@ The following topics are addressed here:
 * xref:#asadmin-subcommands[`asadmin` Subcommands]
 * <<deprecated-unsupported-and-obsolete-options, Deprecated, Unsupported, and Obsolete Options>>
 * <<Applications That Use Apache Derby>>
-* <<No Support for Client VM on Windows AMD64>>
 * <<Metro Reliable Messaging in `InOrder` Delivery Mode>>
 
 [[asadmin-subcommands]]
@@ -565,17 +563,6 @@ asadmin start-database --dbhome c:\glassfish\databases
 ----
 2. After upgrade, start {productName} {product-majorVersion}.
 
-[[no-support-for-client-vm-on-windows-amd64]]
-
-==== No Support for Client VM on Windows AMD64
-
-By default, the {productName} DAS uses the Client VM to achieve best
-startup and deployment performance. If you are using Windows AMD64, edit
-the `domain.xml` file to remove the line
-`<jvm-options>-client<jvm-options>`. In this case, JVM ergonomics
-chooses the appropriate kind of VM for the given platform. Note that
-server instances use the Server VM by default.
-
 [[metro-reliable-messaging-in-inorder-delivery-mode]]
 
 ==== Metro Reliable Messaging in `InOrder` Delivery Mode
@@ -593,29 +580,6 @@ supported feature.
 
 For the complete report about this issue, see
 https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
-
-[[documentation-errata]]
-
-=== Documentation Errata
-
-This section describes documentation errata.
-
-* xref:#upgrading-to-oracle-glassfish-server-is-not-necessary[Upgrading to {productName} Is Not Necessary]
-
-[[upgrading-to-oracle-glassfish-server-is-not-necessary]]
-
-==== Upgrading to {productName} Is Not Necessary
-
-The {productName} Administration Guide discusses
-upgrading {productName} to {productName}. {productName} 4.x is only an open source release, so this
-upgrade is not necessary.
-
-
-[NOTE]
-====
-Upgrading may not work for {productName} {product-majorVersion}
-====
-
 
 [[features-available-only-in-the-full-platform]]
 

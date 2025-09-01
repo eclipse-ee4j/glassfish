@@ -29,7 +29,6 @@
 </li>
 <li><a href="#GSRLN">1 Eclipse GlassFish 7 Release Notes</a>
 <ul class="sectlevel2">
-<li><a href="#revision-history">Revision History</a></li>
 <li><a href="#whats-new-in-the-glassfish-server-release">What&#8217;s New in the Eclipse GlassFish 7 Release?</a></li>
 <li><a href="#hardware-and-software-requirements">Hardware and Software Requirements</a>
 <ul class="sectlevel3">
@@ -52,14 +51,8 @@
 <li><a href="#asadmin-subcommands"><code>asadmin</code> Subcommands</a></li>
 <li><a href="#deprecated-unsupported-and-obsolete-options">Deprecated, Unsupported, and Obsolete Options</a></li>
 <li><a href="#applications-that-use-apache-derby">Applications That Use Apache Derby</a></li>
-<li><a href="#no-support-for-client-vm-on-windows-amd64">No Support for Client VM on Windows AMD64</a></li>
 <li><a href="#metro-reliable-messaging-in-inorder-delivery-mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></li>
 <li><a href="#no-support-for-kerberos-on-aix">No Support for Kerberos on AIX</a></li>
-</ul>
-</li>
-<li><a href="#documentation-errata">Documentation Errata</a>
-<ul class="sectlevel3">
-<li><a href="#upgrading-to-oracle-glassfish-server-is-not-necessary">Upgrading to Eclipse GlassFish Is Not Necessary</a></li>
 </ul>
 </li>
 <li><a href="#features-available-only-in-the-full-platform">Features Available Only in the Full Platform</a></li>
@@ -127,29 +120,6 @@ trademark of The Open Group.</p>
 <div class="sect1">
 <h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>This documentation is part of the Java Enterprise Edition contribution
-to the Eclipse Foundation and is not intended for use in relation to
-Java Enterprise Edition or Orace GlassFish. The documentation is in the
-process of being revised to reflect the new Jakarta EE branding.
-Additional changes will be made as requirements and procedures evolve
-for Jakarta EE. Where applicable, references to Jakarta EE or Java
-Enterprise Edition should be considered references to Jakarta EE.</p>
-</div>
-<div class="paragraph">
-<p>Please see the Title page for additional license information.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>This preface contains information about and conventions for the entire
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
@@ -606,9 +576,6 @@ view the most up-to-date product information.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#revision-history">"Revision History"</a></p>
-</li>
-<li>
 <p><a href="#whats-new-in-the-glassfish-server-release">"What&#8217;s New in the Eclipse GlassFish 7 Release?"</a></p>
 </li>
 <li>
@@ -619,9 +586,6 @@ view the most up-to-date product information.</p>
 </li>
 <li>
 <p><a href="#restrictions-and-deprecated-functionality">"Restrictions and Deprecated Functionality"</a></p>
-</li>
-<li>
-<p><a href="#documentation-errata">"Documentation Errata"</a></p>
 </li>
 <li>
 <p><a href="#features-available-only-in-the-full-platform">"Features Available Only in the Full Platform"</a></p>
@@ -644,39 +608,12 @@ view the most up-to-date product information.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="revision-history"><a class="anchor" href="#revision-history"></a>Revision History</h3>
-<div class="paragraph">
-<p>This section lists the revision history for these Release Notes.</p>
-</div>
-<div id="gabzd" class="paragraph">
-<p>Table 1-1 Revision History</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Date</th>
-<th class="tableblock halign-left valign-top">Description of Changes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">September 2022</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse GlassFish 7.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
 <h3 id="whats-new-in-the-glassfish-server-release"><a class="anchor" href="#whats-new-in-the-glassfish-server-release"></a>What&#8217;s New in the Eclipse GlassFish 7 Release?</h3>
 <div class="paragraph">
 <p>Eclipse GlassFish 7 is the first Compatible Implementation of the Jakarta EE {jakartaee] Platform.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 also introduces the following new features:</p>
+<p>Eclipse GlassFish 7 also supports the following new features:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -713,6 +650,9 @@ see <a href="#jakarta-ee-support">Jakarta EE Standards Support</a>.</p>
 <div class="paragraph">
 <p>For a complete list of the MicroProfile technologies included in Eclipse GlassFish 7.1.0-SNAPSHOT,
 see <a href="#microprofile-support">MicroProfile Standards Support</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about changes in Eclipse GlassFish 7 and all its minor and patch versions, check out the page about <a href="https://glassfish.org/download_gf7.html">all the Eclipse GlassFish 7 releases</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1255,9 +1195,6 @@ Eclipse GlassFish 7.</p>
 <p><a href="#applications-that-use-apache-derby">Applications That Use Apache Derby</a></p>
 </li>
 <li>
-<p><a href="#no-support-for-client-vm-on-windows-amd64">No Support for Client VM on Windows AMD64</a></p>
-</li>
-<li>
 <p><a href="#metro-reliable-messaging-in-inorder-delivery-mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></p>
 </li>
 </ul>
@@ -1506,17 +1443,6 @@ Derby. For example:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="no-support-for-client-vm-on-windows-amd64"><a class="anchor" href="#no-support-for-client-vm-on-windows-amd64"></a>No Support for Client VM on Windows AMD64</h4>
-<div class="paragraph">
-<p>By default, the Eclipse GlassFish DAS uses the Client VM to achieve best
-startup and deployment performance. If you are using Windows AMD64, edit
-the <code>domain.xml</code> file to remove the line
-<code>&lt;jvm-options&gt;-client&lt;jvm-options&gt;</code>. In this case, JVM ergonomics
-chooses the appropriate kind of VM for the given platform. Note that
-server instances use the Server VM by default.</p>
-</div>
-</div>
-<div class="sect3">
 <h4 id="metro-reliable-messaging-in-inorder-delivery-mode"><a class="anchor" href="#metro-reliable-messaging-in-inorder-delivery-mode"></a>Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</h4>
 <div class="paragraph">
 <p>The Metro Reliable Messaging in <code>InOrder</code> Delivery mode has not been
@@ -1533,41 +1459,6 @@ supported feature.</p>
 <div class="paragraph">
 <p>For the complete report about this issue, see
 <a href="https://github.com/javaee/glassfish/issues/16728"><code>Issue-16728</code></a></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="documentation-errata"><a class="anchor" href="#documentation-errata"></a>Documentation Errata</h3>
-<div class="paragraph">
-<p>This section describes documentation errata.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#upgrading-to-oracle-glassfish-server-is-not-necessary">Upgrading to Eclipse GlassFish Is Not Necessary</a></p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="upgrading-to-oracle-glassfish-server-is-not-necessary"><a class="anchor" href="#upgrading-to-oracle-glassfish-server-is-not-necessary"></a>Upgrading to Eclipse GlassFish Is Not Necessary</h4>
-<div class="paragraph">
-<p>The Eclipse GlassFish Administration Guide discusses
-upgrading Eclipse GlassFish to Eclipse GlassFish. Eclipse GlassFish 4.x is only an open source release, so this
-upgrade is not necessary.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Upgrading may not work for Eclipse GlassFish 7</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -2218,7 +2109,7 @@ project dashboards and issue tracking database</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-08-31 07:15:01 UTC
+Last updated 2025-09-01 19:20:12 UTC
 </div>
 </div>
 </body>

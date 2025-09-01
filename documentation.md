@@ -75,13 +75,14 @@ GlassFish, Jakarta EE Web Profile, and GlassFish Embedded, Jakarta EE Web Profil
 
 ## MicroProfile Documentation {#microprofile}
 
-GlassFish, Jakarta EE Platform, and GlassFish Embedded, Jakarta EE Platform, provide the following MicroProfile APIs:
+GlassFish 7.0.25, Jakarta EE Platform, provides the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs:
 
-* [MicroProfile Config 3.0](https://github.com/eclipse/microprofile-config/releases/tag/3.0.3)
+* [MicroProfile Config 3.1](https://github.com/eclipse/microprofile-config/releases/tag/3.1)
 * [MicroProfile JWT RBAC 2.1](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1)
 * [MicroProfile Rest Client 3.0](https://github.com/eclipse/microprofile-rest-client/releases/tag/3.0)
 
-GlassFish, Jakarta EE Web Profile, and GlassFish Embedded, Jakarta EE Web Profile, don't provide any MicroProfile APIs.
+
+GlassFish, Jakarta EE Web Profile, GlassFish Embedded, Jakarta EE Platform, and GlassFish Embedded, Jakarta EE Web Profile don't provide any MicroProfile APIs.
 
 
 ## Eclipse Open MQ Documentation {#open-mq}

@@ -25,10 +25,13 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jnosql-jakarta-persistence-integration</artifactId>
+    <artifactId>jnosql-integration</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Eclipse JNoSQL Jakarta Persistence Integration</name>
+    <name>Eclipse JNoSQL Integration for GlassFish</name>
+    <description>
+        Integration of JNoSQL, and Jakarta Data repositories for both Jakarta Persistence and NoSQL entities
+    </description>
 
     <dependencies>
         <dependency>

@@ -20,8 +20,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.jnosql.jakartapersistence.mapping.metadata.JakartaPersistenceClassScanner;
 import org.eclipse.jnosql.mapping.metadata.ClassConverter;
-import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
 
@@ -41,7 +41,7 @@ public class ReflectionGroupEntityMetadata implements GroupEntityMetadata {
     @PostConstruct
     public void postConstruct() {
         var converter = ClassConverter.load();
-        var scanner = ClassScanner.load();
+        var scanner = JakartaPersistenceClassScanner.load();
         for (Class<?> entity : scanner.entities()) {
             EntityMetadata entityMetadata = converter.apply(entity);
             if (entityMetadata.hasEntityName()) {

@@ -53,9 +53,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Ondro Mihalyi
  */
-public class GlassFishClassScannerTest {
+public class GlassFishJakartaPersistenceClassScannerTest {
 
-    public GlassFishClassScannerTest() {
+    public GlassFishJakartaPersistenceClassScannerTest() {
     }
 
     @Test
@@ -88,7 +88,7 @@ public class GlassFishClassScannerTest {
         Types types = parseClasses(allClasses);
 
         configureCDI(types);
-        final GlassFishClassScanner scanner = new GlassFishClassScanner();
+        final GlassFishJakartaPersistenceClassScanner scanner = new GlassFishJakartaPersistenceClassScanner();
 
         final Set<Class<?>> repositoriesStandardResult = scanner.repositoriesStandard();
         assertTrue(repositoriesStandardResult.equals(standardRepositories), "Standard repositories: " + repositoriesStandardResult);

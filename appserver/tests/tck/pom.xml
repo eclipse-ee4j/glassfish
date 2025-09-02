@@ -126,6 +126,12 @@
                 <version>${omnifish.arquillian.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>ee.omnifish.arquillian</groupId>
+                <artifactId>arquillian-glassfish-server-remote</artifactId>
+                <version>${omnifish.arquillian.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!-- See defaultProtocol type in arquillian.xml in microprofile module -->
             <dependency>
                 <groupId>org.jboss.arquillian.protocol</groupId>

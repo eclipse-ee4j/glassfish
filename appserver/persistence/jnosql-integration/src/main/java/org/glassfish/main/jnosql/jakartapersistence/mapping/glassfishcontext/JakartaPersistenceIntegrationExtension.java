@@ -77,8 +77,8 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(Dependent.class) // Dependent scope is OK because the state is provided via constructor
                 .createWith(ctx -> new ApplicationContext(types));
 
-        addBean(GlassFishClassScanner.class, afterBeanDiscovery, beanManager)
-                .types(ClassScanner.class, GlassFishClassScanner.class)
+        addBean(GlassFishJakartaPersistenceClassScanner.class, afterBeanDiscovery, beanManager)
+                .types(ClassScanner.class, GlassFishJakartaPersistenceClassScanner.class)
                 .scope(ApplicationScoped.class);
 
         addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager)

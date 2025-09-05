@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -308,7 +308,7 @@ public final class EJBSecurityManager implements SecurityManager {
     @Override
     public void destroy() {
         try {
-            authorizationService.refresh();
+            authorizationService.destroy();
 
             /*
              * All enterprise beans of module share same policy context, but each has its

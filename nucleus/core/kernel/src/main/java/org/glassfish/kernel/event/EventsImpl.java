@@ -17,15 +17,14 @@
 
 package org.glassfish.kernel.event;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.event.EventListener;
@@ -36,6 +35,9 @@ import org.glassfish.api.event.RestrictTo;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
+
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Simple implementation of the events dispatching facility.
@@ -51,7 +53,8 @@ public class EventsImpl implements Events, PostConstruct {
     /**
      * Use skip list based map to preserve listeners in registration order.
      */
-    final Map<Listener, EventMatcher> listeners = new ConcurrentSkipListMap<>();
+    final Map<Listener, EventMatcher> listenersBySequence = new ConcurrentSkipListMap<>();
+    final Map<EventListener, Listener> listenersByIdentity = new ConcurrentHashMap<>();
 
     private ExecutorService executor;
 
@@ -70,22 +73,43 @@ public class EventsImpl implements Events, PostConstruct {
     @Override
     public void register(EventListener listener) {
         try {
-            Method eventMethod = listener.getClass().getMethod("event", Event.class);
-            RestrictTo[] restrictTo = eventMethod.getParameters()[0].getAnnotationsByType(RestrictTo.class);
-            EventTypes<?>[] eventTypes = Arrays.stream(restrictTo)
-                .map(restrict -> EventTypes.create(restrict.value())).toArray(EventTypes[]::new);
-            listeners.putIfAbsent(new Listener(listener, sequenceGenerator.getAndIncrement()), new EventMatcher(eventTypes));
+            RestrictTo[] restrictTo =
+                    listener.getClass()
+                            .getMethod("event", Event.class)
+                            .getParameters()[0]
+                            .getAnnotationsByType(RestrictTo.class);
+
+            listenersByIdentity.computeIfAbsent(listener, e -> {
+
+                Listener listenerWrapperWithSeq = new Listener(listener, sequenceGenerator.getAndIncrement());
+
+                EventMatcher eventMatcher = new EventMatcher(
+                    Arrays.stream(restrictTo)
+                          .map(restrict -> EventTypes.create(restrict.value()))
+                          .toArray(EventTypes[]::new));
+
+                listenersBySequence.put(
+                    listenerWrapperWithSeq,
+                    eventMatcher);
+
+                return listenerWrapperWithSeq;
+            });
+
+
         } catch (Throwable t) {
-            // We need to catch Throwable, otherwise we can server not to
-            // shutdown when the following happens:
+            // We need to catch Throwable, otherwise we can not
+            // shutdown the server when the following happens:
+            //
             // Assume a bundle which has registered an event listener
             // has been uninstalled without unregistering the listener.
+            //
             // listener.getClass() refers to a class of such an uninstalled
-            // bundle. If framework has been refreshed, then the
+            // bundle. If the framework has been refreshed, then the
             // classloader can't be used further to load any classes.
+            //
             // As a result, an exception like NoClassDefFoundError is thrown
             // from getMethod.
-            LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionRegisterEventListener, t);
+            LOG.log(SEVERE, KernelLoggerInfo.exceptionRegisterEventListener, t);
         }
     }
 
@@ -96,20 +120,24 @@ public class EventsImpl implements Events, PostConstruct {
 
     @Override
     public void send(final Event<?> event, boolean asynchronously) {
-        for (Map.Entry<Listener, EventMatcher> entry : listeners.entrySet()) {
-            EventMatcher matcher = entry.getValue();
+        for (var entry : listenersBySequence.entrySet()) {
+
             // Check if the listener is interested with his event.
-            if (matcher.matches(event)) {
+            if (entry.getValue().matches(event)) {
+
                 Listener listener = entry.getKey();
+
                 if (asynchronously) {
+                    // Process Async
                     executor.submit(() -> {
                         try {
                             listener.event(event);
                         } catch (Throwable t) {
-                            LOG.log(Level.WARNING, KernelLoggerInfo.exceptionDispatchEvent, t);
+                            LOG.log(WARNING, KernelLoggerInfo.exceptionDispatchEvent, t);
                         }
                     });
                 } else {
+                    // Process sync
                     try {
                         listener.event(event);
                     } catch (DeploymentException e) {
@@ -117,7 +145,7 @@ public class EventsImpl implements Events, PostConstruct {
                         // we re-throw the exception to abort the deployment
                         throw e;
                     } catch (Throwable t) {
-                        LOG.log(Level.WARNING, KernelLoggerInfo.exceptionDispatchEvent, t);
+                        LOG.log(WARNING, KernelLoggerInfo.exceptionDispatchEvent, t);
                     }
                 }
             }
@@ -126,7 +154,12 @@ public class EventsImpl implements Events, PostConstruct {
 
     @Override
     public boolean unregister(EventListener listener) {
-        return listeners.remove(new Listener(listener)) != null;
+        Listener listenerWrapperWithSeq = listenersByIdentity.remove(listener);
+        if (listenerWrapperWithSeq == null) {
+            return false;
+        }
+
+        return listenersBySequence.remove(listenerWrapperWithSeq) != null;
     }
 
     /**
@@ -158,23 +191,26 @@ public class EventsImpl implements Events, PostConstruct {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof Listener)) {
-                return false;
-            }
-            return eventListener.equals(((Listener) obj).eventListener);
+            return
+                obj instanceof Listener listener &&
+                this.eventListener == listener.eventListener;
         }
 
         @Override
         public int hashCode() {
-            return eventListener.hashCode();
+            return System.identityHashCode(eventListener);
         }
 
         @Override
         public int compareTo(Listener listener) {
-            return Long.compare(sequenceNumber, listener.sequenceNumber);
+            // Treat the same underlying listener as the SAME KEY
+            if (this.eventListener == listener.eventListener) {
+                // Identity
+                return 0;
+            }
+
+            // otherwise keep registration order via sequence
+            return Long.compare(this.sequenceNumber, listener.sequenceNumber);
         }
     }
 

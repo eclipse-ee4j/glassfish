@@ -41,14 +41,10 @@ import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.DefaultEntitiesMetadata;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.ReflectionGroupEntityMetadata;
 
 /**
  * TODO - consider moving to weld-integration module, following the existing
@@ -79,14 +75,6 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
 
         addBean(GlassFishJakartaPersistenceClassScanner.class, afterBeanDiscovery, beanManager)
                 .types(ClassScanner.class, GlassFishJakartaPersistenceClassScanner.class)
-                .scope(ApplicationScoped.class);
-
-        addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager)
-                .types(GroupEntityMetadata.class)
-                .scope(ApplicationScoped.class);
-
-        addBean(DefaultEntitiesMetadata.class, afterBeanDiscovery, beanManager)
-                .types(EntitiesMetadata.class)
                 .scope(ApplicationScoped.class);
 
         addBean(GlassFishRepositoryInterceptor.class, afterBeanDiscovery, beanManager)

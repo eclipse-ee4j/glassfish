@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,9 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
-import org.osgi.framework.FrameworkUtil;
+
+import static org.osgi.framework.FrameworkEvent.PACKAGES_REFRESHED;
+import static org.osgi.framework.FrameworkUtil.getBundle;
 
 /**
  * OSGi-aware implementation of the events dispatching facility.
@@ -48,25 +50,33 @@ public class OSGiAwareEventsImpl extends EventsImpl implements FrameworkListener
 
     @Override
     public void frameworkEvent(FrameworkEvent frameworkEvent) {
-        if (frameworkEvent.getType() == FrameworkEvent.PACKAGES_REFRESHED) {
+        if (frameworkEvent.getType() == PACKAGES_REFRESHED) {
+
             // Get System Bundle context
             BundleContext bundleContext = frameworkEvent.getBundle().getBundleContext();
+
             // Uninstalled bundles has been removed when framework has been refreshed.
             // Remove listeners registered by this uninstalled bundles.
-            listeners.keySet().removeIf(listener -> {
+            listenersBySequence.keySet().removeIf(listener -> {
+
                 // Get bundle for event listener
-                Bundle bundle = FrameworkUtil.getBundle(listener.unwrap().getClass());
-                if (bundle != null) {
-                    // Even if Bundle has been removed, it must preserve bundle_id.
-                    return bundleContext.getBundle(bundle.getBundleId()) == null;
+                Bundle bundle = getBundle(listener.unwrap().getClass());
+                if (bundle == null) {
+                    return true;
                 }
-                return true;
+
+                // Even if Bundle has been removed, it must preserve bundle_id.
+                return bundleContext.getBundle(bundle.getBundleId()) == null;
             });
         }
     }
 
     private BundleContext getBundleContext() {
-        Bundle bundle = FrameworkUtil.getBundle(getClass());
-        return bundle != null ? bundle.getBundleContext() : null;
+        Bundle bundle = getBundle(getClass());
+        if (bundle == null) {
+            return null;
+        }
+
+        return bundle.getBundleContext();
     }
 }

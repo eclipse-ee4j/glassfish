@@ -720,7 +720,7 @@ The following cases will use the same persistence context:
 * Using EntityManager retrieved from the repository
 * Using an injected EntityManager for the same persistence unit
 
-You can freely mix Jakarta Data repository methods and direct EntityManager operations in the same application, even in the same transaction. As long as the EntityMangers are for the same persistence unit, they will share the same persistence context. If they are for different persistence units, they will operate independently and will require XA datasources if used in the same transaction.  
+You can freely mix Jakarta Data repository methods and direct EntityManager operations in the same application, even in the same transaction. As long as the EntityMangers are for the same persistence unit, they will share the same persistence context. If they are for different persistence units, they will operate independently and will require XA datasources if used in the same transaction.
 
 [source,java]
 ----

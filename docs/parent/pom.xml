@@ -32,7 +32,7 @@
     <properties>
         <maven.site.skip>true</maven.site.skip>
         <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
-        <asciidoctorj.pdf.version>2.3.19</asciidoctorj.pdf.version>
+        <asciidoctorj.pdf.version>2.3.20</asciidoctorj.pdf.version>
         <asciidoc.pdf.skip>false</asciidoc.pdf.skip>
         <asciidoc.html.skip>false</asciidoc.html.skip>
         <!-- status: DRAFT, BETA, etc., or blank for final -->

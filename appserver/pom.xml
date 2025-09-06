@@ -83,6 +83,7 @@
 
         <!-- Jakarta EE platform -->
         <jakartaee>11</jakartaee>
+        <jakarta.platform.version>11.0.0</jakarta.platform.version>
 
         <!-- Jakarta API Versions -->
 
@@ -211,6 +212,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
+                <version>${jakarta.platform.version}</version>
+            </dependency>
+
             <!-- Jakarta Faces -->
             <dependency>
                 <groupId>jakarta.faces</groupId>

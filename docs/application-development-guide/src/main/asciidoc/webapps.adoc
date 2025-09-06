@@ -2,7 +2,7 @@ type=page
 status=published
 title=Developing Web Applications
 next=ejb.html
-prev=jpa.html
+prev=jakarta-data.html
 ~~~~~~
 
 = Developing Web Applications

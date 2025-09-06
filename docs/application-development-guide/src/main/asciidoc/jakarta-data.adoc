@@ -1,0 +1,762 @@
+type=page
+status=published
+title=Using Jakarta Data Repositories
+next=webapps.html
+prev=jpa.html
+~~~~~~
+
+= Using Jakarta Data Repositories
+
+[[using-jakarta-data-repositories]]
+== Using Jakarta Data Repositories
+
+This chapter describes how to use Jakarta Data repositories in {productName} applications. Jakarta Data provides a standard API for data access that simplifies database operations through repository interfaces and automatic query generation.
+
+The following topics are addressed here:
+
+* xref:#overview-of-jakarta-data[Overview of Jakarta Data]
+* xref:#defining-repository-interfaces[Defining Repository Interfaces]
+* xref:#query-methods[Query Methods]
+* xref:#custom-queries[Custom Queries]
+* xref:#pagination-and-sorting[Pagination and Sorting]
+* xref:#transaction-management[Transaction Management]
+* xref:#jakarta-validation-support[Jakarta Validation Support]
+* xref:#configuring-jakarta-data-repositories[Configuring Jakarta Data Repositories]
+* xref:#integration-with-jpa[Integration with JPA]
+
+For more information about Jakarta Data {jakarta-data-api-version}, see the official https://jakarta.ee/specifications/data/{jakarta-data-spec-version}[Jakarta Data {jakarta-data-api-version} documentation].
+
+[[overview-of-jakarta-data]]
+
+=== Overview of Jakarta Data
+
+Jakarta Data is a specification that provides a standard API for data access in Jakarta EE applications. It offers a repository-based programming model that reduces boilerplate code and provides type-safe database operations.
+
+Key features of Jakarta Data include:
+
+* Repository interfaces with automatic implementation generation
+* Query derivation from method names
+* Support for custom queries using JDQL or JPQL
+* Built-in pagination and sorting capabilities
+* Integration with Jakarta Persistence (JPA)
+* Type-safe query building
+
+Jakarta Data repositories work by defining interfaces that may extend base repository types. The Jakarta Data provider automatically generates implementations of these interfaces at build time or runtime.
+
+[[defining-repository-interfaces]]
+
+=== Defining Repository Interfaces
+
+Jakarta Data repositories are defined as interfaces annotated with `@Repository` annotation (`@jakarta.data.Repository`). The interface may extend one of the base repository interfaces, which provide some ready-to-use methods:
+
+* `Repository<T, K>` - Basic repository interface
+* `CrudRepository<T, K>` - Adds CRUD operations
+* `PageableRepository<T, K>` - Adds pagination support
+
+
+==== Basic Repository Example
+
+This example shows a simple repository interface that extends `CrudRepository` for a `Product` entity. It contains methods defined in `CrudRepository` as well as custom query methods using annotations and parameters.
+
+[source,java]
+----
+import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Repository;
+import jakarta.data.repository.Find;
+import jakarta.data.repository.By;
+import jakarta.data.repository.OrderBy;
+
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    // Parameter-based queries using @Find and @By annotations
+    @Find
+    List<Product> findProducts(@By("name") String name);
+
+    @Query("WHERE price BETWEEN :minPrice AND :maxPrice")
+    List<Product> findProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice);
+
+    @Find
+    Optional<Product> findProduct(@By("code") String code);
+
+    @Find
+    @OrderBy("price")
+    List<Product> findProducts(@By("category") String category);
+}
+----
+
+==== Alternative: Method Name-Based Queries (Deprecated)
+
+{productName} also supports method name-based query derivation, but this approach is deprecated and might be removed in future versions. Use the annotated approach shown above instead.
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    // Method names are automatically converted to queries (DEPRECATED)
+    List<Product> findByName(String name);
+
+    List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+
+    Optional<Product> findByCode(String code);
+
+    List<Product> findByCategoryOrderByPriceAsc(String category);
+}
+----
+
+==== Entity Definition
+
+Your entity classes should be standard JPA entities:
+
+[source,java]
+----
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String code;
+
+    private String name;
+    private String category;
+    private BigDecimal price;
+
+    // Constructors, getters, and setters
+}
+----
+
+[[query-methods]]
+
+=== Query Methods
+
+Jakarta Data supports automatic query generation using annotated methods with the `@Find`, `@Count`, `@Exists`, and `@Delete` annotations combined with parameter annotations like `@By`.
+
+==== Supported Query Annotations
+
+* `@Find` - Find operations
+* `@Count` - Count operations
+* `@Exists` - Existence checks
+* `@Delete` - Delete operations
+* `@Insert` - Insert operations
+* `@Update` - Update operations
+* `@Save` - Save operations (insert or update)
+
+==== Parameter Annotations
+
+* `@By("propertyName")` - Query by property. Specifies the entity property to query by, which can be nested to specify properties of referenced entities (e.g., `@By("customer.address.city")`). If the application is compiled with preserving parameter names in the bytecode (e.g., with `javac -parameters`), `@By` is optional and if not present, the property name will be derived from the parameter name.
+
+==== Examples
+
+[source,java]
+----
+import jakarta.data.repository.*;
+
+@Repository
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+
+    // Find by single property
+    @Find
+    List<Customer> findCustomers(@By("lastName") String lastName);
+
+    // Multiple conditions with And (multiple @By parameters)
+    @Find
+    List<Customer> findCustomers(@By("firstName") String firstName, @By("lastName") String lastName);
+
+    // Range queries using @Query with JDQL
+    @Query("WHERE age BETWEEN :minAge AND :maxAge")
+    List<Customer> findCustomersByAgeRange(int minAge, int maxAge);
+
+    // Comparison operators using @Query with JDQL
+    @Query("WHERE age > :age")
+    List<Customer> findCustomersOlderThan(int age);
+
+    // Pattern matching using @Query with JDQL
+    @Query("WHERE email LIKE :pattern")
+    List<Customer> findCustomersByEmailPattern(String pattern);
+
+    // Collection operations using @Query with JDQL
+    @Query("WHERE status IN :statuses")
+    List<Customer> findCustomersByStatuses(Collection<String> statuses);
+
+    // Null checks using default methods
+    @Find
+    List<Customer> findCustomers(@By("middleName") String middleName);
+
+    default List<Customer> findCustomersWithNullMiddleName() {
+        return findCustomers((String) null);
+    }
+
+    // Counting
+    @Count
+    long countCustomers(@By("status") String status);
+
+    // Existence checks
+    @Exists
+    boolean customerExists(@By("email") String email);
+
+    // Delete operations
+    @Delete
+    void deleteCustomers(@By("status") String status);
+
+    // Insert operations
+    @Insert
+    Customer insertCustomer(Customer customer);
+
+    @Insert
+    List<Customer> insertCustomers(List<Customer> customers);
+
+    // Update operations
+    @Update
+    Customer updateCustomer(Customer customer);
+
+    @Update
+    List<Customer> updateCustomers(List<Customer> customers);
+
+    // Save operations (insert or update)
+    @Save
+    Customer saveCustomer(Customer customer);
+
+    @Save
+    List<Customer> saveCustomers(List<Customer> customers);
+}
+----
+
+==== Alternative: Method Name-Based Queries (Deprecated)
+
+{productName} also supports method name-based query derivation using a standardized naming convention, but this approach may be removed in future versions. Use the annotated approach shown above instead.
+
+===== Supported Keywords
+
+* `findBy`, `getBy`, `queryBy`, `readBy` - Find operations
+* `countBy` - Count operations
+* `existsBy` - Existence checks
+* `deleteBy`, `removeBy` - Delete operations
+
+===== Property Expressions
+
+* `And`, `Or` - Logical operators
+* `Between` - Range queries
+* `LessThan`, `GreaterThan` - Comparison operators
+* `Like`, `NotLike` - Pattern matching
+* `In`, `NotIn` - Collection membership
+* `IsNull`, `IsNotNull` - Null checks
+* `True`, `False` - Boolean values
+
+===== Examples
+
+[source,java]
+----
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+
+    // Find by single property
+    List<Customer> findByLastName(String lastName);
+
+    // Multiple conditions with And
+    List<Customer> findByFirstNameAndLastName(String firstName, String lastName);
+
+    // Or conditions
+    List<Customer> findByFirstNameOrLastName(String name);
+
+    // Comparison operators
+    List<Customer> findByAgeGreaterThan(int age);
+    List<Customer> findByAgeBetween(int minAge, int maxAge);
+
+    // Pattern matching
+    List<Customer> findByEmailLike(String pattern);
+
+    // Collection operations
+    List<Customer> findByStatusIn(Collection<String> statuses);
+
+    // Null checks
+    List<Customer> findByMiddleNameIsNull();
+
+    // Counting
+    long countByStatus(String status);
+
+    // Existence checks
+    boolean existsByEmail(String email);
+
+    // Delete operations
+    void deleteByStatus(String status);
+}
+----
+
+[[custom-queries]]
+
+=== Custom Queries
+
+For complex queries that cannot be expressed through method names, Jakarta Data supports custom queries using the `@Query` annotation. Jakarta Data specifies its own query language called JDQL (Jakarta Data Query Language), which is similar to JPQL (Java Persistence Query Language). {productName} also supports full JPQL queries.
+
+Examples:
+
+[source,java]
+----
+import jakarta.data.repository.Query;
+
+@Repository
+public interface OrderRepository extends CrudRepository<Order, Long> {
+
+    /* A JPQL query that selects orders by customer ID and status. JPQL allows omitting
+     * the "SELECT o FROM Order o" part and by default operates on the entity returned
+     * by the mothod (Order in this case).
+     */
+    @Query("WHERE customer.id = :customerId AND status = :status")
+    List<Order> findOrdersByCustomerAndStatus(Long customerId, String status);
+
+    /* A JPQL query that selects orders containing products from a specific category.
+     * JPQL requires the full "SELECT o FROM Order o" syntax.
+     */
+    @Query("SELECT o FROM Order o JOIN o.items i WHERE i.product.category = :category")
+    List<Order> findOrdersWithProductCategory(String category);
+
+    /* A JPQL query that counts orders placed since a specific date.
+     */
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.orderDate >= :startDate")
+    long countOrdersSince(LocalDate startDate);
+}
+----
+
+[[pagination-and-sorting]]
+
+=== Pagination and Sorting
+
+Jakarta Data provides built-in support for pagination and sorting through the `Pageable` and `Sort` interfaces.
+
+==== Using Pageable
+
+[source,java]
+----
+import jakarta.data.repository.Pageable;
+import jakarta.data.repository.Page;
+import jakarta.data.repository.Sort;
+import jakarta.data.repository.Find;
+import jakarta.data.repository.By;
+
+@Repository
+public interface ProductRepository extends PageableRepository<Product, Long> {
+
+    @Find
+    Page<Product> findProducts(@By("category") String category, Pageable pageable);
+
+    @Query("WHERE price > :price")
+    List<Product> findProductsAbovePrice(BigDecimal price, Sort sort);
+}
+----
+
+==== Usage Example
+
+[source,java]
+----
+@Inject
+private ProductRepository productRepository;
+
+public void demonstratePagination() {
+    // Create pageable request for page 0, size 10, sorted by name
+    Pageable pageable = Pageable.of(0, 10, Sort.by("name").ascending());
+
+    Page<Product> page = productRepository.findProducts("Electronics", pageable);
+
+    List<Product> products = page.getContent();
+    long totalElements = page.getTotalElements();
+    int totalPages = page.getTotalPages();
+    boolean hasNext = page.hasNext();
+}
+----
+
+[[transaction-management]]
+
+=== Transaction Management
+
+Jakarta Data repositories integrate with Jakarta EE transaction management. Repository methods automatically participate in existing transactions or create new ones as needed.
+
+==== Declarative Transactions
+
+[source,java]
+----
+import jakarta.ejb.Stateless;
+import jakarta.transaction.Transactional;
+
+@ApplicationScoped
+public class OrderService {
+
+    @Inject
+    private OrderRepository orderRepository;
+
+    @Inject
+    private ProductRepository productRepository;
+
+    @Transactional
+    public Order createOrder(OrderRequest request) {
+        // All repository operations participate in the same transaction
+        Product product = productRepository.findById(request.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        Order order = new Order();
+        order.setProduct(product);
+        order.setQuantity(request.getQuantity());
+        order.setCustomerId(request.getCustomerId());
+
+        return orderRepository.save(order);
+    }
+}
+----
+
+==== Custom Transaction Behavior
+
+[source,java]
+----
+@Repository
+public interface AuditRepository extends CrudRepository<AuditLog, Long> {
+
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    AuditLog save(AuditLog auditLog);
+}
+----
+
+By default, repository methods use `REQUIRED` transaction type, which means they will join an existing transaction or create a new one if none exists. You can override this behavior using the `@Transactional` annotation on repository methods.
+
+The @Transactional annotation can be applied to the repository interface or individual methods to specify custom transaction behavior.
+
+[[jakarta-validation-support]]
+
+=== Jakarta Validation Support
+
+Jakarta Data repositories integrate with Jakarta Validation to validate method parameters and return values. To trigger validation, repository method parameters need to be annotated with validation annotations.
+
+==== Parameter Validation
+
+For simple field validation, use annotations like `@Max`, `@Min`, `@NotNull` directly on parameters:
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    @Find
+    List<Product> findProducts(@By("price") @Max(1000) @Min(0) BigDecimal maxPrice);
+
+    @Find
+    List<Product> findProducts(@By("category") @NotBlank String category);
+}
+----
+
+For entities that contain validation annotations on their fields, use `@Valid` on the parameter:
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    @Insert
+    Product insertProduct(@Valid Product product);
+
+    @Update
+    Product updateProduct(@Valid Product product);
+
+    @Save
+    Product saveProduct(@Valid Product product);
+
+    @Insert
+    List<Product> insertProducts(@Valid List<Product> products);
+}
+----
+
+==== Entity Validation Annotations
+
+Define validation rules on your entity fields:
+
+[source,java]
+----
+@Entity
+@Table(name = "products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Product code is required")
+    @Size(max = 20, message = "Product code must not exceed 20 characters")
+    private String code;
+
+    @NotBlank(message = "Product name is required")
+    @Size(max = 100, message = "Product name must not exceed 100 characters")
+    private String name;
+
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    private BigDecimal price;
+
+    @Min(value = 0, message = "Stock quantity cannot be negative")
+    private Integer stockQuantity;
+
+    // Constructors, getters, and setters
+}
+----
+
+==== Method Return Value Validation
+
+Validation annotations can also be applied to methods to validate return values:
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    @Find
+    @NotNull
+    Optional<Product> findProduct(@By("code") String code);
+
+    @Find
+    @Size(min = 1, message = "At least one product must be found")
+    List<Product> findProducts(@By("category") String category);
+}
+----
+
+==== Handling Validation Errors
+
+Validation errors are thrown as `ConstraintViolationException`:
+
+[source,java]
+----
+@ApplicationScoped
+public class ProductService {
+
+    @Inject
+    private ProductRepository productRepository;
+
+    public Product createProduct(Product product) {
+        try {
+            return productRepository.insertProduct(product);
+        } catch (ConstraintViolationException e) {
+            Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+            for (ConstraintViolation<?> violation : violations) {
+                String property = violation.getPropertyPath().toString();
+                String message = violation.getMessage();
+                System.err.println("Validation error on " + property + ": " + message);
+            }
+            throw e;
+        }
+    }
+}
+----
+
+[[configuring-jakarta-data-repositories]]
+
+=== Configuring Jakarta Data Repositories
+
+To use Jakarta Data repositories in your {productName} application, you need to:
+
+1. Add the Jakarta Data API or Jakarta EE API dependency to your project
+2. Configure a Jakarta Persistence persistence unit
+3. Optionally configure a data source and install a JDBC driver
+
+{productName} implements Jakarta Data repositories using the JNoSQL provider, which delegates to Jakarta Persistence (JPA) for database interactions. Therefpre, to use Jakarta Data repositories, you need to configure a Jakarta Persistence persistence unit. Jakarta Data {jakarta-data-spec-version} doesn't specify how repositories integrate with JPA. The documentation about integrating Jakarta Data with JPA is specific to {productName}.
+
+==== Adding Dependencies
+
+Add the Jakarta Data API dependency to your `pom.xml`:
+
+[source,xml,subs="specialchars,attributes"]
+----
+<dependency>
+    <groupId>jakarta.data</groupId>
+    <artifactId>jakarta.data-api</artifactId>
+    <version>{jakarta-data-api-version}</version>
+</dependency>
+----
+
+Alternatively, if you're using the full Jakarta EE platform, you can use:
+
+[source,xml,subs="specialchars,attributes"]
+----
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>{jakarta-platform-version}</version>
+    <scope>provided</scope>
+</dependency>
+----
+
+==== Configuring Jakarta Persistence
+
+Configure Jakarta Data in your `persistence.xml`:
+
+[source,xml]
+----
+<persistence-unit name="myPU" transaction-type="JTA">
+    <class>com.example.model.Product</class>
+    <properties>
+        <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+    </properties>
+</persistence-unit>
+----
+
+This will use the default data source configured in {productName}, which points to an external Derby DB. Make sure that DerbyDB is running if you use the default datasource. If you want to specify a custom data source, see the next section.
+
+==== Data Source Configuration (Optional)
+
+If you need to configure a custom data source, use the {productName} administration console or the `asadmin` CLI command, with create-jdbc-connection-pool and create-jdbc-resource commands, and appropriate JDBC driver installed in {productName}:
+
+[source,bash]
+----
+asadmin create-jdbc-connection-pool --datasourceclassname org.postgresql.ds.PGSimpleDataSource \
+  --restype javax.sql.DataSource \
+  --property user=myuser:password=mypassword:databaseName=mydb:serverName=localhost:port=5432 \
+  MyPool
+
+asadmin create-jdbc-resource --connectionpoolid MyPool jdbc/MyDataSource
+----
+
+The above example uses PostgreSQL database. Adjust the `datasourceclassname` and properties according to your database and JDBC driver.
+
+Then adjust your `persistence.xml` to reference the custom data source by its JNDI name defined by the create-jdbc-resource command earlier:
+
+[source,xml]
+----
+<persistence-unit name="myPU" transaction-type="JTA">
+    <jta-data-source>jdbc/MyDataSource</jta-data-source>
+    <class>com.example.model.Product</class>
+    <properties>
+        <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+    </properties>
+</persistence-unit>
+----
+
+[[integration-with-jpa]]
+
+=== Integration with Jakarta Persistence (JPA)
+
+In {productName}, Jakarta Data repositories can work alongside traditional JPA EntityManager operations in the same application. Internally, Jakarta Data repositories use JPA for database interactions, so they share the same persistence context. Calling repository methods is equivalent to using EntityManager alone and you can mix them in the same application, even in the same transaction.
+
+==== Retrieve EntityManager in default methods
+
+You can access the EntityManager used by the repository using a method in the repository interface that returns EntityManager. This allows you to implement custom default repository methods that use the EntityManager directly.
+
+Example:
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    // Method to access the repository's EntityManager
+    EntityManager getEntityManager();
+
+    // Custom method using the repository's EntityManager
+    default List<Product> findProductsWithComplexLogic(String searchTerm) {
+        EntityManager em = getEntityManager();
+        return em.createQuery(
+            "SELECT p FROM Product p WHERE p.name LIKE :term OR p.description LIKE :term",
+            Product.class)
+            .setParameter("term", "%" + searchTerm + "%")
+            .getResultList();
+    }
+}
+----
+
+==== EntityManager Configuration
+
+By default, Jakarta Data repositories use the default EntityManager as if it's injected via `@Inject EntityManager`.
+
+You can use a specific `EntityManager` by one of the following methods:
+
+* Specify the persistence unit name in the `@Repository` annotation
+* Specify CDI qualifiers on a method to select a specific `EntityManager`
+* Create a custom default method that returns an `EntityManager`
+
+===== Specifying Persistence Unit
+
+To use a specific persistence unit, set the `dataStore` attribute in the `@Repository` annotation to the name of the persistence unit defined in `persistence.xml`.
+
+===== Specifying CDI Qualifiers on a method
+
+A custom EntityManager can be specified using a repository method that returns EntityManager. Such method should be annotated by CDI qualifiers that should be used to retrieve the EntityManager. The implementation of the method will also return this EntityManager when called in the application.
+
+If a single repository contains several methods that return EntityManager, calling repository methods will throw an exception.
+
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    // Method to access the repository's EntityManager
+    @CustomDB
+    EntityManager getEntityManager();
+
+}
+----
+
+===== Custom method that returns EntityManager
+
+To specify a custom EntityManager programmatically, define a default method in the repository interface that returns an EntityManager. You can use CDI programmatically to inject the desired EntityManager.
+
+[source,java]
+----
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    // Method to provide a custom EntityManager to the repository
+    default EntityManager getEntityManager() {
+        return CDI.current().select(EntityManager.class, new CustomDB.Literal()).get();
+    }
+
+}
+----
+
+==== Mixing repositories and JPA EntityManager
+
+The following cases will use the same persistence context:
+
+* Calling repository methods that reuse the existing transaction
+* Using EntityManager retrieved from the repository
+* Using an injected EntityManager for the same persistence unit
+
+You can freely mix Jakarta Data repository methods and direct EntityManager operations in the same application, even in the same transaction. As long as the EntityMangers are for the same persistence unit, they will share the same persistence context. If they are for different persistence units, they will operate independently and will require XA datasources if used in the same transaction.  
+
+[source,java]
+----
+@ApplicationScoped
+@Transactional
+public class CustomerService {
+
+    @Inject
+    private EntityManager entityManager;
+
+    @Inject
+    private CustomerRepository customerRepository;
+
+    public Customer updateCustomerWithAudit(Long customerId, CustomerUpdate update) {
+
+        EntityManager repositoryEntityManager = customerRepository.getEntityManager();
+
+        // Use repository for simple operations
+        Customer customer = customerRepository.findById(customerId)
+            .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        // Use EntityManager for complex operations
+        AuditLog audit = new AuditLog();
+        audit.setAction("UPDATE_CUSTOMER");
+        audit.setEntityId(customerId);
+        audit.setTimestamp(LocalDateTime.now());
+        entityManager.persist(audit);
+
+        // Alternatively, use the repository's EntityManager to ensure the same persistence context
+        repositoryEntityManager.flush();
+
+        // Update using repository
+        customer.setName(update.getName());
+        customer.setEmail(update.getEmail());
+
+        return customerRepository.save(customer);
+    }
+}
+----

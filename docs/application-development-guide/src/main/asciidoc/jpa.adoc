@@ -1,7 +1,7 @@
 type=page
 status=published
 title=Configuring the Java Persistence Provider
-next=webapps.html
+next=jakarta-data.html
 prev=webservices.html
 ~~~~~~
 

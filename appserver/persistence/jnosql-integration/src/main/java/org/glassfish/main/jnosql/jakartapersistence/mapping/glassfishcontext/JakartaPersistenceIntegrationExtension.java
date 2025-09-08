@@ -34,7 +34,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
-import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManager;
+import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
@@ -106,9 +106,11 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         addBean(Converters.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
-        addBean(PersistenceDatabaseManager.class, afterBeanDiscovery, beanManager)
+        addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
+        // TODO: Extend this to inject EM by unit name via @PesistenceContext mechanism,
+        // even if not qualifier is defined for the persistence unit
         addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 

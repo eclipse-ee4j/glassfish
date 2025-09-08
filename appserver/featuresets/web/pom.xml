@@ -1429,7 +1429,7 @@
 
         <dependency>
             <groupId>org.glassfish.main.persistence</groupId>
-            <artifactId>jnosql-jakarta-persistence-integration</artifactId>
+            <artifactId>jnosql-integration</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>

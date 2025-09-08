@@ -89,6 +89,14 @@ public class LogCollectorHandler extends Handler {
 
 
     /**
+     * @return size of the internal buffer
+     */
+    public int getSize() {
+        return this.buffer.getSize();
+    }
+
+
+    /**
      * Removes the first record in the buffer and returns it.
      *
      * @return the first {@link GlassFishLogRecord} in the buffer or null if the buffer is empty.

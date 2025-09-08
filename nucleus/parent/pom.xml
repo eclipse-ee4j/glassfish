@@ -149,9 +149,11 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.5.0</easymock.version>
-        <junit.version>5.12.1</junit.version>
+        <junit.version>5.13.4</junit.version>
+        <junit-platform.version>1.13.4</junit-platform.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
+        <slf4j.version>2.0.17</slf4j.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -691,6 +693,18 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-suite-engine</artifactId>
+                <version>${junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>${junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
                 <version>3.0</version>
@@ -706,6 +720,19 @@
                         <artifactId>asm</artifactId>
                     </exclusion>
                 </exclusions>
+                <scope>test</scope>
+            </dependency>
+            <!-- Used by some dependencies (shrinkwrap, testcontainers) in older versions -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

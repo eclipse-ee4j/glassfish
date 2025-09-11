@@ -21,7 +21,6 @@ import jakarta.annotation.Resource;
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -38,6 +37,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import static jakarta.ejb.TransactionAttributeType.NOT_SUPPORTED;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 
@@ -66,7 +66,7 @@ import static java.lang.System.Logger.Level.INFO;
     })
 @Path("rest")
 @Stateless
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+@TransactionAttribute(NOT_SUPPORTED)
 public class DataSourceDefinitionBean {
     private static final Logger LOG = System.getLogger(DataSourceDefinitionBean.class.getName());
 

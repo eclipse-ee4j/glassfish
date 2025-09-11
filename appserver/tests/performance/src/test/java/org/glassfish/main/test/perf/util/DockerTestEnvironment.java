@@ -19,6 +19,7 @@ package org.glassfish.main.test.perf.util;
 import com.github.database.rider.core.api.connection.ConnectionHolder;
 import com.github.database.rider.core.api.dataset.DataSetExecutor;
 import com.github.database.rider.core.dataset.DataSetExecutorImpl;
+import com.github.dockerjava.api.DockerClient;
 
 import jakarta.ws.rs.client.WebTarget;
 
@@ -51,6 +52,9 @@ import static org.testcontainers.utility.MountableFile.forClasspathResource;
  * Environment of Eclipse GlassFish, Derby and Postgress SQL databases.
  */
 public class DockerTestEnvironment {
+    public static final int LIMIT_DB = 220;
+    public static final int LIMIT_JDBC = 100;
+
     private static final Logger LOG = System.getLogger(DockerTestEnvironment.class.getName());
     private static final Logger LOG_DB = System.getLogger("DB");
 
@@ -65,7 +69,11 @@ public class DockerTestEnvironment {
             cmd.withAttachStdout(true);
         })
         .withLogConsumer(o -> LOG_DB.log(INFO, o.getUtf8StringWithoutLineEnding()))
-        .withCommand("postgres", "-c", "log_statement=all", "-c", "log_destination=stderr");
+        .withCommand("postgres",
+            "-c", "log_statement=none",
+            "-c", "log_destination=stderr",
+            "-c", "max_connections=" + LIMIT_DB
+        );
 
     @SuppressWarnings("resource")
     private static final GlassFishContainer AS_DOMAIN = new GlassFishContainer(forClasspathResource("/glassfish.zip"),
@@ -85,6 +93,16 @@ public class DockerTestEnvironment {
      */
     public static java.util.logging.Logger getDomainLogger() {
         return AS_DOMAIN.getLogger();
+    }
+
+    /**
+     * GlassFish's asadmin get -m [key] execution
+     *
+     * @param key monitoring property key
+     * @return int value
+     */
+    public static int asadminMonitor(String key) {
+        return AS_DOMAIN.asadminGetInt(key);
     }
 
     /**
@@ -122,7 +140,7 @@ public class DockerTestEnvironment {
             assertEquals(0, AS_DOMAIN.asadmin("create-jdbc-connection-pool", "--ping",
                 "--restype", "javax.sql.DataSource", //
                 "--datasourceclassname", PGSimpleDataSource.class.getName(), //
-                "--steadypoolsize", "0", "--maxpoolsize", "20", //
+                "--steadypoolsize", "0", "--maxpoolsize", Integer.toString(LIMIT_JDBC), //
                 "--validationmethod", "auto-commit", //
                 "--isconnectvalidatereq", "true", "--failconnection", "true", //
                 "--property", "user=" + DATABASE.getUsername() + ":password=" + DATABASE.getPassword() //
@@ -140,6 +158,20 @@ public class DockerTestEnvironment {
         assertThat("list-jdbc-connection-pools response", respListPools,
             stringContainsInOrder("__TimerPool", "DerbyPool", "domain-pool-A", "domain-pool-B"));
     }
+
+
+    public static void disconnectDatabase(int seconds) {
+        DockerClient client = DockerClientFactory.instance().client();
+        client.disconnectFromNetworkCmd().withNetworkId(NET.getId()).withContainerId(DATABASE.getContainerId()).exec();
+        try {
+            Thread.sleep(seconds * 1000L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        // Reconnect when needed
+        client.connectToNetworkCmd().withNetworkId(NET.getId()).withContainerId(AS_DOMAIN.getContainerId()).exec();
+    }
+
 
     /**
      * Stops all virtual computers, and destroys the virtual network.
@@ -164,6 +196,18 @@ public class DockerTestEnvironment {
         dsExecutor.executeScript("initSchema.sql");
     }
 
+    /**
+     * Create and deploy the war file.
+     *
+     * @param appName name and application context
+     * @param classes classes included to the war file.
+     * @return endpoint of the application - it is expected that the context root is the application
+     *         name.
+     */
+    public static WebTarget deploy(String appName, Class<?>... classes) {
+        File warFile = getArchiveToDeploy(appName, classes);
+        return deploy(appName, warFile);
+    }
 
     /**
      * Create and deploy the war file.
@@ -206,7 +250,7 @@ public class DockerTestEnvironment {
             final ExecResult result = AS_DOMAIN.asadmin("deploy", "--contextroot", appName, "--name", appName,
                 warFileInContainer);
             assertThat("deploy response", result.getStdout(),
-                stringContainsInOrder("Command deploy executed successfully"));
+                stringContainsInOrder("Application deployed with name " + appName));
             return AS_DOMAIN.getRestClient(appName);
         } finally {
             try {
@@ -224,18 +268,22 @@ public class DockerTestEnvironment {
      */
     public static void undeploy(String appName) {
         final ExecResult result = AS_DOMAIN.asadmin("undeploy", appName);
-        assertThat("undeploy response", result.getStdout(),
-            stringContainsInOrder("Command undeploy executed successfully"));
+        assertEquals(0, result.getExitCode(), "Undeploy exit code");
     }
 
-    private static File getArchiveToDeploy(String appName, Package... pkg) {
-        LOG.log(INFO, "getArchiveToDeploy()");
-        final WebArchive war = ShrinkWrap.create(WebArchive.class).addPackages(true, pkg);
+    private static File getArchiveToDeploy(String appName, Class<?>... classes) {
+        final WebArchive war = ShrinkWrap.create(WebArchive.class).addClasses(classes);
         LOG.log(INFO, war.toString(true));
         return toFile(appName, war);
     }
 
+    private static File getArchiveToDeploy(String appName, Package... pkg) {
+        final WebArchive war = ShrinkWrap.create(WebArchive.class).addPackages(true, pkg);
+        return toFile(appName, war);
+    }
+
     private static File toFile(final String appName, final WebArchive war) {
+        LOG.log(INFO, () -> war.toString(true));
         File warFile;
         try {
             warFile = File.createTempFile(appName, ".war");

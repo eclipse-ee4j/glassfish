@@ -22,6 +22,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import org.glassfish.main.test.jdbc.pool.war.DataSourceDefinitionBean;
+import org.glassfish.main.test.jdbc.pool.war.JdbcDsName;
+import org.glassfish.main.test.jdbc.pool.war.RestAppConfig;
 import org.glassfish.main.test.perf.util.DockerTestEnvironment;
 import org.glassfish.tests.utils.junit.TestLoggingExtension;
 import org.junit.jupiter.api.AfterAll;
@@ -42,7 +44,7 @@ public class JdbcPoolInjectionsIT {
 
     @BeforeAll
     public static void init() throws Exception {
-        wsEndpoint = deploy(APPNAME, DataSourceDefinitionBean.class.getPackage());
+        wsEndpoint = deploy(APPNAME, DataSourceDefinitionBean.class, JdbcDsName.class, RestAppConfig.class);
     }
 
     @AfterAll

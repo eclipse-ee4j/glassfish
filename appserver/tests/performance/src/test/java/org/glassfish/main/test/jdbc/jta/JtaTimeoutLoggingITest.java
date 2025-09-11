@@ -193,14 +193,10 @@ public class JtaTimeoutLoggingITest {
 
 
     private static WebArchive getArchiveToDeploy() throws Exception {
-        LOG.info("createDeployment()");
-        final String cpPrefix = ASYNCJOB_CLASS.getPackageName().replaceAll("\\.", "/");
-        final WebArchive war = ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class)
             .addPackages(true, ASYNCJOB_CLASS.getPackage())
-            .addAsWebInfResource(cpPrefix + "/persistence.xml", "classes/META-INF/persistence.xml")
+            .addAsWebInfResource("jdbc/jta/timeout/war/persistence.xml", "classes/META-INF/persistence.xml")
         ;
-        LOG.info(war.toString(true));
-        return war;
     }
 
 

@@ -16,11 +16,9 @@
 
 package org.glassfish.main.test.perf.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Ulimit;
 
-import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 
 import java.io.IOException;
@@ -32,20 +30,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
 
+import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 
 /**
  * Simple GlassFish container based on domain1.
  */
 public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
+
+    public static final int LIMIT_HTTP_THREADS = 1000;
+
     private static final Logger LOG = System.getLogger(GlassFishContainer.class.getName());
     private static final java.util.logging.Logger LOG_GF = java.util.logging.Logger.getLogger("GF");
 
@@ -111,6 +110,25 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         return LOG_GF;
     }
 
+
+    /**
+     * Executes asadmin get -m [key]
+     *
+     * @param key
+     * @return integer value
+     */
+    public int asadminGetInt(String key) {
+        ExecResult monitoring = asadmin("get", "-m", key);
+        String keyEquals = key + " = ";
+        try {
+            int index = monitoring.getStdout().indexOf(keyEquals);
+            return Integer.parseInt(monitoring.getStdout().substring(index + keyEquals.length()).strip());
+        } catch (Exception e) {
+            LOG.log(ERROR, "Failed to parse as int: {0}", monitoring.getStdout().strip());
+            return -1;
+        }
+    }
+
     /**
      * Execute asadmin command.
      *
@@ -121,8 +139,8 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
     public ExecResult asadmin(String commandName, String... arguments) {
         try {
             ExecResult result = execInContainer(toExecArgs(commandName, arguments));
-            LOG.log(INFO, "Asadmin STDOUT: {0}", result.getStdout());
-            LOG.log(INFO, "Asadmin STDERR: {0}", result.getStderr());
+            LOG.log(INFO, "Asadmin STDOUT: \n{0}", result.getStdout());
+            LOG.log(INFO, "Asadmin STDERR: \n{0}", result.getStderr());
             return result;
         } catch (UnsupportedOperationException | IOException | InterruptedException e) {
             throw new RuntimeException(
@@ -135,13 +153,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
      * @return HTTP REST client following redirects, logging requests and responses
      */
     public WebTarget getRestClient(String context) {
-        final ClientConfig clientCfg = new ClientConfig();
-        clientCfg.register(new JacksonFeature());
-        clientCfg.register(new ObjectMapper());
-        clientCfg.register(LoggingResponseFilter.class);
-        clientCfg.property(ClientProperties.FOLLOW_REDIRECTS, "true");
-        final ClientBuilder builder = ClientBuilder.newBuilder().withConfig(clientCfg);
-        return builder.build().target(getHttpEndPoint(context));
+        return RestClientUtilities.getWebTarget(getHttpEndPoint(context), true);
     }
 
     private URI getHttpEndPoint(String context) {
@@ -166,6 +178,17 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         command.append(" && mv /*.jar ").append(PATH_DOCKER_GF_DOMAIN.resolve("lib"));
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" start-domain ").append("domain1");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set-log-levels ").append("org.postgresql.level=FINEST");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + LIMIT_HTTP_THREADS);
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.ejb-container.max-pool-size=900");
+        // Monitoring takes around 10% of throughput
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.jdbc-connection-pool=HIGH");
+        // Does thread dumps periodically, takes much more
+//        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH");
+        // FIXME: Does not work, see https://github.com/eclipse-ee4j/glassfish/issues/25701
+//        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" delete-jvm-options ").append("-Xmx512m");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-jvm-options ").append("-Xmx4g");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" restart-domain ").append("domain1");
         command.append(" && tail -n 10000 -F ").append(PATH_DOCKER_GF_DOMAIN1_SERVER_LOG);
         return command.toString();
     }
@@ -174,6 +197,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         ArrayList<String> command = new ArrayList<>();
         command.add(PATH_DOCKER_ASADMIN);
         command.add("--echo");
+        command.add("--terse");
         command.add(commandName);
         if (arguments != null && arguments.length > 0) {
             command.addAll(List.of(arguments));

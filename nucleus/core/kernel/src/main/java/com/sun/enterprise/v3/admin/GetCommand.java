@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
@@ -43,11 +43,8 @@ import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Target;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
@@ -69,22 +66,13 @@ import static org.glassfish.api.admin.AccessRequired.Util.resourceNameFromDom;
 public class GetCommand extends V2DottedNameSupport
         implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
-    final static private LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetCommand.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(GetCommand.class);
 
     @Inject
     private MonitoringReporter monitoringReporter;
 
     @Inject
     private Domain domain;
-
-    @Inject
-    private ServerEnvironment serverEnv;
-
-    @Inject
-    private Target targetService;
-
-    @Inject
-    private ServiceLocator serviceLocator;
 
     @Param(optional = true, defaultValue = "false", shortName = "m")
     private Boolean monitor;
@@ -174,7 +162,7 @@ public class GetCommand extends V2DottedNameSupport
                 }
             } else {
                 Map<String, String> attributes = getNodeAttributes(node.getKey(), pattern);
-                TreeMap<String, String> attributesSorted = new TreeMap(attributes);
+                TreeMap<String, String> attributesSorted = new TreeMap<>(attributes);
                 for (Entry<String, String> name : attributesSorted.entrySet()) {
                     String finalDottedName = node.getValue() + "." + name.getKey();
                     if (matches(finalDottedName, pattern)) {
@@ -189,17 +177,13 @@ public class GetCommand extends V2DottedNameSupport
 
         if (!foundMatch) {
             report.setActionExitCode(FAILURE);
-            report.setMessage(localStrings.getLocalString("admin.get.path.notfound", "Dotted name path {0} not found.", prefix + pattern));
-
+            report.setMessage(I18N.getLocalString("admin.get.path.notfound", "Dotted name path {0} not found.",
+                prefix + pattern));
         }
     }
 
     private void getMonitorAttributes(AdminCommandContext ctxt) {
-
-        Logger l = KernelLoggerInfo.getLogger();
-        if (l.isLoggable(FINE)) {
-            l.log(FINE, "Get Command: {0}", monitoringReporter.toString());
-        }
+        KernelLoggerInfo.getLogger().log(FINE, "Get Command: {0}", monitoringReporter);
         monitoringReporter.execute();
     }
 
@@ -213,7 +197,7 @@ public class GetCommand extends V2DottedNameSupport
         // Check for logging patterns
         if (pattern.contains(".log-service")) {
             report.setActionExitCode(FAILURE);
-            report.setMessage(localStrings.getLocalString("admin.get.invalid.logservice.command",
+            report.setMessage(I18N.getLocalString("admin.get.invalid.logservice.command",
                     "For getting log levels/attributes use list-log-levels/list-log-attributes command."));
             return null;
         }
@@ -223,7 +207,7 @@ public class GetCommand extends V2DottedNameSupport
             if (pattern.lastIndexOf(".") == -1 || pattern.lastIndexOf(".") == (pattern.length() - 1)) {
                 report.setActionExitCode(FAILURE);
                 // report.setMessage("Missing expected dotted name part");
-                report.setMessage(localStrings.getLocalString("missing.dotted.name", "Missing expected dotted name part"));
+                report.setMessage(I18N.getLocalString("missing.dotted.name", "Missing expected dotted name part"));
                 return null;
             }
         }
@@ -259,7 +243,8 @@ public class GetCommand extends V2DottedNameSupport
         // No matches found - report the failure and return
         if (matchingNodes.isEmpty()) {
             report.setActionExitCode(FAILURE);
-            report.setMessage(localStrings.getLocalString("admin.get.path.notfound", "Dotted name path {0} not found.", prefix + pattern));
+            report.setMessage(I18N.getLocalString("admin.get.path.notfound", "Dotted name path {0} not found.",
+                prefix + pattern));
             return null;
         }
 

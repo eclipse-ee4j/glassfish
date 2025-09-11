@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,23 +22,22 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.v3.common.ActionReporter;
-import com.sun.enterprise.v3.common.PlainTextActionReporter;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
 
 import jakarta.inject.Inject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.System.Logger;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.glassfish.api.ActionReport;
@@ -62,6 +61,9 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.util.StringUtils.ok;
 import static com.sun.enterprise.util.SystemPropertyConstants.MONDOT;
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
 import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
@@ -79,11 +81,13 @@ import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 @ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
 public class MonitoringReporter extends V2DottedNameSupport {
 
-    private final TreeMap nodeTreeToProcess = new TreeMap(); // used for get
-    private List<org.glassfish.flashlight.datatree.TreeNode> nodeListToProcess = new ArrayList<>(); // used for list
+    private static final Logger LOG = System.getLogger(MonitoringReporter.class.getName());
+    /** used for get */
+    private final TreeMap<String, Object> nodeTreeToProcess = new TreeMap<>();
+    /** used for list */
+    private List<org.glassfish.flashlight.datatree.TreeNode> nodeListToProcess = new ArrayList<>();
 
-    List<Server> targets = new ArrayList<>();
-    private PlainTextActionReporter plainReporter;
+    private List<Server> targets = new ArrayList<>();
     private ActionReporter reporter;
     private AdminCommandContext context;
     private String pattern;
@@ -96,12 +100,11 @@ public class MonitoringReporter extends V2DottedNameSupport {
     @Inject
     private Target targetService;
     @Inject
-    ServerEnvironment serverEnv;
+    private ServerEnvironment serverEnv;
     @Inject
-    ServiceLocator habitat;
+    private ServiceLocator habitat;
     private OutputType outputType;
     private final static String DOTTED_NAME = ".dotted-name";
-    private final StringBuilder cliOutput = new StringBuilder();
     private boolean targetIsMultiInstanceCluster;
     private String targetName;
     private Boolean aggregateDataOnly = Boolean.FALSE;
@@ -134,14 +137,15 @@ public class MonitoringReporter extends V2DottedNameSupport {
     ///////////////////////////////////////////////////////////////////////
 
     public void prepareGet(AdminCommandContext c, String arg, Boolean data) {
+        LOG.log(DEBUG, "prepareGet(c={0}, arg={1}, data={2})", c, arg, data);
         aggregateDataOnly = data;
         prepare(c, arg, OutputType.GET);
     }
 
     public Collection<? extends AccessCheck> getAccessChecksForGet() {
         final Collection<AccessCheck> accessChecks = new ArrayList<>();
-        for (Object obj : nodeTreeToProcess.keySet()) {
-            final String name = obj.toString().replace('.', '/');
+        for (String key : nodeTreeToProcess.keySet()) {
+            final String name = key.replace('.', '/');
             accessChecks.add(new AccessCheck(sanitizeResourceName(name), "read"));
         }
         return accessChecks;
@@ -169,8 +173,8 @@ public class MonitoringReporter extends V2DottedNameSupport {
     }
 
     public void execute() {
-        // TODO remove? make it an exception???
         if (hasError()) {
+            LOG.log(DEBUG, "Error detected, returning.");
             return;
         }
 
@@ -183,67 +187,34 @@ public class MonitoringReporter extends V2DottedNameSupport {
     }
 
     private boolean isInstanceRunning() {
-        boolean rs = false;
         int num = 0;
-
         List<Server> allServers = targetService.getAllInstances();
         for (Server server : allServers) {
             if (server.isListeningOnAdminPort()) {
                 num++;
             }
         }
-        if (num >= 2) {
-            rs = true;
-        }
-
-        return rs;
+        return num >= 2;
     }
 
     private void runAggregate() {
-        List<String> list = getOutputLines();
-        ActionReport aggregateReporter = null;
-        if (aggregateDataOnly) {
-            plainReporter = new PlainTextActionReporter();
-            aggregateReporter = plainReporter.addSubActionsReport();
-        } else {
-            aggregateReporter = reporter.addSubActionsReport();
-        }
-        setClusterInfo(aggregateReporter, list);
-        if (aggregateDataOnly) {
-            reporter = plainReporter;
-            context.setActionReport(plainReporter);
-        }
+        setClusterInfo(reporter.addSubActionsReport(), getOutputLines());
     }
 
     private List<String> getOutputLines() {
-        List<String> list = null;
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             reporter.writeReport(os);
             String outputMessage = os.toString(UTF_8);
             String[] lines = outputMessage.split("\\n");
-            list = Arrays.asList(lines);
-        } catch (Exception e) {
+            return Arrays.asList(lines);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
-        return list;
-    }
-
-    private ArrayList<String> getKeyValuePair(String str, String instanceName) {
-        ArrayList<String> list = new ArrayList<>(2);
-        String key = null;
-        String value = null;
-        if (str != null) {
-            key = str.substring(0, str.lastIndexOf('='));
-            key = key.substring(instanceName.length() + 1).trim();
-            value = str.substring(str.lastIndexOf('=') + 1, str.length()).trim();
-        }
-        list.add(0, key);
-        list.add(1, value);
-        return list;
     }
 
     private void setClusterInfo(ActionReport aggregateReporter, List<String> list) {
-        List<HashMap> data = new ArrayList<>(targets.size());
+        List<HashMap<String, String>> data = new ArrayList<>(targets.size());
         int i;
         for (i = 0; i < targets.size(); i++) {
             data.add(new HashMap<>());
@@ -298,21 +269,20 @@ public class MonitoringReporter extends V2DottedNameSupport {
             int total = 0, max = 0, min = 0, index = 0;
             float avg = 0;
             int[] values = new int[data.size()];
-            boolean flag = false;
-            for (HashMap hm : data) {
-                String tmp = (String) hm.get(s);
-                // if tmp is null then the string is not available in all the instances, so not required to add this in the cluster
-                // information
+            boolean nullValue = false;
+            for (Map<String, String> hm : data) {
+                String tmp = hm.get(s);
+                // if tmp is null then the string is not available in all the instances,
+                // so not required to add this in the cluster information
                 if (tmp == null) {
-                    flag = true;
+                    nullValue = true;
                     break;
-                } else {
-                    int count = Integer.parseInt(tmp);
-                    values[index++] = count;
-                    total = total + count;
                 }
+                int count = Integer.parseInt(tmp);
+                values[index++] = count;
+                total = total + count;
             }
-            if (!flag) {
+            if (!nullValue) {
                 noData = false;
                 Arrays.sort(values);
                 min = values[0];
@@ -334,14 +304,26 @@ public class MonitoringReporter extends V2DottedNameSupport {
         }
     }
 
+    private ArrayList<String> getKeyValuePair(String str, String instanceName) {
+        ArrayList<String> list = new ArrayList<>(2);
+        String key = null;
+        String value = null;
+        if (str != null) {
+            key = str.substring(0, str.lastIndexOf('='));
+            key = key.substring(instanceName.length() + 1).trim();
+            value = str.substring(str.lastIndexOf('=') + 1, str.length()).trim();
+        }
+        list.add(0, key);
+        list.add(1, value);
+        return list;
+    }
+
     private long getLastSampleTime(HashMap<String, String> clusterInfo, String lastSampleTimeKey, int numofInstances) {
         long[] values = new long[numofInstances];
         int index = 0;
-        for (Map.Entry e : clusterInfo.entrySet()) {
-            String key = (String) e.getKey();
-            String value = (String) e.getValue();
-            if (key.contains(lastSampleTimeKey)) {
-                values[index++] = Long.parseLong(value);
+        for (Entry<String, String> entry : clusterInfo.entrySet()) {
+            if (entry.getKey().contains(lastSampleTimeKey)) {
+                values[index++] = Long.parseLong(entry.getValue());
             }
         }
         Arrays.sort(values);
@@ -368,32 +350,19 @@ public class MonitoringReporter extends V2DottedNameSupport {
         prepareNodesToProcess();
     }
 
-    /**
-     * The stock ActionReport we get is too inefficient. Replace it with PlainText note that we might be called with HTML or
-     * XML or JSON or others!
-     */
     private void prepareReporter() {
         reporter = (ActionReporter) context.getActionReport();
-
-        if (reporter instanceof PlainTextActionReporter) {
-            // already setup correctly - don't change it!!
-            plainReporter = (PlainTextActionReporter) reporter;
-        } else if (reporter instanceof PropsFileActionReporter) {
-            plainReporter = new PlainTextActionReporter();
-            reporter = plainReporter;
-            context.setActionReport(plainReporter);
-        } else {
-            plainReporter = null;
-        }
+        LOG.log(DEBUG, "reporter: {0}", reporter);
     }
 
     private void prepareDas(String arg) {
-        // TODO throw an exception if any errors????
+        LOG.log(DEBUG, "prepareDas(arg={0})", arg);
         try {
             setSuccess();
             userarg = arg;
 
             if (!validate()) {
+                LOG.log(WARNING, "Validation failed, returning.");
                 return;
             }
         } catch (Exception e) {
@@ -454,10 +423,10 @@ public class MonitoringReporter extends V2DottedNameSupport {
     }
 
     private void runLocally() {
-
         // don't run if this is DAS **and** DAS is not in the server list.
         // otherwise we are in an instance and definitely want to run!
         if (isDas() && !dasIsInList()) {
+            LOG.log(DEBUG, "DAS selected, but there is nothing about DAS in the list.");
             return;
         }
 
@@ -466,55 +435,37 @@ public class MonitoringReporter extends V2DottedNameSupport {
         } else if (outputType == OutputType.LIST) {
             doList();
         }
-
-        if (plainReporter != null) {
-            plainReporter.appendMessage(cliOutput.toString());
-        }
     }
 
-    private void prepareNodeTreeToProcess(final String pattern, final List<org.glassfish.flashlight.datatree.TreeNode> ltn) {
+
+    private void prepareNodeTreeToProcess(final String localPattern,
+        final List<org.glassfish.flashlight.datatree.TreeNode> ltn) {
         for (org.glassfish.flashlight.datatree.TreeNode tn1 : sortTreeNodesByCompletePathName(ltn)) {
             if (!tn1.hasChildNodes()) {
-                insertNameValuePairs(nodeTreeToProcess, tn1, pattern);
+                insertNameValuePairs(nodeTreeToProcess, tn1, localPattern);
             }
         }
     }
 
-    // Byron Nevins -- copied from original implementation
     private void doGet() {
-
+        LOG.log(TRACE, "doGet(); to process: {0}", nodeTreeToProcess);
         ActionReport.MessagePart topPart = reporter.getTopMessagePart();
-        Iterator it = nodeTreeToProcess.keySet().iterator();
-
-        while (it.hasNext()) {
-            Object obj = it.next();
-            String line = obj.toString();
-            line = line.replace(SLASH, "/") + " = " + nodeTreeToProcess.get(obj);
-
-            if (plainReporter != null) {
-                cliOutput.append(line).append('\n');
-            } else {
-                ActionReport.MessagePart part = topPart.addChild();
-                part.setMessage(line);
-            }
+        for (Entry<String, Object> entry : nodeTreeToProcess.entrySet()) {
+            String line = entry.getKey().replace(SLASH, "/") + " = " + entry.getValue();
+            LOG.log(TRACE, "line={0}", line);
+            topPart.addChild().setMessage(line);
         }
         setSuccess();
     }
 
+    /**
+     * List means only print things that have children. Don't print the children.
+     */
     private void doList() {
-        // list means only print things that have children. Don't print the children.
         ActionReport.MessagePart topPart = reporter.getTopMessagePart();
-
         for (org.glassfish.flashlight.datatree.TreeNode tn1 : nodeListToProcess) {
             if (tn1.hasChildNodes()) {
-                String line = tn1.getCompletePathName();
-
-                if (plainReporter != null) {
-                    cliOutput.append(line).append('\n');
-                } else {
-                    ActionReport.MessagePart part = topPart.addChild();
-                    part.setMessage(line);
-                }
+                topPart.addChild().setMessage(tn1.getCompletePathName());
             }
         }
         setSuccess();
@@ -527,21 +478,20 @@ public class MonitoringReporter extends V2DottedNameSupport {
      */
     private void runRemotely() {
         if (!isDas()) {
+            LOG.log(DEBUG, "Not a DAS, returning.");
             return;
         }
-
         List<Server> remoteServers = getRemoteServers();
-
         if (remoteServers.isEmpty()) {
+            LOG.log(DEBUG, "No remote servers, returning.");
             return;
         }
-
         try {
             ParameterMap paramMap = new ParameterMap();
             paramMap.set("monitor", "true");
             paramMap.set("DEFAULT", pattern);
-            ClusterOperationUtil.replicateCommand("get", FailurePolicy.Error, FailurePolicy.Warn, FailurePolicy.Ignore, remoteServers,
-                    context, paramMap, habitat);
+            ClusterOperationUtil.replicateCommand("get", FailurePolicy.Error, FailurePolicy.Warn, FailurePolicy.Ignore,
+                remoteServers, context, paramMap, habitat);
         } catch (Exception ex) {
             setError(Strings.get("admin.get.monitoring.remote.error", getNames(remoteServers)));
         }
@@ -705,7 +655,7 @@ public class MonitoringReporter extends V2DottedNameSupport {
         return true;
     }
 
-    private void insertNameValuePairs(TreeMap map, org.glassfish.flashlight.datatree.TreeNode tn1, String exactMatch) {
+    private void insertNameValuePairs(TreeMap<String, Object> map, org.glassfish.flashlight.datatree.TreeNode tn1, String exactMatch) {
         String name = tn1.getCompletePathName();
         Object value = tn1.getValue();
         if (tn1.getParent() != null) {
@@ -744,49 +694,41 @@ public class MonitoringReporter extends V2DottedNameSupport {
      * it into pattern and do a get on the HashMap. Instead we have to get each and every key in the map, remove backslashes
      * and compare.
      */
-    private NameValue getIgnoreBackslash(TreeMap map, String pattern) {
+    private NameValue getIgnoreBackslash(TreeMap<String, Object> map, String localPattern) {
 
-        if (pattern == null) {
+        if (localPattern == null) {
             return null;
         }
 
-        Object match = map.get(pattern);
-
+        Object match = map.get(localPattern);
         if (match != null) {
-            return new NameValue(pattern, match);
+            return new NameValue(localPattern, match);
         }
 
-        pattern = pattern.replace("\\", "");
-        match = map.get(pattern);
-
+        localPattern = localPattern.replace("\\", "");
+        match = map.get(localPattern);
         if (match != null) {
-            return new NameValue(pattern, match);
+            return new NameValue(localPattern, match);
         }
 
         // No easy match...
-
-        Set<Map.Entry> elems = map.entrySet();
-
-        for (Map.Entry elem : elems) {
+        for (Entry<String, Object> elem : map.entrySet()) {
             String key = elem.getKey().toString();
-
             if (!ok(key)) {
                 continue;
             }
-
             String name = key.replace("\\", "");
-
-            if (pattern.equals(name)) {
+            if (localPattern.equals(name)) {
                 return new NameValue(key, elem.getValue());
             }
         }
         return null;
     }
 
-    private void addStatisticInfo(Object value, String name, TreeMap map) {
-        Map<String, Object> statsMap;
+    private void addStatisticInfo(Object value, String name, TreeMap<String, Object> map) {
         // Most likely we will get the proxy of the StatisticImpl,
         // reconvert that so you can access getStatisticAsMap method
+        final Map<String, Object> statsMap;
         if (Proxy.isProxyClass(value.getClass())) {
             statsMap = ((StatisticImpl) Proxy.getInvocationHandler(value)).getStaticAsMap();
         } else {
@@ -808,12 +750,8 @@ public class MonitoringReporter extends V2DottedNameSupport {
     }
 
     private void appendStatusMessage(String newMessage) {
-        if (plainReporter != null) {
-            cliOutput.append(newMessage).append('\n');
-        } else {
-            reporter.appendMessage("\n");
-            reporter.appendMessage(newMessage);
-        }
+        reporter.appendMessage("\n");
+        reporter.appendMessage(newMessage);
     }
 
     private boolean hasError() {
@@ -845,13 +783,14 @@ public class MonitoringReporter extends V2DottedNameSupport {
     }
 
     private boolean dasIsInList() {
-        return getRemoteServers().size() != targets.size();
+        List<Server> remoteServers = getRemoteServers();
+        LOG.log(TRACE, "dasIsInLiist: remote servers list: {0}, targets: {1}", remoteServers, targets);
+        return remoteServers.size() != targets.size();
     }
 
     private String getNames(List<Server> list) {
         boolean first = true;
         StringBuilder sb = new StringBuilder();
-
         for (Server server : list) {
             if (first) {
                 first = false;

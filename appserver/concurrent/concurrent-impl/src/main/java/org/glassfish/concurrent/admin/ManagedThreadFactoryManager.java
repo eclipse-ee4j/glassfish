@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,8 +26,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
@@ -39,6 +37,7 @@ import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ConfiguredBy;
@@ -64,8 +63,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ
 @ConfiguredBy(Resources.class)
 public class ManagedThreadFactoryManager implements ResourceManager {
 
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ManagedThreadFactoryManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ManagedThreadFactoryManager.class);
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
     private String jndiName = null;
@@ -91,9 +89,8 @@ public class ManagedThreadFactoryManager implements ResourceManager {
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
-
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
@@ -108,12 +105,12 @@ public class ManagedThreadFactoryManager implements ResourceManager {
                 resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
             }
         } catch (TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("create.managed.thread.factory.failed", "Managed thread factory {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
+            String msg = I18N.getLocalString("create.managed.thread.factory.failed", "Managed thread factory {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
-        String msg = localStrings.getLocalString("create.managed.thread.factory.success", "Managed thread factory {0} created successfully", jndiName);
+        String msg = I18N.getLocalString("create.managed.thread.factory.success", "Managed thread factory {0} created successfully", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
@@ -122,7 +119,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
 
 
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
+            String msg = I18N.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
@@ -131,18 +128,18 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         return status;
     }
 
-    private void setAttributes(HashMap attributes, String target) {
-        jndiName = (String) attributes.get(JNDI_NAME);
-        description = (String) attributes.get(DESCRIPTION);
-        contextInfoEnabled = (String) attributes.get(CONTEXT_INFO_ENABLED);
-        contextInfo = (String) attributes.get(CONTEXT_INFO);
-        threadPriority = (String) attributes.get(THREAD_PRIORITY);
-        if(target != null){
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
-        }else{
-            enabled = (String) attributes.get(ENABLED);
+    private void setAttributes(ResourceAttributes attributes, String target) {
+        jndiName = attributes.getString(JNDI_NAME);
+        description = attributes.getString(DESCRIPTION);
+        contextInfoEnabled = attributes.getString(CONTEXT_INFO_ENABLED);
+        contextInfo = attributes.getString(CONTEXT_INFO);
+        threadPriority = attributes.getString(THREAD_PRIORITY);
+        if (target == null) {
+            enabled = attributes.getString(ENABLED);
+        } else {
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.getString(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
+        enabledValueForTarget = attributes.getString(ENABLED);
     }
 
     private ManagedThreadFactory createResource(Resources param, Properties properties) throws PropertyVetoException,
@@ -164,10 +161,10 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         managedThreadFactory.setThreadPriority(threadPriority);
         managedThreadFactory.setEnabled(enabled);
         if (properties != null) {
-            for (Map.Entry e : properties.entrySet()) {
+            for (String propertyName : properties.stringPropertyNames()) {
                 Property prop = managedThreadFactory.createChild(Property.class);
-                prop.setName((String)e.getKey());
-                prop.setValue((String)e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
                 managedThreadFactory.getProperty().add(prop);
             }
         }
@@ -175,7 +172,8 @@ public class ManagedThreadFactoryManager implements ResourceManager {
     }
 
     @Override
-    public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties, boolean validate) throws Exception{
+    public Resource createConfigBean(final Resources resources, ResourceAttributes attributes,
+        final Properties properties, boolean validate) throws Exception {
         setAttributes(attributes, null);
         final ResourceStatus status;
         if (validate) {
@@ -186,26 +184,26 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
         }
-        throw new ResourceException(status.getMessage());
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 
 
     public ResourceStatus delete(final Resources resources, final SimpleJndiName jndiName, final String target)
         throws Exception {
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
+            String msg = I18N.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         Resource resource = resources.getResourceByName(ManagedThreadFactory.class, jndiName);
 
         // ensure we already have this resource
         if (resource == null){
-            String msg = localStrings.getLocalString("delete.managed.thread.factory.notfound", "A managed thread factory named {0} does not exist.", jndiName);
+            String msg = I18N.getLocalString("delete.managed.thread.factory.notfound", "A managed thread factory named {0} does not exist.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         if (SYSTEM_ALL_REQ.equals(resource.getObjectType())) {
-            String msg = localStrings.getLocalString("delete.concurrent.resource.notAllowed", "The {0} resource cannot be deleted as it is required to be configured in the system.", jndiName);
+            String msg = I18N.getLocalString("delete.concurrent.resource.notAllowed", "The {0} resource cannot be deleted as it is required to be configured in the system.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
@@ -213,17 +211,17 @@ public class ManagedThreadFactoryManager implements ResourceManager {
 
             if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(jndiName).isEmpty()) {
-                    String msg = localStrings.getLocalString("delete.managed.thread.factory.resource-ref.exist", "This managed thread factory [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
+                    String msg = I18N.getLocalString("delete.managed.thread.factory.resource-ref.exist", "This managed thread factory [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
                 if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
-                    String msg = localStrings.getLocalString("delete.managed.thread.factory.no.resource-ref", "This managed thread factory [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
+                    String msg = I18N.getLocalString("delete.managed.thread.factory.no.resource-ref", "This managed thread factory [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
 
                 if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
-                    String msg = localStrings.getLocalString("delete.managed.thread.factory.multiple.resource-refs", "This managed thread factory [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
+                    String msg = I18N.getLocalString("delete.managed.thread.factory.multiple.resource-refs", "This managed thread factory [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             }
@@ -237,17 +235,17 @@ public class ManagedThreadFactoryManager implements ResourceManager {
 
             // delete managed-thread-factory
             if (ConfigSupport.apply(param -> param.getResources().remove(resource), resources) == null) {
-                String msg = localStrings.getLocalString("delete.managed.thread.factory.failed", "Managed thread factory {0} deletion failed", jndiName);
+                String msg = I18N.getLocalString("delete.managed.thread.factory.failed", "Managed thread factory {0} deletion failed", jndiName);
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
         } catch(TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("delete.managed.thread.factory.failed", "Managed thread factory {0} deletion failed ", jndiName);
+            String msg = I18N.getLocalString("delete.managed.thread.factory.failed", "Managed thread factory {0} deletion failed ", jndiName);
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
 
-        String msg = localStrings.getLocalString("delete.managed.thread.factory.success", "Managed thread factory {0} deleted successfully", jndiName);
+        String msg = I18N.getLocalString("delete.managed.thread.factory.success", "Managed thread factory {0} deleted successfully", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 }

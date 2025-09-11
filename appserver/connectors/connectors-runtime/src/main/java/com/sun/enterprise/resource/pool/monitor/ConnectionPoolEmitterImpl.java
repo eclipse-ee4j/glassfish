@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,15 +21,13 @@ import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.listener.PoolLifeCycleListener;
-import com.sun.logging.LogDomains;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -40,6 +38,7 @@ import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.escapeResourceNameForMonitoring;
+import static java.lang.System.Logger.Level.DEBUG;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 
 /**
@@ -50,18 +49,19 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
  * @author Shalini M
  */
 public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
+    private static final Logger LOG = System.getLogger(ConnectionPoolEmitterImpl.class.getName());
+    // keep a static reference to InitialContext so as to avoid performance issues.
+    private static volatile InitialContext ic;
+
     private final PoolInfo poolInfo;
     private final ConnectionPoolProbeProvider poolProbeProvider;
     /** Map of app names and respective emitters for a pool. */
     private final Map<PoolInfo, Map<String, ConnectionPoolAppEmitterImpl>> appStatsMap;
     /** Map of app names for a resource handle id */
     private final Map<Long, String> resourceAppAssociationMap;
-    private static Logger _logger = LogDomains.getLogger(ConnectionPoolEmitterImpl.class, LogDomains.RSR_LOGGER);
     private final List<ConnectorConnPoolAppStatsProvider> ccPoolAppStatsProviders;
     private final ConnectorRuntime runtime;
 
-    // keep a static reference to InitialContext so as to avoid performance issues.
-    private volatile static InitialContext ic;
 
     /**
      * Constructor
@@ -76,7 +76,7 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
         this.ccPoolAppStatsProviders = new ArrayList<>();
         this.appStatsMap = new HashMap<>();
         this.resourceAppAssociationMap = new ConcurrentHashMap<>();
-        runtime = ConnectorRuntime.getRuntime();
+        this.runtime = ConnectorRuntime.getRuntime();
         if (ic == null) {
             synchronized (ConnectionPoolEmitterImpl.class) {
                 if (ic == null) {
@@ -174,10 +174,10 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
      */
     @Override
     public void connectionReleased(long resourceHandleId) {
-        ConnectionPoolAppEmitterImpl appEmitter =
-                detectAppBasedProviders(getAppName(resourceHandleId));
-        poolProbeProvider.connectionReleasedEvent(poolInfo.getName().toString(), poolInfo.getApplicationName(), poolInfo.getModuleName());
-        if(appEmitter != null) {
+        ConnectionPoolAppEmitterImpl appEmitter = detectAppBasedProviders(getAppName(resourceHandleId));
+        poolProbeProvider.connectionReleasedEvent(poolInfo.getName().toString(), poolInfo.getApplicationName(),
+            poolInfo.getModuleName());
+        if (appEmitter != null) {
             appEmitter.connectionReleased();
         }
         // Clearing the resource handle id appName mappings stored
@@ -317,11 +317,8 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
                 }
                 appName = (String) ic.lookup(JNDI_CTX_JAVA_APP + "AppName");
                 resourceAppAssociationMap.put(resourceHandleId, appName);
-            } catch (NamingException ex) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Unable to get application name using "
-                            + "java:app/AppName method");
-                }
+            } catch (NamingException e) {
+                LOG.log(DEBUG, "Unable to get application name using java:app/AppName method", e);
 
             }
         }
@@ -339,20 +336,16 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
      * @return
      */
     private ConnectionPoolAppEmitterImpl detectAppBasedProviders(String appName) {
-
-        ConnectionPoolAppProbeProvider probeAppProvider = null;
-        ConnectionPoolAppEmitterImpl connPoolAppEmitter = null;
-
         if (appName == null) {
             //Case when appname cannot be detected. Emitter cannot exist for
             //a null appName for any pool.
             return null;
         }
-
+        ConnectionPoolAppEmitterImpl connPoolAppEmitter;
         if (appStatsMap.containsKey(poolInfo)) {
-            //Some apps have been registered for this pool.
-            //Find if this appName is already registered.
-            //All appEmitters for this pool
+            // Some apps have been registered for this pool.
+            // Find if this appName is already registered.
+            // All appEmitters for this pool
             Map<String, ConnectionPoolAppEmitterImpl> appEmitters = appStatsMap.get(poolInfo);
             //Check if the appEmitters list has an emitter for the appName.
             ConnectionPoolAppEmitterImpl emitter = appEmitters.get(appName);
@@ -360,20 +353,22 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
                 // This appName has already been registered to StatsProviderManager
                 return emitter;
             }
-            if (!ConnectorsUtil.isApplicationScopedResource(poolInfo)) {
-                // register to the StatsProviderManager and add to the list.
-                probeAppProvider = registerConnectionPool(appName);
-                connPoolAppEmitter = addToList(appName, probeAppProvider, appEmitters);
+            if (ConnectorsUtil.isApplicationScopedResource(poolInfo)) {
+                return null;
             }
-        } else if (!ConnectorsUtil.isApplicationScopedResource(poolInfo)) {
+            // register to the StatsProviderManager and add to the list.
+            ConnectionPoolAppProbeProvider probeAppProvider = registerConnectionPool(appName);
+            return addToList(appName, probeAppProvider, appEmitters);
+        } else if (ConnectorsUtil.isApplicationScopedResource(poolInfo)) {
+            return null;
+        } else {
             // Does not contain any app providers associated with this poolname
             // Create a map of app emitters for the appName and add them to the
             // appStatsMap
-            probeAppProvider = registerConnectionPool(appName);
+            ConnectionPoolAppProbeProvider probeAppProvider = registerConnectionPool(appName);
             Map<String, ConnectionPoolAppEmitterImpl> appEmitters = new HashMap<>();
-            connPoolAppEmitter = addToList(appName, probeAppProvider, appEmitters);
+            return addToList(appName, probeAppProvider, appEmitters);
         }
-        return connPoolAppEmitter;
     }
 
     /**

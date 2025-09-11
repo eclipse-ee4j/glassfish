@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,8 +25,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +36,7 @@ import org.glassfish.connectors.config.ResourceAdapterConfig;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
@@ -55,13 +55,12 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_POOL_ID
 @I18n("create.resource.adapter.config")
 public class ResourceAdapterConfigManager implements ResourceManager {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(ResourceAdapterConfigManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ResourceAdapterConfigManager.class);
 
-    private String raName = null;
-    private String threadPoolIds = null;
+    private String raName;
+    private String threadPoolIds;
     private String objectType = "user";
-    private String name = null;
+    private String name;
 
     @Override
     public String getResourceType() {
@@ -69,8 +68,8 @@ public class ResourceAdapterConfigManager implements ResourceManager {
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setParams(attributes);
 
         ResourceStatus validationStatus = isValid(resources);
@@ -91,13 +90,13 @@ public class ResourceAdapterConfigManager implements ResourceManager {
         } catch (TransactionFailure tfe) {
             Logger.getLogger(ResourceAdapterConfigManager.class.getName()).log(Level.SEVERE,
                     "TransactionFailure: create-resource-adapter-config", tfe);
-            String msg = localStrings.getLocalString("create.resource.adapter.config.fail",
+            String msg = I18N.getLocalString("create.resource.adapter.config.fail",
                     "Unable to create resource adapter config", raName) +
                     " " + tfe.getLocalizedMessage();
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        String msg = localStrings.getLocalString(
+        String msg = I18N.getLocalString(
                 "create.resource.adapter.config.success", "Resource adapter config {0} created successfully",
                 raName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
@@ -106,13 +105,13 @@ public class ResourceAdapterConfigManager implements ResourceManager {
     private ResourceStatus isValid(Resources resources){
         ResourceStatus status = new ResourceStatus(ResourceStatus.SUCCESS, "Validation Successful");
         if (raName == null) {
-            String msg = localStrings.getLocalString("create.resource.adapter.confignoRAName",
+            String msg = I18N.getLocalString("create.resource.adapter.confignoRAName",
                             "No RA Name defined for resource adapter config.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         // ensure we don't already have one of this name
         if (resources.getResourceByName(ResourceAdapterConfig.class, new SimpleJndiName(raName)) != null) {
-            String msg = localStrings.getLocalString("create.resource.adapter.config.duplicate",
+            String msg = I18N.getLocalString("create.resource.adapter.config.duplicate",
                     "Resource adapter config already exists for RAR", raName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
@@ -131,27 +130,27 @@ public class ResourceAdapterConfigManager implements ResourceManager {
             newResource.setName(name);
         }
         if (properties != null) {
-            for ( Map.Entry e : properties.entrySet()) {
+            for (Entry<?, ?> e : properties.entrySet()) {
                 Property prop = newResource.createChild(Property.class);
-                prop.setName((String)e.getKey());
-                prop.setValue((String)e.getValue());
+                prop.setName((String) e.getKey());
+                prop.setValue((String) e.getValue());
                 newResource.getProperty().add(prop);
             }
         }
         return newResource;
     }
 
-    public void setParams(HashMap attributes) {
-        raName = (String) attributes.get(RESOURCE_ADAPTER_CONFIG_NAME);
-        name = (String) attributes.get("name");
-        threadPoolIds = (String) attributes.get(THREAD_POOL_IDS);
-        objectType = (String) attributes.get(ServerTags.OBJECT_TYPE);
+    public void setParams(ResourceAttributes attributes) {
+        raName = attributes.getString(RESOURCE_ADAPTER_CONFIG_NAME);
+        name = attributes.getString("name");
+        threadPoolIds = attributes.getString(THREAD_POOL_IDS);
+        objectType = attributes.getString(ServerTags.OBJECT_TYPE);
     }
 
 
     @Override
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-        throws Exception {
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         setParams(attributes);
         final ResourceStatus status;
         if (validate) {
@@ -162,6 +161,6 @@ public class ResourceAdapterConfigManager implements ResourceManager {
         if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
         }
-        throw new ResourceException(status.getMessage());
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 }

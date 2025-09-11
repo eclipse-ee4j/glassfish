@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,14 +35,14 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 public class PoolLifeCycleListenerRegistry implements PoolLifeCycleListener {
 
     // List of listeners
-    protected List<PoolLifeCycleListener> poolListenersList;
+    private List<PoolLifeCycleListener> poolListenersList;
 
     // name of the pool for which the registry is maintained
     private PoolInfo poolInfo;
 
     public PoolLifeCycleListenerRegistry(PoolInfo poolInfo) {
         this.poolInfo = poolInfo;
-        poolListenersList = new ArrayList<>();
+        this.poolListenersList = new ArrayList<>();
     }
 
     /**
@@ -55,7 +55,7 @@ public class PoolLifeCycleListenerRegistry implements PoolLifeCycleListener {
 
         // Check if poolLifeCycleListener has already been set to this. There
         // could be multiple listeners.
-        if (!(poolListenersList.size() > 1)) {
+        if (poolListenersList.size() <= 1) {
             // If the pool is already created, set this registry object to the pool.
             PoolManager poolMgr = ConnectorRuntime.getRuntime().getPoolManager();
             ResourcePool pool = poolMgr.getPool(poolInfo);

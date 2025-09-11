@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +19,8 @@ package org.glassfish.resources.api;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_POOL_NAME;
@@ -66,7 +66,7 @@ public class Resource {
             ));
 
     private final String resType;
-    private final HashMap attrList = new HashMap();
+    private final ResourceAttributes attributes = new ResourceAttributes();
     private final Properties props = new Properties();
     private String sDescription = null;
 
@@ -78,20 +78,20 @@ public class Resource {
         return resType;
     }
 
-    public HashMap getAttributes() {
-        return attrList;
+    public ResourceAttributes getAttributes() {
+        return attributes;
     }
 
     public void setAttribute(String name, String value) {
-        attrList.put(name, value);
+        attributes.set(name, value);
     }
 
     public void setAttribute(String name, String[] value) {
-        attrList.put(name, value);
+        attributes.set(name, value);
     }
 
     public void setAttribute(String name, Properties value) {
-        attrList.put(name, value);
+        attributes.set(name, value);
     }
 
     public void setDescription(String sDescription) {
@@ -106,11 +106,6 @@ public class Resource {
         props.setProperty(name, value);
     }
 
-//Commented from 9.1 as it is not used
- /*   public void setProperty(String name, String value, String desc) {
-        // TO DO:
-    }*/
-
     public Properties getProperties() {
         return props;
     }
@@ -124,22 +119,16 @@ public class Resource {
         if ( !(obj instanceof Resource) ) {
             return false;
         }
-        Resource r = (Resource)obj;
-        return r.getType().equals(this.getType()) &&
-                //No need to compare description for equality
-                //r.getDescription().equals(this.getDescription()) &&
-                r.getProperties().equals(this.getProperties()) &&
-                r.getAttributes().equals(this.getAttributes());
+        Resource otherr = (Resource) obj;
+        return otherr.getType().equals(this.getType())
+            && otherr.getProperties().equals(this.getProperties())
+            && otherr.getAttributes().equals(this.getAttributes());
     }
 
     //when a class overrides equals, override hashCode as well.
     @Override
     public int hashCode() {
-        return this.getAttributes().hashCode() +
-        this.getProperties().hashCode() +
-        this.getType().hashCode();
-        //description is not used to generate hashcode
-        //this.getDescription().hashCode();
+        return Objects.hash(getAttributes(), getProperties(), getType());
     }
 
     //Used to figure out conflicts in a List<Resource>
@@ -207,9 +196,11 @@ public class Resource {
      * Compares the attribute with the specified name
      * in this resource with the passed in resource and checks
      * if they are <code>equal</code>
+     * <p>
+     * Supports just string attribute values!
      */
     private boolean isEqualAttribute(Resource r, String name) {
-        return (getAttribute(r, name).equals(getAttribute(this, name)));
+        return getAttribute(r, name).equals(getAttribute(this, name));
     }
 
     /**
@@ -217,7 +208,7 @@ public class Resource {
      * in the specified resource
      */
     private String getAttribute(Resource r, String name) {
-        return (String) r.getAttributes().get(name);
+        return r.getAttributes().getString(name);
     }
 
     @Override

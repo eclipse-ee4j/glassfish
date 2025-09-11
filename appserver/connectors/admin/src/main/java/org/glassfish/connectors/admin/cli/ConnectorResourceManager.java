@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
@@ -27,8 +26,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
@@ -41,6 +38,7 @@ import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
@@ -61,18 +59,14 @@ public class ConnectorResourceManager implements ResourceManager {
 
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ConnectorResourceManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ConnectorResourceManager.class);
 
-    private String poolName = null;
+    private String poolName;
     private String enabled = Boolean.TRUE.toString();
     private String enabledValueForTarget = Boolean.TRUE.toString();
-    private String jndiName = null;
-    private String description = null;
+    private String jndiName;
+    private String description;
     private String objectType = "user";
-
-    @Inject
-    private Domain domain;
 
     @Inject
     private ResourceUtil resourceUtil;
@@ -86,9 +80,8 @@ public class ConnectorResourceManager implements ResourceManager {
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
-
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
@@ -103,13 +96,13 @@ public class ConnectorResourceManager implements ResourceManager {
                 resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
             }
         } catch (TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("create.connector.resource.fail",
+            String msg = I18N.getLocalString("create.connector.resource.fail",
                     "Connector resource {0} create failed ", jndiName) +
                     " " + tfe.getLocalizedMessage();
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        String msg = localStrings.getLocalString(
+        String msg = I18N.getLocalString(
                 "create.connector.resource.success", "Connector resource {0} created successfully",
                 jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
@@ -119,7 +112,7 @@ public class ConnectorResourceManager implements ResourceManager {
     private ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target){
         ResourceStatus status ;
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("create.connector.resource.noJndiName",
+            String msg = I18N.getLocalString("create.connector.resource.noJndiName",
                     "No JNDI name defined for connector resource.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
@@ -131,7 +124,7 @@ public class ConnectorResourceManager implements ResourceManager {
         }
 
         if (!isConnPoolExists(resources)) {
-            String msg = localStrings.getLocalString("create.connector.resource.connPoolNotFound",
+            String msg = I18N.getLocalString("create.connector.resource.connPoolNotFound",
                     "Attribute value (pool-name = {0}) is not found in list of connector connection pools.", poolName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
@@ -158,27 +151,27 @@ public class ConnectorResourceManager implements ResourceManager {
         newResource.setEnabled(enabled);
         newResource.setObjectType(objectType);
         if (properties != null) {
-            for (Map.Entry e : properties.entrySet()) {
+            for (String propertyName : properties.stringPropertyNames()) {
                 Property prop = newResource.createChild(Property.class);
-                prop.setName((String) e.getKey());
-                prop.setValue((String) e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
                 newResource.getProperty().add(prop);
             }
         }
         return newResource;
     }
 
-    private void setAttributes(HashMap attributes, String target) {
-        poolName = (String) attributes.get(POOL_NAME);
-        if(target != null){
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
-        }else{
-            enabled = (String) attributes.get(ENABLED);
+    private void setAttributes(ResourceAttributes attributes, String target) {
+        poolName = attributes.getString(POOL_NAME);
+        if (target == null) {
+            enabled = attributes.getString(ENABLED);
+        } else {
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.getString(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
-        jndiName = (String) attributes.get(JNDI_NAME);
-        description = (String) attributes.get(DESCRIPTION);
-        objectType = (String) attributes.get(ServerTags.OBJECT_TYPE);
+        enabledValueForTarget = attributes.getString(ENABLED);
+        jndiName = attributes.getString(JNDI_NAME);
+        description = attributes.getString(DESCRIPTION);
+        objectType = attributes.getString(ServerTags.OBJECT_TYPE);
     }
 
     private boolean isConnPoolExists(Resources resources) {
@@ -188,18 +181,18 @@ public class ConnectorResourceManager implements ResourceManager {
 
 
     @Override
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-        throws Exception {
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         setAttributes(attributes, null);
-        ResourceStatus status = null;
-        if (!validate) {
-            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
-        } else {
+        final ResourceStatus status;
+        if (validate) {
             status = isValid(resources, false, null);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
         if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
         }
-        throw new ResourceException(status.getMessage());
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 }

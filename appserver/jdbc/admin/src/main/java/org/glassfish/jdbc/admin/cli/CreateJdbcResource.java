@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.glassfish.api.ActionReport;
@@ -39,6 +38,7 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
@@ -99,11 +99,11 @@ public class CreateJdbcResource implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap<String, String> attrList = new HashMap<>();
-        attrList.put(JNDI_NAME, jndiName);
-        attrList.put(POOL_NAME, connectionPoolId);
-        attrList.put(DESCRIPTION, description);
-        attrList.put(ENABLED, enabled.toString());
+        ResourceAttributes attrList = new ResourceAttributes();
+        attrList.set(JNDI_NAME, jndiName);
+        attrList.set(POOL_NAME, connectionPoolId);
+        attrList.set(DESCRIPTION, description);
+        attrList.set(ENABLED, enabled.toString());
         ResourceStatus rs;
 
         try {

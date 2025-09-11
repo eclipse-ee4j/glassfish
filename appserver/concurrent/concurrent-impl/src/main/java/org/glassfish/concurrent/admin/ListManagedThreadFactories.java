@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +43,6 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.concurrent.config.ManagedThreadFactory;
-import org.glassfish.concurrent.runtime.deployer.DefaultManagedThreadFactory;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
@@ -82,9 +81,6 @@ public class ListManagedThreadFactories implements AdminCommand {
 
     @Inject
     private ServiceLocator habitat;
-
-    @Inject
-    private DefaultManagedThreadFactory defaultFactory; // make sure default has been created
 
     /**
      * Executes the command with the command parameters passed as Properties

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +21,13 @@ import com.sun.enterprise.config.serverbeans.Resources;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.api.Resource;
+import org.glassfish.resources.api.ResourceAttributes;
 
 /**
  * This class serves as the API to creating new resources when an xml file
@@ -41,20 +42,22 @@ public class ResourcesManager {
      * the admin framework when the add-resources command is used to create
      * resources
      */
-    public static ArrayList createResources(Resources resources, File resourceXMLFile,
+    public static List<ResourceStatus> createResources(Resources resources, File resourceXMLFile,
             String target, org.glassfish.resources.admin.cli.ResourceFactory resourceFactory) throws Exception {
-        ArrayList results = new ArrayList();
+        List<ResourceStatus> results = new ArrayList<>();
         org.glassfish.resources.admin.cli.ResourcesXMLParser resourcesParser =
             new org.glassfish.resources.admin.cli.ResourcesXMLParser(resourceXMLFile);
         List<Resource> vResources = resourcesParser.getResourcesList();
         //First add all non connector resources.
-        Iterator<Resource> nonConnectorResources = org.glassfish.resources.admin.cli.ResourcesXMLParser.getNonConnectorResourcesList(vResources, false, false).iterator();
+        Iterator<Resource> nonConnectorResources = org.glassfish.resources.admin.cli.ResourcesXMLParser
+            .getNonConnectorResourcesList(vResources, false, false).iterator();
         while (nonConnectorResources.hasNext()) {
-            Resource resource = (Resource) nonConnectorResources.next();
-            HashMap attrList = resource.getAttributes();
+            Resource resource = nonConnectorResources.next();
+            ResourceAttributes attrList = resource.getAttributes();
             String desc = resource.getDescription();
-            if (desc != null)
-                attrList.put("description", desc);
+            if (desc != null) {
+                attrList.set("description", desc);
+            }
 
             Properties props = resource.getProperties();
 
@@ -70,16 +73,17 @@ public class ResourcesManager {
         }
 
         //Now add all connector resources
-        Iterator connectorResources = org.glassfish.resources.admin.cli.ResourcesXMLParser.getConnectorResourcesList(vResources, false, false).iterator();
+        Iterator<Resource> connectorResources = org.glassfish.resources.admin.cli.ResourcesXMLParser
+            .getConnectorResourcesList(vResources, false, false).iterator();
         while (connectorResources.hasNext()) {
-            Resource resource = (Resource) connectorResources.next();
-            HashMap attrList = resource.getAttributes();
+            Resource resource = connectorResources.next();
+            ResourceAttributes attrList = resource.getAttributes();
             String desc = resource.getDescription();
-            if (desc != null)
-                attrList.put("description", desc);
+            if (desc != null) {
+                attrList.set("description", desc);
+            }
 
             Properties props = resource.getProperties();
-
             ResourceStatus rs;
             try {
                 org.glassfish.resources.admin.cli.ResourceManager rm = resourceFactory.getResourceManager(resource);

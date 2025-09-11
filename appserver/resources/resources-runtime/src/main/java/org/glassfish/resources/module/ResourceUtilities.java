@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,19 +20,16 @@ package org.glassfish.resources.module;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resources.admin.cli.SunResourcesXML;
 import org.glassfish.resources.api.Resource;
+import org.glassfish.resources.api.ResourceAttributes;
 
 import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_POOL_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
@@ -56,7 +53,7 @@ public class ResourceUtilities {
 
 
     private static SimpleJndiName getIdToCompare(final Resource res) {
-        final HashMap attrs = res.getAttributes();
+        final ResourceAttributes attrs = res.getAttributes();
         final String type = res.getType();
         final String id;
         if (org.glassfish.resources.api.Resource.JDBC_CONNECTION_POOL.equals(type) ||
@@ -79,8 +76,8 @@ public class ResourceUtilities {
         return SimpleJndiName.of(id);
     }
 
-    private static String getNamedAttributeValue(final HashMap attributes, final String name) {
-        return (String)attributes.get(name);
+    private static String getNamedAttributeValue(final ResourceAttributes attrs, final String name) {
+        return attrs.getString(name);
     }
 
     /**
@@ -108,7 +105,7 @@ public class ResourceUtilities {
      */
     public static Set<org.glassfish.resources.api.Resource> resolveResourceDuplicatesConflictsWithinArchive(
         List<org.glassfish.resources.admin.cli.SunResourcesXML> sunResList) throws ResourceConflictException {
-        StringBuffer conflictingResources = new StringBuffer();
+        StringBuilder conflictingResources = new StringBuilder();
         Set<org.glassfish.resources.api.Resource> resourceSet = new HashSet<>();
         for (SunResourcesXML sunResXML : sunResList) {
             List<org.glassfish.resources.api.Resource> resources = sunResXML.getResourcesList();
@@ -135,9 +132,7 @@ public class ResourceUtilities {
                             getIdToCompare(res), sunResXML.getXMLPath());
                         conflictingResources.append(message);
                         _logger.warning(message);
-                        if(_logger.isLoggable(Level.FINE)) {
-                            logAttributes(res);
-                        }
+                        _logger.fine(localStrings.getString("resource.attributes", res.getAttributes()));
                     }
                 }
                 if(addResource) {
@@ -149,20 +144,5 @@ public class ResourceUtilities {
             throw new ResourceConflictException(conflictingResources.toString());
         }
         return resourceSet;
-    }
-
-
-    private static void logAttributes(Resource res) {
-        StringBuilder message = new StringBuilder();
-        Set<Map.Entry> entries = res.getAttributes().entrySet();
-        for (Entry entry : entries) {
-            message.append(entry.getKey());
-            message.append("=");
-            message.append(entry.getValue());
-            message.append(" ");
-        }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine(localStrings.getString("resource.attributes", message.toString()));
-        }
     }
 }

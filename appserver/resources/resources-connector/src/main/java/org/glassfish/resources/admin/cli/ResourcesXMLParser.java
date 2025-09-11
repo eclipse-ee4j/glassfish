@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +34,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,6 +64,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ext.LexicalHandler;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
@@ -149,6 +153,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.WORK_SECURITY_
 import static org.glassfish.resources.admin.cli.ResourceConstants.WORK_SECURITY_MAP_PRINCIPAL_MAP;
 import static org.glassfish.resources.admin.cli.ResourceConstants.WORK_SECURITY_MAP_RA_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.WRAP_JDBC_OBJECTS;
+import static org.glassfish.resources.api.Resource.JDBC_RESOURCE;
 
 //i18n import
 
@@ -158,6 +163,8 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.WRAP_JDBC_OBJE
  */
 @I18n("resources.parser")
 public class ResourcesXMLParser implements EntityResolver {
+
+    private static final Logger LOG = System.getLogger(ResourcesXMLParser.class.getName());
 
     private File resourceFile = null;
     private Document document;
@@ -179,8 +186,6 @@ public class ResourcesXMLParser implements EntityResolver {
 
     private static final int NONCONNECTOR = 2;
     private static final int CONNECTOR = 1;
-
-    private static final Logger _logger  = Logger.getLogger(ResourcesXMLParser.class.getName());
 
     private static final String SUN_RESOURCES = "sun-resources";
 
@@ -241,13 +246,13 @@ public class ResourcesXMLParser implements EntityResolver {
             out = new FileOutputStream(to);
             transformer.transform(new DOMSource(document), new StreamResult(out));
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, ex.getMessage(), ex);
+            LOG.log(Level.WARNING, ex.getMessage(), ex);
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch (Exception ex) {
-                    _logger.warning(ex.getMessage());
+                    LOG.log(WARNING, ex.getMessage());
                 }
             }
         }
@@ -262,11 +267,9 @@ public class ResourcesXMLParser implements EntityResolver {
             resourceNode.removeChild(resourceNode.getFirstChild());
         }
 
-        HashMap<String,String> attrs = modifiedResource.getAttributes();
-        Iterator entries = attrs.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry thisEntry = (Map.Entry) entries.next();
-            ((Element)resourceNode).setAttribute((String) thisEntry.getKey(), (String)thisEntry.getValue());
+        Map<String, String> attrs = modifiedResource.getAttributes().getStrings();
+        for (Entry<String, String> thisEntry : attrs.entrySet()) {
+            ((Element) resourceNode).setAttribute(thisEntry.getKey(), thisEntry.getValue());
         }
 
         // Put the new/modified property nodes.
@@ -371,7 +374,7 @@ public class ResourcesXMLParser implements EntityResolver {
                 (systemId != null && systemId.contains(SUN_RESOURCES))){
             String msg = localStrings.getString(
                     "deprecated.resources.dtd", resourceFile.getAbsolutePath() );
-            _logger.log(Level.FINEST, msg);
+            LOG.log(DEBUG, msg);
         }
     }
 
@@ -380,57 +383,38 @@ public class ResourcesXMLParser implements EntityResolver {
      *
      */
     private void generateResourceObjects(String scope) throws Exception {
-        if (document != null) {
-            for (Node nextKid = document.getDocumentElement().getFirstChild();
-                    nextKid != null; nextKid = nextKid.getNextSibling())
-            {
-                String nodeName = nextKid.getNodeName();
-                if (nodeName.equalsIgnoreCase(Resource.CUSTOM_RESOURCE)) {
-                    generateCustomResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.EXTERNAL_JNDI_RESOURCE))
-                {
-                    generateJNDIResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.JDBC_RESOURCE))
-                {
-                    generateJDBCResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.JDBC_CONNECTION_POOL))
-                {
-                    generateJDBCConnectionPoolResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(Resource.MAIL_RESOURCE))
-                {
-                    generateMailResource(nextKid, scope);
-                }
-                //PMF resource is no more supported and hence removing support form sun-resources.xml
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.PERSISTENCE_MANAGER_FACTORY_RESOURCE))
-                {
-                   generatePersistenceResource(nextKid);
-                   _logger.log(Level.FINEST, "persistence-manager-factory-resource is no more supported " +
-                           ", ignoring the resource description");
-                }
-                else if (nodeName.equalsIgnoreCase(Resource.ADMIN_OBJECT_RESOURCE))
-                {
-                    generateAdminObjectResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(Resource.CONNECTOR_RESOURCE))
-                {
-                    generateConnectorResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.CONNECTOR_CONNECTION_POOL))
-                {
-                    generateConnectorConnectionPoolResource(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.RESOURCE_ADAPTER_CONFIG))
-                {
-                    generateResourceAdapterConfig(nextKid, scope);
-                }
-                else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.CONNECTOR_WORK_SECURITY_MAP))
-                {
-                    generateWorkSecurityMap(nextKid, scope);
-                }
+        if (document == null) {
+            return;
+        }
+        for (Node nextKid = document.getDocumentElement().getFirstChild(); nextKid != null; nextKid = nextKid
+            .getNextSibling()) {
+            String nodeName = nextKid.getNodeName();
+            if (nodeName.equalsIgnoreCase(Resource.CUSTOM_RESOURCE)) {
+                generateCustomResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.EXTERNAL_JNDI_RESOURCE)) {
+                generateJNDIResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.JDBC_RESOURCE)) {
+                generateJDBCResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.JDBC_CONNECTION_POOL)) {
+                generateJDBCConnectionPoolResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(Resource.MAIL_RESOURCE)) {
+                generateMailResource(nextKid, scope);
+            } else if (nodeName
+                .equalsIgnoreCase(org.glassfish.resources.api.Resource.PERSISTENCE_MANAGER_FACTORY_RESOURCE)) {
+                // PMF resource is no more supported and hence removing support form sun-resources.xml
+                generatePersistenceResource(nextKid);
+                LOG.log(DEBUG, "persistence-manager-factory-resource is no more supported "
+                    + ", ignoring the resource description");
+            } else if (nodeName.equalsIgnoreCase(Resource.ADMIN_OBJECT_RESOURCE)) {
+                generateAdminObjectResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(Resource.CONNECTOR_RESOURCE)) {
+                generateConnectorResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.CONNECTOR_CONNECTION_POOL)) {
+                generateConnectorConnectionPoolResource(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.RESOURCE_ADAPTER_CONFIG)) {
+                generateResourceAdapterConfig(nextKid, scope);
+            } else if (nodeName.equalsIgnoreCase(org.glassfish.resources.api.Resource.CONNECTOR_WORK_SECURITY_MAP)) {
+                generateWorkSecurityMap(nextKid, scope);
             }
         }
     }
@@ -482,11 +466,7 @@ public class ResourcesXMLParser implements EntityResolver {
 
         List<org.glassfish.resources.api.Resource> finalSortedConnectorList = sortConnectorResources(connectorResources);
         List<org.glassfish.resources.api.Resource> finalSortedNonConnectorList = sortNonConnectorResources(nonConnectorResources);
-        if (type == CONNECTOR) {
-            return finalSortedConnectorList;
-        } else {
-            return finalSortedNonConnectorList;
-        }
+        return type == CONNECTOR ? finalSortedConnectorList : finalSortedNonConnectorList;
     }
 
 
@@ -639,8 +619,8 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(persistenceResource);
         resourceMap.put(persistenceResource, nextKid);
 
-        //debug strings
-        printResourceElements(persistenceResource);
+        LOG.log(DEBUG, "Persistence resource jndiName {0} attributes: {1}", jndiName,
+            persistenceResource.getAttributes());
     }
 
     /**
@@ -678,8 +658,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(customResource);
         resourceMap.put(customResource, nextKid);
 
-        //debug strings
-        printResourceElements(customResource);
+        LOG.log(DEBUG, "Custom resource jndiName {0} attributes: {1}", jndiName, customResource.getAttributes());
     }
 
     /**
@@ -716,8 +695,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(jndiResource);
         resourceMap.put(jndiResource, nextKid);
 
-        //debug strings
-        printResourceElements(jndiResource);
+        LOG.log(DEBUG, "JNDI resource jndiName {0} attributes: {1}", jndiName, jndiResource.getAttributes());
     }
 
     /**
@@ -735,7 +713,7 @@ public class ResourcesXMLParser implements EntityResolver {
         String poolName = getScopedName(poolNameNode.getNodeValue(), scope);
         Node enabledNode = attributes.getNamedItem(ENABLED);
 
-        Resource jdbcResource = new org.glassfish.resources.api.Resource(org.glassfish.resources.api.Resource.JDBC_RESOURCE);
+        Resource jdbcResource = new org.glassfish.resources.api.Resource(JDBC_RESOURCE);
         jdbcResource.setAttribute(JNDI_NAME, jndiName);
         jdbcResource.setAttribute(POOL_NAME, poolName);
         if (enabledNode != null) {
@@ -758,8 +736,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(jdbcResource);
         resourceMap.put(jdbcResource, nextKid);
 
-        //debug strings
-        printResourceElements(jdbcResource);
+        LOG.log(DEBUG, "JDBC resource jndiName {0} attributes: {1}", jndiName, jdbcResource.getAttributes());
     }
 
     /**
@@ -951,8 +928,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(jdbcConnPool);
         resourceMap.put(jdbcConnPool, nextKid);
 
-        // debug strings
-        printResourceElements(jdbcConnPool);
+        LOG.log(DEBUG, "JDBC connection pool name {0} attributes: {1}", name, jdbcConnPool.getAttributes());
     }
 
     /**
@@ -1017,8 +993,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(mailResource);
         resourceMap.put(mailResource, nextKid);
 
-        // debug strings
-        printResourceElements(mailResource);
+        LOG.log(DEBUG, "Mail resource jndiName {0} attributes: {1}", jndiName, mailResource.getAttributes());
     }
 
     /**
@@ -1062,8 +1037,8 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(adminObjectResource);
         resourceMap.put(adminObjectResource, nextKid);
 
-        // debug strings
-        printResourceElements(adminObjectResource);
+        LOG.log(DEBUG, "Admin Object resource jndiName {0} attributes: {1}", jndiName,
+            adminObjectResource.getAttributes());
     }
 
     /**
@@ -1100,8 +1075,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(connectorResource);
         resourceMap.put(connectorResource, nextKid);
 
-        //debug strings
-        printResourceElements(connectorResource);
+        LOG.log(DEBUG, "Connector resource jndiName {0} attributes: {1}", jndiName, connectorResource.getAttributes());
     }
 
 
@@ -1295,8 +1269,8 @@ public class ResourcesXMLParser implements EntityResolver {
                 }
             }
         }
-        //debug strings
-        printResourceElements(connectorConnPoolResource);
+        LOG.log(DEBUG, "Connector pool resource jndiName {0} attributes: {1}", poolName,
+            connectorConnPoolResource.getAttributes());
     }
 
     private void generateWorkSecurityMap(Node node, String scope) throws Exception {
@@ -1309,10 +1283,12 @@ public class ResourcesXMLParser implements EntityResolver {
         }
 
         Node nameNode = attributes.getNamedItem(WORK_SECURITY_MAP_NAME);
-
         Resource workSecurityMapResource = new Resource(org.glassfish.resources.api.Resource.CONNECTOR_WORK_SECURITY_MAP);
-        if (nameNode != null) {
-            String name = nameNode.getNodeValue();
+        final String name;
+        if (nameNode == null) {
+            name = null;
+        } else {
+            name = nameNode.getNodeValue();
             workSecurityMapResource.setAttribute(WORK_SECURITY_MAP_NAME, name);
         }
 
@@ -1362,8 +1338,8 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(workSecurityMapResource);
         resourceMap.put(workSecurityMapResource, node);
 
-        //debug strings
-        printResourceElements(workSecurityMapResource);
+        LOG.log(DEBUG, "Work Security resource name {0} attributes: {1}", name,
+            workSecurityMapResource.getAttributes());
     }
 
 
@@ -1385,8 +1361,8 @@ public class ResourcesXMLParser implements EntityResolver {
             map.setAttribute(POOL_NAME, poolName);
         }
 
-        StringBuffer principal = new StringBuffer();
-        StringBuffer usergroup = new StringBuffer();
+        StringBuilder principal = new StringBuilder();
+        StringBuilder usergroup = new StringBuilder();
 
         NodeList children = mapNode.getChildNodes();
 
@@ -1420,7 +1396,6 @@ public class ResourcesXMLParser implements EntityResolver {
             }
         }
         map.setAttribute(SECURITY_MAP_PRINCIPAL, convertToStringArray(principal.toString()));
-        map.setAttribute("user_group", convertToStringArray(usergroup.toString()));
         vResources.add(map);
         resourceMap.put(map, mapNode);
     }// end of generateSecurityMap....
@@ -1459,8 +1434,7 @@ public class ResourcesXMLParser implements EntityResolver {
         vResources.add(resAdapterConfigResource);
         resourceMap.put(resAdapterConfigResource, nextKid);
 
-        // debug strings
-        printResourceElements(resAdapterConfigResource);
+        LOG.log(DEBUG, "Resource Adapter attributes: {0}", resAdapterConfigResource.getAttributes());
     }
 
     /**
@@ -1488,7 +1462,7 @@ public class ResourcesXMLParser implements EntityResolver {
      * non connector list, so that the RA config is created prior to the
      * RA deployment. For all other purpose, this flag needs to be set to false.
      */
-    public static List getNonConnectorResourcesList(List<org.glassfish.resources.api.Resource> resources,
+    public static List<Resource> getNonConnectorResourcesList(List<org.glassfish.resources.api.Resource> resources,
         boolean isResourceCreation, boolean ignoreDuplicates) {
         return getResourcesOfType(resources, NONCONNECTOR, isResourceCreation, ignoreDuplicates);
     }
@@ -1507,22 +1481,9 @@ public class ResourcesXMLParser implements EntityResolver {
      * RA deployment. For all other purpose, this flag needs to be set to false.
      */
 
-    public static List getConnectorResourcesList(List<org.glassfish.resources.api.Resource> resources,
+    public static List<Resource> getConnectorResourcesList(List<org.glassfish.resources.api.Resource> resources,
         boolean isResourceCreation, boolean ignoreDuplicates) {
         return getResourcesOfType(resources, CONNECTOR, isResourceCreation, ignoreDuplicates);
-    }
-
-    /**
-     * Print(Debug) the resource
-     */
-    private void printResourceElements(Resource resource) {
-        HashMap attrList = resource.getAttributes();
-
-        Iterator attrIter = attrList.keySet().iterator();
-        while (attrIter.hasNext()) {
-            String attrName = (String) attrIter.next();
-            Logger.getLogger(ResourcesXMLParser.class.getName()).log(Level.FINE, "Name of the attribute:[{0}]", attrName);
-        }
     }
 
     // Helper Method to convert a String type to a String[]
@@ -1537,7 +1498,7 @@ public class ResourcesXMLParser implements EntityResolver {
     }
 
 
-    final static class AddResourcesErrorHandler implements ErrorHandler {
+    static final class AddResourcesErrorHandler implements ErrorHandler {
 
         @Override
         public void error(SAXParseException e) throws org.xml.sax.SAXException {
@@ -1556,70 +1517,55 @@ public class ResourcesXMLParser implements EntityResolver {
     }
 
 
-    @Override
-    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
-        InputSource is = null;
-        String dtdFileName = DTD_1_5;
-
-        boolean foundMatchingDTD = false;
-
+    private String getDtdFileName(String publicId, String systemId) {
         if (systemId != null) {
             for (String systemID2 : systemIDs) {
                 if (systemId.contains(systemID2)) {
-                    dtdFileName = systemID2;
-                    foundMatchingDTD = true;
-                    break;
+                    return systemID2;
                 }
             }
         }
-
-        if (!foundMatchingDTD && publicId != null) {
+        if (publicId != null) {
             if (publicId.contains(publicID_sjsas90)) {
-                dtdFileName = DTD_1_3;
+                return DTD_1_3;
             } else if (publicId.contains(publicID_ges30)) {
-                dtdFileName = DTD_1_4;
-            } else if (publicId.contains(publicID_ges31)) {
-                dtdFileName = DTD_1_5;
+                return DTD_1_4;
             }
         }
+        return DTD_1_5;
+    }
 
+
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
+        final String dtdFileName = getDtdFileName(publicId, systemId);
         try {
             String dtd = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) +
                 File.separator + "lib" + File.separator + "dtds" + File.separator +
                 dtdFileName;
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.finest("using DTD [ " + dtd + " ]");
-            }
+            LOG.log(TRACE, () -> "using DTD [ " + dtd + " ]");
             File f = new File(dtd);
             if (f.exists()) {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.finest("DTD [" + dtd + "] exists");
-                }
-                is = new InputSource(new java.io.FileInputStream(dtd));
-            } else {
-                if(_logger.isLoggable(Level.FINEST)){
-                    _logger.finest("No DTD ["+dtd+"] found, trying the enclosing jar (uber jar)");
-                }
-                //In case of embedded Uber jar, it is part of "/dtds" and all modules are in single jar.
-                //TODO refactor and move this logic to embedded module.
-                URL url = this.getClass().getResource("/dtds/" + dtdFileName);
-                InputStream stream = url != null ? url.openStream() : null;
-                if (stream != null) {
-                    if(_logger.isLoggable(Level.FINEST)){
-                        _logger.finest("DTD ["+dtdFileName+"] found in enclosing jar");
-                    }
-                    is = new InputSource(stream);
-                    is.setSystemId(url.toString());
-                }else{
-                    if(_logger.isLoggable(Level.FINEST)){
-                        _logger.finest("DTD ["+dtdFileName+" ] not found in installation, public URL might resolve it");
-                    }
-                }
+                LOG.log(TRACE, () -> "DTD [" + dtd + "] exists");
+                return new InputSource(new java.io.FileInputStream(dtd));
             }
+            LOG.log(TRACE, () -> "No DTD [" + dtd + "] found, trying the enclosing jar (uber jar)");
+            //In case of embedded Uber jar, it is part of "/dtds" and all modules are in single jar.
+            //TODO refactor and move this logic to embedded module.
+            final URL url = getClass().getResource("/dtds/" + dtdFileName);
+            final InputStream stream = url == null ? null : url.openStream();
+            if (url == null || stream == null) {
+                LOG.log(TRACE,
+                    () -> "DTD [" + dtdFileName + " ] not found in installation, public URL might resolve it");
+                return null;
+            }
+            LOG.log(TRACE, () -> "DTD [" + dtdFileName + "] found in enclosing jar");
+            final InputSource is = new InputSource(stream);
+            is.setSystemId(url.toString());
+            return is;
         } catch (Exception e) {
             throw new SAXException("cannot resolve dtd", e);
         }
-        return is;
     }
 
     class MyLexicalHandler implements LexicalHandler{

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,6 @@ import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.resource.pool.monitor.ConnectionPoolAppProbeProvider;
 import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProviderUtil;
 import com.sun.enterprise.resource.pool.monitor.ConnectionPoolStatsProviderBootstrap;
-import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -34,7 +33,6 @@ import jakarta.inject.Provider;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
@@ -63,8 +61,6 @@ public class JdbcPoolMonitoringExtension implements ConnectionPoolMonitoringExte
 
     private final ConnectorRuntime runtime;
 
-    private final static Logger logger = LogDomains.getLogger(JdbcPoolMonitoringExtension.class, LogDomains.RSR_LOGGER);
-
     // List of all jdbc pool stats providers that are created and stored.
     private final List<JdbcConnPoolStatsProvider> jdbcStatsProviders;
     private final List<JdbcConnPoolAppStatsProvider> jdbcPoolAppStatsProviders;
@@ -92,7 +88,7 @@ public class JdbcPoolMonitoringExtension implements ConnectionPoolMonitoringExte
         if (poolManager.getPool(poolInfo) != null) {
             getProbeProviderUtil().createJdbcProbeProvider();
             // Found in the pool table (pool has been initialized/created)
-            JdbcConnPoolStatsProvider jdbcPoolStatsProvider = new JdbcConnPoolStatsProvider(poolInfo, logger);
+            JdbcConnPoolStatsProvider jdbcPoolStatsProvider = new JdbcConnPoolStatsProvider(poolInfo);
             StatsProviderManager.register("jdbc-connection-pool", PluginPoint.SERVER,
                     ConnectorsUtil.getPoolMonitoringSubTreeRoot(poolInfo, true), jdbcPoolStatsProvider);
             // String jdbcPoolName = jdbcPoolStatsProvider.getJdbcPoolName();

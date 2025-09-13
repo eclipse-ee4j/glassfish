@@ -87,6 +87,16 @@ public class JdbcPoolPerformanceIT {
     @Test
     public void testHeavyLoad() throws Exception {
         Options options = createOptions();
+//        Thread networkIssue = new Thread(() -> {
+//            try {
+//                Thread.sleep(1);
+//                DockerTestEnvironment.disconnectDatabase(1);
+//            } catch (InterruptedException e) {
+//                Thread.currentThread().interrupt();
+//            }
+//        });
+//        networkIssue.start();
+
         Collection<RunResult> results = new Runner(options).run();
         // Print all results - for tuning.
         asadmin("get", "--monitor", "*");

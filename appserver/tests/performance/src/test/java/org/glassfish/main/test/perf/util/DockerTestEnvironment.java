@@ -131,6 +131,7 @@ public class DockerTestEnvironment {
         dataSource.setUrl(DATABASE.getJdbcUrl());
         dataSource.setUser(DATABASE.getUsername());
         dataSource.setPassword(DATABASE.getPassword());
+        dataSource.setConnectTimeout(60);
         connectionHolder = dataSource::getConnection;
         dsExecutor = DataSetExecutorImpl.instance("executor", connectionHolder);
         reinitializeDatabase();
@@ -142,10 +143,11 @@ public class DockerTestEnvironment {
                 "--datasourceclassname", PGSimpleDataSource.class.getName(), //
                 "--steadypoolsize", "0", "--maxpoolsize", Integer.toString(LIMIT_JDBC), //
                 "--validationmethod", "auto-commit", //
+//                "--isconnectvalidatereq", "false", "--failconnection", "false", //
                 "--isconnectvalidatereq", "true", "--failconnection", "true", //
                 "--property", "user=" + DATABASE.getUsername() + ":password=" + DATABASE.getPassword() //
                     + ":DatabaseName=" + DATABASE.getDatabaseName() //
-                    + ":ServerName=tc-testdb:port=" + 5432
+                    + ":ServerName=tc-testdb:port=" + 5432 + ":connectTimeout=1" //
                 , //
                 poolName).getExitCode());
             assertEquals(0,
@@ -168,8 +170,7 @@ public class DockerTestEnvironment {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        // Reconnect when needed
-        client.connectToNetworkCmd().withNetworkId(NET.getId()).withContainerId(AS_DOMAIN.getContainerId()).exec();
+        client.connectToNetworkCmd().withNetworkId(NET.getId()).withContainerId(DATABASE.getContainerId()).exec();
     }
 
 

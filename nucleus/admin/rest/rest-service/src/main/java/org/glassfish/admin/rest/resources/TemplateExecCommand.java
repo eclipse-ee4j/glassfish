@@ -136,7 +136,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
             .getCommandInvocation(null, commandName, new RestActionReporter(), null, notify, detach).parameters(params);
         final ResponseBuilder builder = Response.status(HTTP_OK);
         final AsyncAdminCommandInvoker<Response> invoker = detach
-            ? new DetachedSseAdminCommandInvoker(new RestActionReporter(), invocation, builder)
+            ? new DetachedSseAdminCommandInvoker(invocation, builder)
             : new SseAdminCommandInvoker(invocation, builder);
         return invoker.start();
     }

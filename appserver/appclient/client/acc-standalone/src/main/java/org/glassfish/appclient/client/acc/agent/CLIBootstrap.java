@@ -25,6 +25,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +33,7 @@ import org.glassfish.embeddable.client.ApplicationClientCLIEncoding;
 import org.glassfish.embeddable.client.UserError;
 
 import static java.lang.System.arraycopy;
+import static org.glassfish.appclient.client.acc.agent.ClassPathUtils.getClassPathForGfClient;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 
@@ -72,8 +74,8 @@ public class CLIBootstrap {
     private static final boolean IS_WINDOWS = System.getProperty("os.name", "generic").startsWith("Win");
     public final static String FILE_OPTIONS_INTRODUCER = "argsfile=";
 
-    private final static boolean isDebug = System.getenv("AS_DEBUG") != null;
-    private final static String INPUT_ARGS = System.getenv("inputArgs");
+    private final static boolean DEBUG = System.getenv("AS_DEBUG") != null;
+    private final static String WINDOWS_ARGS = isWindows() ? System.getenv("APPCLIENT_WINDOWS_ARGS") : null;
 
     static final String ENV_VAR_PROP_PREFIX = "acc.";
 
@@ -84,8 +86,8 @@ public class CLIBootstrap {
 
     private final static String[] ENV_VARS = { "AS_INSTALL", "APPCPATH", "VMARGS" };
 
-    private JavaInfo java = new JavaInfo();
-    private GlassFishInfo gfInfo = new GlassFishInfo();
+    private final JavaInfo java = new JavaInfo();
+    private final GlassFishInfo gfInfo = new GlassFishInfo();
     /** Records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
     // note: must be defined after jvmMainSetting, because it uses it
@@ -130,41 +132,32 @@ public class CLIBootstrap {
     /** Arguments passed to the ACC Java agent, collected by "accValuedOptions" and "accUnvaluedOptions"  */
     private final AgentArgs agentArgs = new AgentArgs();
 
-
-
-    // #### Main() Methods
-
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try {
-            /*
-             * Convert env vars to properties. (This makes testing easier.)
-             */
+            // Convert env vars to properties.
             envToProps();
             CLIBootstrap boot = new CLIBootstrap();
 
-            /*
-             * Because of how Windows passes arguments, the calling Windows script assigned the input arguments to an environment
-             * variable. Parse that variable's value into the actual arguments.
-             */
-            if (INPUT_ARGS != null) {
-                args = convertInputArgsVariable(INPUT_ARGS);
+            // Because of how Windows passes arguments, the calling Windows script assigned
+            // the input arguments to an environment variable. Parse that variable's value into
+            // the actual arguments.
+            if (WINDOWS_ARGS != null) {
+                args = convertInputArgsVariable(WINDOWS_ARGS);
             }
 
             String outputCommandLine = boot.run(args);
-            if (isDebug) {
+            if (DEBUG) {
                 System.err.println(outputCommandLine);
             }
 
-            /*
-             * Write the generated java command to System.out. The calling shell script will execute this command.
-             *
-             * Using print instead of println seems to work better. Using println added a \r to the end of the last command-line
-             * argument on Windows under cygwin.
-             */
+            // Write the generated java command to System.out.
+            // The calling shell script will execute this command.
+            // Using print instead of println seems to work better.
+            // Using println added a \r to the end of the last command-line argument on Windows
+            // under cygwin.
             System.out.print(outputCommandLine);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -172,12 +165,16 @@ public class CLIBootstrap {
         }
     }
 
+    private static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows");
+    }
+
     private static void envToProps() {
         for (String envVar : ENV_VARS) {
             String value = System.getenv(envVar);
             if (value != null) {
                 System.setProperty(ENV_VAR_PROP_PREFIX + envVar, value);
-                if (isDebug) {
+                if (DEBUG) {
                     System.err.println(ENV_VAR_PROP_PREFIX + envVar + " set to " + value);
                 }
             }
@@ -202,7 +199,7 @@ public class CLIBootstrap {
         while (matcher.find()) {
             String arg = (matcher.group(1) != null ? matcher.group(1) : matcher.group(2));
             argList.add(arg);
-            if (isDebug) {
+            if (DEBUG) {
                 System.err.println("Captured argument " + arg);
             }
         }
@@ -229,9 +226,6 @@ public class CLIBootstrap {
      * @throws UserError
      */
     private String run(String[] args) throws Error {
-        java = new JavaInfo();
-        gfInfo = new GlassFishInfo();
-
         String[] augmentedArgs = new String[args.length + 2];
         augmentedArgs[0] = "-configxml";
         augmentedArgs[1] = gfInfo.configxml().getAbsolutePath();
@@ -289,6 +283,10 @@ public class CLIBootstrap {
         command.append(' ').append("--module-path ").append(quote(gfBootstrapLibs.toString()));
         command.append(' ').append("--add-modules ALL-MODULE-PATH");
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
+        if (userVMArgs.evJVMValuedOptions.values.isEmpty()) {
+            // Even to print help we need this jar on classpath
+            command.append(' ').append("-cp ").append(gfInfo.agentJarPath());
+        }
         command.append(' ').append("-Xshare:off");
         command.append(' ').append(SYSPROP_SYSTEM_CLASS_LOADER).append("org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader");
         command.append(' ').append("-D").append(INSTALL_ROOT.getSystemPropertyName()).append('=').append(quote(gfInfo.home().getAbsolutePath()));
@@ -754,8 +752,7 @@ public class CLIBootstrap {
             // Make sure there is a next item and that it
             if (args[slot].charAt(0) != '-') {
                 values.add("-classpath");
-                values.add(gfInfo.agentJarPath() + File.pathSeparatorChar
-                    + ClassPathUtils.getClassPathForGfClient("."));
+                values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient("."));
                 final int result = super.processValue(args, slot);
                 String className = values.get(values.size() - 1);
                 agentArgs.add("client=class=" + className);
@@ -785,8 +782,7 @@ public class CLIBootstrap {
                 } else if (clientJarPath.endsWith(".jar")) {
                     introducer = null;
                     values.add("-classpath");
-                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar
-                        + ClassPathUtils.getClassPathForGfClient(clientJarPath));
+                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient(clientJarPath));
                     String mainClass = ClassPathUtils.getMainClass(clientJarFile);
                     values.add(mainClass == null ? "" : mainClass);
                 } else {
@@ -1000,8 +996,8 @@ public class CLIBootstrap {
 
         UserVMArgs(String vmargs) throws Error {
 
-            if (isDebug) {
-                System.err.println("VMARGS = " + (vmargs == null ? "null" : vmargs));
+            if (DEBUG) {
+                System.err.println("VMARGS = " + vmargs);
             }
 
             evJVMPropertySettings = new JVMOption("-D.*", null);

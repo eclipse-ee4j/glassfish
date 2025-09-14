@@ -1,7 +1,7 @@
 type=page
 status=published
 title=uptime
-next=validate-dcom.html
+next=validate-multicast.html
 prev=update-password-alias.html
 ~~~~~~
 

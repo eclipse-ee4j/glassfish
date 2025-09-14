@@ -1,7 +1,7 @@
 type=page
 status=published
 title=set-log-levels
-next=setup-local-dcom.html
+next=setup-ssh.html
 prev=set-log-file-format.html
 ~~~~~~
 

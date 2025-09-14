@@ -2,7 +2,7 @@ type=page
 status=published
 title=uninstall-node-ssh
 next=unset.html
-prev=uninstall-node-dcom.html
+prev=uninstall-node.html
 ~~~~~~
 
 = uninstall-node-ssh
@@ -37,9 +37,6 @@ on the host where the subcommand is run and on each host where the
 ====
 This subcommand is equivalent to the
 xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)]
-subcommand. To uninstall {productName} software from hosts that use
-the Distributed Component Object Model (DCOM) remote protocol, use the
-xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)]
 subcommand.
 ====
 
@@ -190,7 +187,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:install-node.adoc#install-node[`install-node`(1)],
 xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
-xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
-xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)]
+xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)]
 
 

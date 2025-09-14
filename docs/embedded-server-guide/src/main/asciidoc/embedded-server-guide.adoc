@@ -212,7 +212,7 @@ By default, {productName} Embedded is started with the following configuration:
 - HTTP listener enabled on port 8080
 - HTTPS listener disabled
 
-It's also possible to start {{productName} on command line with an alternative way, via the main class:
+It's also possible to start {productName} on command line with an alternative way, via the main class:
 
 ```
     java -cp glassfish-embedded.jar org.glassfish.runnablejar.UberMain
@@ -2100,7 +2100,6 @@ nonembedded {productName} with these exceptions:
 
 * Installers
 * Administration Console
-* Update Tool
 * Apache Felix OSGi framework
 * The Maven plug-in for embedded {productName} does not support
 application clients.

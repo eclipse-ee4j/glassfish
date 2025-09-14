@@ -331,7 +331,7 @@ public class CommandResource {
             builder.cookie(getJSessionCookie(jSessionId));
         }
         final AsyncAdminCommandInvoker<Response> invoker = detach
-            ? new DetachedSseAdminCommandInvoker(new PropsFileActionReporter(), invocation, builder)
+            ? new DetachedSseAdminCommandInvoker(invocation, builder)
             : new SseAdminCommandInvoker(invocation, builder);
         return invoker.start();
     }

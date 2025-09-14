@@ -2,7 +2,7 @@ type=page
 status=published
 title=ping-node-ssh
 next=recover-transactions.html
-prev=ping-node-dcom.html
+prev=ping-connection-pool.html
 ~~~~~~
 
 = ping-node-ssh
@@ -46,14 +46,6 @@ enabled for communication over SSH. If the node is not enabled for
 communication over SSH, an error occurs. To determine whether a node is
 enabled for communication over SSH, use the
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)] subcommand.
-
-[NOTE]
-====
-To test whether a node that is enabled for communication over the
-Distributed Component Object Model (DCOM) remote protocol is usable, use
-the xref:ping-node-dcom.adoc#ping-node-dcom[`ping-node-dcom`(1)]
-subcommand.
-====
 
 This subcommand is supported in remote mode only.
 
@@ -126,9 +118,8 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
 xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
-xref:ping-node-dcom.adoc#ping-node-dcom[`ping-node-dcom`(1)],
 xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
-xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)],
+xref:update-node-ssh.adoc#update-node-ssh[`update-node-ssh`(1)],
 xref:version.adoc#version[`version`(1)]
 
 

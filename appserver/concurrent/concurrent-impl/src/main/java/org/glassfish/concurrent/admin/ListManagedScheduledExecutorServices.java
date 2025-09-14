@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,7 +43,6 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
-import org.glassfish.concurrent.runtime.deployer.DefaultManagedScheduledExecutorService;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
@@ -82,15 +82,13 @@ public class ListManagedScheduledExecutorServices implements AdminCommand {
     @Inject
     private ServiceLocator habitat;
 
-    @Inject
-    private DefaultManagedScheduledExecutorService defaultService; // make sure default has been created
-
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the parameter names and the values the parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();

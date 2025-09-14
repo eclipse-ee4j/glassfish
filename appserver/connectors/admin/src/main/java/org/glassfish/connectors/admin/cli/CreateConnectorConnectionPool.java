@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +41,7 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.connectors.admin.cli.CLIConstants.CCP.CCP_ASSOC_WITH_THREAD;
@@ -176,34 +177,35 @@ public class CreateConnectorConnectionPool implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
-        attrList.put(ResourceConstants.RES_ADAPTER_NAME, raname);
-        attrList.put(ResourceConstants.CONN_DEF_NAME, connectiondefinition);
-        attrList.put(ServerTags.DESCRIPTION, description);
-        attrList.put(ResourceConstants.STEADY_POOL_SIZE, steadypoolsize);
-        attrList.put(ResourceConstants.MAX_POOL_SIZE, maxpoolsize);
-        attrList.put(ResourceConstants.MAX_WAIT_TIME_IN_MILLIS, maxwait);
-        attrList.put(ResourceConstants.POOL_SIZE_QUANTITY, poolresize);
-        attrList.put(ResourceConstants.IDLE_TIME_OUT_IN_SECONDS, idletimeout);
-        attrList.put(ResourceConstants.IS_CONNECTION_VALIDATION_REQUIRED, isconnectvalidatereq.toString());
-        attrList.put(ResourceConstants.CONN_FAIL_ALL_CONNECTIONS, failconnection.toString());
-        attrList.put(ResourceConstants.VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS, validateatmostonceperiod);
-        attrList.put(ResourceConstants.CONNECTION_LEAK_TIMEOUT_IN_SECONDS, leaktimeout);
-        attrList.put(ResourceConstants.CONNECTION_LEAK_RECLAIM, leakreclaim.toString());
-        attrList.put(ResourceConstants.CONNECTION_CREATION_RETRY_ATTEMPTS, creationretryattempts);
-        attrList.put(ResourceConstants.CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS, creationretryinterval);
-        attrList.put(ResourceConstants.LAZY_CONNECTION_ASSOCIATION, lazyconnectionassociation.toString());
-        attrList.put(ResourceConstants.LAZY_CONNECTION_ENLISTMENT, lazyconnectionenlistment.toString());
-        attrList.put(ResourceConstants.ASSOCIATE_WITH_THREAD, associatewiththread.toString());
-        attrList.put(ResourceConstants.MATCH_CONNECTIONS, matchconnections.toString());
-        attrList.put(ResourceConstants.MAX_CONNECTION_USAGE_COUNT, maxconnectionusagecount);
-        attrList.put(ResourceConstants.CONNECTOR_CONNECTION_POOL_NAME, poolname);
-        attrList.put(ResourceConstants.CONN_TRANSACTION_SUPPORT, transactionsupport);
-        attrList.put(ResourceConstants.PING, ping.toString());
-        attrList.put(ResourceConstants.POOLING, pooling.toString());
+        ResourceAttributes attrList = new ResourceAttributes();
+        attrList.set(ResourceConstants.RES_ADAPTER_NAME, raname);
+        attrList.set(ResourceConstants.CONN_DEF_NAME, connectiondefinition);
+        attrList.set(ServerTags.DESCRIPTION, description);
+        attrList.set(ResourceConstants.STEADY_POOL_SIZE, steadypoolsize);
+        attrList.set(ResourceConstants.MAX_POOL_SIZE, maxpoolsize);
+        attrList.set(ResourceConstants.MAX_WAIT_TIME_IN_MILLIS, maxwait);
+        attrList.set(ResourceConstants.POOL_SIZE_QUANTITY, poolresize);
+        attrList.set(ResourceConstants.IDLE_TIME_OUT_IN_SECONDS, idletimeout);
+        attrList.set(ResourceConstants.IS_CONNECTION_VALIDATION_REQUIRED, isconnectvalidatereq.toString());
+        attrList.set(ResourceConstants.CONN_FAIL_ALL_CONNECTIONS, failconnection.toString());
+        attrList.set(ResourceConstants.VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS, validateatmostonceperiod);
+        attrList.set(ResourceConstants.CONNECTION_LEAK_TIMEOUT_IN_SECONDS, leaktimeout);
+        attrList.set(ResourceConstants.CONNECTION_LEAK_RECLAIM, leakreclaim.toString());
+        attrList.set(ResourceConstants.CONNECTION_CREATION_RETRY_ATTEMPTS, creationretryattempts);
+        attrList.set(ResourceConstants.CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS, creationretryinterval);
+        attrList.set(ResourceConstants.LAZY_CONNECTION_ASSOCIATION, lazyconnectionassociation.toString());
+        attrList.set(ResourceConstants.LAZY_CONNECTION_ENLISTMENT, lazyconnectionenlistment.toString());
+        attrList.set(ResourceConstants.ASSOCIATE_WITH_THREAD, associatewiththread.toString());
+        attrList.set(ResourceConstants.MATCH_CONNECTIONS, matchconnections.toString());
+        attrList.set(ResourceConstants.MAX_CONNECTION_USAGE_COUNT, maxconnectionusagecount);
+        attrList.set(ResourceConstants.CONNECTOR_CONNECTION_POOL_NAME, poolname);
+        attrList.set(ResourceConstants.CONN_TRANSACTION_SUPPORT, transactionsupport);
+        attrList.set(ResourceConstants.PING, ping.toString());
+        attrList.set(ResourceConstants.POOLING, pooling.toString());
 
         ResourceStatus rs;
 
@@ -229,8 +231,9 @@ public class CreateConnectorConnectionPool implements AdminCommand {
                 report.setMessage(localStrings.getLocalString("create.connector.connection.pool.fail",
                     "Connector connection pool {0} creation failed.", poolname));
             }
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         } else {
             //TODO only for DAS ?
             if ("true".equalsIgnoreCase(ping.toString())) {

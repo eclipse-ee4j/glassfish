@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,8 +31,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,12 +42,14 @@ import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ADMIN_OBJECT_CLASS_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
@@ -66,6 +66,8 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.RES_TYPE;
 @I18n("create.admin.object")
 public class AdminObjectManager implements ResourceManager {
 
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(AdminObjectManager.class);
+
     @Inject
     private Applications applications;
 
@@ -78,21 +80,16 @@ public class AdminObjectManager implements ResourceManager {
     @Inject
     private org.glassfish.resourcebase.resources.util.BindableResourcesHelper resourcesHelper;
 
-    private static final String DESCRIPTION = ServerTags.DESCRIPTION;
-
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(AdminObjectManager.class);
-
-    private String resType = null;
-    private String className = null;
-    private String raName = null;
-    private String enabled = Boolean.TRUE.toString();
-    private String enabledValueForTarget = Boolean.TRUE.toString();
-    private String jndiName = null;
-    private String description = null;
-
     @Inject
     private ServerEnvironment environment;
+
+    private String resType;
+    private String className;
+    private String raName;
+    private String enabled = Boolean.TRUE.toString();
+    private String enabledValueForTarget = Boolean.TRUE.toString();
+    private String jndiName;
+    private String description;
 
     @Override
     public String getResourceType() {
@@ -100,8 +97,8 @@ public class AdminObjectManager implements ResourceManager {
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
-            throws Exception {
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
@@ -118,13 +115,13 @@ public class AdminObjectManager implements ResourceManager {
         } catch (TransactionFailure tfe) {
             Logger.getLogger(AdminObjectManager.class.getName()).log(Level.SEVERE,
                     "Unabled to create administered object", tfe);
-            String msg = localStrings.getLocalString("create.admin.object.fail",
+            String msg = I18N.getLocalString("create.admin.object.fail",
                     "Unable to create administered object {0}.", jndiName) +
                     " " + tfe.getLocalizedMessage();
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        String msg = localStrings.getLocalString(
+        String msg = I18N.getLocalString(
                 "create.admin.object.success",
                 "Administered object {0} created.", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
@@ -134,7 +131,7 @@ public class AdminObjectManager implements ResourceManager {
     private ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target){
         ResourceStatus status ;
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("create.admin.object.noJndiName",
+            String msg = I18N.getLocalString("create.admin.object.noJndiName",
                             "No JNDI name defined for administered object.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
@@ -179,28 +176,28 @@ public class AdminObjectManager implements ResourceManager {
         newResource.setClassName(className);
         newResource.setEnabled(enabled);
         if (props != null) {
-            for ( Map.Entry e : props.entrySet()) {
+            for (String propertyName : props.stringPropertyNames()) {
                 Property prop = newResource.createChild(Property.class);
-                prop.setName((String)e.getKey());
-                prop.setValue((String)e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(props.getProperty(propertyName));
                 newResource.getProperty().add(prop);
             }
         }
         return newResource;
     }
 
-    public void setAttributes(HashMap attributes, String target) {
-        resType = (String) attributes.get(RES_TYPE);
-        className = (String)attributes.get(ADMIN_OBJECT_CLASS_NAME);
-        if(target != null){
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
-        }else{
-            enabled = (String) attributes.get(ENABLED);
+    private void setAttributes(ResourceAttributes attributes, String target) {
+        resType = attributes.getString(RES_TYPE);
+        className = attributes.getString(ADMIN_OBJECT_CLASS_NAME);
+        if (target == null) {
+            enabled = attributes.getString(ENABLED);
+        } else {
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.getString(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
-        jndiName = (String) attributes.get(JNDI_NAME);
-        description = (String) attributes.get(DESCRIPTION);
-        raName = (String) attributes.get(RES_ADAPTER);
+        enabledValueForTarget = attributes.getString(ENABLED);
+        jndiName = attributes.getString(JNDI_NAME);
+        description = attributes.getString(DESCRIPTION);
+        raName = attributes.getString(RES_ADAPTER);
     }
 
      //TODO Error checking taken from v2, need to refactor for v3
@@ -221,14 +218,14 @@ public class AdminObjectManager implements ResourceManager {
              } catch (ConnectorRuntimeException cre) {
                  Logger.getLogger(AdminObjectManager.class.getName()).log(Level.SEVERE,
                          "Could not find admin-ojbect-interface names (resTypes) from ConnectorRuntime for resource adapter.", cre);
-                 String msg = localStrings.getLocalString(
+                 String msg = I18N.getLocalString(
                          "admin.mbeans.rmb.null_ao_intf",
                          "Resource Adapter {0} does not contain any resource type for admin-object. Please specify another res-adapter.",
                          raName) + " " + cre.getLocalizedMessage();
                  return new ResourceStatus(ResourceStatus.FAILURE, msg);
              }
              if (resTypes == null || resTypes.length <= 0) {
-                 String msg = localStrings.getLocalString("admin.mbeans.rmb.null_ao_intf",
+                 String msg = I18N.getLocalString("admin.mbeans.rmb.null_ao_intf",
                          "Resource Adapter {0} does not contain any resource type for admin-object. Please specify another res-adapter.", raName);
                  return new ResourceStatus(ResourceStatus.FAILURE, msg);
              }
@@ -241,7 +238,7 @@ public class AdminObjectManager implements ResourceManager {
                  }
              }
              if(count > 1){
-                 String msg = localStrings.getLocalString(
+                 String msg = I18N.getLocalString(
                          "admin.mbeans.rmb.multiple_admin_objects.found.for.restype",
                          "Need to specify admin-object classname parameter (--classname) as multiple admin objects " +
                                  "use this resType [ {0} ]",  resType);
@@ -255,7 +252,7 @@ public class AdminObjectManager implements ResourceManager {
                  Logger.getLogger(AdminObjectManager.class.getName()).log(Level.SEVERE,
                          "Could not find admin-object-interface names (resTypes) and admin-object-classnames from " +
                                  "ConnectorRuntime for resource adapter.", cre);
-                 String msg = localStrings.getLocalString(
+                 String msg = I18N.getLocalString(
                          "admin.mbeans.rmb.ao_intf_impl_check_failed",
                          "Could not determine admin object resource information of Resource Adapter [ {0} ] for " +
                                  "resType [ {1} ] and classname [ {2} ] ",
@@ -265,7 +262,7 @@ public class AdminObjectManager implements ResourceManager {
          }
 
          if (!isValidAdminObject) {
-            String msg = localStrings.getLocalString("admin.mbeans.rmb.invalid_res_type",
+            String msg = I18N.getLocalString("admin.mbeans.rmb.invalid_res_type",
                 "Invalid Resource Type: {0}", resType);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
@@ -277,8 +274,8 @@ public class AdminObjectManager implements ResourceManager {
         //boolean retVal = false;
         ResourceStatus status = new ResourceStatus(ResourceStatus.SUCCESS, "");
 
-        if ((raName == null) || (raName.equals(""))) {
-            String msg = localStrings.getLocalString("admin.mbeans.rmb.null_res_adapter",
+        if (raName == null || raName.isEmpty()) {
+            String msg = I18N.getLocalString("admin.mbeans.rmb.null_res_adapter",
                     "Resource Adapter Name is null.");
             status = new ResourceStatus(ResourceStatus.FAILURE, msg);
         } else {
@@ -295,14 +292,14 @@ public class AdminObjectManager implements ResourceManager {
                     String appName = raName.substring(0, indx);
                     Application app = applications.getModule(Application.class, appName);
                     if (app == null) {
-                        String msg = localStrings.getLocalString("admin.mbeans.rmb.invalid_ra_app_not_found",
+                        String msg = I18N.getLocalString("admin.mbeans.rmb.invalid_ra_app_not_found",
                                 "Invalid raname. Application with name {0} not found.", appName);
                         status = new ResourceStatus(ResourceStatus.FAILURE, msg);
                     }
                 } else {
                     Application app = applications.getModule(Application.class, raName);
                     if (app == null) {
-                        String msg = localStrings.getLocalString("admin.mbeans.rmb.invalid_ra_cm_not_found",
+                        String msg = I18N.getLocalString("admin.mbeans.rmb.invalid_ra_cm_not_found",
                                 "Invalid raname. Connector Module with name {0} not found.", raName);
                         status = new ResourceStatus(ResourceStatus.FAILURE, msg);
                     }
@@ -313,18 +310,18 @@ public class AdminObjectManager implements ResourceManager {
         return status;
     }
     @Override
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate) throws Exception{
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         setAttributes(attributes, null);
-        ResourceStatus status = null;
-        if(!validate){
-            status = new ResourceStatus(ResourceStatus.SUCCESS,"");
-        }else{
+        final ResourceStatus status;
+        if (validate) {
             status = isValid(resources, false, null);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
-        if(status.getStatus() == ResourceStatus.SUCCESS){
+        if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        }else{
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 }

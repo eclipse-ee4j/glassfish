@@ -18,7 +18,6 @@ host such as the name of the host and the location where the {productName} is in
 The following topics are addressed here:
 
 * xref:#types-of-glassfish-server-nodes[Types of {productName} Nodes]
-* xref:#creating-listing-testing-and-deleting-dcom-nodes[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
 * xref:#creating-listing-testing-and-deleting-ssh-nodes[Creating, Listing, Testing, and Deleting `SSH` Nodes]
 * xref:#creating-listing-and-deleting-config-nodes[Creating, Listing, and Deleting `CONFIG` Nodes]
 * xref:#updating-and-changing-the-type-of-a-node[Updating and Changing the Type of a Node]
@@ -29,16 +28,6 @@ The following topics are addressed here:
 
 Each {productName} node is one of the following types of node:
 
-`DCOM`::
-  A `DCOM` node supports communication over the Distributed Component
-  Object Model (DCOM) remote protocol. The DCOM remote protocol is
-  available only on Windows systems. If DCOM is set up and you plan to
-  administer your {productName} instances centrally, the instances
-  must reside on `DCOM` nodes. +
-  A `DCOM` node's configuration contains the information that is
-  required to connect to the host through DCOM. This information
-  includes, for example, the user name of the Windows user and the port
-  number for DCOM connections to the host.
 `SSH`::
   An `SSH` node supports communication over secure shell (SSH). If SSH
   is set up and you plan to administer your {productName} instances
@@ -48,307 +37,14 @@ Each {productName} node is one of the following types of node:
   includes, for example, the user name of the SSH user and the port
   number for SSH connections to the host.
 `CONFIG`::
-  A `CONFIG` node does not support remote communication. If neither DCOM
-  nor SSH is set up and you plan to administer your instances locally,
+  A `CONFIG` node does not support remote communication. If SSH is not set up
+  and you plan to administer your instances locally,
   the instances can reside on `CONFIG` nodes. You cannot use `CONFIG`
   nodes for instances that you plan to administer centrally. +
   Each domain contains a predefined `CONFIG` node that is named
   ``localhost-``domain, where domain is the name of the domain. On the
   host where the domain administration server (DAS) is running, this
   node represents the local host.
-
-[[creating-listing-testing-and-deleting-dcom-nodes]]
-
-=== Creating, Listing, Testing, and Deleting `DCOM` Nodes
-
-A `DCOM` node supports communication over DCOM. If DCOM is set up and
-you plan to administer your {productName} instances centrally, the
-instances must reside on `DCOM` nodes. For information about setting up
-DCOM, see xref:ssh-setup.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized Administration
-of {productName} Instances].
-
-{productName} enables you to create `DCOM` nodes for use by
-instances, obtain information about `DCOM` nodes, test if `DCOM` nodes
-are reachable, and delete `DCOM` nodes that are no longer required.
-
-The following topics are addressed here:
-
-* xref:#to-create-a-dcom-node[To Create a `DCOM` Node]
-* xref:#to-list-dcom-nodes-in-a-domain[To List `DCOM` Nodes in a Domain]
-* xref:#to-test-if-a-dcom-node-is-reachable[To Test if a `DCOM` Node is Reachable]
-* xref:#to-delete-a-dcom-node[To Delete a `DCOM` Node]
-
-[[to-create-a-dcom-node]]
-
-==== To Create a `DCOM` Node
-
-Use the `create-node-dcom` subcommand in remote mode to create a `DCOM` node.
-
-Before You Begin
-
-Ensure that the Windows user can use DCOM to connect to the host that
-the node will represent. By default, the `create-node-dcom` subcommand
-validates the node's parameters and the DCOM connection to the host.
-If the Windows user cannot use DCOM to connect to the host, the validation fails.
-
-
-[NOTE]
-====
-For information about how to determine whether the Windows user can use
-DCOM to connect to the host, see xref:ssh-setup.adoc#to-test-the-connection-over-dcom-to-a-remote-host[To Test the
-Connection Over DCOM to a Remote Host].
-====
-
-
-1. Ensure that the DAS is running. Remote subcommands require a running server.
-
-2. Run the `create-node-dcom` subcommand. +
-Specify the file that contains the alias for the Windows user's password
-through the `--passwordfile` option of the `asadmin` utility. For more
-information about this file, see xref:ssh-setup.adoc#to-set-up-password-authentication-for-the-windows-user[To Set Up
-Password Authentication for the Windows User].
-+
-[NOTE]
-====
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for configuring the
-node, see the xref:reference-manual.adoc#create-node-dcom[`create-node-dcom`(1)] help page.
-====
-+
-[source]
-----
-C:\> asadmin --passwordfile filename create-node-dcom
---nodehost node-host [--installdir install-dir ]
-node-name
-----
-filname::
-  The name of the file that contains the alias for the Windows user's
-  password.
-node-host::
-  The name of the host that the node represents. The name of the host
-  must be specified. Otherwise, an error occurs.
-install-dir::
-  The full path to the parent of the base installation directory of the
-  {productName} software on the host, for example, `C:\glassfish7`.
-  If the {productName} software is installed in the same directory on
-  the node's host and the DAS host, you can omit this option.
-node-name::
-  Your choice of name for the node that you are creating.
-
-[[nodes-example-3-1]]
-Example 3-1 Creating a `DCOM` Node
-
-This example creates the `DCOM` node `wpmdl1` to represent the host
-`wpmdl1.example.com`. The {productName} software is installed in the
-same directory on the DAS host and on the host `wpmdl1.example.com`.
-
-[source]
-----
-C:\> asadmin --passwordfile aspwalias.txt create-node-dcom
---nodehost wpmdl1.example.com wpmdl1
-Command create-node-dcom executed successfully.
-----
-
-See Also
-
-* xref:reference-manual.adoc#asadmin[`asadmin`(1M)]
-* xref:reference-manual.adoc#create-node-dcom[`create-node-dcom`(1)]
-
-You can also view the full syntax and options of the subcommand by
-typing `asadmin help create-node-dcom` at the command line.
-
-[[GSHAG468]]
-
-Next Steps
-
-After creating a node, you can create instances on the node as explained
-in the following sections:
-
-* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
-* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
-
-[[to-list-dcom-nodes-in-a-domain]]
-
-==== To List `DCOM` Nodes in a Domain
-
-Use the `list-nodes-dcom` subcommand in remote mode to obtain
-information about existing `DCOM` nodes in a domain.
-
-
-[NOTE]
-====
-To obtain information about all existing nodes in a domain, use the
-xref:reference-manual.adoc#list-nodes[`list-nodes`] subcommand.
-====
-
-
-1. Ensure that the DAS is running. Remote subcommands require a running server.
-
-2. Run the xref:reference-manual.adoc#list-nodes-dcom[`list-nodes-dcom`] subcommand.
-+
-[source]
-----
-asadmin> list-nodes-dcom
-----
-
-[[nodes-example-3-2]]
-Example 3-2 Listing Basic Information About All `DCOM` Nodes in a Domain
-
-This example lists the name, type, and host of all `DCOM` nodes in the
-current domain.
-
-[source]
-----
-asadmin> list-nodes-dcom
-xkyd  DCOM  xkyd.example.com
-wpmdl2  DCOM  wpmdl2.example.com
-wpmdl1  DCOM  wpmdl1.example.com
-Command list-nodes-dcom executed successfully.
-----
-
-[[nodes-example-3-3]]
-Example 3-3 Listing Detailed Information About All `DCOM` Nodes in a
-Domain
-
-This example lists detailed information about all `DCOM` nodes in the
-current domain.
-
-[source]
-----
-asadmin> list-nodes-dcom --long=true
-NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
-Command list-nodes-dcom executed successfully.
-----
-
-See Also
-
-* xref:reference-manual.adoc#list-nodes[`list-nodes`(1)]
-* xref:reference-manual.adoc#list-nodes-dcom[`list-nodes-dcom`(1)]
-
-You can also view the full syntax and options of the subcommands by
-typing the following commands at the command line:
-
-* `asadmin help list-nodes`
-* `asadmin help list-nodes-dcom`
-
-[[to-test-if-a-dcom-node-is-reachable]]
-
-==== To Test if a `DCOM` Node is Reachable
-
-Use the `ping-node-dcom` subcommand in remote mode to test if a `DCOM`
-node is reachable.
-
-Before You Begin
-
-Ensure that DCOM is configured on the host where the DAS is running and
-on the host that the node represents.
-
-1. Ensure that the DAS is running. Remote subcommands require a running server.
-
-2. Run the `ping-node-dcom` subcommand.
-+
-[NOTE]
-====
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for testing the node,
-see the xref:reference-manual.adoc#ping-node-dcom[`ping-node-dcom`(1)] help page.
-====
-+
-[source]
-----
-asadmin> ping-node-dcom node-name
-----
-node-name::
-  The name of the node to test.
-
-[[nodes-example-3-4]]
-Example 3-4 Testing if a `DCOM` Node Is Reachable
-
-This example tests if the `DCOM` node `wpmdl2` is reachable.
-
-[source]
-----
-asadmin> ping-node-dcom wpmdl2
-Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
-Command ping-node-dcom executed successfully.
-----
-
-See Also
-
-xref:reference-manual.adoc#ping-node-dcom[`ping-node-dcom`(1)]
-
-You can also view the full syntax and options of the subcommand by
-typing `asadmin help ping-node-dcom` at the command line.
-
-[[to-delete-a-dcom-node]]
-
-==== To Delete a `DCOM` Node
-
-Use the `delete-node-dcom` subcommand in remote mode to delete a `DCOM` node.
-
-Deleting a node removes the node from the configuration of the DAS. The
-node's directories and files are deleted when the last {productName}
-instance that resides on the node is deleted.
-
-Before You Begin
-
-Ensure that no {productName} instances reside on the node that you
-are deleting. For information about how to delete an instance, see the
-following sections.
-
-* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
-
-1. Ensure that the DAS is running. Remote subcommands require a running server.
-
-2. Confirm that no instances reside on the node that you are deleting.
-+
-[source]
-----
-asadmin> list-nodes-dcom --long=true
-----
-3. Run the xref:reference-manual.adoc#delete-node-dcom[`delete-node-dcom`] subcommand.
-+
-[source]
-----
-asadmin> delete-node-dcom node-name
-----
-node-name::
-  The name of the node that you are deleting.
-
-[[nodes-example-3-5]]
-Example 3-5 Deleting a `DCOM` Node
-
-This example confirms that no instances reside on the `DCOM` node `xkyd`
-and deletes the node `xkyd`.
-
-[source]
-----
-asadmin> list-nodes-dcom --long=true
-NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
-Command list-nodes-dcom executed successfully.
-asadmin> delete-node-dcom xkyd
-Command delete-node-dcom executed successfully.
-----
-
-See Also
-
-* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
-* xref:reference-manual.adoc#delete-node-dcom[`delete-node-dcom`(1)]
-* xref:reference-manual.adoc#list-nodes-dcom[`list-nodes-dcom`(1)]
-
-You can also view the full syntax and options of the subcommands by
-typing the following commands at the command line:
-
-* `asadmin help delete-node-dcom`
-* `asadmin help list-nodes-dcom`
 
 [[creating-listing-testing-and-deleting-ssh-nodes]]
 
@@ -359,12 +55,6 @@ plan to administer your {productName} instances centrally, the
 instances must reside on `SSH` nodes. For information about setting up
 SSH, see xref:ssh-setup.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized Administration of
 {productName} Instances].
-
-
-[NOTE]
-====
-Windows systems also support communications over DCOM as an alternative to SSH.
-====
 
 
 {productName} enables you to create `SSH` nodes for use by instances,
@@ -425,8 +115,8 @@ install-dir::
 node-name::
   Your choice of name for the node that you are creating.
 
-[[nodes-example-3-6]]
-Example 3-6 Creating an `SSH` Node
+[[nodes-example-3-1]]
+Example 3-1 Creating an `SSH` Node
 
 This example creates the `SSH` node `sj01` to represent the host
 `sj01.example.com`. The {productName} software is installed in the
@@ -494,8 +184,8 @@ xref:reference-manual.adoc#list-nodes[`list-nodes`] subcommand.
 asadmin> list-nodes-ssh
 ----
 
-[[nodes-example-3-7]]
-Example 3-7 Listing Basic Information About All `SSH` Nodes in a Domain
+[[nodes-example-3-2]]
+Example 3-2 Listing Basic Information About All `SSH` Nodes in a Domain
 
 This example lists the name, type, and host of all `SSH` nodes in the
 current domain.
@@ -508,8 +198,8 @@ sj02  SSH  sj02.example.com
 Command list-nodes-ssh executed successfully.
 ----
 
-[[nodes-example-3-8]]
-Example 3-8 Listing Detailed Information About All `SSH` Nodes in a
+[[nodes-example-3-3]]
+Example 3-3 Listing Detailed Information About All `SSH` Nodes in a
 Domain
 
 This example lists detailed information about all `SSH` nodes in the
@@ -565,8 +255,8 @@ asadmin> ping-node-ssh node-name
 node-name::
   The name of the node to test.
 
-[[nodes-example-3-9]]
-Example 3-9 Testing if an `SSH` Node Is Reachable
+[[nodes-example-3-4]]
+Example 3-4 Testing if an `SSH` Node Is Reachable
 
 This example tests if the `SSH` node `sj01` is reachable.
 
@@ -612,7 +302,7 @@ following sections.
 ----
 asadmin> list-nodes-ssh --long=true
 ----
-3. Run the xref:reference-manual.adoc#delete-node-dcom[`delete-node-ssh`] subcommand.
+3. Run the xref:reference-manual.adoc#delete-node-ssh[`delete-node-ssh`] subcommand.
 +
 [source]
 ----
@@ -621,8 +311,8 @@ asadmin> delete-node-ssh node-name
 node-name::
   The name of the node that you are deleting.
 
-[[nodes-example-3-10]]
-Example 3-10 Deleting an `SSH` Node
+[[nodes-example-3-5]]
+Example 3-5 Deleting an `SSH` Node
 
 This example confirms that no instances reside on the `SSH` node `sj01`
 and deletes the node `sj01`.
@@ -655,8 +345,8 @@ typing the following commands at the command line:
 
 === Creating, Listing, and Deleting `CONFIG` Nodes
 
-A `CONFIG` node does not support remote communication. If neither DCOM
-nor SSH is set up and you plan to administer your instances locally, the
+A `CONFIG` node does not support remote communication. If SSH is not set up
+and you plan to administer your instances locally, the
 instances can reside on `CONFIG` nodes. You cannot use `CONFIG` nodes
 for instances that you plan to administer centrally.
 
@@ -714,8 +404,8 @@ install-dir::
 node-name::
   Your choice of name for the node that you are creating.
 
-[[nodes-example-3-11]]
-Example 3-11 Creating a `CONFIG` Node
+[[nodes-example-3-6]]
+Example 3-6 Creating a `CONFIG` Node
 
 This example creates the `CONFIG` node `cfg01`. The host that the node
 represents and the installation directory of the {productName}
@@ -767,8 +457,8 @@ Remote subcommands require a running server.
 asadmin> list-nodes-config
 ----
 
-[[nodes-example-3-12]]
-Example 3-12 Listing Basic Information About All `CONFIG` Nodes in a
+[[nodes-example-3-7]]
+Example 3-7 Listing Basic Information About All `CONFIG` Nodes in a
 Domain
 
 This example lists the name, type, and host of all `CONFIG` nodes in the
@@ -783,8 +473,8 @@ cfg02  CONFIG  cfg02.example.com
 Command list-nodes-config executed successfully.
 ----
 
-[[nodes-example-3-13]]
-Example 3-13 Listing Detailed Information About All `CONFIG` Nodes in a
+[[nodes-example-3-8]]
+Example 3-8 Listing Detailed Information About All `CONFIG` Nodes in a
 Domain
 
 This example lists detailed information about all `CONFIG` nodes in the
@@ -846,8 +536,8 @@ asadmin> delete-node-config node-name
 node-name::
   The name of the node that you are deleting.
 
-[[nodes-example-3-14]]
-Example 3-14 Deleting a `CONFIG` Node
+[[nodes-example-3-9]]
+Example 3-9 Deleting a `CONFIG` Node
 
 This example confirms that no instances reside on the `CONFIG` node
 `cfg01` and deletes the node `cfg01`.
@@ -885,59 +575,9 @@ node and to change the type of a node.
 
 The following topics are addressed here:
 
-* xref:#to-update-a-dcom-node[To Update a `DCOM` Node]
 * xref:#to-update-an-ssh-node[To Update an `SSH` Node]
 * xref:#to-update-a-config-node[To Update a `CONFIG` Node]
 * xref:#to-change-the-type-of-a-node[To Change the Type of a Node]
-
-[[to-update-a-dcom-node]]
-
-==== To Update a `DCOM` Node
-
-Use the `update-node-dcom` subcommand in remote mode to update a `DCOM` node.
-
-Options of this subcommand specify the new values of the node's configuration data.
-If you omit an option, the existing value is unchanged.
-
-Before You Begin
-
-Ensure that the following prerequisites are met:
-
-* DCOM is configured on the host where the DAS is running and on the
-host that the node represents.
-* The node that you are updating exists.
-
-1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the `update-node-dcom` subcommand.
-+
-[source]
-----
-asadmin> update-node-dcom options node-name
-----
-options::
-  Options of the `update-node-dcom` subcommand for changing the node's
-  configuration data. For information about these options, see the
-  xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)] help page.
-node-name::
-  The name of the `DCOM` node to update.
-
-[[nodes-example-3-15]]
-Example 3-15 Updating a `DCOM` Node
-
-This example updates the host that the node `wpmdl1` represents to `wj01`.
-
-[source]
-----
-asadmin> update-node-dcom --nodehost wj01 wpmdl1
-Command update-node-dcom executed successfully.
-----
-
-See Also
-
-xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)]
-
-You can also view the full syntax and options of the subcommand by
-typing `asadmin help update-node-dcom` at the command line.
 
 [[to-update-an-ssh-node]]
 
@@ -971,8 +611,8 @@ options::
 node-name::
   The name of the `SSH` node to update.
 
-[[nodes-example-3-16]]
-Example 3-16 Updating an `SSH` Node
+[[nodes-example-3-10]]
+Example 3-10 Updating an `SSH` Node
 
 This example updates the host that the node `sj01` represents to
 `adc01.example.com`.
@@ -1020,8 +660,8 @@ options::
 node-name::
   The name of the `CONFIG` node to update.
 
-[[nodes-example-3-17]]
-Example 3-17 Updating a `CONFIG` Node
+[[nodes-example-3-11]]
+Example 3-11 Updating a `CONFIG` Node
 
 This example updates the host that the node `cfg02` represents to
 `adc02.example.com`.
@@ -1050,7 +690,6 @@ Changing the type of a `CONFIG` node enables remote communication for
 the node. The type of the node after the change determines the protocol
 over which the node is enabled for remote communication:
 
-* A `DCOM` node is enabled for communication over DCOM.
 * An `SSH` node is enabled for communication over SSH.
 
 As part of the process of changing the type of a node, you can also
@@ -1061,12 +700,6 @@ the node's configuration data. For most options, if you omit the option,
 the existing value is unchanged. However, default values are applied in
 the following situations:
 
-* Any of the following options of the `update-node-dcom` subcommand is
-omitted:
-
-** `--windowsuser`
-** `--windowsdomain`
-
 * Any of the following options of the `update-node-ssh` subcommand is omitted:
 
 ** `--sshport`
@@ -1076,8 +709,7 @@ omitted:
 
 [CAUTION]
 ====
-Changing a `DCOM` node or an `SSH` node to a `CONFIG` node disables
-remote communication for the node.
+Changing an `SSH` node to a `CONFIG` node disables remote communication for the node.
 ====
 
 
@@ -1085,7 +717,7 @@ Before You Begin
 
 Ensure that the following prerequisites are met:
 
-* SSH or DCOM is configured on the host where the DAS is running and on
+* SSH is configured on the host where the DAS is running and on
 the host that the node represents.
 * The node the type of which you are changing exists.
 
@@ -1094,50 +726,36 @@ the host that the node represents.
 2. Run the appropriate subcommand for updating a node, depending on the
 type of the node after the change.
 
-** To change the type of a node to `DCOM`, run the `update-node-dcom`
-subcommand on the node.
-+
-[source]
-----
-asadmin> update-node-dcom [options] config-or-ssh-node-name
-----
-options::
-  Options of the `update-node-dcom` subcommand for changing the node's
-  configuration data. For information about these options, see the
-  xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)] help page.
-config-or-ssh-node-name::
-  The name of the `CONFIG` node or the `SSH` node to change.
-
 ** To change the type of a node to `SSH`, run the `update-node-ssh`
 subcommand on the node.
 +
 [source]
 ----
-asadmin> update-node-ssh [options] config-or-dcom-node-name
+asadmin> update-node-ssh [options] config-node-name
 ----
 options::
   Options of the `update-node-ssh` subcommand for changing the node's
   configuration data. For information about these options, see the
   xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)] help page.
-config-or-dcom-node-name::
-  The name of the `CONFIG` node or the `DCOM` node to change.
+config-node-name::
+  The name of the `CONFIG` node to change.
 
 ** To change the type of a node to `CONFIG`, run the `update-node-config`
 subcommand on the node.
 +
 [source]
 ----
-asadmin> update-node-config [options] dcom-or-ssh-node-name
+asadmin> update-node-config [options] ssh-node-name
 ----
 options::
   Options of the `update-node-config` subcommand for changing the node's
   configuration data. For information about these options, see the
   xref:reference-manual.adoc#update-node-config[`update-node-config`(1)] help page.
-dcom-or-ssh-node-name::
-  The name of the `DCOM` node or the `SSH` node to change.
+ssh-node-name::
+  The name of the `SSH` node to change.
 
-[[nodes-example-3-18]]
-Example 3-18 Changing a `CONFIG` Node to an `SSH` Node
+[[nodes-example-3-12]]
+Example 3-12 Changing a `CONFIG` Node to an `SSH` Node
 
 This example changes the `CONFIG` node `cfg02` to an `SSH` node.
 
@@ -1150,12 +768,10 @@ Command update-node-ssh executed successfully.
 See Also
 
 * xref:reference-manual.adoc#update-node-config[`update-node-config`(1)]
-* xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)]
 * xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing the following commands at the command line.
 
 * `asadmin help update-node-config`
-* `asadmin help update-node-dcom`
 * `asadmin help update-node-ssh`

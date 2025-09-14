@@ -18,7 +18,7 @@ package org.glassfish.admin.rest.utils;
 
 import com.sun.enterprise.v3.admin.AdminCommandJob;
 import com.sun.enterprise.v3.admin.AsyncAdminCommandInvoker;
-import com.sun.enterprise.v3.common.ActionReporter;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -26,8 +26,9 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import java.lang.System.Logger;
 
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.CommandInvocation;
+import org.glassfish.api.admin.Job;
 
 import static java.lang.System.Logger.Level.TRACE;
 
@@ -38,12 +39,10 @@ import static java.lang.System.Logger.Level.TRACE;
 public class DetachedSseAdminCommandInvoker extends AsyncAdminCommandInvoker<Response> {
     private static final Logger LOG = System.getLogger(DetachedSseAdminCommandInvoker.class.getName());
 
-    private final ActionReporter report;
     private final ResponseBuilder builder;
 
-    public DetachedSseAdminCommandInvoker(ActionReporter idReport, CommandInvocation<AdminCommandJob> invocation, ResponseBuilder builder) {
+    public DetachedSseAdminCommandInvoker(CommandInvocation<AdminCommandJob> invocation, ResponseBuilder builder) {
         super(invocation);
-        this.report = idReport;
         this.builder = builder;
     }
 
@@ -54,8 +53,6 @@ public class DetachedSseAdminCommandInvoker extends AsyncAdminCommandInvoker<Res
     @Override
     public Response start() {
         final AdminCommandJob job = getJob();
-        report.setMessage(job.getId());
-        report.setActionExitCode(ExitCode.SUCCESS);
         final Response response = createResponse(job);
         LOG.log(TRACE, "Job parameters: {0}, this: {1}", job.getParameters(), this);
         startJob();
@@ -64,10 +61,51 @@ public class DetachedSseAdminCommandInvoker extends AsyncAdminCommandInvoker<Res
     }
 
     private Response createResponse(AdminCommandJob job) {
-        try (SseEventOutput eventOutput = new SseEventOutput(job)) {
+        try (SseEventOutput eventOutput = new SseEventOutput(new DetachedAdminCommandState(job))) {
             LOG.log(TRACE, "Writing the job id. {0}", this);
             eventOutput.write();
             return builder.entity(eventOutput).build();
+        }
+    }
+
+    private static final class DetachedAdminCommandState implements AdminCommandState {
+
+        private final String id;
+        private final String name;
+        private final State state;
+
+        DetachedAdminCommandState(Job job) {
+            this.id = job.getId();
+            this.name = job.getName();
+            this.state = job.getState();
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public State getState() {
+            return state;
+        }
+
+        @Override
+        public ActionReport getActionReport() {
+            ActionReport actionReport = new PropsFileActionReporter();
+            actionReport.setActionDescription(name + " command");
+            actionReport.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+            return actionReport;
+        }
+
+        @Override
+        public boolean isOutboundPayloadEmpty() {
+            return true;
         }
     }
 }

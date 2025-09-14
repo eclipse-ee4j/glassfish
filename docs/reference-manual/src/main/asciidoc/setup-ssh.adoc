@@ -2,7 +2,7 @@ type=page
 status=published
 title=setup-ssh
 next=set-web-context-param.html
-prev=setup-local-dcom.html
+prev=set-log-levels.html
 ~~~~~~
 
 = setup-ssh

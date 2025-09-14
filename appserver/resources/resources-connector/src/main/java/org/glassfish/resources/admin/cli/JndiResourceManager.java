@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,8 +26,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
@@ -36,6 +34,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.glassfish.resources.config.ExternalJndiResource;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -54,8 +53,8 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.RES_TYPE;
 @PerLookup
 @I18n("create.jndi.resource")
 public class JndiResourceManager implements ResourceManager {
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(JndiResourceManager.class);
+
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(JndiResourceManager.class);
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
     @Inject
@@ -78,8 +77,8 @@ public class JndiResourceManager implements ResourceManager {
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
@@ -93,14 +92,14 @@ public class JndiResourceManager implements ResourceManager {
                 resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
             }
         } catch (TransactionFailure tfe) {
-            String msg = localStrings.getLocalString(
+            String msg = I18N.getLocalString(
                     "create.jndi.resource.fail",
                     "Unable to create jndi resource {0}.", jndiName) +
                     " " + tfe.getLocalizedMessage();
             return new ResourceStatus(ResourceStatus.FAILURE, msg, true);
         }
 
-        String msg = localStrings.getLocalString(
+        String msg = I18N.getLocalString(
                 "create.jndi.resource.success",
                 "jndi resource {0} created.", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg, true);
@@ -109,21 +108,21 @@ public class JndiResourceManager implements ResourceManager {
     private ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target) {
         ResourceStatus status ;
         if (resType == null) {
-            String msg = localStrings.getLocalString(
+            String msg = I18N.getLocalString(
                     "create.jndi.resource.noResType",
                     "No type defined for JNDI resource.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg, true);
         }
 
         if (factoryClass == null) {
-            String msg = localStrings.getLocalString(
+            String msg = I18N.getLocalString(
                     "create.jndi.resource.noFactoryClassName",
                     "No Factory class name defined for JNDI resource.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg, true);
         }
 
         if (jndiLookupName == null) {
-            String msg = localStrings.getLocalString(
+            String msg = I18N.getLocalString(
                     "create.jndi.resource.noJndiLookupName",
                     "No Jndi Lookup name defined for JNDI resource.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg, true);
@@ -138,19 +137,19 @@ public class JndiResourceManager implements ResourceManager {
         return status;
     }
 
-    private void setAttributes(HashMap attributes, String target) {
-        jndiName = (String) attributes.get(JNDI_NAME);
-        jndiLookupName = (String) attributes.get(JNDI_LOOKUP);
-        resType = (String) attributes.get(RES_TYPE);
-        factoryClass = (String) attributes.get(FACTORY_CLASS);
+    private void setAttributes(ResourceAttributes attributes, String target) {
+        jndiName = attributes.getString(JNDI_NAME);
+        jndiLookupName = attributes.getString(JNDI_LOOKUP);
+        resType = attributes.getString(RES_TYPE);
+        factoryClass = attributes.getString(FACTORY_CLASS);
 
-        if (target != null) {
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String) attributes.get(ENABLED), target);
+        if (target == null) {
+            enabled = attributes.getString(ENABLED);
         } else {
-            enabled = (String) attributes.get(ENABLED);
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.getString(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
-        description = (String) attributes.get(DESCRIPTION);
+        enabledValueForTarget = attributes.getString(ENABLED);
+        description = attributes.getString(DESCRIPTION);
     }
 
     private Object createResource(Resources param, Properties properties) throws PropertyVetoException,
@@ -172,10 +171,10 @@ public class JndiResourceManager implements ResourceManager {
             newResource.setDescription(description);
         }
         if (properties != null) {
-            for (Map.Entry e : properties.entrySet()) {
+            for (String propertyName : properties.stringPropertyNames()) {
                 Property prop = newResource.createChild(Property.class);
-                prop.setName((String) e.getKey());
-                prop.setValue((String) e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
                 newResource.getProperty().add(prop);
             }
         }
@@ -183,19 +182,18 @@ public class JndiResourceManager implements ResourceManager {
     }
 
     @Override
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-            throws Exception {
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         setAttributes(attributes, null);
-        ResourceStatus status = null;
-        if (!validate) {
-            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
-        } else {
+        final ResourceStatus status;
+        if (validate) {
             status = isValid(resources, false, null);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
         if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        } else {
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 }

@@ -2,7 +2,7 @@
 <!--
 
     Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
-    Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -98,7 +98,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.10</jersey.version>
+        <jersey.version>3.1.11</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.3</jakarta.mail-api.version>

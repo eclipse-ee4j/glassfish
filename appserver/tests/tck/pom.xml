@@ -49,6 +49,7 @@
         <module>pages_tags</module>
         <module>pages_debugging</module>
         <module>servlet</module>
+        <module>security</module>
         <module>authentication</module>
         <module>authorization</module>
         <module>cdi</module>
@@ -61,6 +62,9 @@
     </modules>
 
     <properties>
+        <maven.executable>${maven.home}/bin/mvn${file.executable.suffix}</maven.executable>
+        <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
+
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.directoryName>glassfish7</glassfish.directoryName>
@@ -80,7 +84,7 @@
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
 
-        <omnifish.arquillian.version>2.0.0</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.1.1</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>
@@ -143,7 +147,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.7.0</version>
+                <version>7.11.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

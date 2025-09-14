@@ -38,8 +38,6 @@
         <faces.tck.version>4.0.3</faces.tck.version>
         <tck.root>${project.build.directory}</tck.root>
         <tck.parentPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/pom.xml</tck.parentPomFile>
-        <maven.executable>${maven.home}/bin/mvn</maven.executable>
-        <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
     </properties>
 
     <dependencyManagement>

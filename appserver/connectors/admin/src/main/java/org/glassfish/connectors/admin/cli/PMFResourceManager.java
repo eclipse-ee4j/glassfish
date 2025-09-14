@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.ResourceException;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
@@ -31,6 +31,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -43,38 +44,40 @@ import org.jvnet.hk2.annotations.Service;
 @I18n("create.pmf.resource")
 public class PMFResourceManager implements ResourceManager {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PMFResourceManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(PMFResourceManager.class);
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public ResourceStatus create(Resources resources, HashMap attributes, Properties properties, String target)
-            throws Exception {
+    @Override
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, Properties properties,
+        String target) throws Exception {
         return new ResourceStatus(ResourceStatus.WARNING, getWarningMessage(attributes));
     }
 
-    private String getWarningMessage(HashMap attributes) {
+    private String getWarningMessage(ResourceAttributes attributes) {
         //we do not support pmf-resource any more.
-        String jndiName = (String) attributes.get(ResourceConstants.JNDI_NAME);
-        String jdbcResourceJndiName= (String) attributes.get(ResourceConstants.JDBC_RESOURCE_JNDI_NAME);
+        String jndiName = attributes.getString(ResourceConstants.JNDI_NAME);
+        String jdbcResourceJndiName= attributes.getString(ResourceConstants.JDBC_RESOURCE_JNDI_NAME);
         String defaultMsg = "persistence-manager-factory-resource is not supported any more. Instead, " +
                 "use the jdbc-resource [ {0} ] referred by the persistence-manager-factory-resource [ {1} ] " +
                 "in the application(s).";
-        Object params[] = new Object[]{jdbcResourceJndiName, jndiName};
-        return localStrings.getLocalString("create.pmf.resource.not.supported", defaultMsg, params);
+        return I18N.getLocalString("create.pmf.resource.not.supported", defaultMsg, jdbcResourceJndiName, jndiName);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-            throws Exception {
+    @Override
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         throw new ResourceException(getWarningMessage(attributes));
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
+    @Override
     public String getResourceType() {
         return ServerTags.PERSISTENCE_MANAGER_FACTORY_RESOURCE;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package org.glassfish.resources.module;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
@@ -60,7 +59,6 @@ import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
@@ -74,10 +72,10 @@ import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.glassfish.resources.admin.cli.ResourceManager;
 import org.glassfish.resources.admin.cli.ResourcesXMLParser;
 import org.glassfish.resources.admin.cli.SunResourcesXML;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.glassfish.resources.api.ResourcesRegistry;
 import org.glassfish.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigSupport;
 
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
@@ -110,12 +108,6 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
     private final org.glassfish.resources.admin.cli.ResourceFactory resourceFactory;
 
     @Inject
-    private Domain domain;
-
-    @Inject
-    private ServerContext context;
-
-    @Inject
     private Provider<ResourcesApplication> resourcesApplicationProvider;
 
     private final ApplicationRegistry appRegistry;
@@ -123,9 +115,6 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
     private final Provider<ResourceManagerFactory> resourceManagerFactoryProvider;
 
     private final ResourcesBinder resourcesBinder;
-
-    @Inject
-    private ConfigSupport configSupport;
 
     @Inject
     private Events events;
@@ -333,8 +322,8 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      * @return jndi name if present, null otherwise
      */
     private SimpleJndiName extractJNDIName(org.glassfish.resources.api.Resource resource) {
-        HashMap attrs = resource.getAttributes();
-        return SimpleJndiName.of((String) attrs.get(JNDI_NAME));
+        ResourceAttributes attrs = resource.getAttributes();
+        return SimpleJndiName.of(attrs.getString(JNDI_NAME));
     }
 
     private boolean hasRAName(org.glassfish.resources.api.Resource resource) {
@@ -352,9 +341,9 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      */
     private String extractRAName(org.glassfish.resources.api.Resource resource) {
         if (resource.getType().equals(ADMIN_OBJECT_RESOURCE)) {
-            return (String) resource.getAttributes().get(RES_ADAPTER);
+            return resource.getAttributes().getString(RES_ADAPTER);
         }
-        return (String) resource.getAttributes().get(RES_ADAPTER_NAME);
+        return resource.getAttributes().getString(RES_ADAPTER_NAME);
     }
 
     private static void validateResourcesXML(File file, ResourcesXMLParser parser) throws ResourceConflictException {
@@ -472,11 +461,11 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
         List<Resource> resourceConfigs =
                 new ArrayList<>();
         for (org.glassfish.resources.api.Resource resource : resourcesToRegister) {
-            final HashMap attrList = resource.getAttributes();
+            final ResourceAttributes attrList = resource.getAttributes();
             final Properties props = resource.getProperties();
             String desc = resource.getDescription();
             if (desc != null) {
-                attrList.put("description", desc);
+                attrList.set("description", desc);
             }
 
             try {
@@ -500,15 +489,11 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
     }
 
     private static boolean isConnectorResource(org.glassfish.resources.api.Resource resource){
-        if(resource.getType().equals(ADMIN_OBJECT_RESOURCE) ||
-           resource.getType().equals(CONNECTOR_CONNECTION_POOL) ||
-                resource.getType().equals(CONNECTOR_RESOURCE) ||
-                resource.getType().equals(RESOURCE_ADAPTER_CONFIG) ||
-                resource.getType().equals(CONNECTOR_WORK_SECURITY_MAP)){
-            return true;
-        }else{
-            return false;
-        }
+        return resource.getType().equals(ADMIN_OBJECT_RESOURCE)
+            || resource.getType().equals(CONNECTOR_CONNECTION_POOL)
+            || resource.getType().equals(CONNECTOR_RESOURCE)
+            || resource.getType().equals(RESOURCE_ADAPTER_CONFIG)
+            || resource.getType().equals(CONNECTOR_WORK_SECURITY_MAP);
     }
 
     private static boolean isEmbeddedResource(org.glassfish.resources.api.Resource resource,
@@ -521,7 +506,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             } else if(resource.getType().equals(CONNECTOR_CONNECTION_POOL)){
                 attributeName = RES_ADAPTER_NAME;
             } else if(resource.getType().equals(CONNECTOR_RESOURCE)){
-                String poolName = (String)resource.getAttributes().get(POOL_NAME);
+                String poolName = resource.getAttributes().getString(POOL_NAME);
                 if(poolName != null){
                     org.glassfish.resources.api.Resource poolResource = getPoolResource(poolName, resources);
                     //point to poolResource
@@ -545,7 +530,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
         org.glassfish.resources.api.Resource result = null;
         for(org.glassfish.resources.api.Resource resource : resources){
             if(resource.getType().equals(CONNECTOR_CONNECTION_POOL)){
-                String cpName = (String)resource.getAttributes().get(CONNECTION_POOL_NAME);
+                String cpName = resource.getAttributes().getString(CONNECTION_POOL_NAME);
                 if(poolName.equals(cpName)){
                     result = resource;
                     break;
@@ -557,7 +542,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
 
     private static boolean isEmbeddedRar(org.glassfish.resources.api.Resource resource, String attributeName) {
         boolean result = false;
-        String raName = (String)resource.getAttributes().get(attributeName);
+        String raName = resource.getAttributes().getString(attributeName);
         if(raName != null && raName.contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)){
             result = true;
         }

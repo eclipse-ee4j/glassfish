@@ -33,8 +33,7 @@ instance-name
 
 The `create-local-instance` subcommand creates a {productName}
 instance on the node that represents the host where the subcommand is
-run. This subcommand does not require the Distributed Component Object
-Model (DCOM) remote protocol or secure shell (SSH) to be configured.
+run. This subcommand does not require the secure shell (SSH) to be configured.
 
 You must run this subcommand from the host that is represented by the
 node where the instance is to reside. To contact the domain
@@ -381,7 +380,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:create-instance.adoc#create-instance[`create-instance`(1)],
 xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
-xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
 xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
 xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)],
 xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],

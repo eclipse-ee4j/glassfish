@@ -23,7 +23,7 @@ import jakarta.ws.rs.Path;
 
 import java.util.logging.Logger;
 
-import org.glassfish.main.test.jta.timeout.war.stopwatch.Stopwatch;
+import org.glassfish.main.test.jdbc.jta.timeout.war.stopwatch.Stopwatch;
 
 @Path("timeout")
 @Stateless

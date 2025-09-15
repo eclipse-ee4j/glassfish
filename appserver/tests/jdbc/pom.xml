@@ -27,8 +27,8 @@
         <version>7.1.0-SNAPSHOT</version>
     </parent>
 
-    <name>GlassFish Performance Tests</name>
-    <artifactId>performance-tests</artifactId>
+    <name>GlassFish JDBC Tests</name>
+    <artifactId>jdbc-tests</artifactId>
 
     <dependencies>
         <dependency>

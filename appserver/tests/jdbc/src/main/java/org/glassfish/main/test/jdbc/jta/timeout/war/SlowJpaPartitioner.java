@@ -24,7 +24,7 @@ import jakarta.persistence.PersistenceContext;
 
 import java.lang.System.Logger;
 
-import org.glassfish.main.test.jta.timeout.war.stopwatch.Stopwatch;
+import org.glassfish.main.test.jdbc.jta.timeout.war.stopwatch.Stopwatch;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;

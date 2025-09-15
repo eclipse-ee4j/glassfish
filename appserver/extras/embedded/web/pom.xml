@@ -1370,6 +1370,15 @@
             <type>glassfish-jar</type>
             <optional>true</optional>
         </dependency>
+
+        <!-- All MicroProfile features -->
+        <dependency>
+            <groupId>org.glassfish.main.featuresets</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -1403,6 +1412,28 @@
                             <includeTypes>jar,glassfish-jar</includeTypes>
                             <includes>**/*.class</includes>
                             <excludes>module-info.class,META-INF/versions/*/module-info.class</excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-featurepacks-dependencies</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <outputDirectory>${projecty.build.outputDirectory}</outputDirectory>
+                            <excludeTransitive>false</excludeTransitive>
+                            <includeScope>compile</includeScope>
+                            <includeScope>runtime</includeScope>
+                            <includeTypes>jar,glassfish-jar</includeTypes>
+                            <includes>**/*.class</includes>
+                            <excludes>module-info.class,META-INF/versions/*/module-info.class</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.featuresets</groupId>
+                                    <artifactId>microprofile</artifactId>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                     <execution>

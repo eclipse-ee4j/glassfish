@@ -48,6 +48,7 @@
         <module>web</module>
         <module>glassfish</module>
         <module>embedded-web</module>
+        <module>embedded-all</module>
         <module>debug</module>
     </modules>
 </project>

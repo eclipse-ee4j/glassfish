@@ -25,7 +25,6 @@
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>embedded</artifactId>
         <version>7.1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>glassfish-embedded-web</artifactId>
@@ -47,6 +46,12 @@
             <version>${project.version}</version>
             <type>pom</type>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.mwiede</groupId>
+                    <artifactId>jsch</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

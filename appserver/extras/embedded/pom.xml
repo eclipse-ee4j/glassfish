@@ -40,8 +40,8 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- We need to override defaults to compile to include it in the distributions. 
-                 The default scope is set in the root parent to "test" 
+            <!-- We need to override defaults to compile to include it in the distributions.
+                 The default scope is set in the root parent to "test"
             -->
             <dependency>
                 <groupId>org.glassfish.main</groupId>

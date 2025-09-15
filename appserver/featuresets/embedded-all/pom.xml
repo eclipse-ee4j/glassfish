@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.featuresets</groupId>
+        <artifactId>featuresets</artifactId>
+        <version>7.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>embedded-all</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Embedded Glassfish All Featureset</name>
+    <description>This pom defines the set of packages for the Embedded GlassFish All</description>
+
+    <dependencies>
+        <!-- pull Embedded GlassFish Web featureset -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>embedded-web</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>antlr</artifactId>
+            <version>${antlr.version}</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-ejb-mapping</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-support-ejb</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-support-sqlstore</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.main.persistence</groupId>
+                    <artifactId>entitybean-container</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-utility</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-model</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-internal-api</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-generator-database</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.persistence.cmp</groupId>
+            <artifactId>cmp-enhancer</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>dbschema</artifactId>
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.ibm.jbatch</groupId>
+            <artifactId>com.ibm.jbatch.container</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.jbatch</groupId>
+            <artifactId>com.ibm.jbatch.spi</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-impl</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-connector</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.deployment</groupId>
+            <artifactId>deployment-jakartaee-full</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.batch</groupId>
+            <artifactId>glassfish-batch-commands</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.batch</groupId>
+            <artifactId>glassfish-batch-connector</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.enterprise.concurrent</artifactId>
+
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-csiv2-idl</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-orb</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.osgi</groupId>
+                    <artifactId>osgi.core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main.ejb</groupId>
+            <artifactId>ejb-timer-databases</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.ejb</groupId>
+            <artifactId>ejb-full-container</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>ejb.security</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-enabler</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-iiop</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+
+
+        <!-- glassfish-jmx -->
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-mbeanserver</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>amx-core</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+
+        <!-- glassfish-ejb-lite -->
+
+        <!-- glassfish-grizzly -->
+
+        <!-- additional grizzly modules package which includes websockets -->
+
+        <!-- glassfish-jca -->
+        <!-- glassfish-jcdi -->
+
+
+        <!-- glassfish-jms -->
+        <dependency>
+            <groupId>org.glassfish.main.connectors</groupId>
+            <artifactId>connectors-inbound-runtime</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>gf-jms-connector</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>gf-jms-injection</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jms-admin</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jms-core</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jmsra</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <!-- glassfish-jpa -->
+        <!-- glassfish-jsf -->
+        <!-- glassfish-jta -->
+        <!-- glassfish-jts -->
+        <!-- glassfish-management -->
+        <!-- glassfish-nucleus -->
+        <!-- glassfish-web -->
+
+
+
+
+        <dependency>
+            <groupId>org.glassfish.main.jackson.module</groupId>
+            <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>metro-glue</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>webservices-connector</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>jsr109-impl</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>soap-tcp</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-osgi</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-extra-jdk-packages</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>webservices.security</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
+        <!-- xmlsec depends on commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>stax2-api</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.appclient</groupId>
+            <artifactId>gf-client-module</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.weld.se</groupId>
+                    <artifactId>weld-se-shaded</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.appclient</groupId>
+            <artifactId>acc-config</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.appclient.server</groupId>
+            <artifactId>appclient-connector</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.appclient.server</groupId>
+            <artifactId>appclient-server-core</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>appclient.security</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
+
+        </dependency>
+
+        <!-- We cannot unpack dependency from zip file, so we need classes from the jar file -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbytools</artifactId>
+            <version>${derby.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyshared</artifactId>
+            <version>${derby.version}</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>mq-distribution</artifactId>
+            <version>${openmq.version}</version>
+            <type>zip</type>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>webservices-scripts</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>metro-fragments</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+
+        </dependency>
+    </dependencies>
+</project>

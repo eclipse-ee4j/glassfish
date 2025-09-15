@@ -186,6 +186,14 @@
                     <groupId>com.sun.xml.bind</groupId>
                     <artifactId>jaxb-osgi</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.github.mwiede</groupId>
+                    <artifactId>jsch</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.cluster</groupId>
+                    <artifactId>cluster-common</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -436,59 +444,6 @@
 
         </dependency>
         <!-- nucleus-cluster -->
-        <dependency>
-            <groupId>org.glassfish.main.cluster</groupId>
-            <artifactId>cluster-cli</artifactId>
-            <version>${project.version}</version>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-osgi</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.cluster</groupId>
-            <artifactId>cluster-admin</artifactId>
-            <version>${project.version}</version>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-osgi</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.cluster</groupId>
-            <artifactId>cluster-common</artifactId>
-            <version>${project.version}</version>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-osgi</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.cluster</groupId>
-            <artifactId>cluster-ssh</artifactId>
-            <version>${project.version}</version>
-
-        </dependency>
-        <dependency>
-            <groupId>com.github.mwiede</groupId>
-            <artifactId>jsch</artifactId>
-
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.cluster</groupId>
-            <artifactId>gms-adapter</artifactId>
-            <version>${project.version}</version>
-
-        </dependency>
         <!-- glassfish-management -->
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -817,7 +772,16 @@
             <groupId>org.glassfish.main.connectors</groupId>
             <artifactId>connectors-admin</artifactId>
             <version>${project.version}</version>
-
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.mwiede</groupId>
+                    <artifactId>jsch</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.cluster</groupId>
+                    <artifactId>cluster-admin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.connectors</groupId>
@@ -1306,7 +1270,12 @@
             <groupId>org.glassfish.main.jdbc</groupId>
             <artifactId>jdbc-admin</artifactId>
             <version>${project.version}</version>
-
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.main.cluster</groupId>
+                    <artifactId>cluster-admin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.jdbc</groupId>

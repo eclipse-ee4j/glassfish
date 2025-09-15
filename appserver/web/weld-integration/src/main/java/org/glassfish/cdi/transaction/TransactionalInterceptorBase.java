@@ -41,8 +41,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LoggerInfo;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
@@ -221,7 +221,7 @@ public class TransactionalInterceptorBase implements Serializable {
     private void markRollbackIfActiveTransaction() throws SystemException {
         Transaction transaction = getTransactionManager().getTransaction();
         if (transaction != null) {
-            LOG.log(INFO, "About to setRollbackOnly from @Transactional interceptor on transaction: {0}", transaction);
+            LOG.log(DEBUG, "About to setRollbackOnly from @Transactional interceptor on transaction: {0}", transaction);
             getTransactionManager().setRollbackOnly();
         }
     }

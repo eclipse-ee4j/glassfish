@@ -52,8 +52,8 @@ import static org.testcontainers.utility.MountableFile.forClasspathResource;
  * Environment of Eclipse GlassFish, Derby and Postgress SQL databases.
  */
 public class DockerTestEnvironment {
-    public static final int LIMIT_DB = 220;
-    public static final int LIMIT_JDBC = 100;
+    public static final int LIMIT_DB = 300;
+    public static final int LIMIT_JDBC = 200;
 
     private static final Logger LOG = System.getLogger(DockerTestEnvironment.class.getName());
     private static final Logger LOG_DB = System.getLogger("DB");
@@ -147,7 +147,7 @@ public class DockerTestEnvironment {
                 "--isconnectvalidatereq", "true", "--failconnection", "true", //
                 "--property", "user=" + DATABASE.getUsername() + ":password=" + DATABASE.getPassword() //
                     + ":DatabaseName=" + DATABASE.getDatabaseName() //
-                    + ":ServerName=tc-testdb:port=" + 5432 + ":connectTimeout=1" //
+                    + ":ServerName=tc-testdb:port=" + 5432 + ":connectTimeout=10" //
                 , //
                 poolName).getExitCode());
             assertEquals(0,
@@ -164,6 +164,7 @@ public class DockerTestEnvironment {
 
     public static void disconnectDatabase(int seconds) {
         DockerClient client = DockerClientFactory.instance().client();
+        LOG.log(INFO, "Disconnecting database from network!");
         client.disconnectFromNetworkCmd().withNetworkId(NET.getId()).withContainerId(DATABASE.getContainerId()).exec();
         try {
             Thread.sleep(seconds * 1000L);
@@ -171,6 +172,7 @@ public class DockerTestEnvironment {
             Thread.currentThread().interrupt();
         }
         client.connectToNetworkCmd().withNetworkId(NET.getId()).withContainerId(DATABASE.getContainerId()).exec();
+        LOG.log(INFO, "Database reconnected to the network!");
     }
 
 

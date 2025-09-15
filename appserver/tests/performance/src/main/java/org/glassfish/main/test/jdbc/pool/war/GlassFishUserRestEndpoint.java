@@ -39,6 +39,11 @@ public class GlassFishUserRestEndpoint {
     @Transactional(TxType.REQUIRES_NEW)
     public void create(User user) {
         em.persist(user);
+//        try {
+//            Thread.sleep(50L);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
     }
 
 

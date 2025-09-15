@@ -48,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.DockerClientFactory;
 
 import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
 import static org.glassfish.main.test.jdbc.jta.timeout.war.SlowJpaPartitioner.TIMEOUT_IN_SECONDS;
@@ -65,6 +66,7 @@ import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * This test verifies log messages in server.log file after JTA exceptions.
@@ -99,12 +101,16 @@ public class JtaTimeoutLoggingITest {
             + ".executePreparedPartition\\(\\)" + LOG_END);
 
     private static final String APPNAME = "jtaTimeout";
+    private static boolean dockerAvailable;
     private static LogCollectorHandler domainLog;
     private static WebTarget wsEndpoint;
 
 
+
     @BeforeAll
     public static void init() throws Exception {
+        dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
+        assumeTrue(dockerAvailable, "Docker is not available on this environment");
         final java.util.logging.Logger logger = DockerTestEnvironment.getDomainLogger();
         assertNotNull(logger, "domain logger was not found");
         final Filter filter = event -> {
@@ -133,6 +139,9 @@ public class JtaTimeoutLoggingITest {
 
     @AfterAll
     public static void cleanup() throws Exception {
+        if (!dockerAvailable) {
+            return;
+        }
         domainLog.close();
         undeploy(APPNAME);
         asadmin("set", "configs.config.server-config.transaction-service.timeout-in-seconds=0");
@@ -213,9 +222,9 @@ public class JtaTimeoutLoggingITest {
     private Set<Matcher<? super String>> getPatternsForRollbackMessage(final int localTxStatus) {
         return Arrays.stream(new String[] {"EJB5123:Rolling back timed out transaction ", //
             "\\[JavaEETransactionImpl\\: txId=[0-9]+" //
-                + " nonXAResource=\\<ResourceHandle id=[0-9]+," //
-                + " state=\\<ResourceState enlisted=true\\, busy=true\\/\\>" //
-                + "\\/\\> jtsTx=null localTxStatus=" + localTxStatus //
+                + " nonXAResource=ResourceHandle\\[id=[0-9]+," //
+                + " state=ResourceState\\[enlisted=true\\, busy=true\\, usages=[0-9]+\\]\\]" //
+                + " jtsTx=null localTxStatus=" + localTxStatus //
                 + " syncs=", //
             "com.sun.ejb.containers.SimpleEjbResourceHandlerImpl\\@[0-9a-f]+", //
             "com.sun.ejb.containers.ContainerSynchronization\\@[0-9a-f]+", //

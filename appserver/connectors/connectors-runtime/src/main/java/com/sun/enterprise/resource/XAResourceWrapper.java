@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,14 +17,16 @@
 
 package com.sun.enterprise.resource;
 
-import com.sun.logging.LogDomains;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+import java.util.Objects;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
  * This is class is used for debugging. It prints out
@@ -32,134 +34,128 @@ import javax.transaction.xa.Xid;
  * directing the call to the actual XAResource object
  *
  * @author Tony Ng
- *
+ * @author David Matějček
  */
 public class XAResourceWrapper implements XAResource {
 
-    // the actual XAResource object
-    private XAResource res;
+    private static final Logger LOG = System.getLogger(XAResourceWrapper.class.getName());
+    private final XAResource resource;
 
-    public XAResourceWrapper(XAResource res) {
-        this.res = res;
+    /**
+     * Wraps the resource
+     *
+     * @param resource
+     */
+    public XAResourceWrapper(XAResource resource) {
+        this.resource = Objects.requireNonNull(resource, "resource");
     }
-
-    // Create logger object per Java SDK 1.4 to log messages
-    // introduced Santanu De, Sun Microsystems, March 2002
-
-    private static Logger _logger ;
-    static{
-           _logger = LogDomains.getLogger(XAResourceWrapper.class, LogDomains.RSR_LOGGER);
-          }
 
     @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
-        print("XAResource.commit: " + xidToString(xid) + "," + onePhase);
-        res.commit(xid, onePhase);
+        LOG.log(DEBUG, () -> "commit: " + xidToString(xid) + ", onePhase=" + onePhase);
+        resource.commit(xid, onePhase);
     }
 
     @Override
     public void end(Xid xid, int flags) throws XAException {
-        print("XAResource.end: " + xidToString(xid) + "," +
-              flagToString(flags));
-        res.end(xid, flags);
+        LOG.log(DEBUG, () -> "end: " + xidToString(xid) + ", flags=" + flagToString(flags));
+        resource.end(xid, flags);
     }
 
 
     @Override
     public void forget(Xid xid) throws XAException {
-        print("XAResource.forget: " + xidToString(xid));
-        res.forget(xid);
+        LOG.log(DEBUG, () -> "forget: " + xidToString(xid));
+        resource.forget(xid);
     }
 
     @Override
     public int getTransactionTimeout() throws XAException {
-        return res.getTransactionTimeout();
+        return resource.getTransactionTimeout();
     }
 
     @Override
     public boolean isSameRM(XAResource xares) throws XAException {
         if (xares instanceof XAResourceWrapper) {
             XAResourceWrapper other = (XAResourceWrapper) xares;
-            boolean result = res.isSameRM(other.res);
-            print("XAResource.isSameRM: " + res + "," + other.res + "," +
-                  result);
-            return result;
-        } else {
-            boolean result = res.isSameRM(xares);
-            print("XAResource.isSameRM: " + res + "," + xares + "," +
-                  result);
-            return result;
-            //throw new IllegalArgumentException("Has to use XAResourceWrapper for all XAResource objects: " + xares);
+            return resource.isSameRM(other.resource);
         }
+        return resource.isSameRM(xares);
     }
 
     @Override
     public int prepare(Xid xid) throws XAException {
-        print("XAResource.prepare: " + xidToString(xid));
-        int result = res.prepare(xid);
-        print("prepare result = " + flagToString(result));
+        LOG.log(TRACE, () -> "prepare: " + xidToString(xid));
+        int result = resource.prepare(xid);
+        LOG.log(DEBUG, () -> "prepare: " + xidToString(xid) + ", result=" + prepareResultToString(result));
         return result;
     }
 
     @Override
     public Xid[] recover(int flag) throws XAException {
-        print("XAResource.recover: " + flagToString(flag));
-        return res.recover(flag);
+        LOG.log(DEBUG, () -> "recover: flag=" + flagToString(flag));
+        return resource.recover(flag);
     }
 
     @Override
     public void rollback(Xid xid) throws XAException {
-        print("XAResource.rollback: " + xidToString(xid));
-        res.rollback(xid);
+        LOG.log(DEBUG, () -> "rollback: " + xidToString(xid));
+        resource.rollback(xid);
     }
 
     @Override
     public boolean setTransactionTimeout(int seconds) throws XAException {
-        return res.setTransactionTimeout(seconds);
+        LOG.log(DEBUG, () -> "setTransactionTimeout: " + seconds + " s");
+        return resource.setTransactionTimeout(seconds);
     }
 
     @Override
     public void start(Xid xid, int flags) throws XAException {
-        print("XAResource.start: " + xidToString(xid) + "," +
-              flagToString(flags));
-        res.start(xid, flags);
-    }
-
-    private void print(String s) {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,s);
-        }
+        LOG.log(DEBUG, () -> "start: " + xidToString(xid) + ", flags=" + flagToString(flags));
+        resource.start(xid, flags);
     }
 
     private static String xidToString(Xid xid) {
-        return String.valueOf((new String(xid.getGlobalTransactionId()) +
-                               new String(xid.getBranchQualifier())).hashCode());
+        return "XID[global/branch]=" + new String(xid.getGlobalTransactionId(), ISO_8859_1) + "/"
+            + new String(xid.getBranchQualifier(), ISO_8859_1);
     }
 
+
     private static String flagToString(int flag) {
+        // See start+recover javadoc!
         switch (flag) {
-        case TMFAIL:
-            return "TMFAIL";
-        case TMJOIN:
-            return "TMJOIN";
-        case TMNOFLAGS:
-            return "TMNOFLAGS";
-        case TMONEPHASE:
-            return "TMONEPHASE";
-        case TMRESUME:
-            return "TMRESUME";
-        case TMSTARTRSCAN:
-            return "TMSTARTRSCAN";
-        case TMENDRSCAN:
-            return "TMENDRSCAN";
-        case TMSUCCESS:
-            return "TMSUCCESS";
-        case TMSUSPEND:
-            return "TMSUSPEND";
-        case XA_RDONLY:
-            return "XA_RDONLY";
-        default:
-            return "" + Integer.toHexString(flag);
+            case TMSTARTRSCAN:
+                return "TMSTARTRSCAN";
+            case TMENDRSCAN:
+                return "TMENDRSCAN";
+            case TMNOFLAGS:
+                return "TMNOFLAGS";
+            case TMJOIN:
+                return "TMJOIN";
+            case TMRESUME:
+                return "TMRESUME";
+            case TMFAIL:
+                return "TMFAIL";
+            case TMSUCCESS:
+                return "TMSUCCESS";
+            case TMSUSPEND:
+                return "TMSUSPEND";
+            case TMONEPHASE:
+                return "TMONEPHASE";
+            default:
+                return "UNKNOWN[" + Integer.toHexString(flag) + "]";
+        }
+    }
+
+    private static String prepareResultToString(int result) {
+        // See prepare javadoc!
+        switch (result) {
+            case XA_RDONLY:
+                return "XA_RDONLY";
+            case XA_OK:
+                return "XA_OK";
+            default:
+                return "UNKNOWN[" + result + "]";
         }
     }
 
@@ -172,18 +168,18 @@ public class XAResourceWrapper implements XAResource {
             return false;
         }
         if (obj instanceof XAResourceWrapper) {
-            XAResource other = ((XAResourceWrapper) obj).res;
-            return res.equals(other);
+            XAResource other = ((XAResourceWrapper) obj).resource;
+            return resource.equals(other);
         }
         if (obj instanceof XAResource) {
             XAResource other = (XAResource) obj;
-            return res.equals(other);
+            return resource.equals(other);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return res.hashCode();
+        return resource.hashCode();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,36 +28,52 @@ import jakarta.resource.spi.ManagedConnection;
  */
 public class AssocWithThreadResourceHandle extends ResourceHandle {
 
-    private boolean associated_;
-    private long threadId_;
-    private boolean dirty_;
+    private static final int NO_ASSOCIATED_THREAD = -1;
+    private boolean associated;
+    private long threadId = NO_ASSOCIATED_THREAD;
+    private boolean unusable;
 
     public AssocWithThreadResourceHandle(ManagedConnection resource, ResourceSpec spec, ResourceAllocator alloc) {
         super(resource, spec, alloc);
     }
 
-    public boolean isDirty() {
-        return dirty_;
+    /**
+     * @return true if the resource should not be used again.
+     */
+    public boolean isUnusable() {
+        return unusable;
     }
 
-    public void setDirty() {
-        dirty_ = true;
+    /**
+     * Mark the resource to not to be provided again.
+     * Usually because it is somehow broken or the pool will be destroyed.
+     */
+    public void setUnusable() {
+        this.unusable = true;
     }
 
+    /**
+     * Associated resource is owned by a thread and will not be put back to the pool.
+     *
+     * @return true if associated with thread.
+     */
     public boolean isAssociated() {
-        return associated_;
+        return associated;
     }
 
-    public void setAssociated(boolean flag) {
-        associated_ = flag;
+    /**
+     * @param associated true to associate with thread.
+     */
+    public void setAssociated(boolean associated) {
+        this.associated = associated;
+        this.threadId = associated ? Thread.currentThread().getId() : NO_ASSOCIATED_THREAD;
     }
 
+    /**
+     * @return id of the associated thread, -1 if the resource is NOT associated with a thread.
+     */
     public long getThreadId() {
-        return threadId_;
-    }
-
-    public void setThreadId(long threadId) {
-        threadId_ = threadId;
+        return threadId;
     }
 
     @Override

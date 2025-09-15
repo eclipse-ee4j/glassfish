@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,22 +20,23 @@ package com.sun.enterprise.resource.listener;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.logging.LogDomains;
 
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ManagedConnection;
 
+import java.lang.System.Logger;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map.Entry;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * @author Binod P.G
  */
 public class LocalTxConnectionEventListener extends ConnectionEventListener {
 
-    private static final Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = System.getLogger(LocalTxConnectionEventListener.class.getName());
 
     /**
      * A shortcut to the singleton PoolManager instance. Field could also be removed.
@@ -61,33 +62,26 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
 
     public LocalTxConnectionEventListener(ResourceHandle resource) {
         this.resource = resource;
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "LocalTxConnectionEventListener constructor, resource=" + resource + ", this=" + this);
-        }
+        LOG.log(DEBUG, () -> "Created LocalTxConnectionEventListener for " + resource + ", this=" + this);
     }
 
     @Override
     public synchronized void connectionClosed(ConnectionEvent evt) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "LocalTxConnectionEventListener.connectionClosed START, resource=" + resource + ", this=" + this);
-            for (Object key : associatedHandles.keySet()) {
-                ResourceHandle associatedHandle = associatedHandles.get(key);
-                logger.log(Level.FINE,
-                        "LocalTxConnectionEventListener.connectionClosed associatedHandles: key=" + key + ", handle=" + associatedHandle);
-                logger.log(Level.FINE,
-                        "LocalTxConnectionEventListener.connectionClosed associatedHandles: resource=" + associatedHandle.getResource());
+        if (LOG.isLoggable(DEBUG)) {
+            LOG.log(DEBUG, () -> "connectionClosed START, resource=" + resource + ", this=" + this);
+            for (Entry<Object, ResourceHandle> entry : associatedHandles.entrySet()) {
+                LOG.log(DEBUG, () -> "connectionClosed associatedHandles: key=" + entry.getKey() + ", handle="
+                    + entry.getValue() + ", resource=" + entry.getValue().getResource());
             }
         }
 
         Object connectionHandle = evt.getConnectionHandle();
         ResourceHandle handle = associatedHandles.getOrDefault(connectionHandle, resource);
         // ManagedConnection instance is still valid and put back in the pool: do not remove the event listener.
+
         poolManager.resourceClosed(handle);
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "LocalTxConnectionEventListener.connectionClosed END, resource=" + resource + ", handle=" + handle + ", this=" + this);
-        }
+        LOG.log(DEBUG, () -> "connectionClosed END, resource=" + resource + ", handle=" + handle + ", this=" + this);
     }
 
     @Override
@@ -141,9 +135,8 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * @param resourceHandle the original Handle
      */
     public synchronized void associateHandle(Object userHandle, ResourceHandle resourceHandle) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "LocalTxConnectionEventListener associateHandle, userHandle=" + userHandle + ", resourceHandle=" + resourceHandle + ", this=" + this);
-        }
+        LOG.log(DEBUG, () -> "associateHandle for userHandle=" + userHandle + ", resourceHandle=" + resourceHandle
+            + ", this=" + this);
         associatedHandles.put(userHandle, resourceHandle);
     }
 
@@ -155,9 +148,7 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * can also indicate that the map previously associated null with userHandle.
      */
     public synchronized ResourceHandle removeAssociation(Object userHandle) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "LocalTxConnectionEventListener removeAssociation, userHandle=" + userHandle + ", this=" + this);
-        }
+        LOG.log(DEBUG, () -> "removeAssociation for userHandle=" + userHandle + ", this=" + this);
         return associatedHandles.remove(userHandle);
     }
 
@@ -166,9 +157,10 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * @return The clone of the associatedHandles map.
      */
     public synchronized Map<Object, ResourceHandle> getAssociatedHandlesAndClearMap() {
-        logger.log(Level.FINE, "LocalTxConnectionEventListener getAssociatedHandlesAndClearMap, this=" + this);
+        LOG.log(DEBUG, () -> "getAssociatedHandlesAndClearMap, this=" + this);
 
         // Clone the associatedHandles, because we will clear the list in this method
+        @SuppressWarnings("unchecked")
         IdentityHashMap<Object, ResourceHandle> result = (IdentityHashMap<Object, ResourceHandle>) associatedHandles.clone();
 
         // Clear the associatedHandles

@@ -691,14 +691,13 @@ public class ManagedConnectionImpl
     Connection getActualConnection() throws ResourceException {
         if (connectionType == ISXACONNECTION || connectionType == ISPOOLEDCONNECTION) {
             try {
-                if (actualConnection == null) {
+                if (actualConnection == null && pooledConnection != null) {
                     actualConnection = pooledConnection.getConnection();
 
                     // re-initialize lastAutoCommitValue such that resetAutoCommit() wont
                     // affect autoCommit of actualConnection
                     setLastAutoCommitValue(defaultAutoCommitValue);
                 }
-
             } catch (SQLException sqle) {
                 throw new ResourceException(sqle.getMessage(), sqle);
             }

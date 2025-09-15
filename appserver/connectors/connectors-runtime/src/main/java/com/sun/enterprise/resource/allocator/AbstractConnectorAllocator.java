@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,7 +52,7 @@ import javax.security.auth.Subject;
  * @author Sivakumar Thyagarajan
  */
 public abstract class AbstractConnectorAllocator implements ResourceAllocator {
-    protected final static Logger _logger = LogDomains.getLogger(AbstractConnectorAllocator.class,LogDomains.RSR_LOGGER);
+    protected final static Logger LOG = LogDomains.getLogger(AbstractConnectorAllocator.class,LogDomains.RSR_LOGGER);
 
     protected PoolManager poolMgr;
     protected ResourceSpec spec;
@@ -104,13 +104,9 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
                     h.getResourceSpec().getPoolInfo(),
                     re.getClass(),
                     re.getMessage() };
-            _logger.log(Level.WARNING,
-                    "pool.get_invalid_connections_resourceexception", args);
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "", re);
-            }
+            LOG.log(Level.WARNING, "pool.get_invalid_connections_resourceexception", args);
+            LOG.log(Level.FINE, "Failed to check if the connection is valid.", re);
         }
-
         return (invalids == null || invalids.isEmpty()) && !h.hasConnectionErrorOccurred();
     }
 
@@ -138,7 +134,7 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
             ManagedConnection mc = h.getResource();
             mc.cleanup();
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, "managed_con.cleanup-failed", ex);
+            LOG.log(Level.WARNING, "managed_con.cleanup-failed", ex);
             throw new PoolingException(ex.toString(), ex);
         }
     }
@@ -183,7 +179,7 @@ public abstract class AbstractConnectorAllocator implements ResourceAllocator {
         try {
             pt = ConnectorRuntime.getRuntime().getPoolType(spec.getPoolInfo());
         } catch (ConnectorRuntimeException cre) {
-            _logger.log(Level.WARNING,"unable_to_determine_pool_type", spec.getPoolInfo());
+            LOG.log(Level.WARNING,"unable_to_determine_pool_type", spec.getPoolInfo());
         }
         if (pt == ConnectorConstants.PoolType.ASSOCIATE_WITH_THREAD_POOL) {
             return new AssocWithThreadResourceHandle(resource, spec, alloc);

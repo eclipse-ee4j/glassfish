@@ -36,6 +36,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
@@ -47,6 +48,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.testcontainers.DockerClientFactory;
 
 import static java.lang.Math.min;
 import static java.lang.System.Logger.Level.INFO;
@@ -64,22 +66,33 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.openjdk.jmh.runner.options.TimeValue.seconds;
 
+@EnabledIfSystemProperty(
+    named = "enableHWDependentTests",
+    matches = "true",
+    disabledReason = "Test depends on hardware performance")
 @ExtendWith(TestLoggingExtension.class)
 public class JdbcPoolPerformanceIT {
     private static final Logger LOG = System.getLogger(JdbcPoolPerformanceIT.class.getName());
     private static final String APPNAME = "perf";
     private static final int LIMIT_JMH_THREADS = 500;
+    private static boolean dockerAvailable;
     private static WebTarget wsEndpoint;
 
     @BeforeAll
     public static void init() throws Exception {
+        dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
+        assumeTrue(dockerAvailable, "Docker is not available on this environment");
         wsEndpoint = deploy(APPNAME, getArchiveToDeploy());
     }
 
     @AfterAll
     public static void cleanup() throws Exception {
+        if (!dockerAvailable) {
+            return;
+        }
         undeploy(APPNAME);
         DockerTestEnvironment.reinitializeDatabase();
     }
@@ -89,8 +102,8 @@ public class JdbcPoolPerformanceIT {
         Options options = createOptions();
 //        Thread networkIssue = new Thread(() -> {
 //            try {
-//                Thread.sleep(1);
-//                DockerTestEnvironment.disconnectDatabase(1);
+//                Thread.sleep(10);
+//                DockerTestEnvironment.disconnectDatabase(2);
 //            } catch (InterruptedException e) {
 //                Thread.currentThread().interrupt();
 //            }

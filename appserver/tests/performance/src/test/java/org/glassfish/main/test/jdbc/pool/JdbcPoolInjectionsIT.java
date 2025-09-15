@@ -30,25 +30,33 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.testcontainers.DockerClientFactory;
 
 import static org.glassfish.main.test.perf.util.DockerTestEnvironment.deploy;
 import static org.glassfish.main.test.perf.util.DockerTestEnvironment.undeploy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @ExtendWith(TestLoggingExtension.class)
 public class JdbcPoolInjectionsIT {
     private static final String APPNAME = "dspools";
+    private static boolean dockerAvailable;
     private static WebTarget wsEndpoint;
 
 
     @BeforeAll
     public static void init() throws Exception {
+        dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
+        assumeTrue(dockerAvailable, "Docker is not available on this environment");
         wsEndpoint = deploy(APPNAME, DataSourceDefinitionBean.class, JdbcDsName.class, RestAppConfig.class);
     }
 
     @AfterAll
     public static void cleanup() throws Exception {
+        if (!dockerAvailable) {
+            return;
+        }
         undeploy(APPNAME);
         DockerTestEnvironment.reinitializeDatabase();
     }

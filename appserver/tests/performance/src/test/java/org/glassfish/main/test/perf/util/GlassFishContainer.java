@@ -78,7 +78,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
             cmd.withAttachStderr(true);
             cmd.withAttachStdout(true);
             final HostConfig hostConfig = cmd.getHostConfig();
-            hostConfig.withMemory(16 * 1024 * 1024 * 1024L);
+            hostConfig.withMemory(8 * 1024 * 1024 * 1024L);
             hostConfig.withMemorySwappiness(0L);
             hostConfig.withUlimits(new Ulimit[] {new Ulimit("nofile", 4096L, 8192L)});
         })
@@ -187,7 +187,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         // FIXME: Does not work, see https://github.com/eclipse-ee4j/glassfish/issues/25701
 //        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" delete-jvm-options ").append("-Xmx512m");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-jvm-options ").append("-Xmx4g");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-jvm-options ").append("-Xmx2g");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" restart-domain ").append("domain1");
         command.append(" && tail -n 10000 -F ").append(PATH_DOCKER_GF_DOMAIN1_SERVER_LOG);
         return command.toString();

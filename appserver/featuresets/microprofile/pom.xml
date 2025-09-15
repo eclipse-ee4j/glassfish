@@ -139,6 +139,12 @@
         <dependency>
             <groupId>org.glassfish.jersey.ext.microprofile</groupId>
             <artifactId>jersey-mp-rest-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                    <artifactId>jersey-weld2-se</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Required by the jersey-mp-rest-client OSGi bundle -->
         <dependency>

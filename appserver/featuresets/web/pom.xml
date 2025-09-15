@@ -42,7 +42,7 @@
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
-        
+
         <!-- pull MicroProfile featureset -->
         <dependency>
             <groupId>${project.groupId}</groupId>

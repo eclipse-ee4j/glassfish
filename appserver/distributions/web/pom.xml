@@ -89,36 +89,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>do stuff</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <macrodef name="jarupdate">
-                                    <attribute name="basedir"/>
-                                    <attribute name="includes"/>
-                                    <attribute name="destfile"/>
-                                    <sequential>
-                                        <zip destfile="@{destfile}.tmp">
-                                            <zipfileset src="@{destfile}" excludes="@{includes}"/>
-                                        </zip>
-                                        <move file="@{destfile}.tmp" tofile="@{destfile}" />
-                                        <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
-                                    </sequential>
-                                </macrodef>
-
-                                <jarupdate
-                                    basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-hk2.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/tyrus-client" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/tyrus-client.jar"
-                                />
-                            </target>
-                        </configuration>
+                        <id>apply patchespatch</id>
                     </execution>
                 </executions>
             </plugin>

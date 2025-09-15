@@ -36,7 +36,6 @@
     <properties>
         <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
         <glassfish.appclient>${project.build.directory}/stage/glassfish7/glassfish/lib/appclient</glassfish.appclient>
-        <patches>${basedir}/src/main/patches</patches>
     </properties>
 
     <dependencies>
@@ -82,62 +81,9 @@
 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>${ant.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant-contrib</groupId>
-                        <artifactId>ant-contrib</artifactId>
-                        <version>1.0b2</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>ant</groupId>
-                                <artifactId>ant</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
-                        <id>do stuff</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-
-                                <macrodef name="jarupdate">
-                                    <attribute name="basedir"/>
-                                    <attribute name="destfile"/>
-                                    <sequential>
-                                        <echo>PATCHING</echo>
-                                        <zip update="true" basedir="@{basedir}" destfile="@{destfile}" />
-                                    </sequential>
-                                </macrodef>
-
-                                <jarupdate
-                                    basedir="${patches}/microprofile-jwt-auth-api"
-                                    destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/microprofile-rest-client-api"
-                                    destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
-                                />
-                                <jarupdate
-                                           basedir="${patches}/microprofile-health-api"
-                                           destfile="${glassfish.modules}/microprofile-health-api.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/tyrus-client"
-                                    destfile="${glassfish.modules}/tyrus-client.jar"
-                                />
-                            </target>
-                        </configuration>
+                        <id>apply patches</id>
                     </execution>
                 </executions>
             </plugin>

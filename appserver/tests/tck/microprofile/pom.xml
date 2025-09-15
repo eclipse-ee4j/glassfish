@@ -30,6 +30,10 @@
     <packaging>pom</packaging>
     <name>TCK: MicroProfile</name>
 
+    <properties>
+        <glassfish.artifact>glassfish</glassfish.artifact>
+    </properties>
+
     <modules>
         <module>config</module>
         <module>health</module>
@@ -54,7 +58,7 @@
                                 <artifactItems>
                                     <artifactItem>
                                         <groupId>org.glassfish.main.distributions</groupId>
-                                        <artifactId>glassfish</artifactId>
+                                        <artifactId>${glassfish.artifact}</artifactId>
                                         <version>${glassfish.version}</version>
                                         <type>zip</type>
                                     </artifactItem>

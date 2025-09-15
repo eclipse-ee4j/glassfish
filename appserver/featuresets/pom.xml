@@ -44,6 +44,7 @@
     </developers>
 
     <modules>
+        <module>microprofile</module>
         <module>web</module>
         <module>glassfish</module>
         <module>debug</module>

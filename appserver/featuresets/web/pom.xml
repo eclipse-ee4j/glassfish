@@ -42,6 +42,14 @@
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
+        
+        <!-- pull MicroProfile featureset -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
 
         <dependency>
            <groupId>org.glassfish.main.admin</groupId>

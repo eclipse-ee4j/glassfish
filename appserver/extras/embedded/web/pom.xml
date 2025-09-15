@@ -89,6 +89,12 @@
             <groupId>org.glassfish.main</groupId>
             <artifactId>hk2-config-generator</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -119,6 +125,12 @@
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-extras</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>hk2-metadata-generator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -170,12 +182,24 @@
             <artifactId>admin-cli</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>admin-util</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -200,6 +224,12 @@
             <artifactId>config-types</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -240,6 +270,12 @@
             <artifactId>glassfish-api</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -293,12 +329,28 @@
             <artifactId>server-mgmt</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.annotations</groupId>
+                    <artifactId>logging-annotation-processor</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>kernel</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
@@ -390,18 +442,36 @@
             <artifactId>cluster-cli</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
             <artifactId>cluster-admin</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
             <artifactId>cluster-common</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
@@ -438,6 +508,12 @@
             <artifactId>rest-service</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- glassfish-common-web -->
         <dependency>
@@ -451,12 +527,24 @@
             <artifactId>amx-jakartaee</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.main.common</groupId>
+                    <artifactId>amx-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>annotation-framework</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.annotations</groupId>
+                    <artifactId>logging-annotation-processor</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -469,6 +557,12 @@
             <artifactId>dol</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.annotations</groupId>
+                    <artifactId>logging-annotation-processor</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -525,6 +619,16 @@
             <artifactId>orb-connector</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.corba</groupId>
+                    <artifactId>glassfish-corba-orb</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.orb</groupId>
+                    <artifactId>orb-enabler</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.ha</groupId>
@@ -573,6 +677,16 @@
             <version>${project.version}</version>
             <type>zip</type>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.metro</groupId>
+                    <artifactId>webservices-api-osgi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.extras</groupId>
+                    <artifactId>glassfish-embedded-shell</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
@@ -580,6 +694,16 @@
             <version>${project.version}</version>
             <type>zip</type>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.woodstox</groupId>
+                    <artifactId>woodstox-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.extras</groupId>
+                    <artifactId>glassfish-embedded-static-shell</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -802,6 +926,12 @@
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.persistence</groupId>
+                    <artifactId>org.eclipse.persistence.json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.persistence</groupId>
@@ -871,6 +1001,16 @@
             <artifactId>ejb-container</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.corba</groupId>
+                    <artifactId>glassfish-corba-orb</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.corba</groupId>
+                    <artifactId>rmic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
@@ -1074,6 +1214,12 @@
             <artifactId>websecurity</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.annotations</groupId>
+                    <artifactId>logging-annotation-processor</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
@@ -1128,6 +1274,16 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-osgi-bundle</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.jdeparser</groupId>
+                    <artifactId>jdeparser</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging-processor</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.classfilewriter</groupId>
@@ -1165,6 +1321,20 @@
             <version>${project.version}</version>
             <type>zip</type>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
+                    <artifactId>jdbc-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc40</groupId>
+                    <artifactId>jdbc40</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.main.jdbc</groupId>
+                    <artifactId>templates</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- glassfish-jersey -->
         <dependency>
@@ -1378,6 +1548,12 @@
             <version>${project.version}</version>
             <type>pom</type>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                    <artifactId>jersey-weld2-se</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -1406,34 +1582,11 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${projecty.build.outputDirectory}</outputDirectory>
-                            <excludeTransitive>true</excludeTransitive>
                             <includeScope>compile</includeScope>
                             <includeScope>runtime</includeScope>
                             <includeTypes>jar,glassfish-jar</includeTypes>
                             <includes>**/*.class</includes>
                             <excludes>module-info.class,META-INF/versions/*/module-info.class</excludes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-featurepacks-dependencies</id>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <outputDirectory>${projecty.build.outputDirectory}</outputDirectory>
-                            <excludeTransitive>false</excludeTransitive>
-                            <includeScope>compile</includeScope>
-                            <includeScope>runtime</includeScope>
-                            <includeTypes>jar,glassfish-jar</includeTypes>
-                            <includes>**/*.class</includes>
-                            <excludes>module-info.class,META-INF/versions/*/module-info.class</excludes>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.main.featuresets</groupId>
-                                    <artifactId>microprofile</artifactId>
-                                </artifactItem>
-                            </artifactItems>
                         </configuration>
                     </execution>
                     <execution>

@@ -85,6 +85,8 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <!-- EmailableReporter moved in different package, do not update -->
+            <version>7.7.0</version>
         </dependency>
     </dependencies>
 

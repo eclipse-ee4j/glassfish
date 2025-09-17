@@ -67,6 +67,7 @@
         <template.jar>${stage.dir}/${install.dir.name}/glassfish/common/templates/gf/appserver-domain.jar</template.jar>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
         <asadmin.executable>${stage.dir}/${install.dir.name}/bin/asadmin${file.executable.suffix}</asadmin.executable>
+        <patches>${basedir}/src/main/patches</patches>
     </properties>
 
     <build>
@@ -158,6 +159,73 @@
                     <configuration>
                         <skip>true</skip>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant</artifactId>
+                            <version>${ant.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>ant-contrib</groupId>
+                            <artifactId>ant-contrib</artifactId>
+                            <version>1.0b2</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>ant</groupId>
+                                    <artifactId>ant</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>apply patches</id>
+                            <phase>prepare-package</phase>
+                            <!--<phase>initialize</phase>-->
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target xmlns:for="ant:for">
+                                    <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="maven.plugin.classpath" />
+
+                                    <macrodef name="jarupdate">
+                                        <attribute name="basedir"/>
+                                        <attribute name="destfile"/>
+                                        <sequential>
+                                            <echo>PATCHING @{destfile}</echo>
+                                            <zip update="true" basedir="@{basedir}" destfile="@{destfile}" />
+                                        </sequential>
+                                    </macrodef>
+
+                                    <if>
+                                        <available file="${patches}" type="dir"/>
+                                        <then>
+                                            <for param="patches.dir">
+                                                <path>
+                                                    <dirset dir="${patches}" >
+                                                        <include name="*"/>
+                                                    </dirset>
+                                                </path>
+                                                <sequential>
+                                                    <basename property="patches.dir.name" file="@{patches.dir}"/>
+                                                    <jarupdate
+                                                        basedir="@{patches.dir}"
+                                                        destfile="${glassfish.modules}/${patches.dir.name}.jar"
+                                                    />
+                                                    <var name="patches.dir.name" unset="true"/>
+                                                </sequential>
+                                            </for>
+                                        </then>
+                                    </if>
+
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

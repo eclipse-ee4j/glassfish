@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,11 +25,11 @@ import jakarta.transaction.TransactionRequiredException;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
 import static jakarta.transaction.Transactional.TxType.MANDATORY;
-import static java.util.logging.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * Transactional annotation Interceptor class for Mandatory transaction type, ie
@@ -42,13 +43,12 @@ import static java.util.logging.Level.INFO;
 @Interceptor()
 @Transactional(MANDATORY)
 public class TransactionalInterceptorMandatory extends TransactionalInterceptorBase {
-
     private static final long serialVersionUID = 884559632546224653L;
-    private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger LOG = System.getLogger(TransactionalInterceptorMandatory.class.getName());
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
-        _logger.log(INFO, CDI_JTA_MANDATORY);
+        LOG.log(TRACE, "Processing transactional context of type: {0}", MANDATORY);
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
@@ -56,9 +56,10 @@ public class TransactionalInterceptorMandatory extends TransactionalInterceptorB
         setTransactionalTransactionOperationsManger(false);
         try {
             if (getTransactionManager().getTransaction() == null) {
-                throw new TransactionalException("TransactionRequiredException thrown from TxType.MANDATORY transactional interceptor.",
-                        new TransactionRequiredException("Managed bean with Transactional annotation and TxType of "
-                                + "MANDATORY called outside of a transaction context"));
+                throw new TransactionalException(
+                    "TransactionRequiredException thrown from TxType.MANDATORY transactional interceptor.",
+                    new TransactionRequiredException("Managed bean with Transactional annotation and TxType of"
+                        + " MANDATORY called outside of a transaction context"));
             }
             return proceed(ctx);
         } finally {

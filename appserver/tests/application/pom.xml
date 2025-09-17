@@ -30,10 +30,6 @@
     <artifactId>application-tests</artifactId>
     <name>GlassFish Application Tests</name>
 
-    <properties>
-        <glassfish.version>${project.version}</glassfish.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>

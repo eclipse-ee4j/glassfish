@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,16 +23,18 @@ import jakarta.annotation.Priority;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.SystemException;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
 import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
 import static jakarta.transaction.Transactional.TxType.REQUIRED;
-import static java.util.logging.Level.INFO;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * Transactional annotation Interceptor class for Required transaction type, ie
@@ -46,68 +49,64 @@ import static java.util.logging.Level.INFO;
 @Interceptor
 @Transactional(REQUIRED)
 public class TransactionalInterceptorRequired extends TransactionalInterceptorBase {
-
     private static final long serialVersionUID = 7783065031210674657L;
-    private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger LOG = System.getLogger(TransactionalInterceptorRequired.class.getName());
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
-        _logger.log(INFO, CDI_JTA_REQUIRED);
+        LOG.log(TRACE, "Processing transactional context of type: {0}", REQUIRED);
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
 
         setTransactionalTransactionOperationsManger(false);
         try {
-            boolean isTransactionStarted = false;
-            if (getTransactionManager().getTransaction() == null) {
-                _logger.log(INFO, CDI_JTA_MBREQUIRED);
-                try {
-                    getTransactionManager().begin();
-                    TransactionManager tm = getTransactionManager();
-                    if(tm instanceof TransactionManagerHelper){
-                        ((TransactionManagerHelper)tm).preInvokeTx(true);
-                    }
-                } catch (Exception exception) {
-                    _logger.log(INFO, CDI_JTA_MBREQUIREDBT, exception);
-                    throw new TransactionalException(
-                        "Managed bean with Transactional annotation and TxType of REQUIRED " +
-                        "encountered exception during begin " + exception,
-                        exception);
-                }
-                isTransactionStarted = true;
-            }
-
-            Object proceed = null;
+            final boolean isTransactionStarted = beginTransaction();
             try {
-                proceed = proceed(ctx);
+                return proceed(ctx);
             } finally {
                 if (isTransactionStarted) {
-                    try {
-                        TransactionManager tm = getTransactionManager();
-                        if(tm instanceof TransactionManagerHelper){
-                            ((TransactionManagerHelper)tm).postInvokeTx(false, true);
-                        }
-                        // Exception handling for proceed method call above can set TM/TRX as setRollbackOnly
-                        if (getTransactionManager().getTransaction().getStatus() == STATUS_MARKED_ROLLBACK) {
-                            getTransactionManager().rollback();
-                        } else {
-                            getTransactionManager().commit();
-                        }
-                    } catch (Exception exception) {
-                        _logger.log(INFO, CDI_JTA_MBREQUIREDCT, exception);
-                        throw new TransactionalException(
-                            "Managed bean with Transactional annotation and TxType of REQUIRED " +
-                            "encountered exception during commit " + exception,
-                            exception);
-                    }
+                    finishTransaction();
                 }
             }
-
-            return proceed;
-
         } finally {
             resetTransactionOperationsManager();
+        }
+    }
+
+    private boolean beginTransaction() throws SystemException {
+        if (getTransactionManager().getTransaction() != null) {
+            return false;
+        }
+        LOG.log(DEBUG, "Managed bean with Transactional annotation and TxType of REQUIRED"
+            + " called outside a transaction context. Beginning a transaction...");
+        try {
+            getTransactionManager().begin();
+            TransactionManager tm = getTransactionManager();
+            if (tm instanceof TransactionManagerHelper) {
+                ((TransactionManagerHelper) tm).preInvokeTx(true);
+            }
+            return true;
+        } catch (Exception e) {
+            throw new TransactionalException("Managed bean with Transactional annotation and TxType of REQUIRED"
+                + " encountered exception during begin: " + e.getMessage(), e);
+        }
+    }
+
+    private void finishTransaction() {
+        try {
+            if (getTransactionManager() instanceof TransactionManagerHelper) {
+                ((TransactionManagerHelper) getTransactionManager()).postInvokeTx(false, true);
+            }
+            // Exception handling for proceed method call above can set TM/TRX as setRollbackOnly
+            if (getTransactionManager().getTransaction().getStatus() == STATUS_MARKED_ROLLBACK) {
+                getTransactionManager().rollback();
+            } else {
+                getTransactionManager().commit();
+            }
+        } catch (Exception e) {
+            throw new TransactionalException("Managed bean with Transactional annotation and TxType of REQUIRED"
+                + " encountered exception during commit/rollback: " + e.getMessage(), e);
         }
     }
 }

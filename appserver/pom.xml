@@ -79,6 +79,8 @@
     </scm>
 
     <properties>
+        <glassfish.version>${project.version}</glassfish.version>
+
         <!-- Jakarta EE platform -->
         <jakartaee>10</jakartaee>
 

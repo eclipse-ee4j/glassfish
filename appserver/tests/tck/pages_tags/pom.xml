@@ -39,7 +39,6 @@
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
 
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
 
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>

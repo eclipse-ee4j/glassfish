@@ -38,7 +38,7 @@ import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.escapeResourceNameForMonitoring;
-import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 
 /**
@@ -246,10 +246,10 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
      */
     @Override
     public void decrementConnectionUsed(long resourceHandleId) {
-        ConnectionPoolAppEmitterImpl appEmitter =
-                detectAppBasedProviders(getAppName(resourceHandleId));
-        poolProbeProvider.decrementConnectionUsedEvent(poolInfo.getName().toString(), poolInfo.getApplicationName(), poolInfo.getModuleName());
-        if(appEmitter != null) {
+        ConnectionPoolAppEmitterImpl appEmitter = detectAppBasedProviders(getAppName(resourceHandleId));
+        poolProbeProvider.decrementConnectionUsedEvent(poolInfo.getName().toString(), poolInfo.getApplicationName(),
+            poolInfo.getModuleName());
+        if (appEmitter != null) {
             appEmitter.decrementConnectionUsed();
         }
     }
@@ -301,28 +301,30 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
         // if monitoring is disabled, avoid sending events
         // as we need to do "java:app/AppName" to get applicationName for each
         // acquire/return connection call which is a performance bottleneck.
-        if(!runtime.isJdbcPoolMonitoringEnabled() && !runtime.isConnectorPoolMonitoringEnabled()){
+        if (!runtime.isJdbcPoolMonitoringEnabled() && !runtime.isConnectorPoolMonitoringEnabled()) {
             return null;
         }
 
         String appName = resourceAppAssociationMap.get(resourceHandleId);
-        if(appName == null){
-            try {
-                if(ic == null){
-                    synchronized(ConnectionPoolEmitterImpl.class) {
-                        if(ic == null) {
-                            ic = new InitialContext();
-                        }
+        if (appName != null) {
+            return appName;
+        }
+        try {
+            if (ic == null) {
+                synchronized (ConnectionPoolEmitterImpl.class) {
+                    if (ic == null) {
+                        ic = new InitialContext();
                     }
                 }
-                appName = (String) ic.lookup(JNDI_CTX_JAVA_APP + "AppName");
-                resourceAppAssociationMap.put(resourceHandleId, appName);
-            } catch (NamingException e) {
-                LOG.log(DEBUG, "Unable to get application name using java:app/AppName method", e);
-
             }
+            appName = (String) ic.lookup(JNDI_CTX_JAVA_APP + "AppName");
+            resourceAppAssociationMap.put(resourceHandleId, appName);
+            return appName;
+        } catch (NamingException e) {
+            // Don't print stacktrace, it creates too much noise.
+            LOG.log(TRACE, "Unable to get application name using java:app/AppName method: " + e);
+            return null;
         }
-        return appName;
     }
 
     /**
@@ -341,7 +343,6 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
             //a null appName for any pool.
             return null;
         }
-        ConnectionPoolAppEmitterImpl connPoolAppEmitter;
         if (appStatsMap.containsKey(poolInfo)) {
             // Some apps have been registered for this pool.
             // Find if this appName is already registered.
@@ -366,8 +367,7 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
             // Create a map of app emitters for the appName and add them to the
             // appStatsMap
             ConnectionPoolAppProbeProvider probeAppProvider = registerConnectionPool(appName);
-            Map<String, ConnectionPoolAppEmitterImpl> appEmitters = new HashMap<>();
-            return addToList(appName, probeAppProvider, appEmitters);
+            return addToList(appName, probeAppProvider, new HashMap<>());
         }
     }
 
@@ -397,29 +397,32 @@ public class ConnectionPoolEmitterImpl implements PoolLifeCycleListener {
         return probeAppProvider;
     }
 
+    private ConnectionPoolAppEmitterImpl addToList(String appName, ConnectionPoolAppProbeProvider probeAppProvider,
+        Map<String, ConnectionPoolAppEmitterImpl> appEmitters) {
+        ConnectionPoolAppEmitterImpl emitter = addEmitter(appName, probeAppProvider, appEmitters);
+        runtime.getProbeProviderUtil().getConnPoolBootstrap().addToPoolEmitters(poolInfo, this);
+        return emitter;
+    }
+
     /**
      * Add to the pool emitters list. the connection pool application emitter
      * for the specific poolInfo and appName.
-     * @param appName
+     *
+     * @param appName this appName here is different from "appName" instance variable.
      * @param probeAppProvider
      * @param appEmitters
      * @return
      */
-    private ConnectionPoolAppEmitterImpl addToList(String appName,
-            ConnectionPoolAppProbeProvider probeAppProvider,
-            Map<String, ConnectionPoolAppEmitterImpl> appEmitters) {
-        final ConnectionPoolAppEmitterImpl connPoolAppEmitter;
+    private ConnectionPoolAppEmitterImpl addEmitter(String appName, ConnectionPoolAppProbeProvider probeAppProvider,
+        Map<String, ConnectionPoolAppEmitterImpl> appEmitters) {
         if (probeAppProvider == null) {
-            connPoolAppEmitter = null;
-        } else {
-            //Add the newly created probe provider to the list.
-            connPoolAppEmitter = new ConnectionPoolAppEmitterImpl(poolInfo.getName(), appName, probeAppProvider);
-            // NOTE : this appName here is different from "appName" instance variable.
-            appEmitters.put(appName, connPoolAppEmitter);
-            appStatsMap.put(poolInfo, appEmitters);
+            return null;
         }
-        runtime.getProbeProviderUtil().getConnPoolBootstrap().addToPoolEmitters(poolInfo, this);
-        return connPoolAppEmitter;
+         ConnectionPoolAppEmitterImpl appEmitter = new ConnectionPoolAppEmitterImpl(poolInfo.getName(), appName,
+            probeAppProvider);
+        appEmitters.put(appName, appEmitter);
+        appStatsMap.put(poolInfo, appEmitters);
+        return appEmitter;
     }
 
     /**

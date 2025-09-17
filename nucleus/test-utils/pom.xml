@@ -82,5 +82,11 @@
             <artifactId>hamcrest</artifactId>
             <scope>compile</scope>
         </dependency>
+        <!-- To override older shrinkwrap dependency -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 </project>

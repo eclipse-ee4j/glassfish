@@ -120,7 +120,7 @@ public class AsadminLoggingITest {
         assertThat(result, asadminOK());
         String[] lines = substringBefore(result.getStdOut(), "Command list-loggers executed successfully.").split("\n");
         assertAll(
-            () -> assertThat(lines, arrayWithSize(equalTo(62))),
+            () -> assertThat(lines, arrayWithSize(equalTo(63))),
             () -> assertThat(lines[0], matchesPattern("Logger Name[ ]+Subsystem[ ]+Logger Description[ ]+"))
         );
         Map<String, String[]> loggers = Arrays.stream(lines).skip(1).map(line -> line.split("\\s{2,}"))

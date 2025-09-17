@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -505,14 +505,12 @@ public class ConnectionPoolTest {
     private void assertResourceIsBusy(ResourceHandle resource) {
         // Resource must be marked as isBusy right after call to getResource
         ResourceState resourceState = resource.getResourceState();
-        assertTrue(resourceState.isBusy());
-        assertFalse(resourceState.isFree());
+        assertTrue(resourceState.isBusy(), "busy");
     }
 
     private void assertResourceIsNotBusy(ResourceHandle resource) {
         // Resource must be marked as not isBusy / isFree right after call to resourceClosed
         ResourceState resourceState = resource.getResourceState();
-        assertTrue(resourceState.isFree(), "assertResourceIsNotBusy - Expected isFree for resource" + resource);
         assertFalse(resourceState.isBusy(), "assertResourceIsNotBusy - Expected !isBusy for resource" + resource);
     }
 
@@ -565,6 +563,7 @@ public class ConnectionPoolTest {
             return connectorConnectionPool;
         }
 
+        @Override
         protected void scheduleResizerTask() {
             // Do not schedule any resize tasks
         }

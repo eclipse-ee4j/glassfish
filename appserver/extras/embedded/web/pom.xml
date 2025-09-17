@@ -46,12 +46,6 @@
             <version>${project.version}</version>
             <type>pom</type>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.mwiede</groupId>
-                    <artifactId>jsch</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
     </dependencies>

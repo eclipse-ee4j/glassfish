@@ -47,6 +47,7 @@
         <module>ejb</module>
         <module>glassfish_resources_xml</module>
         <module>maven-plugin</module>
+        <module>microprofile</module>
         <module>runnable</module>
         <module>scatteredarchive</module>
         <module>utils</module>

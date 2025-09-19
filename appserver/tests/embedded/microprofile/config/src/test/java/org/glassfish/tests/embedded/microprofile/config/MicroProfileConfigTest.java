@@ -16,8 +16,6 @@
 
 package org.glassfish.tests.embedded.microprofile.config;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -33,6 +31,8 @@ import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test MicroProfile Config functionality in embedded GlassFish

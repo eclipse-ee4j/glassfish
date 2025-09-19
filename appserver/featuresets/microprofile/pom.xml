@@ -40,91 +40,43 @@
             <groupId>org.glassfish.main.microprofile</groupId>
             <artifactId>microprofile-connectors</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- MicroProfile Config -->
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.microprofile</groupId>
             <artifactId>microprofile-config</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- MicroProfile Health -->
         <dependency>
             <groupId>org.eclipse.microprofile.health</groupId>
             <artifactId>microprofile-health-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.microprofile</groupId>
             <artifactId>microprofile-health</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.microprofile</groupId>
             <artifactId>health-glassfish</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- MicroProfile JWT -->
         <dependency>
             <groupId>org.eclipse.microprofile.jwt</groupId>
             <artifactId>microprofile-jwt-auth-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>microprofile-jwt-auth</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- MicroProfile REST Client -->

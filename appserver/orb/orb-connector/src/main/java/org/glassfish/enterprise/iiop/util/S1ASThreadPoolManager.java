@@ -54,6 +54,10 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
 
     static {
         try {
+            /* TODO - IIOPUtils cannot be used in Web Profile. it requires IiopService which
+               isn't on the classpath. Refactor this class to use something else than IIOPUtils
+               or make IIOPUtils work in Web Profile
+            */
             _iiopUtils = Globals.getDefaultHabitat().getService(IIOPUtils.class);
             Collection<org.glassfish.grizzly.config.dom.ThreadPool> tpCol = _iiopUtils.getAllThreadPools();
             org.glassfish.grizzly.config.dom.ThreadPool[] allThreadPools = tpCol.toArray(new org.glassfish.grizzly.config.dom.ThreadPool[tpCol.size()]);

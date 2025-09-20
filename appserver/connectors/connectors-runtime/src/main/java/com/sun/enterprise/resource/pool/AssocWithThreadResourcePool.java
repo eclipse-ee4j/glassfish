@@ -39,7 +39,7 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
  */
 public class AssocWithThreadResourcePool extends ConnectionPool {
 
-    private ThreadLocal<AssocWithThreadResourceHandle> localResource = new ThreadLocal<>();
+    private final ThreadLocal<AssocWithThreadResourceHandle> localResource = new ThreadLocal<>();
 
     public AssocWithThreadResourcePool(PoolInfo poolInfo, Hashtable env) throws PoolingException {
         super(poolInfo, env);
@@ -52,8 +52,8 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
     }
 
     /**
-     * Prefetch is called to check whether there there is a free resource is already associated with the thread Only when
-     * prefetch is unable to find a resource, normal routine (getUnenlistedResource) will happen.
+     * Prefetch is called to check whether there there is a free resource is already associated with the thread.
+     * Only when prefetch is unable to find a resource, normal routine (getUnenlistedResource) will happen.
      *
      * @param spec the ResourceSpec used to locate the correct resource pool
      * @param alloc ResourceAllocator to create a resource
@@ -61,89 +61,74 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
      */
     @Override
     protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc) {
-        AssocWithThreadResourceHandle ar = localResource.get();
-        if (ar != null) {
-            // synch on ar and do a quick-n-dirty check to see if the local
-            // resource is usable at all
-            synchronized (ar.lock) {
-                if ((ar.getThreadId() != Thread.currentThread().getId()) || ar.hasConnectionErrorOccurred() || ar.isDirty()
-                        || !ar.isAssociated()) {
-                    // we were associated with someone else or resource error
-                    // occurred or resource was disassociated and used by some one else. So evict
-                    // NOTE: We do not setAssociated to false here since someone
-                    // else has associated this resource to themself. Also, if
-                    // the eviction is because of a resourceError, the resource is
-                    // not going to be used anyway.
+        AssocWithThreadResourceHandle handle = localResource.get();
+        if (handle == null) {
+            return null;
+        }
+        // synch on ar and do a quick-n-dirty check to see if the local
+        // resource is usable at all
+        handle.lock();
+        try {
+            if (handle.getThreadId() != Thread.currentThread().getId() || handle.hasConnectionErrorOccurred()
+                || handle.isUnusable() || !handle.isAssociated()) {
+                // we were associated with someone else or resource error
+                // occurred or resource was disassociated and used by some one else. So evict
+                // NOTE: We do not setAssociated to false here since someone
+                // else has associated this resource to themself. Also, if
+                // the eviction is because of a resourceError, the resource is
+                // not going to be used anyway.
 
+                localResource.remove();
+                return null;
+            }
+            if (handle.getResourceState().isBusy() || handle.getResourceState().isEnlisted()) {
+                return null;
+            }
+            if (matchConnections) {
+                if (!alloc.matchConnection(handle)) {
+                    // again, since the credentials of the caller don't match
+                    // evict from ThreadLocal
+                    // also, mark the resource as unassociated and make this resource
+                    // potentially usable
                     localResource.remove();
+                    handle.setAssociated(false);
+                    if (poolLifeCycleListener != null) {
+                        poolLifeCycleListener.connectionNotMatched();
+                    }
                     return null;
                 }
-
-                if (ar.getResourceState().isFree() && ar.getResourceState().isUnenlisted()) {
-                    if (matchConnections) {
-                        if (!alloc.matchConnection(ar)) {
-                            // again, since the credentials of the caller don't match
-                            // evict from ThreadLocal
-                            // also, mark the resource as unassociated and make this resource
-                            // potentially usable
-                            localResource.remove();
-                            ar.setAssociated(false);
-                            if (poolLifeCycleListener != null) {
-                                poolLifeCycleListener.connectionNotMatched();
-                            }
-                            return null;
-                        }
-                        if (poolLifeCycleListener != null) {
-                            poolLifeCycleListener.connectionMatched();
-                        }
-                    }
-
-                    if (!isConnectionValid(ar, alloc)) {
-                        localResource.remove();
-                        ar.setAssociated(false);
-                        // disassociating the connection from the thread.
-                        // validation failure will mark the connectionErrorOccurred flag
-                        // and the connection will be removed whenever it is retrieved again
-                        // from the pool.
-                        return null;
-                    }
-
-                    setResourceStateToBusy(ar);
-                    if (maxConnectionUsage_ > 0) {
-                        ar.incrementUsageCount();
-                    }
-                    if (poolLifeCycleListener != null) {
-                        poolLifeCycleListener.connectionUsed(ar.getId());
-                        // Decrement numConnFree
-                        poolLifeCycleListener.decrementNumConnFree();
-
-                    }
-                    return ar;
+                if (poolLifeCycleListener != null) {
+                    poolLifeCycleListener.connectionMatched();
                 }
             }
-        }
 
-        return null;
+            if (!isConnectionValid(handle, alloc)) {
+                localResource.remove();
+                handle.setAssociated(false);
+                // disassociating the connection from the thread.
+                // validation failure will mark the connectionErrorOccurred flag
+                // and the connection will be removed whenever it is retrieved again
+                // from the pool.
+                return null;
+            }
+
+            setResourceStateToBusy(handle);
+            handle.getResourceState().incrementUsageCount();
+            if (poolLifeCycleListener != null) {
+                poolLifeCycleListener.connectionUsed(handle.getId());
+                // Decrement numConnFree
+                poolLifeCycleListener.decrementNumConnFree();
+
+            }
+            return handle;
+        } finally {
+            handle.unlock();
+        }
     }
 
     @Override
     protected Resizer initializeResizer() {
         return new AssocWithThreadPoolResizer(poolInfo, dataStructure, this, this, preferValidateOverRecreate);
-    }
-
-    /**
-     * to associate a resource with the thread
-     *
-     * @param h ResourceHandle
-     */
-    private void setInThreadLocal(AssocWithThreadResourceHandle h) {
-        if (h != null) {
-            synchronized (h.lock) {
-                h.setThreadId(Thread.currentThread().getId());
-                h.setAssociated(true);
-                localResource.set(h);
-            }
-        }
     }
 
     /**
@@ -155,10 +140,9 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
     @Override
     protected boolean isResourceUnused(ResourceHandle h) {
         if (h instanceof AssocWithThreadResourceHandle) {
-            return h.getResourceState().isFree() && !((AssocWithThreadResourceHandle) h).isAssociated();
-        } else {
-            return h.getResourceState().isFree();
+            return !h.getResourceState().isBusy() && !((AssocWithThreadResourceHandle) h).isAssociated();
         }
+        return !h.getResourceState().isBusy();
     }
 
     /**
@@ -167,62 +151,20 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
      */
     @Override
     protected ResourceHandle getUnenlistedResource(ResourceSpec spec, ResourceAllocator alloc) throws PoolingException {
-
-        ResourceHandle result = super.getUnenlistedResource(spec, alloc);
-
-        // It is possible that Resizer might have marked the resource for recycle
-        // and hence we should not use this resource.
-        if (result != null) {
-            synchronized (result.lock) {
-                if (dataStructure.getAllResources().contains(result) && ((AssocWithThreadResourceHandle) result).isDirty()) {
-                    // Remove the resource and set to null
-                    dataStructure.removeResource(result);
-                    result = null;
-                }
-            }
-        }
+        ResourceHandle handle = resolvePossibleRemoval(super.getUnenlistedResource(spec, alloc));
         // If we came here, that's because free doesn't have anything
         // to offer us. This could be because:
         // 1. All free resources are associated
         // 2. There are no free resources
         // 3. We cannot create anymore free resources
         // Handle case 1 here
-
-        // DISASSOCIATE
-        if (result == null) {
-            synchronized (this) {
-
-                for (ResourceHandle resource : dataStructure.getAllResources()) {
-                    synchronized (resource.lock) {
-                        // though we are checking resources from within the free list,
-                        // we could have a situation where the resource was free upto
-                        // this point, put just before we entered the synchronized block,
-                        // the resource "h" got used by the thread that was associating it
-                        // so we need to check for isFree also
-
-                        if (resource.getResourceState().isUnenlisted() && resource.getResourceState().isFree()
-                                && !(((AssocWithThreadResourceHandle) resource).isDirty())) {
-                            if (!matchConnection(resource, alloc) || resource.hasConnectionErrorOccurred()) {
-                                continue;
-                            }
-                            result = resource;
-                            setResourceStateToBusy(result);
-                            ((AssocWithThreadResourceHandle) result).setAssociated(false);
-
-                            break;
-                        }
-                    }
-                }
-            }
+        if (handle == null) {
+            handle = searchFreeUnenlisted(alloc);
         }
-
-        if (localResource.get() == null) {
-            if (result instanceof AssocWithThreadResourceHandle) {
-                setInThreadLocal((AssocWithThreadResourceHandle) result);
-            }
+        if (localResource.get() == null && handle instanceof AssocWithThreadResourceHandle) {
+            setInThreadLocal((AssocWithThreadResourceHandle) handle);
         }
-
-        return result;
+        return handle;
     }
 
     /**
@@ -232,10 +174,10 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
      */
     @Override
     protected synchronized void freeUnenlistedResource(ResourceHandle resourceHandle) {
-        if (this.cleanupResource(resourceHandle)) {
+        if (cleanupResource(resourceHandle)) {
             if (resourceHandle instanceof AssocWithThreadResourceHandle) {
                 // Only when resource handle usage count is more than maxConnUsage
-                if (maxConnectionUsage_ > 0 && resourceHandle.getUsageCount() >= maxConnectionUsage_) {
+                if (maxConnectionUsage > 0 && resourceHandle.getResourceState().getUsageCount() >= maxConnectionUsage) {
                     performMaxConnectionUsageOperation(resourceHandle);
                 } else {
                     if (!((AssocWithThreadResourceHandle) resourceHandle).isAssociated()) {
@@ -264,19 +206,72 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
         try {
             super.deleteResource(resourceHandle);
         } finally {
-            // Note: here we are using the connectionErrorOccurred flag to indicate
-            // that this resource is no longer usable. This flag would be checked while
-            // getting from ThreadLocal
-            // The main intention of marking this is to handle the case where
-            // failAllConnections happens
-            // Note that setDirty only happens here - i.e during destroying of a
-            // resource
-
             if (resourceHandle instanceof AssocWithThreadResourceHandle) {
-                synchronized (resourceHandle.lock) {
-                    ((AssocWithThreadResourceHandle) resourceHandle).setDirty();
-                }
+                ((AssocWithThreadResourceHandle) resourceHandle).setUnusable();
             }
         }
+    }
+
+    /**
+     * to associate a resource with the thread
+     *
+     * @param h ResourceHandle
+     */
+    private void setInThreadLocal(AssocWithThreadResourceHandle h) {
+        if (h == null) {
+            return;
+        }
+        h.lock();
+        try {
+            h.setAssociated(true);
+            localResource.set(h);
+        } finally {
+            h.unlock();
+        }
+    }
+
+    /**
+     * It is possible that Resizer might have marked the resource for recycle
+     * and hence we should not use this resource.
+     */
+    private ResourceHandle resolvePossibleRemoval(ResourceHandle handle) {
+        if (handle == null) {
+            return null;
+        }
+        handle.lock();
+        try {
+            if (dataStructure.getAllResources().contains(handle) && ((AssocWithThreadResourceHandle) handle).isUnusable()) {
+                dataStructure.removeResource(handle);
+                return null;
+            }
+            return handle;
+        } finally {
+            handle.unlock();
+        }
+    }
+
+    private synchronized ResourceHandle searchFreeUnenlisted(ResourceAllocator alloc) {
+        for (ResourceHandle handle : dataStructure.getAllResources()) {
+            handle.lock();
+            try {
+                // though we are checking resources from within the free list,
+                // we could have a situation where the resource was free upto
+                // this point, put just before we entered the synchronized block,
+                // the resource "h" got used by the thread that was associating it
+                // so we need to check for isFree also
+
+                if (handle.getResourceState().isEnlisted() || handle.getResourceState().isBusy()
+                    || handle.hasConnectionErrorOccurred() || ((AssocWithThreadResourceHandle) handle).isUnusable()
+                    || !matchConnection(handle, alloc)) {
+                    continue;
+                }
+                setResourceStateToBusy(handle);
+                ((AssocWithThreadResourceHandle) handle).setAssociated(false);
+                return handle;
+            } finally {
+                handle.unlock();
+            }
+        }
+        return null;
     }
 }

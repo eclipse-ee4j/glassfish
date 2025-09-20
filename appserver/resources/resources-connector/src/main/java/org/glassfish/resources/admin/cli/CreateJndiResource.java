@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +41,7 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
@@ -105,16 +106,17 @@ public class CreateJndiResource implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
-        attrList.put(FACTORY_CLASS, factoryClass);
-        attrList.put(RES_TYPE, resType);
-        attrList.put(JNDI_LOOKUP, jndiLookupName);
-        attrList.put(ENABLED, enabled.toString());
-        attrList.put(JNDI_NAME, jndiName);
-        attrList.put(ServerTags.DESCRIPTION, description);
+        ResourceAttributes attrList = new ResourceAttributes();
+        attrList.set(FACTORY_CLASS, factoryClass);
+        attrList.set(RES_TYPE, resType);
+        attrList.set(JNDI_LOOKUP, jndiLookupName);
+        attrList.set(ENABLED, enabled.toString());
+        attrList.set(JNDI_NAME, jndiName);
+        attrList.set(ServerTags.DESCRIPTION, description);
 
         ResourceStatus rs;
 
@@ -137,8 +139,9 @@ public class CreateJndiResource implements AdminCommand {
                  report.setMessage(localStrings.getLocalString("create.jndi.resource.fail",
                     "jndi resource {0} creation failed", jndiName, ""));
             }
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         if(rs.getMessage() != null){
             report.setMessage(rs.getMessage());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -85,7 +85,11 @@ public class ConnectorConnPoolAppStatsProvider {
             if (appName != null && appName.equals(this.appName)) {
                 //Decrement numConnUsed counter
                 synchronized (numConnUsed) {
-                    numConnUsed.setCurrent(numConnUsed.getCurrent() - 1);
+                    long newValue = numConnUsed.getCurrent() - 1;
+                    if (newValue < 0) {
+                        return;
+                    }
+                    numConnUsed.setCurrent(newValue);
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,8 +26,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
@@ -39,6 +37,7 @@ import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ConfiguredBy;
@@ -63,7 +62,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ
 @ConfiguredBy(Resources.class)
 public class ContextServiceManager implements ResourceManager {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ContextServiceManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ContextServiceManager.class);
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
     private String jndiName = null;
@@ -89,7 +88,7 @@ public class ContextServiceManager implements ResourceManager {
 
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties, String target)
         throws Exception {
         setAttributes(attributes, target);
 
@@ -105,13 +104,13 @@ public class ContextServiceManager implements ResourceManager {
                 resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
             }
         } catch (TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("create.context.service.failed",
+            String msg = I18N.getLocalString("create.context.service.failed",
                 "Context service {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
-        String msg = localStrings.getLocalString("create.context.service.success",
+        String msg = I18N.getLocalString("create.context.service.success",
             "Context service {0} created successfully", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
@@ -121,7 +120,7 @@ public class ContextServiceManager implements ResourceManager {
 
 
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("context.service.noJndiName", "No JNDI name defined for context service.");
+            String msg = I18N.getLocalString("context.service.noJndiName", "No JNDI name defined for context service.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
@@ -130,17 +129,17 @@ public class ContextServiceManager implements ResourceManager {
         return status;
     }
 
-    private void setAttributes(HashMap attributes, String target) {
-        jndiName = (String) attributes.get(JNDI_NAME);
-        description = (String) attributes.get(DESCRIPTION);
-        contextInfoEnabled = (String) attributes.get(CONTEXT_INFO_ENABLED);
-        contextInfo = (String) attributes.get(CONTEXT_INFO);
-        if(target != null){
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
-        }else{
-            enabled = (String) attributes.get(ENABLED);
+    private void setAttributes(ResourceAttributes attributes, String target) {
+        jndiName = attributes.getString(JNDI_NAME);
+        description = attributes.getString(DESCRIPTION);
+        contextInfoEnabled = attributes.getString(CONTEXT_INFO_ENABLED);
+        contextInfo = attributes.getString(CONTEXT_INFO);
+        if (target == null) {
+            enabled = attributes.getString(ENABLED);
+        } else {
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.getString(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
+        enabledValueForTarget = attributes.getString(ENABLED);
     }
 
     private ContextService createResource(Resources param, Properties properties) throws PropertyVetoException,
@@ -161,10 +160,10 @@ public class ContextServiceManager implements ResourceManager {
         contextService.setContextInfo(contextInfo);
         contextService.setEnabled(enabled);
         if (properties != null) {
-            for ( Map.Entry e : properties.entrySet()) {
+            for (String propertyName : properties.stringPropertyNames()) {
                 Property prop = contextService.createChild(Property.class);
-                prop.setName((String)e.getKey());
-                prop.setValue((String)e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
                 contextService.getProperty().add(prop);
             }
         }
@@ -172,7 +171,8 @@ public class ContextServiceManager implements ResourceManager {
     }
 
     @Override
-    public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties, boolean validate) throws Exception{
+    public Resource createConfigBean(final Resources resources, ResourceAttributes attributes,
+        final Properties properties, boolean validate) throws Exception {
         setAttributes(attributes, null);
         final ResourceStatus status;
         if (validate) {
@@ -190,7 +190,7 @@ public class ContextServiceManager implements ResourceManager {
     public ResourceStatus delete(final Resources resources, final String jndiName, final String target)
         throws Exception {
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("context.service.noJndiName", "No JNDI name defined for context service.");
+            String msg = I18N.getLocalString("context.service.noJndiName", "No JNDI name defined for context service.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
@@ -199,12 +199,12 @@ public class ContextServiceManager implements ResourceManager {
 
         // ensure we already have this resource
         if (resource == null) {
-            String msg = localStrings.getLocalString("delete.context.service.notfound", "A context service named {0} does not exist.", jndiName);
+            String msg = I18N.getLocalString("delete.context.service.notfound", "A context service named {0} does not exist.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         if (SYSTEM_ALL_REQ.equals(resource.getObjectType())) {
-            String msg = localStrings.getLocalString("delete.concurrent.resource.notAllowed", "The {0} resource cannot be deleted as it is required to be configured in the system.", jndiName);
+            String msg = I18N.getLocalString("delete.concurrent.resource.notAllowed", "The {0} resource cannot be deleted as it is required to be configured in the system.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
@@ -212,17 +212,17 @@ public class ContextServiceManager implements ResourceManager {
 
             if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
-                    String msg = localStrings.getLocalString("delete.context.service.resource-ref.exist", "This context service [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
+                    String msg = I18N.getLocalString("delete.context.service.resource-ref.exist", "This context service [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
                 if (!resourceUtil.isResourceRefInTarget(simpleJndiName, target)) {
-                    String msg = localStrings.getLocalString("delete.context.service.no.resource-ref", "This context service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
+                    String msg = I18N.getLocalString("delete.context.service.no.resource-ref", "This context service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
 
                 if (resourceUtil.getTargetsReferringResourceRef(simpleJndiName).size() > 1) {
-                    String msg = localStrings.getLocalString("delete.context.service.multiple.resource-refs", "This context service [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
+                    String msg = I18N.getLocalString("delete.context.service.multiple.resource-refs", "This context service [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             }
@@ -240,17 +240,17 @@ public class ContextServiceManager implements ResourceManager {
                 return param.getResources().remove(resource1);
             };
             if (ConfigSupport.apply(configCode, resources) == null) {
-                String msg = localStrings.getLocalString("delete.context.service.failed", "Context service {0} deletion failed", jndiName);
+                String msg = I18N.getLocalString("delete.context.service.failed", "Context service {0} deletion failed", jndiName);
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
         } catch(TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("delete.context.service.failed", "Context service {0} deletion failed ", jndiName);
+            String msg = I18N.getLocalString("delete.context.service.failed", "Context service {0} deletion failed ", jndiName);
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
 
-        String msg = localStrings.getLocalString("delete.context.service.success", "Context service {0} deleted successfully", jndiName);
+        String msg = I18N.getLocalString("delete.context.service.success", "Context service {0} deleted successfully", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 }

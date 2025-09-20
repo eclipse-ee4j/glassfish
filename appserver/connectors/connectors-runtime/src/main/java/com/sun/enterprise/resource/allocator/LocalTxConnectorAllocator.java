@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,25 +48,27 @@ import javax.transaction.xa.XAResource;
  */
 public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
 
-    protected boolean shareable = true;
+    private static final String COMMIT = "COMMIT";
+    private static final String ROLLBACK = "ROLLBACK";
+
+    private static String transactionCompletionMode = System
+        .getProperty("com.sun.enterprise.in-progress-local-transaction.completion-mode");
+
+    private final boolean shareable;
+
+
     public LocalTxConnectorAllocator(PoolManager poolMgr,
                                      ManagedConnectionFactory mcf,
                                      ResourceSpec spec,
                                      Subject subject,
                                      ConnectionRequestInfo reqInfo,
                                      ClientSecurityInfo info,
-                                     ConnectorDescriptor desc, boolean shareable) {
+                                     ConnectorDescriptor desc,
+                                     boolean shareable) {
         super(poolMgr, mcf, spec, subject, reqInfo, info, desc);
         this.shareable = shareable;
     }
 
-    private static String transactionCompletionMode;
-    private static final String COMMIT = "COMMIT";
-    private static final String ROLLBACK = "ROLLBACK";
-
-    static{
-        transactionCompletionMode = System.getProperty("com.sun.enterprise.in-progress-local-transaction.completion-mode");
-    }
 
     @Override
     public ResourceHandle createResource() throws PoolingException {
@@ -109,13 +111,16 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
             XAResource xares = resource.getXAResource();
             forceTransactionCompletion(xares);
             mc.destroy();
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.finest("destroyResource for LocalTxConnectorAllocator done");
-            }
+            LOG.finest("destroyResource for LocalTxConnectorAllocator done");
 
         } catch (Exception ex) {
             throw new PoolingException(ex);
         }
+    }
+
+    @Override
+    public boolean shareableWithinComponent() {
+        return shareable;
     }
 
     private void forceTransactionCompletion(XAResource xares) throws SystemException {
@@ -127,22 +132,22 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
                     if(j2eetran.getStatus() == (Status.STATUS_ACTIVE)){
                         try{
                             if(transactionCompletionMode.equalsIgnoreCase(COMMIT)){
-                                if(_logger.isLoggable(Level.FINEST)){
-                                    _logger.log(Level.FINEST,"Transaction Completion Mode for LocalTx resource is " +
+                                if(LOG.isLoggable(Level.FINEST)){
+                                    LOG.log(Level.FINEST,"Transaction Completion Mode for LocalTx resource is " +
                                             "set as COMMIT, committing transaction");
                                 }
                                 j2eetran.commit();
                             }else if(transactionCompletionMode.equalsIgnoreCase(ROLLBACK)){
-                                if(_logger.isLoggable(Level.FINEST)){
-                                    _logger.log(Level.FINEST,"Transaction Completion Mode for LocalTx resource is " +
+                                if(LOG.isLoggable(Level.FINEST)){
+                                    LOG.log(Level.FINEST,"Transaction Completion Mode for LocalTx resource is " +
                                         "set as ROLLBACK, rolling back transaction");
                                 }
                                 j2eetran.rollback();
                             }else{
-                                _logger.log(Level.WARNING,"Unknown transaction completion mode, no action made");
+                                LOG.log(Level.WARNING,"Unknown transaction completion mode, no action made");
                             }
                         }catch(Exception e){
-                            _logger.log(Level.WARNING, "Failure while forcibily completing an incomplete, " +
+                            LOG.log(Level.WARNING, "Failure while forcibily completing an incomplete, " +
                                     "local transaction ", e);
                         }
                     }
@@ -150,10 +155,4 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
             }
         }
     }
-
-    @Override
-    public boolean shareableWithinComponent() {
-        return shareable;
-    }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,7 +31,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +42,7 @@ import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
@@ -95,8 +95,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
 
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(ConnectorConnectionPoolManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ConnectorConnectionPoolManager.class);
 
     private String raname;
     private String connectiondefinition;
@@ -124,17 +123,14 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
     private String description;
     private String poolname;
 
-    public ConnectorConnectionPoolManager() {
-    }
-
     @Override
     public String getResourceType() {
         return ServerTags.CONNECTOR_CONNECTION_POOL;
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setParams(attributes);
 
         ResourceStatus validationStatus = isValid(resources, true);
@@ -152,13 +148,13 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         } catch (TransactionFailure tfe) {
             Logger.getLogger(ConnectorConnectionPoolManager.class.getName()).log(Level.SEVERE,
                     "create-connector-connection-pool failed", tfe);
-            String msg = localStrings.getLocalString(
+            String msg = I18N.getLocalString(
                     "create.connector.connection.pool.fail", "Connector connection pool {0} create failed: {1}",
                     poolname) + " " + tfe.getLocalizedMessage();
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        String msg = localStrings.getLocalString(
+        String msg = I18N.getLocalString(
                 "create.connector.connection.pool.success", "Connector connection pool {0} created successfully",
                 poolname);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
@@ -168,14 +164,14 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
     private ResourceStatus isValid(Resources resources, boolean requiresNewTransaction){
         ResourceStatus status = new ResourceStatus(ResourceStatus.SUCCESS, "Validation Successful");
         if (poolname == null) {
-            String msg = localStrings.getLocalString("create.connector.connection.pool.noJndiName",
+            String msg = I18N.getLocalString("create.connector.connection.pool.noJndiName",
                 "No pool name defined for connector connection pool.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         // ensure we don't already have one of this name
         final SimpleJndiName jndiName = new SimpleJndiName(poolname);
         if (resources.getResourceByName(ConnectorConnectionPool.class, jndiName) != null) {
-            String errMsg = localStrings.getLocalString("create.connector.connection.pool.duplicate",
+            String errMsg = I18N.getLocalString("create.connector.connection.pool.duplicate",
                 "A resource named {0} already exists.", poolname);
             return new ResourceStatus(ResourceStatus.FAILURE, errMsg);
         }
@@ -184,7 +180,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         if (environment.isDas() && requiresNewTransaction) {
 
             if (applications == null) {
-                String msg = localStrings.getLocalString("noApplications", "No applications found.");
+                String msg = I18N.getLocalString("noApplications", "No applications found.");
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
 
@@ -196,7 +192,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
             } catch (ConnectorRuntimeException cre) {
                 Logger.getLogger(ConnectorConnectionPoolManager.class.getName()).log(Level.SEVERE,
                     "Could not find connection definitions from ConnectorRuntime for resource adapter " + raname, cre);
-                String msg = localStrings.getLocalString("create.connector.connection.pool.noConnDefs",
+                String msg = I18N.getLocalString("create.connector.connection.pool.noConnDefs",
                     "Could not find connection definitions for resource adapter {0}", raname) + " "
                     + cre.getLocalizedMessage();
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
@@ -270,41 +266,41 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         }
         newResource.setName(poolname);
         if (properties != null) {
-            for ( java.util.Map.Entry e : properties.entrySet()) {
+            for (String propertyName : properties.stringPropertyNames()) {
                 Property prop = newResource.createChild(Property.class);
-                prop.setName((String)e.getKey());
-                prop.setValue((String)e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
                 newResource.getProperty().add(prop);
             }
         }
         return newResource;
     }
 
-    public void setParams(HashMap attrList) {
-        raname = (String) attrList.get(RES_ADAPTER_NAME);
-        connectiondefinition = (String) attrList.get(CONN_DEF_NAME);
-        steadypoolsize = (String) attrList.get(STEADY_POOL_SIZE);
-        maxpoolsize = (String) attrList.get(MAX_POOL_SIZE);
-        maxwait = (String) attrList.get(MAX_WAIT_TIME_IN_MILLIS);
-        poolresize = (String) attrList.get(POOL_SIZE_QUANTITY);
-        idletimeout = (String) attrList.get(IDLE_TIME_OUT_IN_SECONDS);
-        isconnectvalidatereq = (String) attrList.get(IS_CONNECTION_VALIDATION_REQUIRED);
-        failconnection = (String) attrList.get(FAIL_ALL_CONNECTIONS);
-        validateAtmostOncePeriod = (String) attrList.get(VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS);
-        connectionLeakTimeout = (String) attrList.get(CONNECTION_LEAK_TIMEOUT_IN_SECONDS);
-        connectionLeakReclaim = (String) attrList.get(CONNECTION_LEAK_RECLAIM);
-        connectionCreationRetryAttempts = (String) attrList.get(CONNECTION_CREATION_RETRY_ATTEMPTS);
-        connectionCreationRetryInterval = (String) attrList.get(CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS);
-        lazyConnectionEnlistment = (String) attrList.get(LAZY_CONNECTION_ENLISTMENT);
-        lazyConnectionAssociation = (String) attrList.get(LAZY_CONNECTION_ASSOCIATION);
-        associateWithThread = (String) attrList.get(ASSOCIATE_WITH_THREAD);
-        matchConnections = (String) attrList.get(MATCH_CONNECTIONS);
-        maxConnectionUsageCount = (String) attrList.get(MAX_CONNECTION_USAGE_COUNT);
-        description = (String) attrList.get(DESCRIPTION);
-        poolname = (String) attrList.get(CONNECTOR_CONNECTION_POOL_NAME);
-        pooling = (String) attrList.get(POOLING);
-        ping = (String) attrList.get(PING);
-        transactionSupport = (String) attrList.get(CONN_TRANSACTION_SUPPORT);
+    private void setParams(ResourceAttributes attrList) {
+        raname = attrList.getString(RES_ADAPTER_NAME);
+        connectiondefinition = attrList.getString(CONN_DEF_NAME);
+        steadypoolsize = attrList.getString(STEADY_POOL_SIZE);
+        maxpoolsize = attrList.getString(MAX_POOL_SIZE);
+        maxwait = attrList.getString(MAX_WAIT_TIME_IN_MILLIS);
+        poolresize = attrList.getString(POOL_SIZE_QUANTITY);
+        idletimeout = attrList.getString(IDLE_TIME_OUT_IN_SECONDS);
+        isconnectvalidatereq = attrList.getString(IS_CONNECTION_VALIDATION_REQUIRED);
+        failconnection = attrList.getString(FAIL_ALL_CONNECTIONS);
+        validateAtmostOncePeriod = attrList.getString(VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS);
+        connectionLeakTimeout = attrList.getString(CONNECTION_LEAK_TIMEOUT_IN_SECONDS);
+        connectionLeakReclaim = attrList.getString(CONNECTION_LEAK_RECLAIM);
+        connectionCreationRetryAttempts = attrList.getString(CONNECTION_CREATION_RETRY_ATTEMPTS);
+        connectionCreationRetryInterval = attrList.getString(CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS);
+        lazyConnectionEnlistment = attrList.getString(LAZY_CONNECTION_ENLISTMENT);
+        lazyConnectionAssociation = attrList.getString(LAZY_CONNECTION_ASSOCIATION);
+        associateWithThread = attrList.getString(ASSOCIATE_WITH_THREAD);
+        matchConnections = attrList.getString(MATCH_CONNECTIONS);
+        maxConnectionUsageCount = attrList.getString(MAX_CONNECTION_USAGE_COUNT);
+        description = attrList.getString(DESCRIPTION);
+        poolname = attrList.getString(CONNECTOR_CONNECTION_POOL_NAME);
+        pooling = attrList.getString(POOLING);
+        ping = attrList.getString(PING);
+        transactionSupport = attrList.getString(CONN_TRANSACTION_SUPPORT);
     }
 
     private ResourceStatus validateConnectorConnPoolAttributes(String raName, String connDef)
@@ -313,7 +309,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         if(status.getStatus() == ResourceStatus.SUCCESS) {
             if(!isValidConnectionDefinition(connDef,raName)) {
 
-                String msg = localStrings.getLocalString("admin.mbeans.rmb.invalid_ra_connectdef_not_found",
+                String msg = I18N.getLocalString("admin.mbeans.rmb.invalid_ra_connectdef_not_found",
                             "Invalid connection definition. Connector Module with connection definition {0} not found.", connDef);
                 status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
@@ -327,7 +323,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         ResourceStatus status = new ResourceStatus(ResourceStatus.SUCCESS, "");
 
         if ((raName == null) || (raName.equals(""))) {
-            String msg = localStrings.getLocalString("admin.mbeans.rmb.null_res_adapter",
+            String msg = I18N.getLocalString("admin.mbeans.rmb.null_res_adapter",
                     "Resource Adapter Name is null.");
             status = new ResourceStatus(ResourceStatus.FAILURE, msg);
         } else {
@@ -344,14 +340,14 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
                     String appName = raName.substring(0, indx);
                     Application app = applications.getModule(Application.class, appName);
                     if (app == null) {
-                        String msg = localStrings.getLocalString("admin.mbeans.rmb.invalid_ra_app_not_found",
+                        String msg = I18N.getLocalString("admin.mbeans.rmb.invalid_ra_app_not_found",
                                 "Invalid raname. Application with name {0} not found.", appName);
                         status = new ResourceStatus(ResourceStatus.FAILURE, msg);
                     }
                 } else {
                     Application app = applications.getModule(Application.class, raName);
                     if (app == null) {
-                        String msg = localStrings.getLocalString("admin.mbeans.rmb.invalid_ra_cm_not_found",
+                        String msg = I18N.getLocalString("admin.mbeans.rmb.invalid_ra_cm_not_found",
                                 "Invalid raname. Connector Module with name {0} not found.", raName);
                         status = new ResourceStatus(ResourceStatus.FAILURE, msg);
                     }
@@ -374,8 +370,8 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
     }
 
     @Override
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-        throws Exception {
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         setParams(attributes);
         final ResourceStatus status;
         if (validate) {

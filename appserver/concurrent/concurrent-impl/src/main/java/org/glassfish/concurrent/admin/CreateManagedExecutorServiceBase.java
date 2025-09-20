@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +17,12 @@
 
 package org.glassfish.concurrent.admin;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.glassfish.api.Param;
+import org.glassfish.resources.api.ResourceAttributes;
 
 import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
@@ -49,8 +48,6 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
  *
  */
 public class CreateManagedExecutorServiceBase {
-
-    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateManagedExecutorServiceBase.class);
 
     @Param(name="jndi_name", primary=true)
     protected String jndiName;
@@ -103,21 +100,21 @@ public class CreateManagedExecutorServiceBase {
     @Param(optional=true)
     protected String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
-    protected void setAttributeList(HashMap attrList) {
-        attrList.put(JNDI_NAME, jndiName);
-        attrList.put(CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
-        attrList.put(CONTEXT_INFO, contextinfo);
-        attrList.put(THREAD_PRIORITY, threadpriority.toString());
-        attrList.put(USE_VIRTUAL_THREADS, useVirtualThreads.toString());
-        attrList.put(LONG_RUNNING_TASKS, longrunningtasks.toString());
-        attrList.put(HUNG_AFTER_SECONDS, hungafterseconds.toString());
-        attrList.put(HUNG_LOGGER_PRINT_ONCE, hungloggerprintonce.toString());
-        attrList.put(HUNG_LOGGER_INITIAL_DELAY_SECONDS, hungloggerinitialdelayseconds.toString());
-        attrList.put(HUNG_LOGGER_INTERVAL_SECONDS, hungloggerintervalseconds.toString());
-        attrList.put(CORE_POOL_SIZE, corepoolsize.toString());
-        attrList.put(KEEP_ALIVE_SECONDS, keepaliveseconds.toString());
-        attrList.put(THREAD_LIFETIME_SECONDS, threadlifetimeseconds.toString());
-        attrList.put(DESCRIPTION, description);
-        attrList.put(ENABLED, enabled.toString());
+    protected void setAttributeList(ResourceAttributes attrList) {
+        attrList.set(JNDI_NAME, jndiName);
+        attrList.set(CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
+        attrList.set(CONTEXT_INFO, contextinfo);
+        attrList.set(THREAD_PRIORITY, threadpriority.toString());
+        attrList.set(USE_VIRTUAL_THREADS, useVirtualThreads.toString());
+        attrList.set(LONG_RUNNING_TASKS, longrunningtasks.toString());
+        attrList.set(HUNG_AFTER_SECONDS, hungafterseconds.toString());
+        attrList.set(HUNG_LOGGER_PRINT_ONCE, hungloggerprintonce.toString());
+        attrList.set(HUNG_LOGGER_INITIAL_DELAY_SECONDS, hungloggerinitialdelayseconds.toString());
+        attrList.set(HUNG_LOGGER_INTERVAL_SECONDS, hungloggerintervalseconds.toString());
+        attrList.set(CORE_POOL_SIZE, corepoolsize.toString());
+        attrList.set(KEEP_ALIVE_SECONDS, keepaliveseconds.toString());
+        attrList.set(THREAD_LIFETIME_SECONDS, threadlifetimeseconds.toString());
+        attrList.set(DESCRIPTION, description);
+        attrList.set(ENABLED, enabled.toString());
     }
 }

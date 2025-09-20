@@ -1,8 +1,7 @@
 type=page
 status=published
 title=List of Tables
-next=title.html
-prev=loe.html
+prev=appendix.html
 ~~~~~~
 
 = List of Tables

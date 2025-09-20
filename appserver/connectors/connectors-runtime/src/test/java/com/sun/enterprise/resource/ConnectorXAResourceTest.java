@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -88,8 +88,7 @@ public class ConnectorXAResourceTest {
         assertEquals(handle, resourceHandle);
 
         // Make sure the resource is unenlisted
-        assertFalse(resourceHandle.isEnlisted());
-        assertTrue(resourceHandle.getResourceState().isUnenlisted());
+        assertFalse(resourceHandle.isEnlisted(), "enlisted");
 
         // In case the resource was unenlisted the transaction should also have been started
         LocalTransaction transaction = resourceHandle.getResource().getLocalTransaction();
@@ -138,8 +137,7 @@ public class ConnectorXAResourceTest {
         assertEquals(3, javaEETransaction.getGetNonXAResourceNrOfCalls());
 
         // Make sure the resource is unenlisted
-        assertFalse(resourceHandle.isEnlisted());
-        assertTrue(resourceHandle.getResourceState().isUnenlisted());
+        assertFalse(resourceHandle.isEnlisted(), "enlisted");
 
         // In case the resource was unenlisted the transaction should also have been started
         LocalTransaction transaction = resourceHandle.getResource().getLocalTransaction();
@@ -180,8 +178,7 @@ public class ConnectorXAResourceTest {
         connectorXAResource.rollback(/* xidNotRequired */ null);
 
         // Make sure the resource is unenlisted
-        assertFalse(resourceHandle.isEnlisted());
-        assertTrue(resourceHandle.getResourceState().isUnenlisted());
+        assertFalse(resourceHandle.isEnlisted(), "enlisted");
 
         // In case the resource was unenlisted the transaction should also have been started
         LocalTransaction transaction = resourceHandle.getResource().getLocalTransaction();
@@ -279,8 +276,7 @@ public class ConnectorXAResourceTest {
         connectorXAResource.rollback(/* xidNotRequired */ null);
 
         // Make sure the resource is unenlisted
-        assertFalse(resourceHandle.isEnlisted());
-        assertTrue(resourceHandle.getResourceState().isUnenlisted());
+        assertFalse(resourceHandle.isEnlisted(), "enlisted");
 
         // In case the resource was unenlisted the transaction should also have been started
         LocalTransaction transaction = resourceHandle.getResource().getLocalTransaction();

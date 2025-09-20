@@ -34,7 +34,6 @@
     <properties>
         <ant.home>${env.ANT_HOME}</ant.home>
         <jdk.home>${env.JAVA_HOME}</jdk.home>
-        <glassfish.version>${project.version}</glassfish.version>
         <maven.repo.local>${user.home}/.m2/repository</maven.repo.local>
         <tck.version>${project.version}</tck.version>
     </properties>
@@ -72,7 +71,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>2.0.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

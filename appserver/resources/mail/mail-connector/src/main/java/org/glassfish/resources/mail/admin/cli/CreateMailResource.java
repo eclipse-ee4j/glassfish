@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +41,7 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -122,18 +122,18 @@ public class CreateMailResource implements AdminCommand {
 
         final ActionReport report = context.getActionReport();
 
-        HashMap<String, String> attributes = new HashMap<>();
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME, jndiName);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_HOST, mailHost);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_USER, mailUser);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_FROM_ADDRESS, fromAddress);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_STORE_PROTO, storeProtocol);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_STORE_PROTO_CLASS, storeProtocolClass);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_TRANS_PROTO, transportProtocol);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_TRANS_PROTO_CLASS, transportProtocolClass);
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_DEBUG, debug.toString());
-        attributes.put(org.glassfish.resources.admin.cli.ResourceConstants.ENABLED, enabled.toString());
-        attributes.put(ServerTags.DESCRIPTION, description);
+        ResourceAttributes attributes = new ResourceAttributes();
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME, jndiName);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_HOST, mailHost);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_USER, mailUser);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_FROM_ADDRESS, fromAddress);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_STORE_PROTO, storeProtocol);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_STORE_PROTO_CLASS, storeProtocolClass);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_TRANS_PROTO, transportProtocol);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_TRANS_PROTO_CLASS, transportProtocolClass);
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.MAIL_DEBUG, debug.toString());
+        attributes.set(org.glassfish.resources.admin.cli.ResourceConstants.ENABLED, enabled.toString());
+        attributes.set(ServerTags.DESCRIPTION, description);
 
         ResourceStatus rs;
 

@@ -17,21 +17,27 @@
 
 -->
 
-<suite name="MicroProfile Rest Client TCK" verbose="2" configfailurepolicy="skip" >
+<suite name="MicroProfile Rest Client TCK" verbose="2" configfailurepolicy="continue" >
     <listeners>
         <listener class-name="org.glassfish.microprofile.rest.client.tck.client.ProgressListener" />
     </listeners>
-    <!-- Separated because they sometimes broke when running in the main block -->
-    <test name="MicroProfile Rest Client TCK - ASYNC Tests">
+    <test name="MicroProfile Rest Client TCK">
         <packages>
-            <package name="org.eclipse.microprofile.rest.client.tck.asynctests.*" />
+            <package name="org.eclipse.microprofile.rest.client.tck.*" />
         </packages>
-    </test>
-    <test name="MicroProfile Rest Client TCK - Common Tests">
-        <packages>
-            <package name="org.eclipse.microprofile.rest.client.tck.*">
-                <exclude name="org.eclipse.microprofile.rest.client.tck.asynctests.*" />
-            </package>
-        </packages>
+        <classes>
+            <!-- See https://github.com/microprofile/microprofile-rest-client/issues/203 -->
+            <class name="org.eclipse.microprofile.rest.client.tck.asynctests.AsyncMethodTest">
+                <methods>
+                    <exclude name="testAsyncInvocationInterceptorProvider" />
+                </methods>
+            </class>
+            <!-- See https://github.com/microprofile/microprofile-rest-client/issues/402 -->
+            <class name="org.eclipse.microprofile.rest.client.tck.cditests.ClientClosedTest">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
+        </classes>
     </test>
 </suite>

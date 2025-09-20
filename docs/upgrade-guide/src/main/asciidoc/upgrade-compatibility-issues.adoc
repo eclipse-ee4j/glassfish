@@ -1,14 +1,14 @@
 type=page
 status=published
 title={productName} Upgrade Compatibility Issues
-next=upgrading-legacy-installation.html
-prev=preface.html
+prev=upgrading-legacy-installation.html
+next=appendix.html
 ~~~~~~
 
 = {productName} Upgrade Compatibility Issues
 
 [[glassfish-server-upgrade-compatibility-issues]]
-== 1 {productName} Upgrade Compatibility Issues
+== 2 {productName} Upgrade Compatibility Issues
 
 This section describes some compatibility issues between {productName} {product-majorVersion} and earlier product releases. This section also describes
 some compatibility issues that affect Java applications that run on
@@ -76,9 +76,6 @@ Windows systems::
 SystemDrive\glassfish8
 ----
 
-In {productName} 3.0.1 and Enterprise Server v3, the default
-installation root directory was `glassfish8`.
-
 [[changes-to-group-management-service-settings]]
 
 === Changes to Group Management Service Settings
@@ -113,17 +110,17 @@ are not supported and have been removed.
 
 === Application Client Interoperability
 
-The Jakarta EE 6 platform specification imposes stricter requirements than
-Jakarta EE 5 did on which JAR files can be visible to various modules
+The Jakarta EE {jakartaee} platform specification imposes stricter requirements than
+Java EE 5 and older did on which JAR files can be visible to various modules
 within an EAR file. In particular, application clients must not have
 access to EJB JAR files or other JAR files in the EAR file unless they
 use a `Class-Path` header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
-Jakarta EE `library-directory` mechanism. Deployed Jakarta EE 5 applications
+Jakarta EE `library-directory` mechanism. Deployed Java EE 5 applications
 that are upgraded to {productName} {product-majorVersion} will have the `compatibility`
 property set to `v2` and will run without change on {productName} {product-majorVersion}.
 You may, however, want to consider modifying the applications to
-conform to Jakarta EE 6 requirements.
+conform to Jakarta EE {jakartaee} requirements.
 
 If your upgrade includes a deployed application with an application
 client, you will need to retrieve the client stubs using {productName} {product-majorVersion} in order to run the client. Use the
@@ -167,8 +164,7 @@ clients and servers synchronized and using the same runtime.
 installations of earlier product versions in which node agents were
 configured, the cluster definitions will be migrated, but the clustered
 instances themselves must be manually re-created. See
-xref:upgrading-legacy-installation.adoc#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node
-Agent Configurations] for more information.
+xref:upgrading-legacy-installation.adoc#correcting-cluster-config[Correcting Cluster configuration] for more information.
 
 [[hadb-and-hadbm-command-support]]
 
@@ -204,7 +200,7 @@ In {productName} {product-majorVersion}, it is recommended that utility options 
 `asadmin` command precede the subcommand. Utility options are options
 that control the behavior of the `asadmin` utility, as distinguished
 from subcommand options. Use of the following options after the
-subcommand is deprecated.
+subcommand is deprecated and will be removed in {productName} 7.1.0.
 
 * `--host`
 * `--port`

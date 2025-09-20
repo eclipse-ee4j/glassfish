@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -113,7 +113,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         // At this point however, we will only support the straight and narrow
         // case where a connection is acquired and then used in the same component.
         // The other case might or might not work
-        if (resourceHandle != null && resourceHandle.getResourceState().isUnenlisted()) {
+        if (resourceHandle != null && !resourceHandle.getResourceState().isEnlisted()) {
             try {
                 // Enable enlistment to be able to enlist the resource.
                 resourceHandle.setEnlistmentSuspended(false);

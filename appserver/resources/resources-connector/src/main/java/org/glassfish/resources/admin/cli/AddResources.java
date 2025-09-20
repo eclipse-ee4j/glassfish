@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +25,9 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import jakarta.inject.Inject;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.lang.System.Logger;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -43,6 +43,8 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  * Create add-resources Command
@@ -61,7 +63,8 @@ import org.jvnet.hk2.annotations.Service;
 })
 public class AddResources implements AdminCommand {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AddResources.class);
+    private static final Logger LOG = System.getLogger(AddResources.class.getName());
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(AddResources.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
@@ -81,46 +84,48 @@ public class AddResources implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         // Check if the path xmlFile exists
         if (!xmlFile.exists()) {
-            report.setMessage(localStrings.getLocalString("FileNotFound",
+            report.setMessage(I18N.getLocalString("FileNotFound",
                 "The system cannot find the path specified: {0}", xmlFile.getName()));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
 
         try {
-            final ArrayList results = ResourcesManager.createResources(
+            final List<ResourceStatus> results = ResourcesManager.createResources(
                     domain.getResources(), xmlFile, target, resourceFactory);
-            final Iterator resultsIter = results.iterator();
+            final Iterator<ResourceStatus> resultsIter = results.iterator();
             report.getTopMessagePart().setChildrenType("Command");
             boolean isSuccess = false;
             while (resultsIter.hasNext()) {
-                ResourceStatus rs = ((ResourceStatus) resultsIter.next());
+                ResourceStatus rs = resultsIter.next();
                 final String msgToAdd = rs.getMessage();
-                if ((msgToAdd != null) && (!msgToAdd.equals(""))) {
+                if (msgToAdd != null && !msgToAdd.isEmpty()) {
                     final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                     part.setMessage(msgToAdd);
                 }
-                if (rs.getStatus() == ResourceStatus.SUCCESS || rs.isAlreadyExists())
+                if (rs.getStatus() == ResourceStatus.SUCCESS || rs.isAlreadyExists()) {
                     isSuccess = true;
+                }
             }
-            report.setActionExitCode(
-                    (isSuccess)?ActionReport.ExitCode.SUCCESS:ActionReport.ExitCode.FAILURE);
-            if (!isSuccess)
-                report.setMessage(localStrings.getLocalString("add.resources.failed",
-                                                "add-resources <{0}> failed", xmlFile.getName()));
+            report.setActionExitCode(isSuccess ? ActionReport.ExitCode.SUCCESS : ActionReport.ExitCode.FAILURE);
+            if (!isSuccess) {
+                report.setMessage(I18N.getLocalString("add.resources.failed", "add-resources <{0}> failed",
+                    xmlFile.getName()));
+            }
 
-        } catch (Exception ex) {
-            Logger.getLogger(AddResources.class.getName()).log(Level.SEVERE, "Something went wrong in add-resources", ex);
-            report.setMessage(localStrings.getLocalString("add.resources.failed",
-                                                "add-resources <{0}> failed", xmlFile.getName()));
+        } catch (Exception e) {
+            LOG.log(ERROR, "Something went wrong in add-resources", e);
+            report.setMessage(
+                I18N.getLocalString("add.resources.failed", "add-resources <{0}> failed", xmlFile.getName()));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             //Need to fix, doesn't show the error from exception, though it writes in the log
-            report.setFailureCause(ex);
+            report.setFailureCause(e);
         }
     }
 }

@@ -35,10 +35,6 @@
        This pom servers just Ant tests, it should not be uploaded to any Maven repository.
     </description>
 
-    <properties>
-        <glassfish.version>${project.version}</glassfish.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.tests</groupId>

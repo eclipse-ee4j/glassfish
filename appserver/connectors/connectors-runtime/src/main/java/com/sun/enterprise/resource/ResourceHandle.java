@@ -22,7 +22,6 @@ import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.transaction.spi.TransactionalResource;
-import com.sun.logging.LogDomains;
 
 import jakarta.resource.spi.ConnectionEventListener;
 import jakarta.resource.spi.DissociatableManagedConnection;
@@ -30,11 +29,11 @@ import jakarta.resource.spi.LazyEnlistableManagedConnection;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.transaction.Transaction;
 
-import java.util.logging.Logger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.transaction.xa.XAResource;
 
-import static java.util.logging.Level.FINEST;
 
 /**
  * ResourceHandle encapsulates a resource connection.
@@ -45,12 +44,10 @@ import static java.util.logging.Level.FINEST;
  */
 public class ResourceHandle implements com.sun.appserv.connectors.internal.api.ResourceHandle, TransactionalResource {
 
-    private static final Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
-
     /**
-     * Unique Id sequence generator value for generating unique ResourceHandle ids.
+     * Unique Id generator value for generating unique sequential ResourceHandle ids.
      */
-    static private long idSequence;
+    private static final AtomicLong ID_GENERATOR = new AtomicLong();
 
     /**
      * The unique Id of this ResourceHandle instance.
@@ -140,20 +137,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
      * Resource handle specific lock, which can be used to lock the resource handle when state of the resource needs to be
      * changed. This is currently only used in the AssocWithThreadResourcePool implementation.
      */
-    public final Object lock = new Object();
-
-    /**
-     * Holds the latest time at which the connection was validated.<br>
-     * Could also be seen as part of ResourceState.
-     */
-    private long lastValidated;
-
-    /**
-     * Holds the number of times the handle(connection) is used so far. It is used by the ConnectionPool logic in case the
-     * "max-connection-usage-count" option is set in the connection pool.<br>
-     * Could also be seen as part of ResourceState.
-     */
-    private int usageCount;
+    private final ReentrantLock lock = new ReentrantLock();
 
     /**
      * Index of this ResourceHandle in the RWLockDataStructure internal ResourceHandle[]. RWLockDataStructure uses this
@@ -187,13 +171,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
      */
     private boolean markedReclaim;
 
-    static private long getNextId() {
-        synchronized (ResourceHandle.class) {
-            idSequence++;
-            return idSequence;
-        }
-    }
-
     /**
      * ResourceHandle constructor
      *
@@ -202,23 +179,16 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
      * @param resourceAllocator the ResourceAllocator that is creating this resource handle instance.
      */
     public ResourceHandle(ManagedConnection resource, ResourceSpec resourceSpec, ResourceAllocator resourceAllocator) {
-        this.id = getNextId();
+        this.id = ID_GENERATOR.incrementAndGet();
         this.resource = resource;
         this.resourceSpec = resourceSpec;
         this.resourceAllocator = resourceAllocator;
-
-        if (resourceAllocator instanceof LocalTxConnectorAllocator) {
-            supportsXAResource = false;
-        } else {
-            supportsXAResource = true;
-        }
-
+        this.supportsXAResource = resourceAllocator instanceof LocalTxConnectorAllocator ? false : true;
         if (resource instanceof LazyEnlistableManagedConnection) {
-            supportsLazyEnlistment = true;
+            this.supportsLazyEnlistment = true;
         }
-
         if (resource instanceof DissociatableManagedConnection) {
-            supportsLazyAssociation = true;
+            this.supportsLazyAssociation = true;
         }
     }
 
@@ -302,23 +272,27 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         return id;
     }
 
+    public void lock() {
+        this.lock.lock();
+    }
+
+
+    public void unlock() {
+        this.lock.unlock();
+    }
+
     public void fillInResourceObjects(Object userConnection, XAResource xaResource) {
         if (userConnection != null) {
             this.userConnection = userConnection;
         }
 
-        if (xaResource != null) {
-            if (logger.isLoggable(FINEST)) {
-                // When Log level is Finest, XAResourceWrapper is used to log
-                // all XA interactions - Don't wrap XAResourceWrapper if it is
-                // already wrapped
-                if ((xaResource instanceof XAResourceWrapper) || (xaResource instanceof ConnectorXAResource)) {
-                    this.xaResource = xaResource;
-                } else {
-                    this.xaResource = new XAResourceWrapper(xaResource);
-                }
-            } else {
+        if (xaResource == null) {
+            this.xaResource = xaResource;
+        } else {
+            if (xaResource instanceof XAResourceWrapper || xaResource instanceof ConnectorXAResource) {
                 this.xaResource = xaResource;
+            } else {
+                this.xaResource = new XAResourceWrapper(xaResource);
             }
         }
     }
@@ -359,7 +333,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     @Override
     public String toString() {
-        return "<ResourceHandle id=" + id + ", state=" + state + "/>";
+        return "ResourceHandle[id=" + id + ", state=" + state + "]";
     }
 
     public void setConnectionErrorOccurred() {
@@ -370,7 +344,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         return connectionErrorOccurred;
     }
 
-    public ResourceState getResourceState() {
+    public final ResourceState getResourceState() {
         return state;
     }
 
@@ -390,22 +364,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     @Override
     public boolean isEnlisted() {
         return state.isEnlisted();
-    }
-
-    public long getLastValidated() {
-        return lastValidated;
-    }
-
-    public void setLastValidated(long lastValidated) {
-        this.lastValidated = lastValidated;
-    }
-
-    public int getUsageCount() {
-        return usageCount;
-    }
-
-    public void incrementUsageCount() {
-        usageCount++;
     }
 
     public int getRwLockDataStructureResourceIndex() {

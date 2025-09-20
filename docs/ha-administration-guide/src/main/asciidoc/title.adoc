@@ -20,15 +20,6 @@ This book describes thehigh-availability features in {productName},
 including converged load balancing, HTTP load balancing, clusters,
 session persistence and failover.
 
-Note: The main thrust of the {productName} 7
-release is to provide an application server for developers to explore
-and begin exploiting the new and updated technologies in the Jakarta EE 10
-platform. Thus, the clustering, standalone instance and high
-availability features of {productName} were not a focus of this
-release. These features are included in the release, but they may not
-function properly with some of the new features added in support of the
-Jakarta EE 10 platform.
-
 [[sthref1]]
 
 '''''

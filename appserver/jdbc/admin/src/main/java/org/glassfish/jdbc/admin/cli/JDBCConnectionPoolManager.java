@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,8 +30,6 @@ import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
@@ -40,6 +38,7 @@ import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.jdbc.util.JdbcResourcesUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
@@ -94,7 +93,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
 
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(JDBCConnectionPoolManager.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(JDBCConnectionPoolManager.class);
 
     private String datasourceclassname;
     private String restype;
@@ -128,14 +127,11 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     private String maxConnectionUsageCount = "0";
     private String ping = Boolean.FALSE.toString();
     private String pooling = Boolean.TRUE.toString();
-    private String validationclassname = null;
+    private String validationclassname;
     private String wrapJDBCObjects = Boolean.TRUE.toString();
 
     private String description;
     private String jdbcconnectionpoolid;
-
-    public JDBCConnectionPoolManager() {
-    }
 
     @Override
     public String getResourceType() {
@@ -143,7 +139,8 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     }
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, Properties properties, String target) throws Exception {
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setAttributes(attributes);
 
         ResourceStatus validationStatus = isValid(resources);
@@ -153,33 +150,41 @@ public class JDBCConnectionPoolManager implements ResourceManager {
 
         try {
             ConfigSupport.apply(param -> createResource(param, properties), resources);
-
         } catch (TransactionFailure tfe) {
-            return new ResourceStatus(FAILURE, localStrings.getLocalString("create.jdbc.connection.pool.fail",
-                    "JDBC connection pool {0} create failed: {1}", jdbcconnectionpoolid, tfe.getMessage()));
+            String msg = I18N.getLocalString(
+                    "create.jdbc.connection.pool.fail", "JDBC connection pool {0} create failed: {1}",
+                    jdbcconnectionpoolid, tfe.getMessage());
+            return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
-
-        return new ResourceStatus(SUCCESS, localStrings.getLocalString("create.jdbc.connection.pool.success",
-                "JDBC connection pool {0} created successfully", jdbcconnectionpoolid));
+        String msg = I18N.getLocalString(
+                "create.jdbc.connection.pool.success", "JDBC connection pool {0} created successfully",
+                jdbcconnectionpoolid);
+        return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
     private ResourceStatus isValid(Resources resources) {
         ResourceStatus status = new ResourceStatus(SUCCESS, "Validation Successful");
         if (jdbcconnectionpoolid == null) {
-            return new ResourceStatus(FAILURE,
-                    localStrings.getLocalString("add.resources.noJdbcConnectionPoolId", "No pool name defined for JDBC Connection pool."));
+            String msg = I18N.getLocalString("add.resources.noJdbcConnectionPoolId",
+                    "No pool name defined for JDBC Connection pool.");
+            return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         // ensure we don't already have one of this name
         for (ResourcePool pool : resources.getResources(ResourcePool.class)) {
             if (pool.getName().equals(jdbcconnectionpoolid)) {
-                return new ResourceStatus(FAILURE, localStrings.getLocalString("create.jdbc.connection.pool.duplicate",
-                        "A resource {0} already exists.", jdbcconnectionpoolid), true);
+                String msg = I18N.getLocalString("create.jdbc.connection.pool.duplicate",
+                        "A resource {0} already exists.", jdbcconnectionpoolid);
+                return new ResourceStatus(ResourceStatus.FAILURE, msg, true);
             }
         }
 
-        if ("table".equals(validationmethod) && Boolean.valueOf(isconnectvalidatereq) && validationtable == null) {
-            return new ResourceStatus(FAILURE, localStrings.getLocalString("create.jdbc.connection.pool.validationtable_required",
-                    "--validationtable is required if --validationmethod=table " + "and --isconnectvalidatereq=true."), true);
+        if ("table".equals(this.validationmethod)
+                && Boolean.TRUE.toString().equals(this.isconnectvalidatereq)
+                && this.validationtable == null) {
+            String msg = I18N.getLocalString("create.jdbc.connection.pool.validationtable_required",
+                    "--validationtable is required if --validationmethod=table " +
+                            "and --isconnectvalidatereq=true.");
+            return new ResourceStatus(ResourceStatus.FAILURE, msg, true);
         }
 
         return status;
@@ -276,67 +281,67 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         }
         newResource.setName(jdbcconnectionpoolid);
         if (properties != null) {
-            for (Map.Entry<Object, Object> e : properties.entrySet()) {
-                Property property = newResource.createChild(Property.class);
-                property.setName((String) e.getKey());
-                property.setValue((String) e.getValue());
-
-                newResource.getProperty().add(property);
+            for (String propertyName : properties.stringPropertyNames()) {
+                Property prop = newResource.createChild(Property.class);
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
+                newResource.getProperty().add(prop);
             }
         }
         return newResource;
     }
 
-    public void setAttributes(HashMap attrList) {
-        datasourceclassname = (String) attrList.get(DATASOURCE_CLASS);
-        restype = (String) attrList.get(RES_TYPE);
-        steadypoolsize = (String) attrList.get(STEADY_POOL_SIZE);
-        maxpoolsize = (String) attrList.get(MAX_POOL_SIZE);
-        maxwait = (String) attrList.get(MAX_WAIT_TIME_IN_MILLIS);
-        poolresize = (String) attrList.get(POOL_SIZE_QUANTITY);
-        idletimeout = (String) attrList.get(IDLE_TIME_OUT_IN_SECONDS);
-        isolationlevel = (String) attrList.get(TRANS_ISOLATION_LEVEL);
-        isisolationguaranteed = (String) attrList.get(IS_ISOLATION_LEVEL_GUARANTEED);
-        isconnectvalidatereq = (String) attrList.get(IS_CONNECTION_VALIDATION_REQUIRED);
-        validationmethod = (String) attrList.get(CONNECTION_VALIDATION_METHOD);
-        validationtable = (String) attrList.get(VALIDATION_TABLE_NAME);
-        failconnection = (String) attrList.get(FAIL_ALL_CONNECTIONS);
-        allownoncomponentcallers = (String) attrList.get(ALLOW_NON_COMPONENT_CALLERS);
-        nontransactionalconnections = (String) attrList.get(NON_TRANSACTIONAL_CONNECTIONS);
-        validateAtmostOncePeriod = (String) attrList.get(VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS);
-        connectionLeakTimeout = (String) attrList.get(CONNECTION_LEAK_TIMEOUT_IN_SECONDS);
-        connectionLeakReclaim = (String) attrList.get(CONNECTION_LEAK_RECLAIM);
-        connectionCreationRetryAttempts = (String) attrList.get(CONNECTION_CREATION_RETRY_ATTEMPTS);
-        connectionCreationRetryInterval = (String) attrList.get(CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS);
-        statementTimeout = (String) attrList.get(STATEMENT_TIMEOUT_IN_SECONDS);
-        lazyConnectionEnlistment = (String) attrList.get(LAZY_CONNECTION_ENLISTMENT);
-        lazyConnectionAssociation = (String) attrList.get(LAZY_CONNECTION_ASSOCIATION);
-        associateWithThread = (String) attrList.get(ASSOCIATE_WITH_THREAD);
-        matchConnections = (String) attrList.get(MATCH_CONNECTIONS);
-        maxConnectionUsageCount = (String) attrList.get(MAX_CONNECTION_USAGE_COUNT);
-        wrapJDBCObjects = (String) attrList.get(WRAP_JDBC_OBJECTS);
-        description = (String) attrList.get(DESCRIPTION);
-        jdbcconnectionpoolid = (String) attrList.get(CONNECTION_POOL_NAME);
-        statementcachesize = (String) attrList.get(STATEMENT_CACHE_SIZE);
-        validationclassname = (String) attrList.get(VALIDATION_CLASSNAME);
-        initsql = (String) attrList.get(INIT_SQL);
-        sqltracelisteners = (String) attrList.get(SQL_TRACE_LISTENERS);
-        pooling = (String) attrList.get(POOLING);
-        ping = (String) attrList.get(PING);
-        driverclassname = (String) attrList.get(DRIVER_CLASSNAME);
+    public void setAttributes(ResourceAttributes attrList) {
+        datasourceclassname = attrList.getString(DATASOURCE_CLASS);
+        restype = attrList.getString(RES_TYPE);
+        steadypoolsize = attrList.getString(STEADY_POOL_SIZE);
+        maxpoolsize = attrList.getString(MAX_POOL_SIZE);
+        maxwait = attrList.getString(MAX_WAIT_TIME_IN_MILLIS);
+        poolresize = attrList.getString(POOL_SIZE_QUANTITY);
+        idletimeout = attrList.getString(IDLE_TIME_OUT_IN_SECONDS);
+        isolationlevel = attrList.getString(TRANS_ISOLATION_LEVEL);
+        isisolationguaranteed = attrList.getString(IS_ISOLATION_LEVEL_GUARANTEED);
+        isconnectvalidatereq = attrList.getString(IS_CONNECTION_VALIDATION_REQUIRED);
+        validationmethod = attrList.getString(CONNECTION_VALIDATION_METHOD);
+        validationtable = attrList.getString(VALIDATION_TABLE_NAME);
+        failconnection = attrList.getString(FAIL_ALL_CONNECTIONS);
+        allownoncomponentcallers = attrList.getString(ALLOW_NON_COMPONENT_CALLERS);
+        nontransactionalconnections = attrList.getString(NON_TRANSACTIONAL_CONNECTIONS);
+        validateAtmostOncePeriod = attrList.getString(VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS);
+        connectionLeakTimeout = attrList.getString(CONNECTION_LEAK_TIMEOUT_IN_SECONDS);
+        connectionLeakReclaim = attrList.getString(CONNECTION_LEAK_RECLAIM);
+        connectionCreationRetryAttempts = attrList.getString(CONNECTION_CREATION_RETRY_ATTEMPTS);
+        connectionCreationRetryInterval = attrList.getString(CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS);
+        statementTimeout = attrList.getString(STATEMENT_TIMEOUT_IN_SECONDS);
+        lazyConnectionEnlistment = attrList.getString(LAZY_CONNECTION_ENLISTMENT);
+        lazyConnectionAssociation = attrList.getString(LAZY_CONNECTION_ASSOCIATION);
+        associateWithThread = attrList.getString(ASSOCIATE_WITH_THREAD);
+        matchConnections = attrList.getString(MATCH_CONNECTIONS);
+        maxConnectionUsageCount = attrList.getString(MAX_CONNECTION_USAGE_COUNT);
+        wrapJDBCObjects = attrList.getString(WRAP_JDBC_OBJECTS);
+        description = attrList.getString(DESCRIPTION);
+        jdbcconnectionpoolid = attrList.getString(CONNECTION_POOL_NAME);
+        statementcachesize = attrList.getString(STATEMENT_CACHE_SIZE);
+        validationclassname = attrList.getString(VALIDATION_CLASSNAME);
+        initsql = attrList.getString(INIT_SQL);
+        sqltracelisteners = attrList.getString(SQL_TRACE_LISTENERS);
+        pooling = attrList.getString(POOLING);
+        ping = attrList.getString(PING);
+        driverclassname = attrList.getString(DRIVER_CLASSNAME);
     }
 
-    public ResourceStatus delete(Iterable<Server> servers, Iterable<Cluster> clusters, final Resources resources, final String cascade,
-            final SimpleJndiName poolName) throws Exception {
 
+    public ResourceStatus delete(Iterable<Server> servers, Iterable<Cluster> clusters, final Resources resources,
+        final String cascade, final SimpleJndiName poolName) throws Exception {
         if (poolName == null) {
-            String msg = localStrings.getLocalString("jdbcConnPool.resource.noJndiName", "No id defined for JDBC Connection pool.");
-            return new ResourceStatus(FAILURE, msg);
+            String msg = I18N.getLocalString("jdbcConnPool.resource.noJndiName",
+                    "No id defined for JDBC Connection pool.");
+            return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         // ensure we already have this resource
         if (!isResourceExists(resources, poolName)) {
-            String msg = localStrings.getLocalString("delete.jdbc.connection.pool.notfound",
+            String msg = I18N.getLocalString("delete.jdbc.connection.pool.notfound",
                     "A JDBC connection pool named {0} does not exist.", poolName);
             return new ResourceStatus(FAILURE, msg);
         }
@@ -345,9 +350,12 @@ public class JDBCConnectionPoolManager implements ResourceManager {
 
             // if cascade=true delete all the resources associated with this pool
             // if cascade=false don't delete this connection pool if a resource is referencing it
-            Object obj = deleteAssociatedResources(servers, clusters, resources, Boolean.parseBoolean(cascade), poolName);
-            if (obj instanceof Integer && (Integer) obj == FAILURE) {
-                String msg = localStrings.getLocalString("delete.jdbc.connection.pool.pool_in_use",
+            Object obj = deleteAssociatedResources(servers, clusters, resources,
+                    Boolean.parseBoolean(cascade), poolName);
+            if (obj instanceof Integer &&
+                    (Integer) obj == ResourceStatus.FAILURE) {
+                String msg = I18N.getLocalString(
+                        "delete.jdbc.connection.pool.pool_in_use",
                         "JDBC Connection pool {0} delete failed ", poolName);
                 return new ResourceStatus(FAILURE, msg);
             }
@@ -360,23 +368,23 @@ public class JDBCConnectionPoolManager implements ResourceManager {
                     return param.getResources().remove(cp);
                 }
             }, resources) == null) {
-                String msg = localStrings.getLocalString("delete.jdbc.connection.pool.notfound",
+                String msg = I18N.getLocalString("delete.jdbc.connection.pool.notfound",
                         "A JDBC connection pool named {0} does not exist.", poolName);
                 return new ResourceStatus(FAILURE, msg);
             }
 
         } catch (TransactionFailure tfe) {
-            String msg = tfe.getMessage() != null ? tfe.getMessage()
-                    : localStrings.getLocalString("jdbcConnPool.resource.deletionFailed", "JDBC Connection pool {0} delete failed ",
-                            poolName);
-            ResourceStatus status = new ResourceStatus(FAILURE, msg);
+            String msg = tfe.getMessage() != null ? tfe.getMessage() :
+                    I18N.getLocalString("jdbcConnPool.resource.deletionFailed",
+                            "JDBC Connection pool {0} delete failed ", poolName);
+            ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
 
-        String msg = localStrings.getLocalString("jdbcConnPool.resource.deleteSuccess", "JDBC Connection pool {0} deleted successfully",
-                poolName);
-        return new ResourceStatus(SUCCESS, msg);
+        String msg = I18N.getLocalString("jdbcConnPool.resource.deleteSuccess",
+                "JDBC Connection pool {0} deleted successfully", poolName);
+        return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
     private boolean isResourceExists(Resources resources, SimpleJndiName poolName) {
@@ -428,7 +436,8 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     }
 
     @Override
-    public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate) throws Exception {
+    public Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception {
         setAttributes(attributes);
 
         final ResourceStatus status;
@@ -441,7 +450,6 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         if (status.getStatus() == SUCCESS) {
             return createConfigBean(resources, properties);
         }
-
-        throw new ResourceException(status.getMessage());
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 }

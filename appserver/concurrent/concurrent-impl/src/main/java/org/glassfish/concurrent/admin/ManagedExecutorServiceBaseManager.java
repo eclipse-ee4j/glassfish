@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +26,6 @@ import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.glassfish.api.admin.ServerEnvironment;
@@ -41,6 +38,7 @@ import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.glassfish.resources.admin.cli.ResourceManager;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -73,7 +71,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ
  */
 public abstract class ManagedExecutorServiceBaseManager implements ResourceManager {
 
-    protected static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(
         ManagedExecutorServiceBaseManager.class);
     protected String jndiName;
     protected String description;
@@ -105,8 +103,8 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
 
     @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
-        throws Exception {
+    public ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
@@ -123,8 +121,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
             String msg = I18N.getLocalString("create.managed.executor.service.failed",
                 "Managed executor service {0} creation failed", jndiName) + tfe.getLocalizedMessage();
             if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
-                msg = I18N.getLocalString("create.managed.scheduled.executor.service.failed",
-                    "Managed scheduled executor service {0} creation failed", jndiName) + tfe.getLocalizedMessage();
+                msg = "Managed scheduled executor service " + jndiName + " creation failed: " + tfe.getMessage();
             }
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
@@ -160,27 +157,27 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
     }
 
 
-    protected void setAttributes(Map<String, String> attributes, String target) {
-        jndiName = attributes.get(JNDI_NAME);
-        description = attributes.get(DESCRIPTION);
-        contextInfo = attributes.get(CONTEXT_INFO);
-        contextInfoEnabled = attributes.get(CONTEXT_INFO_ENABLED);
-        threadPriority = attributes.get(THREAD_PRIORITY);
-        virtual = attributes.get(USE_VIRTUAL_THREADS);
-        longRunningTasks = attributes.get(LONG_RUNNING_TASKS);
-        hungAfterSeconds = attributes.get(HUNG_AFTER_SECONDS);
-        hungLoggerPrintOnce = attributes.get(HUNG_LOGGER_PRINT_ONCE);
-        hungLoggerInitialDelaySeconds = attributes.get(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
-        hungLoggerIntervalSeconds = attributes.get(HUNG_LOGGER_INTERVAL_SECONDS);
-        corePoolSize = attributes.get(CORE_POOL_SIZE);
-        keepAliveSeconds = attributes.get(KEEP_ALIVE_SECONDS);
-        threadLifetimeSeconds = attributes.get(THREAD_LIFETIME_SECONDS);
+    protected void setAttributes(ResourceAttributes attributes, String target) {
+        jndiName = attributes.getString(JNDI_NAME);
+        description = attributes.getString(DESCRIPTION);
+        contextInfo = attributes.getString(CONTEXT_INFO);
+        contextInfoEnabled = attributes.getString(CONTEXT_INFO_ENABLED);
+        threadPriority = attributes.getString(THREAD_PRIORITY);
+        virtual = attributes.getString(USE_VIRTUAL_THREADS);
+        longRunningTasks = attributes.getString(LONG_RUNNING_TASKS);
+        hungAfterSeconds = attributes.getString(HUNG_AFTER_SECONDS);
+        hungLoggerPrintOnce = attributes.getString(HUNG_LOGGER_PRINT_ONCE);
+        hungLoggerInitialDelaySeconds = attributes.getString(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
+        hungLoggerIntervalSeconds = attributes.getString(HUNG_LOGGER_INTERVAL_SECONDS);
+        corePoolSize = attributes.getString(CORE_POOL_SIZE);
+        keepAliveSeconds = attributes.getString(KEEP_ALIVE_SECONDS);
+        threadLifetimeSeconds = attributes.getString(THREAD_LIFETIME_SECONDS);
         if (target == null) {
-            enabled = attributes.get(ENABLED);
+            enabled = attributes.getString(ENABLED);
         } else {
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.get(ENABLED), target);
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.getString(ENABLED), target);
         }
-        enabledValueForTarget = attributes.get(ENABLED);
+        enabledValueForTarget = attributes.getString(ENABLED);
     }
 
 
@@ -215,10 +212,10 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setLongRunningTasks(longRunningTasks);
         managedExecutorService.setUseVirtualThreads(virtual);
         if (properties != null) {
-            for (Entry<Object, Object> e : properties.entrySet()) {
+            for (String propertyName : properties.stringPropertyNames()) {
                 Property prop = managedExecutorService.createChild(Property.class);
-                prop.setName((String)e.getKey());
-                prop.setValue((String)e.getValue());
+                prop.setName(propertyName);
+                prop.setValue(properties.getProperty(propertyName));
                 managedExecutorService.getProperty().add(prop);
             }
         }
@@ -226,10 +223,10 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
 
     @Override
-    public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties,
-        boolean validate) throws Exception {
+    public Resource createConfigBean(final Resources resources, ResourceAttributes attributes,
+        final Properties properties, boolean validate) throws Exception {
         setAttributes(attributes, null);
-        ResourceStatus status = null;
+        final ResourceStatus status;
         if (validate) {
             status = isValid(resources, false, null);
         } else {
@@ -238,7 +235,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
         }
-        throw new ResourceException(status.getMessage());
+        throw new ResourceException(status.getMessage(), status.getException());
     }
 
 

@@ -35,17 +35,10 @@ public class WireMockLibraryIncluder implements ApplicationArchiveProcessor {
     private static final System.Logger LOG = System.getLogger(WireMockLibraryIncluder.class.getName());
 
     private static final String[] DIRECT_DEPENDENCIES = {
-        "com.github.tomakehurst:wiremock",
-        "org.hamcrest:hamcrest",
+        "org.wiremock:wiremock",
         "org.slf4j:slf4j-jdk14",
-        "org.slf4j:jcl-over-slf4j",
-        "org.apache.httpcomponents:httpclient",
-        "org.eclipse.jetty:jetty-server",
-        "org.eclipse.jetty:jetty-servlet",
-        "org.eclipse.jetty:jetty-servlets",
     };
     private static final File[] DEPENDENCIES = initDependenciesForWar();
-
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {

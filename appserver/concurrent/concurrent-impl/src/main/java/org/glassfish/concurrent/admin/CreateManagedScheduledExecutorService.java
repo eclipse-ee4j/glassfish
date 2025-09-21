@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 
 import jakarta.inject.Inject;
 
-import java.util.HashMap;
-
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AdminCommand;
@@ -32,6 +31,7 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 
@@ -58,10 +58,11 @@ public class CreateManagedScheduledExecutorService extends CreateManagedExecutor
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
+        ResourceAttributes attrList = new ResourceAttributes();
         setAttributeList(attrList);
 
         ResourceStatus rs;
@@ -69,7 +70,7 @@ public class CreateManagedScheduledExecutorService extends CreateManagedExecutor
         try {
             rs = managedScheduledExecutorServiceMgr.create(domain.getResources(), attrList, properties, target);
         } catch(Exception e) {
-            report.setMessage(localStrings.getLocalString("create.managed.scheduled.executor.service.failed", "Managed scheduled executor service {0} creation failed", jndiName));
+            report.setMessage("Managed scheduled executor service " + jndiName + " creation failed");
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
             return;
@@ -80,8 +81,9 @@ public class CreateManagedScheduledExecutorService extends CreateManagedExecutor
         }
         if (rs.getStatus() == ResourceStatus.FAILURE) {
             ec = ActionReport.ExitCode.FAILURE;
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         report.setActionExitCode(ec);
     }

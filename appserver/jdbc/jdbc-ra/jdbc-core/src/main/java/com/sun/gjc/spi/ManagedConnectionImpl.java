@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -76,8 +77,8 @@ import static java.util.logging.Level.WARNING;
 public class ManagedConnectionImpl
         implements ManagedConnection, LazyEnlistableManagedConnection, DissociatableManagedConnection {
 
-    protected static final Logger _logger = LogDomains.getLogger(ManagedConnectionImpl.class, LogDomains.RSR_LOGGER);
-    protected static final StringManager localStrings = StringManager.getManager(DataSourceObjectBuilder.class);
+    private static final Logger LOG = LogDomains.getLogger(ManagedConnectionImpl.class, LogDomains.RSR_LOGGER);
+    private static final StringManager I18N = StringManager.getManager(DataSourceObjectBuilder.class);
 
     public static final int ISNOTAPOOLEDCONNECTION = 0;
     public static final int ISPOOLEDCONNECTION = 1;
@@ -167,7 +168,7 @@ public class ManagedConnectionImpl
             throws ResourceException {
 
         if (pooledConn == null && sqlConn == null) {
-            String i18nMsg = localStrings.getString("jdbc.conn_obj_null");
+            String i18nMsg = I18N.getString("jdbc.conn_obj_null");
             throw new ResourceException(i18nMsg);
         }
 
@@ -182,7 +183,7 @@ public class ManagedConnectionImpl
 
         this.managedConnectionFactory = mcf;
         if (passwdCredential != null && this.managedConnectionFactory.equals(passwdCredential.getManagedConnectionFactory()) == false) {
-            String i18nMsg = localStrings.getString("jdbc.mc_construct_err");
+            String i18nMsg = I18N.getString("jdbc.mc_construct_err");
             throw new ResourceException(i18nMsg);
         }
         logWriter = mcf.getLogWriter();
@@ -196,16 +197,16 @@ public class ManagedConnectionImpl
     }
 
     private void executeInitSql(final String initSql) {
-        _logger.log(FINE, "jdbc.execute_init_sql_start");
+        LOG.log(FINE, "jdbc.execute_init_sql_start");
         PreparedStatement statement = null;
 
         if (initSql != null && !initSql.equalsIgnoreCase("null") && !initSql.equals("")) {
             try {
                 statement = actualConnection.prepareStatement(initSql);
-                _logger.log(FINE, "jdbc.executing_init_sql", initSql);
+                LOG.log(FINE, "jdbc.executing_init_sql", initSql);
                 statement.execute();
             } catch (SQLException sqle) {
-                _logger.log(WARNING, "jdbc.exc_init_sql_error", initSql);
+                LOG.log(WARNING, "jdbc.exc_init_sql_error", initSql);
                 initSqlExecuted = false;
             } finally {
                 try {
@@ -213,14 +214,14 @@ public class ManagedConnectionImpl
                         statement.close();
                     }
                 } catch (Exception e) {
-                    if (_logger.isLoggable(FINE)) {
-                        _logger.log(FINE, "jdbc.exc_init_sql_error_stmt_close", e.getMessage());
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.log(FINE, "jdbc.exc_init_sql_error_stmt_close", e.getMessage());
                     }
                 }
             }
             initSqlExecuted = true;
         }
-        _logger.log(FINE, "jdbc.execute_init_sql_end");
+        LOG.log(FINE, "jdbc.execute_init_sql_end");
     }
 
     private void tuneStatementCaching(PoolInfo poolInfo, int statementCacheSize, String statementCacheType) {
@@ -231,7 +232,7 @@ public class ManagedConnectionImpl
                 statementCache = CacheFactory.getDataStructure(poolInfo, cacheType, cacheSize);
                 statementCaching = true;
             } catch (ResourceException ex) {
-                _logger.severe(ex.getMessage());
+                LOG.severe(ex.getMessage());
             }
         }
     }
@@ -278,7 +279,7 @@ public class ManagedConnectionImpl
         logFine("In associateConnection");
         checkIfValid();
         if (connection == null) {
-            throw new ResourceException(localStrings.getString("jdbc.conn_handle_null"));
+            throw new ResourceException(I18N.getString("jdbc.conn_handle_null"));
         }
 
         ConnectionHolder connectionHolder = (ConnectionHolder) connection;
@@ -353,7 +354,7 @@ public class ManagedConnectionImpl
 
     private void clearStatementCache() {
         if (statementCache != null) {
-            _logger.fine("Closing statements in statement cache");
+            LOG.fine("Closing statements in statement cache");
             statementCache.flushCache();
             statementCache.clearCache();
         }
@@ -394,7 +395,7 @@ public class ManagedConnectionImpl
             isDestroyed = true;
             passwdCredential = null;
             connectionHandles = null;
-            throw new ResourceException(localStrings.getString("jdbc.error_in_destroy") + sqle.getMessage(), sqle);
+            throw new ResourceException(I18N.getString("jdbc.error_in_destroy") + sqle.getMessage(), sqle);
         }
 
         isDestroyed = true;
@@ -485,7 +486,7 @@ public class ManagedConnectionImpl
             try {
                 actualConnection.setAutoCommit(defaultAutoCommitValue);
             } catch (SQLException sqle) {
-                throw new ResourceException(localStrings.getString("jdbc.error_during_setAutoCommit") + sqle.getMessage(), sqle);
+                throw new ResourceException(I18N.getString("jdbc.error_during_setAutoCommit") + sqle.getMessage(), sqle);
             }
 
             setLastAutoCommitValue(defaultAutoCommitValue);
@@ -611,19 +612,19 @@ public class ManagedConnectionImpl
                 }
             }
         } catch (java.lang.NullPointerException e) {
-            _logger.log(FINE, "jdbc.duplicateTxCompleted");
+            LOG.log(FINE, "jdbc.duplicateTxCompleted");
         }
 
         if (markedForRemoval) {
             if (aborted) {
                 BadConnectionEventListener badConnectionEventListener = (BadConnectionEventListener) listener;
                 badConnectionEventListener.connectionAbortOccurred(connectionEvent);
-                _logger.log(INFO, "jdbc.markedForRemoval_conAborted");
+                LOG.log(INFO, "jdbc.markedForRemoval_conAborted");
                 markedForRemoval = false;
                 myLogicalConnection.setClosed(true);
             } else {
                 connectionErrorOccurred(null, null);
-                _logger.log(INFO, "jdbc.markedForRemoval_txCompleted");
+                LOG.log(INFO, "jdbc.markedForRemoval_txCompleted");
                 markedForRemoval = false;
             }
         }
@@ -646,6 +647,7 @@ public class ManagedConnectionImpl
      * @throws ResourceException if the physical connection is not valid
      * @see <code>getLogWriter</code>
      */
+    @Override
     public void setLogWriter(PrintWriter out) throws ResourceException {
         checkIfValid();
         logWriter = out;
@@ -689,14 +691,13 @@ public class ManagedConnectionImpl
     Connection getActualConnection() throws ResourceException {
         if (connectionType == ISXACONNECTION || connectionType == ISPOOLEDCONNECTION) {
             try {
-                if (actualConnection == null) {
+                if (actualConnection == null && pooledConnection != null) {
                     actualConnection = pooledConnection.getConnection();
 
                     // re-initialize lastAutoCommitValue such that resetAutoCommit() wont
                     // affect autoCommit of actualConnection
                     setLastAutoCommitValue(defaultAutoCommitValue);
                 }
-
             } catch (SQLException sqle) {
                 throw new ResourceException(sqle.getMessage(), sqle);
             }
@@ -728,7 +729,7 @@ public class ManagedConnectionImpl
      */
     void checkIfValid() throws ResourceException {
         if (isDestroyed || !isUsable) {
-            throw new ResourceException(localStrings.getString("jdbc.mc_not_usable"));
+            throw new ResourceException(I18N.getString("jdbc.mc_not_usable"));
         }
     }
 
@@ -753,7 +754,7 @@ public class ManagedConnectionImpl
         if (markedForRemoval && !transactionInProgress) {
             BadConnectionEventListener badConnectionEventListener = (BadConnectionEventListener) listener;
             badConnectionEventListener.badConnectionClosed(connectionEvent);
-            _logger.log(INFO, "jdbc.markedForRemoval_conClosed");
+            LOG.log(INFO, "jdbc.markedForRemoval_conClosed");
             markedForRemoval = false;
         } else {
             if (listener != null) {
@@ -794,7 +795,7 @@ public class ManagedConnectionImpl
         try {
             actualConnection.setAutoCommit(false);
         } catch (Exception e) {
-            _logger.log(WARNING, "XA Start [ setAutoCommit ] failure ", e);
+            LOG.log(WARNING, "XA Start [ setAutoCommit ] failure ", e);
             connectionErrorOccurred(e, null);
         }
     }
@@ -807,7 +808,7 @@ public class ManagedConnectionImpl
         try {
             actualConnection.setAutoCommit(true);
         } catch (Exception e) {
-            _logger.log(WARNING, "XA End [ setAutoCommit ] failure ", e);
+            LOG.log(WARNING, "XA End [ setAutoCommit ] failure ", e);
             connectionErrorOccurred(e, null);
         }
     }
@@ -826,7 +827,7 @@ public class ManagedConnectionImpl
      */
     public void checkIfActive(ConnectionHolder connectionHolder) throws SQLException {
         if (isDestroyed || !isUsable) {
-            throw new SQLException(localStrings.getString("jdbc.conn_not_usable"));
+            throw new SQLException(I18N.getString("jdbc.conn_not_usable"));
         }
     }
 
@@ -914,7 +915,7 @@ public class ManagedConnectionImpl
     }
 
     private void logFine(String logMessage) {
-        _logger.log(FINE, logMessage);
+        LOG.log(FINE, logMessage);
     }
 
     public PreparedStatement prepareCachedStatement(ConnectionWrapper connection, String sql, int resultSetType, int resultSetConcurrency) throws SQLException {

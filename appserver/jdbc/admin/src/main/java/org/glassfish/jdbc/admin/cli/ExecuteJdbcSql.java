@@ -80,8 +80,7 @@ public class ExecuteJdbcSql implements AdminCommand {
     @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
-        ResourceStatus resourceStatus = null;
-
+        final ResourceStatus resourceStatus;
         try {
             resourceStatus = jdbcResourceManager.executeSql(jndiName, sqlFileName);
         } catch (Exception e) {

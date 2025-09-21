@@ -24,21 +24,18 @@ import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.PoolProperties;
 import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.enterprise.resource.pool.datastructure.DataStructure;
-import com.sun.logging.LogDomains;
 
-import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 
+import java.lang.System.Logger;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Resizer to remove unusable connections, maintain steady-pool <br>
@@ -55,7 +52,7 @@ import static java.util.logging.Level.FINEST;
  */
 public class Resizer extends TimerTask {
 
-    protected final static Logger _logger = LogDomains.getLogger(Resizer.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = System.getLogger(Resizer.class.getName());
 
     protected PoolInfo poolInfo;
     protected DataStructure dataStructure;
@@ -73,12 +70,11 @@ public class Resizer extends TimerTask {
 
     @Override
     public void run() {
-        debug("Resizer for pool " + poolInfo);
+        LOG.log(DEBUG, () -> "Resizing the pool " + poolInfo);
         try {
             resizePool(true);
-        } catch (Exception ex) {
-            Object[] params = new Object[] { poolInfo, ex.getMessage() };
-            _logger.log(Level.WARNING, "resource_pool.resize_pool_error", params);
+        } catch (Exception e) {
+            LOG.log(WARNING, "Resizing the pool failed for pool: " + poolInfo, e);
         }
     }
 
@@ -99,13 +95,13 @@ public class Resizer extends TimerTask {
         int noOfResourcesRemoved = removeIdleAndInvalidResources();
         int poolScaleDownQuantity = pool.getResizeQuantity() - noOfResourcesRemoved;
 
-        // scale down pool by atmost "resize-quantity"
+        // scale down pool by at most "resize-quantity"
         scaleDownPool(poolScaleDownQuantity, forced);
 
         // ensure that steady-pool-size is maintained
         ensureSteadyPool();
 
-        debug("No. of resources held for pool [ " + poolInfo + " ] : " + dataStructure.getResourcesSize());
+        LOG.log(DEBUG, "No. of resources held for pool {0}: ", poolInfo, dataStructure.getResourcesSize());
     }
 
     /**
@@ -117,9 +113,8 @@ public class Resizer extends TimerTask {
             for (int i = dataStructure.getResourcesSize(); i < pool.getSteadyPoolSize(); i++) {
                 try {
                     handler.createResourceAndAddToPool();
-                } catch (PoolingException ex) {
-                    Object[] params = new Object[] { poolInfo, ex.getMessage() };
-                    _logger.log(Level.WARNING, "resource_pool.resize_pool_error", params);
+                } catch (PoolingException e) {
+                    LOG.log(WARNING, "Steady pool size could not be ensured for pool: " + poolInfo, e);
                 }
             }
         }
@@ -154,7 +149,6 @@ public class Resizer extends TimerTask {
     protected int removeIdleAndInvalidResources() {
 
         int poolSizeBeforeRemoval = dataStructure.getResourcesSize();
-        int noOfResourcesRemoved;
         // Find all Connections that are free/not-in-use
         int size = dataStructure.getFreeListSize();
         // let's cache the current time since precision is not required here.
@@ -169,7 +163,7 @@ public class Resizer extends TimerTask {
         try {
             while ((h = dataStructure.getResource()) != null) {
                 ResourceState state = h.getResourceState();
-                if (currentTime - state.getTimestamp() < pool.getIdleTimeout()) {
+                if (currentTime - state.getLastUsage() < pool.getIdleTimeout()) {
                     // Should be added for validation.
                     validConnectionsCounter++;
                     resourcesToValidate.add(h.toString());
@@ -181,8 +175,9 @@ public class Resizer extends TimerTask {
                         validConnectionsCounter++;
                         idleConnKeptInSteadyCounter++;
                         activeResources.add(h);
-                        debug("PreferValidateOverRecreate: Keeping idle resource " + h + " in the steady part of the free pool "
-                                + "as the RA reports it to be valid (" + validConnectionsCounter + " <= " + pool.getSteadyPoolSize() + ")");
+                        LOG.log(DEBUG,"PreferValidateOverRecreate: Keeping idle resource {0}"
+                            + " in the steady part of the free pool as the RA reports it to be valid ({1} <= {2})",
+                            h, validConnectionsCounter, pool.getSteadyPoolSize());
 
                     } else {
                         // Add to remove
@@ -203,28 +198,30 @@ public class Resizer extends TimerTask {
 
         // These statistic computations will work fine as long as resizer locks the pool throughout its operations.
         if (preferValidateOverRecreate) {
-            debug("Idle resources validated and kept in the steady pool for pool [ " + poolInfo + " ] - " + idleConnKeptInSteadyCounter);
-            debug("Number of Idle resources freed for pool [ " + poolInfo + " ] - "
-                    + (size - activeResources.size() - idleConnKeptInSteadyCounter));
-            debug("Number of Invalid resources removed for pool [ " + poolInfo + " ] - "
-                    + (activeResources.size() - dataStructure.getFreeListSize() + idleConnKeptInSteadyCounter));
+            LOG.log(DEBUG, "Idle resources validated and kept in the steady pool {0}: {1}", poolInfo,
+                idleConnKeptInSteadyCounter);
+            LOG.log(DEBUG, "Number of Idle resources freed from pool {0}: {1}", poolInfo,
+                size - activeResources.size() - idleConnKeptInSteadyCounter);
+            LOG.log(DEBUG, "Number of Invalid resources removed from pool {0}: {1}", poolInfo,
+                activeResources.size() - dataStructure.getFreeListSize() + idleConnKeptInSteadyCounter);
         } else {
-            debug("Number of Idle resources freed for pool [ " + poolInfo + " ] - " + (size - activeResources.size()));
-            debug("Number of Invalid resources removed for pool [ " + poolInfo + " ] - " + (activeResources.size() - dataStructure.getFreeListSize()));
+            LOG.log(DEBUG, "Number of Idle resources freed from pool {0}: {1}", poolInfo, size - activeResources.size());
+            LOG.log(DEBUG, "Number of Invalid resources removed from pool {0}: {1}", poolInfo,
+                activeResources.size() - dataStructure.getFreeListSize());
         }
-        noOfResourcesRemoved = poolSizeBeforeRemoval - dataStructure.getResourcesSize();
-        return noOfResourcesRemoved;
+        return poolSizeBeforeRemoval - dataStructure.getResourcesSize();
     }
 
+
     /**
-     * Removes invalid resource handles in the pool while resizing the pool. Uses the Connector 1.5 spec 6.5.3.4 optional RA
-     * feature to obtain invalid ManagedConnections
+     * Removes invalid resource handles in the pool while resizing the pool. Uses the Connector 1.5
+     * spec 6.5.3.4 optional RA feature to obtain invalid ManagedConnections
      *
      * @param freeConnectionsToValidate Set of free connections
      */
     private void removeInvalidResources(Set<String> freeConnectionsToValidate) {
         try {
-            debug("Sending a set of free connections to RA, " + "of size : " + freeConnectionsToValidate.size());
+            LOG.log(DEBUG, "Sending a set of free connections to RA, of size: {0}", freeConnectionsToValidate.size());
             int invalidConnectionsCount = 0;
             ResourceHandle handle;
             Set<ResourceHandle> validResources = new HashSet<>();
@@ -251,17 +248,11 @@ public class Resizer extends TimerTask {
                     dataStructure.returnResource(resourceHandle);
                 }
                 validResources.clear();
-                debug("No. of invalid connections received from RA : " + invalidConnectionsCount);
+                LOG.log(DEBUG, "No. of invalid resources received from RA: {0}", invalidConnectionsCount);
             }
-        } catch (ResourceException re) {
-            _logger.log(FINE, "ResourceException while trying to get invalid connections from MCF", re);
-        } catch (Exception e) {
-            _logger.log(FINE, "Exception while trying to get invalid connections from MCF", e);
+        } catch (Exception re) {
+            LOG.log(WARNING, "Removing invalid resources from the pool " + poolInfo + " failed!", re);
         }
-    }
-
-    protected static void debug(String debugStatement) {
-        _logger.log(FINE, debugStatement);
     }
 
     protected int validateAndRemoveResource(ResourceHandle handle, Set<ManagedConnection> invalidConnections) {
@@ -276,38 +267,29 @@ public class Resizer extends TimerTask {
         return invalidConnectionsCount;
     }
 
-    protected boolean isResourceEligibleForRemoval(ResourceHandle h, int validConnectionsCounter) {
-        boolean isResourceEligibleForRemoval = false;
-
-        ResourceState state = h.getResourceState();
-        // remove all idle-time lapsed resources.
-        ResourceAllocator alloc = h.getResourceAllocator();
-        if (preferValidateOverRecreate && alloc.hasValidatingMCF()) {
-            // validConnectionsCounter is incremented if the connection
-            // is valid but only till the steady pool size.
-            if (validConnectionsCounter < pool.getSteadyPoolSize() && alloc.isConnectionValid(h)) {
-
-                h.setLastValidated(System.currentTimeMillis());
-                state.touchTimestamp();
-            } else {
-                // Connection invalid and hence remove resource.
-                if (_logger.isLoggable(FINEST)) {
-                    if (validConnectionsCounter <= pool.getSteadyPoolSize()) {
-                        _logger.log(FINEST, "PreferValidateOverRecreate: " + "Removing idle resource " + h
-                                + " from the free pool as the RA reports it to be invalid");
-                    } else {
-                        _logger.log(FINEST,
-                                "PreferValidateOverRecreate: " + "Removing idle resource " + h
-                                        + " from the free pool as the steady part size has " + "already been exceeded ("
-                                        + validConnectionsCounter + " > " + pool.getSteadyPoolSize() + ")");
-                    }
-                }
-                isResourceEligibleForRemoval = true;
-            }
-        } else {
-            isResourceEligibleForRemoval = true;
+    protected boolean isResourceEligibleForRemoval(ResourceHandle handle, int validConnectionsCounter) {
+        ResourceAllocator allocator = handle.getResourceAllocator();
+        if (!preferValidateOverRecreate || !allocator.hasValidatingMCF()) {
+            return true;
         }
-
-        return isResourceEligibleForRemoval;
+        // remove all idle-time lapsed resources.
+        // validConnectionsCounter is incremented if the connection
+        // is valid but only till the steady pool size.
+        if (validConnectionsCounter < pool.getSteadyPoolSize() && allocator.isConnectionValid(handle)) {
+            handle.getResourceState().setLastValidated(System.currentTimeMillis());
+            return false;
+        }
+        // Connection invalid and hence remove resource.
+        if (LOG.isLoggable(DEBUG)) {
+            if (validConnectionsCounter <= pool.getSteadyPoolSize()) {
+                LOG.log(DEBUG, "PreferValidateOverRecreate: Removing idle resource " + handle
+                    + " from the free pool as the RA reports it to be invalid");
+            } else {
+                LOG.log(DEBUG, "PreferValidateOverRecreate: Removing idle resource " + handle
+                    + " from the free pool as the steady part size has already been exceeded ("
+                    + validConnectionsCounter + " > " + pool.getSteadyPoolSize() + ")");
+            }
+        }
+        return true;
     }
 }

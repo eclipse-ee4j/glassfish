@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +34,7 @@ public class ConnectionPoolAppEmitterImpl {
     private final ConnectionPoolAppProbeProvider poolAppProbeProvider;
 
     public ConnectionPoolAppEmitterImpl(SimpleJndiName poolName, String appName,
-            ConnectionPoolAppProbeProvider provider) {
+        ConnectionPoolAppProbeProvider provider) {
         this.appName = appName;
         this.poolName = poolName.toString();
         this.poolAppProbeProvider = provider;
@@ -80,6 +80,4 @@ public class ConnectionPoolAppEmitterImpl {
     public void connectionReleased() {
         poolAppProbeProvider.connectionReleasedEvent(poolName, appName);
     }
-
-
 }

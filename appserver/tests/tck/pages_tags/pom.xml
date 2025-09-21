@@ -36,9 +36,8 @@
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
 
         <tck.home>${project.build.directory}/tags-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home> 
-         
-        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
 

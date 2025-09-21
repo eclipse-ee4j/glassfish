@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,52 +25,63 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 
 public class TransactionManager implements jakarta.transaction.TransactionManager {
-    ThreadLocal transactionThreadLocal = new ThreadLocal();
+    private ThreadLocal<Transaction> transactionThreadLocal = new ThreadLocal<>();
 
+    @Override
     public void begin() throws NotSupportedException, SystemException {
-        if (getTransaction() != null)
+        if (getTransaction() != null) {
             throw new NotSupportedException("attempt to start tx when one already exists");
+        }
         transactionThreadLocal.set(new Transaction());
     }
 
+    @Override
     public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException,
             IllegalStateException, SystemException {
-        if (((Transaction) getTransaction()).isMarkedRollback) {
+        if (getTransaction().isMarkedRollback) {
             suspend();
             throw new RollbackException("test tx was marked for rollback");
         }
         suspend();
     }
 
+    @Override
     public int getStatus() throws SystemException {
         return 0;
     }
 
-    public jakarta.transaction.Transaction getTransaction() throws SystemException {
-        return (jakarta.transaction.Transaction) transactionThreadLocal.get();
+    @Override
+    public Transaction getTransaction() throws SystemException {
+        return transactionThreadLocal.get();
     }
 
+    @Override
     public void resume(jakarta.transaction.Transaction transaction)
-            throws InvalidTransactionException, IllegalStateException, SystemException {
-        transactionThreadLocal.set(transaction);
+        throws InvalidTransactionException, IllegalStateException, SystemException {
+        transactionThreadLocal.set((Transaction) transaction);
     }
 
+    @Override
     public void rollback() throws IllegalStateException, SecurityException, SystemException {
         suspend();
     }
 
+    @Override
     public void setRollbackOnly() throws IllegalStateException, SystemException {
-        Transaction transaction = (Transaction) getTransaction();
-        if (transaction != null)
+        Transaction transaction = getTransaction();
+        if (transaction != null) {
             transaction.isMarkedRollback = true;
+        }
     }
 
+    @Override
     public void setTransactionTimeout(int seconds) throws SystemException {
 
     }
 
-    public jakarta.transaction.Transaction suspend() throws SystemException {
-        jakarta.transaction.Transaction transaction = (jakarta.transaction.Transaction) transactionThreadLocal.get();
+    @Override
+    public Transaction suspend() throws SystemException {
+        Transaction transaction = transactionThreadLocal.get();
         transactionThreadLocal.set(null);
         return transaction;
     }

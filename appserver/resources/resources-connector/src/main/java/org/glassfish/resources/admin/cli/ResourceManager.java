@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +20,10 @@ package org.glassfish.resources.admin.cli;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -42,12 +43,14 @@ public interface ResourceManager {
      * @return ResourceStatus indicating the status of resource creation
      * @throws Exception when unable to create the resource
      */
-    ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
-            throws Exception ;
+    ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+        String target) throws Exception;
 
     /**
-     * creates config-bean equivalent for the resource configuration provided as attributes and properties<br>
+     * creates config-bean equivalent for the resource configuration provided as attributes and
+     * properties<br>
      * Does not persist the configuration<br>
+     *
      * @param resources parent for the resource to be created
      * @param attributes attributes of the resource
      * @param properties properties of the resource
@@ -55,11 +58,10 @@ public interface ResourceManager {
      * @return Config-Bean equivalent of the resource
      * @throws Exception when unable to create config-bean-equivalent
      */
-    Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-            throws Exception;
+    Resource createConfigBean(Resources resources, ResourceAttributes attributes, Properties properties,
+        boolean validate) throws Exception;
 
     /**
-     * returns the resource-type
      * @return resource-type
      */
     String getResourceType();

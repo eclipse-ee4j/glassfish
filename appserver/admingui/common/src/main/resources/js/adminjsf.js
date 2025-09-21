@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -2627,7 +2627,10 @@ admingui.ajax = {
                 alert("'execButton' not found!  Unable to submit JSF2 Ajax Request!");
             } else {
                 // Don't ping b/c this is from the header and therefor is a ping
-                faces.ajax.request(src, null,
+                faces.ajax.request(src,
+                {
+                    type: 'click'
+                },
                 {
                     execute: 'execButton',
                     render: 'execResp',

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,11 +23,11 @@ import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Transactional;
 
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
 import static jakarta.transaction.Transactional.TxType.SUPPORTS;
-import static java.util.logging.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * Transactional annotation Interceptor class for Supports transaction type, ie
@@ -40,13 +41,12 @@ import static java.util.logging.Level.INFO;
 @Interceptor
 @Transactional(SUPPORTS)
 public class TransactionalInterceptorSupports extends TransactionalInterceptorBase {
-
     private static final long serialVersionUID = -1752774873298754596L;
-    private static final Logger _logger = Logger.getLogger(CDI_JTA_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger LOG = System.getLogger(TransactionalInterceptorSupports.class.getName());
 
     @AroundInvoke
     public Object transactional(InvocationContext ctx) throws Exception {
-        _logger.log(INFO, CDI_JTA_SUPPORTS);
+        LOG.log(TRACE, "Processing transactional context of type: {0}", SUPPORTS);
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }

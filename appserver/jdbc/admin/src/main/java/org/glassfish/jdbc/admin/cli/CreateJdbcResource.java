@@ -23,7 +23,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.glassfish.api.ActionReport;
@@ -39,6 +38,7 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
@@ -110,11 +110,11 @@ public class CreateJdbcResource implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap<String, String> attributes = new HashMap<>();
-        attributes.put(JNDI_NAME, jndiName);
-        attributes.put(POOL_NAME, connectionPoolId);
-        attributes.put(DESCRIPTION, description);
-        attributes.put(ENABLED, enabled.toString());
+        ResourceAttributes attributes = new ResourceAttributes();
+        attributes.set(JNDI_NAME, jndiName);
+        attributes.set(POOL_NAME, connectionPoolId);
+        attributes.set(DESCRIPTION, description);
+        attributes.set(ENABLED, enabled.toString());
         ResourceStatus resourceStatus;
 
         try {

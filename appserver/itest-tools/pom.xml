@@ -12,10 +12,6 @@
 
     <name>GlassFish Integration Test Tools</name>
 
-    <properties>
-        <glassfish.version>${project.version}</glassfish.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>

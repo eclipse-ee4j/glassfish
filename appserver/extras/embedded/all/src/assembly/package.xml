@@ -13,7 +13,7 @@
             <unpack>true</unpack>
             <outputDirectory></outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
             <useStrictFiltering>true</useStrictFiltering>
             <scope>compile</scope>
             <unpackOptions>
@@ -28,11 +28,11 @@
                     <exclude>META-INF/loggerinfo/*</exclude>
                     <exclude>module-info.class</exclude>
                     <exclude>META-INF/versions/*/module-info.class</exclude>
+                    <exclude>*.jar</exclude>
                 </excludes>
             </unpackOptions>
             <includes>
                 <include>*:*:jar:*</include>
-                <include>*:*:glassfish-jar:*</include>
             </includes>
         </dependencySet>
     </dependencySets>

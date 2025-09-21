@@ -518,10 +518,10 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             if (validatePrivacy(adminCommand)) {
                 CommandInvocation<AdminCommandJob> inv = commandRunner.getCommandInvocation(scope, command, report,
                     subject, parameters.containsKey("notify"), parameters.containsKey("detach"));
-                LOG.log(Level.INFO, "Executing command {0} with parameters {1}, outboundPayload: {2}",
+                LOG.log(Level.FINE, "Executing command {0} with parameters {1}, outboundPayload: {2}",
                     new Object[] {command, parameters, outboundPayload});
                 inv.parameters(parameters).inbound(inboundPayload).outbound(outboundPayload).execute();
-                LOG.log(Level.INFO, "Command {0} executed, outboundPayload: {1}",
+                LOG.log(Level.FINE, "Command {0} executed, outboundPayload: {1}",
                     new Object[] {command, outboundPayload});
                 try {
                     // note it has become extraordinarily difficult to change the reporter!

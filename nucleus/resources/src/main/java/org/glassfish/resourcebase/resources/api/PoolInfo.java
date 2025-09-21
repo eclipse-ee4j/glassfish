@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -86,7 +86,6 @@ public class PoolInfo implements GenericResourceInfo {
 
     @Override
     public String toString() {
-        return super.toString() + "[jndiName=" + name + ", applicationName=" + applicationName + ", moduleName="
-            + moduleName + "]";
+        return "PoolInfo[jndiName=" + name + ", applicationName=" + applicationName + ", moduleName=" + moduleName + "]";
     }
 }

@@ -67,6 +67,7 @@
         <template.jar>${stage.dir}/${install.dir.name}/glassfish/common/templates/gf/appserver-domain.jar</template.jar>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
         <asadmin.executable>${stage.dir}/${install.dir.name}/bin/asadmin${file.executable.suffix}</asadmin.executable>
+        <patches>${basedir}/src/main/patches</patches>
     </properties>
 
     <build>
@@ -158,6 +159,80 @@
                     <configuration>
                         <skip>true</skip>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant</artifactId>
+                            <version>${ant.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>ant-contrib</groupId>
+                            <artifactId>ant-contrib</artifactId>
+                            <version>1.0b2</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>ant</groupId>
+                                    <artifactId>ant</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>apply-patches</id>
+                            <phase>prepare-package</phase>
+                            <!--<phase>initialize</phase>-->
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target xmlns:for="ant:for">
+                                    <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="maven.plugin.classpath" />
+
+                                    <macrodef name="jarupdate">
+                                        <attribute name="basedir"/>
+                                        <attribute name="destfile"/>
+                                        <sequential>
+                                            <fail message="File is missing: @{destfile}">
+                                                <condition>
+                                                    <not>
+                                                        <available file="@{destfile}" />
+                                                    </not>
+                                                </condition>
+                                            </fail>
+                                            <echo>PATCHING @{destfile}</echo>
+                                            <zip update="true" basedir="@{basedir}" destfile="@{destfile}" whenempty="fail" />
+                                        </sequential>
+                                    </macrodef>
+
+                                    <if>
+                                        <available file="${patches}" type="dir"/>
+                                        <then>
+                                            <for param="patches.dir">
+                                                <path>
+                                                    <dirset dir="${patches}" >
+                                                        <include name="*"/>
+                                                    </dirset>
+                                                </path>
+                                                <sequential>
+                                                    <basename property="patches.dir.name" file="@{patches.dir}" />
+                                                    <property name="patch.dest.file" value="${glassfish.modules}/${patches.dir.name}.jar" />
+
+                                                    <jarupdate basedir="@{patches.dir}" destfile="${patch.dest.file}" />
+                                                    <var name="patches.dir.name" unset="true" />
+                                                    <var name="patch.dest.file" unset="true" />
+                                                </sequential>
+                                            </for>
+                                        </then>
+                                    </if>
+
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1996,25 +1996,17 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     private Throwable mapLocal3xException(Throwable t) {
-
-        Throwable mappedException = null;
-
         if (t instanceof TransactionRolledbackLocalException) {
-            mappedException = new EJBTransactionRolledbackException();
-            mappedException.initCause(t);
+            return new EJBTransactionRolledbackException(t.getMessage()).initCause(t);
         } else if (t instanceof TransactionRequiredLocalException) {
-            mappedException = new EJBTransactionRequiredException();
-            mappedException.initCause(t);
+            return new EJBTransactionRequiredException(t.getMessage()).initCause(t);
         } else if (t instanceof NoSuchObjectLocalException) {
-            mappedException = new NoSuchEJBException();
-            mappedException.initCause(t);
+            return new NoSuchEJBException(t.getMessage()).initCause(t);
         } else if (t instanceof AccessLocalException) {
-            mappedException = new EJBAccessException();
-            mappedException.initCause(t);
+            return new EJBAccessException(t.getMessage()).initCause(t);
+        } else {
+            return t;
         }
-
-        return (mappedException != null) ? mappedException : t;
-
     }
 
     /**

@@ -140,8 +140,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     // invoked by DataSource objects to obtain a connection
     @Override
     public Object getResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator, ClientSecurityInfo clientSecurityInfo) throws PoolingException, RetryableUnavailableException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.getResource START, resourceSpec=" + resourceSpec + "\nresourceAllocator="
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "PoolManagerImpl.getResource START, resourceSpec=" + resourceSpec + "\nresourceAllocator="
                     + resourceAllocator + "\nclientSecurityInfo=" + clientSecurityInfo);
         }
         Transaction transaction = null;
@@ -152,8 +152,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
 
         ResourceHandle resourceHandle = getResourceFromPool(resourceSpec, resourceAllocator, clientSecurityInfo, transaction);
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.getResource handle=" + resourceHandle + ", poolStatus" + getPoolStatus(resourceSpec.getPoolInfo()));
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "PoolManagerImpl.getResource handle=" + resourceHandle + ", poolStatus" + getPoolStatus(resourceSpec.getPoolInfo()));
         }
         if (!resourceHandle.supportsLazyAssociation()) {
             resourceSpec.setLazyAssociatable(false);
@@ -183,13 +183,13 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         // resourceAllocator.
         resourceHandle.setResourceSpec(resourceSpec);
 
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.getResource, transaction=" + transaction + " resourceHandle=" + resourceHandle + " isUnenlisted="
-                    + resourceHandle.getResourceState().isUnenlisted());
-        }
+        LOG.log(FINE, "PoolManagerImpl.getResource, transaction=" + transaction + " resourceHandle=" + resourceHandle
+            + " isEnlisted=" + resourceHandle.getResourceState().isEnlisted());
 
         try {
-            if (resourceHandle.getResourceState().isUnenlisted()) {
+            if (resourceHandle.getResourceState().isEnlisted()) {
+                LOG.log(FINE, "getResource - DO NOT ENLIST because it is already Enlisted, resource=" + resourceHandle);
+            } else {
                 // The spec being used here is the spec with the updated lazy enlistment info.
 
                 // Here's the real place where we care about the correct resource manager
@@ -198,10 +198,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
                 // LazyEnlistableResourceManager
 
                 getResourceManager(resourceSpec).enlistResource(resourceHandle);
-            } else {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "PoolManagerImpl.getResource - DO NOT ENLIST because it is already Enlisted, resource=" + resourceHandle);
-                }
             }
         } catch (Exception e) {
             // In the rare cases where enlistResource throws exception, we should return the resource to the pool
@@ -215,8 +211,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
 
         Object result = resourceHandle.getUserConnection();
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.getResource END, resourceHandle=" + resourceHandle);
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "PoolManagerImpl.getResource END, resourceHandle=" + resourceHandle);
         }
         return result;
     }
@@ -361,17 +357,17 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     @Override
     public void resourceClosed(ResourceHandle resource) {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.resourceClosed START, resource=" + resource);
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "PoolManagerImpl.resourceClosed START, resource=" + resource);
         }
 
         getResourceManager(resource.getResourceSpec()).delistResource(resource, TMSUCCESS);
         putbackResourceToPool(resource, false);
 
-        if (LOG.isLoggable(Level.FINE)) {
+        if (LOG.isLoggable(FINE)) {
             // Warning resource state logged here might not be valid, could be part of another thread already
             // but logging the resource id is useful.
-            LOG.log(Level.FINE, "PoolManagerImpl.resourceClosed END, resource=" + resource);
+            LOG.log(FINE, "PoolManagerImpl.resourceClosed END, resource=" + resource);
         }
     }
 
@@ -429,8 +425,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     @Override
     public void putbackResourceToPool(ResourceHandle resourceHandle, boolean errorOccurred) {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.putbackResourceToPool START, resource=" + resourceHandle + ", errorOccurred=" + errorOccurred);
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "PoolManagerImpl.putbackResourceToPool START, resource=" + resourceHandle + ", errorOccurred=" + errorOccurred);
         }
         // Notify pool
         PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
@@ -446,8 +442,8 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
                 }
             }
         }
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "PoolManagerImpl.putbackResourceToPool END, resource=" + resourceHandle + ", errorOccurred=" + errorOccurred);
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "PoolManagerImpl.putbackResourceToPool END, resource=" + resourceHandle + ", errorOccurred=" + errorOccurred);
         }
     }
 

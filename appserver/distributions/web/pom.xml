@@ -91,57 +91,6 @@
                 <executions>
                     <execution>
                         <id>apply-patches</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <macrodef name="jarupdate">
-                                    <attribute name="basedir"/>
-                                    <attribute name="includes"/>
-                                    <attribute name="destfile"/>
-                                    <sequential>
-                                        <local name="destfile.filename"/>
-                                        <basename property="destfile.filename" file="@{destfile}"/>
-                                        <echo>${line.separator}PATCHING ${destfile.filename}${line.separator}</echo>
-                                        <zip destfile="@{destfile}.tmp">
-                                            <zipfileset src="@{destfile}" excludes="@{includes}"/>
-                                        </zip>
-                                        <move file="@{destfile}.tmp" tofile="@{destfile}" />
-                                        <local name="includes.content"/>
-                                        <loadfile property="includes.content" srcFile="@{basedir}/@{includes}"/>
-                                        <echo>${line.separator}New contents of @{includes}:${line.separator}${line.separator}</echo>
-                                        <echo>${includes.content}</echo>
-                                        <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
-                                    </sequential>
-                                </macrodef>
-
-                                <!-- Fixes missing osgi import-->
-                                <jarupdate
-                                    basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/hibernate-validator.jar"
-                                />
-
-                                <!-- To support Annnotations 4 -->
-                                <jarupdate
-                                    basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
-                                />
-
-                                <!-- Path for OSGI locator osgiresourcelocator -->
-                                <jarupdate
-                                    basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-common.jar"
-                                />
-
-                                <!-- To have a manifest at all -->
-                                <jarupdate
-                                    basedir="${patches}/jakarta-data-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.data-api.jar"
-                                />
-                            </target>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

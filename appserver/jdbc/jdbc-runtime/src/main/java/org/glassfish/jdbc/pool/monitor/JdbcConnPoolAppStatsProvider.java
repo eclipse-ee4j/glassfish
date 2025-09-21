@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -86,13 +86,13 @@ public class JdbcConnPoolAppStatsProvider {
 
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "decrementConnectionUsedEvent")
     public void decrementConnectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
-        // handle the num conn used decrement event
-        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
-            if (appName != null && appName.equals(this.appName)) {
-                // Decrement numConnUsed counter
-                synchronized (numConnUsed) {
-                    numConnUsed.setCurrent(numConnUsed.getCurrent() - 1);
+        if (isMyPool(poolName, appName)) {
+            synchronized (numConnUsed) {
+                long newValue = numConnUsed.getCurrent() - 1;
+                if (newValue < 0) {
+                    return;
                 }
+                numConnUsed.setCurrent(newValue);
             }
         }
     }
@@ -105,13 +105,9 @@ public class JdbcConnPoolAppStatsProvider {
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionUsedEvent")
     public void connectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
-        // handle the connection used event
-        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
-            if (appName != null && appName.equals(this.appName)) {
-                // increment numConnUsed
-                synchronized (numConnUsed) {
-                    numConnUsed.setCurrent(numConnUsed.getCurrent() + 1);
-                }
+        if (isMyPool(poolName, appName)) {
+            synchronized (numConnUsed) {
+                numConnUsed.setCurrent(numConnUsed.getCurrent() + 1);
             }
         }
     }
@@ -121,10 +117,8 @@ public class JdbcConnPoolAppStatsProvider {
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionAcquiredEvent")
     public void connectionAcquiredEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
-        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
-            if (appName != null && appName.equals(this.appName)) {
-                numConnAcquired.increment();
-            }
+        if (isMyPool(poolName, appName)) {
+            numConnAcquired.increment();
         }
     }
 
@@ -133,10 +127,8 @@ public class JdbcConnPoolAppStatsProvider {
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionReleasedEvent")
     public void connectionReleasedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
-        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
-            if (appName != null && appName.equals(this.appName)) {
-                numConnReleased.increment();
-            }
+        if (isMyPool(poolName, appName)) {
+            numConnReleased.increment();
         }
     }
 
@@ -155,4 +147,16 @@ public class JdbcConnPoolAppStatsProvider {
         return numConnReleased;
     }
 
+    private boolean isMyPool(String poolName, String appName) {
+        if (this.poolName.toString().equals(poolName)) {
+            return this.appName == null ? appName == null : this.appName.equals(appName);
+        }
+        return false;
+
+    }
+
+    @Override
+    public String toString() {
+        return "JdbcConnPoolAppStatsProvider[" + this.poolName + ":" + this.appName + "]";
+    }
 }

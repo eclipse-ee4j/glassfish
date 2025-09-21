@@ -83,7 +83,7 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
         Result<?> primaryResult = results.iterator().next().getPrimaryResult();
         double ratio = primaryResult.getScore() / firstRunScore;
         LOG.log(INFO, "Score: {0}, firstRunScore: {1}, ratio: {2}", primaryResult.getScore(), firstRunScore, ratio);
-        assertThat("Expected ration", ratio, lessThan(1 / 3d));
+        assertThat("Expected ratio", ratio, lessThan(1 / 3d));
     }
 
 

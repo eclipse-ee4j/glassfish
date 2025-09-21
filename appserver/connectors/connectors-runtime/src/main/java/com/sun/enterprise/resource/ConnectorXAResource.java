@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -199,7 +199,7 @@ public class ConnectorXAResource implements XAResource {
 
     private ResourceHandle getResourceHandle(boolean beginLocalTransactionIfStateIsUnenlisted) throws PoolingException {
         try {
-            ResourceHandle resourceHandle = null;
+            final ResourceHandle resourceHandle;
             JavaEETransaction javaEETransaction = getCurrentTransaction();
             if (javaEETransaction == null || javaEETransaction.getNonXAResource() == null) { // Only if some thing is wrong with tx manager.
                 resourceHandle = localHandle_; // Just return the local handle.
@@ -215,7 +215,7 @@ public class ConnectorXAResource implements XAResource {
                 }
             }
 
-            if (resourceHandle.getResourceState().isUnenlisted() && beginLocalTransactionIfStateIsUnenlisted) {
+            if (!resourceHandle.getResourceState().isEnlisted() && beginLocalTransactionIfStateIsUnenlisted) {
                 ManagedConnection managedConnection = resourceHandle.getResource();
 
                 // Begin the local transaction if first time

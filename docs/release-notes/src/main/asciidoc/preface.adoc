@@ -11,19 +11,6 @@ prev=title.html
 
 == Preface
 
-[NOTE]
-====
-This documentation is part of the Java Enterprise Edition contribution
-to the Eclipse Foundation and is not intended for use in relation to
-Java Enterprise Edition or Orace GlassFish. The documentation is in the
-process of being revised to reflect the new Jakarta EE branding.
-Additional changes will be made as requirements and procedures evolve
-for Jakarta EE. Where applicable, references to Jakarta EE or Java
-Enterprise Edition should be considered references to Jakarta EE.
-
-Please see the Title page for additional license information.
-====
-
 This preface contains information about and conventions for the entire
 {productName} ({productName}) documentation set.
 

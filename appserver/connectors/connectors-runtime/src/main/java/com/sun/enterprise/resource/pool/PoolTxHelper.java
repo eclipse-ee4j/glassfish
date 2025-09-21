@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,7 +45,7 @@ public class PoolTxHelper {
 
     private PoolInfo poolInfo;
 
-    protected final static Logger _logger = LogDomains.getLogger(PoolTxHelper.class, LogDomains.RSR_LOGGER);
+    protected static final Logger _logger = LogDomains.getLogger(PoolTxHelper.class, LogDomains.RSR_LOGGER);
 
     public PoolTxHelper(PoolInfo poolInfo) {
         this.poolInfo = poolInfo;
@@ -173,7 +173,7 @@ public class PoolTxHelper {
      * @return boolean indicating whether the resource is free, non-xa and is enlisted in transaction
      */
     public boolean isNonXAResourceAndFree(JavaEETransaction tran, ResourceHandle resource) {
-        return resource.getResourceState().isFree() && isNonXAResource(resource) && isNonXAResourceInTransaction(tran, resource);
+        return !resource.getResourceState().isBusy() && isNonXAResource(resource) && isNonXAResourceInTransaction(tran, resource);
     }
 
     /**

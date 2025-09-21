@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +41,7 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
+import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_CLASS_NAME;
@@ -110,13 +110,13 @@ public class CreateAdminObject implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap<String, String> attrList = new HashMap<>();
-        attrList.put(RES_TYPE, resType);
-        attrList.put(ADMIN_OBJECT_CLASS_NAME, className);
-        attrList.put(ResourceConstants.ENABLED, enabled.toString());
-        attrList.put(JNDI_NAME, jndiName);
-        attrList.put(ServerTags.DESCRIPTION, description);
-        attrList.put(RES_ADAPTER, raName);
+        ResourceAttributes attrList = new ResourceAttributes();
+        attrList.set(RES_TYPE, resType);
+        attrList.set(ADMIN_OBJECT_CLASS_NAME, className);
+        attrList.set(ResourceConstants.ENABLED, enabled.toString());
+        attrList.set(JNDI_NAME, jndiName);
+        attrList.set(ServerTags.DESCRIPTION, description);
+        attrList.set(RES_ADAPTER, raName);
 
         ResourceStatus rs;
 

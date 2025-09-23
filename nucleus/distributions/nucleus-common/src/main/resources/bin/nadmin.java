@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.productroot.bin.asadmin;
+package org.glassfish.main.bin.nadmin;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class asadmin {
+public class nadmin {
 
     private static final String SYS_LAUNCHERFILE = "jdk.launcher.sourcefile";
 
@@ -32,8 +32,7 @@ public class asadmin {
     private static final String JAVA_HOME = System.getProperty("java.home");
 
     private static final Path MY_JAVA_FILE = getMyJavaFile();
-    // This is the only difference between two asadmin.java files!
-    private static final Path PATH_FROM_BIN_TO_GLASSFISH = Path.of("..", "glassfish");
+    private static final Path PATH_FROM_BIN_TO_GLASSFISH = Path.of("..");
     private static final Path AS_INSTALL = MY_JAVA_FILE.getParent().resolve(PATH_FROM_BIN_TO_GLASSFISH).normalize();
     private static final Path AS_LIB = AS_INSTALL.resolve("lib");
     private static final Path AS_MODULES = AS_INSTALL.resolve("modules");
@@ -71,7 +70,7 @@ public class asadmin {
         args.add("ALL-MODULE-PATH");
         args.add("--class-path");
         args.add(ASADMIN_CLASSPATH);
-        args.add("org.glassfish.admin.cli.AsadminMain");
+        args.add("com.sun.enterprise.admin.cli.AdminMain");
         return args;
     }
 
@@ -91,7 +90,7 @@ public class asadmin {
         String sourceFile = System.getProperty(SYS_LAUNCHERFILE);
         if (sourceFile == null) {
             System.out.println("The '" + SYS_LAUNCHERFILE
-                + "' property is not set, you probably did not execute this program running java asadmin.java, right?");
+                + "' property is not set, you probably did not execute this program running java nadmin.java, right?");
             System.exit(1);
         }
         return Path.of(sourceFile).toAbsolutePath();
@@ -120,7 +119,6 @@ public class asadmin {
 
     private static String getAsadminClassPath() {
         StringBuilder cp = new StringBuilder(1024);
-        cp.append(AS_INSTALL.resolve("appserver-cli.jar"));
         cp.append(File.pathSeparatorChar).append(AS_INSTALL.resolve("admin-cli.jar"));
         cp.append(File.pathSeparatorChar).append(AS_LIB.resolve("asadmin")).append(File.separatorChar).append('*');
         cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("admin-util.jar"));

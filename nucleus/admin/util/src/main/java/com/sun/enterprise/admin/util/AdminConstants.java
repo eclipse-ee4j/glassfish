@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,11 @@ package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
 
-public interface AdminConstants {
+import java.nio.file.Path;
+
+import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+
+public final class AdminConstants {
 
     public static final String HOST_PROPERTY_NAME = "client-hostname";
 
@@ -64,10 +69,12 @@ public interface AdminConstants {
 
     public static final String kLoggerName = AdminLoggerInfo.ADMIN_LOGGER;
 
-    /* Some additional values for 8.0 PE */
-
     public static final String DOMAIN_ADMIN_GROUP_NAME = "asadmin";
-    /* This should the same as the value of <group-name> in
-    com/sun/enterprise/admin/server/core/servlet/sun-web.xml */
 
+    public static final String AS_INSTALL_DIR_NAME = Path.of(System.getProperty(INSTALL_ROOT.getSystemPropertyName()))
+        .getFileName().toString();
+
+    private AdminConstants() {
+        // hidden
+    }
 }

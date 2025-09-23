@@ -34,6 +34,8 @@ import org.glassfish.api.admin.SSHCommandExecutionException;
 import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
 
+import static com.sun.enterprise.admin.util.AdminConstants.AS_INSTALL_DIR_NAME;
+
 /**
  * This class is responsible for running asadmin commands on nodes.
  */
@@ -123,8 +125,7 @@ public class NodeRunner {
         args.add(0, AsadminInput.CLI_INPUT_OPTION);
         args.add(1, AsadminInput.SYSTEM_IN_INDICATOR); // specified to read from System.in
         List<String> fullcommand = new ArrayList<>();
-        String installDir = node.getInstallDirUnixStyle() + "/"
-                + SystemPropertyConstants.getComponentName();
+        String installDir = node.getInstallDirUnixStyle() + "/" + AS_INSTALL_DIR_NAME;
         if (!StringUtils.ok(installDir)) {
             throw new IllegalArgumentException("Node does not have an installDir");
         }

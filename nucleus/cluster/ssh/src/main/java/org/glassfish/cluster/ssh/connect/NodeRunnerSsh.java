@@ -18,7 +18,6 @@
 package org.glassfish.cluster.ssh.connect;
 
 import com.sun.enterprise.config.serverbeans.Node;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -32,6 +31,7 @@ import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.common.util.admin.AsadminInput;
 
+import static com.sun.enterprise.admin.util.AdminConstants.AS_INSTALL_DIR_NAME;
 import static java.lang.System.Logger.Level.DEBUG;
 
 /**
@@ -82,13 +82,12 @@ public class NodeRunnerSsh {
             throw new UnsupportedOperationException("Node is not of type SSH");
         }
 
-        String installDir = node.getInstallDirUnixStyle() + "/" + SystemPropertyConstants.getComponentName();
+        String installDir = node.getInstallDirUnixStyle() + "/" + AS_INSTALL_DIR_NAME;
         List<String> fullcommand = new ArrayList<>();
         final SSHLauncher sshL = new SSHLauncher(node);
         try {
-            // We can just use "nadmin" even on Windows since the SSHD provider
-            // will locate the command (.exe or .bat) for us
-            fullcommand.add("\"" + installDir + "/lib/nadmin\"");
+            fullcommand.add("\"" + sshL.getCapabilities().getJavaExecutable() + "\"");
+            fullcommand.add("\"" + installDir + "/lib/nadmin.java\"");
             fullcommand.addAll(args);
             lastCommandRun = fullcommand.stream().collect(Collectors.joining(" "));
             LOG.log(DEBUG, () -> "Running command on " + node.getNodeHost() + ": " + lastCommandRun);

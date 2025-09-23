@@ -14,6 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+package org.glassfish.main.installroot.bin.asadmin;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;

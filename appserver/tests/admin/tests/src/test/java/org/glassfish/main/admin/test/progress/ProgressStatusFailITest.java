@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,7 +61,7 @@ public class ProgressStatusFailITest {
      */
     @Test
     public void timeout() {
-        AsadminResult result = ASADMIN.exec(2_000, "progress-custom", "1x1", "1x2", "1x1");
+        AsadminResult result = ASADMIN.exec(3000, "progress-custom", "1x1", "1x2", "1x1");
         assertThat(result, not(asadminOK()));
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty(), "progress messages empty");

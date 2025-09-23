@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -162,21 +162,21 @@ public class ProgressCustomCommand implements AdminCommand {
             if (interval.isValid()) {
                 int multip = interval.getMultiplicator();
                 if (interval.getMaxSec() == 0) {
-                    ps.progress(multip, "Finished block without sleeping: [" +blockId + "] " + interval);
+                    ps.progress(multip, "Finished block without sleeping: [" + blockId + "] " + interval);
                 } else {
                     for (int i = 0; i < multip; i++) {
                         if (i == 0) {
-                            ps.progress(0, "Starting block[" +blockId + "] " + interval, interval.isSpin());
+                            ps.progress(0, "Starting block [" + blockId + "] " + interval, interval.isSpin());
                         }
                         try {
                             Thread.sleep(interval.getMilis());
-                        } catch (Exception ex) {
+                        } catch (InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
                         if (i == (multip - 1)) {
-                            ps.progress(1, "Finished block [" +blockId + "] " + interval);
+                            ps.progress(1, "Finished block [" + blockId + "] " + interval);
                         } else {
-                            ps.progress(1, "Block [" +blockId + "] " + interval + ", step: " + (i + 1));
+                            ps.progress(1, "Block [" + blockId + "] " + interval + ", step: " + (i + 1));
                         }
                     }
                 }

@@ -76,6 +76,7 @@ import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.UnsatisfiedDependencyException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.logging.Level.INFO;
 
 /**
  * Base class for a CLI command. An instance of a subclass of this class is created using the getCommand method with the
@@ -150,8 +151,6 @@ public abstract class CLICommand implements PostConstruct {
      * The metadata describing the command's options and operands.
      */
     protected CommandModel commandModel;
-
-    protected StringBuilder metadataErrors;
 
     /**
      * The options parsed from the command line. Initialized by the parse method. The keys are the parameter names from the
@@ -710,7 +709,7 @@ public abstract class CLICommand implements PostConstruct {
     protected void initializeLogger() {
         if (!logger.isLoggable(Level.FINER)) {
             if (programOpts.isTerse()) {
-                logger.setLevel(Level.INFO);
+                logger.setLevel(INFO);
             } else {
                 logger.setLevel(Level.FINE);
             }
@@ -874,10 +873,11 @@ public abstract class CLICommand implements PostConstruct {
         boolean missingOption = false;
         for (ParamModel opt : commandModel.getParameters()) {
             if (opt.getParam().password()) {
-                continue; // passwords are handled later
+                // passwords are handled later
+                continue;
             }
             if (opt.getParam().obsolete() && getOption(opt.getName()) != null) {
-                logger.info(strings.get("ObsoleteOption", opt.getName()));
+                logger.log(Level.WARNING, "Warning: Option --{0} is obsolete and will be ignored.", opt.getName());
             }
             if (opt.getParam().optional()) {
                 continue;
@@ -896,14 +896,15 @@ public abstract class CLICommand implements PostConstruct {
             // if it's still not set, that's an error
             if (getOption(opt.getName()) == null) {
                 missingOption = true;
-                logger.info(strings.get("missingOption", "--" + opt.getName()));
+                logger.log(INFO, "Option --{0} is required but was not specified", opt.getName());
             }
-            if (opt.getParam().obsolete()) { // a required obsolete option?
-                logger.info(strings.get("ObsoleteOption", opt.getName()));
+            // a required obsolete option?
+            if (opt.getParam().obsolete()) {
+                logger.log(Level.WARNING, "Warning: Option --{0} is obsolete and will be ignored.", opt.getName());
             }
         }
         if (missingOption) {
-            throw new CommandValidationException(strings.get("missingOptions", name));
+            throw new CommandValidationException("Command " + name + " is missing required options");
         }
 
         int operandMin = 0;
@@ -923,15 +924,19 @@ public abstract class CLICommand implements PostConstruct {
             }
         }
         if (operands.size() < operandMin) {
-            throw new CommandValidationException(strings.get("notEnoughOperands", name, operandParam.getType()));
+            throw new CommandValidationException(
+                "Command " + name + " requires an operand of type " + operandParam.getType());
         }
         if (operands.size() > operandMax) {
             if (operandMax == 0) {
-                throw new CommandValidationException(strings.get("noOperandsAllowed", name));
+                throw new CommandValidationException(
+                    "Command " + name + " does not accept any operands, but received: " + operands);
             } else if (operandMax == 1) {
-                throw new CommandValidationException(strings.get("tooManyOperands1", name));
+                throw new CommandValidationException(
+                    "Command " + name + " only accepts one operand, but received: " + operands);
             } else {
-                throw new CommandValidationException(strings.get("tooManyOperands", name, operandMax));
+                throw new CommandValidationException(
+                    "Command " + name + " only accepts " + operandMax + " operands, but received: " + operands);
             }
         }
 

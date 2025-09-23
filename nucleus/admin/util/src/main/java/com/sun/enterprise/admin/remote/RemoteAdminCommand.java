@@ -445,7 +445,7 @@ public class RemoteAdminCommand {
                      * should check it first.
                      */
                     if (!opt.getParam().optional()) {
-                        throw new CommandException(strings.get("missingOption", paramName));
+                        throw new CommandException("Option --" + opt.getName() + " is required but was not specified");
                     }
                     // optional param not set, skip it
                     continue;

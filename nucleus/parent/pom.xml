@@ -933,6 +933,7 @@
                             <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                             <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
+                            <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
@@ -955,6 +956,7 @@
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
+                            <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
                     </configuration>
                     <executions>

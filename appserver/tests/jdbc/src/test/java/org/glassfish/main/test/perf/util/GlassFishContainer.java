@@ -48,7 +48,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
     private static final Logger LOG = System.getLogger(GlassFishContainer.class.getName());
     private static final java.util.logging.Logger LOG_GF = java.util.logging.Logger.getLogger("GF");
 
-    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish7");
+    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish8");
     private static final String DOMAIN_NAME = "domain1";
     private static final String PATH_DOCKER_ASADMIN = PATH_DOCKER_GF_ROOT.resolve(Path.of("bin", "asadmin")).toString();
     private static final Path PATH_DOCKER_GF_DOMAINS = PATH_DOCKER_GF_ROOT.resolve(Path.of("glassfish", "domains"));
@@ -65,7 +65,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
      * @param logPrefix
      */
     public GlassFishContainer(MountableFile glassFishZip, Network network, String hostname, String logPrefix) {
-        super("eclipse-temurin:17");
+        super("eclipse-temurin:21");
         withNetwork(network)
         .withCopyFileToContainer(glassFishZip, "/glassfish.zip")
         .withEnv("TZ", "UTC").withEnv("LC_ALL", "en_US.UTF-8")
@@ -173,8 +173,10 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         command.append(" && mkdir -p /opt");
         command.append(" && cd /opt");
         command.append(" && jar xf /glassfish.zip");
-        command.append(" && cd glassfish7/bin && chmod +x asadmin startserv stopserv");
-        command.append(" && cd ../glassfish/bin && chmod +x asadmin appclient startserv stopserv");
+        command.append(" && cd ").append(PATH_DOCKER_GF_ROOT.resolve("bin"));
+        command.append(" && chmod +x asadmin startserv stopserv");
+        command.append(" && cd ../glassfish/bin");
+        command.append(" && chmod +x asadmin appclient startserv stopserv");
         command.append(" && mv /*.jar ").append(PATH_DOCKER_GF_DOMAIN.resolve("lib"));
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" start-domain ").append("domain1");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set-log-levels ").append("org.postgresql.level=FINEST");

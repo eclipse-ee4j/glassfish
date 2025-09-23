@@ -93,7 +93,7 @@ public class GlassFishTestEnvironment {
     /** 1 day. Useful for debugging */
     private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 1000 * 60 * 60 * 24;
 
-    private static HttpClient client = null;
+    private static HttpClient client;
 
     static {
         LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
@@ -370,7 +370,7 @@ public class GlassFishTestEnvironment {
 
 
     private static File findAsadmin() {
-        return new File(GF_ROOT, isWindows() ? "bin/asadmin.bat" : "bin/asadmin");
+        return new File(GF_ROOT, "bin/asadmin.java");
     }
 
     private static File findStartServ(String... optionalPrefix) {

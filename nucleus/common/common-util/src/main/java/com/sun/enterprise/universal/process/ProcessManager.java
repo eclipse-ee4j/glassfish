@@ -334,7 +334,10 @@ public final class ProcessManager {
                     }
                 }
             } catch (IOException e) {
-                LOG.log(WARNING, () -> "ReaderThread " + getName() + " cannot read the process output.", e);
+                if (!isInterrupted()) {
+                    // Interruption can close streams, which is not an error.
+                    LOG.log(WARNING, () -> "ReaderThread " + getName() + " cannot read the process output.", e);
+                }
             } finally {
                 LOG.log(TRACE, "ReaderThread " + getName() + " stopped.");
             }

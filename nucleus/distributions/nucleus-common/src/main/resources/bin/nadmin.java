@@ -31,9 +31,11 @@ public class nadmin {
     private static final boolean AS_TRACE = "true".equals(System.getenv("AS_TRACE"));
     private static final boolean INHERIT_ENV = "false".equals(System.getenv("AS_INHERIT_ENVIRONMENT"));
     private static final boolean USE_SCRIPT = "true".equals(System.getenv("AS_USE_NATIVE_SCRIPT"));
-    private static final String JAVA_HOME = System.getProperty("java.home");
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
+    private static final String JAVA_HOME = System.getProperty("java.home");
     private static final Path MY_JAVA_FILE = getMyJavaFile();
+
     private static final Path PATH_FROM_BIN_TO_GLASSFISH = Path.of("..");
     private static final Path AS_INSTALL = MY_JAVA_FILE.getParent().resolve(PATH_FROM_BIN_TO_GLASSFISH).normalize();
     private static final Path AS_LIB = AS_INSTALL.resolve("lib");
@@ -47,7 +49,7 @@ public class nadmin {
         stderr(() -> "System.env:\n" + System.getenv());
         List<String> cmd = getCommandLinePrefix();
         for (String arg : args) {
-            cmd.add(arg);
+            cmd.add(quote(arg));
         }
         stderr(() -> "Executing: \n" + cmd);
         ProcessBuilder processBuilder = new ProcessBuilder(cmd).directory(null).inheritIO();
@@ -65,27 +67,22 @@ public class nadmin {
             args.add(getScriptPath().toString());
             return args;
         }
-        args.add(Path.of(JAVA_HOME).resolve(Path.of("bin", "java")).toString());
+        args.add(quote(Path.of(JAVA_HOME).resolve(Path.of("bin", "java")).toString()));
         args.add("-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager");
         args.add("--module-path");
-        args.add(AS_LIB.resolve("bootstrap").toString());
+        args.add(quote(AS_LIB.resolve("bootstrap").toString()));
         args.add("--add-modules");
         args.add("ALL-MODULE-PATH");
         args.add("--class-path");
-        args.add(ASADMIN_CLASSPATH);
+        args.add(quote(ASADMIN_CLASSPATH));
         args.add("com.sun.enterprise.admin.cli.AdminMain");
         return args;
     }
 
 
     private static Path getScriptPath() {
-        String fileName = isWindows() ? "nadmin.bat" : "nadmin";
+        String fileName = IS_WINDOWS ? "nadmin.bat" : "nadmin";
         return MY_JAVA_FILE.getParent().resolve(fileName);
-    }
-
-
-    private static boolean isWindows() {
-        return System.getProperty("os.name").contains("windows");
     }
 
 
@@ -146,6 +143,14 @@ public class nadmin {
         cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("launcher.jar"));
         cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("mimepull.jar"));
         return cp.toString();
+    }
+
+
+    private static String quote(String input) {
+        if (IS_WINDOWS) {
+            return "\"" + input + "\"";
+        }
+        return input;
     }
 
 

@@ -82,7 +82,7 @@ public class TestLoggingExtension
             // don't log if the beforeAll failed.
             return;
         }
-        LOG.log(INFO, "Test {0}, started at {1}, test time: {2} ms", context.getTestClass(),
+        LOG.log(INFO, "Test {0}, started at {1}, test time: {2} ms", context.getTestClass().orElse(null),
             ISO_LOCAL_TIME.format(startTime), startTime.until(LocalDateTime.now(), MILLIS));
     }
 }

@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 public class nadmin {
 
     private static final String SYS_LAUNCHERFILE = "jdk.launcher.sourcefile";
 
+    private static final boolean AS_TRACE = "true".equals(System.getenv("AS_TRACE"));
     private static final boolean INHERIT_ENV = "false".equals(System.getenv("AS_INHERIT_ENVIRONMENT"));
     private static final boolean USE_SCRIPT = "true".equals(System.getenv("AS_USE_NATIVE_SCRIPT"));
     private static final String JAVA_HOME = System.getProperty("java.home");
@@ -41,25 +43,26 @@ public class nadmin {
     private static final Path AS_MQ = AS_ROOT.resolve("mq");
 
     public static void main(String... args) throws Exception {
-        System.err.println("System.properties:\n" + System.getProperties());
-        System.err.println("System.env:\n" + System.getenv());
+        stderr(() -> "System.properties:\n" + System.getProperties());
+        stderr(() -> "System.env:\n" + System.getenv());
         List<String> cmd = getCommandLinePrefix();
-        for (int i = 0; i < args.length; i++) {
-            cmd.add(args[i]);
+        for (String arg : args) {
+            cmd.add(arg);
         }
-        System.err.println("Executing: \n" + cmd);
+        stderr(() -> "Executing: \n" + cmd);
         ProcessBuilder processBuilder = new ProcessBuilder(cmd).directory(null).inheritIO();
         prepareEnvironment(processBuilder.environment());
-        Process asadmin = processBuilder.start();
-        asadmin.waitFor();
-        System.err.println("asadmin.java stopped.");
+        Process process = processBuilder.start();
+        int exitCode = process.waitFor();
+        stderr(() -> "Finishing " + MY_JAVA_FILE.getFileName() + ".java with exit code " + exitCode);
+        System.exit(exitCode);
     }
 
 
     private static List<String> getCommandLinePrefix() {
         List<String> args = new ArrayList<>();
         if (USE_SCRIPT) {
-            args.add(getAsadminScriptPath().toString());
+            args.add(getScriptPath().toString());
             return args;
         }
         args.add(Path.of(JAVA_HOME).resolve(Path.of("bin", "java")).toString());
@@ -75,8 +78,8 @@ public class nadmin {
     }
 
 
-    private static Path getAsadminScriptPath() {
-        String fileName = isWindows() ? "asadmin.bat" : "asadmin";
+    private static Path getScriptPath() {
+        String fileName = isWindows() ? "nadmin.bat" : "nadmin";
         return MY_JAVA_FILE.getParent().resolve(fileName);
     }
 
@@ -90,7 +93,8 @@ public class nadmin {
         String sourceFile = System.getProperty(SYS_LAUNCHERFILE);
         if (sourceFile == null) {
             System.out.println("The '" + SYS_LAUNCHERFILE
-                + "' property is not set, you probably did not execute this program running java nadmin.java, right?");
+                + "' property is not set, you probably did not execute this program running java "
+                + MY_JAVA_FILE.getFileName() + ", right?");
             System.exit(1);
         }
         return Path.of(sourceFile).toAbsolutePath();
@@ -142,5 +146,12 @@ public class nadmin {
         cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("launcher.jar"));
         cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("mimepull.jar"));
         return cp.toString();
+    }
+
+
+    private static void stderr(Supplier<String> log) {
+        if (AS_TRACE) {
+            System.err.println(log.get());
+        }
     }
 }

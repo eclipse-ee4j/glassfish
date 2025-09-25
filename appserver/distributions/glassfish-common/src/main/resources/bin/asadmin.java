@@ -26,32 +26,35 @@ import java.util.function.Supplier;
 
 public class asadmin {
 
-    private static final String SYS_LAUNCHERFILE = "jdk.launcher.sourcefile";
-
     private static final boolean AS_TRACE = "true".equals(System.getenv("AS_TRACE"));
     private static final boolean INHERIT_ENV = "false".equals(System.getenv("AS_INHERIT_ENVIRONMENT"));
     private static final boolean USE_SCRIPT = "true".equals(System.getenv("AS_USE_NATIVE_SCRIPT"));
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     private static final String JAVA_HOME = System.getProperty("java.home");
-    private static final Path MY_JAVA_FILE = getMyJavaFile();
+    private static final Path MY_JAVA_FILE = getMyJavaFile("jdk.launcher.sourcefile");
+    private static final Path MY_BIN_DIR = MY_JAVA_FILE.getParent();
 
     // This is the only difference between two asadmin.java files!
     private static final Path PATH_FROM_BIN_TO_GLASSFISH = Path.of("..", "glassfish");
-    private static final Path AS_INSTALL = MY_JAVA_FILE.getParent().resolve(PATH_FROM_BIN_TO_GLASSFISH).normalize();
-    private static final Path AS_LIB = AS_INSTALL.resolve("lib");
-    private static final Path AS_MODULES = AS_INSTALL.resolve("modules");
-    private static final String ASADMIN_CLASSPATH = getAsadminClassPath();
-    private static final Path AS_ROOT = AS_INSTALL.getParent();
-    private static final Path AS_MQ = AS_ROOT.resolve("mq");
+    private static final ASPaths AS_PATHS = new ASPaths(MY_BIN_DIR, PATH_FROM_BIN_TO_GLASSFISH);
+    private static final String ASADMIN_CLASS = "org.glassfish.admin.cli.AsadminMain";
+
+    private static Path getMyJavaFile(String systemProperty) {
+        String sourceFile = System.getProperty(systemProperty);
+        if (sourceFile == null) {
+            System.out.println("The '" + systemProperty
+                + "' property is not set, you probably did not execute this program running java "
+                + asadmin.class.getSimpleName() + ".java");
+            System.exit(1);
+        }
+        return Path.of(sourceFile).toAbsolutePath();
+    }
 
     public static void main(String... args) throws Exception {
         stderr(() -> "System.properties:\n" + System.getProperties());
         stderr(() -> "System.env:\n" + System.getenv());
-        List<String> cmd = getCommandLinePrefix();
-        for (String arg : args) {
-            cmd.add(quote(arg));
-        }
+        List<String> cmd = getCommand(args);
         stderr(() -> "Executing: \n" + cmd);
         ProcessBuilder processBuilder = new ProcessBuilder(cmd).directory(null).inheritIO();
         prepareEnvironment(processBuilder.environment());
@@ -62,42 +65,39 @@ public class asadmin {
     }
 
 
-    private static List<String> getCommandLinePrefix() {
-        List<String> args = new ArrayList<>();
+    private static List<String> getCommand(String... args) {
+        final List<String> cmd;
         if (USE_SCRIPT) {
-            args.add(getScriptPath().toString());
-            return args;
+            cmd = getCommandScriptPrefix();
+        } else {
+            cmd = getCommandJavaPrefix();
         }
-        args.add(quote(Path.of(JAVA_HOME).resolve(Path.of("bin", "java")).toString()));
-        args.add("-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager");
-        args.add("--module-path");
-        args.add(quote(AS_LIB.resolve("bootstrap").toString()));
-        args.add("--add-modules");
-        args.add("ALL-MODULE-PATH");
-        args.add("--class-path");
-        args.add(quote(ASADMIN_CLASSPATH));
-        args.add("org.glassfish.admin.cli.AsadminMain");
-        return args;
-    }
-
-
-    private static Path getScriptPath() {
-        String fileName = IS_WINDOWS ? "asadmin.bat" : "asadmin";
-        return MY_JAVA_FILE.getParent().resolve(fileName);
-    }
-
-
-    private static Path getMyJavaFile() {
-        String sourceFile = System.getProperty(SYS_LAUNCHERFILE);
-        if (sourceFile == null) {
-            System.out.println("The '" + SYS_LAUNCHERFILE
-                + "' property is not set, you probably did not execute this program running java "
-                + MY_JAVA_FILE.getFileName() + ", right?");
-            System.exit(1);
+        for (String arg : args) {
+            cmd.add(quote(arg));
         }
-        return Path.of(sourceFile).toAbsolutePath();
+        return cmd;
     }
 
+
+    private static List<String> getCommandScriptPrefix() {
+        List<String> cmd = new ArrayList<>();
+        cmd.add(MY_BIN_DIR.resolve(IS_WINDOWS ? "asadmin.bat" : "asadmin").toString());
+        return cmd;
+    }
+
+    private static List<String> getCommandJavaPrefix() {
+        List<String> cmd = new ArrayList<>();
+        cmd.add(quote(Path.of(JAVA_HOME).resolve(Path.of("bin", "java")).toString()));
+        cmd.add("-Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager");
+        cmd.add("--module-path");
+        cmd.add(quote(AS_PATHS.asLib.resolve("bootstrap").toString()));
+        cmd.add("--add-modules");
+        cmd.add("ALL-MODULE-PATH");
+        cmd.add("--class-path");
+        cmd.add(quote(AS_PATHS.asadminClassPath));
+        cmd.add(ASADMIN_CLASS);
+        return cmd;
+    }
 
     private static void prepareEnvironment(final Map<String, String> env) {
         if (INHERIT_ENV) {
@@ -109,44 +109,14 @@ public class asadmin {
         env.put("JAVA_HOME", JAVA_HOME);
         env.put("AS_JAVA", JAVA_HOME);
         // always respect inherited value
-        env.putIfAbsent("AS_DERBY_INSTALL", AS_ROOT.resolve("javadb").toString());
-        env.putIfAbsent("AS_IMQ_LIB", AS_MQ.resolve("lib").toString());
-        env.putIfAbsent("AS_IMQ_BIN", AS_MQ.resolve("bin").toString());
-        env.putIfAbsent("AS_CONFIG", AS_INSTALL.resolve("config").toString());
-        env.putIfAbsent("AS_DEF_DOMAINS_PATH", AS_INSTALL.resolve("domains").toString());
-        env.putIfAbsent("AS_DEF_NODES_PATH", AS_INSTALL.resolve("nodes").toString());
-        env.putIfAbsent("ASADMIN_CLASSPATH", ASADMIN_CLASSPATH);
+        env.computeIfAbsent("AS_DERBY_INSTALL", k -> AS_PATHS.asRoot.resolve("javadb").toString());
+        env.computeIfAbsent("AS_IMQ_LIB", k -> AS_PATHS.asMQ.resolve("lib").toString());
+        env.computeIfAbsent("AS_IMQ_BIN", k -> AS_PATHS.asMQ.resolve("bin").toString());
+        env.computeIfAbsent("AS_CONFIG", k -> AS_PATHS.asInstall.resolve("config").toString());
+        env.computeIfAbsent("AS_DEF_DOMAINS_PATH", k -> AS_PATHS.asInstall.resolve("domains").toString());
+        env.computeIfAbsent("AS_DEF_NODES_PATH", k -> AS_PATHS.asInstall.resolve("nodes").toString());
+        env.putIfAbsent("ASADMIN_CLASSPATH", AS_PATHS.asadminClassPath);
     }
-
-
-    private static String getAsadminClassPath() {
-        StringBuilder cp = new StringBuilder(1024);
-        cp.append(AS_INSTALL.resolve("appserver-cli.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_INSTALL.resolve("admin-cli.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_LIB.resolve("asadmin")).append(File.separatorChar).append('*');
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("admin-util.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("backup.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("cluster-common.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("cluster-ssh.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("config-api.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("config-types.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("common-util.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("glassfish-api.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("hk2.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("hk2-config-generator.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("internal-api.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jackson-core.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jakarta.activation-api.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jakarta.validation-api.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jakarta.xml.bind-api.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jaxb-osgi.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jettison.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("jsch.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("launcher.jar"));
-        cp.append(File.pathSeparatorChar).append(AS_MODULES.resolve("mimepull.jar"));
-        return cp.toString();
-    }
-
 
     private static String quote(String input) {
         if (IS_WINDOWS) {
@@ -155,10 +125,56 @@ public class asadmin {
         return input;
     }
 
-
     private static void stderr(Supplier<String> log) {
         if (AS_TRACE) {
             System.err.println(log.get());
+        }
+    }
+
+    private static final class ASPaths {
+        final Path asInstall;
+        final Path asRoot;
+        final Path asModules;
+        final Path asLib;
+        final Path asMQ;
+        final String asadminClassPath;
+
+        ASPaths(Path binDirectory, Path relativeFromBinToInstall) {
+            this.asInstall = binDirectory.resolve(relativeFromBinToInstall).normalize();
+            this.asRoot = asInstall.getParent();
+            this.asModules = asInstall.resolve("modules");
+            this.asLib = asInstall.resolve("lib");
+            this.asMQ = asRoot.resolve("mq");
+            this.asadminClassPath = getAsadminClassPath();
+        }
+
+        private String getAsadminClassPath() {
+            // This capacity should be enough to avoid resizes.
+            StringBuilder cp = new StringBuilder(8192);
+            cp.append(asInstall.resolve("appserver-cli.jar"));
+            cp.append(File.pathSeparatorChar).append(asInstall.resolve("admin-cli.jar"));
+            cp.append(File.pathSeparatorChar).append(asLib.resolve("asadmin")).append(File.separatorChar).append('*');
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("admin-util.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("backup.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("cluster-common.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("cluster-ssh.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("config-api.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("config-types.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("common-util.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("glassfish-api.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("hk2.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("hk2-config-generator.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("internal-api.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jackson-core.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jakarta.activation-api.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jakarta.validation-api.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jakarta.xml.bind-api.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jaxb-osgi.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jettison.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("jsch.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("launcher.jar"));
+            cp.append(File.pathSeparatorChar).append(asModules.resolve("mimepull.jar"));
+            return cp.toString();
         }
     }
 }

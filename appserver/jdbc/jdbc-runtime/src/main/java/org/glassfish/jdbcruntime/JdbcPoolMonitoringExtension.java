@@ -85,7 +85,8 @@ public class JdbcPoolMonitoringExtension implements ConnectionPoolMonitoringExte
      */
     @Override
     public void registerPool(PoolInfo poolInfo) {
-        if (poolManager.getPool(poolInfo) != null) {
+        ResourcePool pool = runtime.getConnectionPoolConfig(poolInfo);
+        if (pool instanceof JdbcConnectionPool && poolManager.getPool(poolInfo) != null) {
             getProbeProviderUtil().createJdbcProbeProvider();
             // Found in the pool table (pool has been initialized/created)
             JdbcConnPoolStatsProvider jdbcPoolStatsProvider = new JdbcConnPoolStatsProvider(poolInfo);

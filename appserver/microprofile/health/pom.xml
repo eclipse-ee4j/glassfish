@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,6 @@
     <name>GlassFish MicroProfile Health</name>
 
     <dependencies>
-        <!-- APIs -->
         <dependency>
             <groupId>org.eclipse.microprofile.health</groupId>
             <artifactId>microprofile-health-api</artifactId>
@@ -52,20 +51,10 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <supportedProjectTypes>
-                        <supportedProjectType>glassfish-jar</supportedProjectType>
-                    </supportedProjectTypes>
                     <instructions>
-                        <!-- A list of packages that are exposed to classes outside the bundle -->
                         <Export-Package>
                             org.glassfish.microprofile.health;
                         </Export-Package>
@@ -80,17 +69,7 @@
                         </Import-Package>
                     </instructions>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-bundle</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

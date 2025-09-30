@@ -2206,6 +2206,9 @@
         <profile>
             <id>oss-release</id>
             <properties>
+                <!-- Already checked with every PR -->
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.test.skip>true</maven.test.skip>
                 <!-- Until we fix everything -->
                 <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
             </properties>

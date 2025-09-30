@@ -33,8 +33,7 @@
     <version>7.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>GlassFish Project</name>
-    <description>Glassfish Project</description>
+    <name>Eclipse GlassFish Aggregator POM</name>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <scm>

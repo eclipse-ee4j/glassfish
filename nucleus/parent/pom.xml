@@ -218,6 +218,8 @@
 
         <!-- Do not autopublish by default -->
         <release.autopublish>false</release.autopublish>
+        <!-- By default block until everything is really published -->
+        <release.waitUntil>published</release.waitUntil>
     </properties>
 
     <dependencyManagement>
@@ -1968,7 +1970,7 @@
                         <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots</centralSnapshotsUrl>
                         <deploymentName>Eclipse GlassFish ${project.version}</deploymentName>
                         <publishingServerId>central</publishingServerId>
-                        <waitUntil>published</waitUntil>
+                        <waitUntil>${release.waitUntil}</waitUntil>
                     </configuration>
                 </plugin>
             </plugins>

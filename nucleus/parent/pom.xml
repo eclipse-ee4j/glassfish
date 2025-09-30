@@ -2239,6 +2239,10 @@
                     <plugin>
                         <groupId>org.cyclonedx</groupId>
                         <artifactId>cyclonedx-maven-plugin</artifactId>
+                        <configuration>
+                            <!-- override autodetection -->
+                            <skipNotDeployed>false</skipNotDeployed>
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>

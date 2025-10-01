@@ -69,7 +69,31 @@
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
-
+    <!-- TODO: Can be removed after it would be removed from parent too -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Disabled Sonatype Nexus</name>
+            <url>http://localhost</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <name>Disabled Sonatype Nexus</name>
+            <url>http://localhost</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </distributionManagement>
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>6.0.1</jakarta.el-api.version>
@@ -164,7 +188,7 @@
         <deploy.skip>false</deploy.skip>
 
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2023-12-04T13:17:33Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-10-01T09:59:22Z</project.build.outputTimestamp>
 
         <!-- Show to developers by default -->
         <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
@@ -929,6 +953,7 @@
                             <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                             <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
+                            <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
@@ -951,6 +976,7 @@
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>${test.enableDefaultLogCfg}</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
+                            <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
                     </configuration>
                     <executions>
@@ -1039,6 +1065,12 @@
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>3.2.8</version>
+                    <configuration>
+                        <gpgArguments>
+                            <arg>--pinentry-mode</arg>
+                            <arg>loopback</arg>
+                        </gpgArguments>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.cyclonedx</groupId>
@@ -1220,6 +1252,33 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.7.0</version>
+                    <configuration>
+                        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>injected-nexus-deploy</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.9.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <autoPublish>${release.autopublish}</autoPublish>
+                        <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots</centralSnapshotsUrl>
+                        <deploymentName>Eclipse GlassFish ${project.version}</deploymentName>
+                        <publishingServerId>central</publishingServerId>
+                        <waitUntil>${release.waitUntil}</waitUntil>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -1429,9 +1488,7 @@
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>command-security-maven-plugin</artifactId>
             </plugin>
-            <!--
-                Disables sbom generation inherited from parent
-            -->
+            <!-- Disables sbom generation inherited from parent -->
             <plugin>
                 <groupId>org.cyclonedx</groupId>
                 <artifactId>cyclonedx-maven-plugin</artifactId>
@@ -1458,6 +1515,9 @@
         <profile>
             <id>oss-release</id>
             <properties>
+                <!-- Already checked with every PR -->
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.test.skip>true</maven.test.skip>
                 <!-- Until we fix everything -->
                 <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
             </properties>
@@ -1488,6 +1548,10 @@
                     <plugin>
                         <groupId>org.cyclonedx</groupId>
                         <artifactId>cyclonedx-maven-plugin</artifactId>
+                        <configuration>
+                            <!-- override autodetection -->
+                            <skipNotDeployed>false</skipNotDeployed>
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -1508,6 +1572,10 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>

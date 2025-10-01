@@ -17,10 +17,8 @@
 package org.glassfish.main.admin.test.tool;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
@@ -34,16 +32,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 class StartStopITest {
 
-    @Test
-    @DisabledOnOs(OS.WINDOWS)
-    void asadminGet_Linux() {
-        assertThat(getAsadmin().exec("get", "*"), asadminOK());
-    }
-
 
     @Test
-    @EnabledOnOs(OS.WINDOWS)
-    void asadminGet_Windows() {
-        assertThat(getAsadmin().exec("get", "\"*\""), asadminOK());
+    void asadminGet() {
+        Asadmin asadmin = getAsadmin().withEnv("AS_TRACE", "true");
+        assertThat(asadmin.exec("get", "*"), asadminOK());
     }
 }

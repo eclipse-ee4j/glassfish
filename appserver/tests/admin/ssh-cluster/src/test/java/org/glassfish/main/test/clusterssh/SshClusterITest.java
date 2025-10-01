@@ -44,7 +44,6 @@ import org.testcontainers.utility.MountableFile;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.testcontainers.containers.BindMode.READ_ONLY;
@@ -67,7 +66,9 @@ public class SshClusterITest {
         .resolve(Path.of(DOMAIN_NAME, "logs", "server.log"));
     private static final Path PATH_DOCKER_GF_NODE1_SERVER_LOG = PATH_DOCKER_GF_NODES
         .resolve(Path.of("node1", "agent", "logs", "server.log"));
-    private static final String PATH_DOCKER_ASADMIN = PATH_DOCKER_GF_ROOT.resolve(Path.of("bin", "asadmin")).toString();
+    private static final String PATH_DOCKER_ASADMIN = PATH_DOCKER_GF_ROOT.resolve(Path.of("bin", "asadmin.java"))
+        .toString();
+    private static final String ASADMIN_CMD = "java " + PATH_DOCKER_ASADMIN;
 
     private static final String PATH_ETC_ENVIRONMENT = "/etc/environment";
     private static final String PATH_SSH_USERDIR = "/root/.ssh";
@@ -102,7 +103,7 @@ public class SshClusterITest {
     public static void start() throws Exception {
         assumeTrue(DockerClientFactory.instance().isDockerAvailable(), "Docker is not available on this environment");
         AS_DOMAIN.start();
-        ExecResult keygenResult = AS_DOMAIN.execInContainer(UTF_8, "ssh-keygen", "-b", "4096",
+        ExecResult keygenResult = AS_DOMAIN.execInContainer("ssh-keygen", "-b", "4096",
             "-t", "rsa", "-f", PATH_PRIVATE_KEY, "-q", "-N", "");
         assertEquals(0, keygenResult.getExitCode(), keygenResult.getStdout() + keygenResult.getStderr());
         File pubKey = new File(tmpDir, "adminkey.pub");
@@ -115,13 +116,13 @@ public class SshClusterITest {
     public static void stop() throws Exception {
         LOG.log(INFO, "Closing docker containers ...");
         if (AS_NODE_1.isRunning()) {
-            ExecResult result = AS_DOMAIN.execInContainer(PATH_DOCKER_ASADMIN, "stop-node", "--kill",
+            ExecResult result = AS_DOMAIN.execInContainer("java", PATH_DOCKER_ASADMIN, "stop-node", "--kill",
                 "node1");
             LOG.log(INFO, "Result: {0}", result.getStdout());
             closeSilently(AS_NODE_1);
         }
         if (AS_DOMAIN.isRunning()) {
-            ExecResult result = AS_DOMAIN.execInContainer(PATH_DOCKER_ASADMIN, "stop-domain", "--kill");
+            ExecResult result = AS_DOMAIN.execInContainer("java", PATH_DOCKER_ASADMIN, "stop-domain", "--kill");
             LOG.log(INFO, "Result: {0}", result.getStdout());
             closeSilently(AS_DOMAIN);
         }
@@ -139,7 +140,7 @@ public class SshClusterITest {
     @Test
     @Order(1)
     public void ssh() throws Exception {
-        ExecResult sshResult = AS_DOMAIN.execInContainer(UTF_8,
+        ExecResult sshResult = AS_DOMAIN.execInContainer(
             // Under some circumstances it can stuck -> now it has 5 seconds.
             "timeout", "5",
             // It always asks for a passphrase so we have to specify it even if it is empty.
@@ -159,7 +160,7 @@ public class SshClusterITest {
     @Test
     @Order(2)
     public void createNode1() throws Exception {
-        ExecResult result = AS_DOMAIN.execInContainer(UTF_8, PATH_DOCKER_ASADMIN, "--user", "admin",
+        ExecResult result = AS_DOMAIN.execInContainer("java", PATH_DOCKER_ASADMIN, "--user", "admin",
             "--passwordfile", "/password.txt", "--interactive=false", "create-node-ssh", "--nodehost", "node1",
             "--install=true", "--sshkeyfile", PATH_PRIVATE_KEY, "--sshuser", "root", "node1");
         assertEquals(0, result.getExitCode(), result.getStdout() + result.getStderr());
@@ -198,12 +199,12 @@ public class SshClusterITest {
         command.append(" && touch " + PATH_SSH_USERDIR + "/known_hosts");
         command.append(getCommandCreatePrivateDir(PATH_SSH_USERDIR));
         command.append(" && ls -la ").append(PATH_DOCKER_GF_ROOT);
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" start-domain ").append("domain1");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN)
+        command.append(" && ").append(ASADMIN_CMD).append(" start-domain ").append("domain1");
+        command.append(" && ").append(ASADMIN_CMD)
             .append(" --user admin --passwordfile /password_update.txt change-admin-password");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN)
+        command.append(" && ").append(ASADMIN_CMD)
             .append(" --user admin --passwordfile /password.txt enable-secure-admin");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" restart-domain");
+        command.append(" && ").append(ASADMIN_CMD).append(" restart-domain");
         command.append(" && tail -n 10000 -F ").append(PATH_DOCKER_GF_DOMAIN1_SERVER_LOG);
         return command.toString();
     }

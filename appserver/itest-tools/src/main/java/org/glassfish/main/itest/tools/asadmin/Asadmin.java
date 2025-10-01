@@ -36,6 +36,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.io.File.separatorChar;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
@@ -60,6 +61,11 @@ public class Asadmin {
         }
         return new KeyAndValue<>(s.substring(0, equalSignPos), s.substring(equalSignPos + 1, s.length()));
     };
+
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("windows");
+    private static final String JAVA_HOME_VALUE = System.getProperty(JAVA_HOME.getSystemPropertyName());
+    private static final String JAVA_EXECUTABLE = JAVA_HOME_VALUE + separatorChar + "bin" + separatorChar + "java"
+        + (IS_WINDOWS ? ".exe" : "");
 
     private final File asadmin;
     private final String adminUser;
@@ -168,7 +174,7 @@ public class Asadmin {
     public <T> List<KeyAndValue<T>> get(final String key, final Function<String, T> transformer) {
         AsadminResult result = exec("get", key);
         assertThat(result, asadminOK());
-        return Arrays.stream(result.getStdOut().split(System.lineSeparator())).map(KEYVAL_SPLITTER)
+        return Arrays.stream(result.getStdOut().split("[\n\r]+")).map(KEYVAL_SPLITTER)
                 .filter(Objects::nonNull).map(kv -> new KeyAndValue<>(kv.getKey(), transformer.apply(kv.getValue())))
                 .collect(Collectors.toList());
     }
@@ -238,6 +244,16 @@ public class Asadmin {
         final List<String> parameters = Arrays.asList(args);
         LOG.log(TRACE, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
+        if (asadmin.getName().endsWith(".java")) {
+            command.add(JAVA_EXECUTABLE);
+            command.add("-Xms64m");
+            command.add("-Xmx64m");
+            command.add("-Xss286k");
+            // Disable GC
+            command.add("-XX:+UnlockExperimentalVMOptions");
+            command.add("-XX:+UseEpsilonGC");
+            command.add("-XX:+AlwaysPreTouch");
+        }
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
         command.add(adminUser);
@@ -251,7 +267,9 @@ public class Asadmin {
         } else {
             command.add("--terse=" + terse);
         }
-        command.addAll(parameters);
+        for (String parameter : parameters) {
+            command.add(escape(parameter));
+        }
 
         final ProcessManager processManager = new ProcessManager(command);
         if (timeout != null) {
@@ -266,8 +284,8 @@ public class Asadmin {
         }
 
         // override any env property to what is used by tests
-        processManager.setEnvironment(JAVA_HOME.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
-        processManager.setEnvironment(JAVA_ROOT.getEnvName(), System.getProperty(JAVA_HOME.getSystemPropertyName()));
+        processManager.setEnvironment(JAVA_HOME.getEnvName(), JAVA_HOME_VALUE);
+        processManager.setEnvironment(JAVA_ROOT.getEnvName(), JAVA_HOME_VALUE);
 
         int exitCode;
         String asadminErrorMessage = "";
@@ -294,5 +312,13 @@ public class Asadmin {
             return new DetachedTerseAsadminResult(args[0], exitCode, stdOut, stdErr);
         }
         return new AsadminResult(args[0], exitCode, stdOut, stdErr);
+    }
+
+
+    private static final String escape(String input) {
+        if (!IS_WINDOWS) {
+            return input;
+        }
+        return "\"" + input + "\"";
     }
 }

@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpException;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +39,7 @@ import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.admin.util.AdminConstants.AS_INSTALL_DIR_NAME;
 import static java.util.logging.Level.SEVERE;
 
 /**
@@ -303,10 +303,8 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      */
     private void checkIfAlreadyInstalled(SSHSession session, String host, Path sshInstallDir)
         throws CommandException, SSHException {
-        String asadmin = Constants.v4 ? "/lib/nadmin" : "/bin/asadmin";
-        String cmd = "\"" + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + asadmin
-            + "\" version --local --terse";
-        int status = session.exec(cmd);
+        int status = session
+            .exec("\"" + sshInstallDir + "/" + AS_INSTALL_DIR_NAME + "/lib/nadmin" + "\" version --local --terse");
         if (status == 0) {
             throw new CommandException(Strings.get("install.dir.exists", sshInstallDir));
         }

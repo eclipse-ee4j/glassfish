@@ -19,14 +19,15 @@ package org.glassfish.main.admin.test;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
-import java.nio.file.Path;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,7 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PathWithSpacesITest {
 
-    private static Asadmin asadmin;
+    private static File binDirectory;
+
 
     @BeforeAll
     static void copyGlassFish() throws Exception {
@@ -42,21 +44,42 @@ public class PathWithSpacesITest {
         File gfRootWithSpaces = new File(originalGF.getParentFile(), "GlassFish With Spaces");
         FileUtils.copy(originalGF, gfRootWithSpaces);
         assertTrue(FileUtils.deleteFile(new File(gfRootWithSpaces, "domains")), "Deletion of domains directory failed");
-        String asadminFileName = SystemUtils.IS_OS_WINDOWS ? "asadmin.bat" : "asadmin";
-        Path asadminPath = gfRootWithSpaces.toPath().resolve(Path.of("bin", asadminFileName));
-        asadmin = new Asadmin(asadminPath.toFile(), "admin", null);
+        binDirectory = new File(gfRootWithSpaces, "bin");
+        File asadminFile = new File(binDirectory, "asadmin.java");
+        Asadmin asadmin = new Asadmin(asadminFile, "admin", null);
         assertThat(asadmin.exec("create-domain", "--nopassword", "--portbase", "14800", "spaces"), asadminOK());
     }
 
 
-    @AfterAll
-    static void stopGlassFish() throws Exception {
+    @AfterEach
+    void stopGlassFish() throws Exception {
+        File asadminFile = new File(binDirectory, "asadmin.java");
+        Asadmin asadmin = new Asadmin(asadminFile, "admin", null);
         assertThat(asadmin.exec("stop-domain", "--kill", "spaces"), asadminOK());
     }
 
 
     @Test
-    void start() throws Exception {
+    @EnabledOnOs(OS.WINDOWS)
+    void startAsadminBat() throws Exception {
+        File asadminFile = new File(binDirectory, "asadmin.bat");
+        Asadmin asadmin = new Asadmin(asadminFile, "admin", null);
+        assertThat(asadmin.exec(60_000, "start-domain", "spaces"), asadminOK());
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void startAsadminBash() throws Exception {
+        File asadminFile = new File(binDirectory, "asadmin");
+        Asadmin asadmin = new Asadmin(asadminFile, "admin", null);
+        assertThat(asadmin.exec(60_000, "start-domain", "spaces"), asadminOK());
+    }
+
+
+    @Test
+    void startAsadminJava() throws Exception {
+        File asadminFile = new File(binDirectory, "asadmin.java");
+        Asadmin asadmin = new Asadmin(asadminFile, "admin", null);
         assertThat(asadmin.exec(60_000, "start-domain", "spaces"), asadminOK());
     }
 }

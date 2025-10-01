@@ -19,12 +19,15 @@ package org.glassfish.cluster.ssh.launcher;
 import java.lang.Runtime.Version;
 import java.nio.charset.Charset;
 
+import static org.glassfish.cluster.ssh.launcher.OperatingSystem.WINDOWS;
+
 /**
  * Detected capabilities of the remote operating system.
  */
 public class RemoteSystemCapabilities {
 
     private final String javaHome;
+    private final String javaExecutable;
     private final Version javaVersion;
     private final OperatingSystem operatingSystem;
     private final Charset charset;
@@ -40,6 +43,25 @@ public class RemoteSystemCapabilities {
         this.javaVersion = javaVersion;
         this.operatingSystem = operatingSystem;
         this.charset = charset;
+        this.javaExecutable = javaHome + (operatingSystem == WINDOWS ? "/bin/java.exe" : "/bin/java");
+    }
+
+
+    /**
+     * Note that when we use different operating system on each node, it is not useful to use Path.
+     *
+     * @return detected java home directory
+     */
+    public String getJavaHome() {
+        return javaHome;
+    }
+
+
+    /**
+     * @return detected java executable
+     */
+    public String getJavaExecutable() {
+        return javaExecutable;
     }
 
 
@@ -55,7 +77,7 @@ public class RemoteSystemCapabilities {
      * @return true if the remote system is NOT Windows.
      */
     public boolean isChmodSupported() {
-        return operatingSystem != OperatingSystem.WINDOWS;
+        return operatingSystem != WINDOWS;
     }
 
 

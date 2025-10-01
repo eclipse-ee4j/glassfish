@@ -8,4 +8,6 @@
     <suppress checks=".*" files=".*[\\/]generated-sources[\\/].*" />
     <suppress checks=".*" files=".*[\\/]generated-test-sources[\\/].*" />
     <suppress checks=".*" files="target[\\/]jackson-jaxb-src[\\/].*" />
+    <!-- nadmin, asadmin java sources are Java based script files -->
+    <suppress checks="PackageDeclaration" files=".*[\\/]bin[\\/](asadmin|nadmin).java" />
 </suppressions>

@@ -28,7 +28,7 @@
     <parent>
         <artifactId>org.glassfish.quicklook</artifactId>
         <groupId>quicklook</groupId>
-        <version>7.1.0-SNAPSHOT</version>
+        <version>7.1.0-M1</version>
     </parent>
     <description>Runs the tests on admin/asadmin code</description>
     <build>

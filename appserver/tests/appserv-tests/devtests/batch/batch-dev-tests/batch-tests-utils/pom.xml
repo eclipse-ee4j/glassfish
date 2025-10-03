@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>batch-dev-tests</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M13</version>
     </parent>
     <artifactId>batch-tests-utils</artifactId>
     <packaging>jar</packaging>

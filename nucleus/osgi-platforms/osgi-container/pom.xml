@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.osgi-platforms</groupId>
         <artifactId>osgi-platforms</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M13</version>
     </parent>
 
     <artifactId>osgi-container</artifactId>

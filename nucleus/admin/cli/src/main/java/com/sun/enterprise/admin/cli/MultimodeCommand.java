@@ -79,11 +79,7 @@ public class MultimodeCommand extends CLICommand {
     private boolean echo; // saved echo flag
     private static final LocalStringsImpl strings = new LocalStringsImpl(MultimodeCommand.class);
 
-    private static final boolean DISABLE_JLINE;
-
-    static {
-        DISABLE_JLINE = Boolean.getBoolean("glassfish.disable.jline") || Boolean.parseBoolean(System.getenv("AS_DISABLE_JLINE"));
-    }
+    private static final boolean DISABLE_JLINE = Boolean.getBoolean("glassfish.disable.jline") || Boolean.parseBoolean(System.getenv("AS_DISABLE_JLINE"));
 
     /**
      * The validate method validates that the type and quantity of parameters and operands matches the requirements for this

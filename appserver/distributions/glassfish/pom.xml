@@ -65,6 +65,10 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

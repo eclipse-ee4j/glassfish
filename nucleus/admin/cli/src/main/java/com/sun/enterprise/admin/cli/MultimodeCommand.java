@@ -17,8 +17,10 @@
 
 package com.sun.enterprise.admin.cli;
 
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.util.CommandModelData;
 
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.BufferedReader;
@@ -28,24 +30,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.*;
 import org.glassfish.api.admin.CommandModel.ParamModel;
-import org.glassfish.api.admin.CommandValidationException;
-import org.glassfish.api.admin.InvalidCommandException;
-import org.glassfish.hk2.api.ActiveDescriptor;
-import org.glassfish.hk2.api.DynamicConfiguration;
-import org.glassfish.hk2.api.DynamicConfigurationService;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.common.util.admin.CommandModelImpl;
+import org.glassfish.hk2.api.*;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.jline.reader.*;
+import org.jline.reader.impl.completer.AggregateCompleter;
+import org.jline.reader.impl.completer.ArgumentCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.reader.impl.completer.SystemCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -75,6 +78,12 @@ public class MultimodeCommand extends CLICommand {
     private String encoding;
     private boolean echo; // saved echo flag
     private static final LocalStringsImpl strings = new LocalStringsImpl(MultimodeCommand.class);
+
+    private static final boolean DISABLE_JLINE;
+
+    static {
+        DISABLE_JLINE = Boolean.getBoolean("glassfish.disable.jline") || Boolean.parseBoolean(System.getenv("AS_DISABLE_JLINE"));
+    }
 
     /**
      * The validate method validates that the type and quantity of parameters and operands matches the requirements for this
@@ -122,7 +131,8 @@ public class MultimodeCommand extends CLICommand {
         try {
             if (file == null) {
                 System.out.println(strings.get("multimodeIntro"));
-                reader = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
+                Prompter prompter = getPrompter();
+                return executeCommands(prompter);
             } else {
                 printPrompt = false;
                 if (!file.canRead()) {
@@ -134,7 +144,7 @@ public class MultimodeCommand extends CLICommand {
                     reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
                 }
             }
-            return executeCommands(reader);
+            return executeCommands(new BufferedReaderPrompter(reader));
         } catch (IOException e) {
             throw new CommandException(e);
         } finally {
@@ -148,6 +158,88 @@ public class MultimodeCommand extends CLICommand {
         }
     }
 
+    private Prompter basicPrompter() throws IOException {
+        return new BufferedReaderPrompter(new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())));
+    }
+
+    @Nonnull
+    private Prompter getPrompter() throws IOException {
+        if (DISABLE_JLINE) {
+            return basicPrompter();
+        }
+        try {
+            Terminal build = TerminalBuilder.builder()
+                    .system(true)
+                    .build();
+            SystemCompleter systemCompleter = new SystemCompleter();
+
+            habitat.getDescriptors(descriptor -> descriptor.getAdvertisedContracts().contains("com.sun.enterprise.admin.cli.CLICommand"))
+                    .forEach(activeDescriptor -> {
+                        String commandName = activeDescriptor.getName();
+                        if (commandName == null) {
+                            return;
+                        }
+                        if (commandName.startsWith("_")) {
+                            return;
+                        }
+                        try {
+                            habitat.reifyDescriptor(activeDescriptor);
+                            systemCompleter.add(commandName, getCompleter(commandName, activeDescriptor.getImplementationClass()));
+                        } catch (Exception ignored) {
+                        }
+                    });
+
+            systemCompleter.compile(Candidate::new);
+
+            LineReader lineReader = LineReaderBuilder.builder()
+                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter()))
+                    .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home"), ".gfclient", ".cli-history"))
+                    .terminal(build).build();
+            return new JLinePrompter(lineReader);
+        } catch (Exception e) {
+            System.err.println("Warning: Failed to initialize the advanced console (JLine). Features like history and auto-completion will be disabled.");
+            System.err.println("Cause: " + e.getMessage());
+            return basicPrompter();
+        }
+    }
+
+    @Nonnull
+    private static Completer getCompleter(String commandName, Class<?> klass) {
+        ArrayList<String> options = new ArrayList<>(List.of("-?", "--help"));
+
+        CommandModelImpl.init(klass, null, null)
+                .entrySet()
+                .stream()
+                .flatMap(MultimodeCommand::parseParam)
+                .forEach(options::add);
+
+        Completer optionCompleter = new StringsCompleter(options);
+
+        return new ArgumentCompleter(List.of(new StringsCompleter(commandName), optionCompleter));
+    }
+
+    @Nonnull
+    private static Stream<String> parseParam(Map.Entry<String, ParamModel> s) {
+        Stream.Builder<String> builder = Stream.builder();
+        Param param = s.getValue().getParam();
+        if (param.primary()) {
+            builder.add("[" + s.getKey() + "]");
+            return builder.build();
+        }
+        String s1 = !"".equals(param.name()) ? param.name() : s.getKey();
+        builder.add("--" + s1);
+        String alias = param.alias();
+        if (!"".equals(alias)) {
+            builder.add("--" + alias);
+        }
+        String shortName = param.shortName();
+        if (!"".equals(shortName)) {
+            builder.add("-" + shortName);
+        }
+
+        return builder.build();
+    }
+
     private static void atomicReplace(ServiceLocator locator, ProgramOptions options) {
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
@@ -159,12 +251,54 @@ public class MultimodeCommand extends CLICommand {
         config.commit();
     }
 
+    interface Prompter {
+        String prompt(String message) throws IOException;
+    }
+
+    class BufferedReaderPrompter implements Prompter {
+        private final BufferedReader reader;
+
+        BufferedReaderPrompter(BufferedReader reader) {
+            this.reader = reader;
+        }
+
+        @Override
+        public String prompt(String message) throws IOException {
+            if (printPrompt) {
+                System.out.print(message);
+                System.out.flush();
+            }
+            return reader.readLine();
+        }
+    }
+
+    class JLinePrompter implements Prompter {
+
+        private final LineReader reader;
+
+        JLinePrompter(LineReader reader) {
+            this.reader = reader;
+        }
+
+        @Override
+        public String prompt(String message) throws IOException {
+            try {
+                if (printPrompt) {
+                    return reader.readLine(message);
+                }
+                return reader.readLine();
+            } catch (UserInterruptException ignored) {
+                return null;
+            }
+        }
+    }
+
     /**
      * Read commands from the specified BufferedReader and execute them. If printPrompt is set, prompt first.
      *
      * @return the exit code of the last command executed
      */
-    private int executeCommands(BufferedReader reader) throws CommandException, CommandValidationException, IOException {
+    private int executeCommands(Prompter prompter) throws CommandException, CommandValidationException, IOException {
         String line;
         int rc = 0;
 
@@ -176,11 +310,7 @@ public class MultimodeCommand extends CLICommand {
         programOpts.toEnvironment(env);
         String prompt = programOpts.getCommandName() + "> ";
         for (;;) {
-            if (printPrompt) {
-                System.out.print(prompt);
-                System.out.flush();
-            }
-            if ((line = reader.readLine()) == null) {
+            if ((line = prompter.prompt(prompt)) == null) {
                 if (printPrompt) {
                     System.out.println();
                 }
@@ -300,5 +430,71 @@ public class MultimodeCommand extends CLICommand {
             args.add(t.nextToken());
         }
         return args.toArray(new String[args.size()]);
+    }
+
+    private class RemoteCommandsCompleter implements Completer {
+        Completer cached;
+
+        @Override
+        public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {
+            try {
+                if (cached == null) {
+
+                    if (computeCache()) return;
+                }
+                cached.complete(lineReader, parsedLine, list);
+            } catch(CommandException ignored){
+            }
+        }
+
+        private boolean computeCache() throws CommandException {
+            String[] remoteCommands = CLIUtil.getRemoteCommands(container, programOpts, env);
+            if (remoteCommands == null) {
+                return true;
+            }
+
+            SystemCompleter systemCompleter = new SystemCompleter();
+
+            for (String remoteCommand : remoteCommands) {
+                if (remoteCommand.startsWith("_")) {
+                    continue;
+                }
+                CommandModel optionsForCommand = getOptionsForCommand(remoteCommand);
+                List<String> options =
+                        optionsForCommand.getParameters().stream()
+                                .map(parameter -> Map.entry(remoteCommand, parameter))
+                                .flatMap(MultimodeCommand::parseParam)
+                                .collect(Collectors.toList());
+
+
+                ArgumentCompleter argumentCompleter = new ArgumentCompleter(
+                        new StringsCompleter(remoteCommand),
+                        new StringsCompleter(options)
+                );
+                systemCompleter.add(remoteCommand, argumentCompleter);
+
+            }
+
+            systemCompleter.compile(Candidate::new);
+            cached = systemCompleter;
+            return false;
+        }
+
+        private CommandModel getOptionsForCommand(String name1)  {
+
+            try {
+                var remoteCLICommand = new RemoteCLICommand(name1, MultimodeCommand.this.programOpts, MultimodeCommand.this.env) {
+                    public CommandModel getCommandModel() throws CommandException {
+                        argv = new String[]{this.name};
+                        prepare();
+                        parse();
+                        return this.commandModel;
+                    }
+                };
+                return remoteCLICommand.getCommandModel();
+            } catch (CommandException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@ package org.glassfish.embeddable;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -128,6 +129,9 @@ public enum GlassFishVariable {
         return this.sysPropName;
     }
 
+    public Optional<String> getSystemPropertyValue() {
+        return Optional.ofNullable(System.getProperty(getSystemPropertyName()));
+    }
 
     /**
      * The map contains pairs of {@link #getEnvName()} and {@link #getSystemPropertyName()}.

@@ -90,12 +90,16 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     public void postConstruct() {
         if (env.isEmbedded()) {
             initEmbeddedSystemOptions();
+            boolean overwriteProperties = false;
+            setSystemPropertiesFromEnv(overwriteProperties);
+            setSystemPropertiesFromDomainXml(overwriteProperties);
             LOG.log(INFO, "Loaded embedded server named: {0}", server.getName());
             return;
         }
         setVersion();
-        setSystemPropertiesFromEnv();
-        setSystemPropertiesFromDomainXml();
+        boolean overwriteProperties = true;
+        setSystemPropertiesFromEnv(overwriteProperties);
+        setSystemPropertiesFromDomainXml(overwriteProperties);
         resolveJavaConfig();
         LOG.log(INFO, "Loaded server named: {0}", server.getName());
     }
@@ -128,22 +132,24 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         setProperty("glassfish.version", Version.getProductIdInfo(), true);
     }
 
-    private void setSystemPropertiesFromEnv() {
+    private void setSystemPropertiesFromEnv(boolean forceOverwrite) {
         // adding our version of some system properties.
-        setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()), true);
-        String hostname = "localhost";
-        try {
-            // canonical name checks to make sure host is proper
-            hostname = NetUtils.getCanonicalHostName();
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
-        }
-        if (hostname != null) {
-            setProperty(HOST_NAME.getSystemPropertyName(), hostname, false);
+        setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()), forceOverwrite);
+        if (HOST_NAME.getSystemPropertyValue().isEmpty()) {
+            String hostname = "localhost";
+            try {
+                // canonical name checks to make sure host is proper
+                hostname = NetUtils.getCanonicalHostName();
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
+            }
+            if (hostname != null) {
+                setProperty(HOST_NAME.getSystemPropertyName(), hostname, false);
+            }
         }
     }
 
-    private void setSystemPropertiesFromDomainXml() {
+    private void setSystemPropertiesFromDomainXml(boolean forceOverwrite) {
         // precedence order from high to low
         // 0. server
         // 1. cluster
@@ -158,14 +164,14 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         final List<SystemProperty> clusterSPList = cluster == null ? null : cluster.getSystemProperty();
         List<SystemProperty> serverSPList = server.getSystemProperty();
 
-        setSystemProperties(domainSPList);
-        setSystemProperties(configSPList);
+        setSystemProperties(domainSPList, forceOverwrite);
+        setSystemProperties(configSPList, forceOverwrite);
 
         if (clusterSPList != null) {
-            setSystemProperties(clusterSPList);
+            setSystemProperties(clusterSPList, forceOverwrite);
 
         }
-        setSystemProperties(serverSPList);
+        setSystemProperties(serverSPList, forceOverwrite);
     }
 
     private List<SystemProperty> getConfigSystemProperties() {
@@ -202,13 +208,13 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         }
     }
 
-    private void setSystemProperties(List<SystemProperty> spList) {
+    private void setSystemProperties(List<SystemProperty> spList, boolean forceOverwrite) {
         for (SystemProperty sp : spList) {
             String name = sp.getName();
             String value = sp.getValue();
 
             if (ok(name)) {
-                setProperty(name, value, true);
+                setProperty(name, value, forceOverwrite);
             }
         }
     }

@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.util.CommandModelData;
 
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.BufferedReader;
@@ -42,6 +41,7 @@ import org.glassfish.common.util.admin.CommandModelImpl;
 import org.glassfish.hk2.api.*;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.jline.builtins.Completers;
 import org.jline.reader.*;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.completer.ArgumentCompleter;
@@ -162,7 +162,6 @@ public class MultimodeCommand extends CLICommand {
         return new BufferedReaderPrompter(new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())));
     }
 
-    @Nonnull
     private Prompter getPrompter() throws IOException {
         if (DISABLE_JLINE) {
             return basicPrompter();
@@ -176,15 +175,12 @@ public class MultimodeCommand extends CLICommand {
             habitat.getDescriptors(descriptor -> descriptor.getAdvertisedContracts().contains("com.sun.enterprise.admin.cli.CLICommand"))
                     .forEach(activeDescriptor -> {
                         String commandName = activeDescriptor.getName();
-                        if (commandName == null) {
-                            return;
-                        }
-                        if (commandName.startsWith("_")) {
+                        if (isInternalCommand(commandName)) {
                             return;
                         }
                         try {
                             habitat.reifyDescriptor(activeDescriptor);
-                            systemCompleter.add(commandName, getCompleter(commandName, activeDescriptor.getImplementationClass()));
+                            systemCompleter.add(commandName, getCompleterForCommand(commandName, activeDescriptor.getImplementationClass()));
                         } catch (Exception ignored) {
                         }
                     });
@@ -203,31 +199,36 @@ public class MultimodeCommand extends CLICommand {
         }
     }
 
-    @Nonnull
-    private static Completer getCompleter(String commandName, Class<?> klass) {
-        ArrayList<String> options = new ArrayList<>(List.of("-?", "--help"));
+    private static Completer getCompleterForCommand(String commandName, Class<?> klass) {
 
-        CommandModelImpl.init(klass, null, null)
+        List<String> options = CommandModelImpl.init(klass, null, null)
                 .entrySet()
                 .stream()
-                .flatMap(MultimodeCommand::parseParam)
-                .forEach(options::add);
+                .flatMap(parameter -> parseParam(parameter.getKey(), parameter.getValue()))
+                .collect(Collectors.toList());
 
-        Completer optionCompleter = new StringsCompleter(options);
 
-        return new ArgumentCompleter(List.of(new StringsCompleter(commandName), optionCompleter));
+        return getArgumentCompleter(commandName, options);
     }
 
-    @Nonnull
-    private static Stream<String> parseParam(Map.Entry<String, ParamModel> s) {
+    private static ArgumentCompleter getArgumentCompleter(String commandName, List<String> options) {
+        return new ArgumentCompleter(
+                new StringsCompleter(commandName),
+                new AggregateCompleter(
+                        new StringsCompleter(options),
+                        new StringsCompleter("-?", "--help"),
+                        new Completers.FileNameCompleter()));
+    }
+
+    private static Stream<String> parseParam(String parameterName, ParamModel option) {
         Stream.Builder<String> builder = Stream.builder();
-        Param param = s.getValue().getParam();
+        Param param = option.getParam();
+        String optionName = !"".equals(param.name()) ? param.name() : parameterName;
         if (param.primary()) {
-            builder.add("[" + s.getKey() + "]");
+            builder.add("[" + optionName + "]");
             return builder.build();
         }
-        String s1 = !"".equals(param.name()) ? param.name() : s.getKey();
-        builder.add("--" + s1);
+        builder.add("--" + optionName);
         String alias = param.alias();
         if (!"".equals(alias)) {
             builder.add("--" + alias);
@@ -236,7 +237,7 @@ public class MultimodeCommand extends CLICommand {
         if (!"".equals(shortName)) {
             builder.add("-" + shortName);
         }
-
+        System.out.println("Param: " + parameterName + " Type: " + option.getType() + " -> " + param);
         return builder.build();
     }
 
@@ -423,6 +424,10 @@ public class MultimodeCommand extends CLICommand {
         return rc;
     }
 
+    private static boolean isInternalCommand(String commandName) {
+        return commandName != null && commandName.startsWith("_");
+    }
+
     private String[] getArgs(String line) throws ArgumentTokenizer.ArgumentException {
         List<String> args = new ArrayList<>();
         ArgumentTokenizer t = new ArgumentTokenizer(line);
@@ -440,14 +445,14 @@ public class MultimodeCommand extends CLICommand {
             try {
                 if (cached == null) {
 
-                    if (computeCache()) return;
+                    if (computeRemoteCommandsCache()) return;
                 }
                 cached.complete(lineReader, parsedLine, list);
             } catch(CommandException ignored){
             }
         }
 
-        private boolean computeCache() throws CommandException {
+        private boolean computeRemoteCommandsCache() throws CommandException {
             String[] remoteCommands = CLIUtil.getRemoteCommands(container, programOpts, env);
             if (remoteCommands == null) {
                 return true;
@@ -456,23 +461,16 @@ public class MultimodeCommand extends CLICommand {
             SystemCompleter systemCompleter = new SystemCompleter();
 
             for (String remoteCommand : remoteCommands) {
-                if (remoteCommand.startsWith("_")) {
+                if (isInternalCommand(remoteCommand)) {
                     continue;
                 }
-                CommandModel optionsForCommand = getOptionsForCommand(remoteCommand);
                 List<String> options =
-                        optionsForCommand.getParameters().stream()
-                                .map(parameter -> Map.entry(remoteCommand, parameter))
-                                .flatMap(MultimodeCommand::parseParam)
+                        getOptionsForCommand(remoteCommand).getParameters().stream()
+                                .flatMap(parameter -> parseParam(parameter.getName(), parameter))
                                 .collect(Collectors.toList());
 
-
-                ArgumentCompleter argumentCompleter = new ArgumentCompleter(
-                        new StringsCompleter(remoteCommand),
-                        new StringsCompleter(options)
-                );
+                ArgumentCompleter argumentCompleter = getArgumentCompleter(remoteCommand, options);
                 systemCompleter.add(remoteCommand, argumentCompleter);
-
             }
 
             systemCompleter.compile(Candidate::new);

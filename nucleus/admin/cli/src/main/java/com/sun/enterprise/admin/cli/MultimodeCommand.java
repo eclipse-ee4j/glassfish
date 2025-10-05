@@ -188,7 +188,7 @@ public class MultimodeCommand extends CLICommand {
             systemCompleter.compile(Candidate::new);
 
             LineReader lineReader = LineReaderBuilder.builder()
-                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter()))
+                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter(), new StringsCompleter("exit", "quit")))
                     .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home"), ".gfclient", ".cli-history"))
                     .terminal(build).build();
             return new JLinePrompter(lineReader);
@@ -237,7 +237,6 @@ public class MultimodeCommand extends CLICommand {
         if (!"".equals(shortName)) {
             builder.add("-" + shortName);
         }
-        System.out.println("Param: " + parameterName + " Type: " + option.getType() + " -> " + param);
         return builder.build();
     }
 

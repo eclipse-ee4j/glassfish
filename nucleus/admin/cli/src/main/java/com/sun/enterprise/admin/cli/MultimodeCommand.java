@@ -30,19 +30,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.CommandModel.ParamModel;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.common.util.admin.CommandModelImpl;
-import org.glassfish.hk2.api.*;
+import org.glassfish.hk2.api.ActiveDescriptor;
+import org.glassfish.hk2.api.DynamicConfiguration;
+import org.glassfish.hk2.api.DynamicConfigurationService;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jline.builtins.Completers;
-import org.jline.reader.*;
+import org.jline.reader.Candidate;
+import org.jline.reader.Completer;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.ParsedLine;
+import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -163,31 +179,7 @@ public class MultimodeCommand extends CLICommand {
             return basicPrompter();
         }
         try {
-            Terminal build = TerminalBuilder.builder()
-                    .system(true)
-                    .build();
-            SystemCompleter systemCompleter = new SystemCompleter();
-
-            habitat.getDescriptors(descriptor -> descriptor.getAdvertisedContracts().contains("com.sun.enterprise.admin.cli.CLICommand"))
-                    .forEach(activeDescriptor -> {
-                        String commandName = activeDescriptor.getName();
-                        if (isInternalCommand(commandName)) {
-                            return;
-                        }
-                        try {
-                            habitat.reifyDescriptor(activeDescriptor);
-                            systemCompleter.add(commandName, getCompleterForCommand(commandName, activeDescriptor.getImplementationClass()));
-                        } catch (Exception ignored) {
-                        }
-                    });
-
-            systemCompleter.compile(Candidate::new);
-
-            LineReader lineReader = LineReaderBuilder.builder()
-                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter(), new StringsCompleter("exit", "quit")))
-                    .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home"), ".gfclient", ".cli-history"))
-                    .terminal(build).build();
-            return new JLinePrompter(lineReader);
+            return new JLinePrompter();
         } catch (Exception e) {
             System.err.println("Warning: Failed to initialize the advanced console (JLine). Features like history and auto-completion will be disabled.");
             System.err.println("Cause: " + e.getMessage());
@@ -249,6 +241,7 @@ public class MultimodeCommand extends CLICommand {
 
     interface Prompter {
         String prompt(String message) throws IOException;
+        void close() throws IOException;
     }
 
     class BufferedReaderPrompter implements Prompter {
@@ -266,18 +259,53 @@ public class MultimodeCommand extends CLICommand {
             }
             return reader.readLine();
         }
+
+        public void close() {
+
+        }
     }
 
     class JLinePrompter implements Prompter {
 
-        private final LineReader reader;
+        private LineReader reader;
+        private Terminal terminal;
 
-        JLinePrompter(LineReader reader) {
-            this.reader = reader;
+        JLinePrompter() throws IOException{
+            setupTerminal();
+        }
+
+        private void setupTerminal() throws IOException {
+            terminal = TerminalBuilder.builder()
+                    .system(true)
+                    .build();
+            SystemCompleter systemCompleter = new SystemCompleter();
+
+            habitat.getDescriptors(descriptor -> descriptor.getAdvertisedContracts().contains("com.sun.enterprise.admin.cli.CLICommand"))
+                    .forEach(activeDescriptor -> {
+                        String commandName = activeDescriptor.getName();
+                        if (isInternalCommand(commandName)) {
+                            return;
+                        }
+                        try {
+                            habitat.reifyDescriptor(activeDescriptor);
+                            systemCompleter.add(commandName, getCompleterForCommand(commandName, activeDescriptor.getImplementationClass()));
+                        } catch (Exception ignored) {
+                        }
+                    });
+
+            systemCompleter.compile(Candidate::new);
+
+            reader = LineReaderBuilder.builder()
+                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter(), new StringsCompleter("exit", "quit")))
+                    .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home"), ".gfclient", ".cli-history"))
+                    .terminal(terminal).build();
         }
 
         @Override
         public String prompt(String message) throws IOException {
+            if (terminal == null) {
+                setupTerminal();
+            }
             try {
                 if (printPrompt) {
                     return reader.readLine(message);
@@ -286,6 +314,12 @@ public class MultimodeCommand extends CLICommand {
             } catch (UserInterruptException ignored) {
                 return null;
             }
+        }
+
+        public void close() throws IOException {
+            reader = null;
+            terminal.close();
+            terminal = null;
         }
     }
 
@@ -338,6 +372,11 @@ public class MultimodeCommand extends CLICommand {
             // XXX - care about their arguments?
             if (command.equals("exit") || command.equals("quit")) {
                 break;
+            }
+
+            if (command.equals("osgi-shell")) {
+                // Stop this JLine instance
+                prompter.close();
             }
 
             CLICommand cmd = null;

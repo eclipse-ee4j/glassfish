@@ -185,7 +185,7 @@ public class UberMain {
             commandParams = new String[split.length - 1];
             for (int i = 1; i < split.length; i++) {
                 commandParams[i - 1] = split[i].trim();
-        }
+            }
         }
         try {
             CommandResult result = commandParams == null

@@ -135,7 +135,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     private void setSystemPropertiesFromEnv(boolean forceOverwrite) {
         // adding our version of some system properties.
         setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()), forceOverwrite);
-        if (HOST_NAME.getSystemPropertyValue().isEmpty()) {
+        if (forceOverwrite || null == System.getProperty(HOST_NAME.getSystemPropertyName())) {
             String hostname = "localhost";
             try {
                 // canonical name checks to make sure host is proper
@@ -144,7 +144,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
                 LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
             }
             if (hostname != null) {
-                setProperty(HOST_NAME.getSystemPropertyName(), hostname, false);
+                setProperty(HOST_NAME.getSystemPropertyName(), hostname, true);
             }
         }
     }

@@ -54,12 +54,11 @@ public class SystemPropertyTest {
         try {
             warFile = createSystemPropertyApp();
             Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
-                    List.of("-Dmy.name=GlassFish"),
-                    "--noPort",
+                    List.of("-Dmy.name=Embedded GlassFish"),
                     warFile.getAbsolutePath()
             );
             assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                    .anyMatch(line -> line.contains("System property my.name: GlassFish")),
+                    .anyMatch(line -> line.contains("System property my.name: Embedded GlassFish")),
                     "Application should print the value of the my.name system property.");
             gfEmbeddedProcess.waitFor(30, TimeUnit.SECONDS);
         } finally {
@@ -74,11 +73,11 @@ public class SystemPropertyTest {
         try {
             warFile = createSystemPropertyApp();
             Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
-                    "create-system-properties my.name=GlassFish",
+                    "create-system-properties my.name=Embedded\\ GlassFish",
                     warFile.getAbsolutePath()
             );
             assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                    .anyMatch(line -> line.contains("System property my.name: GlassFish")),
+                    .anyMatch(line -> line.contains("System property my.name: Embedded GlassFish")),
                     "Application should print the value of the my.name system property.");
             gfEmbeddedProcess.waitFor(30, TimeUnit.SECONDS);
         } finally {
@@ -98,7 +97,7 @@ public class SystemPropertyTest {
                     warFile.getAbsolutePath()
             );
             assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                    .anyMatch(line -> line.contains("System property my.name: GlassFish")),
+                    .anyMatch(line -> line.contains("System property my.name: Embedded GlassFish")),
                     "Application should print the value of the my.name system property.");
             gfEmbeddedProcess.waitFor(30, TimeUnit.SECONDS);
         } finally {
@@ -111,7 +110,7 @@ public class SystemPropertyTest {
         WebArchive warArchive = ShrinkWrap.create(WebArchive.class, warName)
                 .addClass(SystemPropertyApp.class);
         File warFile = new File(warName);
-        warArchive.as(ZipExporter.class).exportTo(warFile);
+        warArchive.as(ZipExporter.class).exportTo(warFile, true);
         logArchiveContent(warArchive, warName, LOG::info);
         return warFile;
     }

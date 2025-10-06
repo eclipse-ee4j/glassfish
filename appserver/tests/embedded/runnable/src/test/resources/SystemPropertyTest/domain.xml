@@ -46,7 +46,7 @@
   </servers>
  <configs>
    <config name="server-config">
-     <system-property name="my.name" value="GlassFish"/>
+     <system-property name="my.name" value="Embedded GlassFish"/>
      <http-service>
         <access-log rotation-interval-in-minutes="15" rotation-suffix="yyyy-MM-dd" />
         <virtual-server id="server" network-listeners="http-listener, https-listener" />

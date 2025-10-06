@@ -35,10 +35,21 @@ import static java.util.stream.Collectors.joining;
  */
 public class GfEmbeddedUtils {
 
-    public static final String DEBUG_PROPERTY_NAME = "glassfish.test.debug.port";
+    public static final String DEBUG_PROPERTY_NAME = "glassfish.test.debug";
+
+    public static Optional<String> getDebugArg() {
+        return Optional.ofNullable(System.getProperty(DEBUG_PROPERTY_NAME))
+                .filter(debugPort -> List.of("none", "disabled", "false").stream()
+                .allMatch(value -> !value.equalsIgnoreCase(debugPort))
+                );
+    }
+
+    public static boolean isDebugEnabled() {
+        return getDebugArg().isPresent();
+    }
 
     public static Process runGlassFishEmbedded(String glassfishEmbeddedJarName, String... additionalArguments) throws
-IOException {
+            IOException {
         return runGlassFishEmbedded(glassfishEmbeddedJarName, List.of(), additionalArguments);
     }
 
@@ -75,12 +86,9 @@ IOException {
     }
 
     private static void addDebugArgsIfDebugEnabled(List<String> arguments) {
-        Optional.ofNullable(System.getProperty(DEBUG_PROPERTY_NAME))
-                .filter(debugPort -> List.of("none", "disabled", "false").stream()
-                        .allMatch(value -> !value.equalsIgnoreCase(debugPort))
-                )
-                .ifPresent(debugPort -> {
-                    arguments.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:" + debugPort);
+        getDebugArg()
+                .ifPresent(debugArgs -> {
+                    arguments.add(debugArgs);
                 });
 
     }

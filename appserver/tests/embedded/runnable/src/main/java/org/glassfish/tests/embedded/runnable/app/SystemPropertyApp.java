@@ -18,7 +18,6 @@ package org.glassfish.tests.embedded.runnable.app;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
-import jakarta.ws.rs.core.Application;
 
 import java.util.logging.Logger;
 
@@ -26,7 +25,7 @@ import java.util.logging.Logger;
  * @author Ondro Mihalyi
  */
 @ApplicationScoped
-public class SystemPropertyApp extends Application {
+public class SystemPropertyApp {
 
     private static final Logger LOG = Logger.getLogger(SystemPropertyApp.class.getName());
 

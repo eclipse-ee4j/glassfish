@@ -87,6 +87,26 @@ public class SystemPropertyTest {
 
     @ParameterizedTest
     @ArgumentsSource(GfEmbeddedJarNameProvider.class)
+    void testSystemPropertyFromPropertyFileDirectly(String gfEmbeddedJarName, TestInfo testInfo) throws Exception {
+        File warFile = null;
+        Path propertiesFile = preparePropertiesFile(testInfo);
+        try {
+            warFile = createSystemPropertyApp();
+            Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
+                    "--properties=" + propertiesFile.toFile().getPath(),
+                    warFile.getAbsolutePath()
+            );
+            assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
+                    .anyMatch(line -> line.contains("System property my.name: Embedded GlassFish")),
+                    "Application should print the value of the my.name system property.");
+            gfEmbeddedProcess.waitFor(30, TimeUnit.SECONDS);
+        } finally {
+            Optional.ofNullable(warFile).ifPresent(File::delete);
+        }
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(GfEmbeddedJarNameProvider.class)
     void testSystemPropertyFromDomainConfig(String gfEmbeddedJarName, TestInfo testInfo) throws Exception {
         File warFile = null;
         Path domainConfigFile = prepareDomainConfig(testInfo);
@@ -123,6 +143,16 @@ public class SystemPropertyTest {
                 domainConfigFile,
                 StandardCopyOption.REPLACE_EXISTING);
         return domainConfigFile;
+    }
+
+    private Path preparePropertiesFile(TestInfo testInfo) throws IOException {
+        String testClassName = testInfo.getTestClass().get().getSimpleName();
+        String testMethodName = testInfo.getTestMethod().get().getName();
+        Path propertiesFile = Paths.get(testClassName + "-" + testMethodName + "-" + "glassfish.properties");
+        Files.copy(getClass().getClassLoader().getResourceAsStream(testClassName + "/glassfish.properties"),
+                propertiesFile,
+                StandardCopyOption.REPLACE_EXISTING);
+        return propertiesFile;
     }
 
 }

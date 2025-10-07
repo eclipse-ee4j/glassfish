@@ -886,7 +886,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.14.0</version>
+                    <version>3.14.1</version>
                     <configuration>
                         <release>17</release>
                         <excludes>
@@ -921,7 +921,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -1138,7 +1138,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.1</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1254,7 +1254,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.18.0</version>
+                    <version>2.19.1</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -1278,7 +1278,6 @@
                                                     <version>20030911</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
                                             <groupId>org.glassfish.external</groupId>
@@ -1293,7 +1292,6 @@
                                                     <version>10.0-b..</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
                                             <groupId>org.glassfish.hk2</groupId>
@@ -1308,7 +1306,6 @@
                                                     <version>2.4.0</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
                                             <groupId>org.glassfish.external</groupId>
@@ -1319,7 +1316,6 @@
                                                     <version>[2,)</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <!-- Jakarta EE 11 major versions to exclude -->
@@ -1337,7 +1333,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1353,7 +1348,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1369,7 +1363,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1385,7 +1378,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1405,7 +1397,6 @@
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1425,7 +1416,6 @@
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1445,7 +1435,6 @@
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1460,7 +1449,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1475,7 +1463,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1494,7 +1481,6 @@
                                                     <version>.*RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1513,7 +1499,6 @@
                                                     <version>.*RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1528,7 +1513,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1547,7 +1531,6 @@
                                                     <version>.*-B.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1562,7 +1545,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1594,7 +1576,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1626,7 +1607,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1641,7 +1621,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1656,7 +1635,6 @@
                                                     <version>.*M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1672,7 +1650,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1687,7 +1664,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1702,7 +1678,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1717,7 +1692,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1732,7 +1706,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1747,7 +1720,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1762,7 +1734,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1777,7 +1748,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1792,7 +1762,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1807,7 +1776,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1822,7 +1790,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1838,7 +1805,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1853,7 +1819,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1872,7 +1837,6 @@
                                                     <version>.*-B.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1899,7 +1863,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1926,7 +1889,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1953,7 +1915,6 @@
                                                     <version>.*-ALPHA.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1969,7 +1930,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                     </rules>
@@ -2343,7 +2303,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.12</jacoco.version>
+                <jacoco.version>0.8.13</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

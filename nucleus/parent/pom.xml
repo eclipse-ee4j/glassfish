@@ -181,6 +181,8 @@
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
         <slf4j.version>2.0.17</slf4j.version>
 
+        <surefire.version>3.5.4</surefire.version>
+        <junit5-surefire-tree-reporter.version>1.4.0</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -954,7 +956,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -975,11 +977,19 @@
                             <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
                             <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
+                        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"/>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>me.fabriciorby</groupId>
+                            <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+                            <version>${junit5-surefire-tree-reporter.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -998,7 +1008,15 @@
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                             <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
+                        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"/>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>me.fabriciorby</groupId>
+                            <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+                            <version>${junit5-surefire-tree-reporter.version}</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
                             <id>integration-test</id>

@@ -22,7 +22,8 @@ and refer zip from the build or from Maven Central Snapshots (same file).
        - It is possible that you will not have permissions to visit the namespace. Ask project leads or
          check if expected artifacts made it to Maven Central, then this was obviously successful.
     2. Verify that a new [7.1.0 tag](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.0) was created
-    3. Verify that it's present in [Maven Central](https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/) (usually takes few minutes now)
+    3. Verify that it's present in [Maven Central](https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish)
+       (usually takes few minutes now)
 9. If everything is OK, then merge the PR.
 10. Delete the branch after merge, only tag will remain.
 11. Upload the new release to the Eclipse download folder.

@@ -143,11 +143,12 @@
         <!-- GlassFish Components -->
         <grizzly.version>4.0.2</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-
-        <glassfish-corba.version>5.0.0</glassfish-corba.version>
         <glassfish-management-api.version>3.3.0</glassfish-management-api.version>
-        <gmbal.version>4.1.0</gmbal.version>
+
+        <!-- ORB -->
         <pfl.version>5.1.0</pfl.version>
+        <glassfish-corba.version>5.0.0</glassfish-corba.version>
+        <gmbal.version>4.1.0</gmbal.version>
 
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
@@ -155,18 +156,18 @@
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
-        <commons-io.version>2.18.0</commons-io.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-io.version>2.20.0</commons-io.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.8</asm.version>
-        <jsch.version>0.2.24</jsch.version>
+        <jsch.version>2.27.3</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
         <jackson.version>2.18.3</jackson.version>
-        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
+        <fasterxml.classmate.version>1.7.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
@@ -179,6 +180,7 @@
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
         <slf4j.version>2.0.17</slf4j.version>
+
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -546,7 +548,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.10</version>
+                <version>5.0.18</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -609,7 +611,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.29.0</version>
+                <version>3.30.6</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -712,6 +714,12 @@
 
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
@@ -744,13 +752,13 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
                     </exclusion>
                 </exclusions>
-                <scope>test</scope>
             </dependency>
             <!-- Used by some dependencies (shrinkwrap, testcontainers) in older versions -->
             <dependency>
@@ -852,6 +860,13 @@
                     <configuration>
                         <includeDate>false</includeDate>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.ow2.asm</groupId>
+                            <artifactId>asm</artifactId>
+                            <version>9.8</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
@@ -869,7 +884,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>3.14.0</version>
                     <configuration>
                         <release>17</release>
                         <excludes>
@@ -918,16 +933,11 @@
                             <artifactId>commons-io</artifactId>
                             <version>${commons-io.version}</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-utils</artifactId>
-                            <version>4.0.2</version>
-                        </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
+                    <version>3.12.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -940,7 +950,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -1006,7 +1016,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>3.5.4</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -1110,7 +1120,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1143,6 +1153,10 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.9.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1193,7 +1207,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>9.0.1</version>
+                    <version>9.0.2</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>

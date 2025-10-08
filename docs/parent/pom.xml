@@ -31,7 +31,7 @@
     <properties>
         <maven.site.skip>true</maven.site.skip>
         <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
-        <asciidoctorj.pdf.version>2.3.19</asciidoctorj.pdf.version>
+        <asciidoctorj.pdf.version>2.3.20</asciidoctorj.pdf.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
         <productName>Eclipse GlassFish</productName>
@@ -173,9 +173,7 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <phase>initialize</phase>

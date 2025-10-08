@@ -44,6 +44,7 @@ import static java.lang.System.Logger.Level.INFO;
 public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
 
     public static final int LIMIT_HTTP_THREADS = 1000;
+    private static final int LIMIT_HTTP_REQUEST_TIMEOUT = 5;
 
     private static final Logger LOG = System.getLogger(GlassFishContainer.class.getName());
     private static final java.util.logging.Logger LOG_GF = java.util.logging.Logger.getLogger("GF");
@@ -56,6 +57,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
     private static final Path PATH_DOCKER_GF_DOMAIN1_SERVER_LOG = PATH_DOCKER_GF_DOMAIN
         .resolve(Path.of("logs", "server.log"));
 
+
     /**
      * Creates preconfigured container with GlassFish.
      *
@@ -65,7 +67,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
      * @param logPrefix
      */
     public GlassFishContainer(MountableFile glassFishZip, Network network, String hostname, String logPrefix) {
-        super("eclipse-temurin:17");
+        super("eclipse-temurin:" + Runtime.version().feature());
         withNetwork(network)
         .withCopyFileToContainer(glassFishZip, "/glassfish.zip")
         .withEnv("TZ", "UTC").withEnv("LC_ALL", "en_US.UTF-8")

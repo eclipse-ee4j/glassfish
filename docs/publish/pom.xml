@@ -232,7 +232,7 @@
             <!-- Publish the entire web site to the gh-pages branch. -->
             <plugin>
                 <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>deploy-site</id>

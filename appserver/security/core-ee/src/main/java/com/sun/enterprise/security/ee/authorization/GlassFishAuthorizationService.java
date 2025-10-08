@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -313,6 +313,9 @@ public class GlassFishAuthorizationService {
 
     public void release() throws PolicyContextException {
         exousiaAuthorizationService.removeStatementsFromPolicy(null);
+
+        // Remove the handlers for policy contexts
+        exousiaAuthorizationService.destroy();
 
         PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
         uncheckedPermissionCache = null;

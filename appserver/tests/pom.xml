@@ -166,6 +166,7 @@
                 <module>application</module>
                 <module>appserv-tests</module>
                 <module>jdbc</module>
+                <module>security</module>
             </modules>
         </profile>
         <profile>
@@ -194,6 +195,7 @@
                 <module>application</module>
                 <module>appserv-tests</module>
                 <module>jdbc</module>
+                <module>security</module>
                 <module>tck</module>
             </modules>
         </profile>

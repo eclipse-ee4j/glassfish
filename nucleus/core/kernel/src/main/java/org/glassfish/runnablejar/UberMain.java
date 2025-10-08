@@ -177,7 +177,8 @@ public class UberMain {
 
     private void executeCommandFromString(String stringCommand) {
         logger.log(FINE, () -> "Executing command: " + stringCommand);
-        String[] split = stringCommand.split(" ");
+        // Split according to empty space but not if empty space is escaped by \
+        String[] split = stringCommand.split("(?<!\\\\)\\s+");
         String command = split[0].trim();
         String[] commandParams = null;
         if (split.length > 1) {

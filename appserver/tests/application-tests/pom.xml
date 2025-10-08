@@ -27,14 +27,14 @@
         <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.glassfish.main.tests.security</groupId>
-    <artifactId>security</artifactId>
+    <groupId>org.glassfish.main.tests.application-tests</groupId>
+    <artifactId>application-tests</artifactId>
     <packaging>pom</packaging>
 
-    <name>Security: Parent</name>
+    <name>Application Tests: Parent</name>
 
     <modules>
-        <module>policy-retranslate</module>
+        <module>security</module>
     </modules>
 
     <properties>

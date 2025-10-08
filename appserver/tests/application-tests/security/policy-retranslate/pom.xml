@@ -44,10 +44,45 @@
     </description>
 
     <dependencies>
-        <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>11.0.0</version>
+         <!-- Jakarta EE APIs-->
+         <dependency>
+             <groupId>jakarta.servlet</groupId>
+             <artifactId>jakarta.servlet-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>jakarta.ws.rs</groupId>
+             <artifactId>jakarta.ws.rs-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>jakarta.enterprise</groupId>
+             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>jakarta.annotation</groupId>
+             <artifactId>jakarta.annotation-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>jakarta.ejb</groupId>
+             <artifactId>jakarta.ejb-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+             <groupId>jakarta.security.enterprise</groupId>
+             <artifactId>jakarta.security.enterprise-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+            <groupId>jakarta.authentication</groupId>
+            <artifactId>jakarta.authentication-api</artifactId>
+            <scope>provided</scope>
+         </dependency>
+         <dependency>
+            <groupId>jakarta.authorization</groupId>
+            <artifactId>jakarta.authorization-api</artifactId>
             <scope>provided</scope>
         </dependency>
         
@@ -86,7 +121,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.8.1</version>
                 <executions>
                     <execution>
                         <id>unpack-glassfish</id>

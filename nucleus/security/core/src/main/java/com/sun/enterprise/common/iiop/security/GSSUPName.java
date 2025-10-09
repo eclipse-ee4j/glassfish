@@ -192,7 +192,7 @@ public class GSSUPName {
         }
 
         /**
-         * Do not append realm name: this ensures that we dont sent "default" or "certificate" to another appserver.
+         * Do not append realm name: this ensures that we don't sent "default" or "certificate" to another appserver.
          *
          * // append an AT-CHAR only if realm is not null. // NOTe: In the current implementation, realm will never // be null. It is
          * either "certificate" or "default".

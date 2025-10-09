@@ -23,7 +23,7 @@ Faster Deployment was achieved by improved file handling; the team replaced cust
 
 ## March 14, 2025 -- Eclipse GlassFish 7.0.23 Available
 
-The key feature for this release is making SSH nodes work on the Windows operating system, and while at it improve the way they work on Linux. The team mainly focussed on this work, and a lot of effort went into it. We're really happy to have achieved the goal to have it fully working. Next to that some important fixes were done for logging and specifically a regression for the security principal was fixed.
+The key feature for this release is making SSH nodes work on the Windows operating system, and while at it improve the way they work on Linux. The team mainly focused on this work, and a lot of effort went into it. We're really happy to have achieved the goal to have it fully working. Next to that some important fixes were done for logging and specifically a regression for the security principal was fixed.
 
 Download links are available from the [GlassFish Download page](download.md).
 
@@ -83,7 +83,7 @@ With much joy we present you Eclipse GlassFish 7.0.16.
 
 Download links are available from the [GlassFish Download page](download.md).
 
-In this summer 2024 release of GlassFish we added several new features. Specifically new is an admin command logger, which logs graphical interactions with the admin UI for usage in scripts. GlassFish now also allows resource references in persistence.xml, and we added a great new feature where we are creating temporary snapshots of the external application libraries during application startup, so any update of these is not longer system dependent. We also did a major refactoring of the aging TLS code and optimized the GJULE logging.
+In this summer 2024 release of GlassFish we added several new features. Specifically new is an admin command logger, which logs graphical interactions with the admin UI for usage in scripts. GlassFish now also allows resource references in persistence.xml, and we added a great new feature where we are creating temporary snapshots of the external application libraries during application startup, so any update of these is no longer system dependent. We also did a major refactoring of the aging TLS code and optimized the GJULE logging.
 
 
 ## May 31, 2024 -- Eclipse GlassFish 7.0.15 Available

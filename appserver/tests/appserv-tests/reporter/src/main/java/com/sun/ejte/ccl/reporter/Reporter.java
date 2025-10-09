@@ -858,7 +858,7 @@ ong with expected and actual result. This is optional as in some case
                 // Now remove TestSuite from Hashtable: PENDING
              if ( writeResult==true )
              {
-                // If we could write teh content properly then remove the TestSuite from Hashtable
+                // If we could write the content properly then remove the TestSuite from Hashtable
              testSuiteHash.remove( testSuiteId.trim() );
              }
             return writeResult;

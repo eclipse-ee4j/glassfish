@@ -57,7 +57,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
     private Set<String> moduleNames;
     private boolean valid;
 
-    // Reset valid flag if teh set of modules changes, so meta-data will be recomputed
+    // Reset valid flag if the set of modules changes, so meta-data will be recomputed
     private Set<String> currentModuleNames() {
         Set<String> currentNames = new HashSet<>();
         for (HK2Module module : modulesRegistry.getModules()) {

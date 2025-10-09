@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -61,6 +62,7 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.completer.ArgumentCompleter;
+import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.reader.impl.completer.SystemCompleter;
 import org.jline.terminal.Terminal;
@@ -187,45 +189,135 @@ public class MultimodeCommand extends CLICommand {
         }
     }
 
-    private static Completer getCompleterForCommand(String commandName, Class<?> klass) {
-
-        List<String> options = CommandModelImpl.init(klass, null, null)
+    private static Completer getCompleterForLocalCommand(String commandName, Class<?> klass) {
+        List<OptionAndCompleter> optionsDesc = CommandModelImpl.init(klass, null, null)
                 .entrySet()
                 .stream()
-                .flatMap(parameter -> parseParam(parameter.getKey(), parameter.getValue()))
+                .flatMap(parameter -> toOptionAndCompleter(parameter.getKey(), parameter.getValue()))
                 .collect(Collectors.toList());
 
-
-        return getArgumentCompleter(commandName, options);
+        return getArgumentCompleter(commandName, optionsDesc);
     }
 
-    private static ArgumentCompleter getArgumentCompleter(String commandName, List<String> options) {
+    private static Completer getArgumentCompleter(String commandName, List<OptionAndCompleter> optionsDesc) {
+
+        optionsDesc.add(new OptionAndCompleter("--help", NullCompleter.INSTANCE, OptionAndCompleter.Type.LONG_OPTION));
+        optionsDesc.add(new OptionAndCompleter("-?", NullCompleter.INSTANCE, OptionAndCompleter.Type.SHORT_OPTION));
+
+        List<String> optionsString = optionsDesc.stream()
+                .filter(option -> option.type != OptionAndCompleter.Type.PRIMARY)
+                .map(option -> option.option)
+                .collect(Collectors.toList());
+
+        List<Completers.OptDesc> optDescs = optionsDesc.stream().flatMap(option -> {
+            switch (option.type) {
+                case LONG_OPTION:
+                    return Stream.of(new Completers.OptDesc(null, option.option, null, option.completer));
+                case SHORT_OPTION:
+                    return Stream.of(new Completers.OptDesc(option.option, null, null, option.completer));
+                case PRIMARY:
+                    return Stream.of();
+            }
+            throw new IllegalStateException(option.type.name());
+        }).collect(Collectors.toList());
+
+        Completer completerForPrimaryOption = optionsDesc.stream()
+                .filter(option -> option.type == OptionAndCompleter.Type.PRIMARY)
+                .map(option -> option.completer)
+                .findFirst()
+                .orElse(NullCompleter.INSTANCE);
+
         return new ArgumentCompleter(
                 new StringsCompleter(commandName),
-                new AggregateCompleter(
-                        new StringsCompleter(options),
-                        new StringsCompleter("-?", "--help"),
-                        new Completers.FileNameCompleter()));
+                new AggregateCompleter(new Completers.OptionCompleter(new StringsCompleter(optionsString), ignored -> optDescs, 1), completerForPrimaryOption));
     }
 
-    private static Stream<String> parseParam(String parameterName, ParamModel option) {
-        Stream.Builder<String> builder = Stream.builder();
+    static class OptionAndCompleter {
+        final String option;
+        final Completer completer;
+        final Type type;
+
+        public enum Type {
+            LONG_OPTION,
+            SHORT_OPTION,
+            PRIMARY
+        }
+
+        OptionAndCompleter(String option, Completer completer, Type type) {
+            this.option = option;
+            this.completer = completer;
+            this.type = type;
+        }
+    }
+
+    private static Stream<OptionAndCompleter> toOptionAndCompleter(String parameterName, ParamModel option) {
+
         Param param = option.getParam();
         String optionName = !"".equals(param.name()) ? param.name() : parameterName;
+        if (isInternalCommand(optionName)) {
+            return Stream.of();
+        }
+        Stream.Builder<OptionAndCompleter> builder = Stream.builder();
         if (param.primary()) {
-            builder.add("[" + optionName + "]");
+            builder.add(new OptionAndCompleter(optionName, getValueCompleter(option), OptionAndCompleter.Type.PRIMARY));
             return builder.build();
         }
-        builder.add("--" + optionName);
+
+        String shortName = param.shortName();
         String alias = param.alias();
         if (!"".equals(alias)) {
-            builder.add("--" + alias);
+            builder.add(new OptionAndCompleter("--" + alias, getValueCompleter(option), OptionAndCompleter.Type.LONG_OPTION));
         }
-        String shortName = param.shortName();
+
         if (!"".equals(shortName)) {
-            builder.add("-" + shortName);
+            builder.add(new OptionAndCompleter("-" + shortName, getValueCompleter(option), OptionAndCompleter.Type.SHORT_OPTION));
         }
+
+        builder.add(new OptionAndCompleter("--" + optionName, getValueCompleter(option),  OptionAndCompleter.Type.LONG_OPTION));
+
         return builder.build();
+    }
+
+    private static Completer getValueCompleter(ParamModel option) {
+        if (option.getType() == File.class) {
+            return new Completers.FileNameCompleter();
+        }
+        if (option.getType() == boolean.class || option.getType() == Boolean.class) {
+            return new StringsCompleter("true", "false");
+        }
+
+        String acceptableValues = option.getParam().acceptableValues();
+        if (!"".equals(acceptableValues)) {
+            return new StringsCompleter(Arrays.stream(acceptableValues.split("" + option.getParam().separator()))
+                    .map(String::trim)
+                    .toArray(String[]::new));
+        }
+        // These options have String type and no other information available.
+        // Searching for "dir" can return "redirect-port" and "file" can return "profile"
+        if (List.of("nodedir",
+                "installdir",
+                "sshkeyfile",
+                "sshpublickeyfile",
+                "backupdir",
+                "domaindir",
+                "filename",
+                "sqlfilename",
+                "adminpasswordfile",
+                "classpath",
+                "nativelibrarypath",
+                "logfile",
+                "transactionlogdir"
+        ).contains(option.getName())) {
+            return new Completers.FileNameCompleter();
+        }
+        return (LineReader line, ParsedLine parsedLine, List<Candidate> candidates) -> {
+            // For cases where we don't know which values would be valid, only return the
+            // FileNameCompleter when the user use a file-like value
+            if (Stream.of(".", "..", "../", "~", "/", "..\\", "./")
+                    .anyMatch(parsedLine.word()::startsWith)) {
+                new Completers.FileNameCompleter().complete(line, parsedLine, candidates);
+            }
+        };
     }
 
     private static void atomicReplace(ServiceLocator locator, ProgramOptions options) {
@@ -288,15 +380,16 @@ public class MultimodeCommand extends CLICommand {
                         }
                         try {
                             habitat.reifyDescriptor(activeDescriptor);
-                            systemCompleter.add(commandName, getCompleterForCommand(commandName, activeDescriptor.getImplementationClass()));
+                            systemCompleter.add(commandName, getCompleterForLocalCommand(commandName, activeDescriptor.getImplementationClass()));
                         } catch (Exception ignored) {
                         }
                     });
 
+            systemCompleter.add(List.of("exit", "quit"), NullCompleter.INSTANCE);
             systemCompleter.compile(Candidate::new);
 
             reader = LineReaderBuilder.builder()
-                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter(), new StringsCompleter("exit", "quit")))
+                    .completer(new AggregateCompleter(systemCompleter, new RemoteCommandsCompleter()))
                     .variable(LineReader.HISTORY_FILE, Paths.get(System.getProperty("user.home"), ".gfclient", ".cli-history"))
                     .terminal(terminal).build();
         }
@@ -459,7 +552,7 @@ public class MultimodeCommand extends CLICommand {
     }
 
     private static boolean isInternalCommand(String commandName) {
-        return commandName != null && commandName.startsWith("_");
+        return commandName == null || commandName.startsWith("_");
     }
 
     private String[] getArgs(String line) throws ArgumentTokenizer.ArgumentException {
@@ -498,12 +591,11 @@ public class MultimodeCommand extends CLICommand {
                 if (isInternalCommand(remoteCommand)) {
                     continue;
                 }
-                List<String> options =
-                        getOptionsForCommand(remoteCommand).getParameters().stream()
-                                .flatMap(parameter -> parseParam(parameter.getName(), parameter))
-                                .collect(Collectors.toList());
-
-                ArgumentCompleter argumentCompleter = getArgumentCompleter(remoteCommand, options);
+                List<OptionAndCompleter> options = getOptionsForCommand(remoteCommand).getParameters()
+                        .stream()
+                        .flatMap(parameter -> toOptionAndCompleter(parameter.getName(), parameter))
+                        .collect(Collectors.toList());
+                Completer argumentCompleter = getArgumentCompleter(remoteCommand, options);
                 systemCompleter.add(remoteCommand, argumentCompleter);
             }
 

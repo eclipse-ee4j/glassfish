@@ -39,7 +39,7 @@ The Zip distributions can be found on following paths:
 * `mvn clean install -Pfastest -T4C` - Building all distribution artifacts as fast as possible. Excludes everything not serving this purpose. Typical time: 1.5 minutes.
 
 After the build, you can run GlassFish in the following ways:
-* Run GlassFish server directly: Navigate to `appserver/distributions/glassfish/target/stage/glassfish7` - it's an unpacked version of GlassFish Full. Then you can run it as usual, e.g. with `bin/startserv`
+* Run GlassFish server directly: Navigate to `appserver/distributions/glassfish/target/stage/glassfish7` - it is an unpacked version of GlassFish Full. Then you can run it as usual, e.g. with `bin/startserv`
 * Run GlassFish server from a ZIP: A zip file is generated either at `appserver/distributions/glassfish/target/glassfish.zip` or in your local maven repository, e.g. at `<HOME>/.m2/repository/org/glassfish/main/distributions/glassfish/<VERSION>/glassfish-<VERSION>.zip`. Unpack it and run as usual
 * Run Embedded GlassFish: Find the JAR file at `appserver/extras/embedded/all/target/glassfish-embedded-all.jar` or in your local maven repository, e.g. at `<HOME>/.m2/repository/org/glassfish/main/extras/glassfish-embedded-all/<VERSION>/glassfish-embedded-all-<VERSION>.jar. Then run it with `java -jar glassfish-embedded-all.jar`
 
@@ -53,9 +53,9 @@ Note that this applies just for tests which are executed by Maven and which use 
 
 ### Special Profiles
 
-* `staging` - In some development stages may happen that some dependencies are available just in OSSRH staging repository.
+* `staging` - In some development stages it may happen that some dependencies are available just in the OSSRH staging repository.
   Then you have to use this profile, which is not enabled by default.
-* `jacoco` - enables the [JaCoCo](https://www.eclemma.org/jacoco/) agent in tests, so you can import it's output to you editor, ie. Eclipse, and see the code coverage.
+* `jacoco` - enables the [JaCoCo](https://www.eclemma.org/jacoco/) agent in tests, so you can import its output to your editor, i.e. Eclipse, and see the code coverage.
 * `jacoco-merge` - merges all JaCoCo output files found in subdirectories and merges them into one. It is useful to see code which wasn't even touched by tests.
 
 ### Special Scripts
@@ -80,7 +80,7 @@ They are quite old and have high technical debt, but at this moment they still p
 
 :warning: If the script fails, sometimes it doesn't stop the domain and you have to do that manually.
 
-:warning: Some of the scripts do inplace filtering or generate other sources which remain and later affect next executions. You have to remove those changes manually.
+:warning: Some of the scripts do in-place filtering or generate other sources which remain and later affect subsequent executions. You have to remove those changes manually.
 
 * `./runtests.sh batch_all` - Usual time: 1 minute
 * `./runtests.sh cdi_all` - Usual time: 6 minutes

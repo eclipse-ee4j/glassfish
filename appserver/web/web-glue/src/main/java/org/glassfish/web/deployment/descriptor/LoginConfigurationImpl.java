@@ -37,7 +37,7 @@ public class LoginConfigurationImpl extends Descriptor implements LoginConfigura
 
     static final Logger _logger = LogFacade.getLogger();
 
-    /** teh client authenticates using http basic authentication. */
+    /** the client authenticates using http basic authentication. */
     public static final String AUTHENTICATION_METHOD_BASIC = LoginConfiguration.BASIC_AUTHENTICATION;
     /** Digest authentication. */
     public static final String AUTHENTICATION_METHOD_DIGEST = LoginConfiguration.DIGEST_AUTHENTICATION;

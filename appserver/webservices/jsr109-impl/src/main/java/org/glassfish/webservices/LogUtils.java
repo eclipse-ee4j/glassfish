@@ -281,7 +281,7 @@ public final class LogUtils {
     public static final String SERVLET_ENDPOINT_FAILURE = LOGMSG_PREFIX + "-00078";
 
     @LogMessageInfo(
-            message = "Error occured",
+            message = "Error occurred",
             level = "SEVERE",
             cause = "unknown",
             action = "unknown")

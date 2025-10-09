@@ -27,7 +27,7 @@ import org.testcontainers.containers.Network;
 public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
 
     public GlassFishContainer(Network network, String hostname, String logPrefix, String command) {
-        super("eclipse-temurin:17");
+        super("eclipse-temurin:" + Runtime.version().feature());
         withNetwork(network)
         .withEnv("TZ", "UTC").withEnv("LC_ALL", "en_US.UTF-8")
         .withStartupAttempts(1)

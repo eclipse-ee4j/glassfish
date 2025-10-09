@@ -51,7 +51,9 @@ public enum Option {
             + " - Keys that start with the \"" + Arguments.DEPLOY_KEY_PREFIX
             + "\" prefix, followed by any text. The value will be"
             + " treated as an application to deploy at startup, as if it was specified on the command line.\n"
-            + "For example, the GlassFish domain directory can be specified with the usual GlassFish Embedded"
+            + " - If a property name doesn't match any already supported patterns and is not"
+            + " a recognized GlassFish property, it will be set as a system property, if it's not already defined.\n"
+            + "\nFor example, the GlassFish domain directory can be specified with the usual GlassFish Embedded"
             + " property \"glassfish.embedded.tmpdir=myDomainDir\", as well as with the property"
             + " \"domainDir=myDomainDir\" that represents the \"--domainDir=myDomainDir\" command-line option."
             + " A command to deploy an application can be specified via a property key"

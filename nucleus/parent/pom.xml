@@ -104,7 +104,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
-        <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
+        <hibernate-validator.version>8.0.3.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
@@ -118,20 +118,20 @@
         <hk2.plugin.version>3.1.1</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
-        <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.5</jakarta.jaxb-impl.version>
+        <jakarta.xml.bind-api.version>4.0.4</jakarta.xml.bind-api.version>
+        <jakarta.jaxb-impl.version>4.0.6</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
         <jersey.version>3.1.11</jersey.version>
 
         <!-- Jakarta Mail -->
-        <jakarta.mail-api.version>2.1.3</jakarta.mail-api.version>
-        <angus.mail.version>2.0.3</angus.mail.version>
+        <jakarta.mail-api.version>2.1.5</jakarta.mail-api.version>
+        <angus.mail.version>2.0.5</angus.mail.version>
 
         <!-- Jakarta Activation -->
-        <activation.version>2.1.3</activation.version>
-        <angus.activation.version>2.0.2</angus.activation.version>
+        <activation.version>2.1.4</activation.version>
+        <angus.activation.version>2.0.3</angus.activation.version>
 
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
@@ -143,11 +143,12 @@
         <!-- GlassFish Components -->
         <grizzly.version>4.0.2</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
-
-        <glassfish-corba.version>5.0.0</glassfish-corba.version>
         <glassfish-management-api.version>3.3.0</glassfish-management-api.version>
-        <gmbal.version>4.1.0</gmbal.version>
+
+        <!-- ORB -->
         <pfl.version>5.1.0</pfl.version>
+        <glassfish-corba.version>5.0.0</glassfish-corba.version>
+        <gmbal.version>4.1.0</gmbal.version>
 
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
@@ -155,18 +156,19 @@
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
-        <commons-io.version>2.18.0</commons-io.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-io.version>2.20.0</commons-io.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
-        <asm.version>9.8</asm.version>
-        <jsch.version>0.2.24</jsch.version>
+        <asm.version>9.9</asm.version>
+        <jsch.version>2.27.3</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.18.3</jackson.version>
-        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
+        <jackson.version>2.20.0</jackson.version>
+        <jackson.version2>2.20</jackson.version2>
+        <fasterxml.classmate.version>1.7.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
@@ -174,11 +176,14 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.6.0</easymock.version>
-        <junit.version>5.13.4</junit.version>
-        <junit-platform.version>1.13.4</junit-platform.version>
+        <junit.version>5.14.0</junit.version>
+        <junit-platform.version>1.14.0</junit-platform.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
         <slf4j.version>2.0.17</slf4j.version>
+
+        <surefire.version>3.5.4</surefire.version>
+        <junit5-surefire-tree-reporter.version>1.4.0</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -546,7 +551,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.10</version>
+                <version>5.0.18</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -609,7 +614,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.29.0</version>
+                <version>3.30.6</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -680,7 +685,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson.version2}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -710,6 +715,12 @@
                 <version>${mimepull.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
@@ -744,13 +755,13 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
                     </exclusion>
                 </exclusions>
-                <scope>test</scope>
             </dependency>
             <!-- Used by some dependencies (shrinkwrap, testcontainers) in older versions -->
             <dependency>
@@ -869,7 +880,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>3.14.1</version>
                     <configuration>
                         <release>17</release>
                         <excludes>
@@ -904,7 +915,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -918,16 +929,11 @@
                             <artifactId>commons-io</artifactId>
                             <version>${commons-io.version}</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-utils</artifactId>
-                            <version>4.0.2</version>
-                        </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
+                    <version>3.12.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -940,11 +946,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -965,11 +971,19 @@
                             <glassfish.suspend>${glassfish.suspend}</glassfish.suspend>
                             <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
+                        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"/>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>me.fabriciorby</groupId>
+                            <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+                            <version>${junit5-surefire-tree-reporter.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -988,7 +1002,15 @@
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
                             <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         </systemPropertyVariables>
+                        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"/>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>me.fabriciorby</groupId>
+                            <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+                            <version>${junit5-surefire-tree-reporter.version}</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
                             <id>integration-test</id>
@@ -1006,7 +1028,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>3.5.4</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -1110,7 +1132,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.1</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1143,6 +1165,10 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.9.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1193,7 +1219,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>9.0.1</version>
+                    <version>9.0.2</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1222,7 +1248,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.18.0</version>
+                    <version>2.19.1</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -1246,7 +1272,6 @@
                                                     <version>20030911</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
                                             <groupId>org.glassfish.external</groupId>
@@ -1261,7 +1286,6 @@
                                                     <version>10.0-b..</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
                                             <groupId>org.glassfish.hk2</groupId>
@@ -1276,7 +1300,6 @@
                                                     <version>2.4.0</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
                                             <groupId>org.glassfish.external</groupId>
@@ -1287,10 +1310,22 @@
                                                     <version>[2,)</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <!-- Jakarta EE 11 major versions to exclude -->
+                                        <rule>
+                                            <groupId>jakarta.activation</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
 
                                         <rule>
                                             <groupId>jakarta.annotation</groupId>
@@ -1305,7 +1340,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1321,7 +1355,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1337,7 +1370,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1353,7 +1385,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1373,7 +1404,6 @@
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1393,7 +1423,6 @@
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1413,7 +1442,6 @@
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1428,7 +1456,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1443,7 +1470,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1462,7 +1488,6 @@
                                                     <version>.*RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1481,7 +1506,6 @@
                                                     <version>.*RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1496,7 +1520,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1515,7 +1538,6 @@
                                                     <version>.*-B.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1530,7 +1552,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1562,7 +1583,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1594,7 +1614,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1609,7 +1628,20 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.mail</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
                                         </rule>
 
                                         <rule>
@@ -1624,7 +1656,6 @@
                                                     <version>.*M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1640,7 +1671,27 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.apache.derby</groupId>
+                                            <artifactId>derby</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[10.17,)</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.external</groupId>
+                                            <artifactId>derby</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[10.17,)</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
                                         </rule>
 
                                         <rule>
@@ -1655,7 +1706,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1670,7 +1720,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1685,7 +1734,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1700,7 +1748,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1715,7 +1762,16 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.mq</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[6.6,)</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
                                         </rule>
 
                                         <rule>
@@ -1730,7 +1786,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1745,7 +1800,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1760,7 +1814,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1775,7 +1828,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1790,7 +1842,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1806,7 +1857,6 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1821,7 +1871,51 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.eclipse.angus</groupId>
+                                            <artifactId>angus-activation</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.eclipse.microprofile.jwt</groupId>
+                                            <artifactId>microprofile-jwt-auth-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.eclipse.angus</groupId>
+                                            <artifactId>angus-mail</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
                                         </rule>
 
                                         <rule>
@@ -1840,7 +1934,6 @@
                                                     <version>.*-B.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1867,7 +1960,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1894,7 +1986,6 @@
                                                     <version>.*Alpha.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1921,7 +2012,6 @@
                                                     <version>.*-ALPHA.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
                                         </rule>
 
                                         <rule>
@@ -1937,7 +2027,16 @@
                                                     <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.slf4j</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
                                         </rule>
 
                                     </rules>
@@ -2311,7 +2410,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.12</jacoco.version>
+                <jacoco.version>0.8.13</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

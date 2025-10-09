@@ -270,7 +270,7 @@ public class CommandResource {
             @HeaderParam(RemoteRestAdminCommand.COMMAND_MODEL_MATCH_HEADER) String modelETag,
             @CookieParam(SESSION_COOKIE_NAME) Cookie jSessionId, ParamsWithPayload pwp) {
         CommandName commandName = new CommandName(normalizeCommandName(command));
-        RestLogging.restLogger.log(Level.FINEST, "execCommandMultInMultOut({0})", commandName);
+        RestLogging.restLogger.log(Level.FINEST, "execCommandMultInSseOut({0})", commandName);
         ParameterMap data = null;
         if (pwp != null) {
             data = pwp.getParameters();
@@ -285,7 +285,7 @@ public class CommandResource {
             @HeaderParam(RemoteRestAdminCommand.COMMAND_MODEL_MATCH_HEADER) String modelETag,
             @CookieParam(SESSION_COOKIE_NAME) Cookie jSessionId) {
         CommandName commandName = new CommandName(normalizeCommandName(command));
-        RestLogging.restLogger.log(Level.FINEST, "execCommandEmptyInMultOut({0})", commandName);
+        RestLogging.restLogger.log(Level.FINEST, "execCommandEmptyInSseOut({0})", commandName);
         ParameterMap data = new ParameterMap();
         return executeSseCommand(commandName, null, data, modelETag, jSessionId);
     }

@@ -37,6 +37,7 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.boot.impl.GlassFishImpl;
+import org.glassfish.main.jdke.props.SystemProperties;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELETE;
 
@@ -79,7 +80,12 @@ class AutoDisposableGlassFish extends GlassFishImpl {
                         && resultList.getOutput().contains(propertyPrefix)) {
                     knownPropertyPrefixes.add(propertyPrefix);
                 } else {
-                    // unknown property prefix, skip it
+                    if (!key.startsWith("com.sun.aas.") && !key.startsWith("-")) {
+                        // unknown property, set as system property
+                        LOG.log(Level.INFO, "Setting system property " + key + " from GlassFish properties, it doesn't match any known property");
+                        SystemProperties.setProperty(key, gfProps.getProperty(key), false);
+                    }
+                    // not a dotted name, doesn't start with a supported prefix, do not set it later
                     continue;
                 }
             }

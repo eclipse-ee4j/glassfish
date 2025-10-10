@@ -15,6 +15,8 @@
  */
 package org.glassfish.tests.embedded.runnable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -31,20 +33,14 @@ public class TestArgumentProviders {
 
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext ec) throws Exception {
-            return Stream.of(Arguments.of("glassfish-embedded-all.jar"), Arguments.of("glassfish-embedded-web.jar"));
+            List<Arguments> arguments = new ArrayList<>();
+            arguments.add(Arguments.of("glassfish-embedded-all.jar"));
+            if (!GfEmbeddedUtils.isDebugEnabled()) {
+                arguments.add(Arguments.of("glassfish-embedded-web.jar"));
+            }
+            return arguments.stream();
         }
 
     }
 
-    /**
-     * For testing a single execution when debugging
-     */
-    public static class SingleGfEmbeddedJarNameProvider implements ArgumentsProvider {
-
-        @Override
-        public Stream<? extends Arguments> provideArguments(ExtensionContext ec) throws Exception {
-            return Stream.of(Arguments.of("glassfish-embedded-all.jar"));
-        }
-
-    }
 }

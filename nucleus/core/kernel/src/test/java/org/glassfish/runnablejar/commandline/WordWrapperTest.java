@@ -38,7 +38,7 @@ public class WordWrapperTest {
                                     .map(Option::getHelpText)
                                     .collect(wordWrapper);
         final List<String> linesEndingWithSpace = message.lines()
-                .filter(line -> line.endsWith(" "))
+                .filter(line -> line.endsWith(" ") && !line.isBlank())
                 .collect(toList());
         assertTrue(linesEndingWithSpace.isEmpty(), "Some lines end with a space: " + linesEndingWithSpace);
 

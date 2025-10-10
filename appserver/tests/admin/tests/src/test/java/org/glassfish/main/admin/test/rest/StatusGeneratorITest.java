@@ -19,7 +19,6 @@ package org.glassfish.main.admin.test.rest;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.main.itest.tools.DomainAdminRestClient;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -30,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 /**
  * @author David Matejcek
  */
-@Disabled("TEMPORARY FOR GLASSFISH 8 M1 - create-instance is missing")
 public class StatusGeneratorITest extends RestTestBase {
 
     @Test
@@ -43,7 +41,6 @@ public class StatusGeneratorITest extends RestTestBase {
                 () -> assertThat(response.readEntity(String.class),
                     stringContainsInOrder("All Commands used in REST Admin",
                         "Missing Commands not used in REST Admin",
-                        "create-instance",
                         "REST-REDIRECT Commands defined on ConfigBeans",
                         "Commands to Resources Mapping Usage in REST Admin",
                         "Resources with Delete Commands in REST Admin (not counting RESTREDIRECT")

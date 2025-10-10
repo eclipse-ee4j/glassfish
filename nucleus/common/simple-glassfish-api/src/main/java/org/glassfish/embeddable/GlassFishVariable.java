@@ -128,7 +128,6 @@ public enum GlassFishVariable {
         return this.sysPropName;
     }
 
-
     /**
      * The map contains pairs of {@link #getEnvName()} and {@link #getSystemPropertyName()}.
      * When the {@link #getEnvName()} returns null, the mapping is not included.

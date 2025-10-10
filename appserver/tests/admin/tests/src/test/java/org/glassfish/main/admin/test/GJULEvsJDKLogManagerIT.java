@@ -31,7 +31,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Example from the Windows command line:
- * <code>.\appserver\tests\admin\tests\target\glassfish7\bin\asadmin create-jvm-options '-XX\:ErrorFile=C\:\\Users\\vboxuser\\glassfish 7\\java_error%%p.log'</code>
+ * <code>.\appserver\tests\admin\tests\target\glassfish8\bin\asadmin create-jvm-options '-XX\:ErrorFile=C\:\\Users\\vboxuser\\glassfish 8\\java_error%%p.log'</code>
  * <p>
  * Apostrophes are needed to prevent interpretation for any command line interpreter
  * Beware of quoting, especially on windows it completely changes interpretation rules.

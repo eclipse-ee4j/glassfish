@@ -285,6 +285,9 @@ The value will be treated as a command to execute at startup.
     - Keys that start with the "deploy." prefix, followed by any text. The
 value will be treated as an application to deploy at startup, as if it
 was specified on the command line.
+    - If a property name doesn't match any already supported patterns and is not
+a recognized GlassFish property, it will be set as a system property, if
+it's not already defined.
 For example, the ${productName} domain directory can be specified with the
 usual Embedded ${productName} property
 "glassfish.embedded.tmpdir=myDomainDir", as well as with the property

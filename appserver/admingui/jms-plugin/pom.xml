@@ -66,8 +66,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.messaging.mq</groupId>
-            <artifactId>imqjmx</artifactId>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>mqjmx-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

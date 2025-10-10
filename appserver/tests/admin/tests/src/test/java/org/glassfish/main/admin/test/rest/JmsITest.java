@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author jasonlee 2010
  * @author David Matejcek 2022
  */
-@Disabled("TEMPORARY FOR GLASSFISH 8 M1 - Unable to delete the temporary JMS Resource test_jms_adapter.")
 public class JmsITest extends RestTestBase {
     private static final String URL_ADMIN_OBJECT_RESOURCE = "/domain/resources/admin-object-resource";
     private static final String URL_CONNECTOR_CONNECTION_POOL = "/domain/resources/connector-connection-pool";

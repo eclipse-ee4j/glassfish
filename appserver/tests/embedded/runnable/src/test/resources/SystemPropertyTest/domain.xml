@@ -17,7 +17,6 @@
 -->
 
 <domain log-root="${com.sun.aas.instanceRoot}/logs" application-root="${com.sun.aas.instanceRoot}/applications" version="10.0">
-  <property name="administrative.domain.name" value="myDomain"/>
   <security-configurations>
     <authorization-service default="true" name="authorizationService">
       <security-provider name="simpleAuthorization" type="Simple" provider-name="simpleAuthorizationProvider">
@@ -47,6 +46,7 @@
   </servers>
  <configs>
    <config name="server-config">
+     <system-property name="my.name" value="Embedded GlassFish"/>
      <http-service>
         <access-log rotation-interval-in-minutes="15" rotation-suffix="yyyy-MM-dd" />
         <virtual-server id="server" network-listeners="http-listener, https-listener" />
@@ -140,8 +140,8 @@
       <transaction-service tx-log-dir="${com.sun.aas.instanceRoot}/logs" >
       </transaction-service>
       <java-config>
-        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
-        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12</jvm-options>
+        <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks</jvm-options>
+        <jvm-options>-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks</jvm-options>
         <jvm-options>-Dorg.glassfish.jms.InitializeOnDemand=true</jvm-options>
       </java-config>
       <network-config>
@@ -172,4 +172,5 @@
       </thread-pools>
     </config>
   </configs>
+  <property name="administrative.domain.name" value="domain1"/>
 </domain>

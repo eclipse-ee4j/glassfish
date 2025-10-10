@@ -28,7 +28,6 @@ import org.glassfish.main.itest.tools.DomainAdminRestClient;
 import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -39,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author jasonlee
  */
-@Disabled("TEMPORARY FOR GLASSFISH 8 M1 - timeout")
 public class ApplicationITest extends RestTestBase {
 
 

@@ -313,8 +313,8 @@ If a variable reference is not resolved, the reference will not be replaced. So,
 
 **System properties that adjust variable resolution:**
 
-* `org.glassfish.variableexpansion.envvars.disabled` -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of {productName}
-* `org.glassfish.variableexpansion.envvars.preferred` - changes the priority - values are resolved first from environment variables and then from system properties
+* `org.glassfish.variableExpansion.envDisabled` -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of {productName}
+* `org.glassfish.variableExpansion.envPreferred` - changes the priority - values are resolved first from environment variables and then from system properties
 
 The following is a list of variables defined by {productName} that can be used in variable references:
 

@@ -98,6 +98,9 @@
         <jakarta.concurrent-api.version>3.1.1</jakarta.concurrent-api.version>
         <concurro.version>3.1.0-M6</concurro.version>
 
+        <!-- Jakarta Interceptors -->
+        <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
+
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
         <jakarta.security-api.version>4.0.0</jakarta.security-api.version>
@@ -107,7 +110,6 @@
         <soteria.version>4.0.1</soteria.version>
         <exousia.version>3.0.0</exousia.version>
         <epicyro.version>3.1.0</epicyro.version>
-        <!-- Dependencies -->
         <nimbus.version>10.5</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
@@ -159,9 +161,6 @@
         <jakarta.cdi-api.version>4.1.0</jakarta.cdi-api.version>
         <weld.version>6.0.3.Final</weld.version>
         <jboss.classfilewriter.version>1.3.1.Final</jboss.classfilewriter.version>
-
-        <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.0</jakarta.mvc-api.version>
@@ -329,9 +328,9 @@
                 <version>${openmq.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.messaging.mq</groupId>
-                <artifactId>imqjmx</artifactId>
-                <version>4.6-b01</version>
+                <groupId>org.glassfish.mq</groupId>
+                <artifactId>mqjmx-api</artifactId>
+                <version>${openmq.version}</version>
             </dependency>
 
             <!-- Jakarta Data-->

@@ -56,6 +56,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jline.builtins.Completers;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -312,7 +313,7 @@ public class MultimodeCommand extends CLICommand {
         }
         return (LineReader line, ParsedLine parsedLine, List<Candidate> candidates) -> {
             // For cases where we don't know which values would be valid, only return the
-            // FileNameCompleter when the user use a file-like value
+            // FileNameCompleter when the user tries to autocomplete a file-like value
             if (Stream.of(".", "..", "../", "~", "/", "..\\", "./")
                     .anyMatch(parsedLine.word()::startsWith)) {
                 new Completers.FileNameCompleter().complete(line, parsedLine, candidates);
@@ -404,7 +405,7 @@ public class MultimodeCommand extends CLICommand {
                     return reader.readLine(message);
                 }
                 return reader.readLine();
-            } catch (UserInterruptException ignored) {
+            } catch (UserInterruptException | EndOfFileException ignored) {
                 return null;
             }
         }

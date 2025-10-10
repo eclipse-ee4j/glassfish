@@ -1907,5 +1907,11 @@
                 </exclusion>
             </exclusions>
        </dependency>
+
+        <!-- JLine for Admin CLI -->
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+        </dependency>
     </dependencies>
 </project>

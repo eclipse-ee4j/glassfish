@@ -17,6 +17,7 @@
 package org.glassfish.config.support;
 
 import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -47,8 +48,6 @@ public class TranslatedConfigView implements ConfigView {
 
     private static final String ALIAS_TOKEN = "ALIAS";
     private static final int MAX_SUBSTITUTION_DEPTH = 100;
-    private static final String DISABLE_ENV_VAR_EXPANSION_PROPERTY = "org.glassfish.variableexpansion.envvars.disabled";
-    private static final String ENV_VAR_EXPANSION_PREFERRED_PROPERTY = "org.glassfish.variableexpansion.envvars.preferred";
 
     public static String expandValue(String value) {
         return (String) getTranslatedValue(value);
@@ -113,10 +112,10 @@ public class TranslatedConfigView implements ConfigView {
             // such as a=${a} or a=foo ${b} and b=bar {$a}
             Matcher m = p.matcher(stringValue);
             String origValue = stringValue;
-            boolean useEnvVars = !Boolean.getBoolean(DISABLE_ENV_VAR_EXPANSION_PROPERTY);
+            boolean useEnvVars = !Boolean.getBoolean(SystemPropertyConstants.DISABLE_ENV_VAR_EXPANSION_PROPERTY);
             boolean preferEnvVars = false;
             if (useEnvVars) {
-                preferEnvVars = Boolean.getBoolean(ENV_VAR_EXPANSION_PREFERRED_PROPERTY);
+                preferEnvVars = Boolean.getBoolean(SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES);
             }
             int i = 0;
             while (m.find() && i < MAX_SUBSTITUTION_DEPTH) {
@@ -146,12 +145,12 @@ public class TranslatedConfigView implements ConfigView {
         if (value == null && useEnvVars) {
             value = System.getenv(variableName);
             if (value == null) {
-                variableName = INVALID_ENV_VAR_CHARS_PATTERN.matcher(variableName)
+                String modifiedVariableName = INVALID_ENV_VAR_CHARS_PATTERN.matcher(variableName)
                         .replaceAll("_");
-                value = System.getenv(variableName);
+                value = System.getenv(modifiedVariableName);
                 if (value == null) {
-                    variableName = variableName.toUpperCase();
-                    value = System.getenv(variableName);
+                    modifiedVariableName = modifiedVariableName.toUpperCase();
+                    value = System.getenv(modifiedVariableName);
                 }
                 if (value == null && preferEnvVars) {
                     value = System.getProperty(variableName);

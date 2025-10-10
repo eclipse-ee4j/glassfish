@@ -77,7 +77,8 @@ public class SystemPropertyConstants {
     public static final String DEFAULT_ADMIN_TIMEOUT_PROPERTY = "org.glassfish.admin.timeout";
     private static final int DEFAULT_ADMIN_TIMEOUT_VALUE = 5000;
 
-    public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.envPreferredToProperties";
+    public static final String PREFER_ENV_VARS_OVER_PROPERTIES = "org.glassfish.variableExpansion.envPreferred";
+    public static final String DISABLE_ENV_VAR_EXPANSION_PROPERTY = "org.glassfish.variableExpansion.envDisabled";
 
     public static final String TRUSTSTORE_FILENAME_DEFAULT = "cacerts.p12";
     public static final String KEYSTORE_FILENAME_DEFAULT = "keystore.p12";

@@ -117,7 +117,7 @@ public class Util {
             return typeName;
         }
 
-        //elimiate last char from typeName if its a delimiter
+        //elimiate last char from typeName if it's a delimiter
         if (typeName.length() - 1 == typeName.lastIndexOf(delimiter)) {
             typeName = typeName.substring(0, typeName.length() - 1);
         }

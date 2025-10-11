@@ -555,7 +555,7 @@ public class LogControl {
                 // current position in the extent file
 
                 if( extentRec.currentLSN.offset == offset ) {
-                    // IF its a link record
+                    // IF it's a link record
 
                     if( extentRec.recordType == LogHandle.LINK ) {
                         // Copy it to LINKCOPY

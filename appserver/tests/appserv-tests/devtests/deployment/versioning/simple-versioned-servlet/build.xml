@@ -39,7 +39,7 @@
     <property name="testPackage" value="versionedservlet"/>
     <property name="gfDDFile" value="glassfish-web.xml"/>
     <property name="gfDDDir" value="WEB-INF"/>
-    <!-- untaggedName: the name of the application, its the version's prefix -->
+    <!-- untaggedName: the name of the application, it's the version's prefix -->
     <property name="untaggedName" value="simple-versioned-servlet"/>
     <!-- link: the context root of the servlet -->
     <property name="link" value="/${untaggedName}"/>

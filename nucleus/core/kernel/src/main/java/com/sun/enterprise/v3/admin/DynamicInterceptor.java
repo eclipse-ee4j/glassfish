@@ -122,7 +122,7 @@ public class DynamicInterceptor implements MBeanServer {
 
         }
 
-        // If its a MBean corresponding to config
+        // If it's a MBean corresponding to config
         if (isConfig(oName)) {
             String configName = getName(oName);
             if (configName != null && configName.endsWith("-config")) {
@@ -135,7 +135,7 @@ public class DynamicInterceptor implements MBeanServer {
             }
         }
 
-        // if its a MBean corresponding to a cluster
+        // if it's a MBean corresponding to a cluster
         if (isCluster(oName)) {
             String targetName = getName(oName);
             if (targetName != null) {
@@ -183,7 +183,7 @@ public class DynamicInterceptor implements MBeanServer {
             }
         }
 
-        // If its a generic query
+        // If it's a generic query
         if ("amx:*".equals(oName) || "*.*".equals(oName)) {
             result.addInstance("server");
             result.addAllInstances(MbeanService.getInstance().getAllInstances());

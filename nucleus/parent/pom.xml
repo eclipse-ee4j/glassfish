@@ -163,7 +163,7 @@
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
         <ant.version>1.10.15</ant.version>
-        <ant.external.version>1.10.2</ant.external.version>
+        <ant.external.version>1.10.15-SNAPSHOT</ant.external.version>
         <jackson.version>2.20.0</jackson.version>
         <jackson.version2>2.20</jackson.version2>
         <fasterxml.classmate.version>1.7.1</fasterxml.classmate.version>

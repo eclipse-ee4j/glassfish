@@ -192,9 +192,9 @@
         <woodstock-prototype.version>1.7.3</woodstock-prototype.version>
 
         <!-- Other -->
-        <dbschema.version>6.7</dbschema.version>
-        <schema2beans.version>6.7</schema2beans.version>
-        <derby.version>10.17.1.0</derby.version>
+        <dbschema.version>2.7.0-SNAPSHOT</dbschema.version>
+        <schema2beans.version>2.7.0-SNAPSHOT</schema2beans.version>
+        <derby.version>10.17.1.0-SNAPSHOT</derby.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>3.0.0</maven-rar-plugin.version>
 

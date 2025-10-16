@@ -19,8 +19,27 @@
 
 @import 'jekyll-theme-eclipsefdn';
 
+.site-title {
+  width: 10em;
+}
+
+.site-title h1 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #3f7b96;
+  margin: 0;
+}
+
+.site-title a:hover {
+  color:#FFFFFF;
+}
+
 .top-nav { 
-  background-color: #f4f4f4; 
+  background-color: #f4f4f4;
+  position: sticky;
+  z-index: 100;
+  top: 0px;
+  padding-top: 1rem;
 }
 
 .top-nav ul {
@@ -67,6 +86,11 @@
 
 .top-nav ul li.icon.support a::before {
     background-image: url('../../img/life-ring.svg');
+}
+
+.sidebar-container {
+  position: sticky;
+  top: 80px;
 }
 
 #toc-sidebar {

@@ -194,7 +194,8 @@
         <!-- Other -->
         <dbschema.version>2.7.0-SNAPSHOT</dbschema.version>
         <schema2beans.version>2.7.0-SNAPSHOT</schema2beans.version>
-        <derby.version>10.17.1.0-SNAPSHOT</derby.version>
+        <derby.version>10.17.1.0</derby.version>
+        <derby.repackaged.version>10.17.1.0-SNAPSHOT</derby.repackaged.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>3.0.0</maven-rar-plugin.version>
 
@@ -700,7 +701,7 @@
             <dependency>
                 <groupId>org.glassfish.external</groupId>
                 <artifactId>derby</artifactId>
-                <version>${derby.version}</version>
+                <version>${derby.repackaged.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>

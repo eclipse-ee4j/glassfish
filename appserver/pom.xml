@@ -192,8 +192,8 @@
         <woodstock-prototype.version>1.7.3</woodstock-prototype.version>
 
         <!-- Other -->
-        <dbschema.version>2.7.0-SNAPSHOT</dbschema.version>
-        <schema2beans.version>2.7.0-SNAPSHOT</schema2beans.version>
+        <dbschema.version>6.7</dbschema.version>
+        <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.17.1.0</derby.version>
         <derby.repackaged.version>10.17.1.0-SNAPSHOT</derby.repackaged.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>

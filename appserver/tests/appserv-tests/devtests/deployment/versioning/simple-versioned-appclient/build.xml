@@ -40,7 +40,7 @@
   <property name="preparatorClassName" value="${testPackage}.client.GetJWSClientStubs"/>
   <property name="gfDDFile" value="glassfish-application-client.xml"/>
   <property name="gfDDDir" value="META-INF"/>
-  <!-- untaggedName: the name of the application, its the version's prefix -->
+  <!-- untaggedName: the name of the application, it's the version's prefix -->
   <property name="untaggedName" value="simple-versioned-appclient"/>
   <!-- packaging: the file archive's extention -->
   <property name="packaging" value="jar"/>

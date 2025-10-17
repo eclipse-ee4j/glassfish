@@ -51,7 +51,7 @@ public class GlassFishToExousiaConverter {
      *
      * <p>
      * Phase 1: gets a map representing the methodPermission elements exactly as they
-     * occured for the ejb in the dd. The map is keyed by method-permission element and each method-permission is mapped to a list of
+     * occurred for the ejb in the dd. The map is keyed by method-permission element and each method-permission is mapped to a list of
      * method elements representing the method elements of the method permision element. Each method element is converted to a
      * corresponding EJBMethodPermission and added, based on its associated method-permission, to the returned JakartaPermissions instance.
      *

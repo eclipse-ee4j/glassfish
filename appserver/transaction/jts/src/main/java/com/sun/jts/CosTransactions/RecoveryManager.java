@@ -781,7 +781,7 @@ public class RecoveryManager {
     /**
      * Recovers the in doubt transactions from the provided list of
      * XAResource objects. This method is never called by the recovery
-     * thread, and its the application threads which wants to pass in
+     * thread, and it's the application threads which wants to pass in
      * the XA resources that call this.
      *
      * @param xaResources enumerated list of XA Resources to be recovered

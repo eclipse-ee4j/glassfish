@@ -209,7 +209,7 @@ public class ConnectorTimerProxy extends Timer {
     }
 
     /**
-     * Handle any exception occured during scheduling timer.
+     * Handle any exception occurred during scheduling timer.
      *
      * In case of unchecked exceptions, the timer is recreated to be used
      * by the subsequent requests for scheduling.

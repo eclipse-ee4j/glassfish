@@ -864,7 +864,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                         getResourceDeployer(resource).validatePreservedResource(oldApp, newApp, resource, oldModuleResources);
                     }
                 }
-            }//else its a new module in the archive being redeployed.
+            }//else it's a new module in the archive being redeployed.
         }
     }
 

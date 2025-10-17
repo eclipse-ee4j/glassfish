@@ -42,7 +42,7 @@
 
   <!-- link: the context root of the servlet -->
   <property name="link" value="/${untaggedName}"/>
-  <!-- untaggedName: the name of the application, its the version's prefix -->
+  <!-- untaggedName: the name of the application, it's the version's prefix -->
   <property name="untaggedName" value="simple-versioned-ear"/>
   <!-- packaging: the file archive's extention -->
   <property name="packaging" value="ear"/>

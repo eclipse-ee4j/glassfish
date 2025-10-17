@@ -165,6 +165,7 @@
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
+                <module>application-tests</module>
                 <module>jdbc</module>
             </modules>
         </profile>
@@ -193,6 +194,7 @@
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
+                <module>application-tests</module>
                 <module>jdbc</module>
                 <module>tck</module>
             </modules>

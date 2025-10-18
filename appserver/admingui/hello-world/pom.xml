@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2024 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+    Maven POM for Hello World Admin Console Plugin.
+    
+    This demonstrates the minimal configuration needed for a JSF-enabled
+    Admin Console plugin. Key aspects:
+    
+    1. PACKAGING: glassfish-jar creates an OSGi-compatible JAR
+    2. PARENT: inherits from admingui parent for consistent configuration
+    3. DEPENDENCIES: Only CDI and console-common are needed for basic JSF integration
+    4. DEV PROFILE: Enables automatic copying to distribution during development
+    
+    The plugin architecture allows this JAR to be:
+    - Included directly in the admin WAR (current approach)
+    - Deployed as a separate OSGi bundle (alternative approach)
+    - Loaded dynamically at runtime via plugin discovery
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 
+        Inherit from admingui parent POM for consistent build configuration.
+        This provides common dependencies, plugin versions, and build settings.
+    -->
+    <parent>
+        <groupId>org.glassfish.main.admingui</groupId>
+        <artifactId>admingui</artifactId>
+        <version>7.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>console-hello-world-plugin</artifactId>
+    <!-- 
+        glassfish-jar packaging creates OSGi-compatible JAR with proper manifest.
+        This allows the plugin to work in both embedded and OSGi deployment modes.
+    -->
+    <packaging>glassfish-jar</packaging>
+
+    <name>Admin Console Hello World Plugin</name>
+    <description>Hello World plugin example for GlassFish Admin Console</description>
+
+    <dependencies>
+        <!-- 
+            CDI API for dependency injection and bean management.
+            Scope 'provided' because the runtime environment supplies this.
+            Enables @Named, @RequestScoped, @Inject annotations.
+        -->
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- 
+            Console common module provides base classes and utilities.
+            Not strictly required for basic JSF integration but useful
+            for more advanced console integration features.
+        -->
+        <dependency>
+            <groupId>org.glassfish.main.admingui</groupId>
+            <artifactId>console-common</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- 
+            Development profile for faster iteration during development.
+            When activated with 'mvn install -Pdev', this profile:
+            1. Enables copying the built JAR to the GlassFish distribution
+            2. Allows testing changes without full rebuild/redeploy cycle
+            3. Copies to the exact location where the admin WAR expects plugins
+        -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- Enable the copy-to-distribution mechanism -->
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+                <!-- 
+                    Specify exact destination path for the plugin JAR.
+                    This path is where the admin WAR's classloader will find the plugin.
+                    The path structure matches the admin console's plugin loading mechanism.
+                -->
+                <copy.modules.to.distribution.destFile>${basedir}/../../../distributions/glassfish/target/stage/glassfish7/glassfish/lib/install/applications/__admingui/WEB-INF/lib/console-hello-world-plugin-${project.version}.jar</copy.modules.to.distribution.destFile>
+            </properties>
+        </profile>
+    </profiles>
+</project>

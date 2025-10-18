@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2024 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+    Modern Jakarta Faces (JSF) page within GlassFish Admin Console.
+    
+    This demonstrates how to create standard JSF pages that integrate seamlessly
+    with the existing Admin Console infrastructure. Key architectural points:
+    
+    1. STANDARD JSF: Uses pure Jakarta Faces syntax, not JSF-Templating
+    2. XHTML FORMAT: Standard Facelets template format (.xhtml extension)
+    3. CDI INTEGRATION: References CDI beans via EL expressions
+    4. CSS INTEGRATION: Includes existing Admin Console stylesheets for consistency
+    5. RESOURCE LOCATION: Placed in META-INF/resources/ for automatic serving
+    
+    How this works:
+    - File is served by JSF ResourceHandler from plugin JAR
+    - AdminGuiViewHandler delegates .xhtml requests to standard JSF ViewHandler
+    - CDI beans in plugin are discovered by web app's service locator
+    - EL expressions resolve to CDI beans via @Named annotation
+    - CSS classes from Admin Console provide consistent styling
+    
+    This approach allows modern JSF development while maintaining integration
+    with the legacy console framework.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Hello World - GlassFish Admin Console</title>
+        
+        <!-- 
+            Include GlassFish Admin Console CSS for consistent styling.
+            These stylesheets provide the visual theme and component styles
+            used throughout the console, ensuring this page looks integrated.
+        -->
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/theme/com/sun/webui/jsf/suntheme/css/css_master.css"/>
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/yui/reset-fonts-grids.css"/>
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resource/common/css/style.css"/>
+        
+        <!-- 
+            Custom CSS for this page.
+            Demonstrates how to add page-specific styling while maintaining
+            consistency with the overall console design.
+        -->
+        <style type="text/css">
+            .hello-container {
+                padding: 20px;
+                margin: 20px;
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+            }
+            .hello-title {
+                color: #2c5aa0;
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+            .hello-message {
+                font-size: 18px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+            .hello-description {
+                font-size: 14px;
+                color: #666;
+                font-style: italic;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <!-- 
+            Main content container using custom CSS classes.
+            This demonstrates standard JSF component usage with data binding.
+        -->
+        <div class="hello-container">
+            <div class="hello-title">
+                <!-- Static content using JSF output component -->
+                <h:outputText value="GlassFish Admin Console JSF Example"/>
+            </div>
+            <div class="hello-message">
+                <!-- 
+                    Dynamic content from CDI bean using EL expression.
+                    #{helloWorldBean.message} resolves to:
+                    1. CDI container finds bean with @Named annotation
+                    2. Calls getMessage() method on HelloWorldBean instance
+                    3. Returns string value for display
+                -->
+                <h:outputText value="#{helloWorldBean.message}"/>
+            </div>
+            <div class="hello-description">
+                <!-- Another example of CDI bean property binding -->
+                <h:outputText value="#{helloWorldBean.description}"/>
+            </div>
+        </div>
+    </h:body>
+</html>

@@ -60,6 +60,7 @@ import static com.sun.enterprise.universal.process.ProcessStreamDrainer.redirect
 import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
 import static com.sun.enterprise.util.OS.isDarwin;
 import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.DISABLE_ENV_VAR_EXPANSION_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS;
 import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
 import static java.lang.Boolean.TRUE;
@@ -640,15 +641,17 @@ public abstract class GFLauncher {
         all.putAll(domainXMLjvmOptions.getCombinedMap());
         all.putAll(domainXMLJavaConfigProfiler.getConfig());
 
-        if (isPreferEnvOverProperties(all)) {
-            all.putAll(System.getenv());
-            replacePropertiesWithEnvVars(domainXMLjvmOptions.xProps);
-            replacePropertiesWithEnvVars(domainXMLjvmOptions.xxProps);
-            replacePropertiesWithEnvVars(domainXMLjvmOptions.plainProps);
-            replacePropertiesWithEnvVars(domainXMLjvmOptions.longProps);
-            replacePropertiesWithEnvVars(domainXMLjvmOptions.sysProps);
-        } else {
-            System.getenv().forEach((name, value) -> all.putIfAbsent(name, value));
+        if (!isEnvVarExpansionDisabled(all)) {
+            if (isPreferEnvOverProperties(all)) {
+                all.putAll(System.getenv());
+                replacePropertiesWithEnvVars(domainXMLjvmOptions.xProps);
+                replacePropertiesWithEnvVars(domainXMLjvmOptions.xxProps);
+                replacePropertiesWithEnvVars(domainXMLjvmOptions.plainProps);
+                replacePropertiesWithEnvVars(domainXMLjvmOptions.longProps);
+                replacePropertiesWithEnvVars(domainXMLjvmOptions.sysProps);
+            } else {
+                System.getenv().forEach((name, value) -> all.putIfAbsent(name, value));
+            }
         }
 
         TokenResolver resolver = new TokenResolver(all);
@@ -691,6 +694,10 @@ public abstract class GFLauncher {
 
     private static Boolean isPreferEnvOverProperties(Map<String, String> properties) {
         return Boolean.parseBoolean(properties.get(PREFER_ENV_VARS_OVER_PROPERTIES));
+    }
+
+    private static boolean isEnvVarExpansionDisabled(Map<String, String> all) {
+        return Boolean.parseBoolean(all.get(DISABLE_ENV_VAR_EXPANSION_PROPERTY));
     }
 
     private void fixLogFilename() throws GFLauncherException {

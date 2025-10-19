@@ -33,7 +33,6 @@
     <name>Glassfish Web Profile Distribution</name>
 
     <properties>
-        <patch.classes>${project.build.directory}/dependency</patch.classes>
         <glassfish.modules>${project.build.directory}/stage/glassfish8/glassfish/modules</glassfish.modules>
         <patches>${basedir}/src/main/patches</patches>
     </properties>

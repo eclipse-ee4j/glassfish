@@ -96,7 +96,10 @@
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.1.1</jakarta.concurrent-api.version>
-        <concurro.version>3.1.0-M6</concurro.version>
+        <concurro.version>3.1.0-SNAPSHOT</concurro.version>
+
+        <!-- Jakarta Interceptors -->
+        <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
@@ -104,10 +107,9 @@
         <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <!-- Implementations -->
-        <soteria.version>4.0.1</soteria.version>
+        <soteria.version>4.0.2-SNAPSHOT</soteria.version>
         <exousia.version>3.0.0</exousia.version>
-        <epicyro.version>3.1.0</epicyro.version>
-        <!-- Dependencies -->
+        <epicyro.version>3.1.1</epicyro.version>
         <nimbus.version>10.5</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
@@ -160,9 +162,6 @@
         <weld.version>6.0.3.Final</weld.version>
         <jboss.classfilewriter.version>1.3.1.Final</jboss.classfilewriter.version>
 
-        <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
-
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.0</jakarta.mvc-api.version>
         <krazo.version>4.0.1</krazo.version>
@@ -196,6 +195,7 @@
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.17.1.0</derby.version>
+        <derby.repackaged.version>10.17.1.0-SNAPSHOT</derby.repackaged.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>3.0.0</maven-rar-plugin.version>
 
@@ -329,9 +329,9 @@
                 <version>${openmq.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.messaging.mq</groupId>
-                <artifactId>imqjmx</artifactId>
-                <version>4.6-b01</version>
+                <groupId>org.glassfish.mq</groupId>
+                <artifactId>mqjmx-api</artifactId>
+                <version>${openmq.version}</version>
             </dependency>
 
             <!-- Jakarta Data-->
@@ -701,7 +701,7 @@
             <dependency>
                 <groupId>org.glassfish.external</groupId>
                 <artifactId>derby</artifactId>
-                <version>${derby.version}</version>
+                <version>${derby.repackaged.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>

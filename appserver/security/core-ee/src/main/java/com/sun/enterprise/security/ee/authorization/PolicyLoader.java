@@ -106,7 +106,7 @@ public class PolicyLoader {
         }
 
         setProperty("simple.jacc.provider.JACCRoleMapper.class",
-            "com.sun.enterprise.security.ee.web.integration.GlassfishRoleMapper", false);
+            "com.sun.enterprise.security.ee.authorization.GlassfishRoleMapper", false);
 
         // Now install the policy provider if one was identified
         if (javaPolicyClassName != null) {

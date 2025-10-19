@@ -119,7 +119,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.9.6-eclipse-temurin-21
+    image: maven:3.9.11-eclipse-temurin-21
     command:
     - cat
     tty: true
@@ -220,14 +220,14 @@ spec:
                   timeout(time: 10, unit: 'MINUTES') {
                      sh '''
                      # Validate the structure in all submodules (especially version ids)
-                     mvn -B -e -fae clean validate -Ptck,set-version-id,staging
+                     mvn -B -e -fae clean validate -Ptck,set-version-id
 
                      # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-                     mvn -B -e install -Pfastest,staging,ci -T4C
+                     mvn -B -e install -Pfastest,ci -T4C
                      ./gfbuild.sh archive_bundles
                      ./gfbuild.sh archive_embedded
 
-                     mvn -B -e clean -Pstaging
+                     mvn -B -e clean
                      tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
                      ls -la ${WORKSPACE}/bundles
                      ls -la ${WORKSPACE}/embedded
@@ -256,7 +256,7 @@ spec:
                         dumpSysInfo()
                         timeout(time: 2, unit: 'HOURS') {
                            sh '''
-                           mvn -B -e clean install -Pstaging,qa,ci
+                           mvn -B -e clean install -Pqa,ci
                            '''
                         }
                      } finally {
@@ -281,7 +281,7 @@ spec:
                }
                tools {
                   jdk 'temurin-jdk21-latest'
-                  maven 'apache-maven-3.9.5'
+                  maven 'apache-maven-3.9.11'
                }
                steps {
                   script {

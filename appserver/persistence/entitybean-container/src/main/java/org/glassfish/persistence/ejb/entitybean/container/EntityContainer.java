@@ -1388,7 +1388,8 @@ public class EntityContainer extends BaseContainer implements CacheListener {
         }
 
         // home methods, finders and remove dont need this
-        if (!containerStateManager.isRemovedEJBObject(context) || !containerStateManager.isRemovedEJBLocalObject(context)) {
+        if (!containerStateManager.isRemovedEJBObject(context)
+            || !containerStateManager.isRemovedEJBLocalObject(context)) {
             // Remove bean from ActiveTxCache table if its there.
             // No need to remove it from txBeanTable because the table
             // gets updated in ContainerFactoryImpl.removeContainerSync.
@@ -1411,7 +1412,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
             }
         } else if (containerStateManager.isNullEJBObject(context) && containerStateManager.isNullEJBLocalObject(context)) {
             // This happens if an ejbcreate has an exception, in that case
-            // we remove bean from ActiveTxCache table if its there.
+            // we remove bean from ActiveTxCache table if it's there.
             // and return it to the pool
             // removeIncompleteTxEJB(context, false);
 

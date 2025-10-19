@@ -232,7 +232,7 @@ class LogCursor {
             if( !logRH.currentLSN.equals(currentLSN) )
                 throw new LogException(null,LogException.LOG_CORRUPTED,9);
 
-            // Check the record header in case its a link record thats been read in
+            // Check the record header in case it's a link record thats been read in
             // IF it is a link record
             //   IF cursor is ASCENDING
             //     Set 'current position' to next LSN in link record

@@ -1,9 +1,9 @@
-CDI developer tests README
+CDI Developer Tests README
 ==========================
 
-To checkout CDI devtests
-------------------------
-- checkout CDI developer tests using the following commands:
+To CheckOut CDI devtests
+-------------------------
+- Checkout CDI developer tests using the following commands:
 svn -N co https://svn.java.net/svn/glassfish~svn/trunk/v2/appserv-tests
 cd appserv-tests #this is the directory set later to APS_HOME
 svn co https://svn.java.net/svn/glassfish~svn/trunk/v2/appserv-tests/config
@@ -13,7 +13,7 @@ svn -N co https://svn.java.net/svn/glassfish~svn/trunk/v2/appserv-tests/devtests
 cd devtests
 svn co https://svn.java.net/svn/glassfish~svn/trunk/v2/appserv-tests/devtests/cdi
 
-Test setup
+Test Setup
 ----------
 - set S1AS_HOME, APS_HOME as appropriate
 export APS_HOME=<appserv-tests> directory
@@ -23,28 +23,28 @@ $S1AS_HOME/bin/asadmin start-domain domain1
 - start Derby
 $S1AS_HOME/bin/asadmin start-database
 
-To run all CDI developer tests
+To Run All CDI Developer Tests
 ------------------------------
 - cd $APS_HOME/devtests/cdi
 - ant all
 - results can be found at APS_HOME/test_results.html
 
 
-Test setup teardown
+Test Setup Teardown
 -------------------
 - stop GlassFish
 $S1AS_HOME/bin/asadmin stop-domain domain1
 - asadmin stop-database
 $S1AS_HOME/bin/asadmin stop-database
 
-To run a single CDI developer test
+To Run a Single CDI Developer Test
 ----------------------------------
-- after performing tasks under "Test setup"
+- after performing tasks under "Test Setup"
 - cd $APS_HOME/devtests/cdi/[test-dir]
 - ant all
-- perform tasks listed under "Test setup teardown"
+- perform tasks listed under "Test Setup Teardown"
 
-To run CDI developer test suite with Security Manager on
+To Run CDI Developer Test Suite with Security Manager On
 ---------------------------------------------------------
 - start domain and enable security manager by 
 asadmin create-jvm-options -Djava.security.manager 

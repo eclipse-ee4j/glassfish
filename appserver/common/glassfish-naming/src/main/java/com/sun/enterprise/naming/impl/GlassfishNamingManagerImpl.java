@@ -672,7 +672,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         }
 
         // This iterates over all names in entire component namespace,
-        // so its a little inefficient. The alternative is to store
+        // so it's a little inefficient. The alternative is to store
         // a list of bindings in each javaURLContext instance.
         ArrayList<SimpleJndiName> list = new ArrayList<>();
         final String logicalNameWithSlash;

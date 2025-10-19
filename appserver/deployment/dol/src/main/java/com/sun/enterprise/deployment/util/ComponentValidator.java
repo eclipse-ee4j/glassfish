@@ -693,7 +693,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     // we need to split the accept(InjectionCapable) into two parts:
     // one needs classloader and one doesn't. This is needed because
     // in the standalone war case, the classloader is not created
-    // untill the web module is being started.
+    // until the web module is being started.
 
     protected void acceptWithCL(InjectionCapable injectable) {
         // If parsed from deployment descriptor, we need to determine whether

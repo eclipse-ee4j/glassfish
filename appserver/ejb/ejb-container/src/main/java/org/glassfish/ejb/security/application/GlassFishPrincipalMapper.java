@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,7 +71,20 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
 
     @Override
     public Principal getCallerPrincipal(Subject subject) {
-        return roleMapper.getCallerPrincipal(subject);
+        Principal principal = roleMapper.getCallerPrincipal(subject);
+        if (principal == null) {
+            return null;
+        }
+
+        // EJB had a vendor specific anonymous principle with a vendor specific name
+        // (who ever thought that was a good idea?)
+        // Jakarta Authorization defines the anonymous principle as null, so we need
+        // to return a null here when we recognise that name.
+        if ("ANONYMOUS".equals(principal.getName())) {
+            return null;
+        }
+
+        return principal;
     }
 
     @Override

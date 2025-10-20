@@ -195,7 +195,7 @@
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.17.1.0</derby.version>
-        <derby.repackaged.version>10.17.1.0-SNAPSHOT</derby.repackaged.version>
+        <derby.repackaged.version>${derby.version}</derby.repackaged.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>3.0.0</maven-rar-plugin.version>
 

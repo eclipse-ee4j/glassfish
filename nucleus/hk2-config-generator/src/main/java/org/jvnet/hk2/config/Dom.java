@@ -1413,7 +1413,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         }
 
         /**
-         * If someone has explicitly called the skipFromXml then dont write the element to
+         * If someone has explicitly called the skipFromXml then don't write the element to
          * domain.xml
          */
         if (!writeToXml) {

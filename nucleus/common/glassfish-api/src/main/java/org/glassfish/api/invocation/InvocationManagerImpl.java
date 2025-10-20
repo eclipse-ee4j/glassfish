@@ -43,7 +43,7 @@ public class InvocationManagerImpl implements InvocationManager {
     // This TLS variable stores an ArrayList.
     // The ArrayList contains ComponentInvocation objects which represent
     // the stack of invocations on this thread. Accesses to the ArrayList
-    // dont need to be synchronized because each thread has its own ArrayList.
+    // don't need to be synchronized because each thread has its own ArrayList.
     private InheritableThreadLocal<InvocationArray<ComponentInvocation>> frames;
 
     private final ThreadLocal<Stack<ApplicationEnvironment>> applicationEnvironments = new ThreadLocal<>() {

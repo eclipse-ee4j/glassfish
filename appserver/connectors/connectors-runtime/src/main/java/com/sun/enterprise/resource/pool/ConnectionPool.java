@@ -1298,7 +1298,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public void resourceErrorOccurred(ResourceHandle resourceHandle) throws IllegalStateException {
-        LOG.log(FINE, "Resource error occured: {0}", resourceHandle);
+        LOG.log(FINE, "Resource error occurred: {0}", resourceHandle);
         if (failAllConnections) {
             // TODO: leakDetector is not updated and isBusy state of this resource is not updated correctly: possible bug.
             // leakDetector should be updated in the doFailAllConnectionsProcessing method. The resource can be updated here.

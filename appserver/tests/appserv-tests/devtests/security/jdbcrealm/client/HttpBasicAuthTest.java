@@ -146,8 +146,8 @@ public class HttpBasicAuthTest implements Runnable {
                     failureCount++;
                 }
 
-                // test failed(well failed if its a postive test, this
-                // is expected if its a negative test)
+                // test failed(well failed if it's a postive test, this
+                // is expected if it's a negative test)
 
                 result = false;
                 continue;

@@ -58,7 +58,7 @@ Pruned in 9.0
 
 ### Jakarta JSON Binding
 
-* [Jakarta JSON Binding 2.0](certificatoins/jakarta-jsonb/2.0/TCK-Results-6.1-RC1)
+* [Jakarta JSON Binding 2.0](certifications/jakarta-jsonb/2.0/TCK-Results-6.1-RC1)
 
 ### Jakarta JSON Processing
 
@@ -130,4 +130,4 @@ Pruned in 9.0
 
 ### Jakarta XML Web Services
 
-* [jakarta XML Web Services 3.0](certifications/jakarta-xml-web-services/3.0/TCK-Results-6.1-RC1)
+* [Jakarta XML Web Services 3.0](certifications/jakarta-xml-web-services/3.0/TCK-Results-6.1-RC1)

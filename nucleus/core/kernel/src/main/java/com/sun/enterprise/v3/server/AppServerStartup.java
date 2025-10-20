@@ -673,7 +673,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         public void onError(RunLevelFuture future, ErrorInformation info) {
             if (future.isDown()) {
                 // TODO: Need a log message
-                logger.log(Level.WARNING, "An error occured when the system was coming down", info.getError());
+                logger.log(Level.WARNING, "An error occurred when the system was coming down", info.getError());
                 return;
             }
 

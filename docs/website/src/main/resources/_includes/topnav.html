@@ -1,5 +1,10 @@
 <div class="nav top-nav hidden-print">
     <ul>
+        <li class="site-title">
+            <a href="{{ '/' | absolute_url }}">
+              <h1>{{ site.title | default: site.github.repository_name }}</h1>
+            </a>
+        </li>
         <li class="icon download">
             <a href="/download.html">Download<p>Distributions, Release Notes</p></a>
             </li>

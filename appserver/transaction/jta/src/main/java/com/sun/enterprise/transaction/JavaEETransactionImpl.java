@@ -807,7 +807,7 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
 
         @Override
         public byte[] getBranchQualifier() {
-            return bqual; // V2-XXX check if its ok to always have same bqual
+            return bqual; // V2-XXX check if it's ok to always have same bqual
         }
 
         // START IASRI 4662745

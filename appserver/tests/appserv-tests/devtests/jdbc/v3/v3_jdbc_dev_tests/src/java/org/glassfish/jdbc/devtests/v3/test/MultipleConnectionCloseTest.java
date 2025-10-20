@@ -122,7 +122,7 @@ public class MultipleConnectionCloseTest implements SimpleTest {
                 } catch (Exception e1) {
                     e.printStackTrace();
                     //closing a connection multiple times is a no-op.
-                    //If exception is thrown, its a failure.
+                    //If exception is thrown, it's a failure.
                     passed = false;
                 }
             }

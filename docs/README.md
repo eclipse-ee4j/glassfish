@@ -28,7 +28,7 @@ file by the `distribution` project.
 Only this combined jar file needs to be deployed to Maven.
 
 The `publish` project collects all of these distribution jar files
-for the current relase and previous releases  using the
+for the current release and previous releases using the
 `maven-dependency-plugin`, lays them out in the proper directory
 structure, and uses the `maven-scm-publish-plugin` to publish
 the content to the `gh-pages` branch of the GitHub repository.
@@ -76,7 +76,7 @@ git clone --branch gh-pages https://github.com/eclipse-ee4j/glassfish.git /separ
 * create a fork in GitHub
 * add the fork as a new remote to the other repository
 * commit the changes to the `gh-pages` branch
-* (force) push the `gh-pages` beanch: `git -C /separate/directory push --force https://github.com/myfork/glassfish.git refs/heads/gh-pages:refs/heads/gh-pages` (replace myfork with your GitHub username)
+* (force) push the `gh-pages` branch: `git -C /separate/directory push --force https://github.com/myfork/glassfish.git refs/heads/gh-pages:refs/heads/gh-pages` (replace myfork with your GitHub username)
 
 6. Preview the website
 

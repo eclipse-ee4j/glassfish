@@ -38,7 +38,6 @@ import java.lang.reflect.Method;
 import java.security.Identity;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -50,6 +49,7 @@ import javax.naming.InitialContext;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 
+import static java.util.Collections.emptyMap;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
@@ -379,12 +379,9 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
      */
     @Override
     public Principal getCallerPrincipal() {
-
         checkAccessToCallerSecurity();
 
-        com.sun.enterprise.security.SecurityManager sm = container.getSecurityManager();
-
-        return sm.getCallerPrincipal();
+        return container.getSecurityManager().getCallerPrincipal();
     }
 
     /**
@@ -392,13 +389,12 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
      */
     @Override
     public Map<String, Object> getContextData() {
-        Map<String, Object> contextData = Collections.emptyMap();
         ComponentInvocation inv = EjbContainerUtilImpl.getInstance().getCurrentInvocation();
-        if (inv instanceof EjbInvocation) {
-            EjbInvocation ejbInv = (EjbInvocation) inv;
-            contextData = ejbInv.getContextData();
+        if (inv instanceof EjbInvocation ejbInv) {
+            return ejbInv.getContextData();
         }
-        return contextData;
+
+        return emptyMap();
     }
 
     @Override
@@ -409,8 +405,7 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
 
         checkAccessToCallerSecurity();
 
-        com.sun.enterprise.security.SecurityManager sm = container.getSecurityManager();
-        return sm.isCallerInRole(roleRef);
+        return container.getSecurityManager().isCallerInRole(roleRef);
     }
 
     /**

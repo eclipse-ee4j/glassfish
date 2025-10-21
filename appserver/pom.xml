@@ -107,7 +107,7 @@
         <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <!-- Implementations -->
-        <soteria.version>4.0.2-SNAPSHOT</soteria.version>
+        <soteria.version>4.0.2</soteria.version>
         <exousia.version>3.0.0</exousia.version>
         <epicyro.version>3.1.1</epicyro.version>
         <nimbus.version>10.5</nimbus.version>
@@ -124,8 +124,8 @@
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
-        <eclipselink.version>5.0.0-B10</eclipselink.version>
-        <eclipselink.asm.version>9.8.0</eclipselink.asm.version>
+        <eclipselink.version>5.0.0-B11</eclipselink.version>
+        <eclipselink.asm.version>9.9.0</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>

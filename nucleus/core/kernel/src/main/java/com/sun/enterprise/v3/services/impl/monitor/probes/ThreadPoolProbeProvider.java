@@ -76,4 +76,10 @@ public class ThreadPoolProbeProvider {
         @ProbeParam("monitoringId") String monitoringId,
         @ProbeParam("threadPoolName") String threadPoolName,
         @ProbeParam("threadId") long threadId) {}
+
+    @Probe(name="setCurrentThreadCountEvent")
+    public void setCurrentThreadCountEvent(
+        @ProbeParam("monitoringId") String monitoringId,
+        @ProbeParam("threadPoolName") String threadPoolName,
+        @ProbeParam("currentThreadCount") int currentThreadCount) {}
 }

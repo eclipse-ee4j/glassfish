@@ -66,6 +66,9 @@ public class ThreadPoolMonitor implements ThreadPoolProbe {
         grizzlyMonitoring.getThreadPoolProbeProvider().threadAllocatedEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 thread.getId());
+        grizzlyMonitoring.getThreadPoolProbeProvider().setCurrentThreadCountEvent(
+                monitoringId, threadPool.getConfig().getPoolName(),
+                threadPool.getSize());
     }
 
     @Override
@@ -73,6 +76,9 @@ public class ThreadPoolMonitor implements ThreadPoolProbe {
         grizzlyMonitoring.getThreadPoolProbeProvider().threadReleasedEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 thread.getId());
+        grizzlyMonitoring.getThreadPoolProbeProvider().setCurrentThreadCountEvent(
+                monitoringId, threadPool.getConfig().getPoolName(),
+                threadPool.getSize());
     }
 
     @Override

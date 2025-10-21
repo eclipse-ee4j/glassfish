@@ -162,6 +162,17 @@ public class ThreadPoolStatsProvider implements StatsProvider {
         }
     }
 
+    @ProbeListener("glassfish:kernel:thread-pool:setCurrentThreadCountEvent")
+    public void setCurrentThreadCountEvent(
+            @ProbeParam("monitoringId") String monitoringId,
+            @ProbeParam("threadPoolName") String threadPoolName,
+            @ProbeParam("currentThreadCount") int currentThreadCount) {
+
+        if (name.equals(monitoringId)) {
+            this.currentThreadCount.setCount(currentThreadCount);
+        }
+    }
+
     @Reset
     public void reset() {
         if (threadPoolConfig != null) {

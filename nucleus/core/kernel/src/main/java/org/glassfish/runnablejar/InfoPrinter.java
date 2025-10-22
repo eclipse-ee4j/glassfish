@@ -99,8 +99,10 @@ public class InfoPrinter {
             final int lengthBefore = output.length();
             output.append(BORDER_CHARACTER)
                     .append(" ")
-                    .append("No applications deployed. Listening on ")
-                    .append(String.join(", ", listenerUrls))
+                    .append("No applications deployed")
+                    .append(listenerUrls.isEmpty()
+                            ? ""
+                            : ". Listening on " + String.join(", ", listenerUrls))
                     .append(" ")
                     .append(BORDER_CHARACTER);
             int lengthAfter = output.length();
@@ -124,8 +126,10 @@ public class InfoPrinter {
             output.append(BORDER_CHARACTER)
                     .append(" ")
                     .append(app.getName())
-                    .append(" deployed at ")
-                    .append(appUrls)
+                    .append(" deployed")
+                    .append( appUrls.isEmpty()
+                            ? ""
+                            : " at: " + appUrls)
                     .append(" ")
                     .append(BORDER_CHARACTER);
             int lengthAfter = output.length();

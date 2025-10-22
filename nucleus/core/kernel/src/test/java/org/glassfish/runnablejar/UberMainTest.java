@@ -36,6 +36,8 @@ import org.glassfish.grizzly.config.dom.Ssl;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.types.Property;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  *
  * @author Ondro Mihalyi
@@ -47,6 +49,19 @@ public class UberMainTest {
         String info = new InfoPrinter().getInfoAfterStartup(List.of(app("/app1"), app("application")),
             List.of(listener(8080, false), listener(8181, true)));
         System.out.println(info);
+        String[] lines = info.split("\n");
+        assertTrue(lines.length == 6, "Number of lines should be 6 but is " + lines.length);
+        assertThatLinesAreEquallyLong(lines);
+    }
+
+    @Test
+    public void getInfoAfterStartup_noListeners() throws GlassFishException {
+        String info = new InfoPrinter().getInfoAfterStartup(List.of(app("/app1"), app("application")),
+            List.of());
+        System.out.println(info);
+        String[] lines = info.split("\n");
+        assertTrue(lines.length == 6, "Number of lines should be 6 but is " + lines.length);
+        assertThatLinesAreEquallyLong(lines);
     }
 
 
@@ -55,8 +70,28 @@ public class UberMainTest {
         String info = new InfoPrinter().getInfoAfterStartup(List.of(),
             List.of(listener(8080, false), listener(8181, true)));
         System.out.println(info);
+        String[] lines = info.split("\n");
+        assertTrue(lines.length == 5, "Number of lines should be 6 but is " + lines.length);
+        assertThatLinesAreEquallyLong(lines);
     }
 
+    @Test
+    public void getInfoAfterStartup_noApps_noListeners() throws GlassFishException {
+        String info = new InfoPrinter().getInfoAfterStartup(List.of(),
+            List.of());
+        System.out.println(info);
+        String[] lines = info.split("\n");
+        assertTrue(lines.length == 5, "Number of lines should be 6 but is " + lines.length);
+        assertThatLinesAreEquallyLong(lines);
+    }
+
+    private void assertThatLinesAreEquallyLong(String[] lines) {
+        int lineLength = lines[0].length();
+        for (int i = 1; i < lines.length; i++) {
+            int thisLineLength = lines[i].length();
+            assertTrue(thisLineLength == lineLength, "All lines should as long as the first line. The first line is " + lineLength + " long while the line number " + i + " is " + thisLineLength + " long");
+        }
+    }
 
     private MockListener listener(int port, boolean secure) {
         return new MockListener(port, secure);

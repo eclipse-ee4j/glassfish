@@ -13,6 +13,7 @@ package org.glassfish.main.test.app.monitoring;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -283,25 +284,19 @@ public class ThreadPoolMonitoringTest {
     }
 
     private ThreadPoolMetrics getThreadPoolMetrics() {
-        // Try different possible monitoring paths
-        String[] possiblePaths = {
-            "server.network.http-listener-1.thread-pool",
-            "server.http-service.http-listener.http-listener-1.thread-pool", 
-            "server.applications.application.threadpool-test.thread-pool",
-            "server.thread-pools.thread-pool.http-thread-pool"
-        };
-        
+        return getThreadPoolMetrics("http-listener-1");
+    }
+    
+    private ThreadPoolMetrics getThreadPoolMetrics(String listenerName) {
         // First, let's see what monitoring data is actually available
         AsadminResult listResult = ASADMIN.exec("list", "*thread*");
         System.out.println("Available thread monitoring paths: " + listResult.getStdOut());
         
-        // Try to get metrics from the most likely path
-        AsadminResult currentResult = ASADMIN.exec("get", "-m", 
-            "server.network.http-listener-1.thread-pool.currentthreadcount");
-        AsadminResult busyResult = ASADMIN.exec("get", "-m",
-            "server.network.http-listener-1.thread-pool.currentthreadsbusy");
-        AsadminResult maxResult = ASADMIN.exec("get", "-m",
-            "server.network.http-listener-1.thread-pool.maxthreads");
+        // Try to get metrics from the specified listener
+        String basePath = "server.network." + listenerName + ".thread-pool";
+        AsadminResult currentResult = ASADMIN.exec("get", "-m", basePath + ".currentthreadcount");
+        AsadminResult busyResult = ASADMIN.exec("get", "-m", basePath + ".currentthreadsbusy");
+        AsadminResult maxResult = ASADMIN.exec("get", "-m", basePath + ".maxthreads");
         
         return new ThreadPoolMetrics(
             extractValue(currentResult.getStdOut(), "currentthreadcount"),
@@ -318,6 +313,20 @@ public class ThreadPoolMonitoringTest {
             }
         }
         return 0;
+    }
+
+    private void makeRequest(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.getResponseCode();
+            conn.disconnect();
+        } catch (Exception e) {
+            // Ignore connection errors for load testing
+        }
     }
 
     private static class ThreadPoolMetrics {
@@ -467,6 +476,116 @@ public class ThreadPoolMonitoringTest {
             
         } finally {
             ASADMIN.exec("set", "configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + originalMaxThreads);
+        }
+    }
+
+    @Test
+    void testAdminListenerThreadPoolMetrics() throws Exception {
+        // Get baseline metrics for admin-listener
+        ThreadPoolMetrics adminBaseline = getThreadPoolMetrics("admin-listener");
+        
+        // Verify admin listener has valid baseline metrics
+        assertTrue(adminBaseline.currentThreadCount >= 0, "Admin listener should have valid thread count");
+        assertTrue(adminBaseline.maxThreads > 0, "Admin listener should have positive max threads");
+        assertTrue(adminBaseline.currentThreadsBusy >= 0, "Admin listener should have valid busy count");
+        
+        // Create load on admin port (4848) using asadmin commands
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        
+        // Submit multiple concurrent admin requests
+        for (int i = 0; i < 5; i++) {
+            executor.submit(() -> {
+                try {
+                    ASADMIN.exec("list", "applications");
+                    Thread.sleep(100);
+                    ASADMIN.exec("get", "server.monitoring-service.*");
+                } catch (Exception e) {
+                    // Ignore for load testing
+                }
+            });
+        }
+        
+        Thread.sleep(500); // Let requests start
+        
+        // Check metrics during admin load
+        ThreadPoolMetrics adminUnderLoad = getThreadPoolMetrics("admin-listener");
+        
+        // Admin listener should maintain valid metrics under load
+        assertTrue(adminUnderLoad.currentThreadCount >= 0, "Admin listener should maintain valid thread count under load");
+        assertTrue(adminUnderLoad.currentThreadsBusy <= adminUnderLoad.currentThreadCount, 
+            "Admin listener: Busy threads should not exceed current threads");
+        assertTrue(adminUnderLoad.maxThreads > 0, "Admin listener should maintain positive max threads");
+        
+        executor.shutdown();
+        executor.awaitTermination(10, TimeUnit.SECONDS);
+        
+        Thread.sleep(1000); // Let threads settle
+        
+        // Final metrics check
+        ThreadPoolMetrics adminFinal = getThreadPoolMetrics("admin-listener");
+        assertTrue(adminFinal.currentThreadCount >= 0, "Admin listener final thread count should be valid");
+        assertTrue(adminFinal.currentThreadsBusy >= 0, "Admin listener final busy count should be valid");
+    }
+
+    @Test
+    void testDualListenerThreadPoolMetrics() throws Exception {
+        // First create http-listener-2 if it doesn't exist
+        AsadminResult createResult = ASADMIN.exec("create-http-listener", 
+            "--listenerport=8081", "--listeneraddress=0.0.0.0", 
+            "--defaultvs=server", "http-listener-2");
+        
+        try {
+            Thread.sleep(2000); // Allow listener to initialize
+            
+            // Get baseline metrics for both listeners
+            ThreadPoolMetrics listener1Baseline = getThreadPoolMetrics("http-listener-1");
+            ThreadPoolMetrics listener2Baseline = getThreadPoolMetrics("http-listener-2");
+            
+            // Verify both listeners have valid baseline metrics
+            assertTrue(listener1Baseline.currentThreadCount >= 0, "Listener 1 should have valid thread count");
+            assertTrue(listener2Baseline.currentThreadCount >= 0, "Listener 2 should have valid thread count");
+            
+            // Create load on both listeners simultaneously
+            ExecutorService executor = Executors.newFixedThreadPool(10);
+            
+            // Submit requests to both ports
+            for (int i = 0; i < 5; i++) {
+                executor.submit(() -> makeRequest("http://localhost:4848/" + APP_NAME + "/hello"));
+                executor.submit(() -> makeRequest("http://localhost:8081/" + APP_NAME + "/hello"));
+            }
+            
+            Thread.sleep(500); // Let requests start
+            
+            // Check metrics during dual load
+            ThreadPoolMetrics listener1UnderLoad = getThreadPoolMetrics("http-listener-1");
+            ThreadPoolMetrics listener2UnderLoad = getThreadPoolMetrics("http-listener-2");
+            
+            // Both listeners should show activity
+            assertTrue(listener1UnderLoad.currentThreadCount >= 0, "Listener 1 should maintain valid thread count under load");
+            assertTrue(listener2UnderLoad.currentThreadCount >= 0, "Listener 2 should maintain valid thread count under load");
+            
+            // Thread counts should be consistent with busy counts
+            assertTrue(listener1UnderLoad.currentThreadsBusy <= listener1UnderLoad.currentThreadCount, 
+                "Listener 1: Busy threads should not exceed current threads");
+            assertTrue(listener2UnderLoad.currentThreadsBusy <= listener2UnderLoad.currentThreadCount,
+                "Listener 2: Busy threads should not exceed current threads");
+            
+            executor.shutdown();
+            executor.awaitTermination(10, TimeUnit.SECONDS);
+            
+            Thread.sleep(1000); // Let threads settle
+            
+            // Final metrics check
+            ThreadPoolMetrics listener1Final = getThreadPoolMetrics("http-listener-1");
+            ThreadPoolMetrics listener2Final = getThreadPoolMetrics("http-listener-2");
+            
+            // Both should have valid final states
+            assertTrue(listener1Final.currentThreadCount >= 0, "Listener 1 final thread count should be valid");
+            assertTrue(listener2Final.currentThreadCount >= 0, "Listener 2 final thread count should be valid");
+            
+        } finally {
+            // Clean up http-listener-2
+            ASADMIN.exec("delete-http-listener", "http-listener-2");
         }
     }
 

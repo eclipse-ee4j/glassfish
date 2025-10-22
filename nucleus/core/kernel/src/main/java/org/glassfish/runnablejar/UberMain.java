@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +81,11 @@ public class UberMain {
 
     GlassFish glassFish;
     CommandRunner commandRunner;
+    String fatalErrorMessage = null;
+    String goodByeMessage = "GlassFish shut down. See you soon!";
+    boolean shutdownRequested = false;
+    // to be used in a shutdown hook when handlers are cleared already
+    Handler[] shutdownLogHandlers;
 
     public static void main(String... args) throws IOException, GlassFishException {
         final Arguments arguments = new CommandLineParser().parse(args);
@@ -88,11 +94,43 @@ public class UberMain {
         } else {
             // When running off the uber jar don't add extras module URLs to classpath.
             EmbeddedGlassFishRuntimeBuilder.addModuleJars = false;
-            new UberMain().run(arguments);
+            logger.info(() -> "GlassFish started. Welcome!");
+            UberMain uberMain = new UberMain();
+            try {
+                uberMain.run(arguments);
+                if (uberMain.isShutdownRequested()) {
+                    uberMain.stopGlassFish();
+                    exit(0);
+                }
+            } catch (Throwable ex) {
+                logger.log(SEVERE, ex.getMessage());
+                logger.log(FINE, ex.getMessage(), ex);
+                uberMain.stopGlassFish();
+                exit(1);
+            }
         }
     }
 
+    public UberMain() {
+        this.shutdownLogHandlers = Logger.getLogger("").getHandlers();
+    }
+
+
+
     public void run(Arguments arguments) throws GlassFishException {
+        try {
+            runInternal(arguments);
+        } catch (Throwable ex) {
+            fatalErrorMessage = ex.getMessage();
+            throw ex;
+        }
+    }
+
+    public boolean isShutdownRequested() {
+        return shutdownRequested;
+    }
+
+    private void runInternal(Arguments arguments) throws GlassFishException {
         addShutdownHook(); // handle Ctrt-C.
 
         GlassFishProperties gfProps = arguments.glassFishProperties;
@@ -121,7 +159,9 @@ public class UberMain {
 
         if (arguments.shutdown) {
             logger.log(INFO, () -> "Shutting down after startup as requested");
-            exit(0);
+            shutdownRequested = true;
+            goodByeMessage = "GlassFish shut down after startup as requested";
+            return;
         }
 
         switch (glassFish.getStatus()) {
@@ -187,24 +227,23 @@ public class UberMain {
                 commandParams[i - 1] = split[i].trim();
             }
         }
-        try {
-            CommandResult result = commandParams == null
-                    ? commandRunner.run(command) : commandRunner.run(command, commandParams);
-            switch (result.getExitStatus()) {
-                case SUCCESS:
-                    logger.log(INFO, () -> "SUCCESS: " + result.getOutput());
-                    break;
-                default:
-                    if (result.getFailureCause() != null) {
-                        throw result.getFailureCause();
+        CommandResult result = commandParams == null
+                ? commandRunner.run(command) : commandRunner.run(command, commandParams);
+        switch (result.getExitStatus()) {
+            case SUCCESS:
+                logger.log(INFO, () -> "SUCCESS: " + result.getOutput());
+                break;
+            default:
+                if (result.getFailureCause() != null) {
+                    if (result.getFailureCause() instanceof RuntimeException runtimeException) {
+                        throw runtimeException;
                     } else {
-                        throw new RuntimeException("Command completed with " + result.getExitStatus() + ": "
-                                + result.getOutput() + ". Command was: " + stringCommand);
+                        throw new RuntimeException(result.getFailureCause());
                     }
-            }
-        } catch (Throwable ex) {
-            logger.log(SEVERE, ex.getMessage());
-            logger.log(FINE, ex.getMessage(), ex);
+                } else {
+                    throw new RuntimeException("Command completed with " + result.getExitStatus() + ": "
+                            + result.getOutput() + ". Command was: " + stringCommand);
+                }
         }
     }
 
@@ -213,23 +252,38 @@ public class UberMain {
 
             @Override
             public void run() {
-                if (glassFish != null) {
-                    stopGlassFish();
+                // We restore the handlers because they are already removed from the logger in the shutdown hook
+                for (Handler handler : shutdownLogHandlers) {
+                    logger.addHandler(handler);
+                }
+
+                stopGlassFish();
+
+                for (Handler handler : logger.getHandlers()) {
+                    logger.removeHandler(handler);
                 }
             }
         });
     }
 
-    private void stopGlassFish() {
-        try {
-            glassFish.stop();
-        } catch (GlassFishException ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
-        } finally {
+    public void stopGlassFish() {
+        if (glassFish != null) {
             try {
-                glassFish.dispose();
+                glassFish.stop();
             } catch (GlassFishException ex) {
                 logger.log(Level.SEVERE, ex.getMessage(), ex);
+            } finally {
+                try {
+                    glassFish.dispose();
+                    glassFish = null;
+                } catch (GlassFishException ex) {
+                    logger.log(Level.SEVERE, ex.getMessage(), ex);
+                }
+            }
+            if (fatalErrorMessage != null) {
+                logger.severe(() -> "GlassFish shut down unexpectedly, due to an error: " + fatalErrorMessage);
+            } else {
+                logger.info(goodByeMessage);
             }
         }
     }

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class CommandLineParser {
 
-    private static Logger logger = Logger.getLogger(CommandLineParser.class.getName());
+    private static final Logger logger = Logger.getLogger(CommandLineParser.class.getName());
 
     public Arguments parse(String[] commandLineArgs) {
         Arguments arguments = new Arguments();
@@ -33,14 +33,40 @@ public class CommandLineParser {
         for (int i = 0; i < commandLineArgs.length; i++) {
             String arg = commandLineArgs[i];
             if (arg.startsWith("-")) {
-                final int initialCharsToIgnore = arg.startsWith("--") ? 2 : 1;
-                String[] keyValue = arg.substring(2).split("=", initialCharsToIgnore);
+                int initialCharsToIgnore = arg.startsWith("--") ? 2 : 1;
+                String optionPart = arg.substring(initialCharsToIgnore);
+
+                String key;
+                String value;
+
+                // Use split with a limit of 2 to handle '=' in the value
+                String[] keyValue = optionPart.split("=", 2);
+                key = keyValue[0];
+
                 try {
                     if (keyValue.length == 2) {
-                        arguments.setOption(keyValue[0], keyValue[1]);
+                        // Case 1: Handles --key=value or -k=value
+                        value = keyValue[1];
                     } else {
-                        arguments.setOption(keyValue[0], null); // No value, it's a flag
+                        // Case 2: Handles --key value (space) OR --key (flag)
+
+                        // Check if a "value" argument exists next
+                        boolean hasNextArg = i + 1 < commandLineArgs.length;
+                        // Check if the next arg is NOT an option itself
+                        boolean nextArgIsValue = hasNextArg && !commandLineArgs[i + 1].startsWith("-");
+
+                        if (nextArgIsValue) {
+                            // This is the --key value case
+                            value = commandLineArgs[i + 1];
+                            i++;
+                        } else {
+                            // This is a flag like --verbose
+                            value = "true";
+                        }
                     }
+
+                    arguments.setOption(key, value);
+
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Unknown argument " + arg);
                 }

@@ -322,8 +322,10 @@ The following is a list of variables defined by {productName} that can be used i
 |===
 |Variable | Description | Example value
 | `com.sun.aas.agentRoot` | The root directory for (remote) nodes | `/path/to/glassfish_installation/glassfish/nodes`
+| `com.sun.aas.configName` | The name of the server configuration | `server-config`
 | `com.sun.aas.configRoot` | The config directory in the domain | `/path/to/glassfish_installation/glassfish/config`
 | `com.sun.aas.derbyRoot` | The root directory for the Apache Derby database | `/path/to/glassfish_installation/javadb`
+| `com.sun.aas.domainName` | The name of the domain | `domain1`
 | `com.sun.aas.domainsRoot` | The root directory for domains | `/path/to/glassfish_installation/glassfish/domains`
 | `com.sun.aas.hostName` | The host name of the server | `192.168.0.1`
 | `com.sun.aas.imqBin` | The directory where the Message Queue binaries are located | `/path/to/glassfish_installation/mq/bin`

@@ -26,6 +26,7 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.universal.process.ProcessUtils;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.ServerDirs;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -93,6 +94,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
             boolean overwriteProperties = false;
             setSystemPropertiesFromEnv(overwriteProperties);
             setSystemPropertiesFromDomainXml(overwriteProperties);
+            setGlassFishSystemProperties();
             LOG.log(INFO, "Loaded embedded server named: {0}", server.getName());
             return;
         }
@@ -100,6 +102,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         boolean overwriteProperties = true;
         setSystemPropertiesFromEnv(overwriteProperties);
         setSystemPropertiesFromDomainXml(overwriteProperties);
+        setGlassFishSystemProperties();
         resolveJavaConfig();
         LOG.log(INFO, "Loaded server named: {0}", server.getName());
     }
@@ -174,6 +177,11 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         setSystemProperties(serverSPList, forceOverwrite);
     }
 
+    private void setGlassFishSystemProperties() {
+        setProperty(SystemPropertyConstants.CONFIG_NAME, server.getConfigRef(), true);
+        setProperty(SystemPropertyConstants.DOMAIN_NAME, domain.getName(), true);
+    }
+
     private List<SystemProperty> getConfigSystemProperties() {
         try {
             String configName = server.getConfigRef();
@@ -222,4 +230,5 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     private static boolean ok(String s) {
         return s != null && !s.isEmpty();
     }
+
 }

@@ -1,15 +1,17 @@
 package org.glassfish.runnablejar.commandline;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 class CommandLineParserTest {
@@ -33,14 +35,6 @@ class CommandLineParserTest {
         );
     }
 
-    static Stream<org.junit.jupiter.params.provider.Arguments> verboseValues() {
-        return Stream.of(
-                of((Object) new String[]{"--verbose"}),
-                of((Object) new String[]{"--verbose", "true"}),
-                of((Object) new String[]{"--verbose=true"})
-        );
-    }
-
     @ParameterizedTest
     @MethodSource("portValues")
     void parsePortOption(String[] arguments) {
@@ -52,6 +46,14 @@ class CommandLineParserTest {
         assertEquals(9090, port);
     }
 
+    static Stream<org.junit.jupiter.params.provider.Arguments> verboseValues() {
+        return Stream.of(
+                of((Object) new String[]{"--verbose"}),
+                of((Object) new String[]{"--verbose", "true"}),
+                of((Object) new String[]{"--verbose=true"})
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("verboseValues")
     void parseVerboseOption(String[] arguments) {
@@ -61,4 +63,22 @@ class CommandLineParserTest {
         assertEquals(0, out.size(),  "Expected no message to be printed");
         assertEquals("true", parse.glassFishProperties.getProperty("verbose"));
     }
+
+    @Test
+    void libraryAndWarOptionsTest() {
+        String[] arguments = {
+                "--noPort",
+                "--stop",
+                "add-library",
+                "testLibrary.jar",
+                "testLibraryApp.war"
+        };
+        Arguments parse = new CommandLineParser().parse(arguments);
+        String value = parse.glassFishProperties.getProperty("embedded-glassfish-config.server.network-config.network-listeners.network-listener.http-listener.enabled");
+        assertEquals("false", value);
+        assertEquals(3, parse.commands.size());
+        assertTrue(parse.shutdown);
+    }
+
+
 }

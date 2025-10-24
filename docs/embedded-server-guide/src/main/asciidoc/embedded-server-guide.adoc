@@ -268,8 +268,8 @@ java -jar glassfish-embedded-all.jar [--properties=FILE]
     [--help] [applications or admin commands...]
 ```
 
-```
-```
+Command line options with a value can be specified in two forms:
+`--option=value` (e.g., `--httpPort=8090`) or `--option value` (e.g., `--httpPort 8090`).
 
 `--properties=FILE`
 

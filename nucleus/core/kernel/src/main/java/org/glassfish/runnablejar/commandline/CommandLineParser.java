@@ -44,6 +44,7 @@ public class CommandLineParser {
                 key = keyValue[0];
 
                 try {
+                    boolean nextArgIsValue = false;
                     if (keyValue.length == 2) {
                         // Case 1: Handles --key=value or -k=value
                         value = keyValue[1];
@@ -53,7 +54,7 @@ public class CommandLineParser {
                         // Check if a "value" argument exists next
                         boolean hasNextArg = i + 1 < commandLineArgs.length;
                         // Check if the next arg is NOT an option itself
-                        boolean nextArgIsValue = hasNextArg && !commandLineArgs[i + 1].startsWith("-");
+                        nextArgIsValue = hasNextArg && !commandLineArgs[i + 1].startsWith("-");
 
                         if (nextArgIsValue) {
                             // This is the --key value case
@@ -65,8 +66,10 @@ public class CommandLineParser {
                         }
                     }
 
-                    arguments.setOption(key, value);
-
+                    Option option = arguments.setOption(key, value);
+                    if (nextArgIsValue && option != null && !option.handlesValue(value)) {
+                        i--;
+                    }
                 } catch (UnknownPropertyException e) {
                     logger.log(Level.WARNING, e, () -> "Unknown argument " + arg);
                 }

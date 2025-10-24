@@ -77,10 +77,10 @@ public class TranslatedConfigView implements ConfigView {
      * exists</li>
      * <li>null</li>
      * </ol>
-     * Environment variables are not considered if the system property {@code "org.glassfish.propertyexpansion.envvars.disabled"}
+     * Environment variables are not considered if the system property {@code "org.glassfish.variableExpansion.envDisabled"}
      * is set to {@code "true"}.
      * <p>
-     * Environment variables take preference over system properties if the system property {@code "org.glassfish.variableexpansion.envvars.preferred"} is set to {@code "true"}.
+     * Environment variables take preference over system properties if the system property {@code "org.glassfish.variableExpansion.envPreferred"} is set to {@code "true"}.
      * <p>
      * Also replaces nested expressions in names of variable references. For
      * example, for a variable "key" with value "name" and variable "servername" with value "GlassFish", the expression

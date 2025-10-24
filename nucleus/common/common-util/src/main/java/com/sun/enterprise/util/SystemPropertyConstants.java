@@ -45,8 +45,14 @@ public class SystemPropertyConstants {
 
     public static final String JHELP_ROOT_PROPERTY = "com.sun.aas.jhelpRoot";
 
+    /** name of the domain */
+    public static final String DOMAIN_NAME = "com.sun.aas.domainName";
+
     /** name of the server instance key */
     public static final String SERVER_NAME = "com.sun.aas.instanceName";
+
+    /** name of the server's config */
+    public static final String CONFIG_NAME = "com.sun.aas.configName";
 
     /** name of the server's cluster */
     public static final String CLUSTER_NAME = "com.sun.aas.clusterName";

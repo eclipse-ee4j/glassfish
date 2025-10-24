@@ -10,7 +10,7 @@
  * https://www.gnu.org/software/classpath/license.html.
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.helloworld.admingui;
+package org.glassfish.modernized.admingui;
 
 import java.net.URL;
 
@@ -36,7 +36,7 @@ import org.jvnet.hk2.annotations.Service;
  * as a separate OSGi bundle.
  */
 @Service
-public class HelloWorldConsolePlugin implements ConsoleProvider {
+public class LoggerSettingsPlugin implements ConsoleProvider {
 
     /**
      * Returns the URL to the plugin configuration file.

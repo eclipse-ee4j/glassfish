@@ -19,18 +19,14 @@
 
 <!--
     Console plugin configuration file that defines integration points.
-    
     This file tells the Admin Console how to integrate this plugin:
-    
     1. console-config id="helloworld" - unique identifier for this plugin
     2. integration-point - defines where and how to integrate with the console
-    
     Integration point types include:
     - org.glassfish.admingui:navNode - adds items to navigation tree
     - org.glassfish.admingui:mastheadStatusArea - adds content to masthead
     - org.glassfish.admingui:loginform - customizes login form
     - org.glassfish.admingui:loginimage - customizes login page image
-    
     The content attribute points to a JSF-Templating file (.jsf) that defines
     the actual UI component to be integrated. These .jsf files use the legacy
     JSF-Templating syntax but can reference modern JSF pages (.xhtml).
@@ -39,14 +35,12 @@
 
     <!--
         Navigation node integration point that adds "Hello World" to the sidebar.
-        
         Attributes explained:
         - id: unique identifier for this integration point
         - type: org.glassfish.admingui:navNode means add to navigation tree
         - priority: controls ordering (lower numbers appear first)
         - parentId: "tree" means add to root level of navigation tree
         - content: path to JSF-Templating file that defines the tree node
-        
         The content file (navigation/helloWorldNavNode.jsf) uses JSF-Templating
         syntax to create a <sun:treeNode> component that appears in the sidebar.
     -->

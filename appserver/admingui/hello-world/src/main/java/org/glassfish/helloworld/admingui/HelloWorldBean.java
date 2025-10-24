@@ -20,15 +20,12 @@ import jakarta.inject.Named;
 
 /**
  * CDI backing bean for the Hello World JSF page in GlassFish Admin Console.
- * 
  * This demonstrates how to create modern Jakarta Faces pages within the legacy
  * Admin Console framework. The key aspects:
- * 
  * 1. Uses CDI (@Named, @RequestScoped) instead of JSF managed beans
  * 2. Works seamlessly with the existing console infrastructure
  * 3. Can be injected with HK2 services via CDI producers if needed
  * 4. Follows standard JSF patterns for data binding and actions
- * 
  * The bean is automatically discovered by CDI due to the implicit bean archive
  * (no beans.xml needed) and made available to JSF via the @Named annotation.
  */
@@ -38,11 +35,9 @@ public class HelloWorldBean {
 
     /**
      * Returns the main greeting message displayed on the page.
-     * 
      * This method is called via EL expression #{helloWorldBean.message}
      * in the XHTML template. The property name follows JavaBean conventions
      * (getMessage() -> message property).
-     * 
      * @return the greeting message
      */
     public String getMessage() {
@@ -51,10 +46,8 @@ public class HelloWorldBean {
 
     /**
      * Returns a description of what this page demonstrates.
-     * 
      * Called via EL expression #{helloWorldBean.description} to show
      * additional information about the JSF integration.
-     * 
      * @return the description text
      */
     public String getDescription() {

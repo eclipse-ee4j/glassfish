@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2024 Contributors to the Eclipse Foundation
@@ -18,23 +17,16 @@
 -->
 
 <!--
-    Maven POM for Hello World Admin Console Plugin.
-    This demonstrates the minimal configuration needed for a JSF-enabled
-    Admin Console plugin. Key aspects:
-    1. PACKAGING: glassfish-jar creates an OSGi-compatible JAR
-    2. PARENT: inherits from admingui parent for consistent configuration
-    3. DEPENDENCIES: Only CDI and console-common are needed for basic JSF integration
-    4. DEV PROFILE: Enables automatic copying to distribution during development
-    The plugin architecture allows this JAR to be:
-    - Included directly in the admin WAR (current approach)
-    - Deployed as a separate OSGi bundle (alternative approach)
-    - Loaded dynamically at runtime via plugin discovery
+    Maven POM for Modernize Admin Console GUI.
+    Web-based administrative interface for GlassFish that provides
+    configuration, monitoring, and management of server domains,
+    applications, and resources through a modernized graphical UI.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!--
-    Inherit from admingui parent POM for consistent build configuration.
+        Inherit from admingui parent POM for consistent build configuration.
         This provides common dependencies, plugin versions, and build settings.
     -->
     <parent>
@@ -44,15 +36,15 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>console-hello-world-plugin</artifactId>
+    <artifactId>modernized-admingui</artifactId>
     <!--
         glassfish-jar packaging creates OSGi-compatible JAR with proper manifest.
         This allows the plugin to work in both embedded and OSGi deployment modes.
     -->
     <packaging>glassfish-jar</packaging>
 
-    <name>Admin Console Hello World Plugin</name>
-    <description>Hello World plugin example for GlassFish Admin Console</description>
+    <name>Admin Console Modernized Admingui</name>
+    <description>This module contain modernized console admin GUI</description>
 
     <dependencies>
         <!--
@@ -76,6 +68,12 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>15.0.7</version>
+            <classifier>jakarta</classifier>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -96,7 +94,7 @@
                     This path is where the admin WAR's classloader will find the plugin.
                     The path structure matches the admin console's plugin loading mechanism.
                 -->
-                <copy.modules.to.distribution.destFile>${basedir}/../../../distributions/glassfish/target/stage/glassfish7/glassfish/lib/install/applications/__admingui/WEB-INF/lib/console-hello-world-plugin-${project.version}.jar</copy.modules.to.distribution.destFile>
+                <copy.modules.to.distribution.destFile>${basedir}/../../../appserver/distributions/glassfish/target/stage/glassfish7/glassfish/lib/install/applications/__admingui/WEB-INF/lib/modernized-admingui-${project.version}.jar</copy.modules.to.distribution.destFile>
             </properties>
         </profile>
     </profiles>

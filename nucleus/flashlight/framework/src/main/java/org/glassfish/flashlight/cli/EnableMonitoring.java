@@ -126,7 +126,7 @@ public class EnableMonitoring implements AdminCommand, AdminCommandSecurity.Prea
          if (!AgentAttacher.attachAgent(pidInt, options)) {
             ActionReport.MessagePart part = report.getTopMessagePart().addChild();
             part.setMessage(localStrings.getLocalString("attach.agent.exception",
-                    "Can't attach the agent to the JVM."));
+                    "Can't attach the agent to the JVM. Restart with the flash-light agent attached by the -javaagent command line parameter"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }

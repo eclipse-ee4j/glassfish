@@ -29,6 +29,11 @@
     <packaging>pom</packaging>
 
     <name>GlassFish Embedded modules</name>
+    
+    <properties>
+        <glassfish.embedded.add-opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</glassfish.embedded.add-opens>
+        <glassfish.embedded.add-exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation java.base/jdk.internal.loader</glassfish.embedded.add-exports>
+    </properties>
 
     <modules>
         <module>common</module>

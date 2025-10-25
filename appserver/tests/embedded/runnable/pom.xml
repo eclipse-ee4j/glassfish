@@ -51,6 +51,11 @@
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.flashlight</groupId>
+            <artifactId>flashlight-agent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

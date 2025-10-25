@@ -44,6 +44,12 @@
             <type>pom</type>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <type>zip</type>
+            <version>${glassfish.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
         </dependency>
@@ -59,12 +65,25 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>copy-embedded</id>
                         <phase>generate-test-resources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <includeGroupIds>org.glassfish.main.extras</includeGroupIds>
+                            <outputDirectory>${surefire.workdir}</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-static-shell</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.glassfish.main.distributions</includeGroupIds>
                             <outputDirectory>${surefire.workdir}</outputDirectory>
                             <stripVersion>true</stripVersion>
                         </configuration>

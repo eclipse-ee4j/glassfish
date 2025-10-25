@@ -131,6 +131,7 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
     }
 
     private void setEnv(GlassFishProperties gfProps) throws Exception {
+        gfProps.setProperty("-type", "EMBEDDED");
         String instanceRootValue = gfProps.getInstanceRoot();
         if (instanceRootValue == null) {
             instanceRootValue = createTempInstanceRoot(gfProps);
@@ -144,7 +145,6 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
         if (installRootValue == null) {
             installRootValue = instanceRoot.getAbsolutePath();
-            gfProps.setProperty("-type", "EMBEDDED");
             JarUtil.extractRars(installRootValue);
         }
         JarUtil.setEnv(installRootValue);

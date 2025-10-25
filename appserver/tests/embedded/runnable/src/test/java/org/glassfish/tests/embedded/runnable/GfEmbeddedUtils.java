@@ -53,15 +53,22 @@ public class GfEmbeddedUtils {
         return runGlassFishEmbedded(glassfishEmbeddedJarName, List.of(), additionalArguments);
     }
 
-    public static Process runGlassFishEmbedded(String glassfishEmbeddedJarName, List<String> jvmOpts, String... additionalArguments) throws IOException {
+    public static Process runGlassFishEmbedded(String glassfishEmbeddedJarName, List<String> jvmOpts, String...
+additionalArguments) throws IOException {
+        return runGlassFishEmbedded(glassfishEmbeddedJarName, false, jvmOpts, additionalArguments);
+    }
+
+    public static Process runGlassFishEmbedded(String glassfishEmbeddedJarName, boolean keepRunning, List<String> jvmOpts, String... additionalArguments) throws IOException {
         List<String> arguments = new ArrayList<>();
         arguments.add(ProcessHandle.current().info().command().get());
         addDebugArgsIfDebugEnabled(arguments);
         arguments.addAll(jvmOpts);
         arguments.addAll(List.of(
                 "-jar", glassfishEmbeddedJarName,
-                "--noPort",
-                "--stop"));
+                "--noPort"));
+        if (!keepRunning) {
+            arguments.add("--stop");
+        }
         for (String argument : additionalArguments) {
             arguments.add(argument);
         }

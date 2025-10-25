@@ -15,15 +15,19 @@
  */
 package org.glassfish.tests.embedded.runnable;
 
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
@@ -31,11 +35,18 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 import org.glassfish.tests.embedded.runnable.TestArgumentProviders.GfEmbeddedJarNameProvider;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.tests.embedded.runnable.GfEmbeddedUtils.runGlassFishEmbedded;
+import static org.glassfish.tests.embedded.runnable.ShrinkwrapUtils.logArchiveContent;
+import static org.glassfish.tests.embedded.runnable.TestUtils.waitFor;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * @author Ondro Mihalyi
@@ -43,113 +54,112 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MonitoringTest {
 
     private static final Logger LOG = Logger.getLogger(MonitoringTest.class.getName());
-    private static final int JMX_PORT = 8686;
-    private static final int WAIT_SECONDS = 30;
 
     @ParameterizedTest
     @ArgumentsSource(GfEmbeddedJarNameProvider.class)
     void testJmxMonitoringWithFlashlightAgent(String gfEmbeddedJarName) throws Exception {
+        assumeTrue(!gfEmbeddedJarName.endsWith("web.jar"),
+                "AMX is not supported by glassfish-embedded-web.jar, skipping this test scenario");
         Process gfEmbeddedProcess = null;
         JMXConnector jmxConnector = null;
+        File warFile = null;
         try {
-            gfEmbeddedProcess = startGlassFishWithJmx(gfEmbeddedJarName);
+            // an app needs to be deployed to initialize request monitoring
+            warFile = createEmptyApp();
+            gfEmbeddedProcess = startGlassFishWithJmx(gfEmbeddedJarName, warFile);
 
             jmxConnector = connectToJmx();
             MBeanServerConnection mbsc = jmxConnector.getMBeanServerConnection();
 
-            bootAmxAndWait(mbsc);
+            bootAmx(mbsc);
 
             verifyMonitoringMBeans(mbsc);
 
         } finally {
-            cleanup(jmxConnector, gfEmbeddedProcess);
+            cleanup(jmxConnector, gfEmbeddedProcess, warFile);
         }
     }
 
-    private File createMonitoringPropertiesFile() throws Exception {
-        File propertiesFile = File.createTempFile("monitoring", ".properties");
-        java.nio.file.Files.write(propertiesFile.toPath(), List.of(
-                "configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH",
-                "configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH"
-        ));
-        return propertiesFile;
+    private File createEmptyApp() throws Exception {
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "empty-app.war")
+                .addAsWebInfResource("", "beans.xml");
+
+        File warFile = File.createTempFile("empty-app", ".war");
+        war.as(ZipExporter.class).exportTo(warFile, true);
+        logArchiveContent(war, "empty-app.war", LOG::info);
+        return warFile;
     }
 
-    private Process startGlassFishWithJmx(String gfEmbeddedJarName) throws IOException {
-        List<String> arguments = new ArrayList<>();
-        arguments.add(ProcessHandle.current().info().command().get());
-        arguments.addAll(List.of(
-                "-javaagent:flashlight-agent.jar",
-                "-Dcom.sun.management.jmxremote",
-                "-Dcom.sun.management.jmxremote.port=" + JMX_PORT,
-                "-Dcom.sun.management.jmxremote.authenticate=false",
-                "-Dcom.sun.management.jmxremote.ssl=false",
-                "-jar", gfEmbeddedJarName,
-                "--noPort",
-                "enable-monitoring --modules http-service"
-        ));
-
-        return new ProcessBuilder()
-                .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                .redirectError(ProcessBuilder.Redirect.PIPE)
-                .command(arguments)
-                .start();
+    private Process startGlassFishWithJmx(String gfEmbeddedJarName, File warFile) throws IOException {
+        return runGlassFishEmbedded(gfEmbeddedJarName, true,
+                List.of("-Dcom.sun.management.jmxremote",
+                        "-javaagent:flashlight-agent.jar"),
+                "enable-monitoring --modules http-service",
+                warFile.getAbsolutePath());
     }
 
-    private JMXConnector connectToJmx() throws Exception {
-        JMXServiceURL serviceURL = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + JMX_PORT + "/jmxrmi");
-
-        for (int i = 0; i < WAIT_SECONDS * 2; i++) {
+    private JMXConnector connectToJmx() throws InterruptedException {
+        return waitFor("JMX connector", () -> {
+            VirtualMachine vm = null;
+            String connectorAddress = null;
             try {
-                return JMXConnectorFactory.connect(serviceURL, null);
+                // Find GlassFish process by looking for our jar
+                for (VirtualMachineDescriptor vmd : VirtualMachine.list()) {
+                    if (vmd.displayName().contains("glassfish-embedded")) {
+                        vm = VirtualMachine.attach(vmd.id());
+
+                        // Get or create JMX connector address
+                        Properties props = vm.getAgentProperties();
+                        vm.detach();
+                        vm = null;
+                        connectorAddress = props.getProperty("com.sun.management.jmxremote.localConnectorAddress");
+
+                        if (connectorAddress != null) {
+                            JMXServiceURL serviceURL = new JMXServiceURL(connectorAddress);
+                            return JMXConnectorFactory.connect(serviceURL, null);
+                        } else {
+                            throw new UnsupportedOperationException("Connector address not available!");
+                        }
+                    }
+                }
             } catch (Exception e) {
-                Thread.sleep(500);
+                LOG.log(WARNING, e.getMessage(), e);
+                if (vm != null) try { vm.detach(); } catch (Exception ignored) {}
             }
-        }
-        throw new IllegalStateException("Could not connect to JMX in " + WAIT_SECONDS + " seconds");
+            return (JMXConnector)null;
+        });
     }
 
-    private void bootAmxAndWait(MBeanServerConnection mbsc) throws Exception {
+    private void bootAmx(MBeanServerConnection mbsc) throws Exception {
         ObjectName bootAMXObjectName = new ObjectName("amx-support:type=boot-amx");
 
-        for (int i = 0; i < WAIT_SECONDS * 2; i++) {
-            if (mbsc.isRegistered(bootAMXObjectName)) {
-                break;
-            }
-            Thread.sleep(500);
-        }
-
-
-        assertTrue(mbsc.isRegistered(bootAMXObjectName), "bootAMX is registered");
+        waitFor("bootAMX", () -> mbsc.isRegistered(bootAMXObjectName) ? true : null);
 
         mbsc.invoke(bootAMXObjectName, "bootAMX", null, null);
-
-        // Wait for AMX runtime to be available
-        for (int i = 0; i < WAIT_SECONDS * 2; i++) {
-            Set<ObjectName> runtimeBeans = mbsc.queryNames(new ObjectName("amx:pp=/,type=runtime"), null);
-            if (!runtimeBeans.isEmpty()) {
-                return;
-            }
-            Thread.sleep(500);
-        }
-        throw new IllegalStateException("AMX runtime not available after " + WAIT_SECONDS + " seconds");
     }
 
-    private void verifyMonitoringMBeans(MBeanServerConnection mbsc) throws Exception {
-        Set<ObjectName> requestBeans = mbsc.queryNames(new ObjectName("amx:type=request-mon,*"), null);
-        assertTrue(!requestBeans.isEmpty(), "Request monitoring MBean should be present");
+    private void verifyMonitoringMBeans(final MBeanServerConnection mbsc) throws InterruptedException, IOException, JMException {
+        Set<ObjectName> requestBeans = waitFor("equest-mon bean", () -> {
+            Set<ObjectName> result = mbsc.queryNames(new ObjectName("amx:type=request-mon,*"), null);
+            return result.isEmpty() ? null : result;
+        });
 
         // Verify we can read monitoring data
         ObjectName requestBean = requestBeans.iterator().next();
         assertNotNull(mbsc.getAttribute(requestBean, "countrequests"), "Should be able to read request count");
     }
 
-    private void cleanup(JMXConnector jmxConnector, Process process) throws InterruptedException {
+    private void cleanup(JMXConnector jmxConnector, Process process, File... files) throws InterruptedException {
         if (jmxConnector != null) try { jmxConnector.close(); } catch (Exception ignored) {}
         if (process != null && process.isAlive()) {
-            process.destroyForcibly();
+            process.destroy();
             process.waitFor(5, TimeUnit.SECONDS);
+            if (process.isAlive()) {
+                process.destroy();
+                process.waitFor(5, TimeUnit.SECONDS);
+            }
         }
+        cleanupFiles(files);
     }
 
     private void cleanupFiles(File... files) {

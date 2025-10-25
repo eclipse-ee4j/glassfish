@@ -2068,6 +2068,11 @@ java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFis
 
 Embedded {productName} supports monitoring through JMX MBeans, similar to regular {productName} Server. However, you must attache the flashlight agent on command line to enable monitoring functionality.
 
+[IMPORTANT]
+====
+AMX (Application Management Extensions) monitoring is only available in `glassfish-embedded-all.jar`. The `glassfish-embedded-web.jar` does not include AMX support, which limits the available monitoring MBeans.
+====
+
 === Prerequisites
 
 To enable monitoring in Embedded {productName}, you need the flashlight agent JAR file:

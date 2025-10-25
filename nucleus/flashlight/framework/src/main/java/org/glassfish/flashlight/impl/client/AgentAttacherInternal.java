@@ -48,7 +48,6 @@ final class AgentAttacherInternal {
         return attachAgent(-1, "");
     }
 
-    private static final String AGENT_CLASSNAME = "org.glassfish.flashlight.agent.ProbeAgentMain";
     static boolean attachAgent(long pid, String options) {
         try {
             if (isAttached) {
@@ -57,11 +56,9 @@ final class AgentAttacherInternal {
 
             if (pid < 0) {
 
-                try {
-                    ClassLoader.getSystemClassLoader().loadClass(AGENT_CLASSNAME);
+                if (AgentAttacher.getInstrumentation().isPresent()) {
                     isAttached = true;
                     return true;
-                } catch (Throwable t) {
                 }
 
                 pid = ProcessHandle.current().pid();

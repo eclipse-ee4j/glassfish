@@ -102,6 +102,12 @@ public enum Option {
         public void handle(String value, Arguments arguments) {
             setPort(DEFAULT_HTTP_LISTENER, 0, arguments);
         }
+
+        @Override
+        public boolean handlesValue(String value) {
+            return isBooleanValue(value);
+        }
+
     },
     AUTO_DEPLOY_DIR("autoDeployDir", "--autoDeployDir=DIRECTORY",
             "Files and directories in this directory will be deployed as applications (in random order), as if they"
@@ -138,6 +144,11 @@ public enum Option {
             arguments.noInfo = (noInfo == null || Boolean.valueOf(noInfo));
         }
 
+        @Override
+        public boolean handlesValue(String value) {
+            return isBooleanValue(value);
+        }
+
     },
     SHUTDOWN("shutdown", Set.of("shut-down", "stop"), "--shut-down, --shutdown, --stop",
     "Shut down GlassFish and the whole JVM process after server is started and initialized."
@@ -150,6 +161,12 @@ public enum Option {
         public void handle(String value, Arguments arguments) {
             arguments.shutdown = true;
         }
+
+        @Override
+        public boolean handlesValue(String value) {
+            return isBooleanValue(value);
+        }
+
     },
     PROMPT("prompt", "--prompt",
     "Run interactive prompt that allows running admin commands. This is useful in development"
@@ -158,12 +175,24 @@ public enum Option {
         public void handle(String value, Arguments arguments) {
             arguments.prompt = true;
         }
+
+        @Override
+        public boolean handlesValue(String value) {
+            return isBooleanValue(value);
+        }
+
     },
     HELP("help", "--help", "Print this help") {
         @Override
         public void handle(String value, Arguments arguments) {
             arguments.askedForHelp = true;
         }
+
+        @Override
+        public boolean handlesValue(String value) {
+            return isBooleanValue(value);
+        }
+
     };
 
     protected static final Logger logger = Logger.getLogger(Option.class.getName());
@@ -195,7 +224,27 @@ public enum Option {
         }
     }
 
+    /**
+     * Apply the option to the arguments structure.
+     * @param value Value for the option. Can be null if no value provided.
+     * @param arguments Output structure to modify according to the key and value
+     */
     public abstract void handle(String value, Arguments arguments);
+
+    /**
+     * Whether the value will be handled by this option or should be treated as another option.
+     * @param value Value of the option
+     * @return {@code true} if the value will be handled, either because a value is required, or because a value is optional and this value is valid
+     */
+    public boolean handlesValue(String value) {
+        return true;
+    }
+
+    protected boolean isBooleanValue(String value) {
+        return value == null
+                || "true".equalsIgnoreCase(value)
+                || "false".equalsIgnoreCase(value);
+    }
 
     public String getMainName() {
         return mainName;

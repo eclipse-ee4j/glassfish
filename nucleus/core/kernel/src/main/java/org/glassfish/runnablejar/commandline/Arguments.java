@@ -130,7 +130,15 @@ public class Arguments {
         deployables.add(deployable);
     }
 
-    void setOption(String key, String value) throws UnknownPropertyException {
+    /**
+     * Apply the option to this object.
+     * @param key Option name
+     * @param value Option value. Can be {@code null} if not value is provided.
+     * @return The {@code Option} that was used to apply the option. Can be {@code null}, e.g. for commands and deployable files.
+     *   If the value was provided but it's not applicable, {@link Option#handlesValue(java.lang.String)} returns false, and the value should be treated as another option.
+     * @throws UnknownPropertyException If the option is not recognized and cannot be applied
+     */
+    Option setOption(String key, String value) throws UnknownPropertyException {
         try {
             Option option;
             try {
@@ -147,13 +155,15 @@ public class Arguments {
                 } else {
                     throw new UnknownPropertyException(key, value);
                 }
-                return;
+                return null;
             }
 
             option.handle(value, this);
+            return option;
 
         } catch (RuntimeException e) {
             logger.log(Level.WARNING, e, () -> "Could not set property " + key + " to value " + value + " - " + e.getMessage());
+            return null;
         }
     }
 

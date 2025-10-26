@@ -10,27 +10,27 @@
 
 package org.glassfish.main.test.app.monitoring;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 @WebServlet("/slow")
 public class SlowServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
             Thread.sleep(2000); // 2 second delay to keep threads busy
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        
+
         resp.setContentType("text/plain");
         try (PrintWriter writer = resp.getWriter()) {
             writer.println("Slow response completed");

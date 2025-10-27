@@ -25,8 +25,10 @@ public class SlowServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        String delayParam = req.getParameter("delay");
+        int delay = delayParam != null ? Integer.parseInt(delayParam) : 5000;
         try {
-            Thread.sleep(2000); // 2 second delay to keep threads busy
+            Thread.sleep(delay); // delay to keep threads busy
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

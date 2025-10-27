@@ -42,6 +42,14 @@ public interface NetworkProxy extends EndpointMapper<HttpHandler>{
      */
     void stop() throws IOException;
 
+    /**
+     * Stop the proxy and remove all shared resources if it's the last proxy.
+     * @param lastOne Whether it's the last proxy.
+     *   {@code false} if other proxies still exist and depend on the shared resources
+     */
+    default void stop(boolean lastOne) throws IOException {
+        stop();
+    }
 
     /**
      * Start the proxy.

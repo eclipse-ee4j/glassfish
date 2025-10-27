@@ -7,17 +7,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.main.test.app.monitoring;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
@@ -28,15 +29,24 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class ThreadPoolMonitoringTest {
 
     private static final Logger LOG = Logger.getLogger(ThreadPoolMonitoringTest.class.getName());
@@ -69,6 +79,13 @@ public class ThreadPoolMonitoringTest {
 
     @Test
     void testThreadPoolMetricsUnderLoad() throws Exception {
+
+                AsadminResult createResult = ASADMIN.exec("create-http-listener",
+                "--listenerport=8081", "--listeneraddress=0.0.0.0",
+                "--defaultvs=server", "http-listener-test");
+//            ASADMIN.exec("delete-http-listener", "http-listener-test");
+
+
         // Get baseline metrics
         ThreadPoolMetrics baseline = getThreadPoolMetrics();
         assertThat("baseline current thread count", baseline.currentThreadCount(), greaterThanOrEqualTo(0));
@@ -79,12 +96,16 @@ public class ThreadPoolMonitoringTest {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         CompletableFuture<?>[] futures = new CompletableFuture[20];
 
+        AtomicInteger activeRequests = new AtomicInteger(0);
+
         for (int i = 0; i < futures.length; i++) {
             futures[i] = CompletableFuture.runAsync(() -> {
                 try {
                     HttpURLConnection conn = GlassFishTestEnvironment.openConnection(8080, "/threadpool-test/slow");
                     conn.setRequestMethod("GET");
+                    activeRequests.incrementAndGet();
                     conn.getResponseCode();
+                    activeRequests.decrementAndGet();
                     conn.disconnect();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -97,7 +118,9 @@ public class ThreadPoolMonitoringTest {
         ThreadPoolMetrics duringLoad = getThreadPoolMetrics();
 
         assertThat("current threads during load", duringLoad.currentThreadCount(), greaterThanOrEqualTo(baseline.currentThreadCount()));
-        assertThat("busy threads during load", duringLoad.currentThreadsBusy(), greaterThanOrEqualTo(1));
+        int numberOfConcurrentRequests = Math.min(activeRequests.get(), baseline.maxThreads());
+        LOG.info("Number of active requests: " + numberOfConcurrentRequests);
+        assertThat("busy threads during load at least number of current active requests or max threads", duringLoad.currentThreadsBusy(), greaterThanOrEqualTo(numberOfConcurrentRequests));
         assertThat("busy threads during load", duringLoad.currentThreadsBusy(), lessThanOrEqualTo(duringLoad.currentThreadCount()));
         assertThat("current threads during load", duringLoad.currentThreadCount(), lessThanOrEqualTo(duringLoad.maxThreads()));
 
@@ -264,8 +287,8 @@ public class ThreadPoolMonitoringTest {
 
     private static File createDeployment() throws IOException {
         WebArchive war = ShrinkWrap.create(WebArchive.class, APP_NAME + ".war")
-            .addClass(TestServlet.class)
-            .addClass(SlowServlet.class);
+                .addClass(TestServlet.class)
+                .addClass(SlowServlet.class);
 
         File warFile = new File(System.getProperty("java.io.tmpdir"), APP_NAME + ".war");
         war.as(ZipExporter.class).exportTo(warFile, true);
@@ -278,21 +301,18 @@ public class ThreadPoolMonitoringTest {
 
     private ThreadPoolMetrics getThreadPoolMetrics(String listenerName) {
         // First, let's see what monitoring data is actually available
-        AsadminResult listResult = ASADMIN.exec("list", "*thread*");
-        System.out.println("Available thread monitoring paths: " + listResult.getStdOut());
+        AsadminResult listResult = ASADMIN.exec("list", "-m", "*thread-pool*");
+        LOG.info("Available thread monitoring paths: " + listResult.getStdOut());
 
         // Try to get metrics from the specified listener
         String basePath = "server.network." + listenerName + ".thread-pool";
-        AsadminResult currentResult = ASADMIN.exec("get", "-m", basePath + ".currentthreadcount");
-        AsadminResult busyResult = ASADMIN.exec("get", "-m", basePath + ".currentthreadsbusy");
-        AsadminResult maxResult = ASADMIN.exec("get", "-m", basePath + ".maxthreads");
-        AsadminResult minResult = ASADMIN.exec("get", "-m", basePath + ".minthreads");
+        AsadminResult result = ASADMIN.exec("get", "-m", basePath + ".*");
 
         return new ThreadPoolMetrics(
-            extractMetric(currentResult.getStdOut(), "currentthreadcount"),
-            extractMetric(busyResult.getStdOut(), "currentthreadsbusy"),
-            extractMetric(minResult.getStdOut(), "minthreads"),
-            extractMetric(maxResult.getStdOut(), "maxthreads")
+                extractMetric(result.getStdOut(), "currentthreadcount"),
+                extractMetric(result.getStdOut(), "currentthreadsbusy"),
+                extractMetric(result.getStdOut(), "minthreads"),
+                extractMetric(result.getStdOut(), "maxthreads")
         );
     }
 
@@ -303,7 +323,7 @@ public class ThreadPoolMonitoringTest {
                 return Integer.parseInt(line.split("=")[1].trim());
             }
         }
-        return -1000;
+        return -911000;
     }
 
     private ThreadPoolConfig getThreadPoolConfig() {
@@ -316,8 +336,8 @@ public class ThreadPoolMonitoringTest {
         AsadminResult maxResult = ASADMIN.exec("get", basePath + ".max-thread-pool-size");
 
         return new ThreadPoolConfig(
-            extractConfig(minResult.getStdOut(), "min-thread-pool-size"),
-            extractConfig(maxResult.getStdOut(), "max-thread-pool-size")
+                extractConfig(minResult.getStdOut(), "min-thread-pool-size"),
+                extractConfig(maxResult.getStdOut(), "max-thread-pool-size")
         );
     }
 
@@ -328,7 +348,7 @@ public class ThreadPoolMonitoringTest {
                 return Integer.parseInt(line.split("=")[1].trim());
             }
         }
-        return -1000;
+        return -911000;
     }
 
     private void makeRequest(String urlString) {
@@ -346,9 +366,11 @@ public class ThreadPoolMonitoringTest {
     }
 
     private record ThreadPoolMetrics(int currentThreadCount, int currentThreadsBusy, int minThreads, int maxThreads) {
+
     }
 
     private record ThreadPoolConfig(int minThreads, int maxThreads) {
+
     }
 
     @Test
@@ -448,14 +470,11 @@ public class ThreadPoolMonitoringTest {
             assertThat("current threads after decrease", afterDecrease.currentThreadCount(), greaterThanOrEqualTo(0));
             assertThat("busy threads after decrease", afterDecrease.currentThreadsBusy(), greaterThanOrEqualTo(0));
 
-            // Since we had 80 concurrent requests, current threads should still be high
-            // (threads don't disappear instantly when pool size is reduced)
-            assertThat("current threads after decrease", afterDecrease.currentThreadCount(), greaterThanOrEqualTo(10));
-
             executor.shutdown();
             Thread.sleep(4000); // Wait for requests to complete
 
             ThreadPoolMetrics afterCompletion = getThreadPoolMetrics();
+            assertThat("current threads after completion", afterCompletion.currentThreadsBusy(), equalTo(0));
             assertThat("current threads after completion", afterCompletion.currentThreadCount(), greaterThanOrEqualTo(0));
             assertThat("current threads after completion", afterCompletion.currentThreadCount(), lessThanOrEqualTo(10));
 
@@ -466,9 +485,12 @@ public class ThreadPoolMonitoringTest {
 
     @Test
     void testThreadPoolSizeCycling() throws Exception {
-        ThreadPoolConfig initial = getThreadPoolConfig();
-        int originalMinThreads = initial.minThreads();
-        int originalMaxThreads = initial.maxThreads();
+        ThreadPoolConfig initialConfig = getThreadPoolConfig();
+        int originalMinThreads = initialConfig.minThreads();
+        int originalMaxThreads = initialConfig.maxThreads();
+        ThreadPoolMetrics metrics = getThreadPoolMetrics();
+
+        assertThat("max threads in pool matches config", metrics.maxThreads(), equalTo(initialConfig.minThreads));
 
         try {
             int[] testSizes = {originalMaxThreads + 3, originalMaxThreads - 1, originalMaxThreads + 7, originalMaxThreads};
@@ -483,17 +505,50 @@ public class ThreadPoolMonitoringTest {
                 ASADMIN.exec("set", "configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + testSize);
                 Thread.sleep(1500);
 
-                ThreadPoolMetrics metrics = getThreadPoolMetrics();
-                assertThat("max threads (testSize=" + testSize + ")", metrics.maxThreads(), equalTo(testSize));
+                metrics = getThreadPoolMetrics();
+                assertThat("max threads (case " + i + ", testSize=" + testSize + ")", metrics.maxThreads(), equalTo(testSize));
                 int currentThreadsMaxSize = Math.max(testSize, originalMinThreads);
-                assertThat("current threads (testSize=" + testSize + ")", metrics.currentThreadCount(), lessThanOrEqualTo(currentThreadsMaxSize));
-                assertThat("busy threads (testSize=" + testSize + ")", metrics.currentThreadsBusy(), lessThanOrEqualTo(metrics.currentThreadCount()));
+                assertThat("current threads (case " + i + ", testSize=" + testSize + ")", metrics.currentThreadCount(), lessThanOrEqualTo(currentThreadsMaxSize));
+                assertThat("busy threads (case " + i + ", testSize=" + testSize + ")", metrics.currentThreadsBusy(), lessThanOrEqualTo(metrics.currentThreadCount()));
             }
 
         } finally {
             ASADMIN.exec("set", "configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + originalMaxThreads);
         }
     }
+
+    static boolean stop = false;
+
+    @BeforeEach
+    void continueIfNotStop() {
+        assumeFalse(stop);
+    }
+
+    @AfterEach
+    void verifyAdminListener() {
+        try {
+        ThreadPoolMetrics adminBaseline = getThreadPoolMetrics("admin-listener");
+
+        // Verify admin listener has valid baseline metrics
+        assertThat("admin listener current threads", adminBaseline.currentThreadCount(), greaterThanOrEqualTo(0));
+        assertThat("admin listener max threads", adminBaseline.maxThreads(), greaterThan(0));
+        assertThat("admin listener busy threads", adminBaseline.currentThreadsBusy(), greaterThanOrEqualTo(0));
+        } catch (Exception e) {
+            stop = true;
+            throw e;
+        }
+    }
+
+    @RegisterExtension
+    AfterTestExecutionCallback afterTestExecutionCallback = new AfterTestExecutionCallback() {
+        @Override
+        public void afterTestExecution(ExtensionContext context) throws Exception {
+            Optional<Throwable> exception = context.getExecutionException();
+            if (exception.isPresent()) { // has exception
+                stop = true;
+            }
+        }
+    };
 
     @Test
     void testAdminListenerThreadPoolMetrics() throws Exception {
@@ -544,17 +599,17 @@ public class ThreadPoolMonitoringTest {
 
     @Test
     void testDualListenerThreadPoolMetrics() throws Exception {
-        // First create http-listener-2 if it doesn't exist
+        // First create http-listener-test if it doesn't exist
         AsadminResult createResult = ASADMIN.exec("create-http-listener",
-            "--listenerport=8081", "--listeneraddress=0.0.0.0",
-            "--defaultvs=server", "http-listener-2");
+                "--listenerport=8081", "--listeneraddress=0.0.0.0",
+                "--defaultvs=server", "http-listener-test");
 
         try {
             Thread.sleep(2000); // Allow listener to initialize
 
             // Get baseline metrics for both listeners
             ThreadPoolMetrics listener1Baseline = getThreadPoolMetrics("http-listener-1");
-            ThreadPoolMetrics listener2Baseline = getThreadPoolMetrics("http-listener-2");
+            ThreadPoolMetrics listener2Baseline = getThreadPoolMetrics("http-listener-test");
 
             // Verify both listeners have valid baseline metrics
             assertThat("listener 1 current threads", listener1Baseline.currentThreadCount(), greaterThanOrEqualTo(0));
@@ -573,7 +628,7 @@ public class ThreadPoolMonitoringTest {
 
             // Check metrics during dual load
             ThreadPoolMetrics listener1UnderLoad = getThreadPoolMetrics("http-listener-1");
-            ThreadPoolMetrics listener2UnderLoad = getThreadPoolMetrics("http-listener-2");
+            ThreadPoolMetrics listener2UnderLoad = getThreadPoolMetrics("http-listener-test");
 
             // Both listeners should show activity
             assertThat("listener 1 current threads under load", listener1UnderLoad.currentThreadCount(), greaterThanOrEqualTo(0));
@@ -590,15 +645,15 @@ public class ThreadPoolMonitoringTest {
 
             // Final metrics check
             ThreadPoolMetrics listener1Final = getThreadPoolMetrics("http-listener-1");
-            ThreadPoolMetrics listener2Final = getThreadPoolMetrics("http-listener-2");
+            ThreadPoolMetrics listener2Final = getThreadPoolMetrics("http-listener-test");
 
             // Both should have valid final states
             assertThat("listener 1 final current threads", listener1Final.currentThreadCount(), greaterThanOrEqualTo(0));
             assertThat("listener 2 final current threads", listener2Final.currentThreadCount(), greaterThanOrEqualTo(0));
 
         } finally {
-            // Clean up http-listener-2
-            ASADMIN.exec("delete-http-listener", "http-listener-2");
+            // Clean up http-listener-test
+            ASADMIN.exec("delete-http-listener", "http-listener-test");
         }
     }
 

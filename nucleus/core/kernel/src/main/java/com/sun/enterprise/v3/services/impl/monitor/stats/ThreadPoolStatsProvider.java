@@ -143,10 +143,11 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     public void threadDispatchedFromPoolEvent(
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
-            @ProbeParam("threadId") long threadId) {
+            @ProbeParam("threadId") long threadId,
+            @ProbeParam("busyThreadCount") long busyThreadCount) {
 
         if (name.equals(monitoringId)) {
-            currentThreadsBusy.increment();
+            currentThreadsBusy.setCount(busyThreadCount);
         }
     }
 
@@ -154,11 +155,12 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     public void threadReturnedToPoolEvent(
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
-            @ProbeParam("threadId") long threadId) {
+            @ProbeParam("threadId") long threadId,
+            @ProbeParam("busyThreadCount") long busyThreadCount) {
 
         if (name.equals(monitoringId)) {
             totalExecutedTasksCount.increment();
-            currentThreadsBusy.decrement();
+            currentThreadsBusy.setCount(busyThreadCount);
         }
     }
 
@@ -167,7 +169,6 @@ public class ThreadPoolStatsProvider implements StatsProvider {
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
             @ProbeParam("currentThreadCount") int currentThreadCount) {
-
         if (name.equals(monitoringId)) {
             this.currentThreadCount.setCount(currentThreadCount);
         }

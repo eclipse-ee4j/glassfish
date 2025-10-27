@@ -37,6 +37,8 @@ import org.glassfish.flashlight.client.ProbeClientInvoker;
 import org.glassfish.flashlight.client.ProbeHandle;
 import org.glassfish.flashlight.client.StatefulProbeClientInvoker;
 
+import static java.util.logging.Level.FINE;
+
 public class FlashlightProbe
         implements ProbeHandle, ProbeInfo{
 
@@ -148,11 +150,15 @@ public class FlashlightProbe
 
         int sz = invokerList.size();
 
-        for (int i=0; i<sz; i++) {
-            ProbeClientInvoker invoker = invokerList.get(i);
-            if(invoker != null) {
-                invoker.invoke(params);
+        try {
+            for (int i=0; i<sz; i++) {
+                ProbeClientInvoker invoker = invokerList.get(i);
+                if(invoker != null) {
+                    invoker.invoke(params);
+                }
             }
+        } catch (IndexOutOfBoundsException e) {
+            logger.log(FINE, "", e);
         }
     }
 

@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS "GlassFishUser" (
   PRIMARY KEY (id)
 );
 
+CREATE INDEX IF NOT EXISTS "GlassFishUserName" ON "GlassFishUser" USING BTREE ("name");
+
 DELETE FROM "JEEVersion" WHERE 1=1;
 DELETE FROM "Brand" WHERE 1=1;
 DELETE FROm "GlassFishUser" WHERE 1=1;

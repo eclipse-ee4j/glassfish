@@ -41,6 +41,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-all</artifactId>
+            <version>${glassfish.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
@@ -162,28 +168,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>prepare-gf-and-db-driver.zip</id>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
-                            <includeGroupIds>org.glassfish.main.distributions,org.postgresql</includeGroupIds>
-                            <includeArtifactIds>glassfish,postgresql</includeArtifactIds>
-                            <includeTypes>zip,jar</includeTypes>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

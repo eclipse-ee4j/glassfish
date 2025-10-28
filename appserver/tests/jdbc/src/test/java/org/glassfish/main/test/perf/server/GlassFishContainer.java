@@ -14,13 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.perf.util;
+package org.glassfish.main.test.perf.server;
 
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Ulimit;
 
 import jakarta.ws.rs.client.WebTarget;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.URI;
@@ -30,21 +31,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.glassfish.main.test.perf.rest.RestClientUtilities;
+import org.glassfish.tests.utils.junit.JUnitSystem;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.utility.MountableFile;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.LIMIT_HTTP_REQUEST_TIMEOUT;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.LIMIT_POOL_EJB;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.LIMIT_POOL_HTTP_THREADS;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.MEM_MAX_APP_HEAP;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.MEM_MAX_APP_OS;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.SERVER_LOG_LEVEL;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.testcontainers.utility.MountableFile.forHostPath;
 
 /**
  * Simple GlassFish container based on domain1.
  */
 public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
-
-    public static final int LIMIT_HTTP_THREADS = 1000;
-    private static final int LIMIT_HTTP_REQUEST_TIMEOUT = 5;
 
     private static final Logger LOG = System.getLogger(GlassFishContainer.class.getName());
     private static final java.util.logging.Logger LOG_GF = java.util.logging.Logger.getLogger("GF");
@@ -61,15 +71,21 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
     /**
      * Creates preconfigured container with GlassFish.
      *
-     * @param glassFishZip GlassFish zip file.
      * @param network
      * @param hostname
      * @param logPrefix
      */
-    public GlassFishContainer(MountableFile glassFishZip, Network network, String hostname, String logPrefix) {
+    public GlassFishContainer(Network network, String hostname, String logPrefix) {
         super("eclipse-temurin:" + Runtime.version().feature());
+        PomEquippedResolveStage resolver = Maven.resolver()
+            .loadPomFromFile(JUnitSystem.detectBasedir().resolve("pom.xml").toFile());
+        Path zipFile = resolver.resolve("org.glassfish.main.distributions:glassfish:zip:?")
+            .withoutTransitivity().asSingleFile().toPath();
+        Path jdbcDriverFile = resolver.resolve("org.postgresql:postgresql:jar:?")
+            .withoutTransitivity().asSingleFile().toPath();
         withNetwork(network)
-        .withCopyFileToContainer(glassFishZip, "/glassfish.zip")
+        .withCopyFileToContainer(forHostPath(zipFile), "/glassfish.zip")
+        .withCopyFileToContainer(forHostPath(jdbcDriverFile), "/postgresql.jar")
         .withEnv("TZ", "UTC").withEnv("LC_ALL", "en_US.UTF-8")
         .withStartupAttempts(1)
         .withStartupTimeout(Duration.ofSeconds(30L))
@@ -80,7 +96,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
             cmd.withAttachStderr(true);
             cmd.withAttachStdout(true);
             final HostConfig hostConfig = cmd.getHostConfig();
-            hostConfig.withMemory(8 * 1024 * 1024 * 1024L);
+            hostConfig.withMemory(MEM_MAX_APP_OS * 1024 * 1024 * 1024L);
             hostConfig.withMemorySwappiness(0L);
             hostConfig.withUlimits(new Ulimit[] {new Ulimit("nofile", 4096L, 8192L)});
         })
@@ -90,26 +106,47 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
             Wait.forLogMessage(".*Total startup time including CLI.*", 1).withStartupTimeout(Duration.ofMinutes(5L)));
     }
 
-    /**
-     * Mount provided JDBC drivers and install them to domain1 when starting the container.
-     *
-     * @param jdbcDriverJars
-     * @return this
-     */
-    public GlassFishContainer withJdbcDrivers(MountableFile... jdbcDriverJars) {
-        for (MountableFile jdbcDriverFile : jdbcDriverJars) {
-            withCopyFileToContainer(jdbcDriverFile,
-                "/" + Path.of(jdbcDriverFile.getFilesystemPath()).getFileName().toString());
-        }
-        return this;
-    }
-
 
     /**
      * @return JUL Logger to allow attaching handlers
      */
     public java.util.logging.Logger getLogger() {
         return LOG_GF;
+    }
+
+
+    /**
+     * Deploy the war file.
+     *
+     * @param appName name and application context
+     * @param warFile the war file to be deployed.
+     * @return endpoint of the application - it is expected that the context root is the application
+     *         name.
+     */
+    public WebTarget deploy(String appName, File warFile) {
+        final String warFileInContainer = "/tmp.war";
+        copyFileToContainer(forHostPath(warFile.toPath()), warFileInContainer);
+        try {
+            final ExecResult result = asadmin("deploy", "--contextroot", appName, "--name", appName,
+                warFileInContainer);
+            assertThat("deploy response", result.getStdout(),
+                stringContainsInOrder("Application deployed with name " + appName));
+            return getRestClient(appName);
+        } finally {
+            try {
+                execInContainer("rm", warFileInContainer);
+            } catch (UnsupportedOperationException | IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    @Override
+    public void stop() {
+        // Print all results - for tuning.
+        asadmin("get", "--monitor", "*");
+        super.stop();
     }
 
 
@@ -179,17 +216,28 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         command.append(" && cd ../glassfish/bin && chmod +x asadmin appclient startserv stopserv");
         command.append(" && mv /*.jar ").append(PATH_DOCKER_GF_DOMAIN.resolve("lib"));
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" start-domain ").append("domain1");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set-log-levels ").append("org.postgresql.level=FINEST");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + LIMIT_HTTP_THREADS);
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.ejb-container.max-pool-size=900");
+        // FIXME: We would have to go over all loggers
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set-log-levels ").append("org.postgresql.level=").append(SERVER_LOG_LEVEL);
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set-log-levels ")
+            .append("org.glassfish.main.jul.handler.GlassFishLogHandler.level=").append(SERVER_LOG_LEVEL);
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ")
+            .append("configs.config.server-config.ejb-container.max-pool-size=").append(LIMIT_POOL_EJB);
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ")
+            .append("configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=")
+            .append(LIMIT_POOL_HTTP_THREADS);
         // Monitoring takes around 10% of throughput
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.jdbc-connection-pool=HIGH");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append(
+            "configs.config.server-config.monitoring-service.module-monitoring-levels.jdbc-connection-pool=HIGH");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append(
+            "configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.request-timeout-seconds=")
+            .append(LIMIT_HTTP_REQUEST_TIMEOUT);
         // Does thread dumps periodically, takes much more
 //        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH");
         // FIXME: Does not work, see https://github.com/eclipse-ee4j/glassfish/issues/25701
 //        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" set ").append("configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" delete-jvm-options ").append("-Xmx512m");
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-jvm-options ").append("-Xmx2g");
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-jvm-options ").append("-Xmx")
+            .append(MEM_MAX_APP_HEAP).append('g');
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" restart-domain ").append("domain1");
         command.append(" && tail -n 10000 -F ").append(PATH_DOCKER_GF_DOMAIN1_SERVER_LOG);
         return command.toString();

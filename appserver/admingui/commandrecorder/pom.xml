@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Contributors to the Eclipse Foundation
+    Copyright (c) 2024,2025 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -63,4 +63,14 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
+                <copy.modules.to.distribution.destFile>${basedir}/../../distributions/glassfish/target/stage/glassfish7/glassfish/lib/install/applications/__admingui/WEB-INF/lib/${project.artifactId}-${project.version}.jar</copy.modules.to.distribution.destFile>
+            </properties>
+        </profile>
+    </profiles>
 </project>

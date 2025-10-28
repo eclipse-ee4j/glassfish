@@ -43,6 +43,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -79,12 +80,6 @@ public class ThreadPoolMonitoringTest {
 
     @Test
     void testThreadPoolMetricsUnderLoad() throws Exception {
-
-                AsadminResult createResult = ASADMIN.exec("create-http-listener",
-                "--listenerport=8081", "--listeneraddress=0.0.0.0",
-                "--defaultvs=server", "http-listener-test");
-//            ASADMIN.exec("delete-http-listener", "http-listener-test");
-
 
         // Get baseline metrics
         ThreadPoolMetrics baseline = getThreadPoolMetrics();
@@ -698,6 +693,56 @@ public class ThreadPoolMonitoringTest {
 
         } finally {
             ASADMIN.exec("set", "configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + originalMaxThreads);
+        }
+    }
+
+    @Test
+    void testThreadPoolMonitoringEnableDisable() throws Exception {
+        try {
+            // 1. Disable thread-pool monitoring
+            ASADMIN.exec("set", "configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=OFF");
+            Thread.sleep(1000); // Allow monitoring to be disabled
+
+            // 2. Schedule 3 long-running requests (5 seconds each)
+            ExecutorService executor = Executors.newFixedThreadPool(3);
+            CompletableFuture<?>[] futures = new CompletableFuture[3];
+
+            for (int i = 0; i < 3; i++) {
+                futures[i] = CompletableFuture.runAsync(() -> {
+                    try {
+                        HttpURLConnection conn = GlassFishTestEnvironment.openConnection(8080, "/threadpool-test/slow?delay=10000");
+                        conn.setRequestMethod("GET");
+                        conn.getResponseCode();
+                        conn.disconnect();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }, executor);
+            }
+
+            // 3. Enable thread-pool monitoring while requests are running
+            ASADMIN.exec("set", "configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH");
+            Thread.sleep(500); // Allow monitoring to be enabled
+
+            // 4. Verify thread metrics show running requests
+            ThreadPoolMetrics metrics = getThreadPoolMetrics();
+
+            assertThat("current thread count with monitoring enabled", metrics.currentThreadCount(), greaterThan(0));
+            assertThat("busy threads should reflect running requests", metrics.currentThreadsBusy(), greaterThanOrEqualTo(3));
+            assertThat("busy threads should not exceed current threads", metrics.currentThreadsBusy(), lessThanOrEqualTo(metrics.currentThreadCount()));
+
+            // Wait for requests to complete
+            CompletableFuture.allOf(futures).get(10, TimeUnit.SECONDS);
+            executor.shutdown();
+
+            // Verify metrics after requests complete
+            Thread.sleep(1000);
+            ThreadPoolMetrics afterCompletion = getThreadPoolMetrics();
+            assertThat("busy threads after completion", afterCompletion.currentThreadsBusy(), lessThan(metrics.currentThreadsBusy()));
+
+        } finally {
+            // Ensure monitoring is re-enabled for other tests
+            ASADMIN.exec("set", "configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH");
         }
     }
 }

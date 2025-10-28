@@ -45,7 +45,7 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     protected final CountStatisticImpl currentThreadCount = new CountStatisticImpl("CurrentThreadCount", "count", "Provides the number of request processing threads currently in the listener thread pool");
     protected final CountStatisticImpl currentThreadsBusy = new CountStatisticImpl("CurrentThreadsBusy", "count", "Provides the number of request processing threads currently in use in the listener thread pool serving requests");
 
-    protected volatile ThreadPoolConfig threadPoolConfig;
+    protected volatile ThreadPoolStats threadPoolStats;
 
     public ThreadPoolStatsProvider(String name) {
         this.name = name;
@@ -53,15 +53,15 @@ public class ThreadPoolStatsProvider implements StatsProvider {
 
     @Override
     public Object getStatsObject() {
-        return threadPoolConfig;
+        return threadPoolStats;
     }
 
     @Override
     public void setStatsObject(Object object) {
-        if (object instanceof ThreadPoolConfig) {
-            threadPoolConfig = (ThreadPoolConfig) object;
+        if (object instanceof ThreadPoolStats) {
+            threadPoolStats = (ThreadPoolStats) object;
         } else {
-            threadPoolConfig = null;
+            threadPoolStats = null;
         }
     }
 
@@ -86,12 +86,18 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     @ManagedAttribute(id = "currentthreadcount")
     @Description("Provides the number of request processing threads currently in the listener thread pool")
     public CountStatistic getCurrentThreadCount() {
+        if (threadPoolStats != null) {
+            currentThreadCount.setCount(threadPoolStats.currentThreadCount);
+        }
         return currentThreadCount;
     }
 
     @ManagedAttribute(id = "currentthreadsbusy")
     @Description("Provides the number of request processing threads currently in use in the listener thread pool serving requests.")
     public CountStatistic getCurrentThreadsBusy() {
+        if (threadPoolStats != null) {
+            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount);
+        }
         return currentThreadsBusy;
     }
 
@@ -176,13 +182,14 @@ public class ThreadPoolStatsProvider implements StatsProvider {
 
     @Reset
     public void reset() {
-        if (threadPoolConfig != null) {
-            maxThreadsCount.setCount(threadPoolConfig.getMaxPoolSize());
-            coreThreadsCount.setCount(threadPoolConfig.getCorePoolSize());
-            currentThreadCount.setCount(0);
-            currentThreadsBusy.setCount(0);
+        if (threadPoolStats != null) {
+            if (threadPoolStats.threadPoolConfig != null) {
+                maxThreadsCount.setCount(threadPoolStats.threadPoolConfig.getMaxPoolSize());
+                coreThreadsCount.setCount(threadPoolStats.threadPoolConfig.getCorePoolSize());
+            }
+            currentThreadCount.setCount(threadPoolStats.currentThreadCount);
+            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount);
         }
-
         totalExecutedTasksCount.setCount(0);
     }
 }

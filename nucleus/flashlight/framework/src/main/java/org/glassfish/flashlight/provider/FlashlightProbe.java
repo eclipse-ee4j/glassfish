@@ -148,17 +148,12 @@ public class FlashlightProbe
             parent.fireProbe(params);
         }
 
-        int sz = invokerList.size();
+        List<ProbeClientInvoker> invokers = new ArrayList<>(invokerList);
 
-        try {
-            for (int i=0; i<sz; i++) {
-                ProbeClientInvoker invoker = invokerList.get(i);
-                if(invoker != null) {
-                    invoker.invoke(params);
-                }
+        for (ProbeClientInvoker invoker : invokers) {
+            if(invoker != null) {
+                invoker.invoke(params);
             }
-        } catch (IndexOutOfBoundsException e) {
-            logger.log(FINE, "", e);
         }
     }
 
@@ -174,13 +169,13 @@ public class FlashlightProbe
             probeInvokeStates.addAll(parentStates);
         }
 
-        int sz = invokerList.size();
+        List<ProbeClientInvoker> invokers = new ArrayList<>(invokerList);
 
-        for (int i=0; i<sz; i++) {
-            StatefulProbeClientInvoker invoker = (StatefulProbeClientInvoker) invokerList.get(i);
+        for (ProbeClientInvoker invoker : invokers) {
             if(invoker != null) {
-                probeInvokeStates.add(new ProbeInvokeState(invoker.getId(),
-                                               invoker.invokeBefore(params)));
+                StatefulProbeClientInvoker statefulInvoker = (StatefulProbeClientInvoker) invoker;
+                probeInvokeStates.add(new ProbeInvokeState(statefulInvoker.getId(),
+                                               statefulInvoker.invokeBefore(params)));
             }
         }
 
@@ -218,15 +213,15 @@ public class FlashlightProbe
             parent.fireProbeOnException(exceptionValue, states);
         }
 
-        int sz = invokerList.size();
+        List<ProbeClientInvoker> invokers = new ArrayList<>(invokerList);
 
         int stateIndex = -1;
-        for (int i=0; i<sz; i++) {
-            StatefulProbeClientInvoker invoker = (StatefulProbeClientInvoker)invokerList.get(i);
+        for (ProbeClientInvoker invoker : invokers) {
             if(invoker != null) {
-                stateIndex = findStateIndex(invoker.getId(), states);
+                StatefulProbeClientInvoker statefulInvoker = (StatefulProbeClientInvoker) invoker;
+                stateIndex = findStateIndex(statefulInvoker.getId(), states);
                 if (stateIndex >= 0)
-                    invoker.invokeOnException(states.get(stateIndex).getState(), exceptionValue);
+                    statefulInvoker.invokeOnException(states.get(stateIndex).getState(), exceptionValue);
             }
         }
     }

@@ -771,17 +771,22 @@ its certificate information in certificate databases in the
 domain-dir``/config`` directory:
 
 Keystore file::
-  The `keystore.jks` file contains {productName} certificate,
+  The `keystore.p12` file contains {productName} certificate,
   including its private key. The keystore file is protected with a
   password. +
   Each keystore entry has a unique alias. After installation, the
-  {productName} keystore has a single entry with an alias of `s1as`.
+  {productName} keystore has a single entry with an alias of `s1as`. +
+  NOTE: For legacy compatibility, JKS format keystores (`keystore.jks`)
+  are still supported, but PKCS12 format is recommended as it is the
+  industry standard and default format since Java 9.
 Truststore file::
-  The `cacerts.jks` file contains the {productName} trusted
+  The `cacerts.p12` file contains the {productName} trusted
   certificates, including public keys for other entities. For a trusted
   certificate, the server has confirmed that the public key in the
   certificate belongs to the certificate's owner. Trusted certificates
-  generally include those of CAs.
+  generally include those of CAs. +
+  NOTE: For legacy compatibility, JKS format truststores (`cacerts.jks`)
+  are still supported, but PKCS12 format is recommended.
 
 By default, {productName} is configured with a keystore and
 truststore that will work with the example applications and for
@@ -1705,15 +1710,13 @@ path to the utility must be present on the command line.
 1. Change to the directory that contains the keystore and truststore files. +
 Always generate the certificate in the directory containing the keystore
 and truststore files. The default is domain-dir``/config``.
-2. Generate the certificate in the keystore file, `keystore.jks`, using
+2. Generate the certificate in the keystore file, `keystore.p12`, using
 the following command format:
 +
 [source]
 ----
-keytool -genkey -alias keyAlias-keyalg RSA
- -keypass changeit
- -storepass changeit
-keystore keystore.jks
+keytool -genkey -alias keyAlias -keyalg RSA -keypass changeit
+ -storepass changeit -keysize 4096 -keystore keystore.p12
 ----
 Use any unique name as your keyAlias. If you have changed the keystore
 or private key password from the default (`changeit`), substitute the
@@ -1725,21 +1728,18 @@ A prompt appears that asks for your name, organization, and other information.
 +
 [source]
 ----
-keytool -export -alias keyAlias-storepass changeit
- -file server.cer
- -keystore keystore.jks
+keytool -export -alias keyAlias -storepass changeit
+ -file server.cer -keystore keystore.p12
 ----
 4. If a certificate signed by a certificate authority is required, see
 xref:#to-sign-a-certificate-by-using-keytool[To Sign a Certificate by Using `keytool`].
-5. Create the `cacerts.jks` truststore file and add the certificate to
+5. Create the `cacerts.p12` truststore file and add the certificate to
 the truststore, using the following command format:
 +
 [source]
 ----
-keytool -import -v -trustcacerts
--alias keyAlias
- -file server.cer
--keystore cacerts.jks
+keytool -import -v -trustcacerts -alias keyAlias
+ -file server.cer -keystore cacerts.p12
  -keypass changeit
 ----
 If you have changed the keystore or private key password from the
@@ -1754,7 +1754,7 @@ Information similar to the following is displayed:
 [source]
 ----
 Certificate was added to keystore
-[Saving cacerts.jks]
+[Saving cacerts.p12]
 ----
 7. To apply your changes, restart {productName}. See
 "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
@@ -1762,6 +1762,9 @@ Certificate was added to keystore
 [[ghlii]]
 Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
 Using an RSA Key Algorithm
+
+NOTE: This example shows the legacy JKS format. For new deployments,
+consider using PKCS12 format as shown in Example 1-11a.
 
 RSA is public-key encryption technology developed by RSA Data Security,
 Inc.
@@ -1771,6 +1774,21 @@ Inc.
 keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
 -dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file}
 -storepass ${keystore.pass}
+----
+
+[[ghlii-pkcs12]]
+Example 1-11a Creating a Self-Signed Certificate in a PKCS12 Keystore by
+Using an RSA Key Algorithm
+
+PKCS12 is the recommended keystore format and has been the default
+since Java 9. RSA is public-key encryption technology developed by
+RSA Data Security, Inc.
+
+[source]
+----
+keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
+-dname ${dn.name} -keypass ${key.pass}
+-keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
 [[ghlew]]
@@ -1826,7 +1844,7 @@ certificate.
 +
 [source]
 ----
-keytool -delete -alias s1as -keystore keystore.jks -storepass <store_passwd>
+keytool -delete -alias s1as -keystore keystore.p12 -storepass <store_passwd>
 ----
 where <store_passwd> is the password for the keystore. For example,
 "mypass". Note that `s1as` is the default alias of the {productName}
@@ -1835,7 +1853,7 @@ keystore.
 +
 [source]
 ----
-keytool -genkeypair -keyalg <key_alg> -keystore keystore.jks
+keytool -genkeypair -keyalg <key_alg> -keystore keystore.p12
 -validity <val_days> -alias s1as
 ----
 where <key_alg> is the algorithm to be used for generating the key pair,
@@ -1855,7 +1873,7 @@ of the certificate does not match the name of the site.
 +
 [source]
 ----
-keytool -certreq -alias s1as -file <certreq_file> -keystore keystore.jks
+keytool -certreq -alias s1as -file <certreq_file> -keystore keystore.p12
 -storepass <store_passwd>
 ----
 where <certreq_file> is the file in which the CSR is stored (for
@@ -1873,12 +1891,12 @@ into a file such as `s1as.cert`. Download the CA certificate and any
 intermediate CA certificates and store them in local files.
 6. Import the CA certificate (if not already present) and any
 intermediate CA certificates (if not already present) indicated by the
-CA into the truststore `cacerts.jks`:
+CA into the truststore `cacerts.p12`:
 +
 [source]
 ----
 keytool -import -v -trustcacerts -alias <CA-Name> -file ca.cert
- -keystore cacerts.jks -storepass <store_passwd>
+ -keystore cacerts.p12 -storepass <store_passwd>
 ----
 7. Replace the original self-signed certificate with the certificate
 you obtained from the CA, as stored in a file such as `s1as.cert`:
@@ -1886,7 +1904,7 @@ you obtained from the CA, as stored in a file such as `s1as.cert`:
 [source]
 ----
 keytool -import -v -trustcacerts -alias s1as -file s1as.cert
-   -keystore keystore.jks -storepass <store_passwd>
+   -keystore keystore.p12 -storepass <store_passwd>
 ----
 When you import the certificate using the same original alias `s1as`,
 keytool treats it as a command to replace the original certificate with

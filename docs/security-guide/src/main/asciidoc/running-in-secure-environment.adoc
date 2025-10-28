@@ -202,10 +202,10 @@ The database files. {productName} includes Apache Derby database,
 however, you can use any JDBC-compliant database.
 
 The directory and filename location of a private keystore, such as
-keystore.jks
+keystore.p12.
 
 The directory and filename location of a Root Certificate Authority (CA)
-keystore, such as cacerts.jks.
+keystore, such as cacerts.p12.
 
 For example, operating systems provide utilities such as umask and chmod
 to set the file access permissions. At a minimum, consider using "umask

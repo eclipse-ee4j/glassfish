@@ -269,6 +269,7 @@ spec:
                   always {
                      archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false
                      junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+                     recordIssues enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }
                }
             }

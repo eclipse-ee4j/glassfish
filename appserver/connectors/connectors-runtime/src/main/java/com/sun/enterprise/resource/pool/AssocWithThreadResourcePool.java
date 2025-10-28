@@ -199,15 +199,15 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
     /**
      * destroys the resource
      *
-     * @param resourceHandle resource to be destroyed
+     * @param handle resource to be destroyed
      */
     @Override
-    public void deleteResource(ResourceHandle resourceHandle) {
+    public void deleteResource(ResourceHandle handle) {
         try {
-            super.deleteResource(resourceHandle);
+            super.deleteResource(handle);
         } finally {
-            if (resourceHandle instanceof AssocWithThreadResourceHandle) {
-                ((AssocWithThreadResourceHandle) resourceHandle).setUnusable();
+            if (handle instanceof AssocWithThreadResourceHandle) {
+                ((AssocWithThreadResourceHandle) handle).setUnusable();
             }
         }
     }
@@ -215,18 +215,18 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
     /**
      * to associate a resource with the thread
      *
-     * @param h ResourceHandle
+     * @param handle ResourceHandle
      */
-    private void setInThreadLocal(AssocWithThreadResourceHandle h) {
-        if (h == null) {
+    private void setInThreadLocal(AssocWithThreadResourceHandle handle) {
+        if (handle == null) {
             return;
         }
-        h.lock();
+        handle.lock();
         try {
-            h.setAssociated(true);
-            localResource.set(h);
+            handle.setAssociated(true);
+            localResource.set(handle);
         } finally {
-            h.unlock();
+            handle.unlock();
         }
     }
 
@@ -250,7 +250,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
         }
     }
 
-    private synchronized ResourceHandle searchFreeUnenlisted(ResourceAllocator alloc) {
+    private synchronized ResourceHandle searchFreeUnenlisted(ResourceAllocator allocator) {
         for (ResourceHandle handle : dataStructure.getAllResources()) {
             handle.lock();
             try {
@@ -262,7 +262,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
 
                 if (handle.getResourceState().isEnlisted() || handle.getResourceState().isBusy()
                     || handle.hasConnectionErrorOccurred() || ((AssocWithThreadResourceHandle) handle).isUnusable()
-                    || !matchConnection(handle, alloc)) {
+                    || !matchConnection(handle, allocator)) {
                     continue;
                 }
                 setResourceStateToBusy(handle);

@@ -15,6 +15,8 @@
  */
 package com.sun.enterprise.v3.services.impl.monitor.stats;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 
 /**
@@ -28,9 +30,9 @@ public class ThreadPoolStats {
 
     public ThreadPoolConfig threadPoolConfig;
 
-    public long currentThreadCount;
+    public volatile long currentThreadCount;
 
-    public long currentBusyThreadCount;
+    public AtomicLong currentBusyThreadCount = new AtomicLong();
 
     public ThreadPoolStats(ThreadPoolConfig threadPoolConfig) {
         this.threadPoolConfig = threadPoolConfig;

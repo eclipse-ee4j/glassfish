@@ -25,7 +25,6 @@ import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
-import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 
 /**
  * Thread Pool statistics
@@ -96,7 +95,7 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     @Description("Provides the number of request processing threads currently in use in the listener thread pool serving requests.")
     public CountStatistic getCurrentThreadsBusy() {
         if (threadPoolStats != null) {
-            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount);
+            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount.get());
         }
         return currentThreadsBusy;
     }
@@ -188,7 +187,7 @@ public class ThreadPoolStatsProvider implements StatsProvider {
                 coreThreadsCount.setCount(threadPoolStats.threadPoolConfig.getCorePoolSize());
             }
             currentThreadCount.setCount(threadPoolStats.currentThreadCount);
-            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount);
+            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount.get());
         }
         totalExecutedTasksCount.setCount(0);
     }

@@ -99,12 +99,12 @@ public class ThreadPoolMonitor implements ThreadPoolProbe {
 
     @Override
     public void onTaskDequeueEvent(AbstractThreadPool threadPool, Runnable task) {
-        stats.currentBusyThreadCount++;
+        long currentBusyThreadCount = stats.currentBusyThreadCount.incrementAndGet();
         stats.currentThreadCount = threadPool.getSize();
         grizzlyMonitoring.getThreadPoolProbeProvider().threadDispatchedFromPoolEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 Thread.currentThread().getId(),
-                stats.currentBusyThreadCount);
+                currentBusyThreadCount);
         grizzlyMonitoring.getConnectionQueueProbeProvider().onTaskDequeuedEvent(
                 monitoringId, task.getClass().getName());
         grizzlyMonitoring.getThreadPoolProbeProvider().setCurrentThreadCountEvent(
@@ -114,14 +114,14 @@ public class ThreadPoolMonitor implements ThreadPoolProbe {
 
     @Override
     public void onTaskCancelEvent(AbstractThreadPool threadPool, Runnable task) {
-        stats.currentBusyThreadCount--;
+        long currentBusyThreadCount = stats.currentBusyThreadCount.decrementAndGet();
         stats.currentThreadCount = threadPool.getSize();
         // when dequeued task is cancelled - we have to "return" the thread, that
         // we marked as dispatched from the pool
         grizzlyMonitoring.getThreadPoolProbeProvider().threadReturnedToPoolEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 Thread.currentThread().getId(),
-                stats.currentBusyThreadCount);
+                currentBusyThreadCount);
         grizzlyMonitoring.getThreadPoolProbeProvider().setCurrentThreadCountEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 threadPool.getSize());
@@ -129,12 +129,12 @@ public class ThreadPoolMonitor implements ThreadPoolProbe {
 
     @Override
     public void onTaskCompleteEvent(AbstractThreadPool threadPool, Runnable task) {
-        stats.currentBusyThreadCount--;
+        long currentBusyThreadCount = stats.currentBusyThreadCount.decrementAndGet();
         stats.currentThreadCount = threadPool.getSize();
         grizzlyMonitoring.getThreadPoolProbeProvider().threadReturnedToPoolEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 Thread.currentThread().getId(),
-                stats.currentBusyThreadCount);
+                currentBusyThreadCount);
         grizzlyMonitoring.getThreadPoolProbeProvider().setCurrentThreadCountEvent(
                 monitoringId, threadPool.getConfig().getPoolName(),
                 threadPool.getSize());

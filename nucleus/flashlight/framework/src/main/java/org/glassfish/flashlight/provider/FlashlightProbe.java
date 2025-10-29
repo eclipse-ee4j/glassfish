@@ -37,8 +37,6 @@ import org.glassfish.flashlight.client.ProbeClientInvoker;
 import org.glassfish.flashlight.client.ProbeHandle;
 import org.glassfish.flashlight.client.StatefulProbeClientInvoker;
 
-import static java.util.logging.Level.FINE;
-
 public class FlashlightProbe
         implements ProbeHandle, ProbeInfo{
 

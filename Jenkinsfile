@@ -217,7 +217,7 @@ spec:
                try {
                   startVmstatLogging('mvn-build')
                   dumpSysInfo()
-                  timeout(time: 10, unit: 'MINUTES') {
+                  timeout(time: 30, unit: 'MINUTES') {
                      sh '''
                      # Validate the structure in all submodules (especially version ids)
                      mvn -B -e -fae clean validate -Ptck,set-version-id

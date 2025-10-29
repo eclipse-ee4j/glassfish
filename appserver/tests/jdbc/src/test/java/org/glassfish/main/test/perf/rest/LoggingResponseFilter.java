@@ -22,7 +22,7 @@ import jakarta.ws.rs.client.ClientResponseFilter;
 
 import java.lang.System.Logger;
 
-import org.testcontainers.shaded.org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import static java.lang.System.Logger.Level.DEBUG;
 

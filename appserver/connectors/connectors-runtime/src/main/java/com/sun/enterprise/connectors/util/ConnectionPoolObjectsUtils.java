@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -395,7 +395,9 @@ public final class ConnectionPoolObjectsUtils {
 
     public static int getTransactionSupportFromRaXml(String rarName) throws ConnectorRuntimeException {
         ConnectorDescriptor descriptor = ConnectorRuntime.getRuntime().getConnectorDescriptor(rarName);
-        String txSupport = descriptor.getOutboundResourceAdapter().getTransSupport();
+        String txSupport = descriptor == null || descriptor.getOutboundResourceAdapter() == null
+            ? null
+            : descriptor.getOutboundResourceAdapter().getTransSupport();
         return parseTransactionSupportString(txSupport);
     }
 }

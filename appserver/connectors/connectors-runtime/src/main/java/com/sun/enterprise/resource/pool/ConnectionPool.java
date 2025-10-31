@@ -31,13 +31,13 @@ import com.sun.enterprise.resource.pool.resizer.Resizer;
 import com.sun.enterprise.resource.pool.waitqueue.PoolWaitQueue;
 import com.sun.enterprise.resource.pool.waitqueue.PoolWaitQueueFactory;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
-import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Transaction;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
 
 import javax.naming.NamingException;
 
@@ -53,11 +52,10 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import static com.sun.appserv.connectors.internal.spi.BadConnectionEventListener.POOL_RECONFIGURED_ERROR_CODE;
 import static com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Connection Pool for Connector & JDBC resources<br>
@@ -66,7 +64,7 @@ import static java.util.logging.Level.WARNING;
  */
 public class ConnectionPool implements ResourcePool, ConnectionLeakListener, ResourceHandler, PoolProperties {
 
-    private static final Logger LOG = LogDomains.getLogger(ConnectionPool.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = System.getLogger(ConnectionPool.class.getName());
 
     // pool life-cycle config properties
     /**
@@ -256,7 +254,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         poolTxHelper = new PoolTxHelper(this.poolInfo);
         gateway = ResourceGateway.getInstance(resourceGatewayClass);
 
-        LOG.log(FINE, "Connection Pool: {0}", this.poolInfo);
+        LOG.log(DEBUG, "Connection Pool: {0}", this.poolInfo);
     }
 
     protected void initializePoolWaitQueue() throws PoolingException {
@@ -273,6 +271,19 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     protected void initializeResourceSelectionStrategy() {
         // do nothing
+    }
+
+
+    /**
+     * Overridden in {@link AssocWithThreadResourcePool} to fetch the resource cached
+     * in the ThreadLocal. Here it simply returns null.
+     *
+     * @param spec the ResourceSpec used to locate the correct resource pool
+     * @param alloc ResourceAllocator to create a resource
+     * @return ResourceHandle resource from ThreadLocal
+     */
+    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc) {
+        return null;
     }
 
     private void setPoolConfiguration(Hashtable<?, ?> env) throws PoolingException {
@@ -321,14 +332,18 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
     }
 
-    // This method does not need to be synchronized since all caller methods are,
-    // but it does not hurt. Just to be safe.
-    protected synchronized void initPool(ResourceAllocator allocator) throws PoolingException {
+    /**
+     * Synchronized initialization of the pool.
+     *
+     * @param resourceAllocator
+     * @throws PoolingException
+     */
+    protected synchronized void ensurePoolInitialized(ResourceAllocator resourceAllocator) throws PoolingException {
         if (poolInitialized) {
             return;
         }
-
-        this.allocator = allocator;
+        LOG.log(DEBUG, "Initializing pool {0} with resource allocator: {1}", poolInfo, resourceAllocator);
+        this.allocator = resourceAllocator;
 
         createResources(this.allocator, steadyPoolSize - dataStructure.getResourcesSize());
 
@@ -367,7 +382,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         resizerTaskTimer.scheduleAtFixedRate(resizerTask, idletime, idletime);
-        LOG.log(FINE, "Scheduled resizer task with the idle time {0} ms", idletime);
+        LOG.log(DEBUG, "Scheduled resizer task with the idle time {0} ms", idletime);
     }
 
     protected Resizer initializeResizer() {
@@ -390,7 +405,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             }
         }
 
-        LOG.log(FINE, "Pool: resource added");
+        LOG.log(DEBUG, "Pool: resource added");
     }
 
     /**
@@ -427,181 +442,147 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * max-connection-wait-time-in-millis has expired.
      */
     @Override
-    public ResourceHandle getResource(ResourceSpec spec, ResourceAllocator alloc, Transaction transaction) throws PoolingException, RetryableUnavailableException {
-        // Note: this method should not be synchronized or the
-        // startTime would be incorrect for threads waiting to enter
+    public ResourceHandle getResource(ResourceSpec spec, ResourceAllocator alloc, Transaction transaction)
+        throws PoolingException, RetryableUnavailableException {
+        ResourceHandle handle = queueForResource(spec, alloc, transaction);
+        if (handle != null) {
+            alloc.fillInResourceObjects(handle);
+        }
+        return handle;
+    }
 
-        /*
-         * Here are all the comments for the method put together for easy reference. 1. // - Try to get a free resource. Note:
-         * internalGetResource() // will create a new resource if none is free and the max has // not been reached. // - If
-         * can't get one, get on the wait queue. // - Repeat this until maxWaitTime expires. // - If maxWaitTime == 0, repeat
-         * indefinitely.
-         *
-         * 2. //the doFailAllConnectionsProcessing method would already //have been invoked by now. //We simply go ahead and
-         * create a new resource here //from the allocator that we have and adjust the resources //list accordingly so as to not
-         * exceed the maxPoolSize ever //(i.e if steadyPoolSize == maxPoolSize ) ///Also since we are creating the resource out
-         * of the allocator //that we came into this method with, we need not worry about //matching
-         */
-        ResourceHandle result = null;
-
-        long startTime = System.currentTimeMillis();
-        long elapsedWaitTime;
-        long remainingWaitTime = 0;
-
+    private ResourceHandle queueForResource(ResourceSpec spec, ResourceAllocator alloc, Transaction transaction)
+        throws PoolingException, RetryableUnavailableException {
+        final long startTime = System.currentTimeMillis();
         while (true) {
-            if (gateway.allowed()) {
-                // See comment #1 above
-                JavaEETransaction javaEETransaction = ((JavaEETransaction) transaction);
-                final Set<?> resourcesSet = javaEETransaction == null ? null : javaEETransaction.getResources(poolInfo);
-
-                // Allow when the pool is not blocked or at-least one resource is
-                // already obtained in the current transaction.
-                if (!blocked || (resourcesSet != null && !resourcesSet.isEmpty())) {
-                    try {
-                        result = internalGetResource(spec, alloc, transaction);
-                    } finally {
-                        gateway.acquiredResource();
-                    }
-                }
-            }
-
-            if (result != null) {
-                // got one, return it
+            final ResourceHandle handle = tryToAcquireHandle(spec, alloc, transaction);
+            final long elapsedTime = System.currentTimeMillis() - startTime;
+            if (handle != null) {
+                gateway.acquiredResource();
                 if (poolLifeCycleListener != null) {
-                    poolLifeCycleListener.connectionAcquired(result.getId());
-                    elapsedWaitTime = System.currentTimeMillis() - startTime;
-                    poolLifeCycleListener.connectionRequestServed(elapsedWaitTime);
-                    if (LOG.isLoggable(FINE)) {
-                        LOG.log(FINE,
-                            "Resource Pool: elapsed time (ms) to get connection for [" + spec + "] : " + elapsedWaitTime);
-                    }
+                    poolLifeCycleListener.connectionAcquired(handle.getId());
+                    poolLifeCycleListener.connectionRequestServed(elapsedTime);
+                    LOG.log(DEBUG, "Elapsed time to get connection for {0}: {1} ms", spec, elapsedTime);
                 }
-                // got one - seems we are not doing validation or matching
-                // return it
-                break;
+                return handle;
             }
 
-            // did not get a resource.
-            if (maxWaitTime > 0) {
-                elapsedWaitTime = System.currentTimeMillis() - startTime;
-                if (elapsedWaitTime < maxWaitTime) {
-                    // time has not expired, determine remaining wait time.
-                    remainingWaitTime = maxWaitTime - elapsedWaitTime;
-                } else if (!blocked) {
-                    // wait time has expired
-                    if (poolLifeCycleListener != null) {
-                        poolLifeCycleListener.connectionTimedOut();
-                    }
-                    throw new PoolingException("No available resources and wait time " + maxWaitTime + " ms expired.");
-                }
+            final long remainingTime = checkRemainingTime(elapsedTime);
+            if (blocked) {
+                waitForReconfiguration();
             }
-
-            if (!blocked) {
-                // add to wait-queue
-                Object waitMonitor = new Object();
-                if (poolLifeCycleListener != null) {
-                    poolLifeCycleListener.connectionRequestQueued();
-                }
-                synchronized (waitMonitor) {
-                    waitQueue.addToQueue(waitMonitor);
-
-                    try {
-                        LOG.log(FINE, "Resource Pool: getting on wait queue");
-                        waitMonitor.wait(remainingWaitTime);
-
-                    } catch (InterruptedException ex) {
-                        // Could be system shutdown.
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-
-                    // Try to remove in case that the monitor has timed out. We don't expect the queue to grow to great numbers
-                    // so the overhead for removing inexistant objects is low.
-                    LOG.log(FINE, "removing wait monitor from queue: {0}", waitMonitor);
-
-                    if (waitQueue.removeFromQueue(waitMonitor)) {
-                        if (poolLifeCycleListener != null) {
-                            poolLifeCycleListener.connectionRequestDequeued();
-                        }
-                    }
-                }
-            } else {
-                // Add to reconfig-wait-queue
-                Object reconfigWaitMonitor = new Object();
-                synchronized (reconfigWaitMonitor) {
-                    reconfigWaitQueue.addToQueue(reconfigWaitMonitor);
-                    try {
-                        if (reconfigWaitTime > 0) {
-                            LOG.log(FINEST, "[DRC] getting into reconfig wait queue for time [{0}]", reconfigWaitTime);
-                            reconfigWaitMonitor.wait(reconfigWaitTime);
-                        }
-                    } catch (InterruptedException ex) {
-                        // Could be system shutdown.
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-
-                    // Try to remove in case that the monitor has timed
-                    // out. We don't expect the queue to grow to great numbers
-                    // so the overhead for removing inexistent objects is low.
-                    LOG.log(FINEST, "[DRC] removing wait monitor from reconfig-wait-queue: {0}", reconfigWaitMonitor);
-
-                    reconfigWaitQueue.removeFromQueue(reconfigWaitMonitor);
-
-                    LOG.log(FINEST, "[DRC] throwing Retryable-Unavailable-Exception");
-                    RetryableUnavailableException rue = new RetryableUnavailableException(
-                        "Pool Reconfigured, Connection Factory can retry the lookup");
-                    rue.setErrorCode(POOL_RECONFIGURED_ERROR_CODE);
-
-                    throw rue;
-                }
-            }
-        }
-
-        alloc.fillInResourceObjects(result);
-        return result;
-    }
-
-    /**
-     * Overridden in AssocWithThreadResourcePool to fetch the resource cached in the ThreadLocal In ConnectionPool this
-     * simply returns null.
-     *
-     * @param spec the ResourceSpec used to locate the correct resource pool
-     * @param alloc ResourceAllocator to create a resource
-     * @return ResourceHandle resource from ThreadLocal
-     */
-    protected ResourceHandle prefetch(ResourceSpec spec, ResourceAllocator alloc) {
-        return null;
-    }
-
-
-    protected ResourceHandle internalGetResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator,
-        Transaction transaction) throws PoolingException {
-        if (!poolInitialized) {
-            initPool(resourceAllocator);
-        }
-
-        ResourceHandle resourceHandle = getResourceFromTransaction(transaction, resourceAllocator, resourceSpec);
-        if (resourceHandle != null) {
-            return resourceHandle;
-        }
-
-        resourceHandle = prefetch(resourceSpec, resourceAllocator);
-        if (resourceHandle != null) {
-            return resourceHandle;
-        }
-
-        // We didnt get a connection that is already enlisted in the current transaction (if any).
-        resourceHandle = getUnenlistedResource(resourceSpec, resourceAllocator);
-        if (resourceHandle != null) {
-            resourceHandle.getResourceState().incrementUsageCount();
+            // add to wait-queue
+            final Object waitMonitor = new Object();
             if (poolLifeCycleListener != null) {
-                poolLifeCycleListener.connectionUsed(resourceHandle.getId());
-                // Decrement numConnFree
+                poolLifeCycleListener.connectionRequestQueued();
+            }
+            synchronized (waitMonitor) {
+                waitQueue.addToQueue(waitMonitor);
+                try {
+                    LOG.log(TRACE, "Getting on wait queue");
+                    waitMonitor.wait(remainingTime);
+                } catch (InterruptedException e) {
+                    LOG.log(TRACE, "Waiting interrupted.", e);
+                    Thread.currentThread().interrupt();
+                } finally {
+                    LOG.log(TRACE, "Removing wait monitor from queue: {0}", waitMonitor);
+                    if (waitQueue.removeFromQueue(waitMonitor) && poolLifeCycleListener != null) {
+                        poolLifeCycleListener.connectionRequestDequeued();
+                    }
+                }
+            }
+        }
+    }
+
+
+    private ResourceHandle tryToAcquireHandle(ResourceSpec spec, ResourceAllocator resourceAllocator,
+        Transaction transaction) throws PoolingException {
+        if (!gateway.allowed()) {
+            LOG.log(TRACE, "Returning null because: gateway not allowed.");
+            return null;
+        }
+        final JavaEETransaction jeeTransaction = ((JavaEETransaction) transaction);
+        final Set<?> resources = jeeTransaction == null ? null : jeeTransaction.getResources(poolInfo);
+        if (blocked && (resources == null || resources.isEmpty())) {
+            LOG.log(TRACE, "Returning null because: blocked and no resources available using JEE Transaction.");
+            return null;
+        }
+        // Allow when the pool is not blocked or at-least one resource is
+        // already obtained in the current transaction.
+        return acquireHandle(spec, resourceAllocator, transaction);
+    }
+
+
+    private ResourceHandle acquireHandle(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator,
+        Transaction transaction) throws PoolingException {
+
+        ensurePoolInitialized(resourceAllocator);
+
+        LOG.log(DEBUG, "Acquiring handle for {0}", resourceSpec);
+
+        ResourceHandle handle = getResourceFromTransaction(transaction, resourceAllocator, resourceSpec);
+        if (handle != null) {
+            return handle;
+        }
+
+        handle = prefetch(resourceSpec, resourceAllocator);
+        if (handle != null) {
+            return handle;
+        }
+
+        // We didn't get a connection that is already enlisted in the current transaction (if any).
+        handle = getUnenlistedResource(resourceSpec, resourceAllocator);
+        if (handle != null) {
+            handle.getResourceState().incrementUsageCount();
+            if (poolLifeCycleListener != null) {
+                poolLifeCycleListener.connectionUsed(handle.getId());
                 poolLifeCycleListener.decrementNumConnFree();
             }
         }
-        return resourceHandle;
+        return handle;
+    }
+
+    private void waitForReconfiguration() throws RetryableUnavailableException {
+        // Add to reconfig-wait-queue
+        final Object reconfigWaitMonitor = new Object();
+        synchronized (reconfigWaitMonitor) {
+            reconfigWaitQueue.addToQueue(reconfigWaitMonitor);
+            try {
+                if (reconfigWaitTime > 0) {
+                    LOG.log(TRACE, "Getting into reconfig wait queue for {0} ms", reconfigWaitTime);
+                    reconfigWaitMonitor.wait(reconfigWaitTime);
+                }
+            } catch (InterruptedException e) {
+                // http thread can time out, system shutdown, etc.
+                LOG.log(TRACE, "Waiting interrupted.", e);
+                Thread.currentThread().interrupt();
+                return;
+            } finally {
+                // Wait could time out or could be notified
+                LOG.log(TRACE, "Removing wait monitor from reconfig-wait-queue: {0}", reconfigWaitMonitor);
+                reconfigWaitQueue.removeFromQueue(reconfigWaitMonitor);
+            }
+            throw new RetryableUnavailableException(
+                "Pool Reconfigured, Connection Factory can retry the lookup", POOL_RECONFIGURED_ERROR_CODE);
+        }
+    }
+
+    private long checkRemainingTime(final long elapsedTime) throws PoolingException {
+        if (maxWaitTime <= 0) {
+            return 0L;
+        }
+        if (elapsedTime < maxWaitTime) {
+            // time has not expired, determine remaining wait time.
+            return maxWaitTime - elapsedTime;
+        }
+        if (blocked) {
+            return 0L;
+        }
+        // Wait time has expired
+        if (poolLifeCycleListener != null) {
+            poolLifeCycleListener.connectionTimedOut();
+        }
+        throw new PoolingException("No available resources and wait time " + maxWaitTime + " ms expired.");
     }
 
     /**
@@ -622,18 +603,16 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         try {
             javaEETransaction = (JavaEETransaction) transaction;
         } catch (ClassCastException e) {
-            LOG.log(SEVERE,
-                "Pool: getResource : transaction is not JavaEETransaction but a " + transaction.getClass().getName(),
-                e);
+            LOG.log(ERROR, "Transaction is not JavaEETransaction but a " + transaction.getClass(), e);
             return null;
         }
 
         // case 1. look for free and enlisted in same tx
-        final Set<?> set = javaEETransaction.getResources(poolInfo);
-        if (set == null) {
+        final Set<?> resources = javaEETransaction.getResources(poolInfo);
+        if (resources == null) {
             return null;
         }
-        final Iterator<?> iter = set.iterator();
+        final Iterator<?> iter = resources.iterator();
         while (iter.hasNext()) {
             ResourceHandle resourceHandle = (ResourceHandle) iter.next();
             if (resourceHandle.hasConnectionErrorOccurred()) {
@@ -866,13 +845,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                             resourceFromPool = resourceHandle;
                             break;
                         }
-
-                        // Matching, but not shareable. To be returned to the pool.
-                        freeResources.add(resourceHandle);
-                    } else {
-                        // Not matching. To be returned to the pool.
-                        freeResources.add(resourceHandle);
                     }
+                    freeResources.add(resourceHandle);
                 }
             } finally {
                 // Return all unmatched, free resources
@@ -888,20 +862,17 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 freeResources.clear();
             }
 
-            if (resourceFromPool != null) {
-                // Set state to Busy
-                setResourceStateToBusy(resourceFromPool);
-            } else {
+            if (resourceFromPool == null) {
                 // Set state to Busy via resizePoolAndGetNewResource call
                 resourceFromPool = resizePoolAndGetNewResource(resourceAllocator);
+            } else {
+                // Set state to Busy
+                setResourceStateToBusy(resourceFromPool);
             }
 
             // Resource from the pool must be marked busy when it is returned from the pool
             if (resourceHandle != null) {
                 makeSureResourceIsBusy(resourceHandle);
-            }
-
-            if (resourceHandle != null) {
                 // Not expecting an enlisted resource to be returned from the pool
                 makeSureResourceIsNotEnlisted(resourceHandle);
             }
@@ -1035,7 +1006,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         int totalResourcesRemoved = 0;
         int freeResourcesCount = dataStructure.getFreeListSize();
         int resourcesCount = (freeResourcesCount >= quantity) ? quantity : freeResourcesCount;
-        LOG.log(FINE, "Purging resources of size: {0}", resourcesCount);
+        LOG.log(DEBUG, "Purging resources of size: {0}", resourcesCount);
 
         for (int i = resourcesCount - 1; i >= 0; i--) {
             ResourceHandle resource = dataStructure.getResource();
@@ -1100,7 +1071,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                 count++;
                 ResourceHandle resourceHandle = resourceAllocator.createResource();
                 long now = System.currentTimeMillis();
-                LOG.log(FINE,
+                LOG.log(DEBUG,
                     () -> "Time taken to create a single resource: " + resourceHandle.getResourceSpec().getResourceId()
                         + " and adding to the pool: " + (now - startTime) + " ms.");
                 if (connectionValidationRequired || validateAtmostEveryIdleSecs) {
@@ -1179,7 +1150,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public void resourceClosed(ResourceHandle handle) throws IllegalStateException {
-        LOG.log(FINE, "Resource was closed, processing handle: {0}", handle);
+        LOG.log(DEBUG, "Resource was closed, processing handle: {0}", handle);
 
         ResourceState state = handle.getResourceState();
         if (!state.isBusy()) {
@@ -1205,7 +1176,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         // Note handle might already be altered by another thread before it is logged!
-        LOG.log(FINE, "Resource was freed after its closure: {0}", handle);
+        LOG.log(DEBUG, "Resource was freed after its closure: {0}", handle);
     }
 
     /**
@@ -1215,8 +1186,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      */
     protected void performMaxConnectionUsageOperation(ResourceHandle handle) {
         dataStructure.removeResource(handle);
-        LOG.log(INFO, "Destroying connection {0} since it has reached the maximum usage of: {1}",
-            new Object[] {handle.getId(), handle.getResourceState().getUsageCount()});
+        LOG.log(DEBUG, "Destroying connection {0} since it has reached the maximum usage of: {1}", handle.getId(),
+            handle.getResourceState().getUsageCount());
 
         if (poolLifeCycleListener != null) {
             poolLifeCycleListener.decrementConnectionUsed(handle.getId());
@@ -1240,7 +1211,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     protected void freeUnenlistedResource(ResourceHandle resourceHandle) {
         // TODO: There is no validation here at all that the resourceHandle.state is already set to unenlisted
 
-        LOG.log(FINE, "freeUnenlistedResource handle: {0}", resourceHandle);
+        LOG.log(DEBUG, "freeUnenlistedResource handle: {0}", resourceHandle);
         try {
             getResourceFromPoolAndFreeResourceMethodsLock.lock();
             if (cleanupResource(resourceHandle)) {
@@ -1298,7 +1269,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public void resourceErrorOccurred(ResourceHandle resourceHandle) throws IllegalStateException {
-        LOG.log(FINE, "Resource error occurred: {0}", resourceHandle);
+        LOG.log(DEBUG, "Resource error occurred: {0}", resourceHandle);
         if (failAllConnections) {
             // TODO: leakDetector is not updated and isBusy state of this resource is not updated correctly: possible bug.
             // leakDetector should be updated in the doFailAllConnectionsProcessing method. The resource can be updated here.
@@ -1345,7 +1316,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     private void doFailAllConnectionsProcessing() {
-        LOG.log(FINE, "doFailAllConnectionsProcessing()");
+        LOG.log(DEBUG, "doFailAllConnectionsProcessing()");
         cancelResizerTask();
         if (poolLifeCycleListener != null) {
             poolLifeCycleListener.connectionValidationFailed(dataStructure.getResourcesSize());
@@ -1357,10 +1328,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
         try {
             createResources(allocator, steadyPoolSize);
-            LOG.log(FINE, "Successfully created new resources.");
+            LOG.log(DEBUG, "Successfully created new resources.");
         } catch (PoolingException pe) {
             // Ignore and hope the resizer does its stuff
-            LOG.log(FINE, "Could not create " + steadyPoolSize + " resources.", pe);
+            LOG.log(DEBUG, "Could not create " + steadyPoolSize + " resources.", pe);
         }
         scheduleResizerTask();
     }
@@ -1445,10 +1416,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             }
         }
         if (waitMonitor == null) {
-            LOG.log(FINE, "Wait monitor is null");
+            LOG.log(DEBUG, "Wait monitor is null");
         } else {
             synchronized (waitMonitor) {
-                LOG.log(FINE, "Notifying wait monitor: {0}", waitMonitor);
+                LOG.log(DEBUG, "Notifying wait monitor: {0}", waitMonitor);
                 waitMonitor.notifyAll();
             }
         }
@@ -1462,13 +1433,13 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public void emptyPool() {
-        LOG.log(FINE, "Emptying pool {0}", poolInfo.getName());
+        LOG.log(DEBUG, "Emptying pool {0}", poolInfo.getName());
         dataStructure.removeAll();
     }
 
     @Override
     public void emptyFreeConnectionsInPool() {
-        LOG.log(FINE, "Emptying free connections in the pool {0}", poolInfo.getName());
+        LOG.log(DEBUG, "Emptying free connections in the pool {0}", poolInfo.getName());
 
         // TODO this is not completely thread safe, between getResource and removeResource
         // the dataStructure can be altered by other threads
@@ -1518,7 +1489,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public synchronized boolean flushConnectionPool() throws PoolingException {
-        LOG.log(FINE, "Flushing Connection Pool {0}", poolInfo);
+        LOG.log(DEBUG, "Flushing Connection Pool {0}", poolInfo);
 
         if (!poolInitialized) {
             throw new PoolingException(
@@ -1529,76 +1500,71 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         dataStructure.removeAll();
         scheduleResizerTask();
         increaseSteadyPoolSize(steadyPoolSize);
-        LOG.log(FINE, "Flush Connection Pool done");
+        LOG.log(DEBUG, "Flush Connection Pool done");
         return true;
     }
 
     @Override
     public synchronized void reconfigurePool(ConnectorConnectionPool poolResource) throws PoolingException {
-        int _idleTime = Integer.parseInt(poolResource.getIdleTimeoutInSeconds()) * 1000;
+        final int idleTimeParam = Integer.parseInt(poolResource.getIdleTimeoutInSeconds()) * 1000;
         if (poolInitialized) {
-            if (_idleTime != idletime && _idleTime != 0) {
-                idletime = _idleTime;
+            if (idleTimeParam != this.idletime && idleTimeParam != 0) {
+                this.idletime = idleTimeParam;
                 scheduleResizerTask();
             }
-            if (_idleTime == 0) {
+            if (idleTimeParam == 0) {
                 // resizerTask.cancel();
                 cancelResizerTask();
             }
         }
-        idletime = _idleTime;
-
-        resizeQuantity = Integer.parseInt(poolResource.getPoolResizeQuantity());
-
-        maxWaitTime = Integer.parseInt(poolResource.getMaxWaitTimeInMillis());
-        // Make sure it's not negative.
-        if (maxWaitTime < 0) {
-            maxWaitTime = 0;
+        this.idletime = idleTimeParam;
+        this.resizeQuantity = Integer.parseInt(poolResource.getPoolResizeQuantity());
+        this.maxWaitTime = Integer.parseInt(poolResource.getMaxWaitTimeInMillis());
+        if (this.maxWaitTime < 0) {
+            this.maxWaitTime = 0;
         }
 
-        connectionValidationRequired = poolResource.isIsConnectionValidationRequired();
-        failAllConnections = poolResource.isFailAllConnections();
+        this.connectionValidationRequired = poolResource.isIsConnectionValidationRequired();
+        this.failAllConnections = poolResource.isFailAllConnections();
         setAdvancedPoolConfiguration(poolResource);
 
-        int _maxPoolSize = Integer.parseInt(poolResource.getMaxPoolSize());
-        int oldMaxPoolSize = maxPoolSize;
+        final int maxPoolSizeParam = Integer.parseInt(poolResource.getMaxPoolSize());
+        final int oldMaxPoolSize = this.maxPoolSize;
 
-        if (_maxPoolSize < steadyPoolSize) {
+        if (maxPoolSizeParam < this.steadyPoolSize) {
             // should not happen, admin must throw exception when this condition happens.
             // as a precaution set max pool size to steady pool size
-            maxPoolSize = steadyPoolSize;
+            this.maxPoolSize = this.steadyPoolSize;
         } else {
-            maxPoolSize = _maxPoolSize;
+            this.maxPoolSize = maxPoolSizeParam;
         }
 
-        if (oldMaxPoolSize != maxPoolSize) {
-            dataStructure.setMaxSize(maxPoolSize);
+        if (oldMaxPoolSize != this.maxPoolSize) {
+            this.dataStructure.setMaxSize(this.maxPoolSize);
         }
-        int _steadyPoolSize = Integer.parseInt(poolResource.getSteadyPoolSize());
-        int oldSteadyPoolSize = steadyPoolSize;
-
-        if (_steadyPoolSize > maxPoolSize) {
+        final int steadyPoolSizeParam = Integer.parseInt(poolResource.getSteadyPoolSize());
+        final int oldSteadyPoolSize = this.steadyPoolSize;
+        if (steadyPoolSizeParam > this.maxPoolSize) {
             // should not happen, admin must throw exception when this condition happens.
             // as a precaution set steady pool size to max pool size
-            steadyPoolSize = maxPoolSize;
+            this.steadyPoolSize = this.maxPoolSize;
         } else {
-            steadyPoolSize = _steadyPoolSize;
+            this.steadyPoolSize = steadyPoolSizeParam;
         }
 
-        if (poolInitialized) {
+        if (this.poolInitialized) {
             // In this case we need to kill extra connections in the pool
-            // For the case where the value is increased, we need not
-            // do anything
-            // num resources to kill is decided by the resources in the pool.
+            // For the case where the value is increased, we need not do anything
+            //
+            // The number resources to kill is decided by the resources in the pool.
             // if we have less than current maxPoolSize resources, we need to
             // kill less.
-            int toKill = dataStructure.getResourcesSize() - maxPoolSize;
-
+            final int toKill = this.dataStructure.getResourcesSize() - this.maxPoolSize;
             if (toKill > 0) {
                 killExtraResources(toKill);
             }
         }
-        reconfigureSteadyPoolSize(oldSteadyPoolSize, _steadyPoolSize);
+        reconfigureSteadyPoolSize(oldSteadyPoolSize, steadyPoolSizeParam);
     }
 
     protected void reconfigureSteadyPoolSize(int oldSteadyPoolSize, int newSteadyPoolSize) throws PoolingException {
@@ -1684,7 +1650,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public synchronized void cancelResizerTask() {
-        LOG.log(FINE, "Cancelling resizer task.");
+        LOG.log(DEBUG, "Cancelling resizer task.");
         if (resizerTask != null) {
             resizerTask.cancel();
         }
@@ -1729,7 +1695,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
                         killExtraResources(toKill);
                     } catch (Exception re) {
                         // ignore for now
-                        LOG.log(FINE, "setMaxPoolSize:: killExtraResources throws exception!", re);
+                        LOG.log(DEBUG, "setMaxPoolSize:: killExtraResources throws exception!", re);
                     }
                 }
             }
@@ -1765,7 +1731,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         // Entity beans when used in bean managed transaction will face an issue since connections
         // are destroyed during reclaim.
         // Stateful session beans will work fine.
-        LOG.log(INFO,
+        LOG.log(WARNING,
             "Reclaiming the leaked connection of pool [{0}] and destroying it so as to avoid both"
                 + " the application that leaked the connection and any other request that can potentially acquire"
                 + " the same connection from the pool end up using the connection at the same time",

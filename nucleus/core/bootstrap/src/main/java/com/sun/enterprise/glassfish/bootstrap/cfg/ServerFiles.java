@@ -95,7 +95,15 @@ public class ServerFiles {
         // glassfish/lib/bootstrap/glassfish.jar
         File bootstrapFile = findBootstrapFile();
         // glassfish/
-        return bootstrapFile.getParentFile().getParentFile().getParentFile();
+        // Defensive code for embedded.
+        File parent = bootstrapFile.getParentFile();
+        for (int i = 0; i < 2; i++) {
+            if (parent == null) {
+                return null;
+            }
+            parent = parent.getParentFile();
+        }
+        return parent;
     }
 
 

@@ -161,11 +161,11 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>embedded</module>
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
                 <module>jdbc</module>
+                <module>embedded</module>
             </modules>
         </profile>
         <profile>
@@ -189,11 +189,11 @@
         <profile>
             <id>tck</id>
             <modules>
-                <module>embedded</module>
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
                 <module>jdbc</module>
+                <module>embedded</module>
                 <module>tck</module>
             </modules>
         </profile>

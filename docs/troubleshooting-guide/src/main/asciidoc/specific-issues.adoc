@@ -765,6 +765,6 @@ the following value:
 
 [source]
 ----
--Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks
--Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks
+-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12
+-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12
 ----

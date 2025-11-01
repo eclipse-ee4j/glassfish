@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +23,8 @@ package org.glassfish.embeddable;
  * @author prasad
  */
 public class GlassFishException extends Exception {
+
+    private static final long serialVersionUID = 5879674257983677584L;
 
     public GlassFishException(String message, Throwable cause) {
         super(message, cause);

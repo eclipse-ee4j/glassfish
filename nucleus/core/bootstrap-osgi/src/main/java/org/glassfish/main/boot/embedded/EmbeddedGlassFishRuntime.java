@@ -116,8 +116,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         for (GlassFish glassFish : glassFishInstances.values()) {
             try {
                 glassFish.dispose();
-            } catch (IllegalStateException ex) {
-                LOG.log(FINER, "GlassFish dispose failed: " + ex.getMessage());
+            } catch (IllegalStateException e) {
+                LOG.log(FINER, "GlassFish dispose failed: " + e.getMessage(), e);
             }
         }
 
@@ -125,8 +125,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
 
         try {
             shutdownInternal();
-        } catch (GlassFishException ex) {
-            LOG.log(WARNING, LogFacade.CAUGHT_EXCEPTION, ex.getMessage());
+        } catch (GlassFishException e) {
+            LOG.log(WARNING, LogFacade.CAUGHT_EXCEPTION, e);
         }
     }
 

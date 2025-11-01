@@ -8,6 +8,8 @@
         <jta-data-source>jdbc/dsPoolA</jta-data-source>
         <properties>
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create" />
+            <property name="eclipselink.cache.shared.default" value="false" />
+            <property name="eclipselink.query-results-cache" value="false" />
         </properties>
     </persistence-unit>
 </persistence>

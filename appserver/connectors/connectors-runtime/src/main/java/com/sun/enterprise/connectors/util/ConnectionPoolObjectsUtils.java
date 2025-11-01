@@ -396,7 +396,9 @@ public final class ConnectionPoolObjectsUtils {
 
     public static int getTransactionSupportFromRaXml(String rarName) throws ConnectorRuntimeException {
         ConnectorDescriptor descriptor = ConnectorRuntime.getRuntime().getConnectorDescriptor(rarName);
-        String txSupport = descriptor.getOutboundResourceAdapter().getTransSupport();
+        String txSupport = descriptor == null || descriptor.getOutboundResourceAdapter() == null
+            ? null
+            : descriptor.getOutboundResourceAdapter().getTransSupport();
         return parseTransactionSupportString(txSupport);
     }
 }

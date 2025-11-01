@@ -35,7 +35,7 @@ import org.glassfish.main.jul.handler.LogCollectorHandler;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 import org.glassfish.main.test.jdbc.jta.timeout.war.AsynchronousTimeoutingJob;
 import org.glassfish.main.test.jdbc.jta.timeout.war.SlowJpaPartitioner;
-import org.glassfish.main.test.perf.util.DockerTestEnvironment;
+import org.glassfish.main.test.perf.server.DockerTestEnvironment;
 import org.glassfish.tests.utils.junit.TestLoggingExtension;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -52,9 +52,6 @@ import org.testcontainers.DockerClientFactory;
 
 import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
 import static org.glassfish.main.test.jdbc.jta.timeout.war.SlowJpaPartitioner.TIMEOUT_IN_SECONDS;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.asadmin;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.deploy;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.undeploy;
 import static org.glassfish.tests.utils.junit.matcher.WaitForExecutable.waitFor;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -102,16 +99,18 @@ public class JtaTimeoutLoggingITest {
 
     private static final String APPNAME = "jtaTimeout";
     private static boolean dockerAvailable;
+
+    private static DockerTestEnvironment environment;
     private static LogCollectorHandler domainLog;
     private static WebTarget wsEndpoint;
-
 
 
     @BeforeAll
     public static void init() throws Exception {
         dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
         assumeTrue(dockerAvailable, "Docker is not available on this environment");
-        final java.util.logging.Logger logger = DockerTestEnvironment.getDomainLogger();
+        environment = DockerTestEnvironment.getInstance();
+        final java.util.logging.Logger logger = environment.getDomainLogger();
         assertNotNull(logger, "domain logger was not found");
         final Filter filter = event -> {
             final Predicate<? super String> predicate = msgPart -> {
@@ -123,9 +122,10 @@ public class JtaTimeoutLoggingITest {
         domainLog = new LogCollectorHandler(logger, 100_000, 10);
         domainLog.setFilter(filter);
 
-        asadmin("set", "configs.config.server-config.transaction-service.timeout-in-seconds=" + TIMEOUT_IN_SECONDS);
-        asadmin("restart-domain", "domain1");
-        wsEndpoint = deploy(APPNAME, getArchiveToDeploy());
+        environment.asadmin("set",
+            "configs.config.server-config.transaction-service.timeout-in-seconds=" + TIMEOUT_IN_SECONDS);
+        environment.asadmin("restart-domain", "domain1");
+        wsEndpoint = environment.deploy(APPNAME, getArchiveToDeploy());
     }
 
 
@@ -143,8 +143,8 @@ public class JtaTimeoutLoggingITest {
             return;
         }
         domainLog.close();
-        undeploy(APPNAME);
-        asadmin("set", "configs.config.server-config.transaction-service.timeout-in-seconds=0");
+        environment.undeploy(APPNAME);
+        environment.asadmin("set", "configs.config.server-config.transaction-service.timeout-in-seconds=0");
     }
 
 

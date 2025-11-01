@@ -571,7 +571,9 @@ organization does not already have one.
 3. Replace the {productName} self-signed certificate with the
 trusted certificate by importing the trusted certificate into the
 {productName} keystore using the `s1as` alias. By default, the
-keystore is located at domain-dir`/config/keystore.jks`.
+keystore is located at domain-dir`/config/keystore.p12` (PKCS12 format,
+recommended). For legacy compatibility, JKS format keystores
+(`keystore.jks`) are also supported.
 +
 For more information about importing a trusted certificate into the
 domain keystore, see "xref:security-guide.adoc#administering-jsse-certificates[Administering JSSE Certificates]"

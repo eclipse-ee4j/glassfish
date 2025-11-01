@@ -52,7 +52,7 @@ import javax.security.auth.Subject;
  * @author Sivakumar Thyagarajan
  */
 public abstract class AbstractConnectorAllocator implements ResourceAllocator {
-    protected final static Logger LOG = LogDomains.getLogger(AbstractConnectorAllocator.class,LogDomains.RSR_LOGGER);
+    protected static final Logger LOG = LogDomains.getLogger(AbstractConnectorAllocator.class,LogDomains.RSR_LOGGER);
 
     protected PoolManager poolMgr;
     protected ResourceSpec spec;

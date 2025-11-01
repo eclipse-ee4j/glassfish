@@ -239,9 +239,11 @@ self-signed certificate for remote instances.
 
 Then, when you enable secure admin, the following actions are performed:
 
-* Both private keys are stored in the domain-wide DAS keystore file, keystore.jks.
+* Both private keys are stored in the domain-wide DAS keystore file, keystore.p12
+  (PKCS12 format, recommended). For legacy compatibility, keystore.jks (JKS format) is also supported.
 * Both public certificates are stored in the domain-wide DAS truststore
-  file, cacerts.jks.
+  file, cacerts.p12 (PKCS12 format, recommended). For legacy compatibility,
+  cacerts.jks (JKS format) is also supported.
 
 When the DAS sends a message to an instance:
 
@@ -286,7 +288,7 @@ change it with the `change-master-password` subcommand.
 
 [source]
 ----
-keytool -list -keystore keystore.jks
+keytool -list -keystore keystore.p12
 Enter keystore password:
 Keystore type: JKS
 Keystore provider: SUN
@@ -460,7 +462,7 @@ the `s1as` alias before doing so.
 If you decide to use the `s1as` and `glassfish-instance` aliases with
 your own certificates, you will first need to disable secure admin (if
 enabled) and then change or delete the exiting `s1as` alias from both
-the `keystore.jks` keystore and `cacerts.jks` truststore for the DAS.
+the `keystore.p12` keystore and `cacerts.p12` truststore for the DAS.
 You can use the `--changealias` or `--delete` option of `keytool` to
 accomplish this. Then, import your own certificates.
 
@@ -514,7 +516,7 @@ you can use keytool to display the DN of a certificate:
 
 [source]
 ----
-keytool -v -list -keystore keystore.jks
+keytool -v -list -keystore keystore.p12
 Enter keystore password:
 Keystore type: JKS
 Keystore provider: SUN
@@ -597,7 +599,7 @@ truststore, you can use keytool to display the alias of a certificate:
 
 [source]
 ----
-keytool -v -list -keystore cacerts.jks
+keytool -v -list -keystore cacerts.p12
 Enter keystore password:
 Keystore type: JKS
 Keystore provider: SUN

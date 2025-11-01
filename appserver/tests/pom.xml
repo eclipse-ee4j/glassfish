@@ -35,7 +35,7 @@
     <name>GlassFish Tests</name>
 
     <properties>
-        <testcontainers.version>1.21.3</testcontainers.version>
+        <testcontainers.version>2.0.1</testcontainers.version>
     </properties>
 
     <dependencyManagement>
@@ -48,13 +48,13 @@
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
-                <artifactId>junit-jupiter</artifactId>
+                <artifactId>testcontainers-junit-jupiter</artifactId>
                 <version>${testcontainers.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
-                <artifactId>postgresql</artifactId>
+                <artifactId>testcontainers-postgresql</artifactId>
                 <version>${testcontainers.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -161,12 +161,12 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>embedded</module>
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
                 <module>application-tests</module>
                 <module>jdbc</module>
+                <module>embedded</module>
             </modules>
         </profile>
         <profile>
@@ -190,12 +190,12 @@
         <profile>
             <id>tck</id>
             <modules>
-                <module>embedded</module>
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
                 <module>application-tests</module>
                 <module>jdbc</module>
+                <module>embedded</module>
                 <module>tck</module>
             </modules>
         </profile>

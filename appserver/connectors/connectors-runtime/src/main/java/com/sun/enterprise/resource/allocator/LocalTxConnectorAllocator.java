@@ -40,6 +40,8 @@ import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
+import static java.util.logging.Level.FINEST;
+
 /**
  * LocalTransaction Connector Allocator, used for transaction level:
  * {@link com.sun.appserv.connectors.internal.api.ConnectorConstants#LOCAL_TRANSACTION_INT}.
@@ -51,7 +53,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
     private static final String COMMIT = "COMMIT";
     private static final String ROLLBACK = "ROLLBACK";
 
-    private static String transactionCompletionMode = System
+    private static final String TX_COMPLETION_MODE = System
         .getProperty("com.sun.enterprise.in-progress-local-transaction.completion-mode");
 
     private final boolean shareable;
@@ -69,6 +71,10 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
         this.shareable = shareable;
     }
 
+    @Override
+    public boolean shareableWithinComponent() {
+        return shareable;
+    }
 
     @Override
     public ResourceHandle createResource() throws PoolingException {
@@ -90,68 +96,56 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
     }
 
     @Override
-    public void fillInResourceObjects(ResourceHandle resource)
-            throws PoolingException {
+    public void fillInResourceObjects(ResourceHandle handle) throws PoolingException {
         try {
-            ManagedConnection mc = resource.getResource();
+            ManagedConnection mc = handle.getResource();
             Object con = mc.getConnection(subject, reqInfo);
-            ConnectorXAResource xares = (ConnectorXAResource) resource.getXAResource();
+            ConnectorXAResource xares = (ConnectorXAResource) handle.getXAResource();
             xares.setUserHandle(con);
-            resource.fillInResourceObjects(con, xares);
+            handle.fillInResourceObjects(con, xares);
         } catch (ResourceException ex) {
             throw new PoolingException(ex);
         }
     }
 
     @Override
-    public void destroyResource(ResourceHandle resource)
-            throws PoolingException {
+    public void destroyResource(ResourceHandle handle) throws PoolingException {
         try {
-            ManagedConnection mc = resource.getResource();
-            XAResource xares = resource.getXAResource();
-            forceTransactionCompletion(xares);
-            mc.destroy();
-            LOG.finest("destroyResource for LocalTxConnectorAllocator done");
-
+            ManagedConnection connection = handle.getResource();
+            XAResource xaResource = handle.getXAResource();
+            forceTransactionCompletion(xaResource);
+            connection.destroy();
+            LOG.log(FINEST, "Connection was destroyed: {0}", connection);
         } catch (Exception ex) {
             throw new PoolingException(ex);
         }
     }
 
-    @Override
-    public boolean shareableWithinComponent() {
-        return shareable;
-    }
 
-    private void forceTransactionCompletion(XAResource xares) throws SystemException {
-        if(transactionCompletionMode != null){
-            if(xares instanceof ConnectorXAResource){
-                ConnectorXAResource connectorXARes = (ConnectorXAResource)xares;
-                JavaEETransaction j2eetran = connectorXARes.getAssociatedTransaction();
-                if(j2eetran != null && j2eetran.isLocalTx()){
-                    if(j2eetran.getStatus() == (Status.STATUS_ACTIVE)){
-                        try{
-                            if(transactionCompletionMode.equalsIgnoreCase(COMMIT)){
-                                if(LOG.isLoggable(Level.FINEST)){
-                                    LOG.log(Level.FINEST,"Transaction Completion Mode for LocalTx resource is " +
-                                            "set as COMMIT, committing transaction");
-                                }
-                                j2eetran.commit();
-                            }else if(transactionCompletionMode.equalsIgnoreCase(ROLLBACK)){
-                                if(LOG.isLoggable(Level.FINEST)){
-                                    LOG.log(Level.FINEST,"Transaction Completion Mode for LocalTx resource is " +
-                                        "set as ROLLBACK, rolling back transaction");
-                                }
-                                j2eetran.rollback();
-                            }else{
-                                LOG.log(Level.WARNING,"Unknown transaction completion mode, no action made");
-                            }
-                        }catch(Exception e){
-                            LOG.log(Level.WARNING, "Failure while forcibily completing an incomplete, " +
-                                    "local transaction ", e);
-                        }
-                    }
+    private void forceTransactionCompletion(XAResource xaResource) throws SystemException {
+        if (TX_COMPLETION_MODE == null) {
+            return;
+        }
+        if (xaResource instanceof ConnectorXAResource) {
+            ConnectorXAResource connectorXARes = (ConnectorXAResource) xaResource;
+            JavaEETransaction j2eetran = connectorXARes.getAssociatedTransaction();
+            if (j2eetran == null || !j2eetran.isLocalTx() || j2eetran.getStatus() != Status.STATUS_ACTIVE) {
+                return;
+            }
+            try {
+                if (COMMIT.equalsIgnoreCase(TX_COMPLETION_MODE)) {
+                    LOG.log(FINEST, "Transaction Completion Mode for LocalTx resource is set as COMMIT,"
+                        + " committing transaction");
+                    j2eetran.commit();
+                } else if (ROLLBACK.equalsIgnoreCase(TX_COMPLETION_MODE)) {
+                    LOG.log(FINEST, "Transaction Completion Mode for LocalTx resource is set as ROLLBACK,"
+                        + " rolling back transaction");
+                    j2eetran.rollback();
+                } else {
+                    LOG.log(Level.WARNING, "Unknown transaction completion mode, no action made");
                 }
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "Failure while forcibily completing an incomplete, local transaction ", e);
             }
         }
     }

@@ -139,21 +139,19 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     // invoked by DataSource objects to obtain a connection
     @Override
-    public Object getResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator, ClientSecurityInfo clientSecurityInfo) throws PoolingException, RetryableUnavailableException {
-        if (LOG.isLoggable(FINE)) {
-            LOG.log(FINE, "PoolManagerImpl.getResource START, resourceSpec=" + resourceSpec + "\nresourceAllocator="
-                    + resourceAllocator + "\nclientSecurityInfo=" + clientSecurityInfo);
-        }
-        Transaction transaction = null;
-        boolean transactional = resourceAllocator.isTransactional();
+    public Object getResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator,
+        ClientSecurityInfo clientSecurityInfo) throws PoolingException, RetryableUnavailableException {
+        LOG.log(FINE, () -> "PoolManagerImpl.getResource START, resourceSpec=" + resourceSpec + "\nresourceAllocator="
+            + resourceAllocator + "\nclientSecurityInfo=" + clientSecurityInfo);
+        final Transaction transaction = resourceAllocator.isTransactional()
+            ? getResourceManager(resourceSpec).getTransaction()
+            : null;
 
-        if (transactional) {
-            transaction = getResourceManager(resourceSpec).getTransaction();
-        }
-
-        ResourceHandle resourceHandle = getResourceFromPool(resourceSpec, resourceAllocator, clientSecurityInfo, transaction);
-        if (LOG.isLoggable(FINE)) {
-            LOG.log(FINE, "PoolManagerImpl.getResource handle=" + resourceHandle + ", poolStatus" + getPoolStatus(resourceSpec.getPoolInfo()));
+        final ResourceHandle resourceHandle = getResourceFromPool(resourceSpec, resourceAllocator, clientSecurityInfo, transaction);
+        LOG.log(FINE, () -> "PoolManagerImpl.getResource handle=" + resourceHandle + ", poolStatus"
+            + getPoolStatus(resourceSpec.getPoolInfo()));
+        if (resourceHandle == null) {
+            throw new PoolingException("No resource handle available for " + resourceSpec.getPoolInfo());
         }
         if (!resourceHandle.supportsLazyAssociation()) {
             resourceSpec.setLazyAssociatable(false);
@@ -168,7 +166,6 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
                 managedConnection.associateConnection(connection);
             } catch (ResourceException e) {
                 putbackDirectToPool(resourceHandle, resourceSpec.getPoolInfo());
-
                 throw new PoolingException(e.getMessage(), e);
             }
         }
@@ -188,7 +185,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
         try {
             if (resourceHandle.getResourceState().isEnlisted()) {
-                LOG.log(FINE, "getResource - DO NOT ENLIST because it is already Enlisted, resource=" + resourceHandle);
+                LOG.log(FINE, "getResource - DO NOT ENLIST because it is already Enlisted, resource={0}", resourceHandle);
             } else {
                 // The spec being used here is the spec with the updated lazy enlistment info.
 
@@ -211,9 +208,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         }
 
         Object result = resourceHandle.getUserConnection();
-        if (LOG.isLoggable(FINE)) {
-            LOG.log(FINE, "PoolManagerImpl.getResource END, resourceHandle=" + resourceHandle);
-        }
+        LOG.log(FINE, "PoolManagerImpl.getResource END, resourceHandle={0}", resourceHandle);
         return result;
     }
 

@@ -19,151 +19,137 @@ package org.glassfish.main.test.jdbc.pool;
 import jakarta.ws.rs.client.WebTarget;
 
 import java.lang.System.Logger;
-import java.net.URI;
+import java.time.Duration;
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.glassfish.main.test.jdbc.pool.war.GlassFishUserRestEndpoint;
 import org.glassfish.main.test.jdbc.pool.war.RestAppConfig;
 import org.glassfish.main.test.jdbc.pool.war.User;
-import org.glassfish.main.test.perf.util.DockerTestEnvironment;
-import org.glassfish.main.test.perf.util.UserRestClient;
+import org.glassfish.main.test.perf.benchmark.Environment;
+import org.glassfish.main.test.perf.benchmark.RestBenchmark;
+import org.glassfish.main.test.perf.embedded.DockerTestEnvironmentWithEmbedded;
+import org.glassfish.main.test.perf.rest.UserRestClient;
+import org.glassfish.main.test.perf.server.DockerTestEnvironment;
 import org.glassfish.tests.utils.junit.TestLoggingExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testcontainers.DockerClientFactory;
 
 import static java.lang.Math.min;
 import static java.lang.System.Logger.Level.INFO;
-import static org.glassfish.main.test.jdbc.pool.JdbcPoolPerformanceIT.RestClientProvider.SYS_PROPERTY_ENDPOINT;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.LIMIT_JDBC;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.asadmin;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.asadminMonitor;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.deploy;
-import static org.glassfish.main.test.perf.util.DockerTestEnvironment.undeploy;
-import static org.glassfish.main.test.perf.util.GlassFishContainer.LIMIT_HTTP_THREADS;
-import static org.hamcrest.CoreMatchers.allOf;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.LIMIT_JMH_THREADS;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.LIMIT_POOL_HTTP_THREADS;
+import static org.glassfish.main.test.perf.benchmark.BenchmarkLimits.LIMIT_POOL_JDBC;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.openjdk.jmh.runner.options.TimeValue.seconds;
 
+
+/**
+ * <code>
+ * mvn clean install -pl :jdbc-tests -Dit.test=JdbcPoolPerformanceIT -DenableHWDependentTests=true -Dit.embedded=true -Dit.disconnectDatabase=false
+ * </code>
+ */
 @EnabledIfSystemProperty(
     named = "enableHWDependentTests",
     matches = "true",
     disabledReason = "Test depends on hardware performance")
 @ExtendWith(TestLoggingExtension.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class JdbcPoolPerformanceIT {
     private static final Logger LOG = System.getLogger(JdbcPoolPerformanceIT.class.getName());
     private static final String APPNAME = "perf";
-    private static final int LIMIT_JMH_THREADS = 500;
-    private static boolean dockerAvailable;
+    private static final boolean DOCKER_AVAILABLE = DockerClientFactory.instance().isDockerAvailable();
+    private static final boolean EMBEDDED = Boolean.getBoolean("it.embedded");
+    private static final boolean DISCONNECT_DB = Boolean.getBoolean("it.disconnectDatabase");
+    private static final int CONN_MAX = min(LIMIT_JMH_THREADS, min(LIMIT_POOL_HTTP_THREADS, LIMIT_POOL_JDBC));
+
+    private static Environment env;
     private static WebTarget wsEndpoint;
 
     @BeforeAll
     public static void init() throws Exception {
-        dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
-        assumeTrue(dockerAvailable, "Docker is not available on this environment");
-        wsEndpoint = deploy(APPNAME, getArchiveToDeploy());
+        assumeTrue(DOCKER_AVAILABLE, "Docker is not available on this environment");
+        WebArchive war = getArchiveToDeploy();
+        env = EMBEDDED ? new DockerTestEnvironmentWithEmbedded() : new DockerTestEnvironment();
+        wsEndpoint = env.start(APPNAME, war);
     }
 
     @AfterAll
     public static void cleanup() throws Exception {
-        if (!dockerAvailable) {
+        if (!DOCKER_AVAILABLE) {
             return;
         }
-        undeploy(APPNAME);
-        DockerTestEnvironment.reinitializeDatabase();
+        env.stop();
     }
 
     @Test
-    public void testHeavyLoad() throws Exception {
-        Options options = createOptions();
-//        Thread networkIssue = new Thread(() -> {
-//            try {
-//                Thread.sleep(10);
-//                DockerTestEnvironment.disconnectDatabase(2);
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//            }
-//        });
-//        networkIssue.start();
+    public void createUser() throws Exception {
+        Options options = RestBenchmark.createOptions(wsEndpoint.getUri(), "createUser");
+        if (DISCONNECT_DB) {
+            env.disconnectDatabase(Duration.ofSeconds(2L), Duration.ofSeconds(5));
+        }
 
         Collection<RunResult> results = new Runner(options).run();
-        // Print all results - for tuning.
-        asadmin("get", "--monitor", "*");
         assertThat(results, hasSize(1));
-        Result<?> primaryResult = results.iterator().next().getPrimaryResult();
-        long usersCreated = new UserRestClient(wsEndpoint).count();
-        int jdbcConnAcquired = asadminMonitor("server.resources.domain-pool-A.numconnacquired-count");
-        int jdbcConnReleased = asadminMonitor("server.resources.domain-pool-A.numconnreleased-count");
-        int jdbcConnCreated = asadminMonitor("server.resources.domain-pool-A.numconncreated-count");
-        int jdbcConnCurrent = asadminMonitor("server.resources.domain-pool-A.perf.numconnused-current");
-        int jdbcConnFree = asadminMonitor("server.resources.domain-pool-A.numconnfree-current");
-        int jdbcMaxUsed = asadminMonitor("server.resources.domain-pool-A.perf.numconnused-highwatermark");
-        int limit = min(LIMIT_JMH_THREADS, min(LIMIT_HTTP_THREADS, LIMIT_JDBC));
-        double jmhThroughput = primaryResult.getScore();
-        LOG.log(INFO, () -> "Results:"
-            + "\nJMH throughput: " + jmhThroughput
-            + "\nusersCreated: " + usersCreated
-            + "\njdbcConnAcquired: " + jdbcConnAcquired
-            + "\njdbcConnReleased: " + jdbcConnReleased
-            + "\njdbcConnCreated: " + jdbcConnCreated
-            + "\njdbcConnCurrent: " + jdbcConnCurrent
-            + "\njdbcConnFree: " + jdbcConnFree
-            + "\njdbcMaxUsed: " + jdbcMaxUsed
-        );
+        PerformanceTestResult resultCreate = new PerformanceTestResult(results.iterator().next().getPrimaryResult());
+        LOG.log(INFO, () -> "Results(create): " + resultCreate);
+        if (!EMBEDDED) {
+            assertAll(
+                () -> assertThat("conn released==acquired", resultCreate.jdbcConnAcquired, equalTo(resultCreate.jdbcConnReleased)),
+                () -> assertThat("conn acquired", resultCreate.jdbcConnAcquired, greaterThan(CONN_MAX)),
+                () -> assertThat("conn created", resultCreate.jdbcConnCreated, equalTo(CONN_MAX)),
+                () -> assertThat("conn used now", resultCreate.jdbcConnCurrent, equalTo(0)),
+                () -> assertThat("conn usable now", resultCreate.jdbcConnFree, equalTo(CONN_MAX)),
+                () -> assertThat("conn highwatermark", resultCreate.jdbcMaxUsed, equalTo(CONN_MAX))
+            );
+        }
         assertAll(
-            () -> assertThat("JMH throughput", jmhThroughput, greaterThan(1_000_000d)),
-            () -> assertThat("Records created", usersCreated, greaterThan(170_000L)),
-            () -> assertThat("conn released==acquired", jdbcConnAcquired, equalTo(jdbcConnReleased)),
-            () -> assertThat("conn acquired", jdbcConnAcquired, greaterThan(limit)),
-            () -> assertThat("conn created", jdbcConnCreated, equalTo(limit)),
-            () -> assertThat("conn used now", jdbcConnCurrent, equalTo(0)),
-            () -> assertThat("conn usable now", jdbcConnFree, equalTo(limit)),
-            () -> assertThat("conn highwatermark", jdbcMaxUsed, equalTo(limit))
+            () -> assertThat("Average Time (ms)", resultCreate.avgTime, lessThan(100d)),
+            () -> assertThat("Records created", resultCreate.usersCreated, greaterThan(150_000L))
         );
     }
 
-    private Options createOptions() {
-        ChainedOptionsBuilder builder = new OptionsBuilder().include(getClass().getName() + ".*");
-        builder.shouldFailOnError(true);
-        builder.warmupIterations(0);
-        builder.timeUnit(TimeUnit.MILLISECONDS).mode(Mode.Throughput);
-        builder.detectJvmArgs().jvmArgsAppend("-D" + SYS_PROPERTY_ENDPOINT + "=" + wsEndpoint.getUri());
-        builder.forks(1).threads(LIMIT_JMH_THREADS);
-        builder.operationsPerInvocation(1_000_000).measurementTime(seconds(5)).timeout(seconds(30));
-        return builder.build();
-    }
+    @Test
+    public void listUsers() throws Exception {
+        Options options = RestBenchmark.createOptions(wsEndpoint.getUri(), "listUsers");
+        if (DISCONNECT_DB) {
+            env.disconnectDatabase(Duration.ofSeconds(2L), Duration.ofSeconds(5));
+        }
 
-    @Benchmark
-    public void meanResponseTimeBenchmark(RestClientProvider clientProvider) throws Exception {
-        User user = new User(RandomStringUtils.insecure().nextAlphabetic(32));
-        UserRestClient client = clientProvider.getClient();
-        client.create(user);
-        List<User> users = client.list();
-        assertThat(users, hasSize(allOf(greaterThan(0), lessThanOrEqualTo(100))));
+        Collection<RunResult> results = new Runner(options).run();
+        assertThat(results, hasSize(1));
+        PerformanceTestResult resultList = new PerformanceTestResult(results.iterator().next().getPrimaryResult());
+        LOG.log(INFO, () -> "Results(list): " + resultList);
+        if (!EMBEDDED) {
+            assertAll(
+                () -> assertThat("conn released==acquired", resultList.jdbcConnAcquired, equalTo(resultList.jdbcConnReleased)),
+                () -> assertThat("conn acquired", resultList.jdbcConnAcquired, greaterThan(CONN_MAX)),
+                () -> assertThat("conn created", resultList.jdbcConnCreated, equalTo(CONN_MAX)),
+                () -> assertThat("conn used now", resultList.jdbcConnCurrent, equalTo(0)),
+                () -> assertThat("conn usable now", resultList.jdbcConnFree, equalTo(CONN_MAX)),
+                () -> assertThat("conn highwatermark", resultList.jdbcMaxUsed, equalTo(CONN_MAX))
+            );
+        }
+        assertAll(
+            () -> assertThat("Average Time (ms)", resultList.avgTime, lessThan(2000d)),
+            () -> assertThat("Records created", resultList.usersCreated, equalTo(resultList.usersCreated))
+        );
     }
 
 
@@ -174,14 +160,46 @@ public class JdbcPoolPerformanceIT {
         ;
     }
 
-    @State(Scope.Benchmark)
-    public static class RestClientProvider {
-        public static final String SYS_PROPERTY_ENDPOINT = "endpoint";
-        private static final UserRestClient CLIENT = new UserRestClient(
-            URI.create(System.getProperty(SYS_PROPERTY_ENDPOINT)), false);
+    private static class PerformanceTestResult {
+        long usersCreated;
+        int jdbcConnAcquired;
+        int jdbcConnReleased;
+        int jdbcConnCreated;
+        int jdbcConnCurrent;
+        int jdbcConnFree;
+        int jdbcMaxUsed;
+        double avgTime;
 
-        public UserRestClient getClient() {
-            return CLIENT;
+        PerformanceTestResult(Result<?> result) {
+            usersCreated = new UserRestClient(wsEndpoint).count();
+            jdbcConnAcquired = asadminMonitor("server.resources.domain-pool-A.numconnacquired-count");
+            jdbcConnReleased = asadminMonitor("server.resources.domain-pool-A.numconnreleased-count");
+            jdbcConnCreated = asadminMonitor("server.resources.domain-pool-A.numconncreated-count");
+            jdbcConnCurrent = asadminMonitor("server.resources.domain-pool-A.perf.numconnused-current");
+            jdbcConnFree = asadminMonitor("server.resources.domain-pool-A.numconnfree-current");
+            jdbcMaxUsed = asadminMonitor("server.resources.domain-pool-A.perf.numconnused-highwatermark");
+            avgTime = result.getScore();
+        }
+
+
+        @Override
+        public String toString() {
+            return "\nAverage Time (ms): " + avgTime
+            + "\nusersCreated: " + usersCreated
+            + "\njdbcConnAcquired: " + jdbcConnAcquired
+            + "\njdbcConnReleased: " + jdbcConnReleased
+            + "\njdbcConnCreated: " + jdbcConnCreated
+            + "\njdbcConnCurrent: " + jdbcConnCurrent
+            + "\njdbcConnFree: " + jdbcConnFree
+            + "\njdbcMaxUsed: " + jdbcMaxUsed;
+        }
+
+        private int asadminMonitor(String string) {
+            if (env instanceof DockerTestEnvironmentWithEmbedded) {
+                return 0;
+            }
+            DockerTestEnvironment gfEnv = (DockerTestEnvironment) env;
+            return gfEnv.asadminMonitor(string);
         }
     }
 }

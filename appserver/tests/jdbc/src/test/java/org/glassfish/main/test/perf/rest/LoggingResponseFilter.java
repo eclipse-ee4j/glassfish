@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.perf.util;
+package org.glassfish.main.test.perf.rest;
 
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientResponseContext;
@@ -22,9 +22,9 @@ import jakarta.ws.rs.client.ClientResponseFilter;
 
 import java.lang.System.Logger;
 
-import org.testcontainers.shaded.org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * Logs REST communication when response comes.
@@ -36,10 +36,10 @@ public class LoggingResponseFilter implements ClientResponseFilter {
 
     @Override
     public void filter(final ClientRequestContext requestContext, final ClientResponseContext responseContext) {
-        if (!LOG.isLoggable(INFO)) {
+        if (!LOG.isLoggable(DEBUG)) {
             return;
         }
-        LOG.log(INFO, "filter(requestContext, responseContext);" //
+        LOG.log(DEBUG, "filter(requestContext, responseContext);" //
             + "\nrequestContext: {0}"
             + "\nrequest headers: {1}"
             + "\nrequest cookies: {2}"

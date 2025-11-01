@@ -382,7 +382,10 @@ Use the following syntax:
 +
 [source]
 ----
-keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.jks
+keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.p12
++
++NOTE: The above examples show PKCS12 format (.p12) which is the recommended
++format since Java 9. For legacy JKS format compatibility, use `.jks` file extension.
 -file cert-name
 ----
 +
@@ -403,7 +406,7 @@ alias called "OID self-signed certificate," you would use the following command:
 [source]
 ----
 keytool -importcert -alias "OID self signed certificate" -keystore \
-/glassfish8/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
+/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer
 ----
 6. Restart the {productName} domain. +
 See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
@@ -471,7 +474,10 @@ Use the following syntax:
 +
 [source]
 ----
-keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.jks
+keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.p12
++
++NOTE: The above examples show PKCS12 format (.p12) which is the recommended
++format since Java 9. For legacy JKS format compatibility, use `.jks` file extensions.
 -file cert-name
 ----
 +
@@ -492,7 +498,7 @@ alias called "OVD self-signed certificate," you would use the following command:
 [source]
 ----
 keytool -importcert -alias "OVD self signed certificate" -keystore \
-/glassfish8/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
+/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer
 ----
 5. Restart the {productName} domain. +
 See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"

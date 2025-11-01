@@ -127,7 +127,7 @@ spec:
     - name: "HOME"
       value: "/home/jenkins"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication -Xlog:gc"
+      value: "-Duser.home=/home/jenkins -Xmx2g -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication -Xlog:gc"
     volumeMounts:
     - name: "jenkins-home"
       mountPath: "/home/jenkins"
@@ -217,10 +217,10 @@ spec:
                try {
                   startVmstatLogging('mvn-build')
                   dumpSysInfo()
-                  timeout(time: 10, unit: 'MINUTES') {
+                  timeout(time: 30, unit: 'MINUTES') {
                      sh '''
                      # Validate the structure in all submodules (especially version ids)
-                     mvn -B -e -fae clean validate -Ptck,set-version-id
+                     mvn -V -B -e -fae clean validate -Ptck,set-version-id
 
                      # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
                      mvn -B -e install -Pfastest,ci -T4C

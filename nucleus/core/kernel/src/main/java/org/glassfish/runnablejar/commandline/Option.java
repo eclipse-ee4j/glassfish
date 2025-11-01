@@ -63,6 +63,7 @@ public enum Option {
             + " The property \"properties\" can also be defined in this file, pointing to another file."
             + " In that case, properties will be loaded also from that file.") {
 
+        @Override
         public void handle(String value, Arguments arguments) {
             loadPropertiesFromFile(value, arguments);
         }
@@ -133,7 +134,7 @@ public enum Option {
                     LogManager.getLogManager().readConfiguration(logConfig);
                 }
             } catch (IOException | NullPointerException ex) {
-                logger.log(WARNING, ex, () -> "Could not open properties file " + fileName);
+                LOG.log(WARNING, ex, () -> "Could not open properties file " + fileName);
             }
         }
     },
@@ -195,21 +196,21 @@ public enum Option {
 
     };
 
-    protected static final Logger logger = Logger.getLogger(Option.class.getName());
+    private static final Logger LOG = Logger.getLogger(Option.class.getName());
 
     private String mainName;
     private Set<String> aliases;
     private String helpText;
     private String usage;
 
-    private Option(String mainName, Set<String> aliases, String usage, String helpText) {
+    Option(String mainName, Set<String> aliases, String usage, String helpText) {
         this.mainName = mainName;
         this.aliases = aliases;
         this.usage = usage;
         this.helpText = helpText;
     }
 
-    private Option(String mainName, String usage, String helpText) {
+    Option(String mainName, String usage, String helpText) {
         this(mainName, Set.of(), usage, helpText);
     }
 
@@ -286,11 +287,11 @@ public enum Option {
                 try {
                     arguments.setOption(key, value);
                 } catch (UnknownPropertyException e) {
-                    logger.log(Level.WARNING, e, () -> "Invalid property '" + e.getKey() + "' in file " + fileName);
+                    LOG.log(Level.WARNING, e, () -> "Invalid property '" + e.getKey() + "' in file " + fileName);
                 }
             });
         } catch (IOException e) {
-            logger.log(Level.WARNING, e, () -> "Could not read properties from file " + fileName + " - " + e.getMessage());
+            LOG.log(Level.WARNING, e, () -> "Could not read properties from file " + fileName + " - " + e.getMessage());
         }
     }
 
@@ -301,7 +302,7 @@ public enum Option {
                 arguments.deployables.add(appFile.getAbsolutePath());
             }
         } else {
-            logger.log(WARNING, () -> "The path specified with the " + this.getUsage() + " option is not a directory: " + directoryName);
+            LOG.log(WARNING, () -> "The path specified with the " + this.getUsage() + " option is not a directory: " + directoryName);
         }
     }
 

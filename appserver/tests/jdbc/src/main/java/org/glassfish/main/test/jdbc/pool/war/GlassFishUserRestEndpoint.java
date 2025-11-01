@@ -39,19 +39,14 @@ public class GlassFishUserRestEndpoint {
     @Transactional(TxType.REQUIRES_NEW)
     public void create(User user) {
         em.persist(user);
-//        try {
-//            Thread.sleep(50L);
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//        }
     }
 
 
     @GET
     @Path("/list")
-    @Transactional(TxType.NOT_SUPPORTED)
+    @Transactional(TxType.SUPPORTS)
     public List<User> list() {
-        return em.createQuery("select u from User u", User.class).setMaxResults(100).getResultList();
+        return em.createQuery("select u from User u order by u.name", User.class).setMaxResults(100).getResultList();
     }
 
 

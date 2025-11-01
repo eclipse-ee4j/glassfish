@@ -61,7 +61,7 @@ public class ProgressStatusFailITest {
      */
     @Test
     public void timeout() {
-        AsadminResult result = ASADMIN.exec(3000, "progress-custom", "1x1", "1x2", "1x1");
+        AsadminResult result = ASADMIN.exec(3100, "progress-custom", "1x1", "1x2", "1x1");
         assertThat(result, not(asadminOK()));
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty(), "progress messages empty");

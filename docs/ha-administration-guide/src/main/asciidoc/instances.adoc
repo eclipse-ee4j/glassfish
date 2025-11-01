@@ -1662,11 +1662,13 @@ By default, {productName} synchronizes only the following
 configuration files:
 
 * `admin-keyfile`
+* `cacerts.p12`
 * `cacerts.jks`
 * `default-web.xml`
 * `domain.xml`
 * `domain-passwords`
 * `keyfile`
+* `keystore.p12`
 * `keystore.jks`
 * `server.policy`
 * `sun-acc.xml`
@@ -1701,12 +1703,12 @@ addition to the files that {productName} resynchronizes by default:
 [source]
 ----
 admin-keyfile
-cacerts.jks
+cacerts.p12
 default-web.xml
 domain.xml
 domain-passwords
 keyfile
-keystore.jks
+keystore.p12
 server.policy
 sun-acc.xml
 wss-server-config-1.0.xml

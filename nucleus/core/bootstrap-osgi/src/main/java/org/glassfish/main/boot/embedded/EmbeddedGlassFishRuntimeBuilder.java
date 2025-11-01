@@ -123,8 +123,8 @@ public class EmbeddedGlassFishRuntimeBuilder implements RuntimeBuilder {
                 } else if (pathname.getName().endsWith(JAR_EXT) && !MODULE_EXCLUDES.contains(pathname.getName())) {
                     try {
                         moduleJarURLs.add(pathname.toURI().toURL());
-                    } catch (Exception ex) {
-                        LOG.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
+                    } catch (Exception e) {
+                        LOG.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, e);
                     }
                 }
                 return false;

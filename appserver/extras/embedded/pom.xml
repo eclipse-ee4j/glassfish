@@ -62,6 +62,7 @@
                 <plugin>
                     <groupId>org.codehaus.gmaven</groupId>
                     <artifactId>groovy-maven-plugin</artifactId>
+                    <version>2.1.1</version>
                     <executions>
                         <execution>
                             <!-- Merges all values in the 'probe-provider-class-names'

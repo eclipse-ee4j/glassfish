@@ -14,6 +14,15 @@ jobs:
     name: Build GlassFish on Windows
     steps:
     - uses: actions/checkout@v4
+    - name: Setup RAM Disk
+      uses: chad-golden/setup-ramdisk@v1.0.1
+      with:
+        size-in-mb: 8096
+    - name: Setup directories in RAM Disk
+      run: |
+        mkdir R:\temp
+        echo "TEMP=R:\temp" >> $env:GITHUB_ENV
+        echo "TMP=R:\temp" >> $env:GITHUB_ENV
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
@@ -41,3 +50,5 @@ jobs:
         skip_success_summary: true
         detailed_summary: true
         flaky_summary: true
+    - name: Dismount RAM Disk
+      uses: chad-golden/setup-ramdisk/dismount@v1.0.1

@@ -26,3 +26,9 @@ jobs:
         name: server-logs
         path: '**/server.log*'
         retention-days: 3
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v5
+      if: success() || failure() # do not run if build cancelled
+      with:
+        report_paths: '**/target/surefire-reports/TEST-*.xml'
+

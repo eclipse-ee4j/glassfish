@@ -90,7 +90,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
     @Param(name = "authrealmname", optional = true)
     private String authRealmName;
 
-    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;
 
     @Param(name = "username", primary = true)

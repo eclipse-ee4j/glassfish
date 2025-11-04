@@ -140,7 +140,7 @@ public class DeleteCustomResourceTest {
         Servers servers = habitat.getService(Servers.class);
         boolean isRefDeleted = true;
         for (Server server : servers.getServer()) {
-            if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+            if (server.getName().equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
                 for (ResourceRef ref : server.getResourceRef()) {
                     if (ref.getRef().equals("sample_custom_resource")) {
                         isRefDeleted = false;

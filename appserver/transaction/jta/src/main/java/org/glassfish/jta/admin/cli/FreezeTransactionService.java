@@ -99,7 +99,7 @@ public class FreezeTransactionService implements AdminCommand {
     private static final Logger LOG = LogDomains.getLogger(FreezeTransactionService.class, LogDomains.JTA_LOGGER, false);
 
     @Param(optional = true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Inject
     JavaEETransactionManager transactionManager;

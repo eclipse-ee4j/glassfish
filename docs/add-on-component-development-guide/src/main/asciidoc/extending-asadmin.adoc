@@ -518,7 +518,7 @@ subcommand implementation if the following annotation is present:
 
 [source,java]
 ----
-@Param(optional=true,defaultValue=SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+@Param(optional=true,defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
 String target;
 ----
 

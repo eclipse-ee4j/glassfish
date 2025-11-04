@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -134,7 +135,7 @@ public class CreateCustomResourceTest {
         Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
-            if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+            if (server.getName().equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
                 for (ResourceRef ref : server.getResourceRef()) {
                     if (ref.getRef().equals("sample_custom_resource")) {
                         assertEquals("true", ref.getEnabled());

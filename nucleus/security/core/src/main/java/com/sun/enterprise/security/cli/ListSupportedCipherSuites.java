@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,9 +62,9 @@ public class ListSupportedCipherSuites implements AdminCommand {
     SSLUtils sslutils;
 
     /*@Param(name = "target", optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;*/
-    @Param(optional = true, primary = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(optional = true, primary = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;
 
     @Override

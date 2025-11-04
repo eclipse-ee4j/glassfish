@@ -49,7 +49,7 @@ public class RollbackTransaction implements AdminCommand {
     private static StringManager localStrings = StringManager.getManager(RollbackTransaction.class);
 
     @Param(optional = true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(name = "transaction_id")
     String txnId;

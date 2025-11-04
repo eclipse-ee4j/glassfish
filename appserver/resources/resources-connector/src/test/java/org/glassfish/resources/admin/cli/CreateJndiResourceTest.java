@@ -131,7 +131,7 @@ public class CreateJndiResourceTest {
         Servers servers = habitat.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
-            if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+            if (server.getName().equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
                 for (ResourceRef ref : server.getResourceRef()) {
                     if (ref.getRef().equals("sample_jndi_resource")) {
                         assertEquals("true", ref.getEnabled());

@@ -141,7 +141,7 @@ public class DeleteJndiResourceTest {
         Servers servers = locator.getService(Servers.class);
         boolean isRefDeleted = true;
         for (Server server : servers.getServer()) {
-            if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+            if (server.getName().equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
                 for (ResourceRef ref : server.getResourceRef()) {
                     if (ref.getRef().equals("sample_jndi_resource")) {
                         isRefDeleted = false;

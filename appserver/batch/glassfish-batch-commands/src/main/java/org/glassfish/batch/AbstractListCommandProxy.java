@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,7 +65,7 @@ public abstract class AbstractListCommandProxy
     @Param(name = "header", shortName = "h", optional = true)
     protected boolean header;
 
-    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     protected String target;
 
     @Param(name = "long", shortName = "l", optional = true)

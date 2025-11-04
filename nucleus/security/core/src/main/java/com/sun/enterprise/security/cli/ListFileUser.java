@@ -86,7 +86,7 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
     @Param(name = "authrealmname", optional = true)
     private String authRealmName;
 
-    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;
 
     @Inject

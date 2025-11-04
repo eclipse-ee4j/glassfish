@@ -81,7 +81,7 @@ public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauth
     @Param(name = "name", optional = true)
     private String fileUserName;
 
-    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;
 
     @Inject

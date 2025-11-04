@@ -97,7 +97,7 @@ public class UnFreezeTransactionService implements AdminCommand {
     private static final Logger logger = LogDomains.getLogger(UnFreezeTransactionService.class, LogDomains.JTA_LOGGER);
 
     @Param(optional = true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Inject
     JavaEETransactionManager transactionManager;

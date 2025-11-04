@@ -38,7 +38,7 @@ import static java.text.MessageFormat.format;
 public class PEFileLayout {
     private static final StringManager _strMgr = StringManager.getManager(PEFileLayout.class);
 
-    public static final String DEFAULT_INSTANCE_NAME = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    public static final String DEFAULT_INSTANCE_NAME = SystemPropertyConstants.DAS_SERVER_NAME;
     /* above field is taken from a central place */
     protected final RepositoryConfig _config;
 

@@ -194,13 +194,13 @@ public class SingletonLifeCycleManager {
         initializedSingletons.add(container);
     }
 
-    private void addDependencies(String singleton, Set<String> dependsOn) {
+    void addDependencies(String singleton, Set<String> dependsOn) {
         if (!dependsOn.isEmpty()) {
             singletonDependencies.putIfAbsent(singleton, dependsOn);
         }
     }
 
-    private Collection<String> computeDependencies(String singleton) {
+    Collection<String> computeDependencies(String singleton) {
         if (!hasDependencies(singleton)) {
             return Set.of();
         }

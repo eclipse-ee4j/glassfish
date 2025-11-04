@@ -68,7 +68,7 @@ public class SystemPropertyConstants {
     public static final String NATIVE_LAUNCHER_LIB_PREFIX = "com.sun.aas.nativeLauncherLibPrefix";
 
     public static final String DAS_SERVER_NAME = "server";
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static final String DEFAULT_SERVER_INSTANCE_NAME = DAS_SERVER_NAME;
 
     public static final String DAS_SERVER_CONFIG = "server-config";

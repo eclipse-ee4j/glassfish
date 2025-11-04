@@ -798,11 +798,6 @@ AS-EJB-00003 [\{0}]: passivateEJB(), Exception caught -> ::
 +
   Action: Define the appropriate method
 
-[[sthref145]]AS-JMS-CORE-00013 Connector Resource could not be closed ::
-  Cause: As described in the message.
-+
-  Action: Resolve the situation described in the message, if necessary.
-
 [[sthref146]]AS-JMS-CORE-00014 rardeployment.mcfcreation_error \{0} ::
   Cause: As described in the message.
 +
@@ -839,11 +834,6 @@ AS-EJB-00003 [\{0}]: passivateEJB(), Exception caught -> ::
   Action: Resolve the situation described in the message, if necessary.
 
 [[sthref153]]AS-JMS-CORE-00021 Cannot obtain master broker ::
-  Cause: As described in the message.
-+
-  Action: Resolve the situation described in the message, if necessary.
-
-[[sthref154]]AS-JMS-CORE-00022 Error while loading connector resources during recovery : \{0} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.

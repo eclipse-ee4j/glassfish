@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
 package org.glassfish.internal.api;
 
 import java.io.IOException;
@@ -5,8 +21,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
 
 /**
  * A ClassLoader that aggregates multiple ClassLoaders and returns unique resources/classes.
@@ -26,7 +43,7 @@ public class CompositeClassLoader extends ClassLoader {
         registerAsParallelCapable();
     }
 
-    private final List<ClassLoader> classLoaders = new CopyOnWriteArrayList<>();
+    private final Set<ClassLoader> classLoaders = Collections.synchronizedSet(new LinkedHashSet<>());
 
     public CompositeClassLoader() {
         super(null);
@@ -64,7 +81,7 @@ public class CompositeClassLoader extends ClassLoader {
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         if (classLoaders.size() == 1) {
-            return classLoaders.get(0).getResources(name);
+            return classLoaders.iterator().next().getResources(name);
         }
         List<Enumeration<URL>> enumerations = new ArrayList<>();
         for (ClassLoader cl : classLoaders) {
@@ -89,6 +106,6 @@ public class CompositeClassLoader extends ClassLoader {
     }
 
     public List<ClassLoader> getClassLoaders() {
-        return Collections.unmodifiableList(classLoaders);
+        return new ArrayList<>(classLoaders);
     }
 }

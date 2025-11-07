@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,19 +65,19 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 @Taxonomy(stability = Stability.NOT_AN_INTERFACE)
 public final class AMXConfigLoader implements TransactionListener {
 
-    private volatile AMXConfigLoaderThread mLoaderThread;
     private final Transactions mTransactions;
     private final Logger mLogger = AMXLoggerInfo.getLogger();
     private final PendingConfigBeans mPendingConfigBeans;
     private final ConfigBeanRegistry mRegistry = ConfigBeanRegistry.getInstance();
     private final MBeanServer mServer;
+    private final AMXConfigLoaderThread mLoaderThread;
 
     /**
      * Detects illegal characters in MBean name values.  (Used instead of
      * individual character searches for efficiency)
      */
-    private static final Pattern ILLEGAL_JMX_NAME_PATTERN = Pattern.compile(".*[=:"
-            + Pattern.quote("\"") + Pattern.quote("*") + Pattern.quote("?") + "].*");
+    private static final Pattern ILLEGAL_JMX_NAME_PATTERN = Pattern
+        .compile(".*[=:" + Pattern.quote("\"") + Pattern.quote("*") + Pattern.quote("?") + "].*");
 
     public AMXConfigLoader(
             final MBeanServer mbeanServer,
@@ -90,6 +90,8 @@ public final class AMXConfigLoader implements TransactionListener {
         mServer = mbeanServer;
         mTransactions = transactions;
         mPendingConfigBeans = pending;
+        mLoaderThread = new AMXConfigLoaderThread(mPendingConfigBeans);
+        mLoaderThread.setDaemon(true);
     }
 
     public void registerConfigured(final Class<? extends ConfigBeanProxy> intf) {
@@ -170,12 +172,11 @@ public final class AMXConfigLoader implements TransactionListener {
                 // ADD: a new ConfigBean was added
                 final ConfigBeanProxy cbp = (ConfigBeanProxy) newValue;
                 final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
-                final boolean doWait = amxIsRunning();
-                if (handleConfigBean(cb, doWait)) // wait until registered
-                {
+                // wait until registered
+                if (handleConfigBean(cb, true)) {
                     newConfigBeans.add(cb);
                 }
-            } else if (newValue == null && oldValue instanceof ConfigBeanProxy && amxIsRunning()) {
+            } else if (newValue == null && oldValue instanceof ConfigBeanProxy) {
                 // REMOVE
                 final ConfigBeanProxy cbp = (ConfigBeanProxy) oldValue;
                 final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
@@ -187,39 +188,37 @@ public final class AMXConfigLoader implements TransactionListener {
         }
 
         // we can't issue events if AMX is not running!
-        if (amxIsRunning()) {
-            for (final PropertyChangeEvent event : remainingEvents) {
-                final Object oldValue = event.getOldValue();
-                final Object newValue = event.getNewValue();
-                final Object source = event.getSource();
-                final String propertyName = event.getPropertyName();
-                //final String sourceString = (source instanceof ConfigBeanProxy) ? ConfigSupport.proxyType((ConfigBeanProxy)source).getName() : "" + source;
+        for (final PropertyChangeEvent event : remainingEvents) {
+            final Object oldValue = event.getOldValue();
+            final Object newValue = event.getNewValue();
+            final Object source = event.getSource();
+            final String propertyName = event.getPropertyName();
+            //final String sourceString = (source instanceof ConfigBeanProxy) ? ConfigSupport.proxyType((ConfigBeanProxy)source).getName() : "" + source;
 
-                //debug( "AMXConfigLoader.sortAndDispatch (ATTR change): name = " + propertyName +
-                //        ", oldValue = " + oldValue + ", newValue = " + newValue + ", source = " + sourceString );
-                if (source instanceof ConfigBeanProxy) {
-                    // CHANGE
-                    final ConfigBeanProxy cbp = (ConfigBeanProxy) source;
-                    final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
-                    //final Class<? extends ConfigBeanProxy> proxyClass = ConfigSupport.proxyType(cbp);
+            //debug( "AMXConfigLoader.sortAndDispatch (ATTR change): name = " + propertyName +
+            //        ", oldValue = " + oldValue + ", newValue = " + newValue + ", source = " + sourceString );
+            if (source instanceof ConfigBeanProxy) {
+                // CHANGE
+                final ConfigBeanProxy cbp = (ConfigBeanProxy) source;
+                final ConfigBean cb = asConfigBean(Dom.unwrap(cbp));
+                //final Class<? extends ConfigBeanProxy> proxyClass = ConfigSupport.proxyType(cbp);
 
-                    // change events without prior add
-                    // we shouldn't have to check for this, but it's a bug in the caller: no even for
-                    // new ConfigBean, but changes come along anyway
+                // change events without prior add
+                // we shouldn't have to check for this, but it's a bug in the caller: no even for
+                // new ConfigBean, but changes come along anyway
 
-                    if (mRegistry.getObjectName(cb) == null) {
-                        if (!newConfigBeans.contains(cb)) {
-                            //debug( "AMXConfigLoader.sortAndDispatch: process new ConfigBean (WORKAROUND): " + proxyClass.getNameProp() );
-                            if (handleConfigBean(cb, false)) {
-                                newConfigBeans.add(cb);
-                            }
+                if (mRegistry.getObjectName(cb) == null) {
+                    if (!newConfigBeans.contains(cb)) {
+                        //debug( "AMXConfigLoader.sortAndDispatch: process new ConfigBean (WORKAROUND): " + proxyClass.getNameProp() );
+                        if (handleConfigBean(cb, false)) {
+                            newConfigBeans.add(cb);
                         }
-                    } else {
-                        issueAttributeChange(cb, propertyName, oldValue, newValue, whenChanged);
                     }
                 } else {
-                    mLogger.fine("AMXConfigLoader.sortAndDispatch: WARNING: source is not a ConfigBean");
+                    issueAttributeChange(cb, propertyName, oldValue, newValue, whenChanged);
                 }
+            } else {
+                mLogger.fine("AMXConfigLoader.sortAndDispatch: WARNING: source is not a ConfigBean");
             }
         }
     }
@@ -314,16 +313,10 @@ public final class AMXConfigLoader implements TransactionListener {
     /**
      * Enable registration of MBeans, queued until now.
      */
-    public synchronized ObjectName start() {
+    public ObjectName start() {
         mLogger.log(Level.INFO, AMXLoggerInfo.inAMXConfigLoader, mLoaderThread );
-        if (mLoaderThread != null) {
-            return null;
-        }
-        FeatureAvailability.getInstance().waitForFeature(FeatureAvailability.AMX_CORE_READY_FEATURE, "AMXConfigLoader.start");
-
-        mLoaderThread = new AMXConfigLoaderThread(mPendingConfigBeans);
-        mLoaderThread.setDaemon(true);
         mLoaderThread.start();
+        FeatureAvailability.getInstance().waitForFeature(FeatureAvailability.AMX_CORE_READY_FEATURE, "AMXConfigLoader.start");
 
         mPendingConfigBeans.swapTransactionListener(this);
         SingletonEnforcer.register(AMXConfigLoader.class, this);
@@ -339,14 +332,10 @@ public final class AMXConfigLoader implements TransactionListener {
         return null;
     }
 
-    private synchronized boolean amxIsRunning() {
-        return mLoaderThread != null;
-    }
-
     private final class AMXConfigLoaderThread extends Thread {
 
         private final PendingConfigBeans mPending;
-        volatile boolean mQuit = false;
+        private volatile boolean mQuit;
         private volatile CountDownLatch mInitalQueueLatch = new CountDownLatch(1);
 
         AMXConfigLoaderThread(final PendingConfigBeans pending) {
@@ -370,8 +359,8 @@ public final class AMXConfigLoader implements TransactionListener {
                     objectName = registerConfigBeanAsMBean(cb);
                     //debug( "AMXConfigLoaderThread.registerOne(): " + objectName);
                 }
-            } catch (final Throwable t) {
-                mLogger.log(Level.WARNING, AMXLoggerInfo.cantRegister, new Object[]{getType(cb), getKey(cb), t});
+            } catch (final Exception e) {
+                mLogger.log(Level.WARNING, AMXLoggerInfo.cantRegister, new Object[]{getType(cb), getKey(cb), e});
             } finally {
                 job.releaseLatch();
             }
@@ -395,7 +384,7 @@ public final class AMXConfigLoader implements TransactionListener {
                 try {
                     latch.await();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    Thread.currentThread().interrupt();
                 }
                 mInitalQueueLatch = null;
             }
@@ -539,7 +528,7 @@ public final class AMXConfigLoader implements TransactionListener {
     }
 
     public Domain getDomain() {
-            return InjectedValues.getInstance().getHabitat().getService(Domain.class);
+        return InjectedValues.getInstance().getHabitat().getService(Domain.class);
     }
 
     private static final AtomicLong sCounter = new AtomicLong(1);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,7 +29,6 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.management.JMException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
-import javax.management.MBeanServerInvocationHandler;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
@@ -66,6 +65,8 @@ import org.glassfish.external.amx.MBeanListener;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static javax.management.MBeanServerInvocationHandler.newProxyInstance;
+
 /**
 An {@link AMXLoader} responsible for loading core amx MBeans
  */
@@ -88,7 +89,7 @@ public final class AMXStartupService
     private static final Logger logger = AMXLoggerInfo.getLogger();
 
     public static MBeanTrackerMBean getMBeanTracker(final MBeanServer server) {
-        return MBeanServerInvocationHandler.newProxyInstance(server, MBeanTrackerMBean.MBEAN_TRACKER_OBJECT_NAME, MBeanTrackerMBean.class, false);
+        return newProxyInstance(server, MBeanTrackerMBean.MBEAN_TRACKER_OBJECT_NAME, MBeanTrackerMBean.class, false);
     }
 
 
@@ -115,11 +116,12 @@ public final class AMXStartupService
 
         final ObjectName allAMXPattern = AMXUtil.newObjectName(AMXGlassfish.DEFAULT.amxJMXDomain(), "*");
         final Set<ObjectName> remainingAMX = mMBeanServer.queryNames(allAMXPattern, null);
-        if (remainingAMX.size() != 0) {
+        if (!remainingAMX.isEmpty()) {
             logger.log(Level.WARNING, AMXLoggerInfo.shutdownNotUnregistered, remainingAMX);
             try {
                 Thread.sleep(1000);
             } catch (final InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
         FeatureAvailability.getInstance().deRegisterFeatures();
@@ -177,16 +179,14 @@ public final class AMXStartupService
 
 
     /**
-    Return a proxy to the AMXStartupService.
+     * @return a proxy to the AMXStartupService.
      */
     public static AMXStartupServiceMBean getAMXStartupServiceMBeanProxy(final MBeanServer mbs) {
-        AMXStartupServiceMBean ss = null;
-
         if (mbs.isRegistered(OBJECT_NAME)) {
-            ss = AMXStartupServiceMBean.class.cast(
-                    MBeanServerInvocationHandler.newProxyInstance(mbs, OBJECT_NAME, AMXStartupServiceMBean.class, false));
+            return AMXStartupServiceMBean.class
+                .cast(newProxyInstance(mbs, OBJECT_NAME, AMXStartupServiceMBean.class, false));
         }
-        return ss;
+        return null;
     }
 
 
@@ -222,7 +222,7 @@ public final class AMXStartupService
     }
 
     /** also works as a loaded/not loaded flag: null if not yet loaded */
-    private volatile ObjectName DOMAIN_ROOT_OBJECTNAME = null;
+    private volatile ObjectName DOMAIN_ROOT_OBJECTNAME;
 
     private synchronized ObjectName loadDomainRoot() {
         if (DOMAIN_ROOT_OBJECTNAME != null) {
@@ -245,8 +245,7 @@ public final class AMXStartupService
 
 
     protected ObjectName loadSystemInfo()
-            throws NotCompliantMBeanException, MBeanRegistrationException,
-            InstanceAlreadyExistsException {
+        throws NotCompliantMBeanException, MBeanRegistrationException, InstanceAlreadyExistsException {
         final SystemInfoImpl systemInfo = SystemInfoFactory.createInstance(mMBeanServer);
 
         ObjectName systemInfoObjectName =
@@ -265,7 +264,7 @@ public final class AMXStartupService
         private volatile ObjectName mTop;
         private final CountDownLatch mLatch;
 
-        public AMXLoaderThread(final AMXLoader loader) {
+        AMXLoaderThread(final AMXLoader loader) {
             mLoader = loader;
             mLatch = new CountDownLatch(1);
         }
@@ -286,6 +285,7 @@ public final class AMXStartupService
             try {
                 mLatch.await();
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
             return mTop;
         }
@@ -380,13 +380,3 @@ public final class AMXStartupService
     }
     // public Startup.Lifecycle getLifecycle() { return Startup.Lifecycle.SERVER; }
 }
-
-
-
-
-
-
-
-
-
-

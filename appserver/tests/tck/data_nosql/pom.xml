@@ -27,10 +27,10 @@
     </parent>
 
     <groupId>org.glassfish.main.tests.tck</groupId>
-    <artifactId>glassfish-data-tck-web-glassfish-runner</artifactId>
+    <artifactId>glassfish-data-tck-nosql-runner</artifactId>
     <version>8.0.0-SNAPSHOT</version>
 
-    <name>Jakarta Data TCK Web Runner for GlassFish using JPA Entities</name>
+    <name>Jakarta Data TCK Runner for GlassFish using NoSQL Entities</name>
 
     <properties>
         <glassfish.version.main>8</glassfish.version.main>
@@ -181,7 +181,7 @@
                     <dependenciesToScan>
                         <dependency>jakarta.data:jakarta.data-tck</dependency>
                     </dependenciesToScan>
-                    <groups><![CDATA[web & persistence]]></groups>
+                    <groups><![CDATA[web & nosql]]></groups>
 
                     <!-- If running back-to-back tests at different levels
                     use this to distinguish the results -->
@@ -192,11 +192,9 @@
 
                         <jakarta.tck.profile>core</jakarta.tck.profile>
                         <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
+						<jakarta.tck.database.type>DOCUMENT</jakarta.tck.database.type>
 
                         <glassfish.postBootCommands>
-                            create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --property databaseName=${glassfish.home}/glassfish/domains/domain1/config/derbyDB:serverName=localhost:portNumber=1527 DerbyPool
-                            create-jdbc-resource --connectionpoolid DerbyPool jdbc/DataTCK
-                            list resources.jdbc-connection-pool.*
                         </glassfish.postBootCommands>
                         <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
 

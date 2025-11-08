@@ -30,7 +30,7 @@
     </parent>
 
     <groupId>org.glassfish.tests</groupId>
-    <artifactId>embedded</artifactId>
+    <artifactId>embedded-tests</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Tests</name>
 

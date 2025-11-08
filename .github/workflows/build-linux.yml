@@ -33,4 +33,8 @@ jobs:
       if: success() || failure() # do not run if build cancelled
       with:
         report_paths: '**/target/*-reports/TEST-*.xml'
-
+        annotate_only: true
+        simplified_summary: true
+        skip_success_summary: true
+        detailed_summary: true
+        flaky_summary: true

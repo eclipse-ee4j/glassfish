@@ -42,6 +42,7 @@
         <module>cdi</module>
         <module>concurrency</module>
         <module>connectors</module>
+        <module>data_jpa</module>
         <module>expression-language</module>
         <module>enterprise-beans</module>
         <module>faces</module>

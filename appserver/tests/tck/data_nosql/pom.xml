@@ -30,7 +30,7 @@
     <artifactId>glassfish-data-tck-nosql-runner</artifactId>
     <version>8.0.0-SNAPSHOT</version>
 
-    <name>Jakarta Data TCK Runner for GlassFish using NoSQL Entities</name>
+    <name>Jakarta Data TCK Web Runner for GlassFish using NoSQL Entities</name>
 
     <properties>
         <glassfish.version.main>8</glassfish.version.main>

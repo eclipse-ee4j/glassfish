@@ -21,49 +21,44 @@ import jakarta.nosql.Entity;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
+import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 /**
+ * Server global implementation of class scanner for NoSQL repositories. Must be stateless.
+ * If necessary, state can be set in the deployment context via transient metadata.
  *
  * @author Ondro Mihalyi
  */
 public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implements ClassScanner {
 
-    private boolean enabled = false;
+    @Override
+    protected boolean isEnabled() {
+        return false;
+    }
 
     @Override
     public Set<Class<?>> entities() {
-        if (!enabled) {
-            return Set.of();
-        }
         return findClassesWithAnnotation(Entity.class);
     }
 
     @Override
     public Set<Class<?>> repositories() {
-        if (!enabled) {
-            return Set.of();
-        }
         return repositoriesStream()
                 .collect(toUnmodifiableSet());
     }
 
     @Override
     public Set<Class<?>> embeddables() {
-        if (!enabled) {
-            return Set.of();
-        }
         return findClassesWithAnnotation(Embeddable.class);
     }
 
     @Override
     public <T extends DataRepository<?, ?>> Set<Class<?>> repositories(Class<T> filter) {
-        if (!enabled) {
-            return Set.of();
-        }
         Objects.requireNonNull(filter, "filter is required");
         return repositoriesStream()
                 .filter(filter::isAssignableFrom)
@@ -72,18 +67,12 @@ public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implem
 
     @Override
     public Set<Class<?>> repositoriesStandard() {
-        if (!enabled) {
-            return Set.of();
-        }
         return repositoriesStreamMatching(this::isSupportedStandardInterface)
                 .collect(toUnmodifiableSet());
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
-        if (!enabled) {
-            return Set.of();
-        }
         // TOTO Return NoSQL custom repositories if they are not supported by Jakarta Persistence
         return Set.of();
     }

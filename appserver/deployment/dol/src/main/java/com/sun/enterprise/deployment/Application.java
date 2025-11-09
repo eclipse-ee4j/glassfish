@@ -54,6 +54,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.deployment.ApplicationPersistenceInfo;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.ModuleDescriptor;
@@ -75,7 +76,7 @@ public class Application extends CommonResourceBundleDescriptor
         implements RoleMappingContainer, WritableJndiNameEnvironment,
             EjbReferenceContainer, ResourceEnvReferenceContainer,
             ResourceReferenceContainer, ServiceReferenceContainer,
-            MessageDestinationReferenceContainer {
+            MessageDestinationReferenceContainer, ApplicationPersistenceInfo {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = DOLUtils.getDefaultLogger();
@@ -761,6 +762,8 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Returns the set of physical entity manager factories associated with
      * persistence units in this application.
+     *
+     * @return Set of entity manager factories available in the app
      */
     @Override
     public Set<EntityManagerFactory> getEntityManagerFactories() {

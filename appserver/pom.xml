@@ -363,11 +363,6 @@
 
             <!-- Jakarta Persistence -->
             <dependency>
-                <groupId>jakarta.persistence</groupId>
-                <artifactId>jakarta.persistence-api</artifactId>
-                <version>${jakarta.persistence-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.persistence</groupId>
                 <artifactId>org.eclipse.persistence.core</artifactId>
                 <version>${eclipselink.version}</version>

@@ -60,15 +60,17 @@ abstract public class BaseGlassFishClassScanner {
 
     abstract protected String getProviderName();
 
+    /**
+     * Whether this scanner is enabled or not. If not enabled, all methods return values as if there were not repository interfaces found.
+     * @return Enabled - will return found repository interfaces, not enabled - will not return any repositories. Enabled by default
+     */
+    protected boolean isEnabled() {
+        return true;
+    }
+
     /* TODO: Optimization - cache all sets returned from methods into the ApplicationContext or deployment context */
     protected Types getTypes() {
-        final ServiceLocator locator = Globals.getDefaultHabitat();
-        DeploymentContext deploymentContext
-                = locator != null
-                        ? locator
-                                .getService(Deployment.class)
-                                .getCurrentDeploymentContext()
-                        : null;
+        DeploymentContext deploymentContext = getDeploymentContext();
         if (deploymentContext != null) {
             // During deployment, we can retrieve Types from the context.
             // We can't access CDI context at this point as this class is not in a bean archive.
@@ -80,7 +82,21 @@ abstract public class BaseGlassFishClassScanner {
         }
     }
 
+    protected DeploymentContext getDeploymentContext() {
+        final ServiceLocator locator = Globals.getDefaultHabitat();
+        DeploymentContext deploymentContext
+                = locator != null
+                ? locator
+                        .getService(Deployment.class)
+                        .getCurrentDeploymentContext()
+                : null;
+        return deploymentContext;
+    }
+
     protected Set<Class<?>> findClassesWithAnnotation(Class<?> annotation) {
+        if (!isEnabled()) {
+            return Set.of();
+        }
         String annotationClassName = annotation.getName();
         return getTypes().getAllTypes()
                 .stream()
@@ -108,6 +124,9 @@ abstract public class BaseGlassFishClassScanner {
     }
 
     protected Stream<Class<?>> repositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
+        if (!isEnabled()) {
+            return Stream.of();
+        }
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
         // TODO: Categorize standard and custom repositories in a single run through the stream
         // - save the result into deployment context, not into this instance, which is shared by all apps

@@ -126,7 +126,7 @@
         <jersey.version>4.0.0</jersey.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
+        <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.5</jakarta.mail-api.version>

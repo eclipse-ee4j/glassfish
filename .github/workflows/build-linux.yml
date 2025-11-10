@@ -3,6 +3,11 @@ name: Build GlassFish on Ubuntu
 on:
   pull_request:
     branches: [ "master", "7.0", "8.0" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     runs-on: ubuntu-24.04

@@ -166,7 +166,6 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                            timeout(time: 4, unit: 'HOURS') {
                               sh '''
                               tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              ls -la /home/jenkins/.m2/repository/org/glassfish/main/distributions/glassfish/*
                               '''
                               sh """
                               mvn -B -e clean verify -Pci -pl :${job} -amd

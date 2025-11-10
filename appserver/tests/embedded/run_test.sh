@@ -53,7 +53,7 @@ merge_junits(){
 run_test_id(){
   case ${TEST_ID} in
     embedded_all)
-      unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+      unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
          test_run_embedded;;
   esac
 }

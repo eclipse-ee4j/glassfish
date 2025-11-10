@@ -6,7 +6,7 @@
 sponsored by the Eclipse Foundation.
 
 ### Release Notes
-* You can read about the [release notes here](https://github.com/eclipse-ee4j/glassfish/releases) 
+* You can read about the [release notes here](https://github.com/eclipse-ee4j/glassfish/releases)
 
 ### Compatibility
 
@@ -100,9 +100,9 @@ They are quite old and have high technical debt, but at this moment they still p
 * `./runtests.sh security_all` - Usual time: 8 minutes
 * `./runtests.sh web_jsp` - Usual time: 8 minutes
 * `./runtests.sh webservice_all` - Usual time: 10 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ejb_web_all` - Usual time: 4 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_web_profile_all` - Usual time: 2 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_full_profile_all` - Usual time: 4 minutes
+* `./runtests.sh ejb_web_all` - Usual time: 4 minutes
+* `./runtests.sh ql_gf_web_profile_all` - Usual time: 2 minutes
+* `./runtests.sh ql_gf_full_profile_all` - Usual time: 4 minutes
 
 * many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
 

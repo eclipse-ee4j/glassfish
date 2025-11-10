@@ -1,5 +1,0 @@
-extraction:
-  java:
-    index:
-      java_version: 17
-      build_command: "mvn --show-version clean install -Pfastest"

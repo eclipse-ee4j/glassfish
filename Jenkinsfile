@@ -296,18 +296,20 @@ pipeline {
                       dumpSysInfo()
                       timeout(time: 30, unit: 'MINUTES') {
                          sh '''
-                         set -x
                          # Validate the structure in all submodules (especially version ids)
                          mvn -V -B -e -fae clean validate -Ptck,set-version-id
-
+                         '''
+                         sh '''
                          # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
                          mvn -B -e install -Pfastest,ci -T4C
+                         '''
+                         sh '''
                          mvn -B -e clean
-
                          mkdir -p ${BUNDLES_DIR}
                          tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
                          tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
-
+                         '''
+                         sh '''
                          # For easy access to built artifacts and using them elsewhere
                          gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
                          mvn_copy="mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.9.0:copy -DoutputDirectory=${BUNDLES_DIR}"

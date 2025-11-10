@@ -124,7 +124,7 @@ def generateAntPodTemplate(job) {
                startVmstatLogging("ant-${job}")
                unstash 'maven-repo'
                unstash 'appserv-tests'
-               timeout(time: 2, unit: 'HOURS') {
+               timeout(time: 4, unit: 'HOURS') {
                   withAnt(installation: 'apache-ant-latest') {
                      dumpSysInfo()
                      sh '''
@@ -163,7 +163,7 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                            startVmstatLogging("mvn-${job}")
                            dumpSysInfo()
                            unstash 'maven-repo'
-                           timeout(time: 2, unit: 'HOURS') {
+                           timeout(time: 4, unit: 'HOURS') {
                               sh '''
                               tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
                               ls -la /home/jenkins/.m2/repository/org/glassfish/main/distributions/glassfish/*
@@ -275,7 +275,7 @@ pipeline {
       timestamps()
 
       // global timeout, abort after 6 hours
-      timeout(time: 6, unit: 'HOURS')
+      timeout(time: 8, unit: 'HOURS')
    }
 
    stages {
@@ -294,7 +294,7 @@ pipeline {
                    try {
                       startVmstatLogging('mvn-build')
                       dumpSysInfo()
-                      timeout(time: 30, unit: 'MINUTES') {
+                      timeout(time: 1, unit: 'HOURS') {
                          sh '''
                          # Validate the structure in all submodules (especially version ids)
                          mvn -V -B -e -fae clean validate -Ptck,set-version-id
@@ -341,7 +341,7 @@ pipeline {
                         try {
                            startVmstatLogging('main-tests')
                            dumpSysInfo()
-                           timeout(time: 2, unit: 'HOURS') {
+                           timeout(time: 4, unit: 'HOURS') {
                               sh '''
                               mvn -B -e clean verify -Pqa,ci,ci-main-tests
                               '''

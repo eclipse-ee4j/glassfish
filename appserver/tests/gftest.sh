@@ -53,7 +53,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
 
   echo "Preparing dependencies ..."
-  mvn clean package -f ${APS_HOME}/lib/pom.xml -Pstaging
+  mvn clean package -f ${APS_HOME}/lib/pom.xml
 fi
 
 "$@"

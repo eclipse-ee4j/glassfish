@@ -46,7 +46,6 @@
         <jvmarg value="-Dmaven.javadoc.skip=true" />
         <arg value="clean"/>
         <arg value="verify"/>
-        <arg value="-Pstaging"/>
       </artifact:mvn>
     </target>
 </project>

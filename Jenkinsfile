@@ -300,7 +300,6 @@ pipeline {
                          mvn -V -B -e -fae clean validate -Ptck,set-version-id
                          '''
                          sh '''
-                         # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
                          mvn -B -e install -Pfastest,ci -T4C
                          '''
                          sh '''
@@ -344,7 +343,7 @@ pipeline {
                            dumpSysInfo()
                            timeout(time: 2, unit: 'HOURS') {
                               sh '''
-                              mvn -B -e clean verify -Pci -pl '!:admin-tests,!:application-tests,!:embedded-tests,!docs'
+                              mvn -B -e clean verify -Pqa,ci,ci-main-tests
                               '''
                            }
                         } finally {

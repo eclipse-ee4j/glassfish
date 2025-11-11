@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ "master", "7.0", "8.0" ]
 
+defaults:
+  run:
+    working-directory: 'R:\glassfish'
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -13,22 +17,25 @@ jobs:
     runs-on: windows-2025
     name: Build GlassFish on Windows
     steps:
-    - uses: actions/checkout@v5
     - name: Setup RAM Disk
       uses: chad-golden/setup-ramdisk@v1.0.1
       with:
-        size-in-mb: 8096
-    - name: Setup directories in RAM Disk
+        size-in-mb: 10240
+    - name: Checkout
+      shell: powershell
+      working-directory: 'R:\'
       run: |
-        mkdir R:\temp
-        echo "TEMP=R:\temp" >> $env:GITHUB_ENV
-        echo "TMP=R:\temp" >> $env:GITHUB_ENV
+        git clone --filter=tree:0 --no-checkout ${{ github.server_url }}/${{ github.repository }} glassfish
+        cd glassfish
+        git fetch --depth=1 origin ${{ github.sha }}
+        git checkout ${{ github.sha }}
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
-        cache: maven
+    - name: Print System Info
+      run: systeminfo
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI

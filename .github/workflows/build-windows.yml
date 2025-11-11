@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-2025
     name: Build GlassFish on Windows
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup RAM Disk
       uses: chad-golden/setup-ramdisk@v1.0.1
       with:

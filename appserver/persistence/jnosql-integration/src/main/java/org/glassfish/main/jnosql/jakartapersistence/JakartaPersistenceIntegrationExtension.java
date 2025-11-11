@@ -56,6 +56,7 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
  *
  * @author Ondro Mihalyi
  */
+// TODO - activate this extension and JNoSQL extensions from a sniffer only if interfaces with @Repository annotation exist in the app
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
     private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());

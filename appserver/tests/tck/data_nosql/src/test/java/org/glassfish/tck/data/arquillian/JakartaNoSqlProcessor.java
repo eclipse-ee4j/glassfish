@@ -19,6 +19,8 @@ import com.sun.tdk.signaturetest.SignatureTest;
 import com.sun.tdk.signaturetest.plugin.PluginAPI;
 import com.sun.tdk.signaturetest.util.CommandLineParserException;
 
+import java.nio.file.Paths;
+
 import org.glassfish.tck.data.junit5.TransactionExtension;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
@@ -38,17 +40,32 @@ public class JakartaNoSqlProcessor implements ApplicationArchiveProcessor {
     public void process(Archive<?> archive, TestClass testClass) {
         if (archive instanceof WebArchive webArchive) {
             webArchive.addPackages(false,
+                    // TCK tests and our extensions
                           TransactionExtension.class.getPackage(),
-                          EntityTests.class.getPackage())
+                          EntityTests.class.getPackage()
+                      )
+                    // TCK Signature tests
                       .addPackages(true,
                           SignatureTest.class.getPackage(),
                           PluginAPI.class.getPackage(),
                           com.sun.tdk.signaturetest.core.Log.class.getPackage(),
-                          CommandLineParserException.class.getPackage());
+                          CommandLineParserException.class.getPackage()
+                      );
+            addMongoArtifactsAsLibraries(webArchive);
             if (Boolean.getBoolean("org.glassfish.data.tck.global-transaction")) {
-                 webArchive.add(new ClassLoaderAsset("META-INF/services/org.junit.jupiter.api.extension.Extension"),
+                 webArchive.add(new ClassLoaderAsset("in-container/META-INF/services/org.junit.jupiter.api.extension.Extension"),
                           "WEB-INF/classes/" + "META-INF/services/org.junit.jupiter.api.extension.Extension");
 
+            }
+        }
+    }
+
+    private void addMongoArtifactsAsLibraries(WebArchive webArchive) {
+        final String artifactsAsCsv = System.getProperty("jnosql.mongo.artifacts");
+        if (artifactsAsCsv != null) {
+            String[] artifacts = artifactsAsCsv.trim().split("\\W*,\\W*");
+            for (String artifact : artifacts) {
+                webArchive.addAsLibrary(Paths.get("target", "dependency", artifact + ".jar").toFile());
             }
         }
     }

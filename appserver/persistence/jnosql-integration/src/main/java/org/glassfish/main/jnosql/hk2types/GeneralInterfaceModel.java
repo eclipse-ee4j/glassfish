@@ -1,4 +1,4 @@
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.hk2types;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,19 +18,19 @@ import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
  *
  * @author Ondro Mihalyi
  */
-record GeneralInterfaceModel(InterfaceModel plainInterface,
+public record GeneralInterfaceModel(InterfaceModel plainInterface,
     ParameterizedInterfaceModel parameterizedInterface,
     Collection<ParameterizedInterfaceModel> parameterizedTypes) {
 
-    GeneralInterfaceModel(InterfaceModel plainInterface) {
+    public GeneralInterfaceModel(InterfaceModel plainInterface) {
         this(plainInterface, null, null);
     }
 
-    GeneralInterfaceModel(ParameterizedInterfaceModel parameterizedInterfaceModel) {
+    public GeneralInterfaceModel(ParameterizedInterfaceModel parameterizedInterfaceModel) {
         this(null, parameterizedInterfaceModel, null);
     }
 
-    GeneralInterfaceModel(ParameterizedInterfaceModel parameterizedInterfaceModel, Collection<ParameterizedInterfaceModel> parameterizedTypes) {
+    public GeneralInterfaceModel(ParameterizedInterfaceModel parameterizedInterfaceModel, Collection<ParameterizedInterfaceModel> parameterizedTypes) {
         this(null, parameterizedInterfaceModel, parameterizedTypes);
     }
 
@@ -68,7 +68,7 @@ record GeneralInterfaceModel(InterfaceModel plainInterface,
         return this.parameterizedInterface != null ? parameterizedInterface.getName() : null;
     }
 
-    boolean isParameterized() {
+    public boolean isParameterized() {
         return parameterizedInterface != null;
     }
 
@@ -76,7 +76,7 @@ record GeneralInterfaceModel(InterfaceModel plainInterface,
     Is an interface with generics but no declared type parameters. E.g. it's List<T> but not List<String>
     - type of parameters is unknown.
      */
-    boolean hasTypeParametersWithUnknownType() {
+    public boolean hasTypeParametersWithUnknownType() {
         if (isParameterized()) {
             return parametizedTypes().isEmpty();
         }
@@ -84,7 +84,7 @@ record GeneralInterfaceModel(InterfaceModel plainInterface,
         return formalTypeParameters != null && !formalTypeParameters.isEmpty();
     }
 
-    String interfaceName() {
+    public String interfaceName() {
         if (isParameterized()) {
             return parameterizedInterface.getRawInterfaceName();
         } else {
@@ -92,25 +92,25 @@ record GeneralInterfaceModel(InterfaceModel plainInterface,
         }
     }
 
-    AnnotationModel getAnnotation(Class<?> annotationClass) {
+    public AnnotationModel getAnnotation(Class<?> annotationClass) {
         if (isParameterized()) {
             return parameterizedInterface.getRawInterface().getAnnotation(annotationClass.getName());
         }
         return plainInterface.getAnnotation(annotationClass.getName());
     }
 
-    ExtensibleType toTypeModel() {
+    public ExtensibleType toTypeModel() {
         return isParameterized() ? parameterizedInterface.getRawInterface() : plainInterface;
     }
 
-    Stream<GeneralInterfaceModel> interfacesAsStream() {
+    public Stream<GeneralInterfaceModel> interfacesAsStream() {
         final ExtensibleType typeModel = toTypeModel();
         final Collection<ParameterizedInterfaceModel> parameterizedInterfaces = typeModel.getParameterizedInterfaces();
         final Collection<InterfaceModel> plainInterfaces = typeModel.getInterfaces();
         return Stream.concat(parameterizedInterfaces.stream().map(parameterizedInterface -> GeneralInterfaceModel.parameterizedFromSubInterface(parameterizedInterface, this)), plainInterfaces.stream().map(GeneralInterfaceModel::new));
     }
 
-    Collection<ParameterizedInterfaceModel> parametizedTypes() {
+    public Collection<ParameterizedInterfaceModel> parametizedTypes() {
         return parameterizedTypes != null ? parameterizedTypes : parameterizedInterface.getParametizedTypes();
     }
 

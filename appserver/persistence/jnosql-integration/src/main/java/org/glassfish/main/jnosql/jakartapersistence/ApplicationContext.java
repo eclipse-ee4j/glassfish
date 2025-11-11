@@ -13,18 +13,30 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.jakartapersistence;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
+import org.glassfish.hk2.classmodel.reflect.Types;
 
 /**
+ * Info about the application provided by GlassFish.
  *
  * @author Ondro Mihalyi
  */
-@Entity
-public class MyOtherEntity {
+public class ApplicationContext {
 
-    @Id
-    long id;
+    final Types types;
+
+    public ApplicationContext(Types types) {
+        this.types = types;
+    }
+
+    /**
+     * Types collected during app deployment
+     * @return Structure that provides info about types present in the application
+     */
+    public Types getTypes() {
+        return types;
+    }
+
 }

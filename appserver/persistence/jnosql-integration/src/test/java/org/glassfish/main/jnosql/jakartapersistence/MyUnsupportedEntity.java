@@ -13,15 +13,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories;
-
-import jakarta.data.repository.Repository;
+package org.glassfish.main.jnosql.jakartapersistence;
 
 /**
  *
  * @author Ondro Mihalyi
  */
-@Repository
-public interface MyNoInterfaceRepository {
+public class MyUnsupportedEntity {
 
 }

@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.jakartapersistence;
 
 import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.CrudRepository;
@@ -37,12 +37,12 @@ import java.util.Set;
 
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyBasicRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCombinedRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCrudRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyDataRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyNoInterfaceRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyUnsupportedRepository;
+import org.glassfish.main.jnosql.jakartapersistence.repositories.MyBasicRepository;
+import org.glassfish.main.jnosql.jakartapersistence.repositories.MyCombinedRepository;
+import org.glassfish.main.jnosql.jakartapersistence.repositories.MyCrudRepository;
+import org.glassfish.main.jnosql.jakartapersistence.repositories.MyDataRepository;
+import org.glassfish.main.jnosql.jakartapersistence.repositories.MyNoInterfaceRepository;
+import org.glassfish.main.jnosql.jakartapersistence.repositories.MyUnsupportedRepository;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 

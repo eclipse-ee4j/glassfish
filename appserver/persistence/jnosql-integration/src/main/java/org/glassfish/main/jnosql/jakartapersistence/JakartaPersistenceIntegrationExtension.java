@@ -13,24 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.jakartapersistence;
 
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
@@ -47,6 +41,8 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
+
 /**
  * TODO - consider moving to weld-integration module, following the existing
  * pattern of defining GlassFish extensions there, for example
@@ -55,6 +51,8 @@ import org.glassfish.internal.deployment.Deployment;
  * good to move CDI-JPA integration from weld-integration into the jpa-container
  * TODO - rename to jakarta-data container, and implement a container, following
  * the JPA container in the jpa-container module
+ * TODO - veto JNoSQL CDI beans provided by the app if they conflict with beans registered by this extension.
+ * If delegation is disabled, veto our beans instead
  *
  * @author Ondro Mihalyi
  */
@@ -110,8 +108,6 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
-        // TODO: Extend this to inject EM by unit name via @PesistenceContext mechanism,
-        // even if not qualifier is defined for the persistence unit
         addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
@@ -134,36 +130,6 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                         .getService(Deployment.class)
                         .getCurrentDeploymentContext();
         return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
-    }
-
-    private <BEAN_TYPE> Function<CreationalContext<BEAN_TYPE>, BEAN_TYPE> createBeanProducer(Class<BEAN_TYPE> beanType, BeanManager beanManager) {
-        return ctx -> {
-            AnnotatedType<BEAN_TYPE> annotatedType = beanManager.createAnnotatedType(beanType);
-            InjectionTarget<BEAN_TYPE> injectionTarget = beanManager.getInjectionTargetFactory(annotatedType).createInjectionTarget(null);
-
-            BEAN_TYPE instance = injectionTarget.produce(ctx);
-            injectionTarget.inject(instance, ctx);
-            injectionTarget.postConstruct(instance);
-
-            return instance;
-        };
-    }
-
-    private <BEAN_TYPE> BiConsumer<BEAN_TYPE, CreationalContext<BEAN_TYPE>> createBeanDestroyer(Class<BEAN_TYPE> beanType, BeanManager beanManager) {
-        return (instance, ctx) -> {
-            AnnotatedType<BEAN_TYPE> annotatedType = beanManager.createAnnotatedType(beanType);
-            InjectionTarget<BEAN_TYPE> injectionTarget = beanManager.getInjectionTargetFactory(annotatedType).createInjectionTarget(null);
-
-            injectionTarget.preDestroy(instance);
-            injectionTarget.dispose(instance);
-        };
-    }
-
-    private <T> BeanConfigurator<T> addBean(Class<T> beanClass, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        return afterBeanDiscovery.<T>addBean()
-                .types(beanClass)
-                .createWith(createBeanProducer(beanClass, beanManager))
-                .destroyWith(createBeanDestroyer(beanClass, beanManager));
     }
 
 }

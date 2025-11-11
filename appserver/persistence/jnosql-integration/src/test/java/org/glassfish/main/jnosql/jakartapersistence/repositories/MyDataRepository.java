@@ -13,18 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.jakartapersistence.repositories;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.data.repository.DataRepository;
+import jakarta.data.repository.Repository;
+
+import org.glassfish.main.jnosql.jakartapersistence.MyEntity;
 
 /**
  *
  * @author Ondro Mihalyi
  */
-@Entity
-public class MyEntity {
+@Repository
+public interface MyDataRepository extends DataRepository<MyEntity, Long> {
 
-    @Id
-    long id;
 }

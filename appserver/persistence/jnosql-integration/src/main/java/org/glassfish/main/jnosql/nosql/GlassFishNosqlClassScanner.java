@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.nosql;
 
 import jakarta.data.repository.DataRepository;
 import jakarta.nosql.Embeddable;
@@ -21,10 +21,10 @@ import jakarta.nosql.Entity;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
-import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
+import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
+import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -38,7 +38,7 @@ public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implem
 
     @Override
     protected boolean isEnabled() {
-        return false;
+        return true;
     }
 
     @Override

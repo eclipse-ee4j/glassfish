@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.jakartapersistence;
 
 import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.CrudRepository;
@@ -40,6 +40,7 @@ import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 
 /**
  *

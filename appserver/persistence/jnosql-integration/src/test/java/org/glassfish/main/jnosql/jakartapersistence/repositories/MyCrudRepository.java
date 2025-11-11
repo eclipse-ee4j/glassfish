@@ -13,15 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories;
+package org.glassfish.main.jnosql.jakartapersistence.repositories;
 
+import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.Repository;
+
+import org.glassfish.main.jnosql.jakartapersistence.MyEntity;
 
 /**
  *
  * @author Ondro Mihalyi
  */
 @Repository
-public interface MyCombinedRepository extends MyCrudRepository, MyBasicRepository {
+public interface MyCrudRepository extends CrudRepository<MyEntity, Long>{
 
 }

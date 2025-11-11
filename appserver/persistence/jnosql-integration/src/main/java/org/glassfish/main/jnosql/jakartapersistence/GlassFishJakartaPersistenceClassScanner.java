@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
+package org.glassfish.main.jnosql.jakartapersistence;
 
 import jakarta.data.repository.DataRepository;
 import jakarta.persistence.Embeddable;
@@ -21,15 +21,12 @@ import jakarta.persistence.Entity;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.jakartapersistence.mapping.metadata.JakartaPersistenceClassScanner;
 import org.glassfish.api.deployment.ApplicationPersistenceInfo;
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
-import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
+import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -101,11 +98,6 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
         Set<Class<?>> result = repositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
         LOG.log(DEBUG, () -> "Detected custom interfaces: " + result);
         return result;
-    }
-
-    @Override
-    protected Stream<Class<?>> repositoriesStreamMatching(Predicate<InterfaceModel> predicate) {
-        return super.repositoriesStreamMatching(predicate); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override

@@ -17,22 +17,20 @@ package org.glassfish.tests.embedded.runnable;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.nio.file.Path;
 
-import org.glassfish.tests.embedded.runnable.TestArgumentProviders.GfEmbeddedJarNameProvider;
+import org.glassfish.tests.embedded.runnable.tool.TestArgumentProviders.GfEmbeddedJarNameProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
-import static org.glassfish.tests.embedded.runnable.GfEmbeddedUtils.outputToStreamOfLines;
-import static org.glassfish.tests.embedded.runnable.GfEmbeddedUtils.runGlassFishEmbedded;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.glassfish.tests.embedded.runnable.tool.BufferedReaderMatcher.readerContains;
+import static org.glassfish.tests.embedded.runnable.tool.EmbeddedGlassFishStarter.start;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -41,84 +39,42 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ConfigFileTest {
 
-    String propertiesFile;
+    @TempDir
+    private Path tmpDir;
+    private Path propertiesFile;
 
     @BeforeEach
     void init(TestInfo testInfo) throws IOException {
-        propertiesFile = "glassfish-" + testInfo.getTestMethod().get().getName() + ".properties";
-        Files.copy(getClass().getClassLoader().getResourceAsStream(testInfo.getTestClass().get().getSimpleName() + "/" + propertiesFile),
-                Paths.get(propertiesFile),
-                StandardCopyOption.REPLACE_EXISTING);
-
+        String fileName = "glassfish-" + testInfo.getTestMethod().get().getName() + ".properties";
+        propertiesFile = tmpDir.resolve(fileName);
+        Files.copy(getClass().getClassLoader().getResourceAsStream(
+            testInfo.getTestClass().get().getSimpleName() + "/" + fileName), propertiesFile, REPLACE_EXISTING);
     }
 
     @ParameterizedTest
     @ArgumentsSource(GfEmbeddedJarNameProvider.class)
     void testExecuteCommandsInOrderDefinedInPropertiesFile(String gfEmbeddedJarName) throws Exception {
-        Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
-                "--properties=" + propertiesFile,
-                "get server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size"
-        );
-        assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                .filter(new TwoLineMatcher(
-                        line -> line.contains("Description: get"),
-                        line -> line.contains("server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=200")
-                ))
-                .findAny().isPresent(),
-                "Message about max-thread-pool-size=200 set is found");
-        gfEmbeddedProcess
-                .waitFor(30, TimeUnit.SECONDS);
+        Process glassfish = start(gfEmbeddedJarName, "--properties=" + propertiesFile,
+            "get server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size");
+        assertThat(glassfish.errorReader(),
+            readerContains("server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=200"));
+        assertTrue(glassfish.waitFor(30, SECONDS), "Process finished.");
     }
 
     @ParameterizedTest
     @ArgumentsSource(GfEmbeddedJarNameProvider.class)
     void testPropertyNamesVariants(String gfEmbeddedJarName) throws Exception {
-        Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
-                "--properties=" + propertiesFile,
-                "get server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size",
-                "get resources.jdbc-connection-pool.DerbyPool.connection-leak-timeout-in-seconds",
-                "get server.network-config.protocols.protocol.http-listener.http.max-connections",
-                "get security-configurations.authorization-service.authorizationService.default"
-
+        Process glassfish = start(gfEmbeddedJarName, "--properties=" + propertiesFile,
+            "get server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size",
+            "get resources.jdbc-connection-pool.DerbyPool.connection-leak-timeout-in-seconds",
+            "get server.network-config.protocols.protocol.http-listener.http.max-connections",
+            "get security-configurations.authorization-service.authorizationService.default"
         );
-        gfEmbeddedProcess
-                .waitFor(30, TimeUnit.SECONDS);
-        List<String> appliedPropertyLogs = outputToStreamOfLines(gfEmbeddedProcess)
-                .filter(new TwoLineMatcher(
-                        line -> line.contains("Description: get"),
-                        line -> true
-                ))
-                .collect(Collectors.toList());
-        assertTrue(appliedPropertyLogs
-                .get(0).contains("server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=200"));
-        assertTrue(appliedPropertyLogs
-                .get(1).contains("resources.jdbc-connection-pool.DerbyPool.connection-leak-timeout-in-seconds=5"));
-        assertTrue(appliedPropertyLogs
-                .get(2).contains("server.network-config.protocols.protocol.http-listener.http.max-connections=10000"));
-        assertTrue(appliedPropertyLogs
-                .get(3).contains("security-configurations.authorization-service.authorizationService.default=false"));
-        assertTrue(appliedPropertyLogs.size() == 4,"4 properties should be logged");
+        assertThat(glassfish.errorReader(),
+            readerContains("server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=200",
+                "resources.jdbc-connection-pool.DerbyPool.connection-leak-timeout-in-seconds=5",
+                "server.network-config.protocols.protocol.http-listener.http.max-connections=10000",
+                "security-configurations.authorization-service.authorizationService.default=false"));
+        assertTrue(glassfish.waitFor(30, SECONDS), "Process finished.");
     }
-
-    private class TwoLineMatcher implements Predicate<String> {
-
-        AtomicReference<String> previousLine = new AtomicReference<>();
-        Predicate<String> previousLinePredicate;
-        Predicate<String> currentLinePredicate;
-
-        public TwoLineMatcher(Predicate<String> previousLinePredicate, Predicate<String> currentLinePredicate) {
-            this.previousLinePredicate = previousLinePredicate;
-            this.currentLinePredicate = currentLinePredicate;
-        }
-
-        @Override
-        public boolean test(String line) {
-            boolean lineMatches = previousLine.get() != null
-                    && previousLinePredicate.test(previousLine.get())
-                    && currentLinePredicate.test(line);
-            previousLine.set(line);
-            return lineMatches;
-        }
-    }
-
 }

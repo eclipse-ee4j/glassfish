@@ -42,10 +42,8 @@ public final class WaitFor {
      * @param actionDescription description of the expected result.
      * @param action
      * @return result.
-     * @throws InterruptedException
      */
-    public static <T> T waitFor(Duration maxTime, String actionDescription, ThrowingSupplier<T> action)
-        throws InterruptedException {
+    public static <T> T waitFor(Duration maxTime, String actionDescription, ThrowingSupplier<T> action) {
         Throwable lastThrowable = null;
         final Instant deadline = Instant.now().plus(maxTime);
         while (true) {
@@ -63,6 +61,7 @@ public final class WaitFor {
             if (deadline.isBefore(Instant.now())) {
                 throw new RuntimeException(actionDescription + " not received within timeout", lastThrowable);
             }
+            Thread.onSpinWait();
         }
     }
 }

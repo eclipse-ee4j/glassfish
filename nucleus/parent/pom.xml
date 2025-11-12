@@ -2560,5 +2560,37 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>clean-partial</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-clean-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-clean</id>
+                                    <configuration>
+                                        <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                        <verbose>true</verbose>
+                                        <filesets>
+                                            <fileset>
+                                                <directory>${project.build.directory}</directory>
+                                                <includes>
+                                                    <include>**/*.class</include>
+                                                    <include>**/*.jar</include>
+                                                    <include>**/*.gz</include>
+                                                    <include>**/*.zip</include>
+                                                </includes>
+                                            </fileset>
+                                        </filesets>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
     </profiles>
 </project>

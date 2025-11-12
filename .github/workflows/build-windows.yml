@@ -18,9 +18,14 @@ jobs:
     name: Build GlassFish on Windows
     steps:
     - name: Setup RAM Disk
-      uses: chad-golden/setup-ramdisk@v1.0.1
-      with:
-        size-in-mb: 10240
+      shell: powershell
+      working-directory: 'D:\'
+      run: |
+        choco install imdisk-toolkit -y
+        imdisk -a -s 10G -m R: -p "/fs:ntfs /q /y"
+        # Verify it's mounted and formatted
+        Get-PSDrive R
+        Get-Volume | Where-Object {$_.DriveLetter -eq 'R'}
     - name: Checkout
       shell: powershell
       working-directory: 'R:\'
@@ -37,9 +42,28 @@ jobs:
     - name: Print System Info
       run: systeminfo
     - name: Build with Maven
+      # each step takes a lot of disk space, so we split it to multiple parts like on jenkins,
+      # and after each we don't delete test results, but we do delete files we don't need any more.
+      run: |
+        mvn -B -e -ntp install '-Pfastest' -T4C
+    - name: Main Tests
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
-      run: mvn -B -e -ntp verify -Pqa '-Dcheckstyle.skip=true'
+      run: |
+        mvn -B -e -ntp verify '-Pqa,ci-main-tests' '-Dcheckstyle.skip=true'
+        mvn -B -e -ntp clean '-Pclean-partial,qa
+    - name: Admin Tests
+      run: |
+        mvn -B -e -ntp verify '-Dcheckstyle.skip=true' -pl ':admin-tests-parent' '-amd'
+        mvn -B -e -ntp clean '-Pclean-partial,qa' -pl ':admin-tests-parent' '-amd'
+    - name: Application Tests
+      run: |
+        mvn -B -e -ntp verify '-Dcheckstyle.skip=true' -pl ':application-tests'
+        mvn -B -e -ntp clean '-Pclean-partial' -pl ':application-tests'
+    - name: Embedded Tests
+      run: |
+        mvn -B -e -ntp verify '-Dcheckstyle.skip=true' -pl ':embedded-tests' '-amd'
+        mvn -B -e -ntp clean '-Pclean-partial' -pl ':embedded-tests' '-amd'
     - name: Upload server logs
       uses: actions/upload-artifact@v4
       if: failure()
@@ -57,5 +81,3 @@ jobs:
         skip_success_summary: true
         detailed_summary: true
         flaky_summary: true
-    - name: Dismount RAM Disk
-      uses: chad-golden/setup-ramdisk/dismount@v1.0.1

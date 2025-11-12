@@ -39,7 +39,7 @@ jobs:
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
-      run: mvn -B -e -ntp install -Pqa '-Dcheckstyle.skip=true'
+      run: mvn -B -e -ntp verify -Pqa '-Dcheckstyle.skip=true'
     - name: Upload server logs
       uses: actions/upload-artifact@v4
       if: failure()

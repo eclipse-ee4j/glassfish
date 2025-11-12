@@ -148,6 +148,7 @@ public class LoggingPrintStreamTest {
      */
     @Test
     @RepeatedTest(100)
+    @Timeout(value = 1, unit = TimeUnit.MINUTES)
     public void testStreamMethods() throws Exception {
         stream.append('x');
         stream.append("-y");

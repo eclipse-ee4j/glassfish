@@ -16,9 +16,6 @@
 
 package org.glassfish.internal.api;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,8 +23,17 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -91,7 +97,7 @@ class CompositeClassLoaderTest {
         compositeClassLoader.addClassLoader(mockClassLoader1);
         compositeClassLoader.addClassLoader(mockClassLoader2);
 
-        assertThrows(ClassNotFoundException.class, 
+        assertThrows(ClassNotFoundException.class,
             () -> compositeClassLoader.loadClass("com.nonexistent.Class"));
     }
 
@@ -118,7 +124,7 @@ class CompositeClassLoaderTest {
         compositeClassLoader.addClassLoader(getClass().getClassLoader());
 
         Enumeration<URL> resources = compositeClassLoader.getResources("META-INF/MANIFEST.MF");
-        
+
         List<URL> resourceList = Collections.list(resources);
         // Should have at least one MANIFEST.MF, exact count depends on classpath
         assertThat(resourceList, is(not(empty())));
@@ -127,10 +133,10 @@ class CompositeClassLoaderTest {
     @Test
     void shouldReturnCopyOfClassLoadersList() {
         compositeClassLoader.addClassLoader(mockClassLoader1);
-        
+
         List<ClassLoader> classLoaders = compositeClassLoader.getClassLoaders();
         classLoaders.add(mockClassLoader2); // Should not affect internal state
-        
+
         // Internal state should remain unchanged
         assertThat(compositeClassLoader.getClassLoaders(), hasSize(1));
         assertThat(compositeClassLoader.getClassLoaders(), contains(mockClassLoader1));

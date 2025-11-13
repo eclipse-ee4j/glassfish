@@ -16,8 +16,6 @@
 
 package org.glassfish.internal.api;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -25,8 +23,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -118,7 +121,7 @@ class LazyEnumerationTest {
 
         LazyEnumeration<String> lazyEnum = new LazyEnumeration<>(enumerations);
         List<String> result = new ArrayList<>();
-        
+
         while (lazyEnum.hasMoreElements()) {
             result.add(lazyEnum.nextElement());
         }

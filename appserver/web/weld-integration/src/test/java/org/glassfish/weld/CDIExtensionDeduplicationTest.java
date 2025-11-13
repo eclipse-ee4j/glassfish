@@ -13,13 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.weld;
-
-import org.easymock.EasyMock;
-import org.glassfish.internal.api.CompositeClassLoader;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URL;
@@ -29,13 +23,23 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import org.glassfish.internal.api.CompositeClassLoader;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 /**
- * Integration test to verify that CDI extensions are properly deduplicated
- * when using CompositeClassLoader in the Weld integration.
+ * Integration test to verify that CDI extensions are properly deduplicated when
+ * using CompositeClassLoader in the Weld integration.
  */
 class CDIExtensionDeduplicationTest {
 
@@ -66,9 +70,9 @@ class CDIExtensionDeduplicationTest {
         urls2.add(serviceUrl3); // Duplicate
 
         expect(mockClassLoader1.getResources("META-INF/services/jakarta.enterprise.inject.spi.Extension"))
-            .andReturn(Collections.enumeration(urls1));
+                .andReturn(Collections.enumeration(urls1));
         expect(mockClassLoader2.getResources("META-INF/services/jakarta.enterprise.inject.spi.Extension"))
-            .andReturn(Collections.enumeration(urls2));
+                .andReturn(Collections.enumeration(urls2));
 
         replay(mockClassLoader1, mockClassLoader2);
 
@@ -76,11 +80,11 @@ class CDIExtensionDeduplicationTest {
         compositeClassLoader.addClassLoader(mockClassLoader2);
 
         Enumeration<URL> resources = compositeClassLoader.getResources(
-            "META-INF/services/jakarta.enterprise.inject.spi.Extension");
+                "META-INF/services/jakarta.enterprise.inject.spi.Extension");
 
         // Convert to list once to avoid consuming enumeration multiple times
         List<URL> resourceList = Collections.list(resources);
-        
+
         // Should only return unique URLs
         assertThat(resourceList, hasSize(2));
         assertThat(resourceList, containsInAnyOrder(serviceUrl1, serviceUrl3));
@@ -92,10 +96,10 @@ class CDIExtensionDeduplicationTest {
     void shouldPreventDuplicateClassLoadersAutomatically() throws Exception {
         // When the same classloader instance is added multiple times (common case for web apps)
         URLClassLoader singleClassLoader = new URLClassLoader(new URL[0]);
-        
+
         compositeClassLoader.addClassLoader(singleClassLoader);
         compositeClassLoader.addClassLoader(singleClassLoader); // Same instance added twice
-        
+
         // Set automatically prevents duplicates
         assertThat(compositeClassLoader.getClassLoaders(), hasSize(1));
         assertThat(compositeClassLoader.getClassLoaders(), contains(singleClassLoader));
@@ -106,13 +110,13 @@ class CDIExtensionDeduplicationTest {
     void shouldPreventDuplicateExtensionInstances() throws Exception {
         // This test simulates the core issue: preventing duplicate CDI extension instances
         // when the same extension class is found through multiple classloaders
-        
+
         String extensionClassName = "com.example.MyExtension";
-        
+
         expect(mockClassLoader1.loadClass(extensionClassName))
-            .andReturn((Class) String.class);
+                .andReturn((Class) String.class);
         expect(mockClassLoader2.loadClass(extensionClassName))
-            .andThrow(new ClassNotFoundException()).anyTimes();
+                .andThrow(new ClassNotFoundException()).anyTimes();
 
         replay(mockClassLoader1, mockClassLoader2);
 
@@ -121,7 +125,7 @@ class CDIExtensionDeduplicationTest {
 
         // Should load from first available classloader
         Class<?> loadedClass = compositeClassLoader.loadClass(extensionClassName);
-        
+
         assertThat(loadedClass, is(String.class));
 
         verify(mockClassLoader1, mockClassLoader2);

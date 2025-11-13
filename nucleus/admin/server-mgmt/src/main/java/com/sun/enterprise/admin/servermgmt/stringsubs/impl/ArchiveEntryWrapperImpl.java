@@ -242,29 +242,21 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
      */
     void updateArchive() throws IOException {
         if (_extractedEntries.isEmpty()) {
-            if (LOG.isLoggable(DEBUG)) {
-                LOG.log(DEBUG, _strings.get("noArchiveEntryToUpdate", _archive.getName()));
-            }
+            LOG.log(DEBUG, () -> _strings.get("noArchiveEntryToUpdate", _archive.getName()));
             return;
         }
         if (_jar == null) {
             throw new JarException("Jar file is not in open state, jar path.");
         }
-        File tempJarFile = null, jarFile = null;
-        FileOutputStream fos = null;
-        JarOutputStream jos = null;
         boolean success = false;
-        try {
-            String jarEntryName = null;
-            jarFile = new File(_jar.getName());
-            tempJarFile = File.createTempFile("helper", ".jar", jarFile.getParentFile());
-            fos = new FileOutputStream(tempJarFile);
-            jos = new JarOutputStream(fos);
+        final File jarFile = new File(_jar.getName());
+        final File tempJarFile = File.createTempFile("helper", ".jar", jarFile.getParentFile());
+        try (FileOutputStream fos = new FileOutputStream(tempJarFile); JarOutputStream jos = new JarOutputStream(fos)) {
             InputStream is = null;
             Set<String> extractedJarEntries = _extractedEntries.keySet();
 
             for (Enumeration<JarEntry> e = _jar.entries(); e.hasMoreElements();) {
-                jarEntryName = e.nextElement().getName();
+                String jarEntryName = e.nextElement().getName();
                 if (extractedJarEntries.contains(jarEntryName)) {
                     File file = _extractedEntries.get(jarEntryName);
                     if (file != null) {
@@ -282,24 +274,6 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
         } catch (Exception e) {
             LOG.log(ERROR, "Error occurred while closing the stream for file " + _archive.getName(), e);
         } finally {
-            if (jos != null) {
-                try {
-                    jos.close();
-                } catch (IOException e) {
-                    if (LOG.isLoggable(DEBUG)) {
-                        LOG.log(DEBUG, _strings.get("errorInClosingStream", jarFile.getPath()), e);
-                    }
-                }
-            }
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    if (LOG.isLoggable(DEBUG)) {
-                        LOG.log(DEBUG, _strings.get("errorInClosingStream", jarFile.getPath()), e);
-                    }
-                }
-            }
             try {
                 _jar.close();
             } catch (IOException e) {
@@ -308,16 +282,16 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
                 }
             }
 
-            if (jarFile != null && !jarFile.delete()) {
-                if (tempJarFile != null && !tempJarFile.delete()) {
+            if (!jarFile.delete()) {
+                if (!tempJarFile.delete()) {
                     LOG.log(ERROR, "Error occurred while closing the stream for file {0}", tempJarFile.getAbsolutePath());
                 }
                 throw new IOException(jarFile.getPath() + " did not get updated. Unable to delete.");
             } else if (!success) {
-                if (tempJarFile != null && !tempJarFile.delete()) {
+                if (!tempJarFile.delete()) {
                     LOG.log(INFO, () -> _strings.get("errorInClosingStream", tempJarFile.getAbsolutePath()));
                 }
-            } else if (tempJarFile != null && !tempJarFile.renameTo(jarFile)) {
+            } else if (!tempJarFile.renameTo(jarFile)) {
                 LOG.log(ERROR, () -> "Could not rename temporary jar " + tempJarFile.getName() + " file to " + jarFile.getName() );
             }
         }

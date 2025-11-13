@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,10 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
@@ -29,7 +28,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
  * Utility class for the substitutable files.
  */
 public class SubstitutionFileUtil {
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(SubstitutionFileUtil.class.getName());
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(SubstitutionFileUtil.class);
 
@@ -55,7 +54,7 @@ public class SubstitutionFileUtil {
             PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES = Integer
                     .parseInt(StringSubstitutionProperties.getProperty(INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB)) * 1024;
         } catch (Exception e) {
-            _logger.log(Level.INFO, SLogger.MISSING_MEMORY_FILE_SIZE);
+            LOG.log(Level.INFO, "In-memory string substitution file size is not deDEBUGd.");
             PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES = DEFAULT_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB;
         }
         return PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES > 0 ? PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES
@@ -73,17 +72,17 @@ public class SubstitutionFileUtil {
         File extractDir = null;
         File extractBaseFile = new File(extractBase);
         if (!extractBaseFile.mkdirs()) {
-            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, extractBaseFile.getAbsolutePath());
+            LOG.log(Level.WARNING, "Could not create directory {0}", extractBaseFile.getAbsolutePath());
         }
         extractDir = File.createTempFile(prefix, null, extractBaseFile);
         // ensure it's a directory
         if (extractDir.delete()) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, _strings.get("recreateDirectories", extractDir.getAbsolutePath()));
+            if (LOG.isLoggable(Level.DEBUG)) {
+                LOG.log(Level.DEBUG, _strings.get("recreateDirectories", extractDir.getAbsolutePath()));
             }
         }
         if (!extractDir.mkdirs()) {
-            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, extractDir.getAbsolutePath());
+            LOG.log(Level.WARNING, "Could not create directory {0}", extractDir.getAbsolutePath());
         }
         return extractDir;
     }
@@ -106,8 +105,8 @@ public class SubstitutionFileUtil {
             }
         }
         if (!file.delete()) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, _strings.get("failureInFileDeletion", file.getAbsolutePath()));
+            if (LOG.isLoggable(Level.DEBUG)) {
+                LOG.log(Level.DEBUG, _strings.get("failureInFileDeletion", file.getAbsolutePath()));
             }
         }
     }

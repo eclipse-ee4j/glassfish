@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +28,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.logging.Level;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -37,6 +38,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * processed differently for faster and better performance comparative to larger files.
  */
 public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
+    private static final Logger LOG = System.getLogger(SmallFileSubstitutionHandler.class.getName());
+
     /**
      * Constructs the {@link SmallFileSubstitutionHandler} for the given input file.
      *
@@ -62,7 +65,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
                 _reader = new CharArrayReader(buffer, 0, count);
             }
         } catch (IOException e) {
-            _logger.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
+            LOG.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _reader;
     }
@@ -72,7 +75,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
         try {
             _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_inputFile), UTF_8));
         } catch (FileNotFoundException e) {
-            _logger.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
+            LOG.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _writer;
     }

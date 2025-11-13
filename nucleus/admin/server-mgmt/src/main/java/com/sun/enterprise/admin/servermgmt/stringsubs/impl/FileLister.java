@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,13 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
-
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
@@ -33,7 +32,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
  * given path.
  */
 final class FileLister {
-    private static final Logger _log = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(FileLister.class.getName());
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(FileLister.class);
 
@@ -66,8 +65,8 @@ final class FileLister {
             // get parent file of the head, add "temp" to handle input like /path/to/parent/*
             File parent = (new File(head + "temp")).getParentFile();
             if (parent == null) {
-                if (_log.isLoggable(Level.FINEST)) {
-                    _log.log(Level.FINEST, _strings.get("parentFileNotSpecified"));
+                if (LOG.isLoggable(Level.DEBUG)) {
+                    LOG.log(Level.DEBUG, _strings.get("parentFileNotSpecified"));
                 }
                 parent = (new File(head + "temp").getAbsoluteFile()).getParentFile();
             }
@@ -128,9 +127,7 @@ final class FileLister {
                 break;
             } else if (File.separator.equals("\\") && pathPattern.contains("/")) {
                 pathPattern = pathPattern.replace("/", File.separator);
-                if (_log.isLoggable(Level.FINEST)) {
-                    _log.log(Level.FINEST, "detected \"/\" in pathWithPattern on Windows, replace with \"\\\"");
-                }
+                LOG.log(Level.DEBUG, "detected \"/\" in pathWithPattern on Windows, replace with \"\\\"");
                 numTries++;
             } else {
                 break;
@@ -150,7 +147,7 @@ final class FileLister {
         List<File> retFiles = new LinkedList<File>();
         if (!rootfile.exists()) {
             // No operation, return empty list
-            _log.log(Level.INFO, SLogger.INVALID_FILE_LOCATION, rootfile.getAbsolutePath());
+            LOG.log(Level.INFO, "Could not locate file or resource {0}", rootfile.getAbsolutePath());
         } else if (!rootfile.isDirectory()) {
             retFiles.add(rootfile);
         } else {

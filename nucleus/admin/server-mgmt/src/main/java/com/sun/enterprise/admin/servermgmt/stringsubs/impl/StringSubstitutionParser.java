@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
 
@@ -28,9 +27,9 @@ import jakarta.xml.bind.Unmarshaller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.sax.SAXSource;
@@ -46,7 +45,7 @@ import org.xml.sax.SAXException;
  */
 public class StringSubstitutionParser {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(StringSubstitutionParser.class.getName());
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(StringSubstitutionParser.class);
     // Path where schema resides i.e Parent directory for schema.
@@ -88,8 +87,8 @@ public class StringSubstitutionParser {
             try {
                 configStream.close();
             } catch (IOException e) {
-                if (_logger.isLoggable(Level.FINER)) {
-                    _logger.log(Level.FINER, _strings.get("errorInClosingStream"));
+                if (LOG.isLoggable(Level.WARNING)) {
+                    LOG.log(Level.WARNING, _strings.get("errorInClosingStream"));
                 }
             }
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,14 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ChangePairRef;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Group;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This class provides method to process {@link ModeType}. The ModeType is predefined set of values use to alter the
@@ -35,7 +36,7 @@ import java.util.logging.Logger;
  */
 public class ModeProcessor {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(ModeProcessor.class.getName());
 
     /**
      * Process the {@link ModeType} for a given string.
@@ -68,7 +69,7 @@ public class ModeProcessor {
             input = input.replace(File.separator, "${/}");
             break;
         default:
-            _logger.log(Level.WARNING, SLogger.NO_PROCESSOR_DEFINED, modeType.toString());
+            LOG.log(WARNING, "No processing defined for {0} mode", modeType);
             break;
         }
         return input;

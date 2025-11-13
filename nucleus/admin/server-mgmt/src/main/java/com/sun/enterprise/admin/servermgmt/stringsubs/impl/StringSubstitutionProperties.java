@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,18 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Load and retrieves the string substitution properties.
  */
 public class StringSubstitutionProperties {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(StringSubstitutionProperties.class.getName());
 
     private static final String STRINGSUBS_PROPERTIES = "/com/sun/enterprise/admin/servermgmt/stringsubs/stringsubs.properties";
     private static Properties _properties = null;
@@ -44,7 +43,7 @@ public class StringSubstitutionProperties {
             _properties = new Properties();
             _properties.load(in);
         } catch (IOException e) {
-            _logger.log(Level.INFO, SLogger.INVALID_FILE_LOCATION, STRINGSUBS_PROPERTIES);
+            LOG.log(Level.WARNING, "Could not locate file or resource " + STRINGSUBS_PROPERTIES, e);
         } finally {
             if (in != null) {
                 try {

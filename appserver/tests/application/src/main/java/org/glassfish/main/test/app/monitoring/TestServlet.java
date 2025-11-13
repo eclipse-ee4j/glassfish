@@ -23,8 +23,7 @@ import java.io.PrintWriter;
 public class TestServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         try (PrintWriter writer = resp.getWriter()) {
             writer.println("Thread Pool Test Servlet");

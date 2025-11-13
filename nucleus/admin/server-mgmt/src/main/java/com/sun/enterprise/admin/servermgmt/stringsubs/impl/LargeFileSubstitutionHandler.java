@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,8 +28,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.logging.Level;
+import java.lang.System.Logger;
 
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -41,6 +43,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * <p>
  */
 public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
+    private static final Logger LOG = System.getLogger(LargeFileSubstitutionHandler.class.getName());
     private static final String BACKUP_FILE_PREFIX = ".bkp";
     private static final String TEMP_FILE_PREFIX = ".tmp";
     private File _outputFile;
@@ -54,7 +57,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
         try {
             _reader = new BufferedReader(new InputStreamReader(new FileInputStream(_inputFile), UTF_8));
         } catch (FileNotFoundException e) {
-            _logger.log(Level.INFO, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
+            LOG.log(INFO, () -> _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _reader;
     }
@@ -70,7 +73,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
             }
             _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile), UTF_8));
         } catch (IOException e) {
-            _logger.log(Level.INFO, _strings.get("failureTempFileCreation", _outputFile.getAbsolutePath(), e));
+            LOG.log(INFO, () -> _strings.get("failureTempFileCreation", _outputFile.getAbsolutePath(), e));
         }
         return _writer;
     }
@@ -83,13 +86,13 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
         if (_inputFile.renameTo(inputBackUpfile)) {
             if (_outputFile.renameTo(new File(_inputFile.getAbsolutePath()))) {
                 if (!inputBackUpfile.delete()) {
-                    _logger.log(Level.INFO, _strings.get("failureInBackUpFileDeletion", inputBackUpfile.getAbsolutePath()));
+                    LOG.log(INFO, () -> _strings.get("failureInBackUpFileDeletion", inputBackUpfile.getAbsolutePath()));
                 }
             } else {
-                _logger.log(Level.INFO, _strings.get("failureInFileRename", _outputFile.getAbsolutePath(), inputFileName));
+                LOG.log(INFO, _strings.get("failureInFileRename", _outputFile.getAbsolutePath(), inputFileName));
             }
         } else {
-            _logger.log(Level.WARNING, _strings.get("failureInFileRename", _inputFile.getAbsolutePath(), inputBackUpfile.getName()));
+            LOG.log(WARNING, () -> _strings.get("failureInFileRename", _inputFile.getAbsolutePath(), inputBackUpfile.getName()));
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,15 +18,14 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import java.io.File;
-import java.util.logging.Level;
+import java.lang.System.Logger;
 
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.BAD_RENAME_CERT_FILE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.RENAME_CERT_FILE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 /**
@@ -36,6 +35,7 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
  */
 @Service
 public class UpgradeFilesystem implements ConfigurationUpgrade, PostConstruct {
+    private static final Logger LOG = System.getLogger(UpgradeFilesystem.class.getName());
 
     @Override
     public void postConstruct() {
@@ -52,9 +52,9 @@ public class UpgradeFilesystem implements ConfigurationUpgrade, PostConstruct {
 
         // Only do this if nodeagents exists and nodes does not
         if (agentsDir.exists() && !nodesDir.exists()) {
-            getLogger().log(Level.INFO, RENAME_CERT_FILE, new Object[] { agentsDir.getPath(), nodesDir.getPath() });
+            LOG.log(INFO, "Renaming {0} to {1}", agentsDir.getPath(), nodesDir.getPath());
             if (!agentsDir.renameTo(nodesDir)) {
-                getLogger().log(Level.SEVERE, BAD_RENAME_CERT_FILE, new Object[] { agentsDir.getPath(), nodesDir.getPath() });
+                LOG.log(ERROR, "Failed to rename {0} to {1}", agentsDir.getPath(), nodesDir.getPath());
             }
         }
     }

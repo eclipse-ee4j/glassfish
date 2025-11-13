@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,21 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
-
+import java.lang.System.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Node for {@link RadixTree}.
  */
 class RadixTreeNode {
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(RadixTreeNode.class.getName());
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(RadixTreeNode.class);
 
@@ -104,12 +103,7 @@ class RadixTreeNode {
      * @return associated child nodes.
      */
     Collection<RadixTreeNode> getChildNodes() {
-        if (_childNodes != null) {
-            return _childNodes.values();
-        } else {
-            List<RadixTreeNode> list = Collections.emptyList();
-            return list;
-        }
+        return _childNodes == null ? Collections.emptyList() : _childNodes.values();
     }
 
     /**
@@ -130,7 +124,9 @@ class RadixTreeNode {
         }
         RadixTreeNode oldNode = _childNodes.put(c, node);
         if (oldNode != null) {
-            _logger.log(Level.WARNING, SLogger.CHILD_NODE_EXISTS, new Object[] { this.toString(), oldNode.toString(), node.toString() });
+            LOG.log(WARNING,
+                "Parent node: {0} contains child node: {1} whose key starts with same character as the key of given node: {2}",
+                this, oldNode, node);
             oldNode._parentNode = null;
         }
         node._parentNode = this;

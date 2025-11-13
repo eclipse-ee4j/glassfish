@@ -417,7 +417,7 @@ class ConfigBeanJMXSupport
     // Tricky case FIXME:  what if there are List<String> elements.
     boolean isLeaf()
     {
-        return mElementInfos.size() == 0;
+        return mElementInfos.isEmpty();
     }
 
     /** partial list (quick check) of legal remoteable types */
@@ -527,7 +527,6 @@ class ConfigBeanJMXSupport
                 attrs.add(a);
                 if ( a.returnType() != String.class )
                 {
-                    // FIXME DEADLOCK
                     AMXLoggerInfo.getLogger().log(Level.INFO, AMXLoggerInfo.illegalNonstring,
                             new Object[]{intf.getName(), m.getName(), a.returnType().getName()});
                 }

@@ -31,7 +31,7 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import org.glassfish.tests.embedded.runnable.tool.EGFContainer;
+import org.glassfish.tests.embedded.runnable.tool.EmbeddedGlassFishContainer;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -61,16 +61,16 @@ public class MonitoringTest {
     private Path tmpDir;
     private JMXConnector jmxConnector;
     private Path warFile;
-    private EGFContainer egf;
+    private EmbeddedGlassFishContainer glassfish;
 
 
     @BeforeEach
     void init() throws Exception {
         // an app needs to be deployed to initialize request monitoring
         warFile = createEmptyApp();
-        egf = new EGFContainer("glassfish-embedded-all.jar", warFile);
-        egf.start();
-        assertThat(egf.getErrorReader(), readerContains("Application empty-app.war deployed at context root"));
+        glassfish = new EmbeddedGlassFishContainer("glassfish-embedded-all.jar", warFile);
+        glassfish.start();
+        assertThat(glassfish.getErrorReader(), readerContains("Application empty-app.war deployed at context root"));
     }
 
     @AfterEach
@@ -83,9 +83,9 @@ public class MonitoringTest {
                 LOG.log(ERROR, "JMX Connector close failed!", e);
             }
         }
-        if (egf.isAlive()) {
+        if (glassfish.isAlive()) {
             LOG.log(INFO, "Terminating the process...");
-            egf.stop();
+            glassfish.stop();
         }
         Files.deleteIfExists(warFile);
     }
@@ -97,7 +97,7 @@ public class MonitoringTest {
         assertNotNull(jmxConnector, "JMX Connector");
         jmxConnector.connect();
         MBeanServerConnection connection = jmxConnector.getMBeanServerConnection();
-        egf.startReadingStdErr();
+        glassfish.startReadingStdErr();
         Object bootAmxResponse = bootAmx(connection);
         LOG.log(INFO, () -> "AMX booted: " + bootAmxResponse);
         assertNotNull(bootAmxResponse, "bootAMX operation");

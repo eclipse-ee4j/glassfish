@@ -32,8 +32,8 @@ import static java.lang.System.Logger.Level.INFO;
  *
  * @author David Matejcek
  */
-public final class EGFContainer {
-    private static final Logger LOG = System.getLogger(EGFContainer.class.getName());
+public final class EmbeddedGlassFishContainer {
+    private static final Logger LOG = System.getLogger(EmbeddedGlassFishContainer.class.getName());
 
     private final String gfEmbeddedJarName;
     private final Path warFile;
@@ -46,7 +46,7 @@ public final class EGFContainer {
      * @param gfEmbeddedJarName
      * @param warFile
      */
-    public EGFContainer(String gfEmbeddedJarName, Path warFile) {
+    public EmbeddedGlassFishContainer(String gfEmbeddedJarName, Path warFile) {
         this.gfEmbeddedJarName = gfEmbeddedJarName;
         this.warFile = warFile;
     }

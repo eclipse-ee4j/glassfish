@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.cdi.CDILoggerInfo;
 import org.glassfish.deployment.common.DeploymentContextImpl;
+import org.glassfish.internal.api.CompositeClassLoader;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.weld.connector.WeldUtils.BDAType;
 import org.jboss.weld.bootstrap.WeldBootstrap;
@@ -284,21 +286,28 @@ public class DeploymentImpl implements CDI11Deployment {
             }
         }
 
+        CompositeClassLoader compositeClassLoader = new CompositeClassLoader();
+        Set<ClassLoader> orderedSetOfClassLoaders = new LinkedHashSet<>();
         for (BeanDeploymentArchive beanDeploymentArchive : getBeanDeploymentArchives()) {
             if (!(beanDeploymentArchive instanceof RootBeanDeploymentArchive)) {
-                ClassLoader classLoader = new FilteringClassLoader(((BeanDeploymentArchiveImpl) beanDeploymentArchive)
-                    .getModuleClassLoaderForBDA());
-                Iterable<Metadata<Extension>> classPathExtensions = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
-                    .loadExtensions(classLoader);
-
-                if (classPathExtensions != null) {
-                    for (Metadata<Extension> beanDeploymentArchiveExtension : classPathExtensions) {
-                        extensionsList.add(beanDeploymentArchiveExtension);
-                    }
-                }
+                ClassLoader classLoader = ((BeanDeploymentArchiveImpl) beanDeploymentArchive)
+                    .getModuleClassLoaderForBDA();
+                orderedSetOfClassLoaders.add(classLoader);
             }
         }
+        for (ClassLoader classLoader : orderedSetOfClassLoaders) {
+                // For a WebApp it should be a single WebApp classloader.
+                // Just in case we have more ClassLoaders, we merge them, to avoid duplicate extensions
+                compositeClassLoader.addClassLoader(new FilteringClassLoader(classLoader));
+        }
+        Iterable<Metadata<Extension>> classPathExtensions = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
+            .loadExtensions(compositeClassLoader);
 
+        if (classPathExtensions != null) {
+            for (Metadata<Extension> beanDeploymentArchiveExtension : classPathExtensions) {
+                extensionsList.add(beanDeploymentArchiveExtension);
+            }
+        }
         return extensions = extensionsList;
     }
 

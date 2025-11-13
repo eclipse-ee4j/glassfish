@@ -120,7 +120,7 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
                 }
             } catch (IOException e) {
                 SubstitutionFileUtil.removeDir(_extractDir);
-                LOG.log(WARNING, "Failed to update jar " + _archive.getName() + " with the substitutable files", e);
+                LOG.log(WARNING, () -> "Failed to update jar " + _archive.getName() + " with the substitutable files", e);
             }
         }
     }
@@ -157,7 +157,7 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
                 getAllArchiveMemberList().add(new ArchiveMemberHandler(file, this));
                 _noOfExtractedEntries.incrementAndGet();
             } else {
-                LOG.log(WARNING, "File {0} not present inside archive {1}", new Object[] { object, _archive.getName() });
+                LOG.log(WARNING, () -> "File " + object + " not present inside archive " + _archive.getName() );
             }
         }
     }
@@ -199,7 +199,7 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
 
         if (jarEntry.isDirectory() && !file.exists()) {
             if (!file.mkdirs()) {
-                LOG.log(INFO, "Could not create directory {0}", file.getAbsolutePath());
+                LOG.log(INFO, () -> "Could not create directory " +  file.getAbsolutePath());
             }
             return;
         }
@@ -315,10 +315,10 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
                 throw new IOException(jarFile.getPath() + " did not get updated. Unable to delete.");
             } else if (!success) {
                 if (tempJarFile != null && !tempJarFile.delete()) {
-                    LOG.log(INFO, _strings.get("errorInClosingStream", tempJarFile.getAbsolutePath()));
+                    LOG.log(INFO, () -> _strings.get("errorInClosingStream", tempJarFile.getAbsolutePath()));
                 }
             } else if (tempJarFile != null && !tempJarFile.renameTo(jarFile)) {
-                LOG.log(ERROR, "Could not rename temporary jar {0} file to {1}", new Object[] { tempJarFile.getName(), jarFile.getName() });
+                LOG.log(ERROR, () -> "Could not rename temporary jar " + tempJarFile.getName() + " file to " + jarFile.getName() );
             }
         }
     }

@@ -57,7 +57,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
         try {
             _reader = new BufferedReader(new InputStreamReader(new FileInputStream(_inputFile), UTF_8));
         } catch (FileNotFoundException e) {
-            LOG.log(INFO, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
+            LOG.log(INFO, () -> _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _reader;
     }
@@ -73,7 +73,7 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
             }
             _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile), UTF_8));
         } catch (IOException e) {
-            LOG.log(INFO, _strings.get("failureTempFileCreation", _outputFile.getAbsolutePath(), e));
+            LOG.log(INFO, () -> _strings.get("failureTempFileCreation", _outputFile.getAbsolutePath(), e));
         }
         return _writer;
     }
@@ -86,13 +86,13 @@ public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
         if (_inputFile.renameTo(inputBackUpfile)) {
             if (_outputFile.renameTo(new File(_inputFile.getAbsolutePath()))) {
                 if (!inputBackUpfile.delete()) {
-                    LOG.log(INFO, _strings.get("failureInBackUpFileDeletion", inputBackUpfile.getAbsolutePath()));
+                    LOG.log(INFO, () -> _strings.get("failureInBackUpFileDeletion", inputBackUpfile.getAbsolutePath()));
                 }
             } else {
                 LOG.log(INFO, _strings.get("failureInFileRename", _outputFile.getAbsolutePath(), inputFileName));
             }
         } else {
-            LOG.log(WARNING, _strings.get("failureInFileRename", _inputFile.getAbsolutePath(), inputBackUpfile.getName()));
+            LOG.log(WARNING, () -> _strings.get("failureInFileRename", _inputFile.getAbsolutePath(), inputBackUpfile.getName()));
         }
     }
 }

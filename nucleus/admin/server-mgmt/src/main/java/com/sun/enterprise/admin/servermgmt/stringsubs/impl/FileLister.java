@@ -147,7 +147,7 @@ final class FileLister {
         List<File> retFiles = new LinkedList<File>();
         if (!rootfile.exists()) {
             // No operation, return empty list
-            LOG.log(Level.INFO, "Could not locate file or resource {0}", rootfile.getAbsolutePath());
+            LOG.log(Level.INFO, () -> "Could not locate file or resource " + rootfile.getAbsolutePath());
         } else if (!rootfile.isDirectory()) {
             retFiles.add(rootfile);
         } else {

@@ -104,7 +104,7 @@ class FileEntryFactory {
                                         : new SmallFileSubstitutionHandler(retrievedFile);
                         substituables.add(substituable);
                     } catch (FileNotFoundException e) {
-                        LOG.log(WARNING, "Could not locate file or resource " + retrievedFile, e);
+                        LOG.log(WARNING, () -> "Could not locate file or resource " + retrievedFile, e);
                     }
                 }
             }

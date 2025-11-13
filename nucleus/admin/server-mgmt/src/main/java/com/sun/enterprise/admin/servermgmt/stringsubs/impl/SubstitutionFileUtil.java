@@ -72,7 +72,7 @@ public class SubstitutionFileUtil {
         File extractDir = null;
         File extractBaseFile = new File(extractBase);
         if (!extractBaseFile.mkdirs()) {
-            LOG.log(Level.WARNING, "Could not create directory {0}", extractBaseFile.getAbsolutePath());
+            LOG.log(Level.WARNING, () -> "Could not create directory " + extractBaseFile.getAbsolutePath());
         }
         extractDir = File.createTempFile(prefix, null, extractBaseFile);
         // ensure it's a directory

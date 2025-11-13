@@ -65,7 +65,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
                 _reader = new CharArrayReader(buffer, 0, count);
             }
         } catch (IOException e) {
-            LOG.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
+            LOG.log(Level.WARNING, () -> _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _reader;
     }
@@ -75,7 +75,7 @@ public class SmallFileSubstitutionHandler extends FileSubstitutionHandler {
         try {
             _writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_inputFile), UTF_8));
         } catch (FileNotFoundException e) {
-            LOG.log(Level.WARNING, _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
+            LOG.log(Level.WARNING, () -> _strings.get("invalidFileLocation", _inputFile.getAbsolutePath()), e);
         }
         return _writer;
     }

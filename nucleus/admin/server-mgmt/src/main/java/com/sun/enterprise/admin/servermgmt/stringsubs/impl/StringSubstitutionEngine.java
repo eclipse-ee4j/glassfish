@@ -130,7 +130,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
         for (String componentId : components) {
             Component component = findComponentById(componentId);
             if (component == null) {
-                LOG.log(Level.INFO, "Component {0} is not present.", componentId);
+                LOG.log(Level.INFO, () -> "Component " + componentId + " is not present.");
                 continue;
             }
             doSubstitution(component);
@@ -255,7 +255,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
                     substituable.finish();
                 }
             } catch (Exception e) {
-                LOG.log(WARNING, "Failed to update jar " + archive.getName() + " with the substitutable files", e);
+                LOG.log(WARNING, () -> "Failed to update jar " + archive.getName() + " with the substitutable files", e);
             }
         }
     }

@@ -40,7 +40,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
-import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
@@ -148,7 +147,7 @@ public class StartServerHelper {
                 serverName, output);
             return;
         }
-        if (ok(output)) {
+        if (output.isEmpty()) {
             throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
         }
         throw new CommandException(I18N.get("serverDied", serverName, exitCode));
@@ -190,8 +189,9 @@ public class StartServerHelper {
 
 
     /**
-     * If the parent is a GF server -- then wait for it to die. This is part of the Client-Server Restart Dance! THe dying
-     * server called us with the system property AS_RESTART set to its pid
+     * If the parent is a GF server -- then wait for it to die.
+     * This is part of the Client-Server Restart Dance!
+     * The dying server called us with the system property AS_RESTART_PREVIOUS_PID set to its pid
      *
      * @throws CommandException if we timeout waiting for the parent to die or if the admin ports never free up
      */
@@ -211,8 +211,8 @@ public class StartServerHelper {
 
 
     private Integer getParentPid() {
-        String pid = System.getProperty("AS_RESTART");
-        if (!ok(pid)) {
+        String pid = System.getProperty("AS_RESTART_PREVIOUS_PID");
+        if (pid == null) {
             return null;
         }
         try {

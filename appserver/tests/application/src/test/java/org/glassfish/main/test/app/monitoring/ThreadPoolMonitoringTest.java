@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,6 +47,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 @TestMethodOrder(MethodName.class)
@@ -195,6 +197,11 @@ public class ThreadPoolMonitoringTest {
         generatorTest.close();
         waitForThreadsBusyCount(HTTP_POOL_1_PORT, 0);
         waitForThreadsBusyCount(HTTP_POOL_TEST_PORT, 0);
+        waitForTaskCountStoppedChanging(HTTP_POOL_1_PORT);
+        waitForTaskCountStoppedChanging(HTTP_POOL_TEST_PORT);
+        // FIXME: Even those waits don't ensure that task count will not increase.
+        //        Reproduced on GHA, more probable on Windows machine - task count changed by a number of currentThreadCount.
+        Thread.sleep(1000L);
         final ThreadPoolMetrics metrics1 = getThreadPoolMetrics(HTTP_POOL_1);
         final ThreadPoolMetrics metricsTest = getThreadPoolMetrics(HTTP_POOL_TEST);
         assertAll(
@@ -572,20 +579,39 @@ public class ThreadPoolMonitoringTest {
         // which means that threads still did not finish.
         // Wait also for the server threads to finish too
         waitForThreadsBusyCount(port, 0);
+        waitForTaskCountStoppedChanging(port);
         return generator;
     }
 
     private static void waitForThreadsBusyCount(int port, int targetCount) throws InterruptedException {
-        final  String poolName = port == HTTP_POOL_1_PORT ? HTTP_POOL_1 : HTTP_POOL_TEST;
+        final String poolName = port == HTTP_POOL_1_PORT ? HTTP_POOL_1 : HTTP_POOL_TEST;
         final String key = "server.network." + poolName + ".thread-pool.currentthreadsbusy-count";
         waitFor(Duration.ofSeconds(10L), () -> {
-            Integer value = Integer
-                .valueOf(ASADMIN.exec("get", "-m", key).getStdOut().replaceFirst(key + " = ", "").strip());
-            assertThat("server busy thread count", value, equalTo(targetCount));
+            assertThat("server busy thread count", getMonitorValue(key), equalTo(targetCount));
             return null;
         });
     }
 
+    private static void waitForTaskCountStoppedChanging(int port) throws InterruptedException {
+        final String poolName = port == HTTP_POOL_1_PORT ? HTTP_POOL_1 : HTTP_POOL_TEST;
+        final String key = "server.network." + poolName + ".thread-pool.totalexecutedtasks-count";
+        final AtomicInteger taskCount = new AtomicInteger();
+        waitFor(Duration.ofSeconds(10L), () -> {
+            final int value = getMonitorValue(key);
+            if (taskCount.get() == 0) {
+                // We need the first value;
+                taskCount.set(value);
+                fail();
+            }
+            assertThat("server busy thread count", value, equalTo(taskCount.getAndSet(value)));
+            return null;
+        });
+    }
+
+
+    private static int getMonitorValue(String key) {
+        return Integer.valueOf(ASADMIN.exec("get", "-m", key).getStdOut().replaceFirst(key + " = ", "").strip());
+    }
 
     private record ThreadPoolMetrics(int currentThreadCount, int currentThreadsBusy, int coreThreads, int maxThreads, int totalTasks) {
     }

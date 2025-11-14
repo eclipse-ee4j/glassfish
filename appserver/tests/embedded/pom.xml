@@ -79,6 +79,7 @@
                         <systemPropertyVariables>
                             <project.directory>${basedir}</project.directory>
                             <buildDir>${surefire.workdir}</buildDir>
+                            <glassfish.version>${glassfish.version}</glassfish.version>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

@@ -16,7 +16,6 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,6 +29,11 @@
     <packaging>pom</packaging>
 
     <name>GlassFish Embedded modules</name>
+
+    <properties>
+        <glassfish.embedded.add-opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</glassfish.embedded.add-opens>
+        <glassfish.embedded.add-exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation java.base/jdk.internal.loader</glassfish.embedded.add-exports>
+    </properties>
 
     <modules>
         <module>common</module>
@@ -51,5 +55,64 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.gmaven</groupId>
+                    <artifactId>groovy-maven-plugin</artifactId>
+                    <version>2.1.1</version>
+                    <executions>
+                        <execution>
+                            <!-- Merges all values in the 'probe-provider-class-names'
+
+                                attribute into a system property 'probe.provider.class.names',
+
+                                which be used when building the final manifest
+                            -->
+                            <id>merge-manifest-values-to-properties</id>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <source>
+                                    import java.util.jar.JarFile
+                                    import java.util.jar.Manifest
+
+                                    def probeProviders = [] as Set
+
+                                    project.artifacts.each { artifact ->
+                                        if (artifact.type == 'jar') {
+                                            try {
+                                                def jar = new JarFile(artifact.file)
+                                                def manifest = jar.manifest
+                                                if (manifest) {
+                                                    def probeValue = manifest.mainAttributes.getValue('probe-provider-class-names')
+                                                    if (probeValue) {
+                                                        probeProviders.add(probeValue)
+                                                    }
+                                                }
+                                                jar.close()
+                                            } catch (Exception e) {
+                                                // Ignore invalid JARs
+                                            }
+                                        }
+                                    }
+
+                                    if (probeProviders) {
+                                        project.properties['probe.provider.class.names'] = probeProviders.join(',')
+                                        println "Found ${probeProviders.size()} probe providers in project dependencies"
+                                    } else {
+                                        println "No probe providers found in project dependencies"
+                                    }
+                                </source>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

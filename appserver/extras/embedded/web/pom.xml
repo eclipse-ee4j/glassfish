@@ -114,6 +114,17 @@
             </plugin>
 
             <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>merge-manifest-values-to-properties</id>
+                        <phase>prepare-package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
@@ -190,8 +201,9 @@
                                     <Multi-Release>true</Multi-Release>
                                     <Bundle-SymbolicName>org.glassfish.main.embedded.web</Bundle-SymbolicName>
                                     <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
-                                    <Add-Opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</Add-Opens>
-                                    <Add-Exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation</Add-Exports>
+                                    <Add-Opens>${glassfish.embedded.add-opens}</Add-Opens>
+                                    <Add-Exports>${glassfish.embedded.add-exports}</Add-Exports>
+                                    <probe-provider-class-names>${probe.provider.class.names}</probe-provider-class-names>
                                 </manifestEntries>
                             </archive>
                         </configuration>

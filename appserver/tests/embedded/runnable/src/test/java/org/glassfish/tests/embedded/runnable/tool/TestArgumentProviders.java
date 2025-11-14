@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.tests.embedded.runnable;
+package org.glassfish.tests.embedded.runnable.tool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +35,10 @@ public class TestArgumentProviders {
         public Stream<? extends Arguments> provideArguments(ExtensionContext ec) throws Exception {
             List<Arguments> arguments = new ArrayList<>();
             arguments.add(Arguments.of("glassfish-embedded-all.jar"));
-            if (!GfEmbeddedUtils.isDebugEnabled()) {
+            if (!EmbeddedGlassFishStarter.isDebugEnabled()) {
                 arguments.add(Arguments.of("glassfish-embedded-web.jar"));
             }
             return arguments.stream();
         }
-
     }
-
 }

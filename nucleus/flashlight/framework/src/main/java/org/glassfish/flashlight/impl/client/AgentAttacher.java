@@ -13,26 +13,63 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.flashlight.impl.client;
+
+import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Method;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.flashlight.FlashlightLoggerInfo;
+
 
 /**
  * created May 26, 2011
+ *
  * @author Byron Nevins
  */
 public final class AgentAttacher {
+
+    private static final String AGENT_CLASSNAME = "org.glassfish.flashlight.agent.ProbeAgentMain";
+
+    private static final Logger logger = FlashlightLoggerInfo.getLogger();
+
+    public static Optional<Instrumentation> getInstrumentation() {
+        try {
+            Class agentMainClass = null;
+            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
+            try {
+                agentMainClass = classLoader.loadClass(AGENT_CLASSNAME);
+            } catch (Throwable t) {
+                // need throwable, not Exception - it may throw an Error!
+                // try one more time after attempting to attach.
+                AgentAttacher.attachAgent();
+                // might throw
+                agentMainClass = classLoader.loadClass(AGENT_CLASSNAME);
+            }
+
+            Method mthd = agentMainClass.getMethod("getInstrumentation", null);
+            return Optional.ofNullable((Instrumentation) mthd.invoke(null, null));
+        } catch (Throwable throwable) {
+            logger.log(Level.WARNING, "Error while getting Instrumentation object from ProbeAgentMain", throwable);
+            return Optional.empty();
+        }
+    }
+
     public synchronized static boolean canAttach() {
         return canAttach;
     }
 
     public synchronized static boolean isAttached() {
         try {
-            if (!canAttach)
+            if (!canAttach) {
                 return false;
+            }
 
             return AgentAttacherInternal.isAttached();
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             return false;
         }
     }
@@ -40,24 +77,24 @@ public final class AgentAttacher {
     public synchronized static boolean attachAgent() {
 
         try {
-            if (!canAttach)
+            if (!canAttach) {
                 return false;
+            }
 
             return attachAgent(-1, "");
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             return false;
         }
     }
 
     public synchronized static boolean attachAgent(int pid, String options) {
         try {
-            if (!canAttach)
+            if (!canAttach) {
                 return false;
+            }
 
             return AgentAttacherInternal.attachAgent(pid, options);
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             return false;
         }
     }
@@ -71,8 +108,7 @@ public final class AgentAttacher {
             // this is a distinct possibility in embedded mode.
             AgentAttacherInternal.isAttached();
             b = true;
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             b = false;
         }
         canAttach = b;

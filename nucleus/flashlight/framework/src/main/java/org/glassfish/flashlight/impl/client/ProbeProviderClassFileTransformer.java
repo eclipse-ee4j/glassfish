@@ -48,7 +48,6 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_ATTACH_API;
-import static org.glassfish.flashlight.FlashlightLoggerInfo.NO_ATTACH_GET;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.REGISTRATION_ERROR;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.RETRANSFORMATION_ERROR;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.WRITE_ERROR;
@@ -82,7 +81,6 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     private static final Instrumentation instrumentation;
     private static boolean _debug = Boolean.parseBoolean(Utility.getEnvOrProp("AS_DEBUG"));
     private static boolean emittedAttachUnavailableMessageAlready = false;
-    private static final String AGENT_CLASSNAME = "org.glassfish.flashlight.agent.ProbeAgentMain";
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
     private ProbeProviderClassFileTransformer(Class providerClass) {
@@ -494,28 +492,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         if (AgentAttacher.canAttach()) {
             canAttach = true;
 
-            try {
-                ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-
-                try {
-                    agentMainClass = classLoader.loadClass(AGENT_CLASSNAME);
-                }
-                catch (Throwable t) {
-                    // need throwable, not Exception - it may throw an Error!
-                    // try one more time after attempting to attach.
-                    AgentAttacher.attachAgent();
-                    // might throw
-                    agentMainClass = classLoader.loadClass(AGENT_CLASSNAME);
-                }
-
-                Method mthd = agentMainClass.getMethod("getInstrumentation", null);
-                nonFinalInstrumentation = (Instrumentation) mthd.invoke(null, null);
-            }
-            catch (Throwable t) {
-                nonFinalInstrumentation = null;
-                // save it for nice neat message code below
-                throwable = t;
-            }
+            nonFinalInstrumentation = AgentAttacher.getInstrumentation().orElse(null);
         }
         // set the final
         instrumentation = nonFinalInstrumentation;
@@ -525,7 +502,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         } else if (instrumentation != null) {
             Log.info("yes.attach.api", instrumentation);
         } else {
-            logger.log(Level.WARNING, NO_ATTACH_GET, throwable);
+            logger.log(Level.WARNING, "Could not attach agent");
         }
     }
 }

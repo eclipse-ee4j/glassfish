@@ -55,6 +55,12 @@ final class AgentAttacherInternal {
             }
 
             if (pid < 0) {
+
+                if (AgentAttacher.getInstrumentation().isPresent()) {
+                    isAttached = true;
+                    return true;
+                }
+
                 pid = ProcessHandle.current().pid();
             }
 

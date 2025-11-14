@@ -76,19 +76,29 @@ public class ThreadPoolStatsProviderGlobal extends ThreadPoolStatsProvider {
     public void threadDispatchedFromPoolEvent(
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
-            @ProbeParam("threadId") long threadId) {
+            @ProbeParam("threadId") long threadId,
+            @ProbeParam("busyThreadCount") long busyThreadCount) {
 
-        currentThreadsBusy.increment();
+        currentThreadsBusy.setCount(busyThreadCount);
     }
 
     @ProbeListener("glassfish:kernel:thread-pool:threadReturnedToPoolEvent")
     public void threadReturnedToPoolEvent(
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
-            @ProbeParam("threadId") long threadId) {
+            @ProbeParam("threadId") long threadId,
+            @ProbeParam("busyThreadCount") long busyThreadCount) {
 
         totalExecutedTasksCount.increment();
-        currentThreadsBusy.decrement();
+        currentThreadsBusy.setCount(busyThreadCount);
+    }
+
+    @ProbeListener("glassfish:kernel:thread-pool:setCurrentThreadCountEvent")
+    public void setCurrentThreadCountEvent(
+            @ProbeParam("monitoringId") String monitoringId,
+            @ProbeParam("threadPoolName") String threadPoolName,
+            @ProbeParam("currentThreadCount") int currentThreadCount) {
+        this.currentThreadCount.setCount(currentThreadCount);
     }
 
 }

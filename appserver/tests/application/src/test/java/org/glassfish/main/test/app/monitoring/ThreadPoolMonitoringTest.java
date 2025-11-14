@@ -10,19 +10,11 @@
 package org.glassfish.main.test.app.monitoring;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.System.Logger;
-import java.net.HttpURLConnection;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,10 +35,7 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 
-import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.TRACE;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
@@ -57,7 +46,6 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 @TestMethodOrder(MethodName.class)
@@ -65,15 +53,15 @@ public class ThreadPoolMonitoringTest {
 
     private static final Logger LOG = System.getLogger(ThreadPoolMonitoringTest.class.getName());
     private static final int HTTP_REQUEST_TIMEOUT = 5000;
-    private static final String APP_NAME = "threadpool-test";
-    private static final String APP_CONTEXT = "/threadpool-test";
-    private static final String CONTEXT_FAST = APP_CONTEXT + "/test";
-    private static final String CONTEXT_LOCK = APP_CONTEXT + "/lock?action=lock";
-    private static final String CONTEXT_UNLOCK = APP_CONTEXT + "/lock?action=unlock";
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final String APP_NAME = "threadpool-test";
+    private static final String HTTP_POOL_1 = "http-listener-1";
+    private static final String HTTP_POOL_TEST = "http-listener-test";
+    private static final int HTTP_POOL_1_PORT = 8080;
+    private static final int HTTP_POOL_TEST_PORT = 8081;
 
     private static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
-    private static final List<String> LISTENER_NAMES = new ArrayList<>();
+    private static final List<String> CUSTOM_LISTENER_NAMES = new ArrayList<>();
     private static final List<UUID> LOCKS = new ArrayList<>();
 
     private static boolean stop;
@@ -103,7 +91,7 @@ public class ThreadPoolMonitoringTest {
             ASADMIN.exec("set", "configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH"),
             asadminOK());
 
-        assertThat(httpGet(8080, CONTEXT_FAST), stringContainsInOrder("http-listener-1"));
+        assertThat(new AppClient(HTTP_POOL_1_PORT, 5000).test(), stringContainsInOrder(HTTP_POOL_1));
         final ThreadPoolMetrics adminBaseline = getThreadPoolMetrics("admin-listener");
         assertThat("admin listener current threads", adminBaseline.currentThreadCount(), greaterThanOrEqualTo(0));
         assertThat("admin listener max threads", adminBaseline.maxThreads(), greaterThan(0));
@@ -121,21 +109,22 @@ public class ThreadPoolMonitoringTest {
     @BeforeEach
     void beforeEach() {
         assumeFalse(stop);
-        http1Baseline = getThreadPoolMetrics();
+        http1Baseline = getThreadPoolMetrics(HTTP_POOL_1);
     }
 
     @AfterEach
     void afterEach() throws Throwable {
         if (!LOCKS.isEmpty()) {
-            HttpLoadGenerator.unlockAppThreads(8080, LOCKS).close();
+            unlockAppThreads(HTTP_POOL_1_PORT, LOCKS).close();
         }
         for (AutoCloseable closeable : CLOSEABLES) {
             closeable.close();
         }
         CLOSEABLES.clear();
-        for (String listenerName : LISTENER_NAMES) {
+        for (String listenerName : CUSTOM_LISTENER_NAMES) {
             ASADMIN.exec("delete-http-listener", listenerName);
         }
+        CUSTOM_LISTENER_NAMES.clear();
         if (stop) {
             return;
         }
@@ -153,7 +142,7 @@ public class ThreadPoolMonitoringTest {
      */
     @Test
     void testAdminListenerThreadPoolMetrics() throws Exception {
-        AsadminLoadGenerator.startGenerator();
+        startAsadminLoadGenerator();
         ThreadPoolMetrics metrics = getThreadPoolMetrics("admin-listener");
         waitFor(Duration.ofSeconds(1L), () -> {
             assertAll(
@@ -174,50 +163,40 @@ public class ThreadPoolMonitoringTest {
 
     @Test
     void testDualListenerHugeAmountOfFastRequests() throws Exception {
-        final String listenerTestName = "http-listener-test";
-        final int listenerTestPort = 8081;
-        LISTENER_NAMES.add(listenerTestName);
-        assertThat(ASADMIN.exec("create-http-listener", "--listenerport=" + listenerTestPort,
-            "--listeneraddress=0.0.0.0", "--defaultvs=server", listenerTestName), asadminOK());
+        assertThat(ASADMIN.exec("create-http-listener", "--listenerport=" + HTTP_POOL_TEST_PORT,
+            "--listeneraddress=0.0.0.0", "--defaultvs=server", HTTP_POOL_TEST), asadminOK());
+        CUSTOM_LISTENER_NAMES.add(HTTP_POOL_TEST);
 
-        final String listener1Name = "http-listener-1";
         AsadminResult listResult = ASADMIN.exec("list", "-m", "*thread-pool*");
         assertThat(listResult, asadminOK());
-        assertThat(listResult.getStdOut(), stringContainsInOrder(listenerTestName, listener1Name));
+        assertThat(listResult.getStdOut(), stringContainsInOrder(HTTP_POOL_TEST, HTTP_POOL_1));
 
-        final ThreadPoolMetrics metrics1Baseline = getThreadPoolMetrics(listener1Name);
-        final ThreadPoolMetrics metricsTestBaseline = getThreadPoolMetrics(listenerTestName);
+        final ThreadPoolMetrics metrics1Baseline = getThreadPoolMetrics(HTTP_POOL_1);
+        final ThreadPoolMetrics metricsTestBaseline = getThreadPoolMetrics(HTTP_POOL_TEST);
 
         assertThat("listener 1 current threads", metrics1Baseline.currentThreadCount(), greaterThanOrEqualTo(0));
         assertThat("listener Test current threads", metricsTestBaseline.currentThreadCount(), equalTo(5));
 
-        assertThat(httpGet(listenerTestPort, CONTEXT_FAST), stringContainsInOrder("http-listener-test"));
+        assertThat(new AppClient(HTTP_POOL_TEST_PORT, 5000).test(), stringContainsInOrder(HTTP_POOL_TEST));
 
         // Create load on both listeners simultaneously
-        final HttpLoadGenerator generator1 = HttpLoadGenerator.startGenerator(8080, CONTEXT_FAST, 5, 1_000_000);
-        final HttpLoadGenerator generatorTest = HttpLoadGenerator.startGenerator(listenerTestPort, CONTEXT_FAST, 5, 1_000_000);
+        final HttpLoadGenerator generator1 = startHttpTestLoadGenerator(HTTP_POOL_1_PORT, 10, 1_000_000);
+        final HttpLoadGenerator generatorTest = startHttpTestLoadGenerator(HTTP_POOL_TEST_PORT, 10, 1_000_000);
 
         waitFor(Duration.ofSeconds(60L), () -> {
-            ThreadPoolMetrics metrics1 = getThreadPoolMetrics(listener1Name);
+            ThreadPoolMetrics metrics1 = getThreadPoolMetrics(HTTP_POOL_1);
             assertThat("listener 1 tasks", metrics1.totalTasks(), greaterThan(metrics1Baseline.totalTasks()));
-            ThreadPoolMetrics metricsTest = getThreadPoolMetrics(listenerTestName);
+            ThreadPoolMetrics metricsTest = getThreadPoolMetrics(HTTP_POOL_TEST);
             assertThat("listener Test tasks", metricsTest.totalTasks(), greaterThan(metricsTestBaseline.totalTasks()));
             return null;
         });
 
         generator1.close();
         generatorTest.close();
-        final ThreadPoolMetrics metrics1 = waitFor(Duration.ofSeconds(10L), () -> {
-            ThreadPoolMetrics metrics = getThreadPoolMetrics(listener1Name);
-            assertThat("listener 1 busy", metrics.currentThreadsBusy(), equalTo(0));
-            return metrics;
-        });
-        final ThreadPoolMetrics metricsTest = waitFor(Duration.ofSeconds(10L), () -> {
-            ThreadPoolMetrics metrics = getThreadPoolMetrics(listenerTestName);
-            assertThat("listener Test busy", metrics.currentThreadsBusy(), equalTo(0));
-            return metrics;
-        });
-
+        waitForThreadsBusyCount(HTTP_POOL_1_PORT, 0);
+        waitForThreadsBusyCount(HTTP_POOL_TEST_PORT, 0);
+        final ThreadPoolMetrics metrics1 = getThreadPoolMetrics(HTTP_POOL_1);
+        final ThreadPoolMetrics metricsTest = getThreadPoolMetrics(HTTP_POOL_TEST);
         assertAll(
             // 1 could be already on the limit
             () -> assertThat("listener 1 current threads", metrics1.currentThreadCount(),
@@ -232,9 +211,8 @@ public class ThreadPoolMonitoringTest {
                 lessThanOrEqualTo(metricsTest.currentThreadCount()))
         );
 
-
-        final ThreadPoolMetrics metrics1Final = getThreadPoolMetrics(listener1Name);
-        final ThreadPoolMetrics metricsTestFinal = getThreadPoolMetrics(listenerTestName);
+        final ThreadPoolMetrics metrics1Final = getThreadPoolMetrics(HTTP_POOL_1);
+        final ThreadPoolMetrics metricsTestFinal = getThreadPoolMetrics(HTTP_POOL_TEST);
         assertAll("Client closed, metrics should not change",
             () -> assertEquals(metrics1, metrics1Final),
             () -> assertEquals(metricsTest, metricsTestFinal)
@@ -244,7 +222,7 @@ public class ThreadPoolMonitoringTest {
     /** Basic sanity checks */
     @Test
     void testThreadPoolMetricsBaseline() throws Exception {
-        ThreadPoolMetrics metrics = getThreadPoolMetrics();
+        ThreadPoolMetrics metrics = getThreadPoolMetrics(HTTP_POOL_1);
         assertAll(
             () -> assertThat("current thread count", metrics.currentThreadCount(), greaterThanOrEqualTo(0)),
             () -> assertThat("busy thread count", metrics.currentThreadsBusy(), greaterThanOrEqualTo(0)),
@@ -259,12 +237,8 @@ public class ThreadPoolMonitoringTest {
     void testThreadPoolMetricsReadTimeout() throws Exception {
         final int remainingThreadCount = 1;
         final List<UUID> locks = generateLocks(http1Baseline.maxThreads() - remainingThreadCount);
-        final HttpLoadGenerator lockGenerator = HttpLoadGenerator.lockAppThreads(8080, locks);
-        final ThreadPoolMetrics duringLoad = waitFor(Duration.ofSeconds(10L), () -> {
-            ThreadPoolMetrics metrics = getThreadPoolMetrics();
-            assertThat("listener 1 tasks", metrics.currentThreadsBusy(), equalTo(locks.size()));
-            return metrics;
-        });
+        final HttpLoadGenerator lockGenerator = lockAppThreads(HTTP_POOL_1_PORT, locks);
+        final ThreadPoolMetrics duringLoad = getThreadPoolMetrics(HTTP_POOL_1);
 
         // All client threads are already running, now we let them wait for the server response.
         // They will time out.
@@ -276,11 +250,11 @@ public class ThreadPoolMonitoringTest {
             () -> assertThat("total tasks", duringLoad.totalTasks(), equalTo(http1Baseline.totalTasks()))
         );
 
-        final HttpLoadGenerator unlockGenerator = HttpLoadGenerator.unlockAppThreads(8080, locks);
+        final HttpLoadGenerator unlockGenerator = unlockAppThreads(HTTP_POOL_1_PORT, locks);
         unlockGenerator.close();
         lockGenerator.close();
 
-        final ThreadPoolMetrics afterLoad = getThreadPoolMetrics();
+        final ThreadPoolMetrics afterLoad = getThreadPoolMetrics(HTTP_POOL_1);
         assertAll("metrics after client stopped",
             () -> assertThat("current threads", afterLoad.currentThreadCount(), equalTo(afterLoad.maxThreads())),
             () -> assertThat("busy threads", afterLoad.currentThreadsBusy(), equalTo(0)),
@@ -290,11 +264,11 @@ public class ThreadPoolMonitoringTest {
 
     @Test
     void testThreadPoolMetricsWithBurstLoad() throws Exception {
-        final HttpLoadGenerator generator = HttpLoadGenerator.startGenerator(8080, CONTEXT_FAST, 50, 100);
+        final HttpLoadGenerator generator = startHttpTestLoadGenerator(HTTP_POOL_1_PORT, 50, 100);
         // Check metrics immediately during burst
-        ThreadPoolMetrics duringBurst = getThreadPoolMetrics();
+        ThreadPoolMetrics duringBurst = getThreadPoolMetrics(HTTP_POOL_1);
         generator.close();
-        ThreadPoolMetrics afterBurst = getThreadPoolMetrics();
+        ThreadPoolMetrics afterBurst = getThreadPoolMetrics(HTTP_POOL_1);
 
         // Validate all metrics remain within bounds
         assertAll("after client stopped",
@@ -328,14 +302,8 @@ public class ThreadPoolMonitoringTest {
             asadminOK());
 
         // 2. Schedule 3 long-running requests
-        final int count = 3;
-        final List<UUID> locks = generateLocks(count);
-        final HttpLoadGenerator lockGenerator = HttpLoadGenerator.lockAppThreads(8080, locks);
-
-        waitFor(Duration.ofSeconds(10L), () -> {
-            assertThat(getThreadPoolMetrics().currentThreadsBusy(), equalTo(count));
-            return null;
-        });
+        final List<UUID> locks = generateLocks(3);
+        final HttpLoadGenerator lockGenerator = lockAppThreads(HTTP_POOL_1_PORT, locks);
 
         // 3. Enable thread-pool monitoring while requests are running
         assertThat(
@@ -344,18 +312,18 @@ public class ThreadPoolMonitoringTest {
             asadminOK());
 
         // 4. Verify thread metrics show running requests
-        final ThreadPoolMetrics metrics = getThreadPoolMetrics();
+        final ThreadPoolMetrics metrics = getThreadPoolMetrics(HTTP_POOL_1);
         assertAll("Under load",
             () -> assertThat("current thread count", metrics.currentThreadCount(), equalTo(http1Baseline.currentThreadCount())),
-            () -> assertThat("busy threads", metrics.currentThreadsBusy(), equalTo(count))
+            () -> assertThat("busy threads", metrics.currentThreadsBusy(), equalTo(locks.size()))
         );
 
         // Wait for requests to complete
-        final HttpLoadGenerator unlockGenerator = HttpLoadGenerator.unlockAppThreads(8080, locks);
+        final HttpLoadGenerator unlockGenerator = unlockAppThreads(HTTP_POOL_1_PORT, locks);
         unlockGenerator.close();
         lockGenerator.close();
 
-        assertThat("busy threads after completion", getThreadPoolMetrics().currentThreadsBusy(), equalTo(0));
+        assertThat("busy threads after completion", getThreadPoolMetrics(HTTP_POOL_1).currentThreadsBusy(), equalTo(0));
     }
 
     @Test
@@ -363,7 +331,7 @@ public class ThreadPoolMonitoringTest {
         final ThreadPoolConfig initialConfig = getThreadPoolConfig();
         final int originalMinThreads = initialConfig.minThreads();
         final int originalMaxThreads = initialConfig.maxThreads();
-        final ThreadPoolMetrics origMetrics = getThreadPoolMetrics();
+        final ThreadPoolMetrics origMetrics = getThreadPoolMetrics(HTTP_POOL_1);
 
         assertThat("max threads in pool matches config", origMetrics.maxThreads(), equalTo(initialConfig.maxThreads()));
         final int[] testSizes = {originalMaxThreads + 3, originalMaxThreads - 1, originalMaxThreads + 7, originalMaxThreads};
@@ -379,7 +347,7 @@ public class ThreadPoolMonitoringTest {
                 asadminOK());
 
             int currentThreadsMaxSize = Math.max(testSize, originalMinThreads);
-            final ThreadPoolMetrics metrics = getThreadPoolMetrics();
+            final ThreadPoolMetrics metrics = getThreadPoolMetrics(HTTP_POOL_1);
             assertAll(
                 () -> assertThat("max threads (case " + index + ", testSize=" + testSize + ")",
                     metrics.maxThreads(), equalTo(testSize)),
@@ -399,20 +367,20 @@ public class ThreadPoolMonitoringTest {
             asadminOK());
 
         waitFor(Duration.ofSeconds(10L), () -> {
-            assertThat("max threads after increase", getThreadPoolMetrics().maxThreads(), equalTo(100));
+            assertThat("max threads after increase", getThreadPoolMetrics(HTTP_POOL_1).maxThreads(), equalTo(100));
             return null;
         });
 
         final int count = 80;
         // Generate significant load to utilize the large pool
         final List<UUID> locks = generateLocks(count);
-        final HttpLoadGenerator lockGenerator = HttpLoadGenerator.lockAppThreads(8080, locks);
-        waitFor(Duration.ofSeconds(10L), () -> {
-            ThreadPoolMetrics metrics = getThreadPoolMetrics();
-            assertThat("busy threads under heavy load", metrics.currentThreadsBusy(), equalTo(count));
-            assertThat("current thread count under heavy load", metrics.currentThreadCount(), equalTo(count));
-            return metrics;
-        });
+        final HttpLoadGenerator lockGenerator = lockAppThreads(HTTP_POOL_1_PORT, locks);
+
+        final ThreadPoolMetrics metrics = getThreadPoolMetrics(HTTP_POOL_1);
+        assertAll("under heavy load",
+            () -> assertThat("busy threads", metrics.currentThreadsBusy(), equalTo(count)),
+            () -> assertThat("current threads", metrics.currentThreadCount(), equalTo(count))
+        );
 
         // Now decrease pool size to 10 while under load
         final int count2 = 10;
@@ -420,18 +388,18 @@ public class ThreadPoolMonitoringTest {
             "configs.config.server-config.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=" + count2),
             asadminOK());
 
-        ThreadPoolMetrics afterDecrease = getThreadPoolMetrics();
+        final ThreadPoolMetrics afterDecrease = getThreadPoolMetrics(HTTP_POOL_1);
         assertAll("afterDecrease",
             () -> assertThat("max threads", afterDecrease.maxThreads(), equalTo(count2)),
             () -> assertThat("current threads", afterDecrease.currentThreadCount(), equalTo(afterDecrease.coreThreads())),
             () -> assertThat("busy threads", afterDecrease.currentThreadsBusy(), equalTo(0))
         );
 
-        final HttpLoadGenerator unlockGenerator = HttpLoadGenerator.unlockAppThreads(8080, locks);
+        final HttpLoadGenerator unlockGenerator = unlockAppThreads(HTTP_POOL_1_PORT, locks);
         unlockGenerator.close();
         lockGenerator.close();
 
-        ThreadPoolMetrics afterCompletion = getThreadPoolMetrics();
+        final ThreadPoolMetrics afterCompletion = getThreadPoolMetrics(HTTP_POOL_1);
         assertAll("afterCompletition",
             () -> assertThat("busy threads", afterCompletion.currentThreadsBusy(), equalTo(0)),
             () -> assertThat("current threads", afterCompletion.currentThreadCount(), equalTo(afterCompletion.maxThreads()))
@@ -447,13 +415,13 @@ public class ThreadPoolMonitoringTest {
                 + newMaxThreads),
             asadminOK());
 
-        final ThreadPoolMetrics afterIncrease = getThreadPoolMetrics();
+        final ThreadPoolMetrics afterIncrease = getThreadPoolMetrics(HTTP_POOL_1);
         assertThat("max threads after increase", afterIncrease.maxThreads(), equalTo(newMaxThreads));
 
         List<UUID> locks = generateLocks(http1Baseline.maxThreads() + 10);
-        HttpLoadGenerator lockGenerator = HttpLoadGenerator.lockAppThreads(8080,  locks);
-        ThreadPoolMetrics loaded = getThreadPoolMetrics();
-        HttpLoadGenerator unlockGenerator = HttpLoadGenerator.unlockAppThreads(8080,  locks);
+        HttpLoadGenerator lockGenerator = lockAppThreads(HTTP_POOL_1_PORT,  locks);
+        ThreadPoolMetrics loaded = getThreadPoolMetrics(HTTP_POOL_1);
+        HttpLoadGenerator unlockGenerator = unlockAppThreads(HTTP_POOL_1_PORT,  locks);
         unlockGenerator.close();
         lockGenerator.close();
 
@@ -464,13 +432,6 @@ public class ThreadPoolMonitoringTest {
         List<UUID> ids = Stream.generate(UUID::randomUUID).limit(count).collect(Collectors.toList());
         LOCKS.addAll(ids);
         return ids;
-    }
-
-    /**
-     * @return "http-listener-1"
-     */
-    private static ThreadPoolMetrics getThreadPoolMetrics() {
-        return getThreadPoolMetrics("http-listener-1");
     }
 
     private static ThreadPoolMetrics getThreadPoolMetrics(String listenerName) {
@@ -500,33 +461,6 @@ public class ThreadPoolMonitoringTest {
         }
         throw new IllegalStateException("Metric not found: " + metricId);
     }
-
-    private static String httpGet(int port, String context) {
-        final HttpURLConnection conn = openHttpGetConnection(port, context);
-        try {
-            assertEquals(200, conn.getResponseCode(), "HTTP Response Code");
-            try (InputStream output = conn.getInputStream()) {
-                return new String(output.readAllBytes(), UTF_8);
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        } finally {
-            conn.disconnect();
-        }
-    }
-
-    private static HttpURLConnection openHttpGetConnection(int port, String context) {
-        try {
-            HttpURLConnection connection = GlassFishTestEnvironment.openConnection(port, context);
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(100);
-            connection.setReadTimeout(HTTP_REQUEST_TIMEOUT);
-            return connection;
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to open connection to " + context, e);
-        }
-    }
-
 
     private static <T> T waitFor(Duration maxTime, Action<T> action) throws InterruptedException {
         final long start = System.currentTimeMillis();
@@ -591,171 +525,73 @@ public class ThreadPoolMonitoringTest {
         throw new IllegalStateException("Config key not found: " + key);
     }
 
+    private static void startAsadminLoadGenerator() {
+        final AsadminLoadGenerator generator = new AsadminLoadGenerator();
+        CLOSEABLES.add(generator);
+        generator.start();
+    }
+
+    private static HttpLoadGenerator startHttpTestLoadGenerator(int port, int maxParallel, int maxRequests) {
+        HttpLoadGenerator generator = new HttpLoadGenerator(port, maxParallel, maxRequests);
+        CLOSEABLES.add(generator);
+        generator.start();
+        return generator;
+    }
+
+    /**
+     * Executes a thread for every lock, which will need another server thread which will
+     * be blocked by the request.
+     * Then automatically terminates itself and returns itself.
+     * You then have to call close which will wait for the termination of all client threads.
+     */
+    private static HttpLoadGenerator lockAppThreads(int port, List<UUID> locks) throws InterruptedException {
+        HttpLoadGenerator generator = new HttpLoadGenerator(port, locks, true);
+        CLOSEABLES.add(generator);
+        generator.start();
+        generator.join();
+        // Always wait until all requests reach the locked state
+        waitForThreadsBusyCount(port, locks.size());
+        return generator;
+    }
+
+    /**
+     * WARNING: The server must have enough free threads to unlock those which were locked!
+     */
+    private static HttpLoadGenerator unlockAppThreads(int port, List<UUID> locks) throws InterruptedException {
+        HttpLoadGenerator generator = new HttpLoadGenerator(port, locks, false);
+        CLOSEABLES.add(generator);
+        LOCKS.removeAll(locks);
+        generator.start();
+        generator.join();
+        final AppClient client = new AppClient(port, 10_000);
+        waitFor(Duration.ofSeconds(10L), () -> {
+            assertThat("count of locks", client.countLocks(), equalTo(0));
+            return null;
+        });
+        // At this moment locks are unlocked, but server still might be sending responses,
+        // which means that threads still did not finish.
+        // Wait also for the server threads to finish too
+        waitForThreadsBusyCount(port, 0);
+        return generator;
+    }
+
+    private static void waitForThreadsBusyCount(int port, int targetCount) throws InterruptedException {
+        final  String poolName = port == HTTP_POOL_1_PORT ? HTTP_POOL_1 : HTTP_POOL_TEST;
+        final String key = "server.network." + poolName + ".thread-pool.currentthreadsbusy-count";
+        waitFor(Duration.ofSeconds(10L), () -> {
+            Integer value = Integer
+                .valueOf(ASADMIN.exec("get", "-m", key).getStdOut().replaceFirst(key + " = ", "").strip());
+            assertThat("server busy thread count", value, equalTo(targetCount));
+            return null;
+        });
+    }
+
+
     private record ThreadPoolMetrics(int currentThreadCount, int currentThreadsBusy, int coreThreads, int maxThreads, int totalTasks) {
     }
 
     private record ThreadPoolConfig(int minThreads, int maxThreads) {
     }
-
-    private static class HttpLoadGenerator extends Thread implements AutoCloseable {
-
-        private final AtomicInteger threadCounter = new AtomicInteger();
-        private final AtomicInteger requestCounter = new AtomicInteger();
-        private final int maxParallel;
-        private final ExecutorService executor;
-        private final Action<?> action;
-        private final int maxRequests;
-
-        /**
-         * Executes a thread for every lock, which will need another server thread which will
-         * be blocked by the request.
-         * Then automatically terminates itself and returns itself.
-         * You then have to call close which will wait for the termination of all client threads.
-         */
-        static HttpLoadGenerator lockAppThreads(int port, List<UUID> locks) throws InterruptedException {
-            HttpLoadGenerator generator = new HttpLoadGenerator(port, locks, true);
-            generator.start();
-            generator.join();
-            return generator;
-        }
-
-        /**
-         * WARNING: The server must have enough free threads to unlock those which were locked!
-         */
-        static HttpLoadGenerator unlockAppThreads(int port, List<UUID> locks) throws InterruptedException {
-            List<UUID> locksCopy = List.copyOf(locks);
-            HttpLoadGenerator generator = new HttpLoadGenerator(port, locksCopy, false);
-            LOCKS.removeAll(locksCopy);
-            generator.start();
-            generator.join();
-            return generator;
-        }
-
-        static HttpLoadGenerator startGenerator(int port, String context, int maxParallel, int maxRequests) {
-            HttpLoadGenerator generator = new HttpLoadGenerator(port, context, maxParallel, maxRequests);
-            generator.start();
-            return generator;
-        }
-
-        HttpLoadGenerator(int port, List<UUID> locks, boolean lock) {
-            CLOSEABLES.add(this);
-            setName("HttpLoadGenerator");
-            this.maxParallel = locks.size();
-            this.maxRequests = locks.size();
-            this.executor = Executors.newFixedThreadPool(maxParallel,
-                t -> new Thread(t, "HttpClient-" + threadCounter.incrementAndGet()));
-            final ConcurrentLinkedDeque<UUID> lockIds = new ConcurrentLinkedDeque<>(locks);
-            final String actionContext = lock ? CONTEXT_LOCK : CONTEXT_UNLOCK;
-            this.action = () -> httpGet(port, actionContext + "&idLock=" + lockIds.remove());
-        }
-
-        HttpLoadGenerator(int port, String context, int maxParallel, int maxRequests) {
-            CLOSEABLES.add(this);
-            setName("HttpLoadGenerator");
-            this.maxParallel = maxParallel;
-            this.maxRequests = maxRequests;
-            this.executor = Executors.newFixedThreadPool(maxParallel,
-                t -> new Thread(t, "HttpClient-" + threadCounter.incrementAndGet()));
-            this.action = () -> httpGet(port, context);
-        }
-
-        @Override
-        public void run() {
-            final AtomicInteger countRunning = new AtomicInteger(0);
-            while (!isInterrupted()) {
-                if (requestCounter.getAndIncrement() > maxRequests) {
-                    LOG.log(INFO, "Already produced {0} requests, stopping.", maxRequests);
-                    executor.shutdown();
-                    return;
-                }
-                if (countRunning.get() == maxParallel) {
-                    LOG.log(TRACE, "Waiting...");
-                    Thread.onSpinWait();
-                    continue;
-                }
-                LOG.log(DEBUG, "Starting another...");
-                countRunning.incrementAndGet();
-                executor.submit(() -> {
-                    action.doAction();
-                    countRunning.decrementAndGet();
-                });
-            }
-        }
-
-        /**
-         * Interrupts the thread is it is alive
-         * Then waits until it terminates.
-         * Then shuts down the executor pool.
-         * Then waits until all threads finish.
-         */
-        @Override
-        public void close() throws InterruptedException {
-            // First interrupt the thread
-            if (isAlive()) {
-                synchronized(this) {
-                    interrupt();
-                }
-            }
-            // ... then wait until it really terminates
-            join();
-            // ... then shutdown executor (but not its threads)
-            executor.shutdown();
-            // ... then wait until all threads finish.
-            assertTrue(executor.awaitTermination(60, TimeUnit.SECONDS),
-                "Timeout when terminating HTTP load generator!");
-        }
-    }
-
-    private static class AsadminLoadGenerator extends Thread implements AutoCloseable {
-
-        private final AtomicInteger threadCounter = new AtomicInteger();
-        private final int maxParallel = 5;
-        private final ExecutorService executor;
-
-        @SuppressWarnings("resource")
-        static void startGenerator() {
-            new AsadminLoadGenerator().start();
-        }
-
-        AsadminLoadGenerator() {
-            CLOSEABLES.add(this);
-            setName("AsadminLoadGenerator");
-            executor = Executors.newFixedThreadPool(maxParallel,
-                t -> new Thread(t, "AsadminClient-" + threadCounter.incrementAndGet()));
-        }
-
-        @Override
-        public void run() {
-            final AtomicInteger countRunning = new AtomicInteger(0);
-            while (!isInterrupted()) {
-                if (countRunning.get() > maxParallel) {
-                    Thread.onSpinWait();
-                    continue;
-                }
-                LOG.log(DEBUG, "Starting another...");
-                countRunning.incrementAndGet();
-                executor.submit(() -> {
-                    ASADMIN.exec("list", "applications");
-                    ASADMIN.exec("get", "server.monitoring-service.*");
-                    countRunning.decrementAndGet();
-                });
-            }
-        }
-
-        @Override
-        public void close() throws InterruptedException {
-            if (isAlive()) {
-                synchronized(this) {
-                    this.interrupt();
-                }
-            }
-            join();
-            executor.shutdown();
-            assertTrue(executor.awaitTermination(60, TimeUnit.SECONDS),
-                "Timeout when terminating asadmin load generator!");
-        }
-    }
-
 
     @FunctionalInterface
     interface Action<T> {

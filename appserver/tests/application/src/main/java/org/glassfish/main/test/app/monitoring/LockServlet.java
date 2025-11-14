@@ -36,14 +36,17 @@ public class LockServlet extends HttpServlet {
             while (lock.get() && !Thread.currentThread().isInterrupted()) {
                 Thread.onSpinWait();
             }
-            sendResponse("Locked " + LOCKS.size() + " requests.", resp);
+            sendResponse("Unlocked " + idLock + ". Still locked around " + LOCKS.size() + " requests.", resp);
         } else if ("unlock".equals(action)) {
             AtomicBoolean lock = LOCKS.remove(idLock);
-            if (lock != null) {
-                // Release another thread trapped in the loop
-                lock.set(false);
+            if (lock == null) {
+                throw new ServletException("Unknown lock: " + lock);
             }
-            sendResponse("Still locked " + LOCKS.size() + " requests.", resp);
+            // Release another thread trapped in the loop
+            lock.set(false);
+            sendResponse("Unlocking " + idLock + ".", resp);
+        } else if ("count".equals(action)) {
+            sendResponse(LOCKS.size(), resp);
         } else {
             throw new ServletException("Unknown action: " + action);
         }
@@ -55,6 +58,13 @@ public class LockServlet extends HttpServlet {
         try (PrintWriter writer = resp.getWriter()) {
             writer.println(message);
             writer.println("Thread: " + Thread.currentThread().getName());
+        }
+    }
+
+    private void sendResponse(int number, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/plain");
+        try (PrintWriter writer = resp.getWriter()) {
+            writer.println(number);
         }
     }
 }

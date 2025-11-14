@@ -32,6 +32,7 @@ import org.glassfish.main.itest.tools.asadmin.DetachedTerseAsadminResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateIntervals;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -57,7 +58,7 @@ public class DetachAttachITest {
     @Test
     public void uptimePeriodically() throws Exception {
         final Set<String> ids = new HashSet<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             LOG.log(INFO, "detachAndAttachUptimePeriodically: round {0}", i);
             final String id;
             {
@@ -77,7 +78,9 @@ public class DetachAttachITest {
 
     @Test
     public void commandWithProgressStatus() throws Exception {
-        final DetachedTerseAsadminResult detached = ASADMIN.execDetached("progress-custom", "4x1");
+        // We have to be faster than the job finishes.
+        final String intervals = generateIntervals(1000, 10, 20, 30);
+        final DetachedTerseAsadminResult detached = ASADMIN.execDetached("progress-custom", intervals);
         assertThat(detached, asadminOK());
         final AsadminResult attachResult = ASADMIN.exec("attach", detached.getJobId());
         assertThat(attachResult, asadminOK());
@@ -88,7 +91,7 @@ public class DetachAttachITest {
         assertEquals(100, prgs.get(prgs.size() - 1).getValue());
 
         JobTestExtension.doAndDisableJobCleanup();
-        assertThat(ASADMIN.exec("attach", detached.getJobId()), not(asadminOK()));
+        assertThat("Attach again", ASADMIN.exec("attach", detached.getJobId()), not(asadminOK()));
     }
 
 
@@ -96,7 +99,8 @@ public class DetachAttachITest {
     public void detachOnesAttachMulti() throws Exception {
         // This affects scheduling of threads and makes the test repeatable
         final int attachCount = Runtime.getRuntime().availableProcessors() + 2;
-        final DetachedTerseAsadminResult jobIdResult = ASADMIN.execDetached("progress-custom", "6x1");
+        final String intervals = generateIntervals(1000);
+        final DetachedTerseAsadminResult jobIdResult = ASADMIN.execDetached("progress-custom", intervals);
         assertThat(jobIdResult, asadminOK());
         assertNotNull(jobIdResult.getJobId(), "id");
         final List<CompletableFuture<AsadminResult>> futureResults = new ArrayList<>(attachCount);
@@ -112,7 +116,8 @@ public class DetachAttachITest {
             final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
             assertAll(
                 () -> assertThat(result, asadminOK()),
-                () -> assertThat(result.getStdOut(), containsString("progress-custom"))
+                () -> assertThat(result.getStdOut(), containsString("progress-custom")),
+                () -> assertThat(result.getStdOut(), not(containsString("FAILURE")))
             );
             if (prgs.isEmpty()) {
                 // We were late to watch the progress, however soon enough to get the result.

@@ -10,10 +10,10 @@ sponsored by the Eclipse Foundation.
 
 ### Compatibility
 
-* Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21, experimentally also higher versions.
-* Eclipse GlassFish 7.1.0 is Jakarta EE 10 compatible, requires Java 17 or 21, experimentally also higher versions.
-* Eclipse GlassFish 7.0.25 is Jakarta EE 10 compatible, requires Java 11, 17 or 21, experimentally also higher versions.
-* Eclipse GlassFish 6.2.5 is Jakarta EE 9.1 compatible, requires Java 11 or 17
+* Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21+
+* Eclipse GlassFish 7.1.0 is Jakarta EE 10 compatible, requires Java 17+
+* Eclipse GlassFish 7.0.25 is Jakarta EE 10 compatible, requires Java 11, supports 17 and 21
+* Eclipse GlassFish 6.2.5 is Jakarta EE 9.1 compatible, requires Java 11, supports 17
 * Eclipse GlassFish 6.1.0 is Jakarta EE 9.1 compatible, requires Java 11
 * Eclipse GlassFish 6.0.0 is Jakarta EE 9 compatible, requires Java 8
 * Eclipse GlassFish 5.1.0 is Java EE 8 and Jakarta EE 8 compatible, requires Java 8

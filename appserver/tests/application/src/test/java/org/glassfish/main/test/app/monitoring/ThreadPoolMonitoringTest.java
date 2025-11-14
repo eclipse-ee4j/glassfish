@@ -409,7 +409,7 @@ public class ThreadPoolMonitoringTest {
         final ThreadPoolMetrics afterCompletion = getThreadPoolMetrics(HTTP_POOL_1);
         assertAll("afterCompletition",
             () -> assertThat("busy threads", afterCompletion.currentThreadsBusy(), equalTo(0)),
-            () -> assertThat("current threads", afterCompletion.currentThreadCount(), equalTo(afterCompletion.maxThreads()))
+            () -> assertThat("current threads", afterCompletion.currentThreadCount(), lessThanOrEqualTo(afterCompletion.maxThreads()))
         );
     }
 

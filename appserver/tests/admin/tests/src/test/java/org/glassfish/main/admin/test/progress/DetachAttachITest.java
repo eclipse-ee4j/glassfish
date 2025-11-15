@@ -33,7 +33,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateIntervals;
+import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateRegularIntervals;
 import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.main.admin.test.progress.UsualLatency.getMeasuredLatency;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,7 +81,7 @@ public class DetachAttachITest {
     @Test
     public void commandWithProgressStatus() throws Exception {
         // We have to be faster than the job finishes.
-        final String intervals = generateIntervals(1000, 10, 20, 30);
+        final String intervals = generateIntervals(1, getMeasuredLatency() + 1000, 10, 20, 30);
         final DetachedTerseAsadminResult detached = ASADMIN.execDetached("progress-custom", intervals);
         assertThat(detached, asadminOK());
         final AsadminResult attachResult = ASADMIN.exec("attach", detached.getJobId());
@@ -99,18 +101,19 @@ public class DetachAttachITest {
     public void detachOnesAttachMulti() throws Exception {
         // This affects scheduling of threads and makes the test repeatable
         final int attachCount = Runtime.getRuntime().availableProcessors() + 2;
-        final String intervals = generateIntervals(1000);
+        final String intervals = generateRegularIntervals(10, (int) getMeasuredLatency());
         final DetachedTerseAsadminResult jobIdResult = ASADMIN.execDetached("progress-custom", intervals);
         assertThat(jobIdResult, asadminOK());
         assertNotNull(jobIdResult.getJobId(), "id");
+        // Let the job start
+        Thread.sleep(getMeasuredLatency());
         final List<CompletableFuture<AsadminResult>> futureResults = new ArrayList<>(attachCount);
         for (int i = 0; i < attachCount; i++) {
             futureResults.add(CompletableFuture.supplyAsync(() -> ASADMIN.exec("attach", jobIdResult.getJobId())));
         }
         LOG.log(INFO, () -> "Started " + attachCount + " attaches to job id " + jobIdResult.getJobId());
-        // Let them all start
         // TODO: On Java21 we can have more control using Executors.newThreadPerTaskExecutor
-        Thread.sleep(1500L);
+        boolean progressNoticed = false;
         for (Future<AsadminResult> futureResult : futureResults) {
             final AsadminResult result = futureResult.get();
             final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
@@ -123,10 +126,12 @@ public class DetachAttachITest {
                 // We were late to watch the progress, however soon enough to get the result.
                 continue;
             }
+            progressNoticed = true;
             assertAll(
                 () -> assertThat(prgs.get(0).getValue(), greaterThanOrEqualTo(0)),
                 () -> assertEquals(100, prgs.get(prgs.size() - 1).getValue())
             );
         }
+        assertTrue(progressNoticed, "Noticed at least one progress report");
     }
 }

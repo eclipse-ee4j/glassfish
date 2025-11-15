@@ -249,10 +249,11 @@ public class Asadmin {
             command.add("-Xms64m");
             command.add("-Xmx64m");
             command.add("-Xss286k");
-            // Disable GC
             command.add("-XX:+UnlockExperimentalVMOptions");
             command.add("-XX:+UseEpsilonGC");
-            command.add("-XX:+AlwaysPreTouch");
+            command.add("-XX:TieredStopAtLevel=1");
+            command.add("-XX:-UsePerfData");
+            command.add("-Djava.awt.headless=true");
         }
         command.add(asadmin.getAbsolutePath());
         command.add("--user");

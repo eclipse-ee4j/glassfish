@@ -21,7 +21,6 @@ import java.lang.System.Logger;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.glassfish.api.ActionReport;
@@ -96,14 +95,14 @@ public class ProgressCustomCommand implements AdminCommand {
 
 
     /**
-     * @param content time of one interval in milliseconds
-     * @param count of intervals
+     * @param timespan total time to split to 100 intervals
      * @return String which can be used as an argument.
      */
-    public static String generateRegularIntervals(long content, int count) {
-        final long[] intervals = new long[count];
-        Arrays.fill(intervals, content);
-        return generateIntervals(intervals);
+    public static String generateRegularIntervals(long timespan) {
+        final int steps = 10;
+        final String[] intervals = new String[steps];
+        Arrays.fill(intervals, Duration.ofMillis(timespan <= steps ? steps : (timespan/steps)).toString());
+        return String.join(",", intervals);
     }
 
     /**
@@ -111,7 +110,8 @@ public class ProgressCustomCommand implements AdminCommand {
      * @return String which can be used as an argument.
      */
     public static String generateIntervals(long... intervals) {
-        return Arrays.stream(intervals).mapToObj(Duration::ofMillis).map(Duration::toString)
-            .collect(Collectors.joining(","));
+        final String[] durations = new String[intervals.length];
+        Arrays.setAll(durations, i -> Duration.ofMillis(intervals[i]).toString());
+        return String.join(",", durations);
     }
 }

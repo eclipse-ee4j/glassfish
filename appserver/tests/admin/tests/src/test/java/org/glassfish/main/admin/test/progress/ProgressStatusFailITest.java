@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateIntervals;
+import static org.glassfish.main.admin.test.progress.UsualLatency.getMeasuredLatency;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -62,13 +63,16 @@ public class ProgressStatusFailITest {
      */
     @Test
     public void timeout() {
-        final int firstStep = 1000;
-        final int secondStep = 2000;
-        final String intervals = generateIntervals(firstStep, secondStep, 10);
-        final AsadminResult result = ASADMIN.exec(firstStep + secondStep/2, "progress-custom", intervals);
+        final long firstStep = 10L;
+        final long secondStep = getMeasuredLatency() + 500L;
+        // timeout is too short for step2
+        final int timeout = (int) (firstStep + 0.9 * secondStep);
+        final String intervals = generateIntervals(firstStep, secondStep, 10L);
+        final AsadminResult result = ASADMIN.exec(timeout, "progress-custom", intervals);
         assertThat(result, not(asadminOK()));
         final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty(), "progress messages empty");
-        assertEquals(33, prgs.get(prgs.size() - 1).getValue());
+        assertEquals(33, prgs.get(prgs.size() - 1).getValue(),
+            "Last seen step for timeout=" + timeout + " and intervals " + intervals);
     }
 }

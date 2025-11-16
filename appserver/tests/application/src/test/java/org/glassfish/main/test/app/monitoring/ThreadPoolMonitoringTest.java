@@ -182,8 +182,10 @@ public class ThreadPoolMonitoringTest {
         assertThat(new AppClient(HTTP_POOL_TEST_PORT, 5000).test(), stringContainsInOrder(HTTP_POOL_TEST));
 
         // Create load on both listeners simultaneously
-        final HttpLoadGenerator generator1 = startHttpTestLoadGenerator(HTTP_POOL_1_PORT, 10, 1_000_000);
-        final HttpLoadGenerator generatorTest = startHttpTestLoadGenerator(HTTP_POOL_TEST_PORT, 10, 1_000_000);
+        final HttpLoadGenerator generator1 = startHttpTestLoadGenerator(HTTP_POOL_1_PORT,
+            metrics1Baseline.maxThreads(), 1_000_000);
+        final HttpLoadGenerator generatorTest = startHttpTestLoadGenerator(HTTP_POOL_TEST_PORT,
+            metricsTestBaseline.maxThreads(), 1_000_000);
 
         waitFor(Duration.ofSeconds(60L), () -> {
             ThreadPoolMetrics metrics1 = getThreadPoolMetrics(HTTP_POOL_1);

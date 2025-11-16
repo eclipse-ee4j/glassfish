@@ -248,11 +248,17 @@ public class Asadmin {
             command.add(JAVA_EXECUTABLE);
             command.add("-Xms64m");
             command.add("-Xmx64m");
-            command.add("-Xss286k");
+            command.add("-Xss256k");
             command.add("-XX:+UnlockExperimentalVMOptions");
+            // NOOP GC
             command.add("-XX:+UseEpsilonGC");
+            // Would touch heap pages BEFORE start, so makes it slower
+            command.add("-XX:-AlwaysPreTouch");
+            // Reduce JIT interventions
             command.add("-XX:TieredStopAtLevel=1");
+            // Disable jvmstat monitoring
             command.add("-XX:-UsePerfData");
+            command.add("-Xlog:gc*=off");
             command.add("-Djava.awt.headless=true");
         }
         command.add(asadmin.getAbsolutePath());

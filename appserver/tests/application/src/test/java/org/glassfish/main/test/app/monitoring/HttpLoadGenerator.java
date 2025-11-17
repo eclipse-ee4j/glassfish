@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,7 +30,6 @@ import org.glassfish.main.test.app.monitoring.ThreadPoolMonitoringTest.Action;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.TRACE;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HttpLoadGenerator extends Thread implements AutoCloseable {
@@ -66,23 +66,27 @@ class HttpLoadGenerator extends Thread implements AutoCloseable {
 
     @Override
     public void run() {
-        final AtomicInteger countRunning = new AtomicInteger(0);
+        final Semaphore countRunning = new Semaphore(maxParallel);
         while (!isInterrupted()) {
-            if (requestCounter.getAndIncrement() > maxRequests) {
+            if (requestCounter.get() == maxRequests) {
                 LOG.log(INFO, "Already produced {0} requests, stopping the executor.", maxRequests);
                 executor.shutdown();
                 return;
             }
-            if (countRunning.get() == maxParallel) {
-                LOG.log(TRACE, "Waiting...");
-                Thread.onSpinWait();
-                continue;
+            try {
+                countRunning.acquire();
+            } catch (InterruptedException e) {
+                interrupt();
             }
-            LOG.log(DEBUG, () -> "Running: " + countRunning + ". Starting another...");
-            countRunning.incrementAndGet();
+            LOG.log(DEBUG,
+                () -> "Running: " + (maxParallel - countRunning.availablePermits()) + ". Starting another...");
+            requestCounter.incrementAndGet();
             executor.submit(() -> {
-                action.doAction();
-                countRunning.decrementAndGet();
+                try {
+                    action.doAction();
+                } finally {
+                    countRunning.release();
+                }
             });
         }
     }

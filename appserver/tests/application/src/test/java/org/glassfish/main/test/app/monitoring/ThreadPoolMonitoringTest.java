@@ -197,13 +197,10 @@ public class ThreadPoolMonitoringTest {
 
         generator1.close();
         generatorTest.close();
-        waitForThreadsBusyCount(HTTP_POOL_1_PORT, 0);
-        waitForThreadsBusyCount(HTTP_POOL_TEST_PORT, 0);
         waitForTaskCountStoppedChanging(HTTP_POOL_1_PORT);
         waitForTaskCountStoppedChanging(HTTP_POOL_TEST_PORT);
-        // FIXME: Even those waits don't ensure that task count will not increase.
-        //        Reproduced on GHA, more probable on Windows machine - task count changed by a number of currentThreadCount.
-        Thread.sleep(1000L);
+        waitForThreadsBusyCount(HTTP_POOL_1_PORT, 0);
+        waitForThreadsBusyCount(HTTP_POOL_TEST_PORT, 0);
         final ThreadPoolMetrics metrics1 = getThreadPoolMetrics(HTTP_POOL_1);
         final ThreadPoolMetrics metricsTest = getThreadPoolMetrics(HTTP_POOL_TEST);
         assertAll(

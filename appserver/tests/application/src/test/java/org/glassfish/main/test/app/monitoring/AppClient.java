@@ -85,8 +85,10 @@ final class AppClient {
         try {
             HttpURLConnection connection = GlassFishTestEnvironment.openConnection(port, context);
             connection.setRequestMethod("GET");
+            connection.setUseCaches(false);
             connection.setConnectTimeout(100);
             connection.setReadTimeout(requestTimeout);
+            connection.connect();
             return connection;
         } catch (IOException e) {
             throw new IllegalStateException("Failed to open connection to " + context, e);

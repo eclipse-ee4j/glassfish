@@ -76,7 +76,8 @@ class HttpLoadGenerator extends Thread implements AutoCloseable {
             try {
                 countRunning.acquire();
             } catch (InterruptedException e) {
-                interrupt();
+                executor.shutdown();
+                return;
             }
             LOG.log(DEBUG,
                 () -> "Running: " + (maxParallel - countRunning.availablePermits()) + ". Starting another...");

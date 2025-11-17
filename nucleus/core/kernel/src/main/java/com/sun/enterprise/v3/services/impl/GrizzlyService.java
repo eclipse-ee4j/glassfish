@@ -203,7 +203,8 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
     public boolean removeNetworkProxy(NetworkProxy proxy) {
         if (proxy != null) {
             try {
-                proxy.stop();
+                boolean lastOne = proxies.size() == 1;
+                proxy.stop(lastOne);
             } catch (IOException e) {
                 LOGGER.log(WARNING, KernelLoggerInfo.grizzlyStopProxy, e);
             }

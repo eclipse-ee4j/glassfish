@@ -113,7 +113,7 @@ get_test_target(){
 }
 
 run_test_id(){
-  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+  unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
   cd `dirname ${0}`
   test_init
   get_test_target ${1}

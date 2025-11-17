@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,8 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
@@ -30,7 +29,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
  */
 class RadixTree {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(RadixTree.class.getName());
     private static final LocalStringsImpl _strings = new LocalStringsImpl(RadixTree.class);
     // Reference to root node.
     private RadixTreeNode _rootNode;
@@ -114,7 +113,8 @@ class RadixTree {
 
             if (noOfMatchedChars == keyLength) {
                 if (node.getValue() != null && !node.getValue().isEmpty()) {
-                    _logger.log(Level.INFO, SLogger.CHANGE_IN_VALUE, new Object[] { node.getValue(), value });
+                    LOG.log(Level.INFO, "Key already exist in tree, Current Value: {0} New Value: {1}.",
+                        node.getValue(), value);
                 }
                 node.setValue(value);
                 break;

@@ -71,7 +71,7 @@ public class MigrateTimers implements AdminCommand {
         LogDomains.getLogger(MigrateTimers.class, LogDomains.EJB_LOGGER);
 
     @Param(name = "target", optional = true, alias="destination",
-        defaultValue=SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+        defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
     public String target;
 
     private boolean needRedirect;
@@ -146,7 +146,7 @@ public class MigrateTimers implements AdminCommand {
 
         //if destinationServer is not set, or set to DAS, pick a running instance
         //in the same cluster as fromServer
-        if(target.equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+        if(target.equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
             List<Server> instances = fromServerCluster.getInstances();
             for(Server instance : instances) {
                 if(instance.isListeningOnAdminPort()) {
@@ -155,7 +155,7 @@ public class MigrateTimers implements AdminCommand {
                 }
             }
             //if destination is still DAS, that means no running server is available
-            if(target.equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+            if(target.equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
                 return localStrings.getString("migrate.timers.noRunningInstanceToChoose",
                         target);
             }

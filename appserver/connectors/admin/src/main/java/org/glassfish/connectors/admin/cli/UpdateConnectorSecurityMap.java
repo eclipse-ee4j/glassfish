@@ -63,7 +63,7 @@ public class UpdateConnectorSecurityMap extends ConnectorSecurityMap implements 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(UpdateConnectorSecurityMap.class);
 
     @Param(optional = true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(name="poolname")
     String poolName;

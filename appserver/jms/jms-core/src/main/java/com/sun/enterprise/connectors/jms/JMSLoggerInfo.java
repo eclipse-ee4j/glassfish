@@ -105,14 +105,6 @@ public class JMSLoggerInfo {
     public static final String NO_SUCH_METHOD = LOGMSG_PREFIX + "-00012";
 
     @LogMessageInfo(
-            message = "Connector Resource could not be closed",
-            level = "WARNING",
-            cause = "unknown",
-            action = "unknown"
-    )
-    public static final String CLOSE_CONNECTION_FAILED = LOGMSG_PREFIX + "-00013";
-
-    @LogMessageInfo(
             message = "Exception while getting configured RMI port : {0}",
             level = "WARNING",
             cause = "unknown",
@@ -167,14 +159,6 @@ public class JMSLoggerInfo {
             action = "unknown"
     )
     public static final String GET_MASTER_FAILED = LOGMSG_PREFIX + "-00021";
-
-    @LogMessageInfo(
-            message = "Error while loading connector resources during recovery : {0}",
-            level = "SEVERE",
-            cause = "unknown",
-            action = "unknown"
-    )
-    public static final String LOAD_RESOURCES_ERROR = LOGMSG_PREFIX + "-00022";
 
     @LogMessageInfo(
             message = "Exception in reading mdb-container configuration : [{0}]",

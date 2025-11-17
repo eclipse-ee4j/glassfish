@@ -22,7 +22,6 @@ import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainException;
 import com.sun.enterprise.admin.servermgmt.RepositoryException;
 import com.sun.enterprise.admin.servermgmt.RepositoryManager;
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainConfigValidator;
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionFactory;
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutor;
@@ -37,6 +36,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +46,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.DOMAIN_XML_FILE;
 import static com.sun.enterprise.security.store.PasswordAdapter.PASSWORD_ALIAS_KEYSTORE;
@@ -60,7 +59,7 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
  */
 public class DomainBuilder {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(DomainBuilder.class.getName());
 
     /** The default stringsubs configuration file name. */
     private final static String STRINGSUBS_FILE = "stringsubs.xml";
@@ -127,15 +126,15 @@ public class DomainBuilder {
             // Loads string substitution XML.
             je = _templateJar.getJarEntry(STRINGSUBS_FILE);
             StringSubstitutor stringSubstitutor = null;
-            if (je != null) {
+            if (je == null) {
+                LOG.log(Level.WARNING, "Missing file: {0}", STRINGSUBS_FILE);
+            } else {
                 stringSubstitutor = StringSubstitutionFactory.createStringSubstitutor(_templateJar.getInputStream(je));
                 List<Property> defaultStringSubsProps = stringSubstitutor.getDefaultProperties(PropertyType.PORT);
                 for (Property prop : defaultStringSubsProps) {
                     _defaultPortValues.setProperty(prop.getKey(), prop.getValue());
                 }
                 _extractedEntries.add(je.getName());
-            } else {
-                _logger.log(Level.WARNING, SLogger.MISSING_FILE, STRINGSUBS_FILE);
             }
             _domainTempalte = new DomainTemplate(templateInfoHolder, stringSubstitutor, templateJarPath);
 
@@ -216,7 +215,7 @@ public class DomainBuilder {
                     File dir = new File(domainDir, jarEntry.getName());
                     if (!dir.exists()) {
                         if (!dir.mkdir()) {
-                            _logger.log(Level.WARNING, SLogger.DIR_CREATION_ERROR, dir.getName());
+                            LOG.log(Level.WARNING, "Could not create directory {0}", dir.getName());
                         }
                     }
                     continue;

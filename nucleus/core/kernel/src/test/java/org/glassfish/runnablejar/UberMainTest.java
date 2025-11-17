@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,10 @@ import org.glassfish.grizzly.config.dom.Ssl;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.types.Property;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasLength;
+
 /**
  *
  * @author Ondro Mihalyi
@@ -47,16 +51,48 @@ public class UberMainTest {
         String info = new InfoPrinter().getInfoAfterStartup(List.of(app("/app1"), app("application")),
             List.of(listener(8080, false), listener(8181, true)));
         System.out.println(info);
+        String[] lines = info.split("\n");
+        assertThat("Number of lines", lines, arrayWithSize(6));
+        assertThatLinesAreEquallyLong(lines);
+    }
+
+    @Test
+    public void getInfoAfterStartup_noListeners() throws GlassFishException {
+        String info = new InfoPrinter().getInfoAfterStartup(List.of(app("/app1"), app("application")),
+            List.of());
+        System.out.println(info);
+        String[] lines = info.split("\n");
+        assertThat("Number of lines", lines, arrayWithSize(6));
+        assertThatLinesAreEquallyLong(lines);
     }
 
 
     @Test
-    public void getInfoAfterStartup_noApps() throws GlassFishException {
+    public void getInfoAfterStartup_noApps() {
         String info = new InfoPrinter().getInfoAfterStartup(List.of(),
             List.of(listener(8080, false), listener(8181, true)));
         System.out.println(info);
+        String[] lines = info.split("\n");
+        assertThat("Number of lines", lines, arrayWithSize(5));
+        assertThatLinesAreEquallyLong(lines);
     }
 
+    @Test
+    public void getInfoAfterStartup_noApps_noListeners() {
+        String info = new InfoPrinter().getInfoAfterStartup(List.of(), List.of());
+        System.out.println(info);
+        String[] lines = info.split("\n");
+        assertThat("Number of lines", lines, arrayWithSize(5));
+        assertThatLinesAreEquallyLong(lines);
+    }
+
+    private void assertThatLinesAreEquallyLong(String[] lines) {
+        int lineLength = lines[0].length();
+        for (int i = 1; i < lines.length; i++) {
+            assertThat("All lines should as long as the first line. Line with number " + i + " broke the rule.",
+                lines[i], hasLength(lineLength));
+        }
+    }
 
     private MockListener listener(int port, boolean secure) {
         return new MockListener(port, secure);
@@ -70,7 +106,7 @@ public class UberMainTest {
 
         private final String name;
 
-        public MockApplication(String name) {
+        MockApplication(String name) {
             this.name = name;
         }
 
@@ -250,7 +286,7 @@ public class UberMainTest {
         int port;
         boolean secure;
 
-        public MockListener(int port, boolean secure) {
+        MockListener(int port, boolean secure) {
             this.port = port;
             this.secure = secure;
         }

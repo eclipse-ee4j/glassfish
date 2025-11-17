@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,7 +67,7 @@ import org.jvnet.hk2.annotations.Service;
 })
 public final class ListJvmOptions implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    @Param(name="target", optional=true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name="target", optional=true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
 
     @Param(name="profiler", optional=true)

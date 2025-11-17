@@ -67,7 +67,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 @UnknownOptionsAreOperands()
 public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
 
     @Param(name = "profiler", optional = true)

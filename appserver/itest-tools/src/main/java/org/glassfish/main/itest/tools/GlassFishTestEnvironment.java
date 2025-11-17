@@ -96,19 +96,21 @@ public class GlassFishTestEnvironment {
     private static HttpClient client;
 
     static {
-        LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
-        LOG.log(Level.INFO, "Expected GlassFish directory: {0}", GF_ROOT);
-        changePassword();
-        Thread hook = new Thread(() -> {
-            getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
-        });
-        Runtime.getRuntime().addShutdownHook(hook);
-        final int timeout = isStartDomainSuspendEnabled()
-                ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
-        // This is the absolutely first start - if it fails, all other starts will fail too.
-        // Note: --suspend implicitly enables --debug
-        assertThat(getAsadmin().exec(timeout,"start-domain",
-                isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
+        if (!isGlassFishRunningRemotely()) {
+            LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
+            LOG.log(Level.INFO, "Expected GlassFish directory: {0}", GF_ROOT);
+            changePassword();
+            Thread hook = new Thread(() -> {
+                getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
+            });
+            Runtime.getRuntime().addShutdownHook(hook);
+            final int timeout = isStartDomainSuspendEnabled()
+                    ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
+            // This is the absolutely first start - if it fails, all other starts will fail too.
+            // Note: --suspend implicitly enables --debug
+            assertThat(getAsadmin().exec(timeout,"start-domain",
+                    isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
+        }
     }
 
 
@@ -432,6 +434,10 @@ public class GlassFishTestEnvironment {
         return envValue == null ? Boolean.getBoolean("glassfish.suspend") : Boolean.parseBoolean(envValue);
     }
 
+    public static boolean isGlassFishRunningRemotely() {
+        final String envValue = System.getenv("GLASSFISH_REMOTE");
+        return envValue == null ? Boolean.getBoolean("glassfish.remote") : Boolean.parseBoolean(envValue);
+    }
 
     private static <T> T doIO(IOSupplier<T> action) {
         try {

@@ -443,12 +443,10 @@ public class JmsRaUtil {
     public static String getUnAliasedPwd(String alias) {
         try {
             String unalisedPwd = RelativePathResolver.getRealPasswordFromAlias(alias);
-            if (unalisedPwd != null && "".equals(unalisedPwd)) {
-                return unalisedPwd;
-            }
+            return unalisedPwd == null || unalisedPwd.isEmpty() ? alias : unalisedPwd;
         } catch (Exception e) {
-
+            _logger.log(Level.WARNING, "Failed to unalias password.", e);
+            return alias;
         }
-        return alias;
     }
 }

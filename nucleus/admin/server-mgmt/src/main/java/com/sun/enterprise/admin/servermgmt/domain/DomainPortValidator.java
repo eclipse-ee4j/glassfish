@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,21 +19,20 @@ package com.sun.enterprise.admin.servermgmt.domain;
 
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainException;
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.util.net.NetUtils;
 
+import java.lang.System.Logger;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.text.MessageFormat.format;
 
 public class DomainPortValidator {
 
-    /* These properties are public interfaces, handle with care */
-    private static final Logger _logger = SLogger.getLogger();
-
+    /** Maximal allowed value of the port number */
     public static final int PORT_MAX_VAL = 65535;
+    private static final Logger LOG = System.getLogger(DomainPortValidator.class.getName());
 
     private final DomainConfig _domainConfig;
     private final Properties _defaultProps;
@@ -141,20 +140,20 @@ public class DomainPortValidator {
             int newport = NetUtils.getFreePort();
             if (portNotSpecified) {
                 if (defaultPortUsed) {
-                    _logger.log(Level.INFO, SLogger.DEFAULT_PORT_IN_USE, new Object[] { name, defaultPort, Integer.toString(newport) });
+                    LOG.log(INFO, "Default port {1} for {0} is in use. Using {2}", name, defaultPort, Integer.toString(newport));
                 } else {
-                    _logger.log(Level.INFO, SLogger.PORT_NOT_SPECIFIED, new Object[] { name, Integer.toString(newport) });
+                    LOG.log(INFO, "Port for {0} is not specified. Using {1}", name, Integer.toString(newport));
                 }
             } else if (invalidPortSpecified) {
-                _logger.log(Level.INFO, SLogger.INVALID_PORT_RANGE, new Object[] { name, Integer.toString(newport) });
+                LOG.log(INFO, "Invalid Port for {0}, should be between 1 and 65535. Using {1}", name, Integer.toString(newport));
             } else {
-                _logger.log(Level.INFO, SLogger.PORT_IN_USE, new Object[] { name, Integer.toString(port), Integer.toString(newport) });
+                LOG.log(INFO, "Port {1} for {0} is in use. Using {2}", name, Integer.toString(port), Integer.toString(newport));
             }
             port = newport;
         } else if (defaultPortUsed) {
-            _logger.log(Level.INFO, SLogger.USING_DEFAULT_PORT, new Object[] { name, Integer.toString(port) });
+            LOG.log(INFO, "Using default port {1} for {0}.", name, Integer.toString(port));
         } else {
-            _logger.log(Level.INFO, SLogger.USING_PORT, new Object[] { name, Integer.toString(port) });
+            LOG.log(INFO, "Using port {1} for {0}.", name, Integer.toString(port));
         }
 
         if (properties != null) {
@@ -185,7 +184,7 @@ public class DomainPortValidator {
         for (Integer port : ports) {
             final int p = port.intValue();
             if (p < 1024) {
-                _logger.warning("On Unix platforms, port numbers below 1024 may require special privileges.");
+                LOG.log(WARNING, "On Unix platforms, port numbers below 1024 may require special privileges.");
                 // display this message only once.
                 // so break once this message is displayed.
                 break;

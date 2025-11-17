@@ -779,6 +779,12 @@
                 <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
                 <version>3.3.4</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>

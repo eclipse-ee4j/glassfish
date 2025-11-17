@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
-    Copyright (c) 1997, 2025 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
+    Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1401,8 +1401,8 @@
                             <Bundle-SymbolicName>org.glassfish.embedded.static-shell</Bundle-SymbolicName>
                             <Class-Path>${classpath.derby} ../asadmin/server-mgmt.jar ../../admin-cli.jar</Class-Path>
                             <Main-Class>org.glassfish.runnablejar.UberMain</Main-Class>
-                            <Add-Opens>java.base/java.lang java.base/java.io java.base/java.util java.base/sun.nio.fs java.base/sun.net.www.protocol.jrt java.naming/javax.naming.spi java.rmi/sun.rmi.transport jdk.management/com.sun.management.internal java.base/jdk.internal.vm.annotation</Add-Opens>
-                            <Add-Exports>java.naming/com.sun.jndi.ldap java.base/jdk.internal.vm.annotation</Add-Exports>
+                            <Add-Opens>${glassfish.embedded.add-opens}</Add-Opens>
+                            <Add-Exports>${glassfish.embedded.add-exports}</Add-Exports>
                         </manifestEntries>
                     </archive>
                 </configuration>

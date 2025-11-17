@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,7 +65,7 @@ public class ListJaccProviders implements AdminCommand, AdminCommandSecurity.Pre
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteJaccProvider.class);
 
-    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;
 
     @Inject

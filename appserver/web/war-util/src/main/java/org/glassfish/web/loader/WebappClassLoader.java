@@ -142,7 +142,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         "org.xml.sax",                               // SAX 1 & 2 (JRE, jrt-fs.jar)
         "org.w3c.dom",                               // DOM 1 & 2 (JRE, jrt-fs.jar)
         "org.glassfish.wasp.taglibs.standard",       // wasp.jar
-        "com.sun.faces"                              // jakarta.faces.jar
+        "com.sun.faces",                             // jakarta.faces.jar
+        "org.eclipse.microprofile"                   // MicroProfile classes
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
         .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
@@ -611,7 +612,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         LOG.log(DEBUG, "getResource(name={0})", name);
         checkStatus(LifeCycleStatus.RUNNING);
         // (1) Delegate to parent if requested, or if the requested resource
-        // belongs to one of the packages that are part of the Jakarta EE platform
+        // belongs to one of the packages that are part of the Jakarta EE platform or MicroProfile
         if (isDelegateFirstResource(name)) {
             URL url = getDelegateClassLoader().getResource(name);
             if (url != null) {
@@ -675,7 +676,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         }
 
         // (1) Delegate to parent if requested, or if the requested resource
-        // belongs to one of the packages that are part of the Jakarta EE platform
+        // belongs to one of the packages that are part of the Jakarta EE platform or MicroProfile
         if (isDelegateFirstResource(name)) {
             stream = getDelegateClassLoader().getResourceAsStream(name);
             if (stream != null) {

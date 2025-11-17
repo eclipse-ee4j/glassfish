@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,17 +33,14 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- *
  * @author Ondro Mihalyi
  */
 public class CollectLogFiles {
 
-    private AsadminResult result;
-
     private File fileWithLogs;
 
     public CollectLogFiles collect() throws IOException {
-        result = getAsadmin().exec("collect-log-files");
+        AsadminResult result = getAsadmin().exec("collect-log-files");
         assertThat(result, asadminOK());
         String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".\n");
         assertThat("zip file path parsed from " + result.getStdOut(), path, notNullValue());
@@ -58,14 +55,15 @@ public class CollectLogFiles {
     }
 
     private List<String> getLogLines(String logFilePath) throws IOException {
-        final ZipFile zipFile = new ZipFile(fileWithLogs);
-        final ZipEntry entry = zipFile.getEntry(logFilePath);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)));
-        List<String> lines = new ArrayList<>();
-        while (reader.ready()) {
-            lines.add(reader.readLine());
+        try (ZipFile zipFile = new ZipFile(fileWithLogs)) {
+            final ZipEntry entry = zipFile.getEntry(logFilePath);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)))) {
+                List<String> lines = new ArrayList<>();
+                while (reader.ready()) {
+                    lines.add(reader.readLine());
+                }
+                return lines;
+            }
         }
-        return lines;
     }
-
 }

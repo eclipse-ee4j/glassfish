@@ -83,6 +83,11 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
 
     @Override
     public void stop() throws IOException {
+        stop(true);
+    }
+
+    @Override
+    public void stop(boolean lastOne) throws IOException {
         ServiceLocator locator = grizzlyService.getServiceLocator();
         IndexedFilter removeFilter = BuilderHelper.createNameAndContractFilter(Mapper.class.getName(),
                 (address.toString() + port));
@@ -94,7 +99,13 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
 
         config.commit();
 
-        unregisterMonitoringStatsProviders();
+        // Do not call unregisterMonitoringStatsProviders()
+        // - providers are shared by all listeners, they would be removed also for other listeners.
+        // We could add a rule to unregister only if there are no other listeners.
+        if (lastOne) {
+            unregisterMonitoringStatsProviders();
+        }
+
         super.stop();
     }
 

@@ -25,7 +25,6 @@ import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
-import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 
 /**
  * Thread Pool statistics
@@ -45,7 +44,7 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     protected final CountStatisticImpl currentThreadCount = new CountStatisticImpl("CurrentThreadCount", "count", "Provides the number of request processing threads currently in the listener thread pool");
     protected final CountStatisticImpl currentThreadsBusy = new CountStatisticImpl("CurrentThreadsBusy", "count", "Provides the number of request processing threads currently in use in the listener thread pool serving requests");
 
-    protected volatile ThreadPoolConfig threadPoolConfig;
+    protected volatile ThreadPoolStats threadPoolStats;
 
     public ThreadPoolStatsProvider(String name) {
         this.name = name;
@@ -53,15 +52,15 @@ public class ThreadPoolStatsProvider implements StatsProvider {
 
     @Override
     public Object getStatsObject() {
-        return threadPoolConfig;
+        return threadPoolStats;
     }
 
     @Override
     public void setStatsObject(Object object) {
-        if (object instanceof ThreadPoolConfig) {
-            threadPoolConfig = (ThreadPoolConfig) object;
+        if (object instanceof ThreadPoolStats) {
+            threadPoolStats = (ThreadPoolStats) object;
         } else {
-            threadPoolConfig = null;
+            threadPoolStats = null;
         }
     }
 
@@ -86,12 +85,18 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     @ManagedAttribute(id = "currentthreadcount")
     @Description("Provides the number of request processing threads currently in the listener thread pool")
     public CountStatistic getCurrentThreadCount() {
+        if (threadPoolStats != null) {
+            currentThreadCount.setCount(threadPoolStats.currentThreadCount);
+        }
         return currentThreadCount;
     }
 
     @ManagedAttribute(id = "currentthreadsbusy")
     @Description("Provides the number of request processing threads currently in use in the listener thread pool serving requests.")
     public CountStatistic getCurrentThreadsBusy() {
+        if (threadPoolStats != null) {
+            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount.get());
+        }
         return currentThreadsBusy;
     }
 
@@ -143,10 +148,11 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     public void threadDispatchedFromPoolEvent(
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
-            @ProbeParam("threadId") long threadId) {
+            @ProbeParam("threadId") long threadId,
+            @ProbeParam("busyThreadCount") long busyThreadCount) {
 
         if (name.equals(monitoringId)) {
-            currentThreadsBusy.increment();
+            currentThreadsBusy.setCount(busyThreadCount);
         }
     }
 
@@ -154,23 +160,35 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     public void threadReturnedToPoolEvent(
             @ProbeParam("monitoringId") String monitoringId,
             @ProbeParam("threadPoolName") String threadPoolName,
-            @ProbeParam("threadId") long threadId) {
+            @ProbeParam("threadId") long threadId,
+            @ProbeParam("busyThreadCount") long busyThreadCount) {
 
         if (name.equals(monitoringId)) {
             totalExecutedTasksCount.increment();
-            currentThreadsBusy.decrement();
+            currentThreadsBusy.setCount(busyThreadCount);
+        }
+    }
+
+    @ProbeListener("glassfish:kernel:thread-pool:setCurrentThreadCountEvent")
+    public void setCurrentThreadCountEvent(
+            @ProbeParam("monitoringId") String monitoringId,
+            @ProbeParam("threadPoolName") String threadPoolName,
+            @ProbeParam("currentThreadCount") int currentThreadCount) {
+        if (name.equals(monitoringId)) {
+            this.currentThreadCount.setCount(currentThreadCount);
         }
     }
 
     @Reset
     public void reset() {
-        if (threadPoolConfig != null) {
-            maxThreadsCount.setCount(threadPoolConfig.getMaxPoolSize());
-            coreThreadsCount.setCount(threadPoolConfig.getCorePoolSize());
-            currentThreadCount.setCount(0);
-            currentThreadsBusy.setCount(0);
+        if (threadPoolStats != null) {
+            if (threadPoolStats.threadPoolConfig != null) {
+                maxThreadsCount.setCount(threadPoolStats.threadPoolConfig.getMaxPoolSize());
+                coreThreadsCount.setCount(threadPoolStats.threadPoolConfig.getCorePoolSize());
+            }
+            currentThreadCount.setCount(threadPoolStats.currentThreadCount);
+            currentThreadsBusy.setCount(threadPoolStats.currentBusyThreadCount.get());
         }
-
         totalExecutedTasksCount.setCount(0);
     }
 }

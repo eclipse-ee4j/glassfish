@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -104,7 +105,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
 
     //TODO: not sure what to do with --target here
     @Param(name = "target", optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    SystemPropertyConstants.DAS_SERVER_NAME)
     private String target;
 
     private final static String ADMIN_SERVER = "server"; //this needs to be at central place, oh well

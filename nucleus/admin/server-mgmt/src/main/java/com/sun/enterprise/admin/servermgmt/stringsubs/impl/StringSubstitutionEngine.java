@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.stringsubs.AttributePreprocessor;
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutionException;
 import com.sun.enterprise.admin.servermgmt.stringsubs.StringSubstitutor;
@@ -38,24 +38,26 @@ import com.sun.enterprise.admin.servermgmt.xml.stringsubs.StringsubsDefinition;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.glassfish.api.logging.LogHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * A class to encapsulate string-subs definition. Parse, validate and performs String substitution for the given
  * string-subs.xml.
  */
 public class StringSubstitutionEngine implements StringSubstitutor {
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(StringSubstitutionEngine.class.getName());
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(StringSubstitutionEngine.class);
 
@@ -128,7 +130,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
         for (String componentId : components) {
             Component component = findComponentById(componentId);
             if (component == null) {
-                _logger.log(Level.INFO, SLogger.MISSING_COMPONENT, componentId);
+                LOG.log(Level.INFO, () -> "Component " + componentId + " is not present.");
                 continue;
             }
             doSubstitution(component);
@@ -143,7 +145,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
         for (String groupId : groups) {
             Group group = findGroupById(groupId);
             if (group == null) {
-                _logger.log(Level.WARNING, SLogger.MISSING_GROUP, groupId);
+                LOG.log(WARNING, "Group {0} is not present.", groupId);
                 continue;
             }
             doSubstitution(group);
@@ -178,15 +180,15 @@ public class StringSubstitutionEngine implements StringSubstitutor {
         List<? extends FileEntry> fileList = group.getFileEntry();
         List<? extends Archive> archiveList = group.getArchive();
         if (!isValid(fileList) && !isValid(archiveList)) {
-            if (_logger.isLoggable(Level.FINER)) {
-                _logger.log(Level.FINER, _strings.get("noSubstitutableGroupEntry", group.getId()));
+            if (LOG.isLoggable(Level.DEBUG)) {
+                LOG.log(Level.DEBUG, _strings.get("noSubstitutableGroupEntry", group.getId()));
             }
             return;
         }
         List<? extends ChangePairRef> refList = group.getChangePairRef();
         if (!isValid(refList)) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, _strings.get("noChangePairForGroup", group.getId()));
+            if (LOG.isLoggable(Level.DEBUG)) {
+                LOG.log(Level.DEBUG, _strings.get("noChangePairForGroup", group.getId()));
             }
             return;
         }
@@ -209,21 +211,21 @@ public class StringSubstitutionEngine implements StringSubstitutor {
 
             Pair pair = _changePairsMap.get(name);
             if (pair == null) {
-                _logger.log(Level.INFO, SLogger.MISSING_CHANGE_PAIR, new Object[] { name, group.getId() });
+                LOG.log(Level.INFO, "Change-Pair {0} referred by group {1} is not deDEBUGd.", name, group.getId());
                 continue;
             }
             String beforeString = pair.getBefore();
             String afterString = pair.getAfter();
 
             if (localMode == null || localMode.length() == 0) {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, _strings.get("noModeValue", group.getId()));
+                if (LOG.isLoggable(DEBUG)) {
+                    LOG.log(DEBUG, _strings.get("noModeValue", group.getId()));
                 }
             } else {
                 try {
                     afterString = ModeProcessor.processModeType(ModeType.fromValue(localMode), afterString);
                 } catch (Exception e) {
-                    _logger.log(Level.WARNING, SLogger.INVALID_MODE_TYPE, localMode);
+                    LOG.log(WARNING, "Invalid Mode Type {0}.", localMode);
                 }
             }
             substitutionMap.put(beforeString, afterString);
@@ -253,7 +255,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
                     substituable.finish();
                 }
             } catch (Exception e) {
-                LogHelper.log(_logger, Level.WARNING, SLogger.ERR_ARCHIVE_SUBSTITUTION, e, archive.getName());
+                LOG.log(WARNING, () -> "Failed to update jar " + archive.getName() + " with the substitutable files", e);
             }
         }
     }
@@ -282,7 +284,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
                 String beforeValue = pair.getBefore();
                 String afterValue = pair.getAfter();
                 if (id == null || beforeValue == null || afterValue == null) {
-                    _logger.log(Level.INFO, SLogger.EMPTY_CHANGE_PAIR);
+                    LOG.log(Level.INFO, "Found an empty <change-pair/>.");
                     continue;
                 }
                 beforeValue = _attrPreprocessor.substituteBefore(beforeValue);

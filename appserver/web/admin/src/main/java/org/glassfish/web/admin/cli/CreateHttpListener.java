@@ -94,7 +94,7 @@ public class CreateHttpListener implements AdminCommand {
     Boolean secure; //FIXME
     @Param(name = "listener_id", primary = true)
     String listenerId;
-    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;

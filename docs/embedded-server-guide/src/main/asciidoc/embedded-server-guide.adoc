@@ -20,6 +20,7 @@ The following topics are addressed here:
 * xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Testing Applications with the Maven Plug-in for Embedded {productName}]
 * xref:#GSESG00039[Using the EJB 3.1 Embeddable API with Embedded {productName}]
 * xref:#changing-log-levels-in-embedded-glassfish-server[Changing Log Levels in Embedded {productName}]
+* xref:#monitoring-embedded-glassfish-server-with-jmx[Monitoring Embedded {productName} with JMX]
 * xref:#default-java-persistence-data-source-for-embedded-glassfish-server[Default Java Persistence Data Source for Embedded {productName}]
 * xref:#restrictions-for-embedded-glassfish-server[Restrictions for Embedded {productName}]
 
@@ -2060,6 +2061,98 @@ command when you invoke Embedded {productName}. For example:
 ----
 java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFish
 ----
+
+[[monitoring-embedded-glassfish-server-with-jmx]]
+
+== Monitoring Embedded {productName} with JMX
+
+Embedded {productName} supports monitoring through JMX MBeans, similar to regular {productName} Server. However, you must attache the flashlight agent on command line to enable monitoring functionality.
+
+[IMPORTANT]
+====
+AMX (Application Management Extensions) monitoring is only available in `glassfish-embedded-all.jar`. The `glassfish-embedded-web.jar` does not include AMX support, which limits the available monitoring MBeans.
+====
+
+=== Prerequisites
+
+To enable monitoring in Embedded {productName}, you need the flashlight agent JAR file:
+
+* Download from Maven Central: `org.glassfish.main.flashlight:flashlight-agent`
+* Or use from an existing {productName} installation: `glassfish/lib/monitor/flashlight-agent.jar`
+
+=== Enabling Monitoring Modules
+
+By default, the monitoring service and MBeans support are enabled, but no monitoring modules are active. You can enable specific monitoring modules using one of two methods:
+
+==== Method 1: Command Line
+
+Start Embedded {productName} with the `enable-monitoring` command:
+
+[source]
+----
+java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'
+----
+
+==== Method 2: Properties File
+
+Create a `glassfish.properties` file in the current directory with monitoring configuration:
+
+[source]
+----
+configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH
+configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH
+----
+
+Then start Embedded {productName}:
+
+[source]
+----
+java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar
+----
+
+=== Accessing Monitoring Data
+
+Once monitoring modules are enabled, you can access monitoring data through JMX clients such as VisualVM or JConsole.
+
+==== Using VisualVM
+
+1. Connect to the Embedded {productName} process in VisualVM
+2. Install the MBeans extension if not already available
+3. Navigate to the MBeans tab
+4. Execute the `bootAMX` operation first (this is required, same as with regular {productName} Server)
+5. Monitoring data will be available under the `amx` node, in nodes that end with `-mon`, such as `thread-pool-mon` or `request-mon`
+
+==== Exposing JMX on a Specific Port
+
+To allow remote JMX connections, you can expose the JMX server on a specific port by adding JVM system properties:
+
+[source]
+----
+java -javaagent:/path/to/flashlight-agent.jar \
+     -Dcom.sun.management.jmxremote \
+     -Dcom.sun.management.jmxremote.port=8686 \
+     -Dcom.sun.management.jmxremote.authenticate=false \
+     -Dcom.sun.management.jmxremote.ssl=false \
+     -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'
+----
+
+[WARNING]
+====
+Exposing JMX without authentication and SSL is not secure and should only be used in development environments. JMX MBeans include management beans that allow executing administrative operations on {productName}, which could be exploited by unauthorized users. In production environments, always enable authentication and SSL for JMX connections.
+====
+
+==== Available Monitoring Modules
+
+Embedded {productName} supports the same monitoring modules as regular {productName} Server, including:
+
+* `thread-pool` - Thread pool statistics
+* `http-service` - HTTP service metrics
+* `web-container` - Web container statistics
+* `ejb-container` - EJB container metrics
+* `transaction-service` - Transaction service data
+* `jvm` - JVM statistics
+
+For comprehensive information about available monitoring modules and their metrics, see xref:administration-guide.adoc#administering-the-monitoring-service[Administering the Monitoring Service] in the {productName} Administration Guide.
 
 [[default-java-persistence-data-source-for-embedded-glassfish-server]]
 

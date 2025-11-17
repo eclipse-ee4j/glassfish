@@ -44,12 +44,6 @@ run_test() {
 if [ ! -z "${JENKINS_HOME}" ] ; then
   export WSIMPORT_OPTS="${ANT_OPTS}"
 
-  # setup the local repository
-  # with the archived chunk from the pipeline build stage
-  if [ -f "${WORKSPACE}/bundles/maven-repo.tar.gz" ]; then
-    tar -xzf ${WORKSPACE}/bundles/maven-repo.tar.gz --overwrite -m -p -C ${HOME}/.m2/repository
-  fi
-
   echo "Removing old glassfish directory: ${S1AS_HOME}";
   rm -rf "${S1AS_HOME}";
 
@@ -59,7 +53,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
 
   echo "Preparing dependencies ..."
-  mvn clean package -f ${APS_HOME}/lib/pom.xml -Pstaging
+  mvn clean package -f ${APS_HOME}/lib/pom.xml
 fi
 
 "$@"

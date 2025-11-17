@@ -182,6 +182,7 @@
         <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED</jvm-options>
 
         <!-- To enable attaching the flashlight agent to the current VM in OpenJDK 9+ -->
         <jvm-options>-Djdk.attach.allowAttachSelf=true</jvm-options>
@@ -342,6 +343,7 @@
              <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED</jvm-options>
              <!-- To enable attaching the flashlight agent to the current VM in OpenJDK 9+ -->
              <jvm-options>-Djdk.attach.allowAttachSelf=true</jvm-options>
          </java-config>

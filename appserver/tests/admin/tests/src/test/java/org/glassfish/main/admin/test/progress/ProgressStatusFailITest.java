@@ -26,6 +26,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateIntervals;
+import static org.glassfish.main.admin.test.progress.UsualLatency.getMeasuredLatency;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -56,15 +58,21 @@ public class ProgressStatusFailITest {
 
     /**
      * This tests that we receive output even for job executed synchronously (not detached)
-     * but timing out. This is possible because we use the SSE (Server Sent Events for the
+     * but timing out. This is possible because we use the SSE (Server Sent Events) for the
      * communication between the asadmin command and the server.
      */
     @Test
     public void timeout() {
-        AsadminResult result = ASADMIN.exec(3100, "progress-custom", "1x1", "1x2", "1x1");
+        final long firstStep = 10L;
+        final long secondStep = getMeasuredLatency() + 500L;
+        // timeout is too short for step2
+        final int timeout = (int) (firstStep + 0.9 * secondStep);
+        final String intervals = generateIntervals(firstStep, secondStep, 10L);
+        final AsadminResult result = ASADMIN.exec(timeout, "progress-custom", intervals);
         assertThat(result, not(asadminOK()));
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
+        final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty(), "progress messages empty");
-        assertEquals(33, prgs.get(prgs.size() - 1).getValue());
+        assertEquals(33, prgs.get(prgs.size() - 1).getValue(),
+            "Last seen step for timeout=" + timeout + " and intervals " + intervals);
     }
 }

@@ -142,7 +142,7 @@ public class DeleteMailResourceTest {
         Servers servers = locator.getService(Servers.class);
         boolean isRefDeleted = true;
         for (Server server : servers.getServer()) {
-            if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
+            if (server.getName().equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
                 for (ResourceRef ref : server.getResourceRef()) {
                     if (ref.getRef().equals("mail/MyMailSession")) {
                         isRefDeleted = false;

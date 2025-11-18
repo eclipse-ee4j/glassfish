@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024,2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,18 +19,15 @@ package org.glassfish.runnablejar;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Domain;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.io.Console;
+import java.lang.System.Logger;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.embeddable.CommandResult;
 import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFish.Status;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
@@ -39,10 +36,10 @@ import org.glassfish.main.boot.embedded.EmbeddedGlassFishRuntimeBuilder;
 import org.glassfish.runnablejar.commandline.Arguments;
 import org.glassfish.runnablejar.commandline.CommandLineParser;
 
-import static java.lang.System.exit;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This is main class for the uber jars viz., glassfish-embedded-all.jar and
@@ -73,28 +70,61 @@ import static java.util.logging.Level.SEVERE;
  * @author Ondro Mihalyi
  * @author bhavanishankar@dev.java.net
  */
-public class UberMain {
+public class UberMain implements AutoCloseable {
 
-    private static final Logger logger = Logger.getLogger(UberMain.class.getName());
+    private static final Logger LOG = System.getLogger(UberMain.class.getName());
     private static final String SERVER_NAME = "server";
+    private static volatile String goodByeMessage;
 
-    GlassFish glassFish;
-    CommandRunner commandRunner;
+    private GlassFish glassFish;
+    private CommandRunner commandRunner;
+    private boolean shutdownRequested;
 
-    public static void main(String... args) throws IOException, GlassFishException {
+    /**
+     * Main will start the server and finish itself.
+     *
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String... args) throws Exception {
         final Arguments arguments = new CommandLineParser().parse(args);
         if (arguments.askedForHelp) {
             arguments.printHelp();
         } else {
             // When running off the uber jar don't add extras module URLs to classpath.
             EmbeddedGlassFishRuntimeBuilder.addModuleJars = false;
-            new UberMain().run(arguments);
+            System.out.println("GlassFish will start now. Welcome!");
+            @SuppressWarnings("resource")
+            UberMain uberMain = new UberMain();
+            try {
+                uberMain.run(arguments);
+                if (uberMain.isShutdownRequested()) {
+                    exit(0, "GlassFish shut down after startup as requested.");
+                }
+            } catch (GlassFishException e) {
+                LOG.log(ERROR, "Exit code 1, execution failed.", e);
+                exit(1, "Exit code 1, execution failed.");
+            } catch (Throwable e) {
+                LOG.log(ERROR, "Exit code 100, execution failed.", e);
+                exit(100, "Exit code 100, execution failed.");
+            }
         }
     }
 
-    public void run(Arguments arguments) throws GlassFishException {
-        addShutdownHook(); // handle Ctrt-C.
+    private static void exit(int exitCode, String goodByeMessage) {
+        UberMain.goodByeMessage = goodByeMessage;
+        System.exit(exitCode);
+    }
 
+    public UberMain() {
+        addShutdownHook();
+    }
+
+    public boolean isShutdownRequested() {
+        return shutdownRequested;
+    }
+
+    private void run(Arguments arguments) throws GlassFishException {
         GlassFishProperties gfProps = arguments.glassFishProperties;
         setFromSystemProperty(gfProps, "org.glassfish.embeddable.autoDelete", "true");
 
@@ -110,73 +140,76 @@ public class UberMain {
             if (glassFish.getDeployer().getDeployedApplications().isEmpty() && arguments.deployables.size() == 1) {
                 final String deployable = arguments.deployables.get(0);
                 executeCommandFromString("deploy --contextroot=/ " + deployable);
-                logger.log(INFO, () -> "Application " + Path.of(deployable).getFileName() + " deployed at context root \"/\"");
+                LOG.log(INFO, () -> "Application " + Path.of(deployable).getFileName() + " deployed at context root \"/\"");
             } else {
-                arguments.deployables.forEach(deployable -> {
+                for (String deployable : arguments.deployables) {
                     executeCommandFromString("deploy " + deployable);
-                    logger.log(INFO, () -> "Application " + Path.of(deployable).getFileName() + " deployed");
-                });
+                    LOG.log(INFO, () -> "Application " + Path.of(deployable).getFileName() + " deployed");
+                }
             }
         }
 
         if (arguments.shutdown) {
-            logger.log(INFO, () -> "Shutting down after startup as requested");
-            exit(0);
+            LOG.log(INFO, "Shutting down after startup as requested.");
+            shutdownRequested = true;
+            return;
         }
 
-        switch (glassFish.getStatus()) {
+        final Status status = glassFish.getStatus();
+        switch (status) {
             case INIT:
             case STARTING:
             case STARTED:
                 if (!arguments.noInfo) {
                     printInfoAfterStartup();
                 }
-
                 if (arguments.prompt) {
                     runCommandPromptLoop();
-                    exit(0);
                 }
                 break;
             case STOPPING:
-                logger.log(INFO, () -> "GlassFish is shutting down...");
+                LOG.log(INFO, "GlassFish is shutting down...");
                 break;
+            case STOPPED:
+            case DISPOSED:
+                LOG.log(INFO, "GlassFish is shut down.");
             default:
-                logger.log(INFO, () -> "GlassFish is shut down");
+                throw new IllegalArgumentException("Unknown status of the GlassFish runtime: " + status);
         }
 
     }
 
     protected void printInfoAfterStartup() throws GlassFishException {
-        final Level LOG_LEVEL = INFO;
-        if (logger.isLoggable(LOG_LEVEL)) {
-            final Domain domain = glassFish.getService(Domain.class);
-            final List<Application> applications = domain.getApplicationsInTarget(SERVER_NAME);
-            final List<NetworkListener> listeners = domain.getServers().getServer(SERVER_NAME).getConfig()
-                    .getNetworkConfig().getNetworkListeners().getNetworkListener();
-            logger.log(LOG_LEVEL, "\n\n" + new InfoPrinter().getInfoAfterStartup(applications, listeners) + "\n");
-        }
+        final Domain domain = glassFish.getService(Domain.class);
+        final List<Application> applications = domain.getApplicationsInTarget(SERVER_NAME);
+        final List<NetworkListener> listeners = domain.getServers().getServer(SERVER_NAME).getConfig()
+                .getNetworkConfig().getNetworkListeners().getNetworkListener();
+        System.out.println("\n\n" + new InfoPrinter().getInfoAfterStartup(applications, listeners));
     }
 
-    private void runCommandPromptLoop() throws GlassFishException {
+    private void runCommandPromptLoop() {
+        final Console console = System.console();
+        if (console == null) {
+            throw new Error("System.console() is not supported in this shell.");
+        }
         while (true) {
-            System.out.print("\n\nGlassFish $ ");
-            String str = null;
-            try {
-                str = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())).readLine();
-            } catch (IOException | RuntimeException e) {
-                logger.log(SEVERE, e.getMessage(), e);
-            }
-            if (str != null && str.trim().length() != 0) {
+            String str = console.readLine("\nGlassFish $ ").strip();
+            if (str != null && !str.isEmpty()) {
                 if ("exit".equalsIgnoreCase(str) || "quit".equalsIgnoreCase(str)) {
-                    break;
+                    exit(0, "GlassFish shut down. See you soon!");
                 }
-                executeCommandFromString(str);
+                try {
+                    executeCommandFromString(str);
+                } catch (GlassFishException e) {
+                    System.out.println(e.getLocalizedMessage());
+                    e.printStackTrace(System.err);
+                }
             }
         }
     }
 
-    private void executeCommandFromString(String stringCommand) {
-        logger.log(FINE, () -> "Executing command: " + stringCommand);
+    private void executeCommandFromString(String stringCommand) throws GlassFishException {
+        LOG.log(DEBUG, () -> "Executing command: " + stringCommand);
         // Split according to empty space but not if empty space is escaped by \
         String[] split = stringCommand.split("(?<!\\\\)\\s+");
         String command = split[0].trim();
@@ -187,49 +220,55 @@ public class UberMain {
                 commandParams[i - 1] = split[i].trim();
             }
         }
-        try {
-            CommandResult result = commandParams == null
-                    ? commandRunner.run(command) : commandRunner.run(command, commandParams);
-            switch (result.getExitStatus()) {
-                case SUCCESS:
-                    logger.log(INFO, () -> "SUCCESS: " + result.getOutput());
-                    break;
-                default:
-                    if (result.getFailureCause() != null) {
-                        throw result.getFailureCause();
-                    } else {
-                        throw new RuntimeException("Command completed with " + result.getExitStatus() + ": "
-                                + result.getOutput() + ". Command was: " + stringCommand);
-                    }
-            }
-        } catch (Throwable ex) {
-            logger.log(SEVERE, ex.getMessage());
-            logger.log(FINE, ex.getMessage(), ex);
+        CommandResult result = commandParams == null
+            ? commandRunner.run(command)
+            : commandRunner.run(command, commandParams);
+
+        switch (result.getExitStatus()) {
+            case SUCCESS:
+                LOG.log(INFO, () -> "SUCCESS: " + result.getOutput());
+                break;
+            case WARNING:
+                LOG.log(WARNING, () -> "WARNING: " + result.getOutput());
+                break;
+            case FAILURE:
+                throw new GlassFishException("Command completed with " + result.getExitStatus() + ": "
+                    + result.getOutput() + ". Command was: " + stringCommand, result.getFailureCause());
+            default:
+                throw new IllegalArgumentException(
+                    "Unknwown command exit status: " + result.getExitStatus() + ". Output: " + result.getOutput());
         }
     }
 
     private void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread("GlassFish Shutdown Hook") {
+        Runtime.getRuntime().addShutdownHook(new Thread("GlassFish UberMain Shutdown Hook") {
 
             @Override
             public void run() {
-                if (glassFish != null) {
-                    stopGlassFish();
+                try {
+                    close();
+                } catch (Throwable t) {
+                    t.printStackTrace();
                 }
             }
         });
     }
 
-    private void stopGlassFish() {
+    @Override
+    public void close() throws GlassFishException {
+        if (glassFish == null) {
+            // nothing to do
+            return;
+        }
+        final GlassFish instance = glassFish;
+        glassFish = null;
         try {
-            glassFish.stop();
-        } catch (GlassFishException ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            instance.stop();
         } finally {
-            try {
-                glassFish.dispose();
-            } catch (GlassFishException ex) {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
+            instance.dispose();
+            // goodbye message can be null - anything can initiate exit for any reason.
+            if (goodByeMessage != null) {
+                System.out.println(goodByeMessage);
             }
         }
     }
@@ -243,5 +282,4 @@ public class UberMain {
             gfProps.setProperty(propertyName, defaultValue);
         }
     }
-
 }

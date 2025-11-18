@@ -381,7 +381,7 @@ Possible values of `--wrapjdbcobjects` are as follows:
     Specifies the database for this connection pool.
   `serverName`;;
     Specifies the database server for this connection pool.
-  `port`;;
+  `portNumber`;;
     Specifies the port on which the database server listens for
     requests.
   `networkProtocol`;;

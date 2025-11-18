@@ -184,6 +184,7 @@ class ConfigBeanJMXSupport
 
     public Class<? extends ConfigBeanProxy> getIntf() { return mIntf; }
 
+    @Override
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
@@ -416,7 +417,7 @@ class ConfigBeanJMXSupport
     // Tricky case FIXME:  what if there are List<String> elements.
     boolean isLeaf()
     {
-        return mElementInfos.size() == 0;
+        return mElementInfos.isEmpty();
     }
 
     /** partial list (quick check) of legal remoteable types */
@@ -847,11 +848,11 @@ class ConfigBeanJMXSupport
 
     private static abstract class MethodInfo
     {
-        protected final Method mMethod;
+        final Method mMethod;
 
-        protected final String mAttrName;
+        final String mAttrName;
 
-        protected final String mXMLName;
+        final String mXMLName;
 
         MethodInfo(final Method m, final String xmlName)
         {
@@ -948,11 +949,13 @@ class ConfigBeanJMXSupport
             return types;
         }
 
+        @Override
         public boolean required()
         {
             return mElement.required();
         }
 
+        @Override
         public boolean key()
         {
             return mElement.key();
@@ -1090,11 +1093,13 @@ class ConfigBeanJMXSupport
             return mAttribute;
         }
 
+        @Override
         public boolean required()
         {
             return mAttribute.required();
         }
 
+        @Override
         public boolean key()
         {
             return mAttribute.key();
@@ -1240,6 +1245,7 @@ class ConfigBeanJMXSupport
             return method().getParameterTypes();
         }
 
+        @Override
         public String toString() {
             String paramsString = "";
             final Class<?>[] paramTypes = signature();

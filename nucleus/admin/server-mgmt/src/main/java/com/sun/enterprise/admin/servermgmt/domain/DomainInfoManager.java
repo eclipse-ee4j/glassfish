@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.DomainInfo;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.ObjectFactory;
 import com.sun.enterprise.admin.servermgmt.xml.domaininfo.TemplateRef;
@@ -28,18 +27,16 @@ import jakarta.xml.bind.Marshaller;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.logging.LogHelper;
 
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
 
 public class DomainInfoManager {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(DomainInfoManager.class.getName());
 
     /**
      * Parses template information file and uses its information to create domain info file.
@@ -50,7 +47,7 @@ public class DomainInfoManager {
             TemplateInfo templateInfo = domainTemplate.getInfo();
             File infoDir = new File(domainDir, DomainConstants.INFO_DIRECTORY);
             if (!infoDir.exists() && !infoDir.mkdirs()) {
-                _logger.log(Level.INFO, SLogger.DIR_CREATION_ERROR, infoDir.getAbsolutePath());
+                LOG.log(Level.INFO, "Could not create directory {0}", infoDir.getAbsolutePath());
                 return;
             }
             File domainInfoXML = new File(infoDir, DomainConstants.DOMAIN_INFO_XML);
@@ -75,7 +72,7 @@ public class DomainInfoManager {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(objFactory.createDomainInfo(domainInfo), outputStream);
         } catch (Exception e) {
-            LogHelper.log(_logger, Level.WARNING, SLogger.DOMAIN_INFO_CREATION_ERROR, e, DomainConstants.DOMAIN_INFO_XML);
+            LOG.log(Level.WARNING, "Could not create domain info XML file " + DomainConstants.DOMAIN_INFO_XML, e);
         } finally {
             if (outputStream != null) {
                 try {

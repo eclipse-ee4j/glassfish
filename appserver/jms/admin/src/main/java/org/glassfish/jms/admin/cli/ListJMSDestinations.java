@@ -93,7 +93,7 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
     Properties props;
 
     @Param(primary=true, optional=true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Inject
     com.sun.appserv.connectors.internal.api.ConnectorRuntime connectorRuntime;

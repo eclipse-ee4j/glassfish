@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,16 +27,14 @@ import com.sun.enterprise.connectors.ConnectorRuntimeExtension;
 import com.sun.enterprise.connectors.DeferredResourceConfig;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.deployment.Application;
-import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
@@ -50,13 +48,16 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
+
 /**
  * @author Shalini M
  */
 @Service
 public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
 
-    private static final Logger LOG = LogDomains.getLogger(JdbcRuntimeExtension.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = System.getLogger(JdbcRuntimeExtension.class.getName());
 
     @Inject
     private Provider<Domain> domainProvider;
@@ -87,7 +88,7 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
             }
         }
 
-        System.out.println("JdbcRuntimeExtension,  getAllSystemRAResourcesAndPools = " + resources);
+        LOG.log(DEBUG, "Detected resources: {0}", resources);
         return resources;
     }
 
@@ -143,18 +144,12 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
         }
         jdbcResource = runtime.getResources(actualResourceInfo).getResourceByName(JdbcResource.class,
             actualResourceInfo.getName());
-
-        if (jdbcResource != null) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("jdbcRes is ---: " + jdbcResource.getJndiName());
-                LOG.fine("poolName is ---: " + jdbcResource.getPoolName());
-            }
+        if (jdbcResource == null) {
+            return null;
         }
-        if (jdbcResource != null) {
-            SimpleJndiName poolName = new SimpleJndiName(jdbcResource.getPoolName());
-            return new PoolInfo(poolName, actualResourceInfo.getApplicationName(), actualResourceInfo.getModuleName());
-        }
-        return null;
+        LOG.log(DEBUG, "JDBC resource: {0} uses pool {1}", jdbcResource.getJndiName(), jdbcResource.getPoolName());
+        SimpleJndiName poolName = new SimpleJndiName(jdbcResource.getPoolName());
+        return new PoolInfo(poolName, actualResourceInfo.getApplicationName(), actualResourceInfo.getModuleName());
     }
 
     /**
@@ -176,12 +171,12 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
             ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
             if (resource.getPoolName().equals(poolInfo.getName().toString())
                 && resourcesUtil.isReferenced(resourceInfo) && resourcesUtil.isEnabled(resource)) {
-                LOG.log(Level.CONFIG, "JDBC pool {0} is referred by resource {1} and is enabled on this server",
-                    new Object[] {poolInfo, resourceInfo});
+                LOG.log(DEBUG, "JDBC pool {0} is referred by resource {1} and is enabled on this server", poolInfo,
+                    resourceInfo);
                 return true;
             }
         }
-        LOG.log(Level.FINE, "No JDBC resource refers [{0}] in this server instance", poolInfo);
+        LOG.log(DEBUG, "No JDBC resource refers {0} in this server instance", poolInfo);
         return false;
     }
 
@@ -198,27 +193,21 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
     @Override
     public DeferredResourceConfig getDeferredResourceConfig(Object resource, Object pool, String resType, String raName)
             throws ConnectorRuntimeException {
-        String resourceAdapterName;
-        DeferredResourceConfig resConfig = null;
         // TODO V3 there should not be res-type related check, refactor
         // deferred-ra-config
         // TODO V3 (not to hold specific resource types)
         if (resource instanceof JdbcResource || pool instanceof JdbcConnectionPool) {
-
             JdbcConnectionPool jdbcPool = (JdbcConnectionPool) pool;
             JdbcResource jdbcResource = (JdbcResource) resource;
 
-            resourceAdapterName = getRANameofJdbcConnectionPool((JdbcConnectionPool) pool);
+            var resourceAdapterName = getRANameofJdbcConnectionPool((JdbcConnectionPool) pool);
+            var resConfig = new DeferredResourceConfig(resourceAdapterName, null, jdbcPool, jdbcResource, null);
 
-            resConfig = new DeferredResourceConfig(resourceAdapterName, null, jdbcPool, jdbcResource, null);
-
-            Resource[] resourcesToload = new Resource[] { jdbcPool, jdbcResource };
+            Resource[] resourcesToload = new Resource[] {jdbcPool, jdbcResource};
             resConfig.setResourcesToLoad(resourcesToload);
-
-        } else {
-            throw new ConnectorRuntimeException("unsupported resource type : " + resource);
+            return resConfig;
         }
-        return resConfig;
+        throw new ConnectorRuntimeException("unsupported resource type : " + resource);
     }
 
 

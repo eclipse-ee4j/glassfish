@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -83,7 +83,6 @@ import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import static org.glassfish.admin.monitor.MLogger.UNHANDLED_EXCEPTION_INFO;
 import static org.glassfish.admin.monitor.MLogger.dtraceEnabled;
 import static org.glassfish.admin.monitor.MLogger.getLogger;
 import static org.glassfish.admin.monitor.MLogger.mbeanDisabled;
@@ -101,7 +100,6 @@ import static org.glassfish.admin.monitor.MLogger.unableToProcessXMLProbeProvide
 @Service
 @RunLevel(InitRunLevel.VAL)
 public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventListener, ModuleLifecycleListener, ConfigListener {
-    @SuppressWarnings("unused")
     @Inject
     @Optional
     private LogManager dependency0; // The LogManager must come up prior to this service
@@ -110,31 +108,31 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     @Inject
     private ModulesRegistry registry;
     @Inject
-    protected ProbeProviderFactory probeProviderFactory;
+    private ProbeProviderFactory probeProviderFactory;
     @Inject
-    protected ProbeClientMediator pcm;
+    private ProbeClientMediator pcm;
     @Inject
-    Events events;
+    private Events events;
 
     @Inject
-    ServerEnvironment serverEnv;
+    private ServerEnvironment serverEnv;
 
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     @Optional
-    MonitoringService monitoringService = null;
+    private MonitoringService monitoringService;
     @Inject
     private org.glassfish.flashlight.provider.ProbeRegistry probeRegistry;
     @Inject
-    ServiceLocator habitat;
+    private ServiceLocator habitat;
     @Inject
-    Transactions transactions;
+    private Transactions transactions;
 
     //Don't inject ConfigBeans to avoid getting every event on them
     private Domain domain;
 
-    Map<String, HK2Module> map = Collections.synchronizedMap(new WeakHashMap<String, HK2Module>());
-    List<String> appList = Collections.synchronizedList(new ArrayList<String>());
+    private final Map<String, HK2Module> map = Collections.synchronizedMap(new WeakHashMap<>());
+    private final List<String> appList = Collections.synchronizedList(new ArrayList<>());
 
     private static final String INSTALL_ROOT_URI_PROPERTY_NAME = "com.sun.aas.installRootURI";
     private static final Logger logger = getLogger();
@@ -181,18 +179,21 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
 
     private void discoverProbeProviders() {
         // Iterate thru existing modules
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "Discovering the ProbeProviders");
+        }
         for (HK2Module m : registry.getModules()) {
             if ((m.getState() == ModuleState.READY) || (m.getState() == ModuleState.RESOLVED)) {
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine(" In (discoverProbeProviders) ModuleState - " + m.getState() + " : " + m.getName());
+                }
                 verifyModule(m);
             }
         }
 
     }
 
+    @Override
     public void preDestroy() {
         //We need to do the cleanup for preventing errors from server starting in Embedded mode
         ProbeRegistry.cleanup();
@@ -202,47 +203,56 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
         }
     }
 
+    @Override
     public void event(Event<?> event) {
         if (event.is(EventTypes.SERVER_READY)) {
             // Process the XMLProviders in lib/monitor dir. Should be the last thing to do in server startup.
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "Discovering the XML ProbeProviders from lib/monitor");
+            }
             discoverXMLProviders();
         }
     }
 
     public void setStatsProviderManagerDelegate() {
         // only run the code one time!
-        if (spmd != null)
+        if (spmd != null) {
             return;
+        }
 
         //Set the StatsProviderManagerDelegate, so we can start processing the StatsProviders
         spmd = new StatsProviderManagerDelegateImpl(pcm, probeRegistry, mrdr, domain, serverEnv.getInstanceName(), monitoringService);
         StatsProviderManager.setStatsProviderManagerDelegate(spmd);
         StatsProviderUtil.setStatsProviderManagerDelegate(spmd);
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine(" StatsProviderManagerDelegate is assigned");
+        }
 
         // Register listener for AMX DomainRoot loaded
         final AMXGlassfish amxg = AMXGlassfish.DEFAULT;
         amxg.listenForDomainRoot(ManagementFactory.getPlatformMBeanServer(), spmd);
     }
 
+    @Override
     public void moduleResolved(HK2Module module) {
-        if (module == null)
+        if (module == null) {
             return;
+        }
         verifyModule(module);
     }
 
+    @Override
     public synchronized void moduleStarted(HK2Module module) {
-        if (module == null)
+        if (module == null) {
             return;
+        }
         verifyModule(module);
     }
 
     private synchronized void verifyModule(HK2Module module) {
-        if (module == null)
+        if (module == null) {
             return;
+        }
         String str = module.getName();
         if (!map.containsKey(str)) {
             map.put(str, module);
@@ -258,8 +268,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
      * @param cl classloader that is used to load application files.
      */
     public synchronized void registerProbes(String appName, File appDir, ClassLoader cl) {
-        if (appName == null)
+        if (appName == null) {
             return;
+        }
         if (cl == null) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "Null classloader passed for application : {0}", appName);
@@ -288,8 +299,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     }
 
     private void addProvider(HK2Module module) {
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine(" Adding the Provider - verified the module");
+        }
         ClassLoader mcl = module.getClassLoader();
         //get manifest entries and process
         ModuleDefinition md = module.getModuleDefinition();
@@ -333,13 +345,15 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
             if (attrs != null) {
                 cnames = attrs.getValue(PROBE_PROVIDER_CLASS_NAMES);
                 if (cnames != null) {
-                    if (logger.isLoggable(Level.FINE))
+                    if (logger.isLoggable(Level.FINE)) {
                         logger.fine("probe providers = " + cnames);
+                    }
                     StringTokenizer st = new StringTokenizer(cnames, DELIMITER);
                     while (st.hasMoreTokens()) {
                         try {
-                            if (mcl != null)
+                            if (mcl != null) {
                                 processProbeProviderClass(mcl.loadClass(st.nextToken().trim()));
+                            }
                         } catch (Exception e) {
                             logger.log(Level.SEVERE, unableToLoadProbeProvider, e);
                         }
@@ -347,8 +361,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
                 }
                 xnames = attrs.getValue(PROBE_PROVIDER_XML_FILE_NAMES);
                 if (xnames != null) {
-                    if (logger.isLoggable(Level.FINE))
+                    if (logger.isLoggable(Level.FINE)) {
                         logger.fine("xnames = " + xnames);
+                    }
                     StringTokenizer st = new StringTokenizer(xnames, DELIMITER);
                     while (st.hasMoreTokens()) {
                         processProbeProviderXML(mcl, st.nextToken(), true);
@@ -362,8 +377,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
         // we just registered a Probe Provider
         // If there are any future items -- let's try to register them again.
 
-        if (FutureStatsProviders.isEmpty())
+        if (FutureStatsProviders.isEmpty()) {
             return; // Performance note -- this should be the case almost always
+        }
 
         List<StatsProviderInfo> removeList = new ArrayList<StatsProviderInfo>();
         Iterator<StatsProviderInfo> it = FutureStatsProviders.iterator();
@@ -386,13 +402,15 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
 
     private void discoverXMLProviders() {
         // Dont process if already discovered, Ideally we should do this whenever a new XML is dropped in lib/monitor
-        if (hasDiscoveredXMLProviders)
+        if (hasDiscoveredXMLProviders) {
             return;
+        }
 
         try {
             URI xmlProviderDirStr = new URI(System.getProperty(INSTALL_ROOT_URI_PROPERTY_NAME) + "/" + "lib" + "/" + "monitor");
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("ProviderXML's Dir = " + xmlProviderDirStr.getPath());
+            }
             File xmlProviderDir = new File(xmlProviderDirStr.getPath());
             //File scriptFile = new File ("/space/GFV3_BLD/glassfish/domains/domain1/applications/scripts/InvokeJavaFromJavascript.js");
             if (logger.isLoggable(Level.FINE)) {
@@ -409,27 +427,32 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     private void loadXMLProviders(File xmlProvidersDir) {
         // Creates a filter which will return only xml files
         FilenameFilter filter = new FilenameFilter() {
+            @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".xml");
             }
         };
         // Retrieves all the provider XML's
         File[] files = xmlProvidersDir.listFiles(filter);
-        if (files == null)
+        if (files == null) {
             return;
+        }
         for (File file : files) {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Found the provider xml - " + file.getAbsolutePath());
+            }
             int index = file.getName().indexOf("-:");
             if (index != -1) {
                 String moduleName = file.getName().substring(0, index);
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine(" The provider xml belongs to - \"" + moduleName + "\"");
+                }
                 if (!map.containsKey(moduleName)) {
                     continue;
                 }
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine(" HK2Module found (containsKey)");
+                }
                 HK2Module module = map.get(moduleName);
 
                 if (module == null) {
@@ -448,8 +471,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     }
 
     private void processProbeProviderClass(Class cls) {
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine("processProbeProviderClass for " + cls);
+        }
         try {
 
             probeProviderFactory.getProbeProvider(cls);
@@ -471,16 +495,20 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
         }
     }*/
 
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine(" spmd = " + spmd);
+        }
         StatsProviderRegistry spr = (spmd == null) ? null : spmd.getStatsProviderRegistry();
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine("spr = " + spr);
+        }
         for (PropertyChangeEvent event : propertyChangeEvents) {
             // let's get out of here ASAP if it is not our stuff!!
-            if (event == null)
+            if (event == null) {
                 continue;
+            }
 
             if (!isCurrentInstanceMatchingTarget(event)) {
                 continue;
@@ -490,17 +518,20 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
             Object oldVal = event.getOldValue();
             Object newVal = event.getNewValue();
 
-            if (newVal == null || newVal.equals(oldVal))
+            if (newVal == null || newVal.equals(oldVal)) {
                 continue; // no change!!
+            }
 
-            if (!ok(propName))
+            if (!ok(propName)) {
                 continue;
+            }
             String level_change_mesg = "Level change event received, {0} New Level = {1}, Old Level = {2}";
             if (event.getSource() instanceof ModuleMonitoringLevels) {
                 String newEnabled = newVal.toString().toUpperCase(Locale.ENGLISH);
                 String oldEnabled = (oldVal == null) ? "OFF" : oldVal.toString().toUpperCase(Locale.ENGLISH);
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, level_change_mesg, new Object[] { propName, newEnabled, oldEnabled });
+                }
                 if (!newEnabled.equals(oldEnabled)) {
                     handleLevelChange(propName, newEnabled);
                 }
@@ -509,8 +540,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
 
                 String newEnabled = newVal.toString().toUpperCase(Locale.ENGLISH);
                 String oldEnabled = (oldVal == null) ? "OFF" : oldVal.toString().toUpperCase(Locale.ENGLISH);
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, level_change_mesg, new Object[] { propName, newEnabled, oldEnabled });
+                }
                 if (!newEnabled.equals(oldEnabled)) {
                     handleLevelChange(cm.getName(), newEnabled);
                 }
@@ -520,8 +552,9 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
                 // so we convert to boolean and then compare...
                 boolean newEnabled = Boolean.parseBoolean(newVal.toString());
                 boolean oldEnabled = (oldVal == null) ? !newEnabled : Boolean.parseBoolean(oldVal.toString());
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, level_change_mesg, new Object[] { propName, newEnabled, oldEnabled });
+                }
 
                 if (newEnabled != oldEnabled) {
                     handleServiceChange(spr, propName, newEnabled);
@@ -553,40 +586,47 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     }
 
     private void handleLevelChange(String propName, String enabledStr) {
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine("In handleLevelChange(), spmd = " + spmd + "  Enabled=" + enabledStr);
-        if (!ok(propName))
+        }
+        if (!ok(propName)) {
             return;
+        }
 
         if (!monitoringEnabled && !"OFF".equals(enabledStr)) {
             enableMonitoring(true);
         }
 
-        if (spmd == null)
+        if (spmd == null) {
             return; // nothing to do!
+        }
 
         if (parseLevelsBoolean(enabledStr)) {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "Enabling {0} monitoring to {1}", new Object[] { propName, enabledStr });
+            }
             try {
                 spmd.enableStatsProviders(propName);
             } catch (RuntimeException rte) {
-                logger.log(Level.INFO, UNHANDLED_EXCEPTION_INFO, rte);
+                logger.log(Level.WARNING, "Failed to enable " + propName + " monitoring", rte);
             }
         } else {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "Disabling {0} monitoring", propName);
+            }
             spmd.disableStatsProviders(propName);
         }
     }
 
     private void handleServiceChange(StatsProviderRegistry spr, String propName, boolean enabled) {
-        if (!ok(propName))
+        if (!ok(propName)) {
             return;
+        }
 
         if (propName.equals("mbean-enabled")) {
-            if (spr == null) // required!
+            if (spr == null) { // required!
                 return;
+            }
 
             if (enabled) {
                 logger.log(Level.INFO, mbeanEnabled);
@@ -643,13 +683,15 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     }
 
     private boolean parseLevelsBoolean(String s) {
-        if (ok(s) && s.equals("OFF"))
+        if (ok(s) && s.equals("OFF")) {
             return false;
+        }
 
         return true;
     }
 
     private class ProcessProbes implements ProbeProviderEventListener {
+        @Override
         public <T> void probeProviderAdded(String moduleProviderName, String moduleName, String probeProviderName, String invokerId,
                 Class<T> providerClazz, T provider) {
             handleFutureStatsProviders();

@@ -83,6 +83,7 @@ public final class SseAdminCommandInvoker extends AsyncAdminCommandInvoker<Respo
         @Override
         public void onAdminCommandEvent(String eventName, ProgressEvent event) {
             try {
+                LOG.log(TRACE, "onAdminCommandEvent, name: {0}, event: {1}", eventName, event);
                 eventOutput.write(eventName, event);
             } catch (Exception e) {
                 // Log the exception but do not stop processing the state change event.

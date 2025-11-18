@@ -133,11 +133,6 @@ public class FlashlightLoggerInfo {
     public static final String NO_ATTACH_API = LOGMSG_PREFIX + "-00510";
 
     @LogMessageInfo(
-            message = "Error while getting Instrumentation object from ProbeAgentMain",
-            level = "WARNING")
-    public static final String NO_ATTACH_GET = LOGMSG_PREFIX + "-00511";
-
-    @LogMessageInfo(
             message = "DTrace is not available.",
             cause="This is caused if following are missing: \n1. JDK 7 is required to run DTrace\n2. glassfish-dtrace.jar value-add is required for DTrace",
             action="Run with JDK 7 and glassfish-dtrace.jar",

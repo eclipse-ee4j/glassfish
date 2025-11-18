@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,6 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import static org.glassfish.admin.monitor.MLogger.UNHANDLED_EXCEPTION;
 import static org.glassfish.admin.monitor.MLogger.getLogger;
 
 public class JndiNameLookupHelper {
@@ -49,7 +49,7 @@ public class JndiNameLookupHelper {
         try {
             context = new InitialContext();
         } catch (javax.naming.NamingException e) {
-            logger.log(Level.WARNING, UNHANDLED_EXCEPTION, e);
+            logger.log(Level.WARNING, "Failed to create the InitialContext() instance.", e);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,24 +28,19 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
 
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_CREATE_LOG_PROPS;
-import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_UPDATE_LOG_PROPS;
-import static com.sun.enterprise.admin.servermgmt.SLogger.FAIL_UPGRADE_LOG_SERVICE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
+import static java.lang.System.Logger.Level.ERROR;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
@@ -55,6 +50,7 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
  */
 @Service
 public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
+    private static final Logger LOG = System.getLogger(UpgradeLogging.class.getName());
 
     @Inject
     Configs configs;
@@ -91,8 +87,8 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
                 FileUtils.copy(src, dest);
             }
 
-        } catch (IOException ioe) {
-            getLogger().log(Level.SEVERE, FAIL_CREATE_LOG_PROPS, ioe);
+        } catch (IOException e) {
+            LOG.log(ERROR, "Failure while upgrading log-service. Could not create logging.properties file.", e);
         }
 
         try {
@@ -117,25 +113,17 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
             logLevels.put("retain-error-statistics-for-hours", logService.getRetainErrorStatisticsForHours());
             final Map<String, String> m = new HashMap<>(logLevels);
 
-            ConfigSupport.apply(new SingleConfigCode<Config>() {
-                @Override
-                public Object run(Config c) throws PropertyVetoException, TransactionFailure {
-
-                    try {
-                        //update logging.properties
-                        logConfig.updateLoggingProperties(m);
-
-                        c.setLogService(null);
-
-                    } catch (IOException e) {
-                        getLogger().log(Level.SEVERE, FAIL_UPDATE_LOG_PROPS, e);
-                    }
-                    return null;
+            ConfigSupport.apply(c -> {
+                try {
+                    logConfig.updateLoggingProperties(m);
+                    c.setLogService(null);
+                } catch (IOException e) {
+                    LOG.log(ERROR, "Failure while upgrading log-service. Could not update logging.properties file.", e);
                 }
+                return null;
             }, config);
-        } catch (TransactionFailure tf) {
-            getLogger().log(Level.SEVERE, FAIL_UPGRADE_LOG_SERVICE, tf);
-            throw new RuntimeException(tf);
+        } catch (TransactionFailure e) {
+            throw new RuntimeException("Failure while upgrading log-service", e);
         }
     }
 }

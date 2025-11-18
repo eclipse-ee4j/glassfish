@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,104 +15,89 @@
  */
 package org.glassfish.tests.embedded.runnable;
 
-import java.io.File;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.glassfish.tests.embedded.runnable.TestArgumentProviders.GfEmbeddedJarNameProvider;
 import org.glassfish.tests.embedded.runnable.app.App;
 import org.glassfish.tests.embedded.runnable.library.MockExecutorService;
+import org.glassfish.tests.embedded.runnable.tool.TestArgumentProviders.GfEmbeddedJarNameProvider;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
-import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
-import static java.lang.System.err;
-import static org.glassfish.tests.embedded.runnable.GfEmbeddedUtils.outputToStreamOfLines;
-import static org.glassfish.tests.embedded.runnable.GfEmbeddedUtils.runGlassFishEmbedded;
-import static org.glassfish.tests.embedded.runnable.ShrinkwrapUtils.logArchiveContent;
+import static java.lang.System.Logger.Level.INFO;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.glassfish.tests.embedded.runnable.tool.BufferedReaderMatcher.readerContains;
+import static org.glassfish.tests.embedded.runnable.tool.EmbeddedGlassFishStarter.start;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Ondro Mihalyi
+ * @author David Matejcek
  */
 public class AddLibraryTest {
 
-    private static final Logger LOG = Logger.getLogger(AddLibraryTest.class.getName());
+    private static final Logger LOG = System.getLogger(AddLibraryTest.class.getName());
+
+    @TempDir
+    private Path tmpDir;
+    private Path jarFile;
+    private Path warFile;
+
+    @AfterEach
+    void deleteFiles() throws Exception {
+        if (jarFile != null) {
+            Files.deleteIfExists(jarFile);
+        }
+        if (warFile != null) {
+            Files.deleteIfExists(warFile);
+        }
+    }
 
     @ParameterizedTest
     @ArgumentsSource(GfEmbeddedJarNameProvider.class)
     void testAddLibraryForApp(String gfEmbeddedJarName) throws Exception {
-
-        File jarFile = null;
-        File warFile = null;
-        try {
-            jarFile = testLibraryJavaArchive(jarFile);
-            warFile = warArchiveThatDependsOnTestLibrary(warFile);
-            Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
-                    "add-library " + jarFile.getAbsolutePath(),
-                    warFile.getAbsolutePath()
-            );
-            assertTrue(outputToStreamOfLines(gfEmbeddedProcess)
-                    .filter(line -> line.contains("App initialized"))
-                    .findAny().isPresent(),
-                    "A log from deployed application is present");
-            gfEmbeddedProcess
-                    .waitFor(30, TimeUnit.SECONDS);
-        } finally {
-            Optional.ofNullable(jarFile).ifPresent(File::delete);
-            Optional.ofNullable(warFile).ifPresent(File::delete);
-        }
+        jarFile = testLibraryJavaArchive();
+        warFile = warArchiveThatDependsOnTestLibrary();
+        Process glassfish = start(gfEmbeddedJarName, "add-library " + jarFile, warFile.toString());
+        assertThat(glassfish.errorReader(), readerContains("App initialized"));
+        assertTrue(glassfish.waitFor(30, SECONDS), "Process finished.");
     }
 
     @ParameterizedTest
     @ArgumentsSource(GfEmbeddedJarNameProvider.class)
     void testAddLibraryForGrizzlyExecutor(String gfEmbeddedJarName) throws Exception {
-
-        File jarFile = null;
-        File warFile = null;
-        try {
-            jarFile = testLibraryJavaArchive(jarFile);
-            Process gfEmbeddedProcess = runGlassFishEmbedded(gfEmbeddedJarName,
-                    "add-library " + jarFile.getAbsolutePath(),
-                    "set configs.config.server-config.thread-pools.thread-pool.http-thread-pool.classname=" + MockExecutorService.class.getName()
-            );
-            assertTrue(! outputToStreamOfLines(gfEmbeddedProcess)
-                    .peek(err::println)
-                    .filter(line -> line.contains("ClassNotFoundException"))
-                    .findAny().isPresent(),
-                    "ClassNotFoundException should not be thrown for " + MockExecutorService.class.getSimpleName());
-            gfEmbeddedProcess
-                    .waitFor(30, TimeUnit.SECONDS);
-        } finally {
-            Optional.ofNullable(jarFile).ifPresent(File::delete);
-            Optional.ofNullable(warFile).ifPresent(File::delete);
-        }
+        jarFile = testLibraryJavaArchive();
+        Process glassfish = start(gfEmbeddedJarName, "add-library " + jarFile,
+            "set configs.config.server-config.thread-pools.thread-pool.http-thread-pool.classname="
+                + MockExecutorService.class.getName());
+        assertThat(glassfish.errorReader(), not(readerContains("ClassNotFoundException")));
+        assertTrue(glassfish.waitFor(30, SECONDS), "Process finished.");
     }
 
-    private File testLibraryJavaArchive(File jarFile) throws FileExistsException, ArchiveExportException, UnknownExtensionTypeException, IllegalArgumentException {
+    private Path testLibraryJavaArchive() throws Exception {
         String jarName = "testLibrary.jar";
-        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, jarName)
-                .addClass(MockExecutorService.class);
-        jarFile = new File(jarName);
-        javaArchive.as(ZipExporter.class).exportTo(jarFile);
-        logArchiveContent(javaArchive, jarName, LOG::info);
+        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, jarName).addClass(MockExecutorService.class);
+        jarFile = tmpDir.resolve(jarName).toAbsolutePath();
+        javaArchive.as(ZipExporter.class).exportTo(jarFile.toFile());
+        LOG.log(INFO, () -> "Java library:\n" + javaArchive.toString(true));
         return jarFile;
     }
 
-    private File warArchiveThatDependsOnTestLibrary(File warFile) throws FileExistsException, ArchiveExportException, IllegalArgumentException {
+    private Path warArchiveThatDependsOnTestLibrary() throws Exception {
         String warName = "testLibraryApp.war";
-        WebArchive warArchive = ShrinkWrap.create(WebArchive.class, warName)
-                .addPackage(App.class.getPackage());
-        warFile = new File(warName);
-        warArchive.as(ZipExporter.class).exportTo(warFile);
-        logArchiveContent(warArchive, warName, LOG::info);
+        WebArchive warArchive = ShrinkWrap.create(WebArchive.class, warName).addPackage(App.class.getPackage());
+        warFile = tmpDir.resolve(warName).toAbsolutePath();
+        warArchive.as(ZipExporter.class).exportTo(warFile.toFile());
+        LOG.log(INFO, () -> "WAR:\n" + warArchive.toString(true));
         return warFile;
     }
 

@@ -1,6 +1,5 @@
 #!/bin/bash
-#
-# Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+# Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,21 +26,18 @@ catch() {
   fi
 }
 
-install_glassfish() {
-  mvn clean -N org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy \
-  -Dartifact=org.glassfish.main.distributions:glassfish:${GF_VERSION}:zip \
-  -Dmdep.stripVersion=true \
-  -DoutputDirectory=${WORKSPACE}/bundles \
-  -Pstaging
-}
-
-install_jacoco() {
-  mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy \
-  -Dartifact=org.jacoco:org.jacoco.agent:0.8.12:jar:runtime \
+install_dependency() {
+  mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.9.0:copy \
+  -Dartifact=$1 \
   -Dmdep.stripVersion=true \
   -Dmdep.stripClassifier=true \
-  -DoutputDirectory=${WORKSPACE}/bundles \
-  -Pstaging
+  -DoutputDirectory="${BUNDLES_DIR}"
+}
+
+install_bundles() {
+  install_dependency "org.glassfish.main.distributions:glassfish:${GF_VERSION}:zip"
+  install_dependency "org.glassfish.main.distributions:web:${GF_VERSION}:zip"
+  install_dependency "org.jacoco:org.jacoco.agent:0.8.12:jar:runtime"
 }
 
 ####################################
@@ -82,7 +78,7 @@ export M2_HOME="${M2_HOME=$(realpath $(dirname $(realpath $(which mvn)))/..)}"
 export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
 
 if [ -z "${2}" ]; then
-  export GF_VERSION="$(mvn help:evaluate -f "${APS_HOME}/pom.xml" -Dexpression=project.version -q -DforceStdout -Pstaging)"
+  export GF_VERSION="$(mvn help:evaluate -f "${APS_HOME}/pom.xml" -Dexpression=project.version -q -DforceStdout)"
 else
   export GF_VERSION="$2"
 fi
@@ -97,7 +93,8 @@ echo GF_VERSION=$GF_VERSION
 echo GLASSFISH_SUSPEND=$GLASSFISH_SUSPEND
 
 export JACOCO_ENABLED="true"
-export WORKSPACE="$(pwd)/target"
+export WORKSPACE="${WORKSPACE:-$(pwd)/target}"
+export BUNDLES_DIR="${BUNDLES_DIR:-${WORKSPACE}/bundles}"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export GLASSFISH_HOME="${WORKSPACE}/glassfish8"
 export CLASSPATH="${GLASSFISH_HOME}/javadb"
@@ -108,10 +105,10 @@ export ANT_OPTS="${ANT_OPTS} -Djdk.xml.totalEntitySizeLimit=50000000"
 export PORT_ADMIN="${PORT_ADMIN=4848}"
 export PORT_HTTP="${PORT_HTTP=8080}"
 export PORT_HTTPS="${PORT_HTTPS=8181}"
-if [ ! -f "${WORKSPACE}/bundles/glassfish.zip" ]; then
-  install_glassfish;
-fi
-install_jacoco;
+
+echo "Environment variables: "
+env | sort;
+install_bundles;
 
 rm -rf "${GLASSFISH_HOME}"
 rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml

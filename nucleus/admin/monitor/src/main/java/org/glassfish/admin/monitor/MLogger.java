@@ -41,12 +41,6 @@ public class MLogger {
     @LoggerInfo(subsystem = "Monitoring", description = "Monitoring Logger", publish = true)
     public static final String LOGGER_NAME = "jakarta.enterprise.monitoring";
     private final static Logger logger = Logger.getLogger(LOGGER_NAME, SHARED_LOGMESSAGE_RESOURCE);
-    // these messages are historical.  We've transitioned to this latest Logging API
-    // TODO figure out cause/action etc.  This is too expensive to do right now...
-    @LogMessageInfo(message = "Caught an Exception: {0}", comment = "Unhandled Exception", cause = "see Exception message", action = "see Exception message", level = "WARNING")
-    public static final String UNHANDLED_EXCEPTION = "NCLS-MNTG-00000";
-    @LogMessageInfo(message = "Caught an Exception: {0}", comment = "Unhandled Exception - Not an error.", cause = "see Exception message", action = "see Exception message", level = "INFO")
-    public static final String UNHANDLED_EXCEPTION_INFO = "NCLS-MNTG-00001";
     @LogMessageInfo(message = "Flashlight listener registration failed for listener class: {0} , will retry later", comment = "see message", cause = "see message", action = "see message", level = "WARNING")
     public static final String ListenerRegistrationFailed = "NCLS-MNTG-00201";
     @LogMessageInfo(message = "Unable to create container-monitoring for {0}.", comment = "see message", cause = "see message", action = "see message", level = "SEVERE")

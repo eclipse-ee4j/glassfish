@@ -68,12 +68,20 @@ public class ThreadPoolProbeProvider {
     public void threadDispatchedFromPoolEvent(
         @ProbeParam("monitoringId") String monitoringId,
         @ProbeParam("threadPoolName") String threadPoolName,
-        @ProbeParam("threadId") long threadId) {}
+        @ProbeParam("threadId") long threadId,
+        @ProbeParam("busyThreadCount") long busyThreadCount) {}
 
 
     @Probe(name="threadReturnedToPoolEvent")
     public void threadReturnedToPoolEvent(
         @ProbeParam("monitoringId") String monitoringId,
         @ProbeParam("threadPoolName") String threadPoolName,
-        @ProbeParam("threadId") long threadId) {}
+        @ProbeParam("threadId") long threadId,
+        @ProbeParam("busyThreadCount") long busyThreadCount) {}
+
+    @Probe(name="setCurrentThreadCountEvent")
+    public void setCurrentThreadCountEvent(
+        @ProbeParam("monitoringId") String monitoringId,
+        @ProbeParam("threadPoolName") String threadPoolName,
+        @ProbeParam("currentThreadCount") int currentThreadCount) {}
 }

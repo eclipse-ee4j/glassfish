@@ -145,7 +145,7 @@ test_run(){
 
 run_test_id(){
   cat /etc/hosts
-  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+  unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
   cd `dirname ${0}`
   test_init
   TARGET_FROM_INPUT=(`echo $1 | sed 's/web_//'`)

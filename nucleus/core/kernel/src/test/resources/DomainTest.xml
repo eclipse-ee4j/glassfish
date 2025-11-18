@@ -151,6 +151,7 @@
         <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke</jvm-options>
         <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED</jvm-options>
       </java-config>
       <network-config>
         <protocols>

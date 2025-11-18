@@ -143,6 +143,14 @@ public class GrizzlyProxy implements NetworkProxy {
         grizzlyListener.stop();
     }
 
+    /**
+     * Stops the Grizzly service and shared resources if last one.
+     */
+    @Override
+    public void stop(boolean lastOne) throws IOException {
+        grizzlyListener.stop(lastOne);
+    }
+
     @Override
     public void destroy() {
         grizzlyListener.destroy();

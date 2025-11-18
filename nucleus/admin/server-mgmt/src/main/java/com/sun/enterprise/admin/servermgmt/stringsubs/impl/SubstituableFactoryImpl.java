@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutableFactory;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.Archive;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Default {@link SubstitutableFactory} implementation to retrieve the {@link Substitutable} entries from a
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  */
 public class SubstituableFactoryImpl implements SubstitutableFactory {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(SubstituableFactoryImpl.class.getName());
 
     @Override
     public List<? extends Substitutable> getFileEntrySubstituables(FileEntry fileEntry) {
@@ -45,7 +46,8 @@ public class SubstituableFactoryImpl implements SubstitutableFactory {
         try {
             return new ArchiveEntryWrapperImpl(archive).getSubstitutables();
         } catch (IOException e) {
-            _logger.log(Level.INFO, SLogger.ERR_RETRIEVING_SUBS_ENTRIES, archive.getName());
+            LOG.log(WARNING, "IO Error occurred while retrieving substitutable entries from archive {0}.",
+                archive.getName());
         }
         return null;
     }

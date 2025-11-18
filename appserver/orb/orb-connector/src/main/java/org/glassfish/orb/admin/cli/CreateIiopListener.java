@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,7 +65,7 @@ public class CreateIiopListener implements AdminCommand {
             LocalStringManagerImpl(CreateIiopListener.class);
 
     @Param( name="target", optional=true,
-        defaultValue=SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+        defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
     String target ;
 
     @Param(name="listeneraddress", alias="address")

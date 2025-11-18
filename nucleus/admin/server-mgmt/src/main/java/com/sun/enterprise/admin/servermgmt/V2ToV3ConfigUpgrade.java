@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PerLookup;
@@ -38,9 +37,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import static com.sun.enterprise.admin.servermgmt.SLogger.JVM_OPTION_UPGRADE_FAILURE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
 
 /**
  * Change the jvm-options from v2 to v3
@@ -93,8 +89,7 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
                 ConfigSupport.apply(new JavaConfigChanger(), jc);
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, JVM_OPTION_UPGRADE_FAILURE, e);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failure while upgrading jvm-options from V2 to V3", e);
         }
     }
 
@@ -103,8 +98,9 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
         // note that the remove list also has all the items we just added with
         // doAdditions() so that we don't get duplicate messes.
         for (String s : oldJvmOptions) {
-            if (!shouldRemove(s))
+            if (!shouldRemove(s)) {
                 newJvmOptions.add(s);
+            }
         }
     }
 
@@ -123,12 +119,15 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
     }
 
     private boolean shouldRemove(String option) {
-        if (!ok(option))
+        if (!ok(option)) {
             return true;
+        }
 
-        for (String s : REMOVAL_LIST)
-            if (option.startsWith(s))
+        for (String s : REMOVAL_LIST) {
+            if (option.startsWith(s)) {
                 return true;
+            }
+        }
 
         return false;
     }

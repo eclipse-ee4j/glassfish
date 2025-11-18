@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,20 +22,20 @@ import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 
 import java.io.File;
+import java.lang.System.Logger;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.MONITOR_MEMORY_TITLE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.MONITOR_TITLE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.MONITOR_UPTIME_TITLE;
-import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
+import static java.lang.System.Logger.Level.INFO;
 
 public class MonitorTask extends TimerTask {
+    private static final Logger LOG = System.getLogger(MonitorTask.class.getName());
+    private static final LocalStringsImpl strings = new LocalStringsImpl(MonitorTask.class);
+
     private String type = null;
     private String filter = null;
     private Timer timer = null;
@@ -43,17 +44,17 @@ public class MonitorTask extends TimerTask {
     private RemoteCLICommand cmd;
     private static final int NUM_ROWS = 25;
     private int counter = 0;
-    private static final Logger logger = getLogger();
-    private final static LocalStringsImpl strings = new LocalStringsImpl(MonitorTask.class);
     volatile Boolean allOK = null;
 
     public MonitorTask(final Timer timer, final String[] remoteArgs, ProgramOptions programOpts, Environment env, final String type,
             final String filter, final File fileName) throws CommandException, CommandValidationException {
         this.timer = timer;
-        if ((type != null) && (type.length() > 0))
+        if ((type != null) && (type.length() > 0)) {
             this.type = type;
-        if ((filter != null) && (filter.length() > 0))
+        }
+        if ((filter != null) && (filter.length() > 0)) {
             this.filter = filter;
+        }
         this.remoteArgs = remoteArgs;
         cmd = new RemoteCLICommand(remoteArgs[0], programOpts, env);
         displayHeader(type);
@@ -68,8 +69,8 @@ public class MonitorTask extends TimerTask {
         } else if ("httplistener".equals(type)) {
             title = String.format("%1$-4s %2$-4s %3$-6s %4$-4s", "ec", "mt", "pt", "rc");
         } else if ("jvm".equals(type)) {
-            title = String.format("%1$45s", MONITOR_TITLE);
-            logger.info(title);
+            title = String.format("%1$45s", "JVM Monitoring");
+            LOG.log(INFO, title);
             // row title
             title = null;
             if (filter != null) {
@@ -79,8 +80,8 @@ public class MonitorTask extends TimerTask {
             }
             if (title == null) {
                 // default jvm stats
-                title = String.format("%1$-35s %2$-40s", MONITOR_UPTIME_TITLE, MONITOR_MEMORY_TITLE);
-                logger.info(title);
+                title = String.format("%1$-35s %2$-40s", "UpTime(ms)", "Heap and NonHeap Memory(bytes)");
+                LOG.log(INFO, title);
                 title = String.format("%1$-25s %2$-10s %3$-10s %4$-10s %5$-10s %6$-10s", strings.get("monitor.jvm.current"),
                         strings.get("monitor.jvm.min"), strings.get("monitor.jvm.max"), strings.get("monitor.jvm.low"),
                         strings.get("monitor.jvm.high"), strings.get("monitor.jvm.count"));
@@ -89,13 +90,14 @@ public class MonitorTask extends TimerTask {
             title = String.format("%1$-5s %2$-5s %3$-5s %4$-5s %5$-5s %6$-5s %7$-5s %8$-8s %9$-10s %10$-5s", "asc", "ast", "rst", "st",
                     "ajlc", "mjlc", "tjlc", "aslc", "mslc", "tslc");
         }
-        logger.info(title);
+        LOG.log(INFO, title);
     }
 
     void cancelMonitorTask() {
         timer.cancel();
     }
 
+    @Override
     public void run() {
         try {
             cmd.execute(remoteArgs);
@@ -106,7 +108,7 @@ public class MonitorTask extends TimerTask {
             }
             counter++;
         } catch (Exception e) {
-            //logger.severe(
+            //LOG.severe(
             //strings.get("monitorCommand.errorRemote", e.getMessage()));
             allOK = false;
             cancelMonitorTask();
@@ -129,25 +131,6 @@ public class MonitorTask extends TimerTask {
         } else if ("webmodule".equals(type)) {
             details = strings.get("commands.monitor.webmodule_virtual_server_detail");
         }
-        logger.info(details);
+        LOG.log(INFO, details);
     }
-    /*
-    synchronized void writeToFile(final String text) {
-    try {
-    BufferedWriter out =
-    new BufferedWriter(new FileWriter(fileName, true));
-    out.append(text);
-    out.newLine();
-    out.close();
-    } catch (IOException ioe) {
-    final String unableToWriteFile =
-    strings.getString("commands.monitor.unable_to_write_to_file",
-    fileName.getName());
-    logger.info(unableToWriteFile);
-    //if (verbose) {
-    //ioe.printStackTrace();
-    //}
-    }
-    }
-     */
 }

@@ -85,7 +85,7 @@ public class ListJMSResources implements AdminCommand {
     String resourceType;
 
     @Param(primary=true, optional=true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
 
     @Inject

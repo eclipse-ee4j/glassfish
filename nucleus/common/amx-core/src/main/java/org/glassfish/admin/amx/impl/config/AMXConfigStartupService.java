@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,8 +51,6 @@ public final class AMXConfigStartupService
         org.glassfish.hk2.api.PreDestroy,
         AMXLoader {
 
-    @Inject
-    InjectedValues mInjectedValues;
     @Inject//(name=AppserverMBeanServerFactory.OFFICIAL_MBEANSERVER)
     private MBeanServer mMBeanServer;
     @Inject
@@ -66,6 +64,7 @@ public final class AMXConfigStartupService
         //debug( "AMXStartupService.AMXStartupService()" );
     }
 
+    @Override
     public void postConstruct() {
         final TimingDelta delta = new TimingDelta();
 
@@ -80,6 +79,7 @@ public final class AMXConfigStartupService
         AMXLoggerInfo.getLogger().log(Level.FINE, "Initialized AMXConfig Startup service in {0} ms", delta.elapsedMillis());
     }
 
+    @Override
     public void preDestroy() {
         AMXLoggerInfo.getLogger().info(AMXLoggerInfo.stoppingAMX);
         unloadAMXMBeans();
@@ -101,6 +101,7 @@ public final class AMXConfigStartupService
         return ProxyFactory.getInstance(mMBeanServer).getProxy(getDomainConfig(), AMXProxy.class);
     }
 
+    @Override
     public synchronized ObjectName loadAMXMBeans() {
         if (mLoader == null) {
             //getDomainRootProxy().waitAMXReady();
@@ -114,6 +115,7 @@ public final class AMXConfigStartupService
         return getDomainConfig();
     }
 
+    @Override
     public synchronized void unloadAMXMBeans() {
         final AMXProxy domainConfigProxy = getDomainConfigProxy();
         if (domainConfigProxy != null) {

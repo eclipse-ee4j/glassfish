@@ -19,9 +19,9 @@ copy_ql_results(){
     if [[ ${1} = "ql_gf_web_profile_all" || ${1} = "ql_gf_full_profile_all" || "ql_gf_embedded_profile_all" = ${1} ]]; then
         tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${WORKSPACE}/glassfish8/glassfish/domains
         cp ${WORKSPACE}/glassfish8/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
-        cp -r ${WORKSPACE}/appserver/tests/quicklook/test-output/* ${WORKSPACE}/results/
-        cp ${WORKSPACE}/appserver/tests/quicklook/test-output/TESTS-TestSuites.xml ${WORKSPACE}/results/junitreports/test_results_junit.xml
-        cp ${WORKSPACE}/appserver/tests/quicklook/quicklook_summary.txt ${WORKSPACE}/results || true
+        cp -r ${BASEDIR}/appserver/tests/quicklook/test-output/* ${WORKSPACE}/results/
+        cp ${BASEDIR}/appserver/tests/quicklook/test-output/TESTS-TestSuites.xml ${WORKSPACE}/results/junitreports/test_results_junit.xml
+        cp ${BASEDIR}/appserver/tests/quicklook/quicklook_summary.txt ${WORKSPACE}/results || true
         cat ${WORKSPACE}/results/junitreports/test_results_junit.xml | grep -B 1 -C 7 "<error" || true
     else
         cp ${WORKSPACE}/nucleus/domains/domain1/logs/server.log* ${WORKSPACE}/results
@@ -36,37 +36,18 @@ run_test_id(){
 
         # Run quick look full profile tests using the full glassfish distribution (GD) build
 
-        unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+        unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
 
-        cd ${WORKSPACE}/appserver/tests/quicklook/
+        cd appserver/tests/quicklook/
 
         mvn -Dglassfish.home=${S1AS_HOME} -Ptest_gd_security,report test | tee ${TEST_RUN_LOG}
-    elif [[ ${1} = "ql_gf_nucleus_all" || ${1} = "nucleus_admin_all" ]]; then
-
-        # Run quick look nucleus tests using the nucleus build
-
-        unzip_test_resources ${WORKSPACE}/bundles/nucleus-new.zip
-
-        if [[ ${1} = "ql_gf_nucleus_all" ]]; then
-            cd ${WORKSPACE}/nucleus/tests/quicklook
-        elif [[ ${1} = "nucleus_admin_all"  ]]; then
-            cd ${WORKSPACE}/nucleus/tests/admin
-        fi
-
-        mvn -Dmaven.test.failure.ignore=true -Dnucleus.home=${WORKSPACE}/nucleus clean test | tee ${TEST_RUN_LOG}
-
-        if [[ ${1} = "ql_gf_nucleus_all" ]]; then
-            merge_junit_xmls ${WORKSPACE}/nucleus/tests/quicklook/target/surefire-reports/junitreports
-        elif [[ ${1} = "nucleus_admin_all"  ]]; then
-            merge_junit_xmls ${WORKSPACE}/nucleus/tests/admin/target/surefire-reports/junitreports
-        fi
     elif [[ ${1} = "ql_gf_web_profile_all" || $1 = "ql_gf_embedded_profile_all" ]]; then
 
         # Run quick look EE web profile tests using the web profile glassfish distribution (WD, Web Distribution) build
 
-        unzip_test_resources ${WORKSPACE}/bundles/web.zip
+        unzip_test_resources ${BUNDLES_DIR}/web.zip
 
-        cd ${WORKSPACE}/appserver/tests/quicklook/
+        cd appserver/tests/quicklook/
 
         if [[ ${1} = "ql_gf_web_profile_all" ]]; then
             mvn -Dglassfish.home=${S1AS_HOME} -Ptest_wd_security,report test | tee ${TEST_RUN_LOG}
@@ -95,6 +76,7 @@ list_test_ids(){
 
 OPT=${1}
 TEST_ID=${2}
+BASEDIR="$(pwd)"
 source `dirname ${0}`/../common_test.sh
 mkdir -p ${WORKSPACE}/results/junitreports
 

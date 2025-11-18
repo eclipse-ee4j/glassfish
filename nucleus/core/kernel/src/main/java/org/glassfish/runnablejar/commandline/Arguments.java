@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024,2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -57,11 +57,11 @@ public class Arguments {
     public final List<String> commands = new ArrayList<>();
     public final GlassFishProperties glassFishProperties = new GlassFishProperties();
     public final List<String> deployables = new ArrayList<>();
-    public boolean askedForHelp = false;
-    public boolean noInfo = false;
-    public boolean shutdown = false;
-    public boolean prompt = false;
-    private String argumentsDocList = null;
+    public boolean askedForHelp;
+    public boolean noInfo;
+    public boolean shutdown;
+    public boolean prompt;
+    private String argumentsDocList;
 
     public void setDefaults() {
         glassFishProperties.setPort(DEFAULT_HTTP_LISTENER, 8080);

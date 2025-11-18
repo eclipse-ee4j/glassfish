@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,29 +17,29 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.FileEntry;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.glassfish.api.logging.LogHelper;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Factory class to get the files that has to undergo string substitution.
  */
 class FileEntryFactory {
 
-    private static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(FileEntryFactory.class.getName());
     private static final LocalStringsImpl _strings = new LocalStringsImpl(FileEntryFactory.class);
 
     /**
@@ -75,8 +76,8 @@ class FileEntryFactory {
                             if (matchingFile.exists() && matchingFile.canRead() && matchingFile.canWrite()) {
                                 retrievedFiles.add(matchingFile);
                             } else {
-                                if (_logger.isLoggable(Level.FINER)) {
-                                    _logger.log(Level.FINER, _strings.get("skipFileFromSubstitution", matchingFile.getAbsolutePath()));
+                                if (LOG.isLoggable(DEBUG)) {
+                                    LOG.log(DEBUG, _strings.get("skipFileFromSubstitution", matchingFile.getAbsolutePath()));
                                 }
                             }
                         }
@@ -87,8 +88,8 @@ class FileEntryFactory {
                 retrievedFiles = fileLocator.getFiles(fileEntry.getName());
             }
             if (retrievedFiles.isEmpty()) {
-                if (_logger.isLoggable(Level.FINER)) {
-                    _logger.log(Level.FINER, _strings.get("noMatchedFile", pathEntry));
+                if (LOG.isLoggable(DEBUG)) {
+                    LOG.log(DEBUG, _strings.get("noMatchedFile", pathEntry));
                 }
                 continue;
             }
@@ -103,7 +104,7 @@ class FileEntryFactory {
                                         : new SmallFileSubstitutionHandler(retrievedFile);
                         substituables.add(substituable);
                     } catch (FileNotFoundException e) {
-                        LogHelper.log(_logger, Level.WARNING, SLogger.INVALID_FILE_LOCATION, e, retrievedFile);
+                        LOG.log(WARNING, () -> "Could not locate file or resource " + retrievedFile, e);
                     }
                 }
             }

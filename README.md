@@ -10,10 +10,10 @@ sponsored by the Eclipse Foundation.
 
 ### Compatibility
 
-* Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21, supports Java 23, experimentally also higher versions.
-* Eclipse GlassFish 7.1.0 is Jakarta EE 10 compatible, requires Java 17 or 21, experimentally also higher versions.
-* Eclipse GlassFish 7.0.25 is Jakarta EE 10 compatible, requires Java 11, 17 or 21, experimentally also higher versions.
-* Eclipse GlassFish 6.2.5 is Jakarta EE 9.1 compatible, requires Java 11 or 17
+* Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21+
+* Eclipse GlassFish 7.1.0 is Jakarta EE 10 compatible, requires Java 17+
+* Eclipse GlassFish 7.0.25 is Jakarta EE 10 compatible, requires Java 11, supports 17 and 21
+* Eclipse GlassFish 6.2.5 is Jakarta EE 9.1 compatible, requires Java 11, supports 17
 * Eclipse GlassFish 6.1.0 is Jakarta EE 9.1 compatible, requires Java 11
 * Eclipse GlassFish 6.0.0 is Jakarta EE 9 compatible, requires Java 8
 * Eclipse GlassFish 5.1.0 is Java EE 8 and Jakarta EE 8 compatible, requires Java 8
@@ -100,9 +100,9 @@ They are quite old and have high technical debt, but at this moment they still p
 * `./runtests.sh security_all` - Usual time: 8 minutes
 * `./runtests.sh web_jsp` - Usual time: 8 minutes
 * `./runtests.sh webservice_all` - Usual time: 10 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ejb_web_all` - Usual time: 4 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_web_profile_all` - Usual time: 2 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_full_profile_all` - Usual time: 4 minutes
+* `./runtests.sh ejb_web_all` - Usual time: 4 minutes
+* `./runtests.sh ql_gf_web_profile_all` - Usual time: 2 minutes
+* `./runtests.sh ql_gf_full_profile_all` - Usual time: 4 minutes
 
 * many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
 

@@ -43,6 +43,10 @@ public interface GrizzlyListener {
 
     void stop() throws IOException;
 
+    default void stop(boolean lastOne) throws IOException {
+        stop();
+    }
+
     void destroy();
 
     String getName();

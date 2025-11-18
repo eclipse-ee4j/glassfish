@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,17 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
-import com.sun.enterprise.admin.servermgmt.SLogger;
 import com.sun.enterprise.admin.servermgmt.stringsubs.Substitutable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * Abstract class initialize the input file for the string substitution. The sub-classes provides the way to create the
@@ -34,7 +35,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
  */
 public abstract class FileSubstitutionHandler implements Substitutable {
 
-    protected static final Logger _logger = SLogger.getLogger();
+    private static final Logger LOG = System.getLogger(FileSubstitutionHandler.class.getName());
 
     protected static final LocalStringsImpl _strings = new LocalStringsImpl(FileLister.class);
 
@@ -66,8 +67,8 @@ public abstract class FileSubstitutionHandler implements Substitutable {
             try {
                 _reader.close();
             } catch (Exception e) {
-                if (_logger.isLoggable(Level.FINER)) {
-                    _logger.log(Level.FINER, _strings.get("errorInClosingStream", _inputFile.getAbsolutePath()), e);
+                if (LOG.isLoggable(DEBUG)) {
+                    LOG.log(DEBUG, _strings.get("errorInClosingStream", _inputFile.getAbsolutePath()), e);
                 }
             }
         }
@@ -75,8 +76,8 @@ public abstract class FileSubstitutionHandler implements Substitutable {
             try {
                 _writer.close();
             } catch (Exception e) {
-                if (_logger.isLoggable(Level.FINER)) {
-                    _logger.log(Level.FINER, _strings.get("errorInClosingStream"), e);
+                if (LOG.isLoggable(DEBUG)) {
+                    LOG.log(DEBUG, _strings.get("errorInClosingStream"), e);
                 }
             }
         }

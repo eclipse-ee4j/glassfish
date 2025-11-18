@@ -66,7 +66,7 @@ public class DeleteLogLevel implements AdminCommand {
     String properties;
 
     @Param(optional = true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Inject
     LoggingConfigImpl loggingConfig;
@@ -105,7 +105,7 @@ public class DeleteLogLevel implements AdminCommand {
                 targetConfigName = target;
                 isConfig = true;
 
-                Server targetServer = domain.getServerNamed(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME);
+                Server targetServer = domain.getServerNamed(SystemPropertyConstants.DAS_SERVER_NAME);
                 if (targetServer != null && targetServer.getConfigRef().equals(target)) {
                     isDas = true;
                 }

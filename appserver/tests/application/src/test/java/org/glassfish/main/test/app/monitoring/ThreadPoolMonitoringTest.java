@@ -468,10 +468,10 @@ public class ThreadPoolMonitoringTest {
         throw new IllegalStateException("Metric not found: " + metricId);
     }
 
-    private static <T> T waitFor(Duration maxTime, Action<T> action) throws InterruptedException {
+    private static <T> T waitFor(Duration maxTime, Action<T> action) {
         final long start = System.currentTimeMillis();
         final long timeout = start + maxTime.toMillis();
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 T result = action.doAction();
                 LOG.log(INFO, "Action passed after {0} ms", System.currentTimeMillis() - start);
@@ -480,9 +480,10 @@ public class ThreadPoolMonitoringTest {
                 if (timeout < System.currentTimeMillis()) {
                     throw e;
                 }
-                Thread.sleep(100L);
+                Thread.onSpinWait();
             }
         }
+        return fail("Thread was interrupted.");
     }
 
 
@@ -582,7 +583,7 @@ public class ThreadPoolMonitoringTest {
         return generator;
     }
 
-    private static void waitForThreadsBusyCount(int port, int targetCount) throws InterruptedException {
+    private static void waitForThreadsBusyCount(int port, int targetCount) {
         final String poolName = port == HTTP_POOL_1_PORT ? HTTP_POOL_1 : HTTP_POOL_TEST;
         final String key = "server.network." + poolName + ".thread-pool.currentthreadsbusy-count";
         waitFor(Duration.ofSeconds(10L), () -> {
@@ -591,18 +592,20 @@ public class ThreadPoolMonitoringTest {
         });
     }
 
-    private static void waitForTaskCountStoppedChanging(int port) throws InterruptedException {
+    private static void waitForTaskCountStoppedChanging(int port) {
         final String poolName = port == HTTP_POOL_1_PORT ? HTTP_POOL_1 : HTTP_POOL_TEST;
         final String key = "server.network." + poolName + ".thread-pool.totalexecutedtasks-count";
-        final AtomicInteger taskCount = new AtomicInteger();
+        final AtomicInteger taskCount = new AtomicInteger(getMonitorValue(key));
         waitFor(Duration.ofSeconds(10L), () -> {
-            final int value = getMonitorValue(key);
-            if (taskCount.get() == 0) {
-                // We need the first value;
-                taskCount.set(value);
-                fail();
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+               Thread.currentThread().interrupt();
+               fail();
             }
-            assertThat("server busy thread count", value, equalTo(taskCount.getAndSet(value)));
+            final int value = getMonitorValue(key);
+            final int previousValue = taskCount.getAndSet(value);
+            assertThat("server busy thread count", value, equalTo(previousValue));
             return null;
         });
     }
@@ -620,6 +623,6 @@ public class ThreadPoolMonitoringTest {
 
     @FunctionalInterface
     interface Action<T> {
-        T doAction();
+        T doAction() throws AssertionError;
     }
 }

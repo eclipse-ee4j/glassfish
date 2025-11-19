@@ -108,7 +108,7 @@
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <!-- Implementations -->
         <soteria.version>4.0.2</soteria.version>
-        <exousia.version>3.0.0</exousia.version>
+        <exousia.version>3.0.1</exousia.version>
         <epicyro.version>3.1.1</epicyro.version>
         <nimbus.version>10.5</nimbus.version>
         <jcip.version>1.0.2</jcip.version>

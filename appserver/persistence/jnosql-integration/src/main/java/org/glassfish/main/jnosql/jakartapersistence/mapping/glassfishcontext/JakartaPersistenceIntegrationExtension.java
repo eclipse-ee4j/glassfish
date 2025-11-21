@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
+import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
@@ -121,6 +122,9 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(ApplicationScoped.class);
 
         addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager)
+                .scope(ApplicationScoped.class);
+
+        addBean(PersistenceUnitCacheProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
     }
 

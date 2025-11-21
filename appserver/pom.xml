@@ -123,7 +123,7 @@
         <jakarta.data.spec.version>1.0</jakarta.data.spec.version>
         <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
         <jakarta.nosql.spec.version>1.0.1</jakarta.nosql.spec.version>
-        <jnosql.version>1.1.11-SNAPSHOT</jnosql.version>
+        <jnosql.version>1.1.11</jnosql.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>

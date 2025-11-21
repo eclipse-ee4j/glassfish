@@ -269,6 +269,22 @@ public class GlassFishTestEnvironment {
     }
 
     /**
+     * Creates a {@link HttpResponse} for the default port using unsecured HTTP.
+     *
+     * @param context - part of the url behind the <code>http://localhost:[port]</code>
+     * @return a new disconnected {@link HttpURLConnection}.
+     * @throws IOException
+     */
+    public static HttpResponse<String> getHttpResource(final String context) throws Exception {
+        String rootContext = context;
+        if (context != null && !context.startsWith("/")) {
+            rootContext = "/" + context;
+        }
+
+        return getHttpResource(false, 8080, rootContext);
+    }
+
+    /**
      * Creates a {@link HttpURLConnection} for the given port and context.
      *
      * @param secured true for https, false for http

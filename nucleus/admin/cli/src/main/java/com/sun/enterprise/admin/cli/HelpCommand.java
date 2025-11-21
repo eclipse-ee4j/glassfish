@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,16 +54,17 @@ public class HelpCommand extends CLICommand {
 
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
-        try {
-            new More(getPageLength(), getSource(), getDestination(), getUserInput(), getUserOutput(), getQuitChar(), getPrompt());
+        try (Reader source = getSource()) {
+            More more = new More(getUserInput(), getUserOutput(), getQuitChar(), getPrompt());
+            more.view(getPageLength(), source, getDestination());
+            return 0;
         } catch (IOException ioe) {
             throw new CommandException(ioe);
         }
-        return 0;
     }
 
     private String getCommandName() {
-        return cmd != null ? cmd : DEFAULT_HELP_PAGE;
+        return cmd == null ? DEFAULT_HELP_PAGE : cmd;
     }
 
     private Writer getDestination() {
@@ -87,11 +88,11 @@ public class HelpCommand extends CLICommand {
 
     private Reader getSource() throws CommandException, CommandValidationException {
         CLICommand command = CLICommand.getCommand(habitat, getCommandName());
-        Reader r = command.getManPage();
-        if (r == null) {
+        final Reader reader = command.getManPage();
+        if (reader == null) {
             throw new CommandException(strings.get("ManpageMissing", getCommandName()));
         }
-        return expandManPage(r);
+        return expandManPage(reader);
     }
 
     private Reader getUserInput() {

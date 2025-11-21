@@ -59,7 +59,6 @@ public class DetachAttachITest {
 
     private static final Logger LOG = System.getLogger(DetachAttachITest.class.getName());
 
-    private static final int STEP_MULTIPLIER = 10;
     private static final long MEASURED_LATENCY = getMeasuredLatency();
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(false);

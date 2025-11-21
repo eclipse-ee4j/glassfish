@@ -66,7 +66,7 @@ public class ProgressStatusFailITest {
      */
     @Test
     public void timeout() {
-        final long jobTime = (int) getMeasuredLatency() * 5L;
+        final long jobTime = (int) getMeasuredLatency() * 10L;
         final int timeout = (int) jobTime / 2;
         final String intervals = generateRegularIntervals(jobTime);
         final AsadminResult result = ASADMIN.exec(timeout, "progress-custom", intervals);

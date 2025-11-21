@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,20 +30,21 @@ import java.io.Writer;
  *
  * This class provides a primitive more(1) functionality, paging through the given file, with an optional pagelength.
  */
-
-public class More {
+class More {
     private BufferedReader in;
     private BufferedWriter out;
     private String quit;
     private String prompt;
 
-    public More(int linesPerPage, Reader src, Writer dest, Reader fromUser, Writer toUser, String quitPrefix, String prompt)
-            throws IOException {
+    More(Reader fromUser, Writer toUser, String quitPrefix, String prompt) throws IOException {
         in = new BufferedReader(fromUser);
         out = new BufferedWriter(toUser);
         quit = quitPrefix;
         this.prompt = prompt;
 
+    }
+
+    void view(int linesPerPage, Reader src, Writer dest) throws IOException {
         Pager pager = new Pager(linesPerPage, src, dest);
         do {
             pager.nextPage();
@@ -53,7 +55,7 @@ public class More {
      * Return false iff the line read from the user starts with the quit character. This is a blocking call, waiting on
      * input from the user
      */
-    boolean wantsToContinue() throws IOException {
+    private boolean wantsToContinue() throws IOException {
         out.write(prompt);
         out.newLine();
         out.flush();

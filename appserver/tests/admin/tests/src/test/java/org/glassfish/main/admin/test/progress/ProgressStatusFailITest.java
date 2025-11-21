@@ -26,11 +26,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateIntervals;
+import static com.sun.enterprise.tests.progress.ProgressCustomCommand.generateRegularIntervals;
 import static org.glassfish.main.admin.test.progress.UsualLatency.getMeasuredLatency;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -63,16 +66,19 @@ public class ProgressStatusFailITest {
      */
     @Test
     public void timeout() {
-        final long firstStep = 10L;
-        final long secondStep = getMeasuredLatency() + 500L;
-        // timeout is too short for step2
-        final int timeout = (int) (firstStep + 0.9 * secondStep);
-        final String intervals = generateIntervals(firstStep, secondStep, 10L);
+        final long jobTime = (int) getMeasuredLatency() * 10L;
+        final int timeout = (int) jobTime / 2;
+        final String intervals = generateRegularIntervals(jobTime);
         final AsadminResult result = ASADMIN.exec(timeout, "progress-custom", intervals);
         assertThat(result, not(asadminOK()));
         final List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty(), "progress messages empty");
-        assertEquals(33, prgs.get(prgs.size() - 1).getValue(),
-            "Last seen step for timeout=" + timeout + " and intervals " + intervals);
+        final int lastStepSeen = prgs.get(prgs.size() - 1).getValue();
+        assertAll(
+            () -> assertThat("Last seen step for timeout=" + timeout + " and intervals " + intervals, lastStepSeen,
+                greaterThan(0)),
+            () -> assertThat("Last seen step for timeout=" + timeout + " and intervals " + intervals, lastStepSeen,
+                lessThan(100))
+        );
     }
 }

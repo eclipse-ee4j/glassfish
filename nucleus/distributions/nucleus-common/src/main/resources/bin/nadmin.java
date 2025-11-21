@@ -57,7 +57,7 @@ public class nadmin {
         prepareEnvironment(processBuilder.environment());
         Process process = processBuilder.start();
         int exitCode = process.waitFor();
-        stderr(() -> "Finishing " + MY_JAVA_FILE.getFileName() + ".java with exit code " + exitCode);
+        stderr(() -> "Finishing " + MY_JAVA_FILE.getFileName() + " with exit code " + exitCode);
         System.exit(exitCode);
     }
 

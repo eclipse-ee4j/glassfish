@@ -16,7 +16,7 @@
 
 set -e
 # Change to -x for echoing commands
-set +x
+set -x
 
 catch() {
   if [ "$1" != "0" ]; then

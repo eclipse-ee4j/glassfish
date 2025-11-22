@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.launcher.GFLauncher;
-import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.process.ProcessUtils;
@@ -94,12 +93,7 @@ public class StartServerHelper {
             System.out.print(I18N.get("WaitServer", serverOrDomainName) + " ");
         }
 
-        final Process glassFishProcess;
-        try {
-            glassFishProcess = launcher.getProcess();
-        } catch (GFLauncherException e) {
-            throw new IllegalStateException("Could not access the server process!", e);
-        }
+        final Process glassFishProcess = launcher.getProcess();
         final Supplier<Boolean> signOfFinishedStartup = () -> {
             if (pidFile == null) {
                 if (isListeningOnAnyEndpoint()) {
@@ -131,13 +125,8 @@ public class StartServerHelper {
 
         // Now try to throw some comprehensible report about what happened.
         final int exitCode = glassFishProcess.exitValue();
-        final String output;
-        try {
-            ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
-            output = psd.getOutErrString();
-        } catch (GFLauncherException e) {
-            throw new IllegalStateException("Could not access the output of the server process!", e);
-        }
+        ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
+        final String output = psd.getOutErrString();
         final String serverName = info.isDomain()
             ? "domain " + info.getDomainName()
             : "instance " + info.getInstanceName();
@@ -148,9 +137,9 @@ public class StartServerHelper {
             return;
         }
         if (output.isEmpty()) {
-            throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
+            throw new CommandException(I18N.get("serverDied", serverName, exitCode));
         }
-        throw new CommandException(I18N.get("serverDied", serverName, exitCode));
+        throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
     }
 
     /**
@@ -170,13 +159,7 @@ public class StartServerHelper {
 
 
     public void report() {
-        final String logfile;
-        try {
-            logfile = launcher.getLogFilename();
-        } catch (GFLauncherException e) {
-            throw new IllegalStateException(e);
-        }
-
+        final String logfile = launcher.getLogFilename();
         final Integer adminPort;
         if (addresses == null || addresses.isEmpty()) {
             adminPort = null;

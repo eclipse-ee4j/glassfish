@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import com.sun.enterprise.universal.xml.MiniXmlParserException;
+
 import java.io.File;
 
 import org.glassfish.api.admin.RuntimeType;
@@ -61,7 +63,7 @@ public class GFLauncherTest {
     }
 
     @BeforeEach
-    public void initLauncher() throws GFLauncherException {
+    public void initLauncher() throws Exception {
         launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
         info = launcher.getInfo();
         info.setInstallDir(installDir);
@@ -75,7 +77,7 @@ public class GFLauncherTest {
      */
     @Test
     public void defaultDomainButMultipleDomainsExist() throws Exception {
-        GFLauncherException e = assertThrows(GFLauncherException.class, launcher::launch);
+        GFLauncherException e = assertThrows(GFLauncherException.class, launcher::setup);
         assertEquals("There is more than one domain in " + domainsDir.getAbsolutePath()
             + ".  Try again but specify the domain name as the last argument.", e.getMessage());
     }
@@ -87,6 +89,7 @@ public class GFLauncherTest {
     @Test
     public void domain1WithDiagOptions() throws Exception {
         info.setDomainName("domain1");
+        launcher.setup();
         launcher.launch();
         CommandLine cmdline = launcher.getCommandLine();
         // 0 --> java, 1 --> "-cp" 2 --> the classpath, 3 -->first arg
@@ -100,6 +103,7 @@ public class GFLauncherTest {
     @Test
     public void domain2WithoutDiagOptions() throws Exception {
         info.setDomainName("domain2");
+        launcher.setup();
         launcher.launch();
         CommandLine cmdline = launcher.getCommandLine();
         assertThat(cmdline, hasItems(matchesPattern(".*java(.exe)?(\")?"), is("-cp"),
@@ -114,7 +118,7 @@ public class GFLauncherTest {
     @Test
     public void missingDomain() throws Exception {
         info.setDomainName("NoSuchDomain");
-        GFLauncherException e = assertThrows(GFLauncherException.class, launcher::launch);
+        GFLauncherException e = assertThrows(GFLauncherException.class, launcher::setup);
         assertEquals("The domain root dir is not pointing to a directory.  This is what I was looking for: ["
             + new File(domainsDir, "NoSuchDomain").getAbsolutePath() + "]", e.getMessage());
     }
@@ -127,8 +131,8 @@ public class GFLauncherTest {
     @Test
     public void brokenDomainXml() throws Exception {
         info.setDomainName("baddomain");
-        GFLauncherException e = assertThrows(GFLauncherException.class, launcher::launch);
-        assertEquals("Fatal Error encountered during launch: \"Xml Parser Error: javax.xml.stream.XMLStreamException:"
+        MiniXmlParserException e = assertThrows(MiniXmlParserException.class, launcher::setup);
+        assertEquals("Xml Parser Error: javax.xml.stream.XMLStreamException:"
             + " ParseError at [row,col]:[57,7]\n"
             + "Message: The element type \"system-property\" must be terminated by the matching"
             + " end-tag \"</system-property>\".", e.getMessage());
@@ -138,8 +142,9 @@ public class GFLauncherTest {
      * Test the logfilename handling -- log-service is in domain.xml like V2
      */
     @Test
-    public void domain1FromSGES2() throws GFLauncherException {
+    public void domain1FromSGES2() throws Exception {
         info.setDomainName("domain1");
+        launcher.setup();
         launcher.launch();
         assertTrue(launcher.getLogFilename().endsWith("server.log"));
     }
@@ -148,16 +153,18 @@ public class GFLauncherTest {
      * Test the logfilename handling -- no log-service is in domain.xml
      */
     @Test
-    public void noLogService() throws GFLauncherException {
+    public void noLogService() throws Exception {
         info.setDomainName("domainNoLog");
         launcher.launch();
+        launcher.setup();
         assertTrue(launcher.getLogFilename().endsWith("server.log"));
     }
 
     @Test
-    public void dropInterruptedCommands() throws GFLauncherException {
+    public void dropInterruptedCommands() throws Exception {
         info.setDomainName("domainNoLog");
         info.setDropInterruptedCommands(true);
+        launcher.setup();
         launcher.launch();
         assertTrue(launcher.getJvmOptions().contains("-Dorg.glassfish.job-manager.drop-interrupted-commands=true"));
     }

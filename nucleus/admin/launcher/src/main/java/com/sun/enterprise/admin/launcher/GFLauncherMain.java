@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import com.sun.enterprise.universal.xml.MiniXmlParserException;
+
 import org.glassfish.main.jul.GlassFishLogManagerInitializer;
 
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.LAUNCH_FAILURE;
@@ -42,8 +44,9 @@ public class GFLauncherMain {
         try {
             GFLauncher launcher = GFLauncherFactory.getInstance(DAS);
             launcher.getInfo().addArgs(args);
+            launcher.setup();
             launcher.launch();
-        } catch (GFLauncherException ex) {
+        } catch (GFLauncherException | MiniXmlParserException ex) {
             GFLauncherLogger.severe(LAUNCH_FAILURE, ex);
         }
     }

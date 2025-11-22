@@ -65,15 +65,6 @@ class GFEmbeddedLauncher extends GFLauncher {
     }
 
     @Override
-    void internalLaunch() throws GFLauncherException {
-        try {
-            launchInstance();
-        } catch (Exception ex) {
-            throw new GFLauncherException(ex);
-        }
-    }
-
-    @Override
     List<File> getMainModulepath() throws GFLauncherException {
         return List.of();
     }
@@ -104,8 +95,8 @@ class GFEmbeddedLauncher extends GFLauncher {
         setup = true;
         try {
             setupFromEnv();
-        } catch (GFLauncherException gfle) {
-            throw new GFLauncherException(GENERAL_MESSAGE + gfle.getMessage(), gfle);
+        } catch (GFLauncherException e) {
+            throw new GFLauncherException(GENERAL_MESSAGE + e.getMessage(), e);
         }
 
         initCommandLine();
@@ -128,12 +119,14 @@ class GFEmbeddedLauncher extends GFLauncher {
 
             File dom = new File(parent, domainName);
             File theConfigDir = new File(dom, "config");
-            File dx = new File(theConfigDir, "domain.xml");
+            File domainXmlFile = new File(theConfigDir, "domain.xml");
             info.setConfigDir(theConfigDir);
 
             info.setDomainRootDir(new File(System.getenv(INSTALL_HOME)));
-            MiniXmlParser parser = new MiniXmlParser(dx, instanceName);
-            info.setAdminAddresses(parser.getAdminAddresses());
+            MiniXmlParser parser = new MiniXmlParser(domainXmlFile, instanceName);
+            List<HostAndPort> adminAddresses = parser.getAdminAddresses();
+            info.setAsadminAdminAddress(new HostAndPort("localhost", 4848, false));
+            info.setXmlAdminAddresses(adminAddresses);
             File logFile = new File(dom, "logs");
             logFile = new File(logFile, "server.log");
             logFilename = logFile.getAbsolutePath();
@@ -143,25 +136,11 @@ class GFEmbeddedLauncher extends GFLauncher {
             e.printStackTrace();
         }
 
-        List<HostAndPort> adminAddresses = info.getAdminAddresses();
-
-        if (adminAddresses == null || adminAddresses.isEmpty()) {
-            adminAddresses = new ArrayList<>();
-            adminAddresses.add(new HostAndPort("localhost", 4848, false));
-            info.setAdminAddresses(adminAddresses);
-        }
         GFLauncherLogger.addLogFileHandler(getLogFilename());
-
-        // super.fixLogFilename();
-
-        /*
-         * String domainName = parser.getDomainName(); if(GFLauncherUtils.ok(domainName)) { info.setDomainName(domainName); }
-         */
-
     }
 
     @Override
-    public String getLogFilename() throws GFLauncherException {
+    public String getLogFilename() {
         return logFilename;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,20 +64,17 @@ public class EmbeddedCreateContextTest {
         embedded.addWebListener(listener);
 
         File docRoot = new File(TestConfiguration.PROJECT_DIR, "target/classes");
-        Context context = (Context) embedded.createContext(docRoot, contextRoot, null);
+        Context context = embedded.createContext(docRoot, contextRoot, null);
 
-        URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
+        URL servlet = new URL("http://localhost:8080/" + contextRoot + "/hello");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
-
         StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
     }
 
     @AfterAll

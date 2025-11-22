@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,8 +27,12 @@ import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.tests.embedded.ejb.basic.SampleEjb;
 import org.glassfish.tests.embedded.ejb.basic.TimerEjb;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * this test will use the ejb API testing.
@@ -38,12 +42,23 @@ import org.junit.jupiter.api.Test;
  */
 public class EmbeddedTest {
 
+    private static GlassFish glassfish;
+
+    @BeforeAll
+    static void init() throws Exception {
+        glassfish = GlassFishRuntime.bootstrap().newGlassFish();
+        glassfish.start();
+    }
+
+    @AfterAll
+    static void close() throws Exception {
+        if (glassfish != null) {
+            glassfish.dispose();
+        }
+    }
+
     @Test
     public void test() throws Exception {
-        GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
-        glassfish.start();
-
-
         Deployer deployer = glassfish.getDeployer();
         URI uri = new File(System.getProperty("project.directory"), "target/classes").toURI();
         System.out.println("Deploying [" + uri + "]");
@@ -64,13 +79,8 @@ public class EmbeddedTest {
         System.out.println("Verifying TimerEjb [" + timerEjb + "]");
         Thread.sleep(4000);
         boolean result = timerEjb.verifyTimer();
-        Assertions.assertTrue(result);
+        assertTrue(result);
         System.out.println("TimerEJB tested successfully.");
-
-        glassfish.stop();
-        glassfish.dispose();
-
         System.out.println("EmbeddedTest completed.");
-
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,19 +75,14 @@ public class EmbeddedSetDefaultWebXmlTest {
         // test if dir listing is getting picked up from default-web.xml
         URL servlet = new URL("http://localhost:8080/"+contextRoot);
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
-
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
-
         embedded.removeContext(context);
-
      }
 
     @AfterAll
@@ -99,5 +94,4 @@ public class EmbeddedSetDefaultWebXmlTest {
             glassfish = null;
         }
     }
-
 }

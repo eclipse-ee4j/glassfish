@@ -97,7 +97,8 @@ class AutoDisposableGlassFish extends GlassFishImpl {
     }
 
     @Override
-    public void dispose() throws GlassFishException {
+    public synchronized void dispose() throws GlassFishException {
+        onDisposeAction.accept(this);
         try {
             super.dispose();
         } finally {
@@ -107,7 +108,6 @@ class AutoDisposableGlassFish extends GlassFishImpl {
                     deleteRecursive(instanceRoot);
                 }
             }
-            onDisposeAction.accept(this);
         }
     }
 

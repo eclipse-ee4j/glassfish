@@ -39,6 +39,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Tests WebContainer
  *
@@ -91,8 +93,7 @@ public class EmbeddedWebTest {
         webListeners[0] = testListener;
 
         String virtualServerId = "embedded-server";
-        VirtualServer virtualServer = (VirtualServer)
-                embedded.createVirtualServer(virtualServerId, root, webListeners);
+        VirtualServer virtualServer = embedded.createVirtualServer(virtualServerId, root, webListeners);
         embedded.addVirtualServer(virtualServer);
 
         config.setVirtualServerId(virtualServerId);
@@ -102,27 +103,27 @@ public class EmbeddedWebTest {
         ArrayList<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after creation " + listenerList.size());
         Assertions.assertTrue(listenerList.size()==2);
-        for (WebListener listener : embedded.getWebListeners())
+        for (WebListener listener : embedded.getWebListeners()) {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
+        }
 
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
-        Assertions.assertEquals(virtualServerId,vs.getID());
+        assertEquals(virtualServerId,vs.getID());
 
-        Context context = (Context) embedded.createContext(root);
+        Context context = embedded.createContext(root);
         //embedded.addContext(context, contextRoot);
         virtualServer.addContext(context, contextRoot);
 
         URL servlet = new URL("http://localhost:"+newPort+"/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
         StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
-        System.out.println(inputLine);
-        Assertions.assertEquals("Hello World!", sb.toString());
+        assertEquals("Hello World!", sb.toString());
 
         System.out.println("Removing web listener "+testListener.getId());
         embedded.removeWebListener(testListener);
@@ -130,8 +131,9 @@ public class EmbeddedWebTest {
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after deletion " + listenerList.size());
         Assertions.assertTrue(listenerList.size()==1);
-        for (WebListener listener : embedded.getWebListeners())
+        for (WebListener listener : embedded.getWebListeners()) {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
+        }
 
         virtualServer.removeContext(context);
 

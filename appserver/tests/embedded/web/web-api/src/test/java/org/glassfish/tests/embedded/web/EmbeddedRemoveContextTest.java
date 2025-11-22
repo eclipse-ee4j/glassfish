@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,9 +32,12 @@ import org.glassfish.embeddable.web.VirtualServer;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests WebContainer#removeContext
@@ -72,8 +75,8 @@ public class EmbeddedRemoveContextTest {
         embedded.addContext(context, contextRoot);
 
         VirtualServer vs = embedded.getVirtualServer("server");
-        Assertions.assertEquals("server", vs.getID());
-        Assertions.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
+        assertEquals("server", vs.getID());
+        assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
         boolean containsContext = false;
         for (Context ctx : vs.getContexts()) {
             System.out.println("Context found "+ctx.getPath());
@@ -81,24 +84,21 @@ public class EmbeddedRemoveContextTest {
                 containsContext = true;
             }
         }
-        Assertions.assertTrue(containsContext);
+        assertTrue(containsContext);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
-
         StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
 
         embedded.removeContext(context);
 
-        Assertions.assertNull(vs.getContext(contextRoot));
+        assertNull(vs.getContext(contextRoot));
 
         containsContext = false;
         for (Context ctx : vs.getContexts()) {
@@ -107,26 +107,26 @@ public class EmbeddedRemoveContextTest {
                 containsContext = true;
             }
         }
-        Assertions.assertTrue(!containsContext);
+        assertTrue(!containsContext);
 
         embedded.addContext(context, contextRoot);
 
-        Assertions.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
+        assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
         for (Context ctx : vs.getContexts()) {
             System.out.println("Context found "+ctx.getPath());
             if (ctx.getPath().endsWith(contextRoot)) {
                 containsContext = true;
             }
         }
-        Assertions.assertTrue(containsContext);
+        assertTrue(containsContext);
         yc = servlet.openConnection();
-        in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-
         sb = new StringBuilder();
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
 
         embedded.removeContext(context);
     }

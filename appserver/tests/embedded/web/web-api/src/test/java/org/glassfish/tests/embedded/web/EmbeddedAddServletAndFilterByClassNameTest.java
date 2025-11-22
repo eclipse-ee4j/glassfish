@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,7 @@ public class EmbeddedAddServletAndFilterByClassNameTest {
 
         VirtualServer vs = embedded.getVirtualServer("server");
         System.out.println("Default virtual server "+vs);
-        Context context = (Context) embedded.createContext(root);
+        Context context = embedded.createContext(root);
 
         ServletRegistration sr = context.addServlet("NewFilterServlet", "org.glassfish.tests.embedded.web.NewFilterServlet");
         sr.setInitParameter("servletInitName", "servletInitValue");

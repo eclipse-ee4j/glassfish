@@ -71,16 +71,13 @@ public class EmbeddedSetConfigurationTest {
 
         URL servlet = new URL("http://localhost:8080");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
-
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
      }
 
     @AfterAll

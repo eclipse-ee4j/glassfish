@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,7 @@ public class EmbeddedCreateServletAndFilterTest {
 
         VirtualServer vs = embedded.getVirtualServer("server");
         System.out.println("Default virtual server "+vs);
-        Context context = (Context) embedded.createContext(root);
+        Context context = embedded.createContext(root);
 
         Class<NewFilterServlet> servletCl = (Class<NewFilterServlet>)
             Class.forName("org.glassfish.tests.embedded.web.NewFilterServlet");
@@ -96,19 +96,15 @@ public class EmbeddedCreateServletAndFilterTest {
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/newFilterServlet");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
 
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+            StringBuilder sb = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
-
         vs.removeContext(context);
-
      }
 
     @AfterAll

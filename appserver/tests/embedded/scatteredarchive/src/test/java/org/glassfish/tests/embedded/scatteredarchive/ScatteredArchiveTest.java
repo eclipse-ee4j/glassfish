@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,9 +41,7 @@ import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.tests.embedded.scatteredarchive.contextInitialized.ContextInitializedTestServlet;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -54,6 +52,8 @@ import static org.glassfish.tests.embedded.scatteredarchive.contextInitialized.C
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -96,7 +96,7 @@ public class ScatteredArchiveTest {
         Deployer deployer = glassfish.getDeployer();
         String appname = deployer.deploy(warURI);
         System.out.println("Deployed [" + appname + "]");
-        Assertions.assertEquals(appname, "scatteredarchive");
+        assertEquals(appname, "scatteredarchive");
 
         // Now create a http listener and access the app.
         WebContainer webcontainer = glassfish.getService(WebContainer.class);
@@ -122,7 +122,7 @@ public class ScatteredArchiveTest {
         printContents(rarURI);
         appname = deployer.deploy(rarURI);
         System.out.println("Deployed RAR [" + appname + "]");
-        Assertions.assertEquals(appname, "scatteredra");
+        assertEquals(appname, "scatteredra");
 
         // Test Scattered Enterprise Archive.
         ScatteredEnterpriseArchive ear = new ScatteredEnterpriseArchive("sear");
@@ -133,7 +133,7 @@ public class ScatteredArchiveTest {
         printContents(earURI);
         appname = deployer.deploy(earURI);
         System.out.println("Deployed [" + appname + "]");
-        Assertions.assertEquals(appname, "sear");
+        assertEquals(appname, "sear");
 
         get("http://localhost:9090/satest", "Hi, my name is Bhavani. What's yours?");
         get("http://localhost:9090/satest/" + testServletName,
@@ -168,7 +168,7 @@ public class ScatteredArchiveTest {
         Deployer deployer = glassfish.getDeployer();
         String appname = deployer.deploy(warURI);
         logger.log(INFO, "Deployed [" + appname + "]");
-        Assertions.assertEquals(appname, ARCHIVE_NAME);
+        assertEquals(appname, ARCHIVE_NAME);
 
         get("http://localhost:8080/satest/" + ContextInitializedTestServlet.class.getSimpleName(),
                 LABEL_CONTEXT_INITIALIZED_COUNTER, "1");
@@ -185,41 +185,41 @@ public class ScatteredArchiveTest {
 
     private void get(String urlStr, String containingString) throws Exception {
         List<String> inLines = getLinesFromUrl(new URL(urlStr));
-        MatcherAssert.assertThat("Output from servlet", inLines, hasItem(containsString(containingString)));
+        assertThat("Output from servlet", inLines, hasItem(containsString(containingString)));
         logger.log(INFO, "***** SUCCESS **** Found [" + containingString + "] in the response.*****");
     }
 
     private void get(String urlStr, String key, String value) throws Exception {
         List<String> inLines = getLinesFromUrl(new URL(urlStr));
         String result = key + ":" + value;
-        MatcherAssert.assertThat("Output from servlet", inLines, hasItem(is(result)));
+        assertThat("Output from servlet", inLines, hasItem(is(result)));
         logger.log(INFO, "***** SUCCESS **** Found [" + result + "] in the response.*****");
     }
 
     private List<String> getLinesFromUrl(URL url) throws Exception {
         URLConnection yc = url.openConnection();
         logger.log(DEBUG, "\nURLConnection [" + yc + "] : ");
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                yc.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
             return in.lines().collect(toList());
         }
     }
 
     void printContents(URI jarURI) throws IOException {
-        JarFile jarfile = new JarFile(new File(jarURI));
         StringBuilder contents = new StringBuilder();
-        contents.append("[")
-                .append(jarURI)
-                .append("] contents : \n");
-        Enumeration<JarEntry> entries = jarfile.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            contents.append(entry.getSize())
-                    .append("\t")
-                    .append(new Date(entry.getTime()))
-                    .append("\t")
-                    .append(entry.getName())
-                    .append("\n");
+        try (JarFile jarfile = new JarFile(new File(jarURI))) {
+            contents.append("[")
+                    .append(jarURI)
+                    .append("] contents : \n");
+            Enumeration<JarEntry> entries = jarfile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                contents.append(entry.getSize())
+                        .append("\t")
+                        .append(new Date(entry.getTime()))
+                        .append("\t")
+                        .append(entry.getName())
+                        .append("\n");
+            }
         }
         logger.log(INFO, contents);
     }

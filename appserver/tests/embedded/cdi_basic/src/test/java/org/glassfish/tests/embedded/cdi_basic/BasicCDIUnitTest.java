@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,9 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,13 +49,26 @@ public class BasicCDIUnitTest {
 
     private static final String PROJECT_DIR = System.getProperty("project.directory");
 
+    private static GlassFish glassfish;
+
+    @BeforeAll
+    static void init() throws Exception {
+        GlassFishProperties props = new GlassFishProperties();
+        props.setPort("http-listener", 8080);
+        glassfish = GlassFishRuntime.bootstrap().newGlassFish(props);
+        glassfish.start();
+    }
+
+    @AfterAll
+    static void close() throws Exception {
+        if (glassfish != null) {
+            glassfish.dispose();
+        }
+    }
+
     @Test
     public void test() throws Exception {
 
-        GlassFishProperties props = new GlassFishProperties();
-        props.setPort("http-listener", 8080);
-        GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish(props);
-        glassfish.start();
 
         // Test Scattered Web Archive
         ScatteredArchive sa = new ScatteredArchive("cdi_basic",
@@ -80,8 +95,6 @@ public class BasicCDIUnitTest {
                 "All CDI beans have been injected.");
 
         deployer.undeploy(appname);
-
-        glassfish.dispose();
 
     }
 

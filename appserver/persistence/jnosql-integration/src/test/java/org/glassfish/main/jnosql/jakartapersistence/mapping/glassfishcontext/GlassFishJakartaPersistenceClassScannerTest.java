@@ -47,7 +47,9 @@ import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.rep
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
@@ -91,11 +93,13 @@ public class GlassFishJakartaPersistenceClassScannerTest {
         final GlassFishJakartaPersistenceClassScanner scanner = new GlassFishJakartaPersistenceClassScanner();
 
         final Set<Class<?>> repositoriesStandardResult = scanner.repositoriesStandard();
-        assertTrue(repositoriesStandardResult.equals(standardRepositories), "Standard repositories: " + repositoriesStandardResult);
+        assertThat("Standard repositories", repositoriesStandardResult, is(equalTo(standardRepositories)));
+
         final Set<Class<?>> customRepositoriesResult = scanner.customRepositories();
-        assertTrue(customRepositoriesResult.equals(customRepositories), "Custom repositories: " + customRepositoriesResult);
+        assertThat("Custom repositories", customRepositoriesResult, is(equalTo(customRepositories)));
+
         final Set<Class<?>> repositoriesResult = scanner.repositories();
-        assertTrue(repositoriesResult.equals(normalRepositories), "Repositories: " + repositoriesResult);
+        assertThat("Repositories", repositoriesResult, is(equalTo(normalRepositories)));
     }
 
     private void configureCDI(Types types) {

@@ -59,8 +59,6 @@ public class RestartServer {
     private String serverName = "";
 
     private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
-    private static final String AS_RESTART_PID = "-DAS_RESTART=" + ProcessHandle.current().pid();
-    private static final String[] normalProps = { AS_RESTART_PID };
     private static final int RESTART_NORMAL = 10;
     private static final int RESTART_DEBUG_ON = 11;
     private static final int RESTART_DEBUG_OFF = 12;
@@ -136,8 +134,9 @@ public class RestartServer {
 
     private void scheduleReincarnation() throws RDCException {
         try {
+            final String[] sysProps = new String[] {"-DAS_RESTART_PREVIOUS_PID=" + ProcessHandle.current().pid()};
             Runtime.getRuntime()
-                .addShutdownHook(new StartServerShutdownHook(modulepath, classpath, normalProps, classname, args));
+                .addShutdownHook(new StartServerShutdownHook(modulepath, classpath, sysProps, classname, args));
         } catch (Exception e) {
             throw new RDCException(e);
         }

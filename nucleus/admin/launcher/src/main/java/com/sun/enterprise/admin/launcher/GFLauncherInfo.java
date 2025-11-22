@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,7 @@ import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +38,9 @@ import static com.sun.enterprise.universal.io.SmartFile.sanitize;
 /**
  * @author Byron Nevins
  */
-public class GFLauncherInfo {
+public final class GFLauncherInfo {
 
-    // BUG TODO get the def. domains dir from asenv 3/14/2008. Will this ever be done? 24/05/2020
+    // TODO: These directories are configurable, see asenv.conf. What about other places?
     private final static String DEFAULT_DOMAIN_PARENT_DIR = "domains";
     private final static String CONFIG_DIR = "config";
     private final static String CONFIG_FILENAME = "domain.xml";
@@ -63,6 +65,7 @@ public class GFLauncherInfo {
     private boolean verbose; // --verbose argument e.g. ./asadmin start-domain --verbose
     private boolean watchdog;
     private boolean upgrade;
+    private boolean ignoreOutput;
 
     private File domainParentDir;
     private File instanceRootDir;
@@ -76,16 +79,18 @@ public class GFLauncherInfo {
     private File configDir; // default [domainRootDir]/config
     private File configFile; // default [configDir]/domain.xml
 
-    File installDir; // default is [installDir]/modules/common-utils.jar/../..
+    private File installDir; // default is [installDir]/modules/common-utils.jar/../..
 
     private boolean valid;
 
     private boolean dropInterruptedCommands; // "org.glassfish.job-manager.drop-interrupted-commands" system property
-    private List<HostAndPort> adminAddresses; // admin host and port, e.g. localhost:4848
+    /** admin host and port, e.g. localhost:4848 */
+    private List<HostAndPort> xmlAdminAddresses;
+    private HostAndPort asadminAdminAddress;
     private RespawnInfo respawnInfo;
 
-    // password tokens -- could be multiple -- launcher should *just* write them onto stdin of server
-    final List<String> securityTokens = new ArrayList<>(); // note: it's package private
+    /** password tokens -- could be multiple -- launcher should *just* write them onto stdin of server */
+    private final List<String> securityTokens = new ArrayList<>();
 
     GFLauncherInfo(RuntimeType type) {
         this.type = type;
@@ -128,6 +133,13 @@ public class GFLauncherInfo {
      */
     public void setVerbose(boolean b) {
         verbose = b;
+    }
+
+    /**
+     * @param ignoreOutput to explicitly disable collecting server's output.
+     */
+    public void setIgnoreOutput(boolean ignoreOutput) {
+        this.ignoreOutput = ignoreOutput;
     }
 
     /**
@@ -175,6 +187,7 @@ public class GFLauncherInfo {
         return suspend;
     }
 
+
     /**
      * Starts the server in upgrade mode
      *
@@ -217,6 +230,13 @@ public class GFLauncherInfo {
     }
 
     /**
+     * @return true to explicitly disable collecting server's output.
+     */
+    public boolean isIgnoreOutput() {
+        return ignoreOutput;
+    }
+
+    /**
      *
      * @return true if watchdog mode is on.
      */
@@ -252,8 +272,13 @@ public class GFLauncherInfo {
         return instanceName;
     }
 
+    /**
+     * @return list of admin endpoints, never null.
+     */
     public List<HostAndPort> getAdminAddresses() {
-        return adminAddresses;
+        return xmlAdminAddresses == null || xmlAdminAddresses.isEmpty()
+            ? List.of(asadminAdminAddress)
+            : xmlAdminAddresses;
     }
 
     public RuntimeType getType() {
@@ -370,12 +395,26 @@ public class GFLauncherInfo {
         if (name == null || value == null) {
             throw new NullPointerException();
         }
-
         securityTokens.add(name + "=" + value);
     }
 
-    void setAdminAddresses(List<HostAndPort> adminAddresses) {
-        this.adminAddresses = adminAddresses;
+
+    List<String> getSecurityTokens() {
+        return Collections.unmodifiableList(securityTokens);
+    }
+
+    /**
+     * @param adminAddresses from domain.xml
+     */
+    public void setXmlAdminAddresses(List<HostAndPort> adminAddresses) {
+        this.xmlAdminAddresses = adminAddresses;
+    }
+
+    /**
+     * @param adminAddress provided by the command line
+     */
+    public void setAsadminAdminAddress(HostAndPort adminAddress) {
+        this.asadminAdminAddress = adminAddress;
     }
 
     /**
@@ -607,7 +646,7 @@ public class GFLauncherInfo {
         return verbose || watchdog;
     }
 
-    final private static class ThreeStateBoolean {
+    private static final class ThreeStateBoolean {
 
         final Boolean b;
 
@@ -626,7 +665,5 @@ public class GFLauncherInfo {
         boolean isFalse() {
             return !isNull() && !b.booleanValue();
         }
-
     }
-
 }

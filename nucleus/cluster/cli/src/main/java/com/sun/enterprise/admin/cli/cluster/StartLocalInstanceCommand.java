@@ -173,7 +173,8 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
                 if (env.debug()) {
                     setProperty(CLIConstants.WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
                 }
-                getLauncher().relaunch();
+                getLauncher().setup();
+                getLauncher().launch();
             }
         } catch (GFLauncherException gfle) {
             throw new CommandException(gfle.getMessage());

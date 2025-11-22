@@ -195,7 +195,8 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
                         setProperty(WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
                     }
 
-                    glassFishLauncher.relaunch();
+                    glassFishLauncher.setup();
+                    glassFishLauncher.launch();
                 }
 
             } else {

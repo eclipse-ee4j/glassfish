@@ -18,7 +18,6 @@
 package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.launcher.GFLauncher;
-import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.process.ProcessUtils;
@@ -40,7 +39,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
-import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
@@ -95,12 +93,7 @@ public class StartServerHelper {
             System.out.print(I18N.get("WaitServer", serverOrDomainName) + " ");
         }
 
-        final Process glassFishProcess;
-        try {
-            glassFishProcess = launcher.getProcess();
-        } catch (GFLauncherException e) {
-            throw new IllegalStateException("Could not access the server process!", e);
-        }
+        final Process glassFishProcess = launcher.getProcess();
         final Supplier<Boolean> signOfFinishedStartup = () -> {
             if (pidFile == null) {
                 if (isListeningOnAnyEndpoint()) {
@@ -132,13 +125,8 @@ public class StartServerHelper {
 
         // Now try to throw some comprehensible report about what happened.
         final int exitCode = glassFishProcess.exitValue();
-        final String output;
-        try {
-            ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
-            output = psd.getOutErrString();
-        } catch (GFLauncherException e) {
-            throw new IllegalStateException("Could not access the output of the server process!", e);
-        }
+        ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
+        final String output = psd.getOutErrString();
         final String serverName = info.isDomain()
             ? "domain " + info.getDomainName()
             : "instance " + info.getInstanceName();
@@ -148,10 +136,10 @@ public class StartServerHelper {
                 serverName, output);
             return;
         }
-        if (ok(output)) {
-            throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
+        if (output.isEmpty()) {
+            throw new CommandException(I18N.get("serverDied", serverName, exitCode));
         }
-        throw new CommandException(I18N.get("serverDied", serverName, exitCode));
+        throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
     }
 
     /**
@@ -171,13 +159,7 @@ public class StartServerHelper {
 
 
     public void report() {
-        final String logfile;
-        try {
-            logfile = launcher.getLogFilename();
-        } catch (GFLauncherException e) {
-            throw new IllegalStateException(e);
-        }
-
+        final String logfile = launcher.getLogFilename();
         final Integer adminPort;
         if (addresses == null || addresses.isEmpty()) {
             adminPort = null;
@@ -190,8 +172,9 @@ public class StartServerHelper {
 
 
     /**
-     * If the parent is a GF server -- then wait for it to die. This is part of the Client-Server Restart Dance! THe dying
-     * server called us with the system property AS_RESTART set to its pid
+     * If the parent is a GF server -- then wait for it to die.
+     * This is part of the Client-Server Restart Dance!
+     * The dying server called us with the system property AS_RESTART_PREVIOUS_PID set to its pid
      *
      * @throws CommandException if we timeout waiting for the parent to die or if the admin ports never free up
      */
@@ -211,8 +194,8 @@ public class StartServerHelper {
 
 
     private Integer getParentPid() {
-        String pid = System.getProperty("AS_RESTART");
-        if (!ok(pid)) {
+        String pid = System.getProperty("AS_RESTART_PREVIOUS_PID");
+        if (pid == null) {
             return null;
         }
         try {

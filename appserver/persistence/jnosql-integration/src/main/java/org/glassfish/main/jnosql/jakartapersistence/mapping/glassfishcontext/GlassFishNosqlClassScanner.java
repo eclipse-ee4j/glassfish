@@ -21,7 +21,6 @@ import jakarta.nosql.Entity;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
@@ -77,10 +76,7 @@ public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implem
         if (!enabled) {
             return Set.of();
         }
-        Predicate<ParameterizedInterfaceModel> isSupportedBuiltInInterface = this::isSupportedBuiltInInterface;
-        Predicate<ParameterizedInterfaceModel> directlyImplementsStandardInterface = this::directlyImplementsStandardInterface;
-        return repositoriesStreamMatching(intfModel -> intfModel.getParameterizedInterfaces().stream()
-                .anyMatch(isSupportedBuiltInInterface.and(directlyImplementsStandardInterface)))
+        return repositoriesStreamMatching(this::isSupportedStandardInterface)
                 .collect(toUnmodifiableSet());
     }
 

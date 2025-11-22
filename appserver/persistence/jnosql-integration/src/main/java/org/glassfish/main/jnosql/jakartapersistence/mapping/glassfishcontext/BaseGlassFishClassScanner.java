@@ -22,7 +22,11 @@ import jakarta.data.repository.Repository;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.Entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -37,7 +41,6 @@ import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.hk2.classmodel.reflect.ExtensibleType;
 import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
 import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
-import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
@@ -51,7 +54,9 @@ abstract public class BaseGlassFishClassScanner {
     private static final Logger LOG = Logger.getLogger(BaseGlassFishClassScanner.class.getName());
 
     /**
-     * Whether the entity supported by this repository interface is supported by this provide (e.g. the entity class contains {@link Entity} annotation.
+     * Whether the entity supported by this repository interface is supported by
+     * this provide (e.g. the entity class contains {@link Entity} annotation.
+     *
      * @param entityType Type of the entity, analogous to the entity class
      * @return True if the entity is supported, false otherwise
      */
@@ -104,12 +109,10 @@ abstract public class BaseGlassFishClassScanner {
     }
 
     protected Stream<Class<?>> repositoriesStream() {
-        return repositoriesStreamMatching(intfModel ->
-                intfModel.getParameterizedInterfaces().stream()
-                .anyMatch(this::isSupportedBuiltInInterface));
+        return repositoriesStreamMatching(r -> true);
     }
 
-    protected Stream<Class<?>> repositoriesStreamMatching(Predicate<InterfaceModel> predicate) {
+    protected Stream<Class<?>> repositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
         return getTypes().getAllTypes()
                 .stream()
@@ -124,43 +127,61 @@ abstract public class BaseGlassFishClassScanner {
                         }
                     }
                     return false;
-                        })
-                .map(InterfaceModel.class::cast)
+                })
+                .map(intfModel -> new GeneralInterfaceModel((InterfaceModel) intfModel))
                 .filter(predicate)
+                .map(GeneralInterfaceModel::toTypeModel)
                 .map(this::typeModelToClass);
     }
 
-    protected boolean noneOfExtendedInterfacesIsStandard(InterfaceModel intfModel) {
-        Predicate<ParameterizedInterfaceModel> directlyImplementsStandardInterface = this::directlyImplementsStandardInterface;
-        return intfModel.getParameterizedInterfaces().isEmpty()
-                || intfModel.getParameterizedInterfaces().stream()
-                        .allMatch(directlyImplementsStandardInterface
-                                .negate());
+    protected boolean isSupportedBuiltInInterface(GeneralInterfaceModel interf) {
+        if (interf.hasTypeParametersWithUnknownType()) {
+            return false;
+        }
+        if (isDataRepositoryInterface(interf) && interf.isParameterized()) {
+            final Collection<ParameterizedInterfaceModel> parameterizedTypes = interf.parametizedTypes();
+            return !parameterizedTypes.isEmpty()
+                    && isSupportedEntityType(parameterizedTypes.iterator().next());
+        } else {
+            final Stream<GeneralInterfaceModel> directlyImplementedInterfaces = interf.interfacesAsStream();
+            return directlyImplementedInterfaces
+                    .filter(this::isSupportedBuiltInInterface)
+                    .count() > 0;
+        }
     }
 
-    protected boolean isSupportedBuiltInInterface(ParameterizedInterfaceModel interf) {
-        final Collection<ParameterizedInterfaceModel> parameterizedTypes = interf.getParametizedTypes();
-        return !parameterizedTypes.isEmpty()
-                && isSupportedEntityType(parameterizedTypes.iterator().next())
-                && isDataRepositoryInterface(interf);
+    protected boolean isSupportedStandardInterface(GeneralInterfaceModel interf) {
+        if (interf.hasTypeParametersWithUnknownType()) {
+            return false;
+        }
+        if (implementsStandardInterfaceDirectly(interf)) {
+            return isSupportedBuiltInInterface(interf);
+        } else {
+            final Stream<GeneralInterfaceModel> directlyImplementedInterfaces = interf.interfacesAsStream();
+            return directlyImplementedInterfaces
+                    .filter(this::isSupportedStandardInterface)
+                    .count() == 1;
+        }
     }
 
-    protected boolean directlyImplementsStandardInterface(ParameterizedInterfaceModel interf) {
-        var types = getTypes();
-        Type basicRepositoryType = types.getBy(BasicRepository.class.getName());
-        Type crudRepositoryType = types.getBy(CrudRepository.class.getName());
-        Type dataRepositoryType = types.getBy(DataRepository.class.getName());
-        final Collection implementedInterfaces = interf.getRawInterface().getInterfaces();
-        return implementedInterfaces.contains(basicRepositoryType)
-                || implementedInterfaces.contains(crudRepositoryType)
-                || implementedInterfaces.contains(dataRepositoryType)
-                || canBeAssignedToOneOf(classForName(interf.getRawInterfaceName()),
-                        BasicRepository.class, CrudRepository.class, DataRepository.class);
+    protected boolean isNotSupportedStandardInterface(GeneralInterfaceModel intfModel) {
+        return !isSupportedStandardInterface(intfModel);
     }
 
-    private boolean isDataRepositoryInterface(ParameterizedInterfaceModel interf) {
-        return interf.getRawInterfaceName().equals(DataRepository.class.getName())
-                || DataRepository.class.isAssignableFrom(classForName(interf.getRawInterfaceName()));
+    private boolean isDataRepositoryInterface(GeneralInterfaceModel interf) {
+        return interf.interfaceName().equals(DataRepository.class.getName());
+    }
+
+    private boolean implementsStandardInterfaceDirectly(GeneralInterfaceModel interf) {
+        return interf.interfacesAsStream()
+                .filter(generalInterface
+                        -> Set.of(
+                        BasicRepository.class.getName(),
+                        CrudRepository.class.getName(),
+                        DataRepository.class.getName()
+                )
+                        .contains(generalInterface.interfaceName())
+                ).count() > 0;
     }
 
     private boolean canBeAssignedToOneOf(Class<?> clazz, Class<?>... assignables) {
@@ -170,5 +191,94 @@ abstract public class BaseGlassFishClassScanner {
             }
         }
         return false;
+    }
+}
+
+record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfaceModel parameterizedInterface, Collection<ParameterizedInterfaceModel> parameterizedTypes) {
+
+    private static System.Logger LOG = System.getLogger(GeneralInterfaceModel.class.getName());
+
+    GeneralInterfaceModel {
+        LOG.log(System.Logger.Level.INFO, Map.of(
+                "plain", "" + this.plainInterface(),
+                "parameterized", "" + this.parameterizedInterface(),
+                "types", "" + this.parameterizedTypes()
+        ));
+    }
+
+    GeneralInterfaceModel(InterfaceModel plainInterface) {
+        this(plainInterface, null, null);
+    }
+
+    GeneralInterfaceModel(ParameterizedInterfaceModel parameterizedInterfaceModel) {
+        this(null, parameterizedInterfaceModel, null);
+    }
+
+    GeneralInterfaceModel(ParameterizedInterfaceModel parameterizedInterfaceModel, Collection<ParameterizedInterfaceModel> parameterizedTypes) {
+        this(null, parameterizedInterfaceModel, parameterizedTypes);
+    }
+
+    boolean isParameterized() {
+        return parameterizedInterface != null;
+    }
+
+    /*
+      Is an interface with generics but no declared type parameters. E.g. it's List<T> but not List<String>
+      - type of parameters is unknown.
+    */
+    boolean hasTypeParametersWithUnknownType() {
+        return isParameterized() ? parametizedTypes().isEmpty() : plainInterface.getFormalTypeParameters() != null && !plainInterface.getFormalTypeParameters().isEmpty();
+    }
+
+    String interfaceName() {
+        if (isParameterized()) {
+            return parameterizedInterface.getRawInterfaceName();
+        } else {
+            return plainInterface.getName();
+        }
+    }
+
+    ExtensibleType toTypeModel() {
+        return isParameterized() ? parameterizedInterface.getRawInterface() : plainInterface;
+    }
+
+    Stream<GeneralInterfaceModel> interfacesAsStream() {
+        final ExtensibleType typeModel = toTypeModel();
+        final Collection<ParameterizedInterfaceModel> parameterizedInterfaces = typeModel.getParameterizedInterfaces();
+        final Collection<InterfaceModel> plainInterfaces = typeModel.getInterfaces();
+
+        return Stream.concat(
+                parameterizedInterfaces.stream().map(parameterizedInterface -> GeneralInterfaceModel.parameterizedFromSubInterface(parameterizedInterface, this)),
+                plainInterfaces.stream().map(GeneralInterfaceModel::new)
+        );
+    }
+
+    Collection<ParameterizedInterfaceModel> parametizedTypes() {
+        return parameterizedTypes != null ? parameterizedTypes : parameterizedInterface.getParametizedTypes();
+    }
+
+    /*
+     Creates an instance for a give parameterized interface and captures parameter types from the interface that extends it. Parameter types are not defined on superinterfaces therefore the information about them is lost down the line. E.g. for IntfB extends IntfA<String>, IntfA<T>, the information about String type is present only on IntfB. IntfA only knows the parameter name is "T" but not that its type is String.
+    */
+    static GeneralInterfaceModel parameterizedFromSubInterface(ParameterizedInterfaceModel parameterizedInterface, GeneralInterfaceModel subInterface) {
+        if (subInterface.isParameterized()) {
+            List<ParameterizedInterfaceModel> parameterizedTypes = new ArrayList<>();
+            final Map<String, ParameterizedInterfaceModel> formalTypeParametersOnSubInterface = subInterface.toTypeModel().getFormalTypeParameters();
+            final Iterator<ParameterizedInterfaceModel> iteratorThroughParameterizedTypesOnSubInterface = subInterface.parametizedTypes().iterator();
+            for (Map.Entry<String, ParameterizedInterfaceModel> formalTypeParameterOnSubInterface : formalTypeParametersOnSubInterface.entrySet() ) {
+
+                if (!iteratorThroughParameterizedTypesOnSubInterface.hasNext()) {
+                    throw new IllegalStateException("The number of parameterized types and formal type parameters is not the same, interface: " + parameterizedInterface);
+                }
+                final ParameterizedInterfaceModel parameterizedTypeOnSubInterface = iteratorThroughParameterizedTypesOnSubInterface.next();
+                final Map formalTypeParametersOnInterface = parameterizedInterface.getRawInterface().getFormalTypeParameters();
+                if (formalTypeParametersOnInterface.containsKey(formalTypeParameterOnSubInterface.getKey())) {
+                    parameterizedTypes.add(parameterizedTypeOnSubInterface);
+                }
+            }
+            return new GeneralInterfaceModel(parameterizedInterface, parameterizedTypes);
+        } else {
+            return new GeneralInterfaceModel(parameterizedInterface);
+        }
     }
 }

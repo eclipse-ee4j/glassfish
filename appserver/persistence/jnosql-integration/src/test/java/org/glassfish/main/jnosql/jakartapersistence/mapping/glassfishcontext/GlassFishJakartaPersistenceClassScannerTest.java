@@ -15,8 +15,6 @@
  */
 package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
 
-
-
 import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.DataRepository;
@@ -64,29 +62,35 @@ public class GlassFishJakartaPersistenceClassScannerTest {
     public void testVariousRepositories() throws URISyntaxException, IOException, InterruptedException {
 
         Set<Class<?>> allClasses = new HashSet<>();
-        Set<Class<?>> normalRepositories = new HashSet<>();
 
-        final Set<Class<?>> apiClasses = Set.of(DataRepository.class, BasicRepository.class, CrudRepository.class,
-                Entity.class, Repository.class);
-        allClasses.addAll(apiClasses);
+        {
+            final Set<Class<?>> apiClasses = Set.of(DataRepository.class, BasicRepository.class, CrudRepository.class,
+                    Entity.class, Repository.class);
+            allClasses.addAll(apiClasses);
+        }
 
-        final Set<Class<?>> otherTestClasses = Set.of(MyEntity.class);
-        allClasses.addAll(otherTestClasses);
+        {
+            final Set<Class<?>> otherTestClasses = Set.of(MyEntity.class);
+            allClasses.addAll(otherTestClasses);
+        }
 
         final Set<Class<?>> standardRepositories = Set.of(
                 MyDataRepository.class, MyBasicRepository.class, MyCrudRepository.class);
-        allClasses.addAll(standardRepositories);
-        normalRepositories.addAll(standardRepositories);
 
         final Set<Class<?>> combinedRepositories = Set.of(CombinedRepository.class);
-        allClasses.addAll(combinedRepositories);
-        normalRepositories.addAll(combinedRepositories);
 
         final Set<Class<?>> customRepositories = new HashSet<>();
-        customRepositories.addAll(Set.of(NoInterfaceRepository.class));
         customRepositories.addAll(combinedRepositories);
-        allClasses.addAll(customRepositories);
+        customRepositories.addAll(Set.of(NoInterfaceRepository.class));
 
+        Set<Class<?>> allRepositories = new HashSet<>();
+        allRepositories.addAll(standardRepositories);
+        allRepositories.addAll(combinedRepositories);
+        allRepositories.addAll(customRepositories);
+
+        allClasses.addAll(combinedRepositories);
+        allClasses.addAll(customRepositories);
+        allClasses.addAll(standardRepositories);
         Types types = parseClasses(allClasses);
 
         configureCDI(types);
@@ -99,7 +103,9 @@ public class GlassFishJakartaPersistenceClassScannerTest {
         assertThat("Custom repositories", customRepositoriesResult, is(equalTo(customRepositories)));
 
         final Set<Class<?>> repositoriesResult = scanner.repositories();
-        assertThat("Repositories", repositoriesResult, is(equalTo(normalRepositories)));
+        assertThat("Repositories", repositoriesResult, is(equalTo(allRepositories)));
+
+        assertThat("Repositories = standard + custom", repositoriesStandardResult.size() + customRepositoriesResult.size(), is(equalTo(repositoriesResult.size())));
     }
 
     private void configureCDI(Types types) {

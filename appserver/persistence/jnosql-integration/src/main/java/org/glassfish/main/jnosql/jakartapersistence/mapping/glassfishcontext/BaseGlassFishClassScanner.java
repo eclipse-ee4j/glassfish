@@ -160,7 +160,7 @@ abstract public class BaseGlassFishClassScanner {
             final Stream<GeneralInterfaceModel> directlyImplementedInterfaces = interf.interfacesAsStream();
             return directlyImplementedInterfaces
                     .filter(this::isSupportedStandardInterface)
-                    .count() == 1;
+                    .count() > 0;
         }
     }
 
@@ -195,16 +195,6 @@ abstract public class BaseGlassFishClassScanner {
 }
 
 record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfaceModel parameterizedInterface, Collection<ParameterizedInterfaceModel> parameterizedTypes) {
-
-    private static System.Logger LOG = System.getLogger(GeneralInterfaceModel.class.getName());
-
-    GeneralInterfaceModel {
-        LOG.log(System.Logger.Level.INFO, Map.of(
-                "plain", "" + this.plainInterface(),
-                "parameterized", "" + this.parameterizedInterface(),
-                "types", "" + this.parameterizedTypes()
-        ));
-    }
 
     GeneralInterfaceModel(InterfaceModel plainInterface) {
         this(plainInterface, null, null);

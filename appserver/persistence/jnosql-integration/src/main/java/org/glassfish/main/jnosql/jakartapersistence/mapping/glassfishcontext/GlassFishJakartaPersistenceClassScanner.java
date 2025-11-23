@@ -26,6 +26,7 @@ import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.jakartapersistence.mapping.metadata.JakartaPersistenceClassScanner;
 import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 /**
@@ -34,22 +35,27 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
  */
 public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassScanner implements JakartaPersistenceClassScanner {
 
-    private boolean enabled = false;
+    private static final System.Logger LOG = System.getLogger(GlassFishJakartaPersistenceClassScanner.class.getName());
 
     @Override
     public Set<Class<?>> entities() {
-        return findClassesWithAnnotation(Entity.class);
+        final Set<Class<?>> result = findClassesWithAnnotation(Entity.class);
+        LOG.log(DEBUG, () -> "Found entities: " + result);
+        return result;
     }
 
     @Override
     public Set<Class<?>> repositories() {
-        return repositoriesStream()
-                .collect(toUnmodifiableSet());
+        Set<Class<?>> result = repositoriesStream().collect(toUnmodifiableSet());
+        LOG.log(DEBUG, () -> "Detected repository interfaces: " + result);
+        return result;
     }
 
     @Override
     public Set<Class<?>> embeddables() {
-        return findClassesWithAnnotation(Embeddable.class);
+        Set<Class<?>> result = findClassesWithAnnotation(Embeddable.class);
+        LOG.log(DEBUG, () -> "Detected embeddables: " + result);
+        return result;
     }
 
     @Override
@@ -62,14 +68,16 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
 
     @Override
     public Set<Class<?>> repositoriesStandard() {
-        return repositoriesStreamMatching(this::isSupportedStandardInterface)
-                .collect(toUnmodifiableSet());
+        Set<Class<?>> result = repositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
+        LOG.log(DEBUG, () -> "Detected standard repository interfaces: " + result);
+        return result;
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
-        return repositoriesStreamMatching(this::isNotSupportedStandardInterface)
-                .collect(toUnmodifiableSet());
+        Set<Class<?>> result = repositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
+        LOG.log(DEBUG, () -> "Detected custom interfaces: " + result);
+        return result;
     }
 
     @Override

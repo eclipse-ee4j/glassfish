@@ -74,21 +74,23 @@ public class GlassFishJakartaPersistenceClassScannerTest {
             allClasses.addAll(otherTestClasses);
         }
 
-        final Set<Class<?>> standardRepositories = Set.of(
-                MyDataRepository.class, MyBasicRepository.class, MyCrudRepository.class);
+        final Set<Class<?>> standardRepositories = new HashSet<>();
 
-        final Set<Class<?>> combinedRepositories = Set.of(CombinedRepository.class);
+        {
+            final Set<Class<?>> combinedRepositories = Set.of(CombinedRepository.class);
+            standardRepositories.addAll(Set.of(
+                    MyDataRepository.class, MyBasicRepository.class, MyCrudRepository.class));
+            standardRepositories.addAll(combinedRepositories);
+        }
+
 
         final Set<Class<?>> customRepositories = new HashSet<>();
-        customRepositories.addAll(combinedRepositories);
         customRepositories.addAll(Set.of(NoInterfaceRepository.class));
 
         Set<Class<?>> allRepositories = new HashSet<>();
         allRepositories.addAll(standardRepositories);
-        allRepositories.addAll(combinedRepositories);
         allRepositories.addAll(customRepositories);
 
-        allClasses.addAll(combinedRepositories);
         allClasses.addAll(customRepositories);
         allClasses.addAll(standardRepositories);
         Types types = parseClasses(allClasses);

@@ -70,12 +70,15 @@ public class RestartDomainCommand extends StopDomainCommand {
     protected void doCommand() throws CommandException {
 
         if (!isRestartable()) {
-            throw new CommandException(Strings.get("restartDomain.notRestartable"));
+            throw new CommandException("The domain reports that it is not restartable.\n\n"
+                + "This usually means that the password file that was originally used"
+                + " to start the server has been deleted or is not readable now.\n"
+                + "Please stop and then restart the server - or fix the password file.");
         }
 
         // Save old values before executing restart
         final Long oldPid = getServerPid();
-        final HostAndPort oldAdminAddress = getAdminAddress();
+        final HostAndPort oldAdminAddress = getReachableAdminAddress();
         final HostAndPort newAdminEndpoint = getAdminAddress("server");
         final RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
         if (debug == null) {
@@ -94,9 +97,9 @@ public class RestartDomainCommand extends StopDomainCommand {
     @Override
     protected int dasNotRunning() throws CommandException {
         if (!isLocal()) {
-            throw new CommandException(Strings.get("restart.dasNotRunningNoRestart"));
+            throw new CommandException("Remote server is not running, can not restart it");
         }
-        logger.warning(strings.get("restart.dasNotRunning"));
+        logger.warning("Server is not running, will attempt to start it...");
         CLICommand cmd = habitat.getService(CLICommand.class, "start-domain");
         /*
          * Collect the arguments that also apply to start-domain.

@@ -20,8 +20,6 @@ package com.sun.enterprise.admin.servermgmt.cli;
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainsManager;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
-import com.sun.enterprise.universal.process.ProcessUtils;
-import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,20 +43,12 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
 
     private static final LocalStringsImpl strings = new LocalStringsImpl(DeleteDomainCommand.class);
 
-    // this is single threaded code, deliberately avoiding volatile/atomic
-    private HostAndPort adminAddress;
-
-    /**
-     */
     @Override
     protected void validate() throws CommandException, CommandValidationException {
         setDomainName(domainName0);
         super.validate();
-        adminAddress = super.getAdminAddress();
     }
 
-    /**
-     */
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
 
@@ -72,7 +62,7 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
             // might need a revisit (Kedar: 09/16/2009)
             //deleteLoginInfo();
         } catch (Exception e) {
-            throw new CommandException(e.getLocalizedMessage());
+            throw new CommandException(e.getLocalizedMessage(), e);
         }
 
         logger.fine(strings.get("DomainDeleted", getDomainName()));
@@ -80,10 +70,11 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
     }
 
     private void checkRunning() throws CommandException {
-        programOpts.setInteractive(false); // don't prompt for password
-        if (isThisDAS(getDomainRootDir()) && ProcessUtils.isListening(adminAddress)) {
-            String msg = strings.get("domain.is.running", getDomainName(), getDomainRootDir());
-            throw new IllegalStateException(msg);
+        // don't prompt for password
+        programOpts.setInteractive(false);
+        if (isThisDAS(getDomainRootDir()) && getReachableAdminAddress() != null) {
+            throw new CommandException(
+                "Domain " + getDomainName() + " at " + getDomainRootDir() + " is running. Stop it first.");
         }
     }
 

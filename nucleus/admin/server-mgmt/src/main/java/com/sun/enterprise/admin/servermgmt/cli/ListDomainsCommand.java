@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,8 @@ import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.DomainDirs;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -68,11 +69,11 @@ public final class ListDomainsCommand extends LocalDomainCommand {
             programOpts.setInteractive(false); // no prompting for passwords
             if (domainsList.length > 0) {
                 if (longOpt) {
-                    String headings[] = { "DOMAIN", "ADMIN_HOST", "ADMIN_PORT", "RUNNING", "RESTART_REQUIRED" };
+                    String headings[] = { "DOMAIN", "ADMIN_ENDPOINTS", "RUNNING", "RESTART_REQUIRED" };
                     ColumnFormatter cf = header ? new ColumnFormatter(headings) : new ColumnFormatter();
                     for (String dn : domainsList) {
                         DomainInfo di = getStatus(dn);
-                        cf.addRow(new Object[] { dn, di.adminAddr.getHost(), di.adminAddr.getPort(), di.status, di.restartRequired });
+                        cf.addRow(new Object[] { dn, di.getAdminEndpoints(), di.status, di.restartRequired });
                     }
                     logger.info(cf.toString());
                 } else {
@@ -83,41 +84,49 @@ public final class ListDomainsCommand extends LocalDomainCommand {
             } else {
                 logger.fine(strings.get("NoDomainsToList"));
             }
-        } catch (Exception ex) {
-            throw new CommandException(ex.getLocalizedMessage());
+        } catch (Exception e) {
+            throw new CommandException(e.getLocalizedMessage(), e);
         }
         return 0;
     }
 
-    static class DomainInfo {
-        public HostAndPort adminAddr;
-        public boolean status;
-        public String statusMsg;
-        public boolean restartRequired;
-    }
-
-    private DomainInfo getStatus(String dn) throws IOException, CommandException {
-        setDomainName(dn);
+    private DomainInfo getStatus(String domainName) throws CommandException {
+        // We have to change these to get the right domain.xml
+        setDomainName(domainName);
         initDomain();
-        DomainInfo di = new DomainInfo();
-        di.adminAddr = getAdminAddress("server");
-        programOpts.setHostAndPort(di.adminAddr);
-        di.status = isThisDAS(getDomainRootDir());
-
-        if (di.status) {
-            di.statusMsg = strings.get("list.domains.StatusRunning", dn);
+        DomainInfo info = new DomainInfo();
+        info.adminAddr = loadAdminAddresses(getDomainXml());
+        HostAndPort reachableEndpoint = getReachableAdminAddress(() -> info.adminAddr);
+        if (reachableEndpoint == null) {
+            info.status = false;
+            info.statusMsg = domainName + " not running";
+        } else {
+            programOpts.setHostAndPort(reachableEndpoint);
+            info.status = isThisDAS(getDomainRootDir());
+            info.statusMsg = domainName + " running";
             try {
                 RemoteCLICommand cmd = new RemoteCLICommand("_get-restart-required", programOpts, env);
                 String restartRequired = cmd.executeAndReturnOutput("_get-restart-required");
-                di.restartRequired = Boolean.parseBoolean(restartRequired.trim());
-                if (di.restartRequired) {
-                    di.statusMsg = strings.get("list.domains.StatusRestartRequired", dn);
+                info.restartRequired = Boolean.parseBoolean(restartRequired.trim());
+                if (info.restartRequired) {
+                    info.statusMsg = domainName + " running, restart required to apply configuration changes";
                 }
-            } catch (Exception ex) {
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Failed to check domain status for " + domainName, e);
             }
-        } else {
-            di.statusMsg = strings.get("list.domains.StatusNotRunning", dn);
         }
-        return di;
+        return info;
+    }
+
+
+    private static class DomainInfo {
+        List<HostAndPort> adminAddr;
+        boolean status;
+        String statusMsg;
+        boolean restartRequired;
+
+        private String getAdminEndpoints() {
+            return toHttpList(adminAddr);
+        }
     }
 }

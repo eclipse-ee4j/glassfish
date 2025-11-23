@@ -87,7 +87,7 @@ public class StopDomainCommand extends LocalDomainCommand {
         if (programOpts.getHost().equals(CLIConstants.DEFAULT_HOSTNAME)) {
             super.initDomain();
         } else if (userArgDomainName != null) { // remote case
-            throw new CommandException(Strings.get("StopDomain.noDomainNameAllowed"));
+            throw new CommandException("No domain name allowed with --host option.");
         }
     }
 
@@ -101,8 +101,10 @@ public class StopDomainCommand extends LocalDomainCommand {
                 return dasNotRunning();
             }
 
-            // cmd line has higher priority, but if not set, use domain.xml or defaults
-            addr = getAdminAddress();
+            addr = getReachableAdminAddress();
+            if (addr == null) {
+                return dasNotRunning();
+            }
             programOpts.setHostAndPort(addr);
             LOG.log(Level.DEBUG, "Stopping local domain on port {0}", programOpts.getPort());
 
@@ -156,7 +158,7 @@ public class StopDomainCommand extends LocalDomainCommand {
                     throw new CommandException(e.getMessage(), e);
                 }
             } else {
-                throw new CommandException(Strings.get("StopDomain.dasNotRunningRemotely"));
+                throw new CommandException("Killing a remote domain is not possible.");
             }
         }
 
@@ -184,7 +186,7 @@ public class StopDomainCommand extends LocalDomainCommand {
             cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
             if (printDots) {
                 // use stdout because logger always appends a newline
-                System.out.print(Strings.get("StopDomain.WaitDASDeath") + " ");
+                System.out.print("Waiting for the domain to stop ");
             }
             final boolean dead;
             if (isLocal()) {
@@ -193,7 +195,8 @@ public class StopDomainCommand extends LocalDomainCommand {
                 dead = ProcessUtils.waitWhileListening(addr, stopTimeout, printDots);
             }
             if (!dead) {
-                throw new CommandException(Strings.get("StopDomain.DASNotDead", stopTimeout.toSeconds()));
+                throw new CommandException(
+                    "Timed out " + stopTimeout.toSeconds() + " seconds waiting for the domain to stop.");
             }
         } catch (Exception e) {
             // The domain server may have died so fast we didn't have time to

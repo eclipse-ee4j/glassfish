@@ -76,6 +76,24 @@ public final class ProcessUtils {
         return waitFor(() -> !isAlive(pid), timeout, printDots);
     }
 
+    /**
+     * Blocks until the pid file contains a new PID or timeout comes first.
+     * Doesn't check if the state of the process.
+     *
+     * @param oldPid process identifier
+     * @param pidFile file which will contain the new PID at some point
+     * @param timeout
+     * @param printDots true to print dots to STDOUT while waiting. One dot per second.
+     * @return true if the new PID was detected before timeout. False otherwise.
+     */
+    public static boolean waitForNewPid(final long oldPid, final File pidFile, Duration timeout, boolean printDots) {
+        Supplier<Boolean> predicate = () -> {
+            final Long newPid = loadPid(pidFile);
+            return newPid != null && newPid.longValue() != oldPid;
+        };
+        return waitFor(predicate, timeout, printDots);
+    }
+
 
     /**
      * @param pidFile
@@ -130,7 +148,7 @@ public final class ProcessUtils {
      * Blocks until the endpoint closes the connection or timeout comes first.
      *
      * @param endpoint endpoint host and port to use.
-     * @param timeout
+     * @param timeout must not be null
      * @param printDots true to print dots to STDOUT while waiting. One dot per second.
      * @return true if the connection was closed before timeout. False otherwise.
      */

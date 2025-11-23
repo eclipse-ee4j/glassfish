@@ -16,11 +16,13 @@
  */
 package com.sun.enterprise.admin.servermgmt.cli;
 
+import com.sun.enterprise.admin.launcher.GFLauncher;
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 
 import java.time.Duration;
 
+import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.RuntimeType;
 
 /**
@@ -34,9 +36,12 @@ public interface StartServerCommand {
     RuntimeType getType();
 
     /**
-     * Create a launcher for the whatever type of server "we" are.
+     * @return new {@link GFLauncher} for the whatever type of server "we" are.
+     * @throws GFLauncherException Failed to create the launcher for some reason
+     * @throws MiniXmlParserException Failed to load domain.xml
+     * @throws CommandException
      */
-    void createLauncher() throws GFLauncherException, MiniXmlParserException;
+    GFLauncher createLauncher() throws GFLauncherException, MiniXmlParserException, CommandException;
 
     /**
      * Timeout for the individual command.

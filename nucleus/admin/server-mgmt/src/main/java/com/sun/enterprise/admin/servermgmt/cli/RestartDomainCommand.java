@@ -26,6 +26,7 @@ import jakarta.inject.Inject;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -36,6 +37,8 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
+import static com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.step;
+import static com.sun.enterprise.admin.servermgmt.cli.StartServerHelper.parseCustomEndpoints;
 
 /**
  * THe restart-domain command. The local portion of this command is only used to block until:
@@ -55,13 +58,28 @@ import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
 @Service(name = "restart-domain")
 @PerLookup
 public class RestartDomainCommand extends StopDomainCommand {
-    private static final LocalStringsImpl strings = new LocalStringsImpl(RestartDomainCommand.class);
+    private static final LocalStringsImpl I18N = new LocalStringsImpl(RestartDomainCommand.class);
 
     @Param(name = "debug", optional = true)
     private Boolean debug;
 
+    // Cannot be disabled, we use it to get PID.
+    private boolean checkPidFile = true;
+
+    @Param(name = "check-process-alive", optional = true, defaultValue = "true")
+    private boolean checkProcessAlive;
+
+    @Param(name = "check-admin-port", optional = true, defaultValue = "true")
+    private boolean checkAdminEndpoint;
+
+    @Param(name = "server-output", shortName = "o",  optional = true)
+    private Boolean printServerOutput;
+
+    @Param(optional = true)
+    private String customEndpoints;
+
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     /**
      * Execute the restart-domain command.
@@ -76,7 +94,7 @@ public class RestartDomainCommand extends StopDomainCommand {
                 + "Please stop and then restart the server - or fix the password file.");
         }
 
-        // Save old values before executing restart
+        // oldPid is received from the running server.
         final Long oldPid = getServerPid();
         final HostAndPort oldAdminAddress = getReachableAdminAddress();
         final HostAndPort newAdminEndpoint = getAdminAddress("server");
@@ -87,8 +105,16 @@ public class RestartDomainCommand extends StopDomainCommand {
             cmd.executeAndReturnOutput("restart-domain", "--debug", debug.toString());
         }
 
-        waitForRestart(oldPid, oldAdminAddress, newAdminEndpoint, getRestartTimeout());
-        logger.info(strings.get("restartDomain.success"));
+        final Duration timeout = getRestartTimeout();
+        final Duration startTimeout = step(null, timeout,
+            () -> waitForStop(isLocal() ? oldPid : null, oldAdminAddress, timeout));
+
+        final List<HostAndPort> userEndpoints = parseCustomEndpoints(customEndpoints);
+        final ServerLifeSignCheck lifeSignCheck = new ServerLifeSignCheck("domain " + getDomainName(),
+            printServerOutput, checkPidFile, checkProcessAlive, checkAdminEndpoint, userEndpoints);
+        final Supplier<List<HostAndPort>> adminEndpointsSupplier = () -> List.of(getReachableAdminAddress());
+        final String report = waitForStart(oldPid, lifeSignCheck, adminEndpointsSupplier, startTimeout);
+        logger.info(report);
     }
 
     /**
@@ -100,7 +126,7 @@ public class RestartDomainCommand extends StopDomainCommand {
             throw new CommandException("Remote server is not running, can not restart it");
         }
         logger.warning("Server is not running, will attempt to start it...");
-        CLICommand cmd = habitat.getService(CLICommand.class, "start-domain");
+        CLICommand cmd = serviceLocator.getService(CLICommand.class, "start-domain");
         /*
          * Collect the arguments that also apply to start-domain.
          * The start-domain CLICommand object will already have the
@@ -130,10 +156,24 @@ public class RestartDomainCommand extends StopDomainCommand {
             opts.add("--timeout");
             opts.add(Long.toString(startTimeout.toSeconds()));
         }
+        opts.add("--check-pid-file");
+        opts.add(Boolean.toString(checkPidFile));
+        opts.add("--check-process-alive");
+        opts.add(Boolean.toString(checkProcessAlive));
+        opts.add("--check-admin-port");
+        opts.add(Boolean.toString(checkAdminEndpoint));
+        if (printServerOutput != null) {
+            // TODO: At this moment works just when the domain was not running
+            opts.add("--server-output");
+            opts.add(Boolean.toString(printServerOutput));
+        }
+        if (customEndpoints != null) {
+            opts.add("--custom-endpoints");
+            opts.add(customEndpoints);
+        }
         if (getDomainName() != null) {
             opts.add(getDomainName());
         }
-
         return cmd.execute(opts.toArray(String[]::new));
     }
 

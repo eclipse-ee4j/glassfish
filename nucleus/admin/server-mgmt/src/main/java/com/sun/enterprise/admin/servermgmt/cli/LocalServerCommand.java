@@ -21,6 +21,8 @@ import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.GlassFishProcess;
+import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.ServerLifeSigns;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessUtils;
@@ -31,10 +33,12 @@ import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
@@ -44,14 +48,17 @@ import org.glassfish.main.jdke.security.KeyTool;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
+import static com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.step;
+import static com.sun.enterprise.universal.process.ProcessUtils.loadPid;
+import static com.sun.enterprise.universal.process.ProcessUtils.waitForNewPid;
+import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileIsAlive;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
-import static java.util.logging.Level.CONFIG;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.FINEST;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 
 /**
  * A class that's supposed to capture all the behavior common to operation on a "local" server.
@@ -59,6 +66,8 @@ import static java.util.logging.Level.FINEST;
  * @author Byron Nevins
  */
 public abstract class LocalServerCommand extends CLICommand {
+
+    private static final Logger LOG = System.getLogger(LocalServerCommand.class.getName());
 
     private ServerDirs serverDirs;
 
@@ -132,6 +141,7 @@ public abstract class LocalServerCommand extends CLICommand {
             Integer port = userPort == null ? DEFAULT_ADMIN_PORT : userPort;
             boolean secure = userSecure == null ? false : userSecure;
             HostAndPort endpoint = new HostAndPort(host, port, secure);
+            LOG.log(DEBUG, () -> "Checking candidate: " + endpoint);
             return ProcessUtils.isListening(endpoint) ? endpoint : null;
         }
         for (HostAndPort candidate : adminEndpointCandidates) {
@@ -139,6 +149,7 @@ public abstract class LocalServerCommand extends CLICommand {
             final int port = userPort == null ? candidate.getPort() : userPort;
             final boolean secure = userSecure == null ? candidate.isSecure() : userSecure;
             HostAndPort endpoint = new HostAndPort(host, port, secure);
+            LOG.log(DEBUG, () -> "Checking candidate: " + endpoint);
             if (ProcessUtils.isListening(endpoint)) {
                 return endpoint;
             }
@@ -164,6 +175,10 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
 
+    protected final HostAndPort getUserProvidedAdminAddress() {
+        return new HostAndPort(programOpts.getHost(), programOpts.getPort(), programOpts.isSecure());
+    }
+
     protected final void setServerDirs(ServerDirs sd) {
         serverDirs = sd;
     }
@@ -183,7 +198,7 @@ public abstract class LocalServerCommand extends CLICommand {
     protected final void setLocalPassword() {
         String pw = serverDirs == null ? null : serverDirs.getLocalPassword();
         programOpts.setPassword(pw == null ? null : pw.toCharArray(), LOCAL_PASSWORD);
-        logger.finer(ok(pw) ? "Using local password" : "Not using local password");
+        LOG.log(DEBUG, () -> ok(pw) ? "Using local password" : "Not using local password");
     }
 
     protected final void unsetLocalPassword() {
@@ -223,7 +238,7 @@ public abstract class LocalServerCommand extends CLICommand {
             PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), MASTER_PASSWORD_PASSWORD.toCharArray());
             return pw.getPasswordForAlias(MASTER_PASSWORD_ALIAS);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "A master password file reading error: " + e.toString(), e);
+            LOG.log(Level.WARNING, "A master password file reading error: " + e.toString(), e);
             return null;
         }
     }
@@ -233,7 +248,7 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     protected boolean loadAndVerifyKeystore(File jks, String mpv) {
-        logger.log(FINEST, "loading keystore: " + jks);
+        LOG.log(DEBUG, "loading keystore: " + jks);
         if (jks == null || mpv == null) {
             return false;
         }
@@ -241,7 +256,7 @@ public abstract class LocalServerCommand extends CLICommand {
             new KeyTool(jks, mpv.toCharArray()).loadKeyStore();
             return true;
         } catch (Exception e) {
-            logger.log(FINER, e.getMessage(), e);
+            LOG.log(DEBUG, e.getMessage(), e);
             return false;
         }
     }
@@ -254,25 +269,25 @@ public abstract class LocalServerCommand extends CLICommand {
         // Yes, returning master password as a string is not right ...
         final int countOfRetries = 3;
         final long start = System.currentTimeMillis();
-        String mpv = passwords.get(CLIConstants.MASTER_PASSWORD);
-        if (mpv == null) {
+        String masterPassword = passwords.get(CLIConstants.MASTER_PASSWORD);
+        if (masterPassword == null) {
             // not specified in the password file
             // optimization for the default case
-            mpv = KEYSTORE_PASSWORD_DEFAULT;
-            if (!verifyMasterPassword(mpv)) {
-                mpv = readFromMasterPasswordFile();
-                if (!verifyMasterPassword(mpv)) {
-                    mpv = retry(countOfRetries);
+            masterPassword = KEYSTORE_PASSWORD_DEFAULT;
+            if (!verifyMasterPassword(masterPassword)) {
+                masterPassword = readFromMasterPasswordFile();
+                if (!verifyMasterPassword(masterPassword)) {
+                    masterPassword = retry(countOfRetries);
                 }
             }
         } else {
             // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
-            if (!verifyMasterPassword(mpv)) {
-                mpv = retry(countOfRetries);
+            if (!verifyMasterPassword(masterPassword)) {
+                masterPassword = retry(countOfRetries);
             }
         }
-        logger.log(FINER, "Time spent in master password extraction: {0} ms", (System.currentTimeMillis() - start));
-        return mpv;
+        LOG.log(DEBUG, "Time spent in master password extraction: " + (System.currentTimeMillis() - start) + " ms");
+        return masterPassword;
     }
 
     /**
@@ -286,13 +301,13 @@ public abstract class LocalServerCommand extends CLICommand {
         }
 
         ourDir = getUniquePath(ourDir);
-        logger.log(FINER, "Check if server is at location {0}", ourDir);
+        LOG.log(DEBUG, "Check if server is at location {0}", ourDir);
 
         try {
             RemoteCLICommand cmd = new RemoteCLICommand("__locations", programOpts, env);
             ActionReport report = cmd.executeAndReturnActionReport(new String[] { "__locations" });
             String theirDirPath = report.findProperty(directoryKey);
-            logger.log(FINER, "Remote server has root directory {0}", theirDirPath);
+            LOG.log(DEBUG, "Remote server has root directory {0}", theirDirPath);
 
             if (ok(theirDirPath)) {
                 File theirDir = getUniquePath(new File(theirDirPath));
@@ -311,72 +326,155 @@ public abstract class LocalServerCommand extends CLICommand {
      * @return PID or null if unreachable
      */
     protected final Long getServerPid() {
-        Long pidFromFile = ProcessUtils.loadPid(getServerDirs().getPidFile());
+        Long pidFromFile = loadPid(getServerDirs().getPidFile());
         try {
             RemoteCLICommand command = new RemoteCLICommand("__locations", programOpts, env);
             ActionReport report = command.executeAndReturnActionReport("__locations");
             if (report.getActionExitCode() == ExitCode.SUCCESS) {
                 long pidFromAdmin = Long.parseLong(report.findProperty("Pid"));
                 if (pidFromFile == null || !pidFromFile.equals(pidFromAdmin)) {
-                    logger.log(Level.SEVERE,
-                        "PID should be the same: PID from file = " + pidFromFile + ", pidFromAdmin = " + pidFromAdmin);
+                    LOG.log(Level.ERROR, "PID should be the same: PID from file = " + pidFromFile
+                        + ", while PID received from admin endpoint = " + pidFromAdmin);
                 }
                 return pidFromAdmin;
             }
             return null;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "The server PID could not be resolved, sending PID from file: " + pidFromFile, e);
+            LOG.log(Level.ERROR, "The server PID could not be resolved, sending PID from file: " + pidFromFile + ".", e);
             return pidFromFile;
         }
     }
 
-
     /**
-     * Waits until server stops and starts
+     * Waits until server stops
      *
-     * @param oldPid
-     * @param oldAdminAddress
-     * @param newAdminAddress new admin endpoint - usually same as old, but it could change with restart.
+     * @param pid
+     * @param adminAddress
      * @param timeout can be null
      * @throws CommandException if we time out.
      */
-    protected final void waitForRestart(final Long oldPid, final HostAndPort oldAdminAddress,
-        final HostAndPort newAdminAddress, final Duration timeout) throws CommandException {
-        logger.log(Level.FINEST, "waitForRestart(oldPid={0}, oldAdminAddress={1}, newAdminAddress={2}, timeout={3})",
-            new Object[] {oldPid, oldAdminAddress, newAdminAddress, timeout});
+    protected final void waitForStop(final Long pid, final HostAndPort adminAddress, final Duration timeout)
+        throws CommandException {
+        LOG.log(DEBUG, "waitForStop(pid={0}, oldAdminAddress={1}, timeout={2})", pid, adminAddress, timeout);
 
         final boolean printDots = !programOpts.isTerse();
-        final boolean stopped = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, timeout, printDots);
-        if (!stopped) {
-            throw new CommandException("Timed out waiting for the server to restart");
+        final Duration portTimeout;
+        if (pid == null) {
+            portTimeout = timeout;
+        } else {
+            portTimeout = step("Waiting for the death of the process with pid " + pid, timeout,
+                () -> waitWhileIsAlive(pid, timeout, printDots));
+            if (ProcessUtils.isAlive(pid)) {
+                throw new CommandException("Timed out waiting for the server process to stop.");
+            }
         }
-        logger.log(CONFIG, "Server instance is stopped, now we wait for the start on {0}", newAdminAddress);
-        // Could change
-        programOpts.setHostAndPort(newAdminAddress);
-        final Supplier<Boolean> signStart = () -> {
-            if (!ProcessUtils.isListening(newAdminAddress)) {
-                // nobody is listening
-                return false;
-            }
-            try {
-                resetServerDirs();
-                setLocalPassword();
-            } catch (Exception e) {
-                logger.log(FINEST, "The endpoint is alive, but we failed to reset the local password.", e);
-                return false;
-            }
-            Long newPid = ProcessUtils.loadPid(getServerDirs().getPidFile());
-            if (newPid == null) {
-                return false;
-            }
-            logger.log(FINEST, "The server pid is {0}", newPid);
-            return ProcessUtils.isAlive(newPid);
-        };
-        if (!ProcessUtils.waitFor(signStart, timeout, printDots)) {
-            throw new CommandException("Timed out waiting for the server to restart");
+        if (adminAddress == null) {
+            return;
         }
+        LOG.log(INFO, "Waiting until admin endpoint {0} is free.", adminAddress);
+        final boolean stopped = ProcessUtils.waitWhileListening(adminAddress,
+            portTimeout == null ? Duration.ofHours(1L) : portTimeout, printDots);
+        if (stopped) {
+            return;
+        }
+        throw new CommandException("Timed out waiting for the server to stop.");
     }
 
+    /**
+     * Waits until server is running - with different pid
+     *
+     * @param oldPid
+     * @param lifeSignCheck
+     * @param adminEndpointsSupplier
+     * @param timeout can be null
+     * @throws CommandException if we time out.
+     */
+    protected final String waitForStart(final Long oldPid, final ServerLifeSignCheck lifeSignCheck,
+        final Supplier<List<HostAndPort>> adminEndpointsSupplier, final Duration timeout) throws CommandException {
+        LOG.log(DEBUG, "waitForStart(oldPid={0}, adminEndpoints, timeout={1})", oldPid, timeout);
+
+        final boolean printDots = !programOpts.isTerse();
+        final File pidFile = getServerDirs().getPidFile();
+        final Duration startTimeout;
+        if (oldPid == null) {
+            startTimeout = timeout;
+        } else {
+            startTimeout = step("Waiting for the new PID.", timeout,
+                () -> waitForNewPid(oldPid, pidFile, timeout, printDots));
+        }
+        if (startTimeout != null && startTimeout.isNegative()) {
+            throw new CommandException(reportPidFileIssue(pidFile));
+        }
+        final Long pid = loadPid(getServerDirs().getPidFile());
+        if (pid == null) {
+            throw new CommandException(reportPidFileIssue(pidFile));
+        }
+
+        try {
+            resetServerDirs();
+            setLocalPassword();
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "The endpoint is alive, but we failed to reset the local password.", e);
+        }
+
+        LOG.log(INFO, () -> "Waiting until start of " + lifeSignCheck.getServerTitleAndName() + " completes.");
+
+        final ServerLifeSignChecker checker = new ServerLifeSignChecker(lifeSignCheck, pidFile, adminEndpointsSupplier, printDots);
+        final GlassFishProcess process = GlassFishProcess.of(pid);
+        final ServerLifeSigns signs = checker.watchStartup(process, startTimeout);
+        final String report = report(signs);
+        if (signs.isError()) {
+            throw new CommandException(report);
+        }
+        return report;
+    }
+
+    private String reportPidFileIssue(final File pidFile) {
+        File restartLogFile = serverDirs.getRestartLogFile();
+        String error = "Could not load the PID number from file " + pidFile;
+        String restartLog = loadRestartLog(restartLogFile);
+        if (restartLog == null) {
+            return error + "\nThe " + restartLogFile + " file could not be loaded too.";
+        }
+        return error + "\n" + restartLog;
+    }
+
+    private String report(ServerLifeSigns signs) {
+        final StringBuilder report = new StringBuilder(2048);
+        report.append('\n').append(signs.getSummary());
+        if (signs.getSuggestion() != null) {
+            report.append('\n').append(signs.getSuggestion());
+        }
+        report.append("\n  Location: ").append(getServerDirs().getServerDir());
+        final String situationReport = signs.getSituationReport();
+        if (situationReport != null) {
+            report.append(signs.getSituationReport());
+        }
+        if (signs.isError()) {
+            final String restartLog = loadRestartLog(serverDirs.getRestartLogFile());
+            if (restartLog != null) {
+                report.append('\n').append(restartLog);
+            }
+        }
+        return report.toString();
+    }
+
+    private String loadRestartLog(final File logFile ) {
+        if (logFile == null || !logFile.exists()) {
+            return null;
+        }
+        try {
+            String report = "Found restart log file content: \n##########\n"
+                + Files.readString(serverDirs.getRestartLogFile().toPath()) + "\n##########\n";
+            // The log is there just to diagnose failed start phase of the restart.
+            // We don't want to delete it if we cannot load it.
+            logFile.delete();
+            return report;
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Failed to read the restart log file: " + serverDirs.getRestartLogFile(), e);
+            return null;
+        }
+    }
 
     /**
      * @return uptime from the server.
@@ -390,7 +488,7 @@ public abstract class LocalServerCommand extends CLICommand {
             throw new CommandException("Server is not running, will attempt to start it...");
         }
 
-        logger.log(FINER, "server uptime: {0}", up_ms);
+        LOG.log(DEBUG, () -> "Server uptime: " + up_ms + " ms");
         return up_ms;
     }
 
@@ -437,7 +535,7 @@ public abstract class LocalServerCommand extends CLICommand {
         if (mp.canRead()) {
             return mp;
         }
-        logger.log(FINEST, "File does not exist or is not readable: {0}", mp);
+        LOG.log(DEBUG, "File does not exist or is not readable: {0}", mp);
         return null;
     }
 
@@ -459,7 +557,6 @@ public abstract class LocalServerCommand extends CLICommand {
         String mpv;
         // prompt times times
         for (int i = 0; i < times; i++) {
-            // XXX - I18N
             String prompt = "Enter master password - (" + (times - i) + ") attempt(s) remain)> ";
             char[] mpvArr = super.readPassword(prompt);
             mpv = mpvArr != null ? new String(mpvArr) : null;

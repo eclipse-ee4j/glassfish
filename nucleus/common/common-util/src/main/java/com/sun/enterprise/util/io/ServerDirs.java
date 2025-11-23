@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
@@ -211,6 +212,10 @@ public class ServerDirs {
 
     public final boolean isValid() {
         return valid;
+    }
+
+    public File getRestartLogFile() {
+        return getServerDir().toPath().resolve(Path.of("logs", "restart.log")).toFile();
     }
 
     @Override

@@ -382,7 +382,6 @@ public abstract class GFLauncher {
         throw new IllegalStateException("Call to getLogFilename() before it has been initialized!");
     }
 
-
     /**
      * @return null or a port number
      */

@@ -18,9 +18,12 @@
 package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.launcher.GFLauncher;
+import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
-import com.sun.enterprise.universal.process.ProcessStreamDrainer;
+import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.GlassFishProcess;
+import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.ServerLifeSigns;
 import com.sun.enterprise.universal.process.ProcessUtils;
+import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.ServerDirs;
 import com.sun.enterprise.util.net.NetUtils;
@@ -28,32 +31,39 @@ import com.sun.enterprise.util.net.NetUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
+import org.glassfish.main.jul.formatter.OneLineFormatter;
+import org.glassfish.main.jul.handler.GlassFishLogHandler;
+import org.glassfish.main.jul.handler.GlassFishLogHandlerConfiguration;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
+import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileListening;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
- * Java does not allow multiple inheritance. Both StartDomainCommand and StartInstanceCommand have common code but they
- * are already in a different hierarchy of classes. The first common baseclass is too far away -- e.g. no "launcher"
- * variable, etc.
- *
- * Instead -- put common code in here and call it as common utilities This class is designed to be thread-safe and
- * IMMUTABLE
+ * Manager of starting process.
+ * While {@link GFLauncher} manages the launch of the new server, this controls also user interaction.
  *
  * @author bnevins
+ * @author David Matejcek
  */
-public class StartServerHelper {
+public final class StartServerHelper {
     private static final LocalStringsImpl I18N = new LocalStringsImpl(StartServerHelper.class);
     private static final Logger LOG = System.getLogger(StartServerHelper.class.getName(), I18N.getBundle());
 
@@ -61,115 +71,129 @@ public class StartServerHelper {
     private final GFLauncher launcher;
     private final File pidFile;
     private final GFLauncherInfo info;
-    private final List<HostAndPort> addresses;
+    private final List<HostAndPort> adminAddresses;
     private final ServerDirs serverDirs;
-    private final String masterPassword;
-    private final String serverOrDomainName;
-    private final Duration timeout;
+    private final String serverTitleAndName;
+    private final ServerLifeSignCheck lifeSignCheck;
 
-    public StartServerHelper(boolean terse, ServerDirs serverDirs, GFLauncher launcher, String masterPassword,
-        Duration timeout) {
+    public StartServerHelper(boolean terse, Duration timeout, ServerDirs serverDirs, GFLauncher launcher,
+        ServerLifeSignCheck lifeSignCheck) throws GFLauncherException {
         this.terse = terse;
         this.launcher = launcher;
         this.info = launcher.getInfo();
-
-        if (info.isDomain()) {
-            this.serverOrDomainName = info.getDomainName();
-        } else {
-            this.serverOrDomainName = info.getInstanceName();
-        }
-
-        this.addresses = info.getAdminAddresses();
+        this.serverTitleAndName = (info.isDomain() ? "domain " : "instance ") + serverDirs.getServerName();
+        this.adminAddresses = info.getAdminAddresses();
         this.serverDirs = serverDirs;
         this.pidFile = serverDirs.getPidFile();
-        this.masterPassword = masterPassword;
-        this.timeout = timeout;
-    }
+        this.lifeSignCheck = lifeSignCheck;
 
-
-    public void waitForServerStart() throws CommandException {
-        if (!terse) {
-            // use stdout because logger always appends a newline
-            System.out.print(I18N.get("WaitServer", serverOrDomainName) + " ");
-        }
-
-        final Process glassFishProcess = launcher.getProcess();
-        final Supplier<Boolean> signOfFinishedStartup = () -> {
-            if (pidFile == null) {
-                if (isListeningOnAnyEndpoint()) {
-                    return true;
-                }
-            } else {
-                if (pidFile.exists()) {
-                    LOG.log(Level.TRACE, "The pid file {0} has been created.", pidFile);
-                    return true;
-                }
+        // This means we are running restart.
+        // Restart has a problem, the start is initiate d by the running server.
+        // That means we cannot watch its output. So we have to write it down.
+        if (launcher.getPidBeforeRestart() != null) {
+            waitForParentToDie(launcher.getPidBeforeRestart(), timeout);
+            configureLoggingOfRestart(serverDirs.getRestartLogFile());
+            final Integer debugPort = launcher.getDebugPort();
+            if (debugPort != null) {
+                LOG.log(INFO, "Waiting few seconds until debug port {0} is free.", debugPort);
+                waitWhileListening(new HostAndPort("localhost", debugPort, true), Duration.ofSeconds(10), terse);
             }
-            // Don't wait if the process died.
-            return !glassFishProcess.isAlive();
-        };
-        if (!ProcessUtils.waitFor(signOfFinishedStartup, timeout, !terse)) {
-            final String msg;
-            if (info.isDomain()) {
-                msg = I18N.get("serverNoStart", I18N.get("DAS"), info.getDomainName(), timeout);
-            } else {
-                msg = I18N.get("serverNoStart", I18N.get("INSTANCE"), info.getInstanceName(), timeout);
-            }
-            throw new CommandException(msg);
         }
-
-        if (glassFishProcess.isAlive()) {
-            // Ok, server is running.
-            return;
-        }
-
-        // Now try to throw some comprehensible report about what happened.
-        final int exitCode = glassFishProcess.exitValue();
-        ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
-        final String output = psd.getOutErrString();
-        final String serverName = info.isDomain()
-            ? "domain " + info.getDomainName()
-            : "instance " + info.getInstanceName();
-        if (exitCode == 0) {
-            LOG.log(INFO,
-                "Server {0} started successfuly. The startup command produced following output before it finished: \n{1}",
-                serverName, output);
-            return;
-        }
-        if (output.isEmpty()) {
-            throw new CommandException(I18N.get("serverDied", serverName, exitCode));
-        }
-        throw new CommandException(I18N.get("serverDiedOutput", serverName, exitCode, output));
+        checkFreeAdminPorts(info.getAdminAddresses());
+        deletePidFile();
     }
 
     /**
-     * Run a series of commands to prepare for a launch.
+     * Blocks and communicates with the user using console.
      *
-     * @return false if there was a problem.
+     * @return launcher exit code
+     * @throws GFLauncherException
+     * @throws MiniXmlParserException
      */
-    public boolean prepareForLaunch() throws CommandException {
-        waitForParentToDie();
-        setSecurity();
-        if (!checkPorts()) {
-            return false;
+    public int talkWithUser() throws GFLauncherException, MiniXmlParserException {
+        while (true) {
+            int returnValue = launcher.getExitValue();
+            switch (returnValue) {
+                case RESTART_NORMAL:
+                    LOG.log(INFO, "restart");
+                    break;
+                case RESTART_DEBUG_ON:
+                    LOG.log(INFO, "restartChangeDebug", "on");
+                    info.setDebug(true);
+                    break;
+                case RESTART_DEBUG_OFF:
+                    LOG.log(INFO, "restartChangeDebug", "off");
+                    info.setDebug(false);
+                    break;
+                default:
+                    return returnValue;
+            }
+            setProperty(WALL_CLOCK_START_PROP, Instant.now().toString(), true);
+            launcher.setup();
+            launcher.launch();
         }
-        deletePidFile();
-        return true;
+    }
+
+    public String waitForServerStart(Duration timeout) throws GFLauncherException {
+        if (!terse) {
+            System.out.print("Waiting for " + serverTitleAndName + " to start ");
+        }
+        final GlassFishProcess glassFishProcess = GlassFishProcess.of(launcher.getProcess());
+        final ServerLifeSignChecker checker = new ServerLifeSignChecker(lifeSignCheck, pidFile, () -> adminAddresses, !terse);
+        final ServerLifeSigns signs = checker.watchStartup(glassFishProcess, timeout);
+        final String report = report(signs);
+        if (signs.isError()) {
+            throw new GFLauncherException(report);
+        }
+        return report;
     }
 
 
-    public void report() {
-        final String logfile = launcher.getLogFilename();
-        final Integer adminPort;
-        if (addresses == null || addresses.isEmpty()) {
-            adminPort = null;
-        } else {
-            adminPort = addresses.get(0).getPort();
+    private String report(ServerLifeSigns signs) {
+        final StringBuilder report = new StringBuilder(2048);
+        report.append('\n').append(signs.getSummary());
+        if (signs.getSuggestion() != null) {
+            report.append('\n').append(signs.getSuggestion());
         }
-        LOG.log(INFO, "ServerStart.SuccessMessage", info.isDomain() ? "domain " : "instance",
-            serverDirs.getServerName(), serverDirs.getServerDir(), logfile, adminPort);
+        report.append("\n  Location: ").append(serverDirs.getServerDir());
+        report.append("\n  Log File: ").append(launcher.getLogFilename());
+        final String situationReport = signs.getSituationReport();
+        if (situationReport != null) {
+            report.append(signs.getSituationReport());
+        }
+        // Print output just if user explicitly asked
+        // or start failed and user did not explicitly forbid the print.
+        if (launcher.getPidBeforeRestart() != null
+            || lifeSignCheck.getPrintServerOutput() == Boolean.TRUE
+            || (signs.isError() && lifeSignCheck.getPrintServerOutput() != Boolean.FALSE)) {
+            report.append("\n\n").append(getProcessOutput());
+        }
+        return report.append('\n').toString();
     }
 
+
+    private String getProcessOutput() {
+        final String output = launcher.getProcessStreamDrainer().getOutErrString();
+        if (output == null) {
+            return "Unfortunately the new process did not produce any output.";
+        }
+        return "The output of the process until we stopped watching:\n\n**********\n" + output + "\n**********";
+    }
+
+    private void configureLoggingOfRestart(File logFile) {
+        GlassFishLogHandlerConfiguration cfg = new GlassFishLogHandlerConfiguration();
+        cfg.setFormatterConfiguration(new OneLineFormatter());
+        if (logFile.isFile()) {
+            logFile.renameTo(new File(logFile.getParent(), "restart.log_" + LocalDateTime.now()));
+        }
+        cfg.setLogFile(logFile);
+        cfg.setLevel(Level.ALL);
+        cfg.setFlushFrequency(1);
+        GlassFishLogHandler handler = new GlassFishLogHandler(cfg);
+        java.util.logging.Logger.getLogger("").addHandler(handler);
+        // see AdminMain
+        java.util.logging.Logger.getLogger("com.sun.enterprise.admin.cli").addHandler(handler);
+    }
 
     /**
      * If the parent is a GF server -- then wait for it to die.
@@ -178,53 +202,13 @@ public class StartServerHelper {
      *
      * @throws CommandException if we timeout waiting for the parent to die or if the admin ports never free up
      */
-    private void waitForParentToDie() throws CommandException {
-        // we also come here with just a regular start in which case there is
-        // no parent, and the System Property is NOT set to anything...
-        final Integer pid = getParentPid();
-        if (pid == null) {
-            return;
-        }
-        LOG.log(DEBUG, "Waiting for death of the parent process with pid={0}", pid);
+    private void waitForParentToDie(long pid, Duration timeout) throws GFLauncherException {
+        LOG.log(INFO, () -> "Waiting for death of the parent process with the pid " + pid);
         if (!ProcessUtils.waitWhileIsAlive(pid, timeout, false)) {
-            throw new CommandException(I18N.get("deathwait_timeout", timeout));
+            throw new GFLauncherException("Waited " + timeout.toSeconds()
+                + " s for the server to die. Restart is not possible unless you kill it manually.");
         }
-        LOG.log(DEBUG, "Parent process with PID={0} is dead and all admin endpoints are free.", pid);
-    }
-
-
-    private Integer getParentPid() {
-        String pid = System.getProperty("AS_RESTART_PREVIOUS_PID");
-        if (pid == null) {
-            return null;
-        }
-        try {
-            return Integer.valueOf(pid);
-        } catch (NumberFormatException e) {
-            LOG.log(WARNING, "Cannot parse pid {0} required for waiting for the death of the parent process.", pid);
-            return null;
-        }
-    }
-
-
-    private boolean isListeningOnAnyEndpoint() {
-        for (HostAndPort address : addresses) {
-            if (ProcessUtils.isListening(address)) {
-                LOG.log(Level.TRACE, "Server is listening on {0}.", address);
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    private boolean checkPorts() {
-        String err = adminPortInUse();
-        if (err == null) {
-            return true;
-        }
-        LOG.log(WARNING, err);
-        return false;
+        LOG.log(DEBUG, () -> "Parent process with PID " + pid + " is dead.");
     }
 
     private void deletePidFile() {
@@ -241,22 +225,65 @@ public class StartServerHelper {
         LOG.log(DEBUG, "The pid file {0} has been deleted.", pidFile);
     }
 
-    private void setSecurity() {
-        info.addSecurityToken(MASTER_PASSWORD, masterPassword);
+
+    /**
+     * @param endpoints
+     * @return space separated list of endpoints including HTTP/HTTPS protocol prefix.
+     */
+    public static String toHttpList(List<HostAndPort> endpoints) {
+        return endpoints.stream()
+        .map(h -> (h.isSecure() ? "https://" : "http://") + h.getHost() + ':' + h.getPort())
+        .collect(Collectors.joining(" "));
     }
 
-    private String adminPortInUse() {
-        return adminPortInUse(info.getAdminAddresses());
-    }
 
-    private static String adminPortInUse(List<HostAndPort> adminAddresses) {
-        // it returns a String for logging --- if desired
-        for (HostAndPort addr : adminAddresses) {
-            if (!NetUtils.isPortFree(addr.getHost(), addr.getPort())) {
-                return I18N.get("ServerRunning", addr.getPort());
+    /**
+     * @param customEndpoints value provided by the user
+     * @return parsed list of endpoints to check
+     * @throws CommandException if anything goes wrong
+     */
+    public static List<HostAndPort> parseCustomEndpoints(String customEndpoints) throws CommandException {
+        if (customEndpoints == null || customEndpoints.isBlank()) {
+            return List.of();
+        }
+        final String[] strings = customEndpoints.strip().split(",");
+        final List<HostAndPort> endpoints = new ArrayList<>(strings.length);
+        for (String string : strings) {
+            try {
+                final boolean secure = string.startsWith("https");
+                final boolean http = string.startsWith("http");
+                final String[] pair = string.replaceFirst("[a-z]+\\://", "").split(":");
+                final HostAndPort endpoint;
+                if (pair.length == 1) {
+                    final int port;
+                    if (http) {
+                        port = secure ? 443 : 80;
+                    } else {
+                        throw new CommandException("Port is mandatory endpoints without explicit protocol: " + string);
+                    }
+                    endpoint = new HostAndPort(pair[0], port, secure);
+                } else if (pair.length == 2) {
+                    endpoint = new HostAndPort(pair[0], Integer.parseInt(pair[1]), secure);
+                } else {
+                    throw new CommandException("Invalid customEndpoints value: " + string);
+                }
+                endpoints.add(endpoint);
+            } catch (CommandException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new CommandException("Invalid customEndpoints value: " + string, e);
             }
         }
+        return endpoints;
+    }
 
-        return null;
+    private static void checkFreeAdminPorts(List<HostAndPort> endpoints) throws GFLauncherException {
+        LOG.log(INFO, "Checking if all admin ports are free.");
+        for (HostAndPort endpoint : endpoints) {
+            if (!NetUtils.isPortFree(endpoint.getHost(), endpoint.getPort())) {
+                throw new GFLauncherException("There is a process already using the admin port " + endpoint.getPort()
+                    + " - it might be another instance of a GlassFish server.");
+            }
+        }
     }
 }

@@ -99,7 +99,10 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             return instanceNotRunning();
         }
 
-        HostAndPort addr = getAdminAddress(getServerDirs().getServerName());
+        HostAndPort addr = getReachableAdminAddress();
+        if (addr == null) {
+            return instanceNotRunning();
+        }
         programOpts.setHostAndPort(addr);
         logger.log(Level.FINER, "Stopping server at {0}", addr);
 

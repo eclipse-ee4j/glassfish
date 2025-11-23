@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import org.glassfish.api.Param;
@@ -37,6 +36,10 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = "_change-master-password-das")
 @PerLookup
 public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
+
+    private static final String MSG_NO_CONSOLE = "The Master Password is required to start the domain.\n"
+        + "No console, no prompting possible. You should either create the domain\n"
+        + "with --savemasterpassword=true or provide a password file with the --passwordfile option.";
 
     @Param(name = "domain", primary = true, optional = true)
     protected String domainName0;
@@ -68,9 +71,10 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
     protected int executeCommand() throws CommandException {
 
         try {
-            HostAndPort adminAddress = getAdminAddress();
-            if (ProcessUtils.isListening(adminAddress)) {
-                throw new CommandException(strings.get("domain.is.running", getDomainName(), getDomainRootDir()));
+            HostAndPort adminAddress = getReachableAdminAddress();
+            if (adminAddress != null) {
+                throw new CommandException(
+                    "Domain " + getDomainName() + " at " + getDomainRootDir() + " is running. Stop it first.");
             }
             DomainConfig domainConfig = new DomainConfig(getDomainName(), getDomainsDir().getAbsolutePath());
             PEDomainsManager manager = new PEDomainsManager();
@@ -83,7 +87,7 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
                 }
             }
             if (mp == null) {
-                throw new CommandException(strings.get("no.console"));
+                throw new CommandException(MSG_NO_CONSOLE);
             }
             if (!super.verifyMasterPassword(mp)) {
                 throw new CommandException(strings.get("incorrect.mp"));
@@ -91,7 +95,7 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
             char[] nmpCharArr = getPassword("newmasterpassword", strings.get("new.mp"), strings.get("new.mp.again"), true);
             String nmp = nmpCharArr != null ? new String(nmpCharArr) : null;
             if (nmp == null) {
-                throw new CommandException(strings.get("no.console"));
+                throw new CommandException(MSG_NO_CONSOLE);
             }
             if (nmp.trim().length() < 6) {
                 throw new CommandException(strings.get("incorrect.password.length"));

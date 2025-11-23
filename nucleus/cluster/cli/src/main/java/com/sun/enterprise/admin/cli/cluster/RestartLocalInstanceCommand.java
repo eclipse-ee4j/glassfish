@@ -60,7 +60,9 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
 
         // Save old values before executing restart
         final Long oldPid = getServerPid();
-        final HostAndPort adminAddress = getAdminAddress(getServerDirs().getServerName());
+        final HostAndPort oldAdminAddress = getReachableAdminAddress();
+        final HostAndPort newAdminAddress = getAdminAddress(getServerDirs().getServerName());
+
         // run the remote restart-instance command and throw away the output
         RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
         if (debug == null) {
@@ -70,13 +72,19 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         }
 
         // Timeouts are set in commands we use, so we will wait for the result without timeout.
-        waitForRestart(oldPid, adminAddress, adminAddress, getRestartTimeout());
+        waitForRestart(oldPid, oldAdminAddress, newAdminAddress, getRestartTimeout());
         logger.info("Successfully restarted the instance.");
     }
 
     @Override
     protected int instanceNotRunning() throws CommandException {
         logger.warning(Strings.get("restart.instanceNotRunning"));
+
+        int result = super.instanceNotRunning();
+        if (result != 0) {
+            // super failed to stop.
+            return result;
+        }
         CLICommand cmd = habitat.getService(CLICommand.class, "start-local-instance");
         /*
          * Collect the arguments that also apply to start-instance-domain.

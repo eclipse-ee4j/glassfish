@@ -151,7 +151,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             doAutoUpgrade(masterPassword);
 
             if (dry_run) {
-                logger.fine(Strings.get("dry_run_msg"));
+                logger.fine("Dump of JVM Invocation line that would be used to launch:");
                 List<String> cmd = glassFishLauncher.getCommandLine().toList();
                 int indexOfReadStdin = cmd.indexOf("-read-stdin");
                 String cmdToLog = IntStream.range(0, cmd.size())
@@ -322,7 +322,9 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
                     char[] newPasswordArray = super.getPassword(npwo, null, true);
                     String newPassword = newPasswordArray != null ? new String(newPasswordArray) : null;
                     if (newPassword == null) {
-                        throw new CommandException(strings.get("no.console"));
+                        throw new CommandException("The Master Password is required to start the domain.\n"
+                            + "No console, no prompting possible. You should either create the domain\n"
+                            + "with --savemasterpassword=true or provide a password file with the --passwordfile option.");
                     }
 
                     fileRealmHelper.updateUser(firstAdminUser, firstAdminUser, newPassword.toCharArray(), null);

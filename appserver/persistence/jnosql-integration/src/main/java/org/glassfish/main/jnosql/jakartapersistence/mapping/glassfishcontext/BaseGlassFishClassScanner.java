@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,7 +50,7 @@ import org.glassfish.internal.deployment.Deployment;
  */
 abstract public class BaseGlassFishClassScanner {
 
-    private static final Logger LOG = Logger.getLogger(BaseGlassFishClassScanner.class.getName());
+    private static final System.Logger LOG = System.getLogger(BaseGlassFishClassScanner.class.getName());
 
     /**
      * Whether the entity supported by this repository interface is supported by
@@ -89,8 +88,8 @@ abstract public class BaseGlassFishClassScanner {
         String annotationClassName = annotation.getName();
         return getTypes().getAllTypes()
                 .stream()
-                .filter(type -> type instanceof ClassModel)
-                .filter(type -> null != type.getAnnotation(annotationClassName))
+                .filter(ClassModel.class::isInstance)
+                .filter(type -> type.getAnnotation(annotationClassName) != null)
                 .map(ClassModel.class::cast)
                 .map(this::typeModelToClass)
                 .collect(Collectors.toSet());
@@ -114,21 +113,20 @@ abstract public class BaseGlassFishClassScanner {
 
     protected Stream<Class<?>> repositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
+        String providerName = getProviderName();
         return getTypes().getAllTypes()
                 .stream()
-                .filter(type -> type instanceof InterfaceModel)
+                .filter(InterfaceModel.class::isInstance)
                 .filter(type -> {
                     final AnnotationModel repositoryAnnotation = type.getAnnotation(Repository.class.getName());
                     if (repositoryAnnotation != null) {
                         String provider = repositoryAnnotation.getValue("provider", String.class);
-                        if (Objects.equals(Repository.ANY_PROVIDER, provider)
-                                || getProviderName().equals(provider)) {
-                            return true;
-                        }
+                        return Objects.equals(Repository.ANY_PROVIDER, provider) || providerName.equals(provider);
                     }
                     return false;
                 })
-                .map(intfModel -> new GeneralInterfaceModel((InterfaceModel) intfModel))
+                .map(InterfaceModel.class::cast)
+                .map(GeneralInterfaceModel::new)
                 .filter(predicate)
                 .map(GeneralInterfaceModel::toTypeModel)
                 .map(this::typeModelToClass);
@@ -143,10 +141,8 @@ abstract public class BaseGlassFishClassScanner {
             return !parameterizedTypes.isEmpty()
                     && isSupportedEntityType(parameterizedTypes.iterator().next());
         } else {
-            final Stream<GeneralInterfaceModel> directlyImplementedInterfaces = interf.interfacesAsStream();
-            return directlyImplementedInterfaces
-                    .filter(this::isSupportedBuiltInInterface)
-                    .count() > 0;
+            return interf.interfacesAsStream()
+                    .anyMatch(this::isSupportedBuiltInInterface);
         }
     }
 
@@ -157,10 +153,8 @@ abstract public class BaseGlassFishClassScanner {
         if (implementsStandardInterfaceDirectly(interf)) {
             return isSupportedBuiltInInterface(interf);
         } else {
-            final Stream<GeneralInterfaceModel> directlyImplementedInterfaces = interf.interfacesAsStream();
-            return directlyImplementedInterfaces
-                    .filter(this::isSupportedStandardInterface)
-                    .count() > 0;
+            return interf.interfacesAsStream()
+                    .anyMatch(this::isSupportedStandardInterface);
         }
     }
 
@@ -172,25 +166,15 @@ abstract public class BaseGlassFishClassScanner {
         return interf.interfaceName().equals(DataRepository.class.getName());
     }
 
+    private static final Set<String> STANDARD_INTERFACES = Set.of(
+            BasicRepository.class.getName(),
+            CrudRepository.class.getName(),
+            DataRepository.class.getName()
+    );
+
     private boolean implementsStandardInterfaceDirectly(GeneralInterfaceModel interf) {
         return interf.interfacesAsStream()
-                .filter(generalInterface
-                        -> Set.of(
-                        BasicRepository.class.getName(),
-                        CrudRepository.class.getName(),
-                        DataRepository.class.getName()
-                )
-                        .contains(generalInterface.interfaceName())
-                ).count() > 0;
-    }
-
-    private boolean canBeAssignedToOneOf(Class<?> clazz, Class<?>... assignables) {
-        for (Class<?> cls : assignables) {
-            if (cls.isAssignableFrom(clazz)) {
-                return true;
-            }
-        }
-        return false;
+                .anyMatch(generalInterface -> STANDARD_INTERFACES.contains(generalInterface.interfaceName()));
     }
 }
 
@@ -217,7 +201,11 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
       - type of parameters is unknown.
     */
     boolean hasTypeParametersWithUnknownType() {
-        return isParameterized() ? parametizedTypes().isEmpty() : plainInterface.getFormalTypeParameters() != null && !plainInterface.getFormalTypeParameters().isEmpty();
+        if (isParameterized()) {
+            return parametizedTypes().isEmpty();
+        }
+        Map<String, ParameterizedInterfaceModel> formalTypeParameters = plainInterface.getFormalTypeParameters();
+        return formalTypeParameters != null && !formalTypeParameters.isEmpty();
     }
 
     String interfaceName() {
@@ -238,7 +226,8 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
         final Collection<InterfaceModel> plainInterfaces = typeModel.getInterfaces();
 
         return Stream.concat(
-                parameterizedInterfaces.stream().map(parameterizedInterface -> GeneralInterfaceModel.parameterizedFromSubInterface(parameterizedInterface, this)),
+                parameterizedInterfaces.stream().map(parameterizedInterface ->
+                        GeneralInterfaceModel.parameterizedFromSubInterface(parameterizedInterface, this)),
                 plainInterfaces.stream().map(GeneralInterfaceModel::new)
         );
     }

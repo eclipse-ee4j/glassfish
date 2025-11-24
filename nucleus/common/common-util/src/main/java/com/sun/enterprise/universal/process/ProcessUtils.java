@@ -28,8 +28,6 @@ import java.lang.ProcessHandle.Info;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -38,10 +36,8 @@ import java.util.function.Supplier;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
@@ -143,50 +139,6 @@ public final class ProcessUtils {
         }
         return true;
     }
-
-    /**
-     * Blocks until the endpoint closes the connection or timeout comes first.
-     *
-     * @param endpoint endpoint host and port to use.
-     * @param timeout must not be null
-     * @param printDots true to print dots to STDOUT while waiting. One dot per second.
-     * @return true if the connection was closed before timeout. False otherwise.
-     */
-    public static boolean waitWhileListening(HostAndPort endpoint, Duration timeout, boolean printDots) {
-        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
-        try (Socket server = new Socket()) {
-            server.setSoTimeout((int) timeout.toMillis());
-            // Max 5 seconds to connect. It is an extreme value for local endpoint.
-            try {
-                server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
-            } catch (IOException e) {
-                LOG.log(TRACE, "Unable to connect - server is probably down.!", e);
-                return true;
-            }
-            try {
-                int result = server.getInputStream().read();
-                if (result == -1) {
-                    LOG.log(TRACE, "Input stream closed - server probably stopped!");
-                    return true;
-                }
-                LOG.log(ERROR, "We were able to read something: {0}. Returning false.", result);
-                return false;
-            } catch (SocketTimeoutException e) {
-                LOG.log(TRACE, "Timeout while reading. Returning false.", e);
-                return false;
-            } catch (SocketException e) {
-                LOG.log(TRACE, "Socket read failed. Returning true.", e);
-                return true;
-            }
-        } catch (Exception ex) {
-            LOG.log(WARNING, "An attempt to open a socket to " + endpoint
-                + " resulted in exception. Therefore we assume the server has stopped.", ex);
-            return true;
-        } finally {
-            DotPrinter.stopWaiting(dotPrinter);
-        }
-    }
-
 
     /**
      * @param endpoint endpoint host and port to use.

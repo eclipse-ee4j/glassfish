@@ -51,7 +51,8 @@ import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
-import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileListening;
+import static com.sun.enterprise.universal.process.ProcessUtils.isListening;
+import static com.sun.enterprise.universal.process.ProcessUtils.waitFor;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
@@ -96,7 +97,9 @@ public final class StartServerHelper {
             final Integer debugPort = launcher.getDebugPort();
             if (debugPort != null) {
                 LOG.log(INFO, "Waiting few seconds until debug port {0} is free.", debugPort);
-                waitWhileListening(new HostAndPort("localhost", debugPort, true), Duration.ofSeconds(10), terse);
+                final HostAndPort debugEndpoint = new HostAndPort("localhost", debugPort, false);
+                final boolean portIsFree = waitFor(() -> !isListening(debugEndpoint), timeout, terse);
+                LOG.log(INFO, "Debug port is {0}.", portIsFree ? "free" : "blocked");
             }
         }
         checkFreeAdminPorts(info.getAdminAddresses());

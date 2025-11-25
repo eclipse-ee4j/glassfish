@@ -23,6 +23,8 @@ import com.sun.corba.ee.spi.transport.Acceptor;
 import com.sun.corba.ee.spi.transport.ORBSocketFactory;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.integration.AppClientSSL;
+import com.sun.enterprise.universal.process.ProcessUtils;
+import com.sun.enterprise.util.HostAndPort;
 import com.sun.logging.LogDomains;
 
 import java.io.IOException;
@@ -32,6 +34,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -89,7 +92,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
      * @todo provide an interface to the admin, so that whenever a iiop-listener
      * is added / removed, we modify the hashtable,
      */
-    private final Map portToSSLInfo = new Hashtable();
+    private final Map<Integer, SSLInfo> portToSSLInfo = new Hashtable<>();
     /* this is stored for the client side of SSL Connections.
      * Note: There will be only 1 ctx for the client side, as we will reuse the
      * ctx for all SSL connections
@@ -175,8 +178,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 }
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE,"IIOPSSLSocketFactory initialization failed.", e);
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("IIOPSSLSocketFactory initialization failed.", e);
         }
     }
 
@@ -256,7 +258,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         if (type.equals(SSL_MUTUALAUTH) || type.equals(SSL) || type.equals(PERSISTENT_SSL)) {
             return createSSLServerSocket(type, inetSocketAddress);
         }
-        ServerSocket serverSocket = null;
+        final ServerSocket serverSocket;
         if (orb.getORBData().acceptorSocketType().equals(SOCKETCHANNEL)) {
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             serverSocket = serverSocketChannel.socket();
@@ -264,6 +266,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             serverSocket = new ServerSocket();
         }
         serverSocket.setReuseAddress(true);
+        checkPort(inetSocketAddress);
         serverSocket.bind(inetSocketAddress);
         return serverSocket;
     }
@@ -335,7 +338,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         }
         int port = inetSocketAddress.getPort();
         Integer iport = Integer.valueOf(port);
-        SSLInfo sslInfo = (SSLInfo)portToSSLInfo.get(iport);
+        SSLInfo sslInfo = portToSSLInfo.get(iport);
         if (sslInfo == null) {
             throw new IOException("No SSL info found for port " + iport);
         }
@@ -362,6 +365,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             // bugfix for 6349541
             // specify the ip address to bind to, 50 is the default used
             // by the ssf implementation when only the port is specified
+            checkPort(inetSocketAddress);
             ss = ssf.createServerSocket(port, BACKLOG, inetSocketAddress.getAddress());
             ss.setReuseAddress(true);
             if (ciphers != null) {
@@ -386,6 +390,16 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             LOG.log(Level.FINE, "Created server socket:" + ss);
         }
         return ss;
+    }
+
+    /** FIXME Temporary hack until we find out which part is leaking. */
+    private static void checkPort(InetSocketAddress address) {
+        int port = address.getPort();
+        if (port < 1) {
+            return;
+        }
+        HostAndPort endpoint = new HostAndPort(address.getHostString(), port, false);
+        ProcessUtils.waitFor(() -> !ProcessUtils.isListening(endpoint), Duration.ofSeconds(10L), true);
     }
 
     /**

@@ -146,6 +146,7 @@ public final class ProcessUtils {
      */
     public static boolean isListening(HostAndPort endpoint) {
         try (Socket server = new Socket()) {
+            server.setReuseAddress(false);
             // Max 5 seconds to connect. It is an extreme value for local endpoint.
             server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
             return true;

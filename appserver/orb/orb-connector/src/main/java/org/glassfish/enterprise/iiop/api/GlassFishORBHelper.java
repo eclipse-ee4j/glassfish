@@ -97,6 +97,14 @@ public class GlassFishORBHelper implements ORBLocator {
             // Still, threads already working with the instance will have it unstable.
             final ORB destroyedOrb = orb;
             orb = null;
+            // FIXME: com.sun.corba.ee.impl.transport.AcceptorImpl.getAcceptedSocket(AcceptorImpl.java:127)
+            //        can still be blocked in standalone thread, that would lead to its failure
+            //        and cascade leading sockets open. Restart of the server could fail then.
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                // We don't want to interrupt here.
+            }
             destroyedOrb.destroy();
         }
     }

@@ -17,21 +17,19 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import com.sun.logging.LogDomains;
-
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.lang.System.Logger;
 import java.nio.channels.SelectableChannel;
 import java.rmi.Remote;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ORBLocator;
@@ -39,7 +37,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
-import static com.sun.logging.LogDomains.CORBA_LOGGER;
+import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
  * This class exposes any orb/iiop functionality needed by modules in the app server.
@@ -51,7 +50,10 @@ import static com.sun.logging.LogDomains.CORBA_LOGGER;
 @Singleton
 public class GlassFishORBHelper implements ORBLocator {
 
-    private static final Logger LOG = LogDomains.getLogger(GlassFishORBHelper.class, CORBA_LOGGER, false);
+    private static final Logger LOG = System.getLogger(GlassFishORBHelper.class.getName());
+
+    @Inject
+    private Provider<Events> eventsProvider;
 
     @Inject
     private ServiceLocator services;
@@ -75,17 +77,27 @@ public class GlassFishORBHelper implements ORBLocator {
 
     @PostConstruct
     public void postConstruct() {
+        // WARN: Neither PreDestroy annotation nor interface worked!
+        EventListener glassfishEventListener = event -> {
+            if (event.is(SERVER_SHUTDOWN)) {
+                onShutdown();
+            }
+        };
+        eventsProvider.get().register(glassfishEventListener);
         orbFactory = services.getService(GlassFishORBFactory.class);
+        LOG.log(INFO, "GlassFishORBLocator created.");
     }
 
-    @PreDestroy
-    public void onShutdown() {
+    private void onShutdown() {
         // FIXME: getORB is able to create another, it should be refactored and simplified.
         destroyed = true;
-        LOG.log(Level.CONFIG, "ORB Shutdown started");
-        if (orb != null) {
-            orb.destroy();
+        LOG.log(INFO, "ORB shutdown started");
+        if (this.orb != null) {
+            // First remove, then destroy.
+            // Still, threads already working with the instance will have it unstable.
+            final ORB destroyedOrb = orb;
             orb = null;
+            destroyedOrb.destroy();
         }
     }
 

@@ -251,13 +251,9 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
      */
     @Override
     public ServerSocket createServerSocket(String type, InetSocketAddress inetSocketAddress) throws IOException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Creating server socket for type =" + type
-                    + " inetSocketAddress =" + inetSocketAddress);
-        }
+        LOG.log(Level.INFO, "Creating server socket for type =" + type + " inetSocketAddress =" + inetSocketAddress);
 
-        if(type.equals(SSL_MUTUALAUTH) || type.equals(SSL) ||
-            type.equals(PERSISTENT_SSL)) {
+        if (type.equals(SSL_MUTUALAUTH) || type.equals(SSL) || type.equals(PERSISTENT_SSL)) {
             return createSSLServerSocket(type, inetSocketAddress);
         }
         ServerSocket serverSocket = null;
@@ -267,9 +263,9 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         } else {
             serverSocket = new ServerSocket();
         }
-
-         serverSocket.bind(inetSocketAddress);
-         return serverSocket;
+        serverSocket.setReuseAddress(true);
+        serverSocket.bind(inetSocketAddress);
+        return serverSocket;
     }
 
     /**
@@ -360,12 +356,14 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 LOG.log(Level.FINE, "Cipher Suite: " + element);
             }
         }
+
         ServerSocket ss = null;
         try {
             // bugfix for 6349541
             // specify the ip address to bind to, 50 is the default used
             // by the ssf implementation when only the port is specified
             ss = ssf.createServerSocket(port, BACKLOG, inetSocketAddress.getAddress());
+            ss.setReuseAddress(true);
             if (ciphers != null) {
                 ((SSLServerSocket) ss).setEnabledCipherSuites(ciphers);
             }

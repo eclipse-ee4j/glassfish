@@ -265,7 +265,6 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         } else {
             serverSocket = new ServerSocket();
         }
-        serverSocket.setReuseAddress(true);
         checkPort(inetSocketAddress);
         serverSocket.bind(inetSocketAddress);
         return serverSocket;
@@ -367,7 +366,6 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             // by the ssf implementation when only the port is specified
             checkPort(inetSocketAddress);
             ss = ssf.createServerSocket(port, BACKLOG, inetSocketAddress.getAddress());
-            ss.setReuseAddress(true);
             if (ciphers != null) {
                 ((SSLServerSocket) ss).setEnabledCipherSuites(ciphers);
             }
@@ -398,8 +396,11 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         if (port < 1) {
             return;
         }
-        HostAndPort endpoint = new HostAndPort(address.getHostString(), port, false);
-        ProcessUtils.waitFor(() -> !ProcessUtils.isListening(endpoint), Duration.ofSeconds(10L), true);
+        final HostAndPort endpoint = new HostAndPort(address.getHostString(), port, false);
+        if (!ProcessUtils.isListening(endpoint)) {
+            return;
+        }
+        ProcessUtils.waitWhileListening(endpoint, Duration.ofSeconds(10L), false);
     }
 
     /**

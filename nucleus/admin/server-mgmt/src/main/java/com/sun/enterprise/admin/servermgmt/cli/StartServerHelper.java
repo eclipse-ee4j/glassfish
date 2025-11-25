@@ -51,8 +51,6 @@ import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
 import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
 import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
-import static com.sun.enterprise.universal.process.ProcessUtils.isListening;
-import static com.sun.enterprise.universal.process.ProcessUtils.waitFor;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
@@ -94,14 +92,8 @@ public final class StartServerHelper {
         if (launcher.getPidBeforeRestart() != null) {
             waitForParentToDie(launcher.getPidBeforeRestart(), timeout);
             configureLoggingOfRestart(serverDirs.getRestartLogFile());
-            final Integer debugPort = launcher.getDebugPort();
-            if (debugPort != null) {
-                LOG.log(INFO, "Waiting few seconds until debug port {0} is free.", debugPort);
-                final HostAndPort debugEndpoint = new HostAndPort("localhost", debugPort, false);
-                final boolean portIsFree = waitFor(() -> !isListening(debugEndpoint), timeout, terse);
-                LOG.log(INFO, "Debug port is {0}.", portIsFree ? "free" : "blocked");
-            }
         }
+        checkFreeDebugPort(launcher.getDebugPort(), Duration.ofSeconds(10L), terse);
         checkFreeAdminPorts(info.getAdminAddresses());
         deletePidFile();
     }
@@ -205,7 +197,7 @@ public final class StartServerHelper {
      *
      * @throws CommandException if we timeout waiting for the parent to die or if the admin ports never free up
      */
-    private void waitForParentToDie(long pid, Duration timeout) throws GFLauncherException {
+    private void waitForParentToDie(Long pid, Duration timeout) throws GFLauncherException {
         LOG.log(INFO, () -> "Waiting for death of the parent process with the pid " + pid);
         if (!ProcessUtils.waitWhileIsAlive(pid, timeout, false)) {
             throw new GFLauncherException("Waited " + timeout.toSeconds()
@@ -280,8 +272,23 @@ public final class StartServerHelper {
         return endpoints;
     }
 
+    /**
+     * Fast respawn can meet with previous JVM on ports, despite the JVM is already dead.
+     * So we have to wait a bit.
+     */
+    private static void checkFreeDebugPort(Integer debugPort, Duration timeout, boolean terse) {
+        if (debugPort == null) {
+            return;
+        }
+        final HostAndPort debugEndpoint = new HostAndPort("localhost", debugPort, false);
+        if (!ProcessUtils.isListening(debugEndpoint)) {
+            return;
+        }
+        ProcessUtils.waitWhileListening(debugEndpoint, timeout, !terse);
+    }
+
     private static void checkFreeAdminPorts(List<HostAndPort> endpoints) throws GFLauncherException {
-        LOG.log(INFO, "Checking if all admin ports are free.");
+        LOG.log(DEBUG, "Checking if all admin ports are free.");
         for (HostAndPort endpoint : endpoints) {
             if (!NetUtils.isPortFree(endpoint.getHost(), endpoint.getPort())) {
                 throw new GFLauncherException("There is a process already using the admin port " + endpoint.getPort()

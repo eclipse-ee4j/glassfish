@@ -32,7 +32,6 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
@@ -58,7 +57,6 @@ import static com.sun.enterprise.admin.servermgmt.cli.StartServerHelper.parseCus
 @Service(name = "restart-domain")
 @PerLookup
 public class RestartDomainCommand extends StopDomainCommand {
-    private static final LocalStringsImpl I18N = new LocalStringsImpl(RestartDomainCommand.class);
 
     @Param(name = "debug", optional = true)
     private Boolean debug;
@@ -97,7 +95,8 @@ public class RestartDomainCommand extends StopDomainCommand {
         // oldPid is received from the running server.
         final Long oldPid = getServerPid();
         final HostAndPort oldAdminAddress = getReachableAdminAddress();
-        final HostAndPort newAdminEndpoint = getAdminAddress("server");
+        final boolean printDots = !programOpts.isTerse();
+        final PortWatcher portWatcher = oldAdminAddress == null ? null : PortWatcher.watch(oldAdminAddress, printDots);
         final RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
         if (debug == null) {
             cmd.executeAndReturnOutput("restart-domain");
@@ -106,8 +105,16 @@ public class RestartDomainCommand extends StopDomainCommand {
         }
 
         final Duration timeout = getRestartTimeout();
-        final Duration startTimeout = step(null, timeout,
-            () -> waitForStop(isLocal() ? oldPid : null, oldAdminAddress, timeout));
+        final Duration startTimeout;
+        if (isLocal()) {
+            startTimeout = step(null, timeout, () -> waitForStop(oldPid, null, timeout));
+        } else {
+            startTimeout = timeout;
+        }
+
+        if (portWatcher != null && !portWatcher.get(startTimeout)) {
+            logger.warning("The endpoint is still listening after timeout: " + oldAdminAddress);
+        }
 
         final List<HostAndPort> userEndpoints = parseCustomEndpoints(customEndpoints);
         final ServerLifeSignCheck lifeSignCheck = new ServerLifeSignCheck("domain " + getDomainName(),
@@ -116,6 +123,7 @@ public class RestartDomainCommand extends StopDomainCommand {
         final String report = waitForStart(oldPid, lifeSignCheck, adminEndpointsSupplier, startTimeout);
         logger.info(report);
     }
+
 
     /**
      * If the server isn't running, try to start it.

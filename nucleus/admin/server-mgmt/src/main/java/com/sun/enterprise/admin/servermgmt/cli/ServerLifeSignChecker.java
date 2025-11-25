@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 
 import org.glassfish.api.admin.CommandException;
 
-import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class ServerLifeSignChecker {
     private static final Logger LOG = System.getLogger(ServerLifeSignChecker.class.getName());
@@ -223,7 +223,7 @@ public class ServerLifeSignChecker {
             return timeout;
         }
         if (message != null) {
-            LOG.log(INFO, message);
+            LOG.log(DEBUG, message);
         }
         Instant start = Instant.now();
         action.action();

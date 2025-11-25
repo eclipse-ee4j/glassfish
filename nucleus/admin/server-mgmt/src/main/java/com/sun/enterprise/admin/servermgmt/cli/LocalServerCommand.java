@@ -49,11 +49,10 @@ import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
 import static com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.step;
-import static com.sun.enterprise.universal.process.ProcessUtils.isListening;
 import static com.sun.enterprise.universal.process.ProcessUtils.loadPid;
-import static com.sun.enterprise.universal.process.ProcessUtils.waitFor;
 import static com.sun.enterprise.universal.process.ProcessUtils.waitForNewPid;
 import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileIsAlive;
+import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileListening;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
@@ -373,9 +372,7 @@ public abstract class LocalServerCommand extends CLICommand {
         if (adminAddress == null) {
             return;
         }
-        LOG.log(INFO, "Waiting until admin endpoint {0} is free.", adminAddress);
-        final boolean portIsFree = waitFor(() -> !isListening(adminAddress), portTimeout, printDots);
-        LOG.log(INFO, "Admin port is {0}.", portIsFree ? "free" : "blocked");
+        final boolean portIsFree = waitWhileListening(adminAddress, portTimeout, printDots);
         if (portIsFree) {
             return;
         }

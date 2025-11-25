@@ -19,6 +19,7 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.servermgmt.cli.PortWatcher;
 import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignCheck;
 import com.sun.enterprise.util.HostAndPort;
 
@@ -63,9 +64,9 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         // Save old values before executing restart
         final Long oldPid = getServerPid();
         final HostAndPort oldAdminAddress = getReachableAdminAddress();
-
-        // run the remote restart-instance command and throw away the output
-        RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
+        final boolean printDots = !programOpts.isTerse();
+        final PortWatcher portWatcher = oldAdminAddress == null ? null : PortWatcher.watch(oldAdminAddress, printDots);
+        final RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
         if (debug == null) {
             cmd.executeAndReturnOutput("_restart-instance");
         } else {
@@ -73,8 +74,16 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         }
 
         final Duration timeout = getRestartTimeout();
-        final Duration startTimeout = step("Waiting until instance stops.", timeout,
-            () -> waitForStop(oldPid, oldAdminAddress, timeout));
+        final Duration startTimeout;
+        if (isLocal()) {
+            startTimeout = step(null, timeout, () -> waitForStop(oldPid, null, timeout));
+        } else {
+            startTimeout = timeout;
+        }
+
+        if (portWatcher != null && !portWatcher.get(startTimeout)) {
+            logger.warning("The endpoint is still listening after timeout: " + oldAdminAddress);
+        }
 
         final ServerLifeSignCheck lifeSignCheck = new ServerLifeSignCheck("instance " + getInstanceName(), true, true, true, true, List.of());
         final String report = waitForStart(oldPid, lifeSignCheck, () -> List.of(getReachableAdminAddress()), startTimeout);

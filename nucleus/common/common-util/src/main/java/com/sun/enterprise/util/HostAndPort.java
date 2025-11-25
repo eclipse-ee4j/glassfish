@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.util;
 
+import java.net.InetSocketAddress;
 import java.util.Objects;
 
 /**
@@ -65,6 +66,13 @@ public class HostAndPort {
         return port;
     }
 
+    /**
+     * @return new {@link InetSocketAddress}
+     */
+    public InetSocketAddress toInetSocketAddress() {
+        return new InetSocketAddress(getHost(), getPort());
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(host, port, secure);
@@ -87,6 +95,6 @@ public class HostAndPort {
 
     @Override
     public String toString() {
-        return host + ":" + port + (secure ? " (encrypted)" : " (unencrypted)");
+        return host + ":" + port;
     }
 }

@@ -31,7 +31,7 @@ public class JakartaEE {
 
     public static TransactionSynchronizationRegistry getDefaultTransactionSynchronizationRegistry() {
         try {
-            return (TransactionSynchronizationRegistry) new InitialContext().lookup("java:comp/TransactionSynchronizationRegistry");
+            return InitialContext.doLookup("java:comp/TransactionSynchronizationRegistry");
         } catch (NamingException ex) {
             throw new RuntimeException(ex);
         }

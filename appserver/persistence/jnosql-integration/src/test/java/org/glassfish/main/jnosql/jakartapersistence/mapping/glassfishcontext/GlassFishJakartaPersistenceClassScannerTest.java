@@ -38,18 +38,17 @@ import java.util.Set;
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyBasicRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCombinedRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCrudRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyDataRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyNoInterfaceRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyUnsupportedRepository;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCombinedRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyNoInterfaceRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyUnsupportedRepository;
 
 /**
  *

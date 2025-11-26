@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
-import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
@@ -90,8 +89,8 @@ public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implem
     }
 
     @Override
-    protected boolean isSupportedEntityType(ParameterizedInterfaceModel entityType) {
-        return null != entityType.getRawInterface().getAnnotation(Entity.class.getName());
+    protected boolean isSupportedEntityType(GeneralInterfaceModel entityType) {
+        return null != entityType.getAnnotation(Entity.class);
     }
 
     @Override

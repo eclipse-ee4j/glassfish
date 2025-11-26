@@ -59,7 +59,7 @@ abstract public class BaseGlassFishClassScanner {
      * @param entityType Type of the entity, analogous to the entity class
      * @return True if the entity is supported, false otherwise
      */
-    abstract protected boolean isSupportedEntityType(ParameterizedInterfaceModel entityType);
+    abstract protected boolean isSupportedEntityType(GeneralInterfaceModel entityType);
 
     abstract protected String getProviderName();
 
@@ -113,6 +113,8 @@ abstract public class BaseGlassFishClassScanner {
 
     protected Stream<Class<?>> repositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
+        // TODO: Categorize standard and custom repositories in a single run through the stream
+        // - save the result into deployment context, not into this instance, which is shared by all apps
         String providerName = getProviderName();
         return getTypes().getAllTypes()
                 .stream()
@@ -127,34 +129,40 @@ abstract public class BaseGlassFishClassScanner {
                 })
                 .map(InterfaceModel.class::cast)
                 .map(GeneralInterfaceModel::new)
+                .filter(this::doesNotHaveUnsupportedMainEntity)
                 .filter(predicate)
                 .map(GeneralInterfaceModel::toTypeModel)
                 .map(this::typeModelToClass);
     }
 
-    protected boolean isSupportedBuiltInInterface(GeneralInterfaceModel interf) {
-        if (interf.hasTypeParametersWithUnknownType()) {
-            return false;
-        }
-        if (isDataRepositoryInterface(interf) && interf.isParameterized()) {
-            final Collection<ParameterizedInterfaceModel> parameterizedTypes = interf.parametizedTypes();
-            return !parameterizedTypes.isEmpty()
-                    && isSupportedEntityType(parameterizedTypes.iterator().next());
-        } else {
-            return interf.interfacesAsStream()
-                    .anyMatch(this::isSupportedBuiltInInterface);
-        }
+    private boolean doesNotHaveUnsupportedMainEntity(GeneralInterfaceModel interf) {
+        final GeneralInterfaceModel mainEntityType = getMainEntityOfInterface(interf);
+        return mainEntityType == null || isSupportedEntityType(mainEntityType);
+
     }
 
     protected boolean isSupportedStandardInterface(GeneralInterfaceModel interf) {
+        final GeneralInterfaceModel mainEntityType = getMainEntityIfSupportedStandardInterface(interf);
+        return null != mainEntityType && isSupportedEntityType(mainEntityType);
+    }
+
+    protected GeneralInterfaceModel getMainEntityIfSupportedStandardInterface(GeneralInterfaceModel interf) {
         if (interf.hasTypeParametersWithUnknownType()) {
-            return false;
+            return null;
         }
-        if (implementsStandardInterfaceDirectly(interf)) {
-            return isSupportedBuiltInInterface(interf);
+        GeneralInterfaceModel entityCandidate = getMainEntityIfDirectStandardInterface(interf);
+        if (entityCandidate != null) {
+            return entityCandidate;
         } else {
-            return interf.interfacesAsStream()
-                    .anyMatch(this::isSupportedStandardInterface);
+            final List<GeneralInterfaceModel> entityCandidates = interf.interfacesAsStream()
+                    .map(this::getMainEntityIfSupportedStandardInterface)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .limit(2)
+                    .toList();
+            return entityCandidates.size() == 1
+                    ? entityCandidates.getFirst()
+                    : null; // either no entity or more than 1
         }
     }
 
@@ -172,10 +180,34 @@ abstract public class BaseGlassFishClassScanner {
             DataRepository.class.getName()
     );
 
-    private boolean implementsStandardInterfaceDirectly(GeneralInterfaceModel interf) {
-        return interf.interfacesAsStream()
-                .anyMatch(generalInterface -> STANDARD_INTERFACES.contains(generalInterface.interfaceName()));
+    private GeneralInterfaceModel getMainEntityIfDirectStandardInterface(GeneralInterfaceModel interf) {
+        return STANDARD_INTERFACES.contains(interf.interfaceName())
+                ? getMainEntityOfInterface(interf)
+                : null;
     }
+
+    protected GeneralInterfaceModel getMainEntityOfInterface(GeneralInterfaceModel interf) {
+        if (interf.hasTypeParametersWithUnknownType()) {
+            return null;
+        }
+        if (interf.isParameterized()) {
+            final Collection<ParameterizedInterfaceModel> parameterizedTypes = interf.parametizedTypes();
+            return parameterizedTypes.isEmpty()
+                    ? null
+                    : new GeneralInterfaceModel(parameterizedTypes.iterator().next());
+        } else {
+            final List<GeneralInterfaceModel> entityCandidates = interf.interfacesAsStream()
+                    .map(this::getMainEntityOfInterface)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .limit(2)
+                    .toList();
+            return entityCandidates.size() == 1
+                    ? entityCandidates.getFirst()
+                    : null; // either no entity or more than 1
+        }
+    }
+
 }
 
 record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfaceModel parameterizedInterface, Collection<ParameterizedInterfaceModel> parameterizedTypes) {
@@ -192,6 +224,40 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
         this(null, parameterizedInterfaceModel, parameterizedTypes);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(plainInterfaceName(), parameterizedInterfaceFullName(), this.parameterizedTypes);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GeneralInterfaceModel other = (GeneralInterfaceModel) obj;
+        if (!Objects.equals(this.plainInterfaceName(), other.plainInterfaceName())) {
+            return false;
+        }
+        if (!Objects.equals(this.parameterizedInterfaceFullName(), other.parameterizedInterfaceFullName())) {
+            return false;
+        }
+        return Objects.equals(this.parameterizedTypes, other.parameterizedTypes);
+    }
+
+    private Object plainInterfaceName() {
+        return this.plainInterface != null ? this.plainInterface.getName() : null;
+    }
+
+    private Object parameterizedInterfaceFullName() {
+        return this.parameterizedInterface != null ? parameterizedInterface.getName() : null;
+    }
+
     boolean isParameterized() {
         return parameterizedInterface != null;
     }
@@ -199,7 +265,7 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
     /*
       Is an interface with generics but no declared type parameters. E.g. it's List<T> but not List<String>
       - type of parameters is unknown.
-    */
+     */
     boolean hasTypeParametersWithUnknownType() {
         if (isParameterized()) {
             return parametizedTypes().isEmpty();
@@ -216,6 +282,13 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
         }
     }
 
+    AnnotationModel getAnnotation(Class<?> annotationClass) {
+        if (isParameterized()) {
+            return parameterizedInterface.getRawInterface().getAnnotation(annotationClass.getName());
+        }
+        return plainInterface.getAnnotation(annotationClass.getName());
+    }
+
     ExtensibleType toTypeModel() {
         return isParameterized() ? parameterizedInterface.getRawInterface() : plainInterface;
     }
@@ -226,8 +299,8 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
         final Collection<InterfaceModel> plainInterfaces = typeModel.getInterfaces();
 
         return Stream.concat(
-                parameterizedInterfaces.stream().map(parameterizedInterface ->
-                        GeneralInterfaceModel.parameterizedFromSubInterface(parameterizedInterface, this)),
+                parameterizedInterfaces.stream().map(parameterizedInterface
+                        -> GeneralInterfaceModel.parameterizedFromSubInterface(parameterizedInterface, this)),
                 plainInterfaces.stream().map(GeneralInterfaceModel::new)
         );
     }
@@ -238,13 +311,13 @@ record GeneralInterfaceModel(InterfaceModel plainInterface, ParameterizedInterfa
 
     /*
      Creates an instance for a give parameterized interface and captures parameter types from the interface that extends it. Parameter types are not defined on superinterfaces therefore the information about them is lost down the line. E.g. for IntfB extends IntfA<String>, IntfA<T>, the information about String type is present only on IntfB. IntfA only knows the parameter name is "T" but not that its type is String.
-    */
+     */
     static GeneralInterfaceModel parameterizedFromSubInterface(ParameterizedInterfaceModel parameterizedInterface, GeneralInterfaceModel subInterface) {
         if (subInterface.isParameterized()) {
             List<ParameterizedInterfaceModel> parameterizedTypes = new ArrayList<>();
             final Map<String, ParameterizedInterfaceModel> formalTypeParametersOnSubInterface = subInterface.toTypeModel().getFormalTypeParameters();
             final Iterator<ParameterizedInterfaceModel> iteratorThroughParameterizedTypesOnSubInterface = subInterface.parametizedTypes().iterator();
-            for (Map.Entry<String, ParameterizedInterfaceModel> formalTypeParameterOnSubInterface : formalTypeParametersOnSubInterface.entrySet() ) {
+            for (Map.Entry<String, ParameterizedInterfaceModel> formalTypeParameterOnSubInterface : formalTypeParametersOnSubInterface.entrySet()) {
 
                 if (!iteratorThroughParameterizedTypesOnSubInterface.hasNext()) {
                     throw new IllegalStateException("The number of parameterized types and formal type parameters is not the same, interface: " + parameterizedInterface);

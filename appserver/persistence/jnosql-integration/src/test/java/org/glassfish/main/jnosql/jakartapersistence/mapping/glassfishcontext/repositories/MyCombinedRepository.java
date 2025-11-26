@@ -22,6 +22,6 @@ import jakarta.data.repository.Repository;
  * @author Ondro Mihalyi
  */
 @Repository
-public interface CombinedRepository extends MyCrudRepository, MyBasicRepository {
+public interface MyCombinedRepository extends MyCrudRepository, MyBasicRepository {
 
 }

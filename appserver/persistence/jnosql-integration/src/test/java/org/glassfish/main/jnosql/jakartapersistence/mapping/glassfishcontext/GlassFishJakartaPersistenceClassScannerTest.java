@@ -37,17 +37,19 @@ import java.util.Set;
 
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.CombinedRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyBasicRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCrudRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyDataRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.NoInterfaceRepository;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCombinedRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyNoInterfaceRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyUnsupportedRepository;
 
 /**
  *
@@ -70,14 +72,14 @@ public class GlassFishJakartaPersistenceClassScannerTest {
         }
 
         {
-            final Set<Class<?>> otherTestClasses = Set.of(MyEntity.class);
+            final Set<Class<?>> otherTestClasses = Set.of(MyEntity.class, MyOtherEntity.class, MyUnsupportedEntity.class, MyUnsupportedRepository.class);
             allClasses.addAll(otherTestClasses);
         }
 
         final Set<Class<?>> standardRepositories = new HashSet<>();
 
         {
-            final Set<Class<?>> combinedRepositories = Set.of(CombinedRepository.class);
+            final Set<Class<?>> combinedRepositories = Set.of(MyCombinedRepository.class);
             standardRepositories.addAll(Set.of(
                     MyDataRepository.class, MyBasicRepository.class, MyCrudRepository.class));
             standardRepositories.addAll(combinedRepositories);
@@ -85,7 +87,7 @@ public class GlassFishJakartaPersistenceClassScannerTest {
 
 
         final Set<Class<?>> customRepositories = new HashSet<>();
-        customRepositories.addAll(Set.of(NoInterfaceRepository.class));
+        customRepositories.addAll(Set.of(MyNoInterfaceRepository.class));
 
         Set<Class<?>> allRepositories = new HashSet<>();
         allRepositories.addAll(standardRepositories);

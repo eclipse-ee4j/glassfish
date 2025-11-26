@@ -15,13 +15,16 @@
  */
 package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories;
 
+import jakarta.data.repository.DataRepository;
 import jakarta.data.repository.Repository;
+
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.MyUnsupportedEntity;
 
 /**
  *
  * @author Ondro Mihalyi
  */
 @Repository
-public interface NoInterfaceRepository {
+public interface MyUnsupportedRepository extends DataRepository<MyUnsupportedEntity, Long> {
 
 }

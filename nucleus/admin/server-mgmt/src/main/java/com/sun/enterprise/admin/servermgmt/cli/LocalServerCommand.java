@@ -404,7 +404,7 @@ public abstract class LocalServerCommand extends CLICommand {
         if (startTimeout != null && startTimeout.isNegative()) {
             throw new CommandException(reportPidFileIssue(pidFile));
         }
-        final Long pid = loadPid(getServerDirs().getPidFile());
+        final Long pid = pidFile.isFile() ? loadPid(pidFile) : null;
         if (pid == null) {
             throw new CommandException(reportPidFileIssue(pidFile));
         }

@@ -277,14 +277,10 @@ public final class StartServerHelper {
      * So we have to wait a bit.
      */
     private static void checkFreeDebugPort(Integer debugPort, Duration timeout, boolean terse) {
-        if (debugPort == null) {
+        if (debugPort == null || NetUtils.isPortFree(debugPort)) {
             return;
         }
-        final HostAndPort debugEndpoint = new HostAndPort("localhost", debugPort, false);
-        if (!ProcessUtils.isListening(debugEndpoint)) {
-            return;
-        }
-        ProcessUtils.waitWhileListening(debugEndpoint, timeout, !terse);
+        ProcessUtils.waitFor(() -> NetUtils.isPortFree(debugPort), Duration.ofSeconds(10L), terse);
     }
 
     private static void checkFreeAdminPorts(List<HostAndPort> endpoints) throws GFLauncherException {

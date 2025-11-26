@@ -211,6 +211,7 @@ public abstract class GFLauncher {
                 LOG.log(INFO, () -> "Debugging will be available on port " + debugPort + ".");
             }
         }
+        logCommandLine();
         try {
             startTime = System.currentTimeMillis();
             if (isFakeLaunch()) {
@@ -284,7 +285,6 @@ public abstract class GFLauncher {
         setClasspath();
         initCommandLine();
         setJvmOptions();
-        logCommandLine();
 
         // if no <network-config> element, we need to upgrade this domain
         needsAutoUpgrade = !domainXML.hasNetworkConfig();

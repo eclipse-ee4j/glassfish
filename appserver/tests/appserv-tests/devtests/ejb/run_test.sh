@@ -16,38 +16,7 @@
 #
 
 get_12_free_ports() {
-    local ports=()
-    local port
-    local found
-
-    for attempt in {1..1000}; do
-        [ ${#ports[@]} -ge 12 ] && break
-
-        port=$((49152 + RANDOM % 16384))
-
-        # Skip if already in our list
-        found=false
-        for p in "${ports[@]}"; do
-            if [ "$p" -eq "$port" ]; then
-                found=true
-                break
-            fi
-        done
-        [ "$found" = true ] && continue
-
-        # Check if port is free
-        if ! timeout 0.1 bash -c "</dev/tcp/localhost/$port" 2>/dev/null; then
-            ports+=("$port")
-        fi
-    done
-
-    if [ ${#ports[@]} -eq 12 ]; then
-        echo "${ports[@]}"
-        return 0
-    else
-        echo "ERROR: Only found ${#ports[@]} free ports" >&2
-        return 1
-    fi
+    ${JAVA_HOME}/bin/java  ${APS_HOME}/devtests/ejb/ports.java
 }
 
 test_run_ejb(){

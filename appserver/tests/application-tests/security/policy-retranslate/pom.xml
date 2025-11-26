@@ -28,17 +28,17 @@
         <artifactId>security</artifactId>
         <version>8.0.0-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>security-policy-retranslate</artifactId>
     <packaging>war</packaging>
-    
+
     <name>Security Policy Retranslate</name>
     <description>
         The example app used Jakarta REST, where in GF Jersey dynamically adds a Servlet.
-        
+
         This action triggers policy retranslate. In the REST resource we use get caller principal
         from the security context, which on its turn depends upon the request set by authorization.
-        
+
         If the retranslate setup doesn't clear the previous translation, we will not get to see
         this request and hence not the principal.
     </description>
@@ -85,7 +85,7 @@
             <artifactId>jakarta.authorization-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- Junit 5 -->
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
@@ -143,7 +143,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>

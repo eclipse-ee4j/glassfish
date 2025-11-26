@@ -30,8 +30,8 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
 
-import static java.lang.System.getProperty;
 import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.getProperty;
 import static java.net.http.HttpClient.newHttpClient;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.jboss.shrinkwrap.api.ShrinkWrap.create;

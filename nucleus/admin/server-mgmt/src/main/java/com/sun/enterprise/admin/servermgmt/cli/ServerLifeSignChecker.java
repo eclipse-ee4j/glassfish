@@ -73,23 +73,23 @@ public class ServerLifeSignChecker {
         if (wasTimeout) {
             return createTimeoutReport(signs);
         }
-        if (!process.isAlive()) {
-            signs.error = true;
-            signs.suggestion = getSuggestions();
-            final Integer exitCode = process.exitCode();
-            if (exitCode == null) {
-                signs.summary = "The process died.";
-            } else {
-                signs.summary = "The startup command return code was " + exitCode + " which means that the start ";
-                if (exitCode == 0) {
-                    signs.summary += "succeded, however later the process stopped for some reason.";
-                } else {
-                    signs.summary += "failed with exit code " + exitCode + ".";
-                }
-            }
+        if (process.isAlive()) {
+            signs.summary = "Successfully started the " + checks.getServerTitleAndName() + ".";
             return signs;
         }
-        signs.summary = "Successfully started the " + checks.getServerTitleAndName() + ".";
+        signs.error = true;
+        signs.suggestion = getSuggestions();
+        final Integer exitCode = process.exitCode();
+        if (exitCode == null) {
+            signs.summary = "The process died.";
+        } else {
+            signs.summary = "The startup command return code was " + exitCode + " which means that the start ";
+            if (exitCode == 0) {
+                signs.summary += "succeded, however later the process stopped for some reason.";
+            } else {
+                signs.summary += "failed.";
+            }
+        }
         return signs;
     }
 

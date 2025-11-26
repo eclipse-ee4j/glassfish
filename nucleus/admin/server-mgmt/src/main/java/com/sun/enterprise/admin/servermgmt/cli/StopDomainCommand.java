@@ -152,6 +152,8 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
+                    LOG.log(Level.WARNING, "The domain admin port could not be reached."
+                        + " We will try to kill the process with PID " + prevPid);
                     ProcessUtils.kill(prevPid, getStopTimeout(), !programOpts.isTerse());
                 } catch (KillNotPossibleException e) {
                     throw new CommandException(e.getMessage(), e);
@@ -195,6 +197,8 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (kill && isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
+                    LOG.log(Level.WARNING, "The stop-domain command timed out."
+                        + " We will try to kill the process with PID " + prevPid);
                     ProcessUtils.kill(prevPid, stopTimeout, printDots);
                     return;
                 } catch (Exception ex) {

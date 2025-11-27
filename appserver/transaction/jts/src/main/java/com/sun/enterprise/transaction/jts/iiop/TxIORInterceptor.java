@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,7 @@ import com.sun.logging.LogDomains;
 
 import java.util.logging.Logger;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.INTERNAL;
@@ -46,10 +46,10 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger _logger = LogDomains.getLogger(InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
 
-    private Codec codec;
-    private ServiceLocator serviceLocator;
+    private final Codec codec;
+    private final ServiceLocator serviceLocator;
 
     public TxIORInterceptor(Codec codec, ServiceLocator serviceLocator) {
         this.codec = codec;
@@ -66,21 +66,21 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
     @Override
     public void establish_components(IORInfo iorInfo) {
         try {
-            _logger.log(FINE, "TxIORInterceptor.establish_components->:");
+            LOG.log(FINE, "TxIORInterceptor.establish_components->:");
 
             // Add OTS tagged components. These are always the same for all EJBs
             OTSPolicy otsPolicy = null;
             try {
-                otsPolicy = (OTSPolicy) iorInfo.get_effective_policy(serviceLocator.getService(GlassFishORBHelper.class).getOTSPolicyType());
+                otsPolicy = (OTSPolicy) iorInfo.get_effective_policy(serviceLocator.getService(GlassFishORBLocator.class).getOTSPolicyType());
             } catch (INV_POLICY ex) {
-                _logger.log(FINE, "TxIORInterceptor.establish_components: OTSPolicy not present");
+                LOG.log(FINE, "TxIORInterceptor.establish_components: OTSPolicy not present");
             }
             addOTSComponents(iorInfo, otsPolicy);
 
         } catch (Exception e) {
-            _logger.log(WARNING, "Exception in establish_components", e);
+            LOG.log(WARNING, "Exception in establish_components", e);
         } finally {
-            _logger.log(FINE, "TxIORInterceptor.establish_components<-:");
+            LOG.log(FINE, "TxIORInterceptor.establish_components<-:");
         }
     }
 

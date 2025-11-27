@@ -339,7 +339,6 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         String wallClockStart = System.getProperty("WALL_CLOCK_START");
         if (wallClockStart != null) {
             try {
-                // it will only be set when called from AsadminMain and the env. variable AS_DEBUG is set to true
                 Instant realstart = Instant.parse(wallClockStart);
                 long duration = Duration.between(realstart, Instant.now()).toMillis();
                 logger.log(Level.INFO, KernelLoggerInfo.startupTotalTime, duration);

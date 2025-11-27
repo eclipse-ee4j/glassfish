@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,24 +42,6 @@ public class IIOPImplLogFacade {
     public static Logger getLogger(final Class<?> clazz) {
         return Logger.getLogger(clazz.getName(), BUNDLE_NAME);
     }
-
-
-    @LogMessageInfo(
-        message = "Exception converting the message fragment size {0} to integer, using default value: {1}.",
-        level = "WARNING")
-    public static final String INVALID_MESSAGE_FRAGMENT_SIZE = "AS-ORB-0001";
-
-    @LogMessageInfo(
-        message = "Exception converting the max connections value {0} to integer, using default value {1}.",
-        level = "WARNING")
-    public static final String INVALID_MAX_CONNECTIONS = "AS-ORB-0002";
-
-    @LogMessageInfo(
-        message = "Unexpected Exception in ORB initialization",
-        cause = "Check server.log for details",
-        action = "Check network configuration",
-        level = "SEVERE")
-    public static final String ORB_INITIALIZATION_FAILED = "AS-ORB-0010";
 
     @LogMessageInfo(
         message = "Invalid or unavailable RootPOA service name",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import jakarta.inject.Provider;
 
 import java.lang.ref.WeakReference;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
@@ -38,9 +37,6 @@ public class Lookups {
     private Provider<SecurityMechanismSelector> securityMechanismSelectorProvider;
 
     @Inject
-    private Provider<GlassFishORBHelper> glassFishORBHelperProvider;
-
-    @Inject
     private Provider<SecurityContextUtil> securityContextUtilProvider;
 
     @Inject
@@ -49,7 +45,7 @@ public class Lookups {
     /**
      * Static singleton {@link Habitat} instance.
      */
-    private static final ServiceLocator habitat = Globals.getDefaultHabitat();
+    private static final ServiceLocator SERVICE_LOCATOR = Globals.getDefaultHabitat();
 
     /**
      * Static singleton {@link Lookups} instance. Note that this is assigned lazily and may remain null if the
@@ -58,7 +54,6 @@ public class Lookups {
     private static Lookups singleton;
 
     private static WeakReference<SecurityMechanismSelector> sms = new WeakReference<>(null);
-    private static WeakReference<GlassFishORBHelper> orb = new WeakReference<>(null);
     private static WeakReference<SecurityContextUtil> sc = new WeakReference<>(null);
 
     private Lookups() {
@@ -71,11 +66,11 @@ public class Lookups {
      * @return true if the singleton instance has been successfully assigned; false otherwise
      */
     private static synchronized boolean checkSingleton() {
-        if (singleton == null && habitat != null) {
+        if (singleton == null && SERVICE_LOCATOR != null) {
             // Obtaining the singleton through the habitat will cause the injections to occur.
-            singleton = habitat.create(Lookups.class);
-            habitat.inject(singleton);
-            habitat.postConstruct(singleton);
+            singleton = SERVICE_LOCATOR.create(Lookups.class);
+            SERVICE_LOCATOR.inject(singleton);
+            SERVICE_LOCATOR.postConstruct(singleton);
         }
         return singleton != null;
     }
@@ -89,33 +84,14 @@ public class Lookups {
         if (sms.get() != null) {
             return sms.get();
         }
-        return _getSecurityMechanismSelector();
+        return provideSecurityMechanismSelector();
     }
 
-    private static synchronized SecurityMechanismSelector _getSecurityMechanismSelector() {
+    private static synchronized SecurityMechanismSelector provideSecurityMechanismSelector() {
         if (sms.get() == null && checkSingleton()) {
             sms = new WeakReference<>(singleton.securityMechanismSelectorProvider.get());
         }
         return sms.get();
-    }
-
-    /**
-     * Get the {@link GlassFishORBHelper}.
-     *
-     * @return the {@link GlassFishORBHelper}; null if not available
-     */
-    static GlassFishORBHelper getGlassFishORBHelper() {
-        if (orb.get() != null) {
-            return orb.get();
-        }
-        return _getGlassFishORBHelper();
-    }
-
-    private static synchronized GlassFishORBHelper _getGlassFishORBHelper() {
-        if (orb.get() == null && checkSingleton()) {
-            orb = new WeakReference<>(singleton.glassFishORBHelperProvider.get());
-        }
-        return orb.get();
     }
 
     /**
@@ -127,10 +103,10 @@ public class Lookups {
         if (sc.get() != null) {
             return sc.get();
         }
-        return _getSecurityContextUtil();
+        return provideSecurityContextUtil();
     }
 
-    private static synchronized SecurityContextUtil _getSecurityContextUtil() {
+    private static synchronized SecurityContextUtil provideSecurityContextUtil() {
         if (sc.get() == null && checkSingleton()) {
             sc = new WeakReference<>(singleton.securityContextUtilProvider.get());
         }

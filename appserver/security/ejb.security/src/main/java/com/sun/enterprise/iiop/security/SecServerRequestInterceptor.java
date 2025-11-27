@@ -56,7 +56,7 @@ import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.internal.api.ORBLocator;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.NO_PERMISSION;
 import org.omg.CORBA.ORB;
@@ -103,18 +103,16 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
     private final String name;
     private final Codec codec;
     private final SecurityContextUtil secContextUtil;
-    private final GlassFishORBHelper orbHelper;
-    private final SecurityMechanismSelector smSelector;
+    private final ORBLocator orbLocator;
 
     // Not required
     // SecurityService secsvc = null; // Security Service
-    public SecServerRequestInterceptor(String name, Codec codec) {
+    public SecServerRequestInterceptor(String name, Codec codec, ORBLocator orbLocator) {
         this.name = name;
         this.codec = codec;
         this.prname = name + "::";
-        secContextUtil = Lookups.getSecurityContextUtil();
-        orbHelper = Lookups.getGlassFishORBHelper();
-        smSelector = Lookups.getSecurityMechanismSelector();
+        this.secContextUtil = Lookups.getSecurityContextUtil();
+        this.orbLocator = orbLocator;
     }
 
     @Override
@@ -174,11 +172,11 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
     /**
      * CDR encode a SAS Context body and then construct a service context element.
      */
-    private ServiceContext createSvcContext(SASContextBody sasctxtbody, ORB orb) {
+    private ServiceContext createSvcContext(SASContextBody sasctxtbody) {
 
         ServiceContext sc = null;
 
-        Any a = orb.create_any();
+        Any a = orbLocator.getORB().create_any();
         SASContextBodyHelper.insert(a, sasctxtbody);
 
         byte[] cdr_encoded_saselm = {};
@@ -335,14 +333,14 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         sc.authcls = PasswordCredential.class;
     }
 
-    private void handle_null_service_context(ServerRequestInfo ri, ORB orb) {
+    private void handle_null_service_context(ServerRequestInfo ri) {
         LOG.log(Level.FINE, "No SAS context element found in service context list for operation: {0}", ri.operation());
         ServiceContext sc = null;
         int secStatus = secContextUtil.setSecurityContext(null, ri.object_id(), ri.operation(), getServerSocket());
 
         if (secStatus == SecurityContextUtil.STATUS_FAILED) {
             SASContextBody sasctxbody = createContextError(INVALID_MECHANISM_MAJOR, INVALID_MECHANISM_MINOR);
-            sc = createSvcContext(sasctxbody, orb);
+            sc = createSvcContext(sasctxbody);
             ri.add_reply_service_context(sc, NO_REPLACE);
             LOG.log(Level.FINE, "SecServerRequestInterceptor.receive_request: NO_PERMISSION");
             throw new NO_PERMISSION();
@@ -351,24 +349,17 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
     @Override
     public void receive_request(ServerRequestInfo ri) throws ForwardRequest {
-        SecurityContext seccontext = null; // SecurityContext to be sent
-        ServiceContext sc = null; // service context
-        int status = 0;
-        boolean raise_no_perm = false;
-
         LOG.log(Level.FINE, "Entered {0} receive_request", prname);
 
-        // secsvc = Csiv2Manager.getSecurityService();
-        ORB orb = orbHelper.getORB();
-
+        ServiceContext serviceContext;
         try {
-            sc = ri.get_request_service_context(SECURITY_ATTRIBUTE_SERVICE_ID);
-            if (sc == null) {
-                handle_null_service_context(ri, orb);
+            serviceContext = ri.get_request_service_context(SECURITY_ATTRIBUTE_SERVICE_ID);
+            if (serviceContext == null) {
+                handle_null_service_context(ri);
                 return;
             }
         } catch (org.omg.CORBA.BAD_PARAM e) {
-            handle_null_service_context(ri, orb);
+            handle_null_service_context(ri);
             return;
         }
 
@@ -376,7 +367,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         /* Decode the service context field */
         Any SasAny;
         try {
-            SasAny = codec.decode_value(sc.context_data, SASContextBodyHelper.type());
+            SasAny = codec.decode_value(serviceContext.context_data, SASContextBodyHelper.type());
         } catch (Exception e) {
             throw new SecurityException("CDR Decoding error for SAS context element.", e);
         }
@@ -401,15 +392,12 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         if (sasdiscr == MTMessageInContext.value) {
             sasctxbody = createContextError(SvcContextUtils.MessageInContextMinor);
-            sc = createSvcContext(sasctxbody, orb);
+            serviceContext = createSvcContext(sasctxbody);
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, "Adding ContextError message to service context list");
                 LOG.log(Level.FINE, "SecurityContext set to null");
             }
-            ri.add_reply_service_context(sc, NO_REPLACE);
-            // no need to set the security context
-//              secsvc.setSecurityContext(null, ri.object_id(), ri.operation());
-
+            ri.add_reply_service_context(serviceContext, NO_REPLACE);
             throw new NO_PERMISSION();
         }
 
@@ -429,13 +417,13 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         EstablishContext ec = sasctxbody.establish_msg();
 
-        seccontext = new SecurityContext();
+        final SecurityContext seccontext = new SecurityContext();
         seccontext.subject = new Subject();
 
         try {
             if (ec.client_authentication_token.length != 0) {
                 LOG.log(Level.FINE, "Message contains Client Authentication Token");
-                createAuthCred(seccontext, ec.client_authentication_token, orb);
+                createAuthCred(seccontext, ec.client_authentication_token, orbLocator.getORB());
             }
         } catch (Exception e) {
             throw new SecurityException("Error while creating a JAAS subject credential.", e);
@@ -449,8 +437,8 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         } catch (SecurityException secex) {
             LOG.log(Level.SEVERE, "Could not create an identity for an identity token.", secex);
             sasctxbody = createContextError(INVALID_MECHANISM_MAJOR, INVALID_MECHANISM_MINOR);
-            sc = createSvcContext(sasctxbody, orb);
-            ri.add_reply_service_context(sc, NO_REPLACE);
+            serviceContext = createSvcContext(sasctxbody);
+            ri.add_reply_service_context(serviceContext, NO_REPLACE);
             throw new NO_PERMISSION();
         } catch (Exception e) {
             throw new SecurityException("Error while creating a JAAS subject credential.", e);
@@ -458,7 +446,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         }
 
         LOG.log(Level.FINE, "Invoking setSecurityContext() to set security context");
-        status = secContextUtil.setSecurityContext(seccontext, ri.object_id(), ri.operation(), getServerSocket());
+        final int status = secContextUtil.setSecurityContext(seccontext, ri.object_id(), ri.operation(), getServerSocket());
         LOG.log(Level.FINE, "setSecurityContext() returned status code {0}", status);
 
         /**
@@ -471,17 +459,17 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         if (status == SecurityContextUtil.STATUS_FAILED) {
             LOG.log(Level.FINE, "setSecurityContext() returned STATUS_FAILED");
             sasctxbody = createContextError(status);
-            sc = createSvcContext(sasctxbody, orb);
+            serviceContext = createSvcContext(sasctxbody);
             LOG.log(Level.FINE, "Adding ContextError message to service context list");
-            ri.add_reply_service_context(sc, NO_REPLACE);
+            ri.add_reply_service_context(serviceContext, NO_REPLACE);
             throw new NO_PERMISSION();
         }
 
         LOG.log(Level.FINE, "setSecurityContext() returned SUCCESS");
         sasctxbody = createCompleteEstablishContext(status);
-        sc = createSvcContext(sasctxbody, orb);
+        serviceContext = createSvcContext(sasctxbody);
         LOG.log(Level.FINE, "Adding CompleteEstablisContext message to service context list");
-        ri.add_reply_service_context(sc, NO_REPLACE);
+        ri.add_reply_service_context(serviceContext, NO_REPLACE);
     }
 
     /*

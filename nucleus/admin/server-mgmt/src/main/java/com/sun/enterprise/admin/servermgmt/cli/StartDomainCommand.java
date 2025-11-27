@@ -28,6 +28,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.ObjectAnalyzer;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -192,7 +193,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     @Override
     public final GFLauncher createLauncher() throws GFLauncherException, MiniXmlParserException, CommandException {
         final GFLauncher gfLauncher = GFLauncherFactory.getInstance(getType());
-        launchParameters = gfLauncher.getInfo();
+        launchParameters = gfLauncher.getParameters();
         launchParameters.setDomainName(getDomainName());
         launchParameters.setDomainParentDir(getDomainsDir().getPath());
         launchParameters.setVerbose(verbose || upgrade);
@@ -284,7 +285,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
      * NOTE: this depends on glassFishLauncher.setup having already been called.
      */
     private void doAdminPasswordCheck() throws CommandException {
-        String adminRealmKeyFile = launcher.getAdminRealmKeyFile();
+        File adminRealmKeyFile = launcher.getAdminRealmKeyFile();
         if (adminRealmKeyFile == null) {
             return;
         }

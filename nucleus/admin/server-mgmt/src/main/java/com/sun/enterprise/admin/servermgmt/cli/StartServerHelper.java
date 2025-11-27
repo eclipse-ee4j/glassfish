@@ -69,7 +69,7 @@ public final class StartServerHelper {
     private final boolean terse;
     private final GFLauncher launcher;
     private final File pidFile;
-    private final GFLauncherInfo info;
+    private final GFLauncherInfo launchParams;
     private final List<HostAndPort> adminAddresses;
     private final ServerDirs serverDirs;
     private final String serverTitleAndName;
@@ -79,9 +79,9 @@ public final class StartServerHelper {
         ServerLifeSignCheck lifeSignCheck) throws GFLauncherException {
         this.terse = terse;
         this.launcher = launcher;
-        this.info = launcher.getInfo();
-        this.serverTitleAndName = (info.isDomain() ? "domain " : "instance ") + serverDirs.getServerName();
-        this.adminAddresses = info.getAdminAddresses();
+        this.launchParams = launcher.getParameters();
+        this.serverTitleAndName = (launchParams.isDomain() ? "domain " : "instance ") + serverDirs.getServerName();
+        this.adminAddresses = launchParams.getAdminAddresses();
         this.serverDirs = serverDirs;
         this.pidFile = serverDirs.getPidFile();
         this.lifeSignCheck = lifeSignCheck;
@@ -94,7 +94,7 @@ public final class StartServerHelper {
             configureLoggingOfRestart(serverDirs.getRestartLogFile());
         }
         checkFreeDebugPort(launcher.getDebugPort(), Duration.ofSeconds(10L), terse);
-        checkFreeAdminPorts(info.getAdminAddresses());
+        checkFreeAdminPorts(launchParams.getAdminAddresses());
         deletePidFile();
     }
 
@@ -114,11 +114,11 @@ public final class StartServerHelper {
                     break;
                 case RESTART_DEBUG_ON:
                     LOG.log(INFO, "restartChangeDebug", "on");
-                    info.setDebug(true);
+                    launchParams.setDebug(true);
                     break;
                 case RESTART_DEBUG_OFF:
                     LOG.log(INFO, "restartChangeDebug", "off");
-                    info.setDebug(false);
+                    launchParams.setDebug(false);
                     break;
                 default:
                     return returnValue;
@@ -129,16 +129,20 @@ public final class StartServerHelper {
         }
     }
 
-    public String waitForServerStart(Duration timeout) throws GFLauncherException {
+    public String waitForServerStart(Duration timeout) throws CommandException {
         if (!terse) {
-            System.out.print("Waiting for " + serverTitleAndName + " to start ");
+            if (launcher.isSuspendEnabled()) {
+                // If the server starts suspended, user needs to see this before it happens.
+                System.out.print("Debugging is configured to listen on port " + launcher.getDebugPort()
+                    + ". Server's JVM is set to suspend.");
+            }
         }
         final GlassFishProcess glassFishProcess = GlassFishProcess.of(launcher.getProcess());
         final ServerLifeSignChecker checker = new ServerLifeSignChecker(lifeSignCheck, pidFile, () -> adminAddresses, !terse);
         final ServerLifeSigns signs = checker.watchStartup(glassFishProcess, timeout);
         final String report = report(signs);
         if (signs.isError()) {
-            throw new GFLauncherException(report);
+            throw new CommandException(report);
         }
         return report;
     }
@@ -151,7 +155,14 @@ public final class StartServerHelper {
             report.append('\n').append(signs.getSuggestion());
         }
         report.append("\n  Location: ").append(serverDirs.getServerDir());
-        report.append("\n  Log File: ").append(launcher.getLogFilename());
+        report.append("\n  Log File: ").append(launcher.getLogFile());
+        if (launcher.getDebugPort() != null) {
+            report.append("\n  Debugging is configured to listen on port " + launcher.getDebugPort() + ".");
+            if (launcher.isSuspendEnabled()) {
+                report.append(" Server's JVM is set to suspend.");
+            }
+        }
+
         final String situationReport = signs.getSituationReport();
         if (situationReport != null) {
             report.append(signs.getSituationReport());

@@ -36,8 +36,8 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
-import static com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.step;
 import static com.sun.enterprise.admin.servermgmt.cli.StartServerHelper.parseCustomEndpoints;
+import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
 
 /**
  * THe restart-domain command. The local portion of this command is only used to block until:
@@ -112,6 +112,10 @@ public class RestartDomainCommand extends StopDomainCommand {
             startTimeout = timeout;
         }
 
+        // Well, this looks duplicit, but it is not. The port watcher starts before we run the command
+        // on the instance. It will attach to the admin endpoint and wait for the disconnection.
+        // Meanwhile we ask the instance for restart.
+        // After we are sure that the server stopped, we will monitor its start.
         if (portWatcher != null && !portWatcher.get(startTimeout)) {
             logger.warning("The endpoint is still listening after timeout: " + oldAdminAddress);
         }

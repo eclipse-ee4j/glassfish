@@ -175,9 +175,9 @@
         <!-- Admin console components -->
         <jsftemplating.version>4.0.4</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>6.0.1</woodstock.version>
+        <woodstock.version>6.0.2</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
-        <woodstock-dojo-ajax-nodemo.version>1.12.4</woodstock-dojo-ajax-nodemo.version>
+        <woodstock-json.version>2.0</woodstock-json.version>
         <woodstock-prototype.version>1.7.3</woodstock-prototype.version>
 
         <!-- Other -->
@@ -611,9 +611,9 @@
                 <version>${woodstock-json.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.woodstock.dependlibs</groupId>
-                <artifactId>dojo-ajax-nodemo</artifactId>
-                <version>${woodstock-dojo-ajax-nodemo.version}</version>
+                <groupId>org.glassfish.woodstock.external</groupId>
+                <artifactId>dojo</artifactId>
+                <version>${woodstock.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>

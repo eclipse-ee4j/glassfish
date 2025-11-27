@@ -83,9 +83,8 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
 
             ArrayList<String> serverNames = getInstanceDirs(serverDir);
             for (String serverName: serverNames) {
-                if (isRunning(serverDir, serverName)) {
-                    throw new CommandException(strings.get("instance.is.running",
-                            serverName));
+                if (isRunning(serverName)) {
+                    throw new CommandException(strings.get("instance.is.running", serverName));
                 }
             }
 
@@ -213,7 +212,7 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
     }
 
 
-    private boolean isRunning(File nodeDirChild, String serverName) throws CommandException {
+    private boolean isRunning(String serverName) throws CommandException {
         File serverDir = new File(nodeDirChild, serverName);
         File configDir = new File(serverDir, "config");
         File domainXml = new File(configDir, "domain.xml");

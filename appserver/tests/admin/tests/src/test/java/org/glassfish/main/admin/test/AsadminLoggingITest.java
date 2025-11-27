@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,8 @@
  */
 
 package org.glassfish.main.admin.test;
+
+import com.sun.enterprise.util.OS;
 
 import java.io.File;
 import java.io.FileReader;
@@ -69,11 +71,16 @@ public class AsadminLoggingITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
+    /** Fill up the server log. */
     @BeforeAll
-    public static void fillUpServerLog() {
-        // Fill up the server log.
-        AsadminResult result = ASADMIN.exec("restart-domain", "--timeout", "60");
-        assertThat(result, asadminOK());
+    public static void fillUpServerLog() throws Exception {
+        if (OS.isWindowsForSure()) {
+            // For some reason windows can collide on debug port.
+            assertThat(ASADMIN.exec("stop-domain"), asadminOK());
+            assertThat(ASADMIN.exec("start-domain"), asadminOK());
+        } else {
+            assertThat(ASADMIN.exec("restart-domain"), asadminOK());
+        }
     }
 
     @Test

@@ -159,9 +159,8 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
 
         if (node == null) {
             if(nodeDirChild == null) {
-                throw new CommandException(Strings.get("internal.error",
-                        "nodeDirChild was null.  The Base Class is supposed to "
-                        + "guarantee that this won't happen"));
+                throw new CommandException(
+                    "The nodeDirChild was null. The Base Class is supposed to guarantee that this won't happen");
             }
             _node = nodeDirChild.getName();
             String nodeHost = getInstanceHostName(true);

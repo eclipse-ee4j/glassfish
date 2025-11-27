@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,21 +93,19 @@ public class ChangeMasterPasswordCommand extends CLICommand {
             if (nodeDir != null) {
                 command = CLICommand.getCommand(habitat, CHANGE_MASTER_PASSWORD_NODE);
                 return command.execute(argv);
-            } else {
-
-                // nodeDir is not specified and domainNameOrNodeName is not a domain.
-                // It could be a node
-                // We add defaultNodeDir parameter to args
-                ArrayList arguments = new ArrayList<String>(Arrays.asList(argv));
-                arguments.remove(argv.length - 1);
-                arguments.add("--nodedir");
-                arguments.add(getDefaultNodesDirs().getAbsolutePath());
-                arguments.add(domainNameOrNodeName);
-                String[] newargs = (String[]) arguments.toArray(new String[arguments.size()]);
-
-                command = CLICommand.getCommand(habitat, CHANGE_MASTER_PASSWORD_NODE);
-                return command.execute(newargs);
             }
+            // nodeDir is not specified and domainNameOrNodeName is not a domain.
+            // It could be a node
+            // We add defaultNodeDir parameter to args
+            ArrayList<String> arguments = new ArrayList<>(Arrays.asList(argv));
+            arguments.remove(argv.length - 1);
+            arguments.add("--nodedir");
+            arguments.add(getDefaultNodesDirs().getAbsolutePath());
+            arguments.add(domainNameOrNodeName);
+            String[] newargs = arguments.toArray(String[]::new);
+
+            command = CLICommand.getCommand(habitat, CHANGE_MASTER_PASSWORD_NODE);
+            return command.execute(newargs);
         } catch (IOException e) {
             throw new CommandException(e.getMessage(), e);
         }

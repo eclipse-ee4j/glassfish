@@ -21,10 +21,8 @@ import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
-import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedWriter;
@@ -206,12 +204,6 @@ public abstract class GFLauncher {
      */
     public final void launch() throws GFLauncherException {
         if (debugPort != null) {
-            // As the debugger starts immediately with the new process,
-            // and especially if there is some problem with shutdown, we can escalate it.
-            if (ProcessUtils.isListening(new HostAndPort("localhost", debugPort, false))) {
-                throw new GFLauncherException(
-                    "The debug port " + debugPort + " is already occupied by another process.");
-            }
             if (debugSuspend) {
                 LOG.log(INFO,
                     () -> "Debugging will be available and the server will start suspended on port " + debugPort + ".");
@@ -219,6 +211,7 @@ public abstract class GFLauncher {
                 LOG.log(INFO, () -> "Debugging will be available on port " + debugPort + ".");
             }
         }
+        logCommandLine();
         try {
             startTime = System.currentTimeMillis();
             if (isFakeLaunch()) {
@@ -292,7 +285,6 @@ public abstract class GFLauncher {
         setClasspath();
         initCommandLine();
         setJvmOptions();
-        logCommandLine();
 
         // if no <network-config> element, we need to upgrade this domain
         needsAutoUpgrade = !domainXML.hasNetworkConfig();
@@ -381,7 +373,6 @@ public abstract class GFLauncher {
         }
         throw new IllegalStateException("Call to getLogFilename() before it has been initialized!");
     }
-
 
     /**
      * @return null or a port number

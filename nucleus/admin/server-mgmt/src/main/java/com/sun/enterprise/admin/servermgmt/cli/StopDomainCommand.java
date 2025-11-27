@@ -106,7 +106,7 @@ public class StopDomainCommand extends LocalDomainCommand {
                 return dasNotRunning();
             }
             programOpts.setHostAndPort(addr);
-            LOG.log(Level.DEBUG, "Stopping local domain on port {0}", programOpts.getPort());
+            LOG.log(Level.INFO, "Stopping local domain on admin endpoint {0}", addr);
 
             /*
              * If we're using the local password, we don't want to prompt
@@ -119,15 +119,14 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (!isThisDAS(getDomainRootDir())) {
                 return dasNotRunning();
             }
-
             LOG.log(Level.DEBUG, "It's the correct DAS");
         } else {
+            addr = getUserProvidedAdminAddress();
             // remote
             // Verify that the DAS is running and reachable
             if (!DASUtils.pingDASQuietly(programOpts, env)) {
                 return dasNotRunning();
             }
-
             LOG.log(Level.DEBUG, "DAS is running");
             programOpts.setInteractive(false);
         }
@@ -153,6 +152,8 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
+                    LOG.log(Level.WARNING, "The domain admin port could not be reached."
+                        + " We will try to kill the process with PID " + prevPid);
                     ProcessUtils.kill(prevPid, getStopTimeout(), !programOpts.isTerse());
                 } catch (KillNotPossibleException e) {
                     throw new CommandException(e.getMessage(), e);
@@ -178,33 +179,26 @@ public class StopDomainCommand extends LocalDomainCommand {
      */
     protected void doCommand() throws CommandException {
         // run the remote stop-domain command and throw away the output
-        final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
-        final Long oldPid = getServerPid();
+        final Long pid = getServerPid();
         final boolean printDots = !programOpts.isTerse();
         final Duration stopTimeout = getStopTimeout();
+        localShutdown(isLocal() ? pid : null, stopTimeout, printDots);
+    }
+
+    private void localShutdown(Long pid, Duration stopTimeout, boolean printDots) throws CommandException {
+        final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
+        cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
         try {
-            cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
-            if (printDots) {
-                // use stdout because logger always appends a newline
-                System.out.print("Waiting for the domain to stop ");
-            }
-            final boolean dead;
-            if (isLocal()) {
-                dead = oldPid == null || ProcessUtils.waitWhileIsAlive(oldPid, stopTimeout, printDots);
-            } else {
-                dead = ProcessUtils.waitWhileListening(addr, stopTimeout, printDots);
-            }
-            if (!dead) {
-                throw new CommandException(
-                    "Timed out " + stopTimeout.toSeconds() + " seconds waiting for the domain to stop.");
-            }
-        } catch (Exception e) {
+            waitForStop(pid, addr, stopTimeout);
+        } catch (CommandException e) {
             // The domain server may have died so fast we didn't have time to
             // get the (always successful!!) return data.  This is NOT AN ERROR!
             LOG.log(Level.DEBUG, "Remote stop-domain call failed.", e);
             if (kill && isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
+                    LOG.log(Level.WARNING, "The stop-domain command timed out."
+                        + " We will try to kill the process with PID " + prevPid);
                     ProcessUtils.kill(prevPid, stopTimeout, printDots);
                     return;
                 } catch (Exception ex) {

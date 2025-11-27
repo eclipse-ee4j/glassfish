@@ -15,6 +15,10 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
+get_12_free_ports() {
+    ${JAVA_HOME}/bin/java  ${APS_HOME}/devtests/ejb/ports.java
+}
+
 test_run_ejb(){
 
         rm -rf ${S1AS_HOME}/domains/domain1
@@ -22,17 +26,18 @@ test_run_ejb(){
         echo "AS_ADMIN_PASSWORD=" > temppwd
         cat ${APS_HOME}/temppwd
 
-        ADMIN_PORT=45707
-        JMS_PORT=45708
-        JMX_PORT=45709
-        ORB_PORT=45710
-        SSL_PORT=45711
-        INSTANCE_PORT=45712
-        ALTERNATE_PORT=45713
-        ORB_SSL_PORT=45714
-        ORB_SSL_MUTUALAUTH_PORT=45715
-        DB_PORT=45716
-        DB_PORT_2=45717
+        PORTS=($(get_12_free_ports))
+        ADMIN_PORT=${PORTS[0]}
+        JMS_PORT=${PORTS[1]}
+        JMX_PORT=${PORTS[2]}
+        ORB_PORT=${PORTS[3]}
+        SSL_PORT=${PORTS[4]}
+        INSTANCE_PORT=${PORTS[5]}
+        ALTERNATE_PORT=${PORTS[6]}
+        ORB_SSL_PORT=${PORTS[7]}
+        ORB_SSL_MUTUALAUTH_PORT=${PORTS[8]}
+        DB_PORT=${PORTS[9]}
+        DB_PORT_2=${PORTS[10]}
 
         ${S1AS_HOME}/bin/asadmin \
                 --user anonymous \

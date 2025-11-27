@@ -19,6 +19,8 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.servermgmt.cli.PortWatcher;
+import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignCheck;
 import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
@@ -35,6 +37,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
+import static com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignChecker.step;
 
 /**
  * @author Byron Nevins
@@ -61,19 +64,30 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
         // Save old values before executing restart
         final Long oldPid = getServerPid();
         final HostAndPort oldAdminAddress = getReachableAdminAddress();
-        final HostAndPort newAdminAddress = getAdminAddress(getServerDirs().getServerName());
-
-        // run the remote restart-instance command and throw away the output
-        RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
+        final boolean printDots = !programOpts.isTerse();
+        final PortWatcher portWatcher = oldAdminAddress == null ? null : PortWatcher.watch(oldAdminAddress, printDots);
+        final RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
         if (debug == null) {
             cmd.executeAndReturnOutput("_restart-instance");
         } else {
             cmd.executeAndReturnOutput("_restart-instance", "--debug", debug.toString());
         }
 
-        // Timeouts are set in commands we use, so we will wait for the result without timeout.
-        waitForRestart(oldPid, oldAdminAddress, newAdminAddress, getRestartTimeout());
-        logger.info("Successfully restarted the instance.");
+        final Duration timeout = getRestartTimeout();
+        final Duration startTimeout;
+        if (isLocal()) {
+            startTimeout = step(null, timeout, () -> waitForStop(oldPid, null, timeout));
+        } else {
+            startTimeout = timeout;
+        }
+
+        if (portWatcher != null && !portWatcher.get(startTimeout)) {
+            logger.warning("The endpoint is still listening after timeout: " + oldAdminAddress);
+        }
+
+        final ServerLifeSignCheck lifeSignCheck = new ServerLifeSignCheck("instance " + getInstanceName(), true, true, true, true, List.of());
+        final String report = waitForStart(oldPid, lifeSignCheck, () -> List.of(getReachableAdminAddress()), startTimeout);
+        logger.info(report);
     }
 
     @Override

@@ -72,6 +72,9 @@ class AutoDisposableGlassFish extends GlassFishImpl {
             if (commandRunner == null) {
                 // only create the CommandRunner if needed
                 commandRunner = serviceLocator.getService(CommandRunner.class);
+                if (commandRunner == null) {
+                    throw new GlassFishException("Service locator failed to resolve the CommandRunner");
+                }
             }
             String propertyPrefix = propertyName.split("\\.")[0];
             if (!knownPropertyPrefixes.contains(propertyPrefix)) {

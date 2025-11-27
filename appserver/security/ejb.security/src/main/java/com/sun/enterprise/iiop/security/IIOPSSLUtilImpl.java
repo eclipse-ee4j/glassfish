@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.iiop.security;
 
+import com.sun.corba.ee.spi.transport.SocketInfo;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.security.ssl.J2EEKeyManager;
 import com.sun.enterprise.security.ssl.SSLUtils;
@@ -33,7 +34,7 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
@@ -54,7 +55,8 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
     @Inject
     private SSLUtils sslUtils;
 
-    private GlassFishORBHelper orbHelper;
+    @Inject
+    private GlassFishORBLocator orbLocator;
 
     private Object appClientSSL;
 
@@ -111,17 +113,14 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
     }
 
     @Override
-    public Object getSSLPortsAsSocketInfo(Object ior) {
+    public List<SocketInfo> getSSLPortsAsSocketInfo(Object ior) {
         SecurityMechanismSelector selector = Lookups.getSecurityMechanismSelector();
-        return selector.getSSLSocketInfo(ior);
+        return (List<SocketInfo>) selector.getSSLSocketInfo(ior);
     }
 
     @Override
     public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, Object sInfos) {
         List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos = (List<com.sun.corba.ee.spi.folb.SocketInfo>) sInfos;
-        orbHelper = Lookups.getGlassFishORBHelper();
-        TaggedComponent result = null;
-        org.omg.CORBA.ORB orb = orbHelper.getORB();
         int sslMutualAuthPort = -1;
         try {
             if (iorInfo instanceof com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt) {
@@ -134,12 +133,11 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
         LOG.log(FINE, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
-        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(orb, sslMutualAuthPort);
-        EjbDescriptor desc = ctc.getEjbDescriptor(iorInfo);
-        if (desc != null) {
-            result = ctc.createSecurityTaggedComponent(socketInfos, desc);
+        EjbDescriptor desc = orbLocator.getEjbDescriptor(iorInfo);
+        if (desc == null) {
+            return null;
         }
-        return result;
+        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getORB());
+        return ctc.createSecurityTaggedComponent(socketInfos, desc);
     }
-
 }

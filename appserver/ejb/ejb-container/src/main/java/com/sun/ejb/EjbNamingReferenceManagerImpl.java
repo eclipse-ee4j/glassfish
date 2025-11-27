@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +33,7 @@ import javax.naming.NamingException;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
 
@@ -48,10 +48,10 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager {
 
     @Inject
-    InvocationManager invMgr;
+    private InvocationManager invMgr;
 
     @Inject
-    Provider<GlassFishORBHelper> glassFishORBHelperProvider;
+    private Provider<ORBLocator> orbLocatorProvider;
 
     @Override
     public Object resolveEjbReference(EjbReferenceDescriptor ejbRefDesc, Context context)
@@ -119,22 +119,17 @@ public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager 
 
             ClassLoader origClassLoader = Utility.getClassLoader();
             boolean setCL = false;
-
             try {
-
                 try {
-
-                    String refInterface = ejbRefDesc.isEJB30ClientView() ?
-                       ejbRefDesc.getEjbInterface() : ejbRefDesc.getHomeClassName();
+                    String refInterface = ejbRefDesc.isEJB30ClientView()
+                        ? ejbRefDesc.getEjbInterface()
+                        : ejbRefDesc.getHomeClassName();
                     origClassLoader.loadClass(refInterface);
 
-                } catch(ClassNotFoundException e) {
-
-                     ClassLoader referringBundleClassLoader =
-                             ejbRefDesc.getReferringBundleDescriptor().getClassLoader();
-                     Utility.setContextClassLoader(referringBundleClassLoader);
-                     setCL = true;
-
+                } catch (ClassNotFoundException e) {
+                    ClassLoader referringBundleClassLoader = ejbRefDesc.getReferringBundleDescriptor().getClassLoader();
+                    Utility.setContextClassLoader(referringBundleClassLoader);
+                    setCL = true;
                 }
 
                 /* For remote ejb refs, first lookup the target remote object
@@ -147,8 +142,7 @@ public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager 
                  * MEJB resolution for cluster support post V3 FCS.
                  */
                 if (remoteJndiName.hasCorbaPrefix()) {
-                    GlassFishORBHelper orbHelper = glassFishORBHelperProvider.get();
-                    ORB orb = orbHelper.getORB();
+                    ORB orb = orbLocatorProvider.get().getORB();
                     jndiObj = orb.string_to_object(remoteJndiName.toString());
                 } else {
                     jndiObj = context.lookup(remoteJndiName.toString());
@@ -190,17 +184,13 @@ public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager 
 
         if(currentInv == null) {
             throw new IllegalStateException("no current invocation");
-        } else if (currentInv.getInvocationType() !=
-                   ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) {
-            throw new IllegalStateException
-                ("Illegal invocation type for EJB Context : "
-                 + currentInv.getInvocationType());
+        } else if (currentInv.getInvocationType() != ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) {
+            throw new IllegalStateException(
+                "Illegal invocation type for EJB Context : " + currentInv.getInvocationType());
         }
 
         EjbInvocation ejbInv = (EjbInvocation) currentInv;
-
         Object returnObject = ejbInv.context;
-
         if (contextType.equals("jakarta.ejb.TimerService")) {
             if (EJBTimerService.getEJBTimerService() == null) {
                 throw new IllegalStateException("EJB Timer Service not available");

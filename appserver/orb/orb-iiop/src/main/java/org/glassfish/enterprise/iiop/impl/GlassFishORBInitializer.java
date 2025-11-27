@@ -19,7 +19,7 @@ package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.logging.LogDomains;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
@@ -46,6 +46,7 @@ import static java.util.logging.Level.FINE;
  */
 public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject implements ORBInitializer {
 
+    private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogDomains.getLogger(GlassFishORBInitializer.class, LogDomains.CORBA_LOGGER);
 
     /**
@@ -79,7 +80,7 @@ public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject implement
         try {
             Codec codec = cf.create_codec(encoding);
             IIOPUtils iiopUtils = IIOPUtils.getInstance();
-            Collection<IIOPInterceptorFactory> interceptorFactories = iiopUtils.getAllIIOPInterceptrFactories();
+            List<IIOPInterceptorFactory> interceptorFactories = iiopUtils.getAllIIOPInterceptrFactories();
 
             for (IIOPInterceptorFactory factory : interceptorFactories) {
                 LOG.log(FINE, "Processing interceptor factory: {0}", factory);

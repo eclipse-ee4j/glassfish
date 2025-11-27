@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,9 @@
 
 package org.glassfish.enterprise.iiop.api;
 
+import com.sun.corba.ee.impl.folb.InitialGroupInfoService;
+import com.sun.enterprise.deployment.EjbDescriptor;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
@@ -26,18 +29,21 @@ import java.lang.System.Logger;
 import java.nio.channels.SelectableChannel;
 import java.rmi.Remote;
 import java.util.Properties;
+import java.util.concurrent.Semaphore;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
+import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
@@ -48,15 +54,13 @@ import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
  */
 @Service
 @Singleton
-public class GlassFishORBHelper implements ORBLocator {
+public class GlassFishORBLocator implements ORBLocator {
 
-    private static final Logger LOG = System.getLogger(GlassFishORBHelper.class.getName());
+    private static final Logger LOG = System.getLogger(GlassFishORBLocator.class.getName());
+    private static final ThreadLocal<ORB> TMP_ORB = new ThreadLocal<>();
 
     @Inject
     private Provider<Events> eventsProvider;
-
-    @Inject
-    private ServiceLocator services;
 
     @Inject
     private ProcessEnvironment processEnv;
@@ -67,16 +71,21 @@ public class GlassFishORBHelper implements ORBLocator {
     @Inject
     private Provider<GlassfishNamingManager> glassfishNamingManagerProvider;
 
+    @Inject
+    private GlassFishORBFactory orbFactory;
+
     private ProtocolManager protocolManager;
     private SelectableChannelDelegate selectableChannelDelegate;
-    private GlassFishORBFactory orbFactory;
 
     // volatile is enough for sync, just one thread can write
     private volatile ORB orb;
     private volatile boolean destroyed;
+    private volatile Exception failure;
+    private Semaphore semaphore = new Semaphore(1);
+    private Thread initializerThread;
 
     @PostConstruct
-    public void postConstruct() {
+    private void postConstruct() {
         // WARN: Neither PreDestroy annotation nor interface worked!
         EventListener glassfishEventListener = event -> {
             if (event.is(SERVER_SHUTDOWN)) {
@@ -84,15 +93,16 @@ public class GlassFishORBHelper implements ORBLocator {
             }
         };
         eventsProvider.get().register(glassfishEventListener);
-        orbFactory = services.getService(GlassFishORBFactory.class);
         LOG.log(INFO, "GlassFishORBLocator created.");
     }
 
     private void onShutdown() {
-        // FIXME: getORB is able to create another, it should be refactored and simplified.
         destroyed = true;
-        LOG.log(INFO, "ORB shutdown started");
+        LOG.log(INFO, "GlassFishORBLocator shutdown started");
         if (this.orb != null) {
+            LOG.log(INFO, "GlassFishORBLocator shutdown waits for lock");
+            semaphore.acquireUninterruptibly();
+            LOG.log(INFO, "GlassFishORBLocator shutdown has the lock");
             // First remove, then destroy.
             // Still, threads already working with the instance will have it unstable.
             final ORB destroyedOrb = orb;
@@ -109,68 +119,86 @@ public class GlassFishORBHelper implements ORBLocator {
         }
     }
 
-    // Called by PEORBConfigurator executed from glassfish-corba-orb.jar
-    public synchronized void setORB(ORB orb) {
-        this.orb = orb;
-    }
-
-    /**
-     * Get or create the default orb. This can be called for any process type. However, protocol manager and CosNaming
-     * initialization only take place for the Server.
-     */
     @Override
     public ORB getORB() {
-        // Use a volatile double-checked locking idiom here so that we can publish
-        // a partly-initialized ORB early, so that lazy init can come into getORB()
-        // and allow an invocation to the transport to complete.
-        {
-            final ORB orbInstance = this.orb;
-            if (orbInstance != null || destroyed) {
-                return orbInstance;
+        LOG.log(TRACE, "getORB() entry");
+        if (destroyed) {
+            return null;
+        }
+        if (orb != null) {
+            LOG.log(TRACE, "getORB() the shortest path out");
+            return orb;
+        }
+
+        if (semaphore.tryAcquire()) {
+            // First thread will create the ORB.
+            initializerThread = Thread.currentThread();
+        } else if (Thread.currentThread() == initializerThread) {
+            // Awful design of corba-orb library needs this.
+            LOG.log(DEBUG, "Detected recursion!", new Exception());
+            return TMP_ORB.get();
+        } else {
+            try {
+                // Other threads must wait.
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
-        synchronized (this) {
-            if (this.orb != null) {
-                return this.orb;
+
+        try {
+            if (this.orb != null || destroyed) {
+                LOG.log(TRACE, "getORB() second shortest path out");
+                return orb;
+            }
+            if (this.failure != null) {
+                throw new RuntimeException("ORB initialization already failed in another thread!", failure);
             }
             try {
-                final boolean isServer = processEnv.getProcessType().isServer();
-
-                final Properties props = new Properties();
-                props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.toString(isServer));
-
-                // Create orb and make it visible.
-                //
-                // This will allow loopback calls to getORB() from portable interceptors activated
-                // as a side-effect of the remaining initialization.
-                //
-                // If it's a server, there's a small time window during which the ProtocolManager
-                // won't be available.
-                // Any callbacks that result from the protocol manager initialization itself cannot
-                // depend on having access to the protocol manager.
-                orb = orbFactory.createORB(props);
-                if (isServer && protocolManager == null) {
-                    protocolManager = initProtocolManager(orb);
-                }
+                initialize(processEnv.getProcessType().isServer());
+                LOG.log(DEBUG, "ORB initialization finished successfuly.");
                 return orb;
             } catch (Exception e) {
-                orb = null;
-                protocolManager = null;
-                throw new RuntimeException("Orb initialization erorr", e);
+                failure = e;
+                // Close all ports, etc.
+                if (orb != null) {
+                    orb.destroy();
+                }
             }
+            // Current stacktrace + original cause.
+            throw new RuntimeException("ORB initialization failed!", failure);
+        } finally {
+            TMP_ORB.remove();
+            semaphore.release();
+            initializerThread = null;
         }
     }
 
+    private void initialize(boolean isServer) throws Exception {
+        LOG.log(DEBUG, "getORB(): Initialization started by " + Thread.currentThread(), new Exception());
+        final Properties props = new Properties();
+        props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.toString(isServer));
+        this.orb = orbFactory.createORB(props);
+        if (isServer) {
+            // Does the JNDI binding
+            new InitialGroupInfoService(orb);
+        }
+        LOG.log(INFO, "ORB initialization succeeded: {0}", orb);
+    }
 
-    private ProtocolManager initProtocolManager(final ORB orbInstance) throws Exception {
+    private ProtocolManager initProtocolManager() throws Exception {
+        if (failure != null) {
+            throw new IllegalStateException(
+                "Cannot initialize the protocol manager, because ORB initialization failed.", failure);
+        }
         final ProtocolManager manager = protocolManagerProvider.get();
-        manager.initialize(orbInstance);
+        manager.initialize(orb);
 
         // Move startup of naming to PEORBConfigurator so it runs before interceptors.
         manager.initializePOAs();
 
         final GlassfishNamingManager namingManager = glassfishNamingManagerProvider.get();
-        final Remote remoteSerialProvider = namingManager.initializeRemoteNamingSupport(orbInstance);
+        final Remote remoteSerialProvider = namingManager.initializeRemoteNamingSupport(orb);
         manager.initializeRemoteNaming(remoteSerialProvider);
         return manager;
     }
@@ -188,23 +216,34 @@ public class GlassFishORBHelper implements ORBLocator {
      * Get a protocol manager for creating remote references.
      * ProtocolManager is only available in the server.
      * Otherwise, this method returns null.
-     * If it's the server and the orb hasn't been already created, calling this method has the side
-     * effect of creating the orb.
      */
     public ProtocolManager getProtocolManager() {
         if (!processEnv.getProcessType().isServer() || destroyed) {
             return null;
         }
-        synchronized (this) {
-            if (protocolManager == null) {
-                getORB();
+        if (!isORBInitialized()) {
+            getORB();
+        }
+        if (protocolManager != null) {
+            return protocolManager;
+        }
+
+        semaphore.acquireUninterruptibly();
+        try {
+            if (processEnv.getProcessType().isServer()) {
+                protocolManager = initProtocolManager();
+                LOG.log(INFO, "ProtocolManager initialization finished successfuly.");
             }
             return protocolManager;
+        } catch (Exception e) {
+            throw new IllegalStateException("ProtocolManager initialization failed!", e);
+        } finally {
+            semaphore.release();
         }
     }
 
     public boolean isORBInitialized() {
-        return orb != null;
+        return orb != null && initializerThread == null;
     }
 
     public int getOTSPolicyType() {
@@ -227,18 +266,30 @@ public class GlassFishORBHelper implements ORBLocator {
         return orbFactory.getORBInitialPort();
     }
 
-    @Override
-    public String getORBHost(ORB orb) {
-        return orbFactory.getORBHost(orb);
+    public EjbDescriptor getEjbDescriptor(IORInfo iorInfo) {
+        return orbFactory.getEjbDescriptor(iorInfo);
     }
 
     @Override
-    public int getORBPort(ORB orb) {
+    public int getORBPort() {
+        while (!isORBInitialized()) {
+            Thread.onSpinWait();
+        }
         return orbFactory.getORBPort(orb);
     }
 
     public boolean isEjbCall(ServerRequestInfo sri) {
         return orbFactory.isEjbCall(sri);
+    }
+
+    /**
+     * Due to bad corba-orb design, we need to have a partially initialized {@link ORB} instance
+     * ready for recursive requests.
+     *
+     * @param orb
+     */
+    public static void setThreadLocal(ORB orb) {
+        TMP_ORB.set(orb);
     }
 
     public interface SelectableChannelDelegate {

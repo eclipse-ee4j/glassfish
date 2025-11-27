@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,15 +13,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories;
 
+package org.glassfish.main.test.app.data;
+
+import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.Repository;
+import jakarta.data.repository.Save;
+import jakarta.transaction.Transactional;
 
-/**
- *
- * @author Ondro Mihalyi
- */
 @Repository
-public interface NoInterfaceRepository {
-
+@Transactional(Transactional.TxType.REQUIRES_NEW)
+public interface TransactionRepository extends CrudRepository<TransactionEntity, Long> {
+    @Save
+    TransactionEntity save(TransactionEntity entity);
 }

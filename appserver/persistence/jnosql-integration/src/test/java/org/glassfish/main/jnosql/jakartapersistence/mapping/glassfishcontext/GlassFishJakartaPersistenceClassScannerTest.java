@@ -15,8 +15,6 @@
  */
 package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext;
 
-
-
 import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.DataRepository;
@@ -39,63 +37,78 @@ import java.util.Set;
 
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.CombinedRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyBasicRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCombinedRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyCrudRepository;
 import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyDataRepository;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.NoInterfaceRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyNoInterfaceRepository;
+import org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories.MyUnsupportedRepository;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
  * @author Ondro Mihalyi
  */
-public class GlassFishClassScannerTest {
+public class GlassFishJakartaPersistenceClassScannerTest {
 
-    public GlassFishClassScannerTest() {
+    public GlassFishJakartaPersistenceClassScannerTest() {
     }
 
     @Test
     public void testVariousRepositories() throws URISyntaxException, IOException, InterruptedException {
 
         Set<Class<?>> allClasses = new HashSet<>();
-        Set<Class<?>> normalRepositories = new HashSet<>();
 
-        final Set<Class<?>> apiClasses = Set.of(DataRepository.class, BasicRepository.class, CrudRepository.class,
-                Entity.class, Repository.class);
-        allClasses.addAll(apiClasses);
+        {
+            final Set<Class<?>> apiClasses = Set.of(DataRepository.class, BasicRepository.class, CrudRepository.class,
+                    Entity.class, Repository.class);
+            allClasses.addAll(apiClasses);
+        }
 
-        final Set<Class<?>> otherTestClasses = Set.of(MyEntity.class);
-        allClasses.addAll(otherTestClasses);
+        {
+            final Set<Class<?>> otherTestClasses = Set.of(MyEntity.class, MyOtherEntity.class, MyUnsupportedEntity.class, MyUnsupportedRepository.class);
+            allClasses.addAll(otherTestClasses);
+        }
 
-        final Set<Class<?>> standardRepositories = Set.of(
-                MyDataRepository.class, MyBasicRepository.class, MyCrudRepository.class);
-        allClasses.addAll(standardRepositories);
-        normalRepositories.addAll(standardRepositories);
+        final Set<Class<?>> standardRepositories = new HashSet<>();
 
-        final Set<Class<?>> combinedRepositories = Set.of(CombinedRepository.class);
-        allClasses.addAll(combinedRepositories);
-        normalRepositories.addAll(combinedRepositories);
+        {
+            final Set<Class<?>> combinedRepositories = Set.of(MyCombinedRepository.class);
+            standardRepositories.addAll(Set.of(
+                    MyDataRepository.class, MyBasicRepository.class, MyCrudRepository.class));
+            standardRepositories.addAll(combinedRepositories);
+        }
+
 
         final Set<Class<?>> customRepositories = new HashSet<>();
-        customRepositories.addAll(Set.of(NoInterfaceRepository.class));
-        customRepositories.addAll(combinedRepositories);
-        allClasses.addAll(customRepositories);
+        customRepositories.addAll(Set.of(MyNoInterfaceRepository.class));
 
+        Set<Class<?>> allRepositories = new HashSet<>();
+        allRepositories.addAll(standardRepositories);
+        allRepositories.addAll(customRepositories);
+
+        allClasses.addAll(customRepositories);
+        allClasses.addAll(standardRepositories);
         Types types = parseClasses(allClasses);
 
         configureCDI(types);
-        final GlassFishClassScanner scanner = new GlassFishClassScanner();
+        final GlassFishJakartaPersistenceClassScanner scanner = new GlassFishJakartaPersistenceClassScanner();
 
         final Set<Class<?>> repositoriesStandardResult = scanner.repositoriesStandard();
-        assertTrue(repositoriesStandardResult.equals(standardRepositories), "Standard repositories: " + repositoriesStandardResult);
+        assertThat("Standard repositories", repositoriesStandardResult, is(equalTo(standardRepositories)));
+
         final Set<Class<?>> customRepositoriesResult = scanner.customRepositories();
-        assertTrue(customRepositoriesResult.equals(customRepositories), "Custom repositories: " + customRepositoriesResult);
+        assertThat("Custom repositories", customRepositoriesResult, is(equalTo(customRepositories)));
+
         final Set<Class<?>> repositoriesResult = scanner.repositories();
-        assertTrue(repositoriesResult.equals(normalRepositories), "Repositories: " + repositoriesResult);
+        assertThat("Repositories", repositoriesResult, is(equalTo(allRepositories)));
+
+        assertThat("Repositories = standard + custom", repositoriesStandardResult.size() + customRepositoriesResult.size(), is(equalTo(repositoriesResult.size())));
     }
 
     private void configureCDI(Types types) {

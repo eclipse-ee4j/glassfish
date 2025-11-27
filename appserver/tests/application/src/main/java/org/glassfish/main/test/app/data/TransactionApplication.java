@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,15 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.repositories;
 
-import jakarta.data.repository.Repository;
+package org.glassfish.main.test.app.data;
 
-/**
- *
- * @author Ondro Mihalyi
- */
-@Repository
-public interface CombinedRepository extends MyCrudRepository {
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
+import java.util.Set;
+
+@ApplicationPath("")
+public class TransactionApplication extends Application {
+    @Override
+    public Set<Class<?>> getClasses() {
+        return Set.of(TransactionResource.class);
+    }
 }

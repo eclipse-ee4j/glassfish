@@ -83,6 +83,7 @@
 
         <!-- Jakarta EE platform -->
         <jakartaee>11</jakartaee>
+        <jakarta.platform.version>11.0.0</jakarta.platform.version>
 
         <!-- Jakarta API Versions -->
 
@@ -119,8 +120,10 @@
 
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
+        <jakarta.data.spec.version>1.0</jakarta.data.spec.version>
         <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
-        <jnosql.version>1.1.10</jnosql.version>
+        <jakarta.nosql.spec.version>1.0.1</jakarta.nosql.spec.version>
+        <jnosql.version>1.1.11</jnosql.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
@@ -211,6 +214,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
+                <version>${jakarta.platform.version}</version>
+            </dependency>
+
             <!-- Jakarta Faces -->
             <dependency>
                 <groupId>jakarta.faces</groupId>

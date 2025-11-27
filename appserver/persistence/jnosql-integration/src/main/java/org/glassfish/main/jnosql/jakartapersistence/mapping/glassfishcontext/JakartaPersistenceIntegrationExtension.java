@@ -34,21 +34,18 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
-import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManager;
+import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
+import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.DefaultEntitiesMetadata;
-import org.glassfish.main.jnosql.jakartapersistence.mapping.reflection.nosql.ReflectionGroupEntityMetadata;
 
 /**
  * TODO - consider moving to weld-integration module, following the existing
@@ -77,16 +74,8 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(Dependent.class) // Dependent scope is OK because the state is provided via constructor
                 .createWith(ctx -> new ApplicationContext(types));
 
-        addBean(GlassFishClassScanner.class, afterBeanDiscovery, beanManager)
-                .types(ClassScanner.class, GlassFishClassScanner.class)
-                .scope(ApplicationScoped.class);
-
-        addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager)
-                .types(GroupEntityMetadata.class)
-                .scope(ApplicationScoped.class);
-
-        addBean(DefaultEntitiesMetadata.class, afterBeanDiscovery, beanManager)
-                .types(EntitiesMetadata.class)
+        addBean(GlassFishJakartaPersistenceClassScanner.class, afterBeanDiscovery, beanManager)
+                .types(ClassScanner.class, GlassFishJakartaPersistenceClassScanner.class)
                 .scope(ApplicationScoped.class);
 
         addBean(GlassFishRepositoryInterceptor.class, afterBeanDiscovery, beanManager)
@@ -118,9 +107,11 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         addBean(Converters.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
-        addBean(PersistenceDatabaseManager.class, afterBeanDiscovery, beanManager)
+        addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
+        // TODO: Extend this to inject EM by unit name via @PesistenceContext mechanism,
+        // even if not qualifier is defined for the persistence unit
         addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
 
@@ -131,6 +122,9 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .scope(ApplicationScoped.class);
 
         addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager)
+                .scope(ApplicationScoped.class);
+
+        addBean(PersistenceUnitCacheProvider.class, afterBeanDiscovery, beanManager)
                 .scope(ApplicationScoped.class);
     }
 

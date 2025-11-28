@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,9 +25,10 @@ import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -68,7 +69,7 @@ public class EmbeddedJSPTest {
 
         System.out.println("Deployed " + appName);
 
-        Assertions.assertTrue(appName != null);
+        assertTrue(appName != null);
 
         /*
         URL servlet = new URL("http://localhost:8080/hellojsp/index.jsp");
@@ -83,9 +84,7 @@ public class EmbeddedJSPTest {
         System.out.println(inputLine);
         */
 
-        if (appName!=null)
-            deployer.undeploy(appName);
-
+        deployer.undeploy(appName);
         System.out.println("Undeployed "+appName);
     }
 

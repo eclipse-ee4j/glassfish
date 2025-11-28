@@ -128,7 +128,6 @@ public final class NetUtils {
         if (portNumber <= 0 || portNumber > MAX_PORT) {
             return false;
         }
-
         if (hostName == null || isThisHostLocal(hostName)) {
             return isPortFreeServer(portNumber);
         }
@@ -136,26 +135,17 @@ public final class NetUtils {
     }
 
     private static boolean isPortFreeClient(String hostName, int portNumber) {
-        try {
-            // WBN - I have no idea why I'm messing with these streams!
-            // I lifted the code from installer.  Apparently if you just
-            // open a socket on a free port and catch the exception something
-            // will go wrong in Windows.
-            // Feel free to change it if you know EXACTLY what you're doing
-
-            //If the host name is null, assume localhost
-            if (hostName == null) {
-                hostName = getHostName();
-            }
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
-            }
-        } catch (Exception e) {
-            // Nobody is listening on this port
-            return true;
+        // If the host name is null, assume localhost
+        if (hostName == null) {
+            hostName = getHostName();
         }
-
-        return false;
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
+            return false;
+        } catch (IOException e) {
+            // Nobody is listening on this port
+        }
+        return true;
     }
 
     private static boolean isPortFreeServer(int port) {
@@ -201,8 +191,8 @@ public final class NetUtils {
         }
     }
 
-    private static boolean isPortFreeServer(int port, InetAddress add) {
-        try (ServerSocket ss = new ServerSocket(port, 10, add)) {
+    private static boolean isPortFreeServer(int port, InetAddress address) {
+        try (ServerSocket ss = new ServerSocket(port, 10, address)) {
             return true;
         } catch (Exception e) {
             return false;

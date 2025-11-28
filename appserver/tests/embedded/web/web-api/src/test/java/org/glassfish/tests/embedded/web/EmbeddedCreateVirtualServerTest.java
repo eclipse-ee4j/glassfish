@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,9 +36,11 @@ import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.WebListener;
 import org.glassfish.embeddable.web.config.VirtualServerConfig;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests WebContainer#createVirtualServerTest
@@ -71,9 +73,10 @@ public class EmbeddedCreateVirtualServerTest {
         embedded.addWebListener(httpListener);
 
         List<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
-        Assertions.assertTrue(listenerList.size()==1);
-        for (WebListener listener : embedded.getWebListeners())
+        assertTrue(listenerList.size()==1);
+        for (WebListener listener : embedded.getWebListeners()) {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
+        }
 
         WebListener testListener = embedded.createWebListener("test-listener", HttpListener.class);
         testListener.setPort(newPort);
@@ -82,8 +85,7 @@ public class EmbeddedCreateVirtualServerTest {
 
         File f = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         String virtualServerId = "embedded-server";
-        VirtualServer virtualServer = (VirtualServer)
-                embedded.createVirtualServer(virtualServerId, f, webListeners);
+        VirtualServer virtualServer = embedded.createVirtualServer(virtualServerId, f, webListeners);
         VirtualServerConfig config = new VirtualServerConfig();
         config.setHostNames("localhost");
         virtualServer.setConfig(config);
@@ -91,28 +93,28 @@ public class EmbeddedCreateVirtualServerTest {
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after creation " + listenerList.size());
-        Assertions.assertTrue(listenerList.size()==2);
-        for (WebListener listener : embedded.getWebListeners())
+        assertTrue(listenerList.size()==2);
+        for (WebListener listener : embedded.getWebListeners()) {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
+        }
 
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
-        Assertions.assertEquals(virtualServerId,vs.getID());
+        assertEquals(virtualServerId,vs.getID());
 
         File docRoot = new File(TestConfiguration.PROJECT_DIR, "target/classes");
-        Context context = (Context) embedded.createContext(docRoot);
+        Context context = embedded.createContext(docRoot);
         vs.addContext(context, contextRoot);
 
         URL servlet = new URL("http://localhost:"+newPort+"/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
         StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
-        System.out.println(inputLine);
-        Assertions.assertEquals("Hello World!", sb.toString());
+        assertEquals("Hello World!", sb.toString());
 
         vs.removeContext(context);
         System.out.println("Removing web listener "+testListener.getId());
@@ -120,9 +122,10 @@ public class EmbeddedCreateVirtualServerTest {
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after deletion " + listenerList.size());
-        Assertions.assertTrue(listenerList.size()==1);
-        for (WebListener listener : embedded.getWebListeners())
+        assertTrue(listenerList.size()==1);
+        for (WebListener listener : embedded.getWebListeners()) {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
+        }
     }
 
     @AfterAll

@@ -285,7 +285,7 @@ public abstract class CLICommand implements PostConstruct {
         validate();
         if (programOpts.isEcho()) {
             logger.info(echoCommand());
-            // In order to avoid echoing commands used intenally to the
+            // In order to avoid echoing commands used internally to the
             // implementation of *this* command, we turn off echo after
             // having echoed this command.
             programOpts.setEcho(false);
@@ -297,14 +297,14 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
-     * Return the name of this command.
+     * @return the name of this command.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Return the command scope for this command.  The command scope is
+     * @return the command scope for this command.  The command scope is
      * a name space in which commands are defined. Command clients can specify a scope
      * to use in looking up a command. Currently this is only used for remote
      * commands. By default, the context is null.
@@ -330,7 +330,7 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
-     * Return a BufferedReader for the man page for this command, or null if not found.
+     * @return a BufferedReader for the man page for this command, or null if not found.
      */
     public BufferedReader getManPage() {
         String commandName = getName();
@@ -347,9 +347,9 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /**
-     * Return a man page for this command that has the tokens substituted
+     * @return a man page for this command that has the tokens substituted
      */
-    public BufferedReader expandManPage(Reader r) {
+    public BufferedReader expandManPage(Reader reader) {
         manpageTokenValues[0] = programOpts.getCommandName();
         manpageTokenValues[1] = Environment.getPrefix();
         manpageTokenValues[2] = Version.getProductNameAbbreviation();
@@ -357,7 +357,7 @@ public abstract class CLICommand implements PostConstruct {
         for (int i = 0; i < manpageTokens.length; i++) {
             tvs.add(new TokenValue(manpageTokens[i], manpageTokenValues[i], "{", "}"));
         }
-        return new BufferedReader(new LineTokenReplacer(tvs).getReader(r));
+        return new BufferedReader(new LineTokenReplacer(tvs).getReader(reader));
     }
 
     /**
@@ -368,15 +368,14 @@ public abstract class CLICommand implements PostConstruct {
      */
     public String getUsage() {
         String usage;
-        if (commandModel != null && ok(usage = commandModel.getUsageText())) {
-            StringBuilder usageText = new StringBuilder();
-            usageText.append(strings.get("Usage", strings.get("Usage.brief", programOpts.getCommandName())));
-            usageText.append(" ");
-            usageText.append(usage);
-            return usageText.toString();
-        } else {
+        if (commandModel == null || !ok(usage = commandModel.getUsageText())) {
             return generateUsageText();
         }
+        StringBuilder usageText = new StringBuilder();
+        usageText.append(strings.get("Usage", strings.get("Usage.brief", programOpts.getCommandName())));
+        usageText.append(" ");
+        usageText.append(usage);
+        return usageText.toString();
     }
 
     private String generateUsageText() {
@@ -632,9 +631,8 @@ public abstract class CLICommand implements PostConstruct {
             StringBuilder sb = new StringBuilder(len + 2);
             sb.append('"').append(value).append('"');
             return sb.toString();
-        } else {
-            return value;
         }
+        return value;
     }
 
     /**
@@ -798,30 +796,25 @@ public abstract class CLICommand implements PostConstruct {
      * option. If so, get the man page using the getManPage method, copy the content to System.out, and return true.
      * Otherwise return false. Subclasses may override this method to perform a different check or to use a different method
      * to display the man page. If this method returns true, the validate and executeCommand methods won't be called.
+     *
+     * @return true to end the program as we just printed the man page.
      */
     protected boolean checkHelp() throws CommandException {
-        if (programOpts.isHelp()) {
-            BufferedReader br = getManPage();
-            if (br == null) {
-                throw new CommandException(strings.get("ManpageMissing", name));
-            }
-            br = expandManPage(br);
+        if (!programOpts.isHelp()) {
+            return false;
+        }
+        final BufferedReader manPage = getManPage();
+        if (manPage == null) {
+            throw new CommandException(strings.get("ManpageMissing", name));
+        }
+        try (BufferedReader expandedManPage = expandManPage(manPage)) {
             String line;
-            try {
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } catch (IOException ioex) {
-                throw new CommandException(strings.get("ManpageMissing", name), ioex);
-            } finally {
-                try {
-                    br.close();
-                } catch (IOException ex) {
-                }
+            while ((line = expandedManPage.readLine()) != null) {
+                System.out.println(line);
             }
             return true;
-        } else {
-            return false;
+        } catch (IOException ioex) {
+            throw new CommandException(strings.get("ManpageMissing", name), ioex);
         }
     }
 

@@ -4,6 +4,8 @@ rm -rf appserver/tests/appserv-tests/devtests/cdi/implicit/deployment-option/cli
 rm appserver/tests/appserv-tests/devtests/cdi/javaee-integration/*/lib/*.jar
 rm appserver/tests/appserv-tests/devtests/cdi/javaee-integration/*/ra/generic-ra.jar
 
+rm -rf appserver/tests/tck/cdi/bin
+
 git checkout HEAD -- appserver/tests/appserv-tests/config.properties appserver/tests/appserv-tests/config/derby.properties
 git checkout HEAD -- .gitignore
 

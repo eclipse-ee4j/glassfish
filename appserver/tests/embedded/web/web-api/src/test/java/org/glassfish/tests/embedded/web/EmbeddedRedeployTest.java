@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,9 +32,11 @@ import org.glassfish.embeddable.web.VirtualServer;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests redeploy scenario
@@ -73,36 +75,33 @@ public class EmbeddedRedeployTest {
 
         VirtualServer vs = embedded.getVirtualServer("server");
         String path = vs.getContext(contextRoot).getPath();
-        Assertions.assertEquals(path, contextRoot);
+        assertEquals(path, contextRoot);
         invoke();
 
         embedded.removeContext(context);
-        Assertions.assertNull(vs.getContext(contextRoot));
+        assertNull(vs.getContext(contextRoot));
 
         embedded.addContext(context, contextRoot);
-        Assertions.assertEquals(path, contextRoot);
+        assertEquals(path, contextRoot);
 
         invoke();
 
         embedded.removeContext(context);
-        Assertions.assertNull(vs.getContext(contextRoot));
+        assertNull(vs.getContext(contextRoot));
 
     }
 
     private void invoke() throws Exception {
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
-
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
+            System.out.println(sb);
         }
-        System.out.println(sb);
-        in.close();
     }
 
     @AfterAll

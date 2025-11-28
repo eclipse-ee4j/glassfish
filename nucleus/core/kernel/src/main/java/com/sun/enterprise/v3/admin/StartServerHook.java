@@ -56,8 +56,6 @@ class StartServerShutdownHook extends Thread {
 
     private static final Logger LOG = System.getLogger(StartServerShutdownHook.class.getName());
     private static final boolean LOG_RESTART = Boolean.parseBoolean(System.getenv("AS_RESTART_LOGFILES"));
-    private static final Path LOGDIR = new File(System.getProperty("com.sun.aas.instanceRoot"), "logs").toPath()
-        .toAbsolutePath();
     private static final Predicate<Thread> FILTER_OTHER_HOOKS = t -> t.getName().startsWith("GlassFish")
         && t.getName().endsWith("Shutdown Hook");
 
@@ -72,7 +70,7 @@ class StartServerShutdownHook extends Thread {
             throw new IllegalArgumentException("classname was null");
         }
         this.startTime = Instant.now();
-        this.logFile = getLogFileOld(startTime);
+        this.logFile = getLogFile(startTime);
         this.builder = prepareStartup(startTime, modulepath, classpath, sysProps, classname, args);
     }
 
@@ -176,12 +174,13 @@ class StartServerShutdownHook extends Thread {
     }
 
 
-    private static PrintStream getLogFileOld(Instant startTime) {
+    private static PrintStream getLogFile(Instant startTime) {
         if (!LOG_RESTART) {
             return null;
         }
         try {
-            return new PrintStream(LOGDIR.resolve("restart-" + startTime + "-old.log").toFile());
+            return new PrintStream(new File(System.getProperty("com.sun.aas.instanceRoot"), "logs").toPath()
+                .resolve("start-server-shutdown-hook-" + startTime + ".log").toFile());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -233,8 +232,7 @@ class StartServerShutdownHook extends Thread {
             outerCommand.add("-c");
             // waitpid is not everywhere.
             outerCommand.add("(waitpid -e " + ProcessHandle.current().pid() + " || sleep 1) && '"
-                + cmdline.stream().collect(Collectors.joining("' '"))
-                + (LOG_RESTART ? "' > '" + LOGDIR.resolve("restart-" + startTime + "-new.log'") : "'"));
+                + cmdline.stream().collect(Collectors.joining("' '")) + "'");
         }
 
         final ProcessBuilder builder = new ProcessBuilder(outerCommand);

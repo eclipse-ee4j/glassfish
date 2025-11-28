@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +20,10 @@ package com.sun.enterprise.admin.launcher;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 /**
- * The one and only type of Exception that will be thrown out of this package. I18N is wired in. If a String message is
- * found in the resource bundle, it will use that String. If not, it will use the String itself.
+ * The one and only type of Exception that will be thrown out of this package.
+ * I18N is wired in.
+ * If a String message is found in the resource bundle, it will use the resolved message.
+ * If not, it will use the String itself.
  *
  * @author bnevins
  */
@@ -68,11 +71,9 @@ public class GFLauncherException extends Exception {
     }
 
     /**
-     *
      * @param t The causing Throwable.
      */
     public GFLauncherException(Throwable t) {
-        super(t);
+        super(t.getMessage(), t);
     }
-
 }

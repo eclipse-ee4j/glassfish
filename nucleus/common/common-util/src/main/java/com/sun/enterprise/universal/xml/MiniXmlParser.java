@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -173,8 +173,11 @@ public class MiniXmlParser {
         return domainName;
     }
 
+    /**
+     * @return never null
+     */
     public List<HostAndPort> getAdminAddresses() {
-        if (adminAddresses == null || adminAddresses.isEmpty()) {
+        if (adminAddresses.isEmpty()) {
             String[] listenerNames = getListenerNamesForVS(DEFAULT_ADMIN_VS_ID, vsAttributes);
             if (listenerNames == null || listenerNames.length == 0) {
                 listenerNames = getListenerNamesForVS(DEFAULT_VS_ID, vsAttributes); //plan B

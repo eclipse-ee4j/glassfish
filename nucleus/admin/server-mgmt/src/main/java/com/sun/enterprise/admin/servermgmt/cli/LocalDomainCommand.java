@@ -17,10 +17,13 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
+import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.DomainDirs;
 import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -42,7 +45,7 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
     // the key for the Domain Root in the main attributes of the
     // manifest returned by the __locations command
     private static final String DOMAIN_ROOT_KEY = "Domain-Root";
-    private DomainDirs dd = null;
+    private DomainDirs dd;
 
     /*
      * The prepare method must ensure that the superclass' implementation of
@@ -63,6 +66,24 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
     protected void validate() throws CommandException, CommandValidationException {
 
         initDomain();
+    }
+
+    /**
+     * Loads the list of admin addresses of a particular server parsed from the domain.xml.
+     *
+     * @param domainXml
+     * @return list of HostAndPort objects with admin server address. Never null but can be empty.
+     */
+    protected final List<HostAndPort> loadAdminAddresses(File domainXml) {
+        return loadAdminAddresses(domainXml, "server");
+    }
+
+    /**
+     * @return admin endpoint of the domain.
+     */
+    @Override
+    protected final HostAndPort getReachableAdminAddress() {
+        return getReachableAdminAddress(() -> loadAdminAddresses(getDomainXml(), "server"));
     }
 
     protected final File getDomainsDir() {
@@ -111,4 +132,13 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
         return isThisServer(ourDir, DOMAIN_ROOT_KEY);
     }
 
+    /**
+     * @param endpoints
+     * @return space separated list of endpoints including HTTP/HTTPS protocol prefix.
+     */
+    protected static String toHttpList(List<HostAndPort> endpoints) {
+        return endpoints.stream()
+        .map(h -> (h.isSecure() ? "https://" : "http://") + h.getHost() + ':' + h.getPort())
+        .collect(Collectors.joining(" "));
+    }
 }

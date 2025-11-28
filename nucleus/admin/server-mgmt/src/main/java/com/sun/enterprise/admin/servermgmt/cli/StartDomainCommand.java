@@ -25,8 +25,8 @@ import com.sun.enterprise.admin.launcher.GFLauncherInfo;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
-
-import jakarta.inject.Inject;
+import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.ObjectAnalyzer;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,20 +42,15 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
-import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINER;
 import static org.glassfish.api.admin.RuntimeType.DAS;
-import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * The start-domain command.
@@ -66,7 +62,7 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 @PerLookup
 public class StartDomainCommand extends LocalDomainCommand implements StartServerCommand {
 
-    private static final LocalStringsImpl strings = new LocalStringsImpl(StartDomainCommand.class);
+    private static final LocalStringsImpl I18N = new LocalStringsImpl(StartDomainCommand.class);
 
     @Param(optional = true, shortName = "v", defaultValue = "false")
     private boolean verbose;
@@ -89,23 +85,35 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     @Param(optional = true, shortName = "s", defaultValue = "false")
     private boolean suspend;
 
-    @Param(name = "domain_name", primary = true, optional = true)
-    private String domainName0;
-
     @Param(name = "dry-run", shortName = "n", optional = true, defaultValue = "false")
-    private boolean dry_run;
+    private boolean dryRun;
 
     @Param(optional = true)
     private Integer timeout;
 
-    @Param(name = "drop-interrupted-commands", optional = true, defaultValue = "false")
-    private boolean drop_interrupted_commands;
+    @Param(name = "check-pid-file", optional = true, defaultValue = "true")
+    private boolean checkPidFile;
 
-    @Inject
-    ServerEnvironment serverEnvironment;
+    @Param(name = "check-process-alive", optional = true, defaultValue = "true")
+    private boolean checkProcessAlive;
+
+    @Param(name = "check-admin-port", optional = true, defaultValue = "true")
+    private boolean checkAdminEndpoint;
+
+    @Param(name = "server-output", shortName = "o",  optional = true)
+    private Boolean printServerOutput;
+
+    @Param(name = "custom-endpoints", optional = true)
+    private String customEndpoints;
+
+    @Param(name = "drop-interrupted-commands", optional = true, defaultValue = "false")
+    private boolean dropInterruptedCommands;
+
+    @Param(name = "domain_name", primary = true, optional = true)
+    private String userArgDomainName;
 
     private GFLauncherInfo launchParameters;
-    private GFLauncher glassFishLauncher;
+    private GFLauncher launcher;
     private StartServerHelper startServerHelper;
 
     // the name of the master password option
@@ -116,9 +124,6 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         return DAS;
     }
 
-    /**
-     * @return timeout for the command
-     */
     @Override
     public Duration getTimeout() {
         return timeout == null ? WAIT_FOR_DAS_TIME_MS : Duration.ofSeconds(timeout);
@@ -126,7 +131,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
 
     @Override
     protected void validate() throws CommandException, CommandValidationException {
-        setDomainName(domainName0);
+        setDomainName(userArgDomainName);
         super.validate();
     }
 
@@ -134,33 +139,33 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     protected int executeCommand() throws CommandException {
         try {
             // createLauncher needs to go before the startServerHelper is created!!
-            createLauncher();
-            String masterPassword = getMasterPassword();
+            launcher = createLauncher();
 
-            startServerHelper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), glassFishLauncher, masterPassword, getTimeout());
+            final List<HostAndPort> userEndpoints = StartServerHelper.parseCustomEndpoints(customEndpoints);
+            final ServerLifeSignCheck signOfLife = new ServerLifeSignCheck("domain " + getDomainName(),
+                printServerOutput, checkPidFile, checkProcessAlive, checkAdminEndpoint, userEndpoints);
+            startServerHelper = new StartServerHelper(programOpts.isTerse(), getTimeout(), getServerDirs(), launcher, signOfLife);
 
-            if (!startServerHelper.prepareForLaunch()) {
+            if (!upgrade && launcher.needsManualUpgrade()) {
+                logger.info(I18N.get("manualUpgradeNeeded"));
                 return ERROR;
             }
 
-            if (!upgrade && glassFishLauncher.needsManualUpgrade()) {
-                logger.info(strings.get("manualUpgradeNeeded"));
-                return ERROR;
+            if (!upgrade && launcher.needsAutoUpgrade()) {
+                doAutoUpgrade();
             }
 
-            doAutoUpgrade(masterPassword);
-
-            if (dry_run) {
-                logger.fine(Strings.get("dry_run_msg"));
-                List<String> cmd = glassFishLauncher.getCommandLine().toList();
+            if (dryRun) {
+                logger.fine("Dump of JVM Invocation line that would be used to launch:");
+                List<String> cmd = launcher.getCommandLine().toList();
                 int indexOfReadStdin = cmd.indexOf("-read-stdin");
                 String cmdToLog = IntStream.range(0, cmd.size())
-                        // Don't print -read-stdin option as it's not needed to run the server
-                        // Also skip the next line with "true", which is related to this option
-                        .filter(index -> index < indexOfReadStdin || index > indexOfReadStdin + 1)
-                        .mapToObj(cmd::get)
-                        .collect(Collectors.joining("\n"))
-                        + "\n";
+                    // Don't print -read-stdin option as it's not needed to run the server
+                    // Also skip the next line with "true", which is related to this option
+                    .filter(index -> index < indexOfReadStdin || index > indexOfReadStdin + 1)
+                    .mapToObj(cmd::get)
+                    .collect(Collectors.joining("\n"))
+                    + "\n";
                 logger.info(cmdToLog);
                 return SUCCESS;
             }
@@ -169,69 +174,45 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
 
             // Launch returns very quickly if verbose is not set
             // if verbose is set then it returns after the domain dies
-            glassFishLauncher.launch();
+            launcher.launch();
 
-            if (verbose || upgrade || watchdog) { // we can potentially loop forever here...
-                while (true) {
-                    int returnValue = glassFishLauncher.getExitValue();
-
-                    switch (returnValue) {
-                    case RESTART_NORMAL:
-                        logger.info(strings.get("restart"));
-                        break;
-                    case RESTART_DEBUG_ON:
-                        logger.info(strings.get("restartChangeDebug", "on"));
-                        launchParameters.setDebug(true);
-                        break;
-                    case RESTART_DEBUG_OFF:
-                        logger.info(strings.get("restartChangeDebug", "off"));
-                        launchParameters.setDebug(false);
-                        break;
-                    default:
-                        return returnValue;
-                    }
-
-                    if (env.debug()) {
-                        setProperty(WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
-                    }
-
-                    glassFishLauncher.relaunch();
-                }
-
-            } else {
-                startServerHelper.waitForServerStart();
-                startServerHelper.report();
-                return SUCCESS;
+            if (verbose || upgrade || watchdog) {
+                return startServerHelper.talkWithUser();
             }
-        } catch (GFLauncherException gfle) {
-            throw new CommandException(gfle.getMessage());
+            final String report = startServerHelper.waitForServerStart(getTimeout());
+            logger.info(report);
+            return SUCCESS;
+        } catch (GFLauncherException e) {
+            throw new CommandException(e.getMessage(), e);
         } catch (MiniXmlParserException me) {
             throw new CommandException(me);
         }
     }
 
-    /**
-     * Create a glassFishLauncher for the domain specified by arguments to this command. The glassFishLauncher is for a
-     * server of the specified type. Sets the glassFishLauncher and launchParameters fields. It has to be public because it
-     * is part of an interface
-     */
     @Override
-    public void createLauncher() throws GFLauncherException, MiniXmlParserException {
-        glassFishLauncher = GFLauncherFactory.getInstance(getType());
-        launchParameters = glassFishLauncher.getInfo();
-
+    public final GFLauncher createLauncher() throws GFLauncherException, MiniXmlParserException, CommandException {
+        final GFLauncher gfLauncher = GFLauncherFactory.getInstance(getType());
+        launchParameters = gfLauncher.getInfo();
         launchParameters.setDomainName(getDomainName());
         launchParameters.setDomainParentDir(getDomainsDir().getPath());
         launchParameters.setVerbose(verbose || upgrade);
+        launchParameters.setIgnoreOutput(printServerOutput == Boolean.FALSE);
         launchParameters.setSuspend(suspend);
         launchParameters.setDebug(debug);
         launchParameters.setUpgrade(upgrade);
         launchParameters.setWatchdog(watchdog);
-        launchParameters.setDropInterruptedCommands(drop_interrupted_commands);
+        launchParameters.setDropInterruptedCommands(dropInterruptedCommands);
+        launchParameters.setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(),
+            programOpts.getClassPath(), respawnArgs());
+        launchParameters.setAsadminAdminAddress(getUserProvidedAdminAddress());
+        gfLauncher.setup();
+        launchParameters.addSecurityToken(MASTER_PASSWORD, getMasterPassword());
+        return gfLauncher;
+    }
 
-        launchParameters.setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(), programOpts.getClassPath(), respawnArgs());
-
-        glassFishLauncher.setup();
+    @Override
+    public String toString() {
+        return ObjectAnalyzer.toStringWithSuper(this);
     }
 
     /**
@@ -242,94 +223,101 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         args.addAll(Arrays.asList(programOpts.getProgramArguments()));
 
         // now the start-domain specific arguments
-        args.add(getName()); // the command name
+        // the command name
+        args.add(getName());
         args.add("--verbose=" + String.valueOf(verbose));
         args.add("--watchdog=" + String.valueOf(watchdog));
         args.add("--debug=" + String.valueOf(debug));
         args.add("--domaindir");
         args.add(getDomainsDir().toString());
         if (ok(getDomainName())) {
-            args.add(getDomainName()); // the operand
+            // the operand
+            args.add(getDomainName());
         }
 
         logger.log(FINER, "Respawn args: {0}", args);
         return args.toArray(String[]::new);
     }
 
+
     /**
-     * If this domain needs to be upgraded and --upgrade wasn't specified, first start the domain to do the upgrade and then
-     * start the domain again for real.
+     * If this domain needs to be upgraded and --upgrade wasn't specified, first start the domain
+     * to do the upgrade and then start the domain again for real.
+     *
+     * @return new {@link GFLauncher}
      */
-    private void doAutoUpgrade(String mpv) throws GFLauncherException, MiniXmlParserException, CommandException {
-        if (upgrade || !glassFishLauncher.needsAutoUpgrade()) {
-            return;
-        }
-
-        logger.info(strings.get("upgradeNeeded"));
+    private GFLauncher doAutoUpgrade() throws GFLauncherException, MiniXmlParserException, CommandException {
+        logger.info(I18N.get("upgradeNeeded"));
         launchParameters.setUpgrade(true);
-        glassFishLauncher.setup();
-        glassFishLauncher.launch();
-        Process glassFishProcess = glassFishLauncher.getProcess();
-        int exitCode = -1;
+        launcher.setup();
+        launcher.launch();
+        final int exitCode = waitForAutoUpgradeFinish();
+        if (exitCode == SUCCESS) {
+            logger.info(I18N.get("upgradeSuccessful"));
+            // need a new glassFishLauncher to start the domain for real
+            return createLauncher();
+        }
+        final ProcessStreamDrainer psd = launcher.getProcessStreamDrainer();
+        final String output = psd.getOutErrString();
+        if (ok(output)) {
+            throw new CommandException(I18N.get("upgradeFailedOutput", launchParameters.getDomainName(), exitCode, output));
+        }
+        throw new CommandException(I18N.get("upgradeFailed", launchParameters.getDomainName(), exitCode));
+    }
+
+    private int waitForAutoUpgradeFinish() {
+        final Process glassFishProcess = launcher.getProcess();
         try {
-            exitCode = glassFishProcess.waitFor();
-        } catch (InterruptedException ex) {
+            return glassFishProcess.waitFor();
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            logger.log(Level.SEVERE, "Waiting for the upgrade was interrupted!", e);
+            System.exit(-1);
+            return -1;
         }
-
-        if (exitCode != SUCCESS) {
-            ProcessStreamDrainer psd = glassFishLauncher.getProcessStreamDrainer();
-            String output = psd.getOutErrString();
-            if (ok(output)) {
-                throw new CommandException(strings.get("upgradeFailedOutput", launchParameters.getDomainName(), exitCode, output));
-            }
-            throw new CommandException(strings.get("upgradeFailed", launchParameters.getDomainName(), exitCode));
-        }
-        logger.info(strings.get("upgradeSuccessful"));
-
-        // need a new glassFishLauncher to start the domain for real
-        createLauncher();
-        // continue with normal start...
     }
 
     /**
-     * Check to make sure that at least one admin user is able to login. If none is found, then prompt for an admin
-     * password.
+     * Check to make sure that at least one admin user is able to login.
+     * If none is found, then prompt for an admin password.
      *
      * NOTE: this depends on glassFishLauncher.setup having already been called.
      */
     private void doAdminPasswordCheck() throws CommandException {
-        String adminRealmKeyFile = glassFishLauncher.getAdminRealmKeyFile();
-        if (adminRealmKeyFile != null) {
-            try {
-                FileRealmHelper fileRealmHelper = new FileRealmHelper(adminRealmKeyFile);
-                if (!fileRealmHelper.hasAuthenticatableUser()) {
-
-                    // Prompt for the password for the first user and set it
-                    Set<String> adminUsers = fileRealmHelper.getUserNames();
-                    if (adminUsers == null || adminUsers.isEmpty()) {
-                        throw new CommandException("no admin users");
-                    }
-
-                    String firstAdminUser = adminUsers.iterator().next();
-                    ParamModelData npwo = new ParamModelData(newpwName, String.class, false, null);
-                    npwo.prompt = strings.get("new.adminpw", firstAdminUser);
-                    npwo.promptAgain = strings.get("new.adminpw.again", firstAdminUser);
-                    npwo.param._password = true;
-
-                    logger.info(strings.get("new.adminpw.prompt"));
-                    char[] newPasswordArray = super.getPassword(npwo, null, true);
-                    String newPassword = newPasswordArray != null ? new String(newPasswordArray) : null;
-                    if (newPassword == null) {
-                        throw new CommandException(strings.get("no.console"));
-                    }
-
-                    fileRealmHelper.updateUser(firstAdminUser, firstAdminUser, newPassword.toCharArray(), null);
-                    fileRealmHelper.persist();
-                }
-            } catch (IOException ioe) {
-                throw new CommandException(ioe);
+        String adminRealmKeyFile = launcher.getAdminRealmKeyFile();
+        if (adminRealmKeyFile == null) {
+            return;
+        }
+        try {
+            FileRealmHelper fileRealmHelper = new FileRealmHelper(adminRealmKeyFile);
+            if (fileRealmHelper.hasAuthenticatableUser()) {
+                return;
             }
+            // Prompt for the password for the first user and set it
+            Set<String> adminUsers = fileRealmHelper.getUserNames();
+            if (adminUsers == null || adminUsers.isEmpty()) {
+                throw new CommandException("no admin users");
+            }
+
+            String firstAdminUser = adminUsers.iterator().next();
+            ParamModelData npwo = new ParamModelData(newpwName, String.class, false, null);
+            npwo.prompt = I18N.get("new.adminpw", firstAdminUser);
+            npwo.promptAgain = I18N.get("new.adminpw.again", firstAdminUser);
+            npwo.param._password = true;
+
+            logger.info(I18N.get("new.adminpw.prompt"));
+            char[] newPasswordArray = super.getPassword(npwo, null, true);
+            String newPassword = newPasswordArray == null ? null : new String(newPasswordArray);
+            if (newPassword == null) {
+                throw new CommandException("The Master Password is required to start the domain.\n"
+                    + "No console, no prompting possible. You should either create the domain\n"
+                    + "with --savemasterpassword=true or provide a password file with the --passwordfile option.");
+            }
+
+            fileRealmHelper.updateUser(firstAdminUser, firstAdminUser, newPassword.toCharArray(), null);
+            fileRealmHelper.persist();
+        } catch (IOException ioe) {
+            throw new CommandException(ioe);
         }
     }
 }

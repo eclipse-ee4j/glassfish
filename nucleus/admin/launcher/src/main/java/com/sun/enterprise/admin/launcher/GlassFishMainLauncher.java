@@ -47,17 +47,6 @@ class GlassFishMainLauncher extends GFLauncher {
     }
 
     @Override
-    void internalLaunch() throws GFLauncherException {
-        try {
-            launchInstance();
-        } catch (GFLauncherException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new GFLauncherException(ex);
-        }
-    }
-
-    @Override
     List<File> getMainClasspath() throws GFLauncherException {
         return List.of();
     }

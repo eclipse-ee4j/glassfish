@@ -63,7 +63,7 @@ public class JobManagerITest {
             "--cleanup-initial-delay=0s",
             "--cleanup-poll-interval=0s"), asadminOK());
         assertThat(ASADMIN.exec(COMMAND_PROGRESS_SIMPLE), asadminOK());
-        assertThat(ASADMIN.exec("restart-domain", "--timeout", "60"), asadminOK());
+        assertThat(ASADMIN.exec("restart-domain", "--timeout", "60", "domain1"), asadminOK());
         assertThat(ASADMIN.exec("list-jobs").getStdOut(), stringContainsInOrder(COMMAND_PROGRESS_SIMPLE, "COMPLETED"));
         JobTestExtension.doAndDisableJobCleanup();
     }

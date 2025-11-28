@@ -46,8 +46,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.glassfish.main.jdke.i18n.LocalStringsImpl;
-
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.FLASHLIGHT_AGENT_NAME;
@@ -55,9 +53,6 @@ import static com.sun.enterprise.admin.launcher.GFLauncherConstants.LIBMON_NAME;
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.COMMAND_LINE;
 import static com.sun.enterprise.universal.collections.CollectionUtils.propertiesToStringMap;
 import static com.sun.enterprise.universal.glassfish.GFLauncherUtils.ok;
-import static com.sun.enterprise.universal.process.ProcessStreamDrainer.dispose;
-import static com.sun.enterprise.universal.process.ProcessStreamDrainer.redirect;
-import static com.sun.enterprise.universal.process.ProcessStreamDrainer.save;
 import static com.sun.enterprise.util.OS.isDarwin;
 import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.DISABLE_ENV_VAR_EXPANSION_PROPERTY;
@@ -65,6 +60,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_C
 import static com.sun.enterprise.util.SystemPropertyConstants.PREFER_ENV_VARS_OVER_PROPERTIES;
 import static java.lang.Boolean.TRUE;
 import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
@@ -84,8 +80,7 @@ import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
  * @author bnevins
  */
 public abstract class GFLauncher {
-    private static final LocalStringsImpl I18N = new LocalStringsImpl(GFLauncher.class);
-    private static final Logger LOG = System.getLogger(GFLauncher.class.getName(), I18N.getBundle());
+    private static final Logger LOG = System.getLogger(GFLauncher.class.getName());
 
     /**
      * Parameters provided by the caller of a launcher, either programmatically
@@ -115,7 +110,7 @@ public abstract class GFLauncher {
      * The debug port (<code>address</code>) primarily extracted from
      * <code>domainXMLjavaConfigDebugOptions</code>
      */
-    private int debugPort = -1;
+    private Integer debugPort;
 
     /**
      * The debug suspend (<code>suspend</code>) primarily extracted from
@@ -161,11 +156,6 @@ public abstract class GFLauncher {
      */
     private boolean logFilenameWasFixed;
 
-    /**
-     * Tracks whether the setup() had been called and/or should be called again.
-     */
-    private boolean setupCalledByClients; // handle with care
-
     // Tracks upgrading from V2 to V3. Since we're at V6 atm of wring, is this really needed?
     private boolean needsAutoUpgrade;
     private boolean needsManualUpgrade;
@@ -194,14 +184,18 @@ public abstract class GFLauncher {
      */
     private int exitValue = -1;
 
+    private Long pidBeforeRestart;
+
     GFLauncher(GFLauncherInfo info) {
         this.callerParameters = info;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ////// PUBLIC api area starts here ////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 
+    abstract List<File> getMainModulepath() throws GFLauncherException;
+
+    abstract List<File> getMainClasspath() throws GFLauncherException;
+
+    abstract String getMainClass() throws GFLauncherException;
 
     /**
      * Launches the server.
@@ -209,50 +203,46 @@ public abstract class GFLauncher {
      * @throws GFLauncherException if launch failed.
      */
     public final void launch() throws GFLauncherException {
-        if (isDebugSuspend()) {
-            LOG.log(INFO, "ServerStart.DebuggerSuspendedMessage", debugPort);
-        } else if (debugPort >= 0) {
-            LOG.log(INFO, "ServerStart.DebuggerMessage", debugPort);
+        if (debugPort != null) {
+            if (debugSuspend) {
+                LOG.log(INFO,
+                    () -> "Debugging will be available and the server will start suspended on port " + debugPort + ".");
+            } else {
+                LOG.log(INFO, () -> "Debugging will be available on port " + debugPort + ".");
+            }
         }
-
+        logCommandLine();
         try {
             startTime = System.currentTimeMillis();
-            if (!setupCalledByClients) {
-                setup();
+            if (isFakeLaunch()) {
+                return;
             }
-            internalLaunch();
-        } catch (GFLauncherException gfe) {
-            throw gfe;
-        } catch (Exception t) {
-            throw new GFLauncherException(I18N.get("unknownError", t.getMessage()), t);
+            launchInstance();
+        } catch (GFLauncherException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GFLauncherException(e);
         } finally {
             GFLauncherLogger.removeLogFileHandler();
         }
     }
 
-    /**
-     * Launches the server - but forces the setup() to go through again.
-     *
-     * @throws com.sun.enterprise.admin.launcher.GFLauncherException
-     */
-    public final void relaunch() throws GFLauncherException {
-        setupCalledByClients = false;
-        launch();
-    }
-
     public void setup() throws GFLauncherException, MiniXmlParserException {
         asenvProps = getAsEnvConfReader().getProps();
+        pidBeforeRestart = resolvePidBeforeRestart();
+
         callerParameters.setup();
         setupLogLevels();
 
-        MiniXmlParser domainXML = new MiniXmlParser(getInfo().getConfigFile(), getInfo().getInstanceName());
+        MiniXmlParser domainXML = new MiniXmlParser(callerParameters.getConfigFile(), callerParameters.getInstanceName());
 
         String domainName = domainXML.getDomainName();
         if (ok(domainName)) {
             callerParameters.setDomainName(domainName);
         }
 
-        callerParameters.setAdminAddresses(domainXML.getAdminAddresses());
+        // Can be empty! Then local commands will set what they have from user
+        callerParameters.setXmlAdminAddresses(domainXML.getAdminAddresses());
         domainXMLjavaConfig = new JavaConfig(domainXML.getJavaConfig());
         setupProfilerAndJvmOptions(domainXML);
         setupUpgradeSecurity();
@@ -271,10 +261,10 @@ public abstract class GFLauncher {
         renameOsgiCache();
         setupMonitoring(domainXML);
         domainXMLSystemProperty = domainXML.getSystemProperties();
-        asenvProps.put(INSTANCE_ROOT.getSystemPropertyName(), getInfo().getInstanceRootDir().getPath());
+        asenvProps.put(INSTANCE_ROOT.getSystemPropertyName(), callerParameters.getInstanceRootDir().getPath());
 
         // Set the config java-home value as the Java home for the environment,
-        // unless it is empty or it is already refering to a substitution of
+        // unless it is empty or it is already referring to a substitution of
         // the environment variable.
         String javaHome = domainXMLjavaConfig.getJavaHome();
         if (ok(javaHome) && !javaHome.trim().equals(JAVA_ROOT.toExpression())) {
@@ -283,7 +273,7 @@ public abstract class GFLauncher {
 
         domainXMLjavaConfigDebugOptions = getDebugOptionsFromDomainXMLJavaConfig();
         parseJavaConfigDebugOptions();
-        domainXML.setupConfigDir(getInfo().getConfigDir(), getInfo().getInstallDir());
+        domainXML.setupConfigDir(callerParameters.getConfigDir(), callerParameters.getInstallDir());
 
         setLogFilename(domainXML);
         resolveAllTokens();
@@ -295,49 +285,51 @@ public abstract class GFLauncher {
         setClasspath();
         initCommandLine();
         setJvmOptions();
-        logCommandLine();
 
         // if no <network-config> element, we need to upgrade this domain
         needsAutoUpgrade = !domainXML.hasNetworkConfig();
         needsManualUpgrade = !domainXML.hasDefaultConfig();
-        setupCalledByClients = true;
     }
 
     /**
      *
-     * @return The callerParameters object that contains startup
-     * callerParameters
+     * @return The callerParameters object that contains startup caller parameters
      */
     public final GFLauncherInfo getInfo() {
         return callerParameters;
     }
 
     /**
-     * Returns the admin realm key file for the server, if the admin realm is a
-     * FileRealm. Otherwise return null. This value can be used to create a
-     * FileRealm for the server.
+     * @return the admin realm key file for the server, if the admin realm is a FileRealm.
+     * Otherwise return null. This value can be used to create a FileRealm for the server.
      */
     public String getAdminRealmKeyFile() {
         return adminFileRealmKeyFile;
     }
 
     /**
-     * Returns true if secure admin is enabled
+     * @return true if secure admin is enabled
      */
     public boolean isSecureAdminEnabled() {
         return secureAdminEnabled;
     }
 
     /**
-     * Returns the exit value of the glassFishProcess. This only makes sense
-     * when we ran in verbose mode and waited for the glassFishProcess to exit
-     * in the wait() method. Caveat Emptor!
+     * Returns the exit value of the glassFishProcess.
+     * This only makes sense when we ran in verbose mode and waited for the glassFishProcess to exit
+     * in the {@link #wait(Process)} method.
      *
-     * @return the glassFishProcess' exit value if it completed and we waited.
-     * Otherwise it returns -1
+     * @return the glassFishProcess' exit value if it completed and we waited. Otherwise it returns -1
      */
     public final int getExitValue() {
         return exitValue;
+    }
+
+    /**
+     * @return PID of the previous JVM process of the server, sent from that as a system property.
+     */
+    public Long getPidBeforeRestart() {
+        return this.pidBeforeRestart;
     }
 
     /**
@@ -347,14 +339,11 @@ public abstract class GFLauncher {
      * @return The Process object of the launched Server glassFishProcess. you
      * will either get a valid Process object or an Exceptio will be thrown. You
      * are guaranteed not to get a null.
-     * @throws GFLauncherException if the Process has not been created yet -
-     * call launch() before calling this method.
      */
-    public final Process getProcess() throws GFLauncherException {
+    public final Process getProcess() {
         if (glassFishProcess == null) {
-            throw new GFLauncherException("invalid_process");
+            throw new IllegalStateException("Process was not started yet!");
         }
-
         return glassFishProcess;
     }
 
@@ -364,14 +353,12 @@ public abstract class GFLauncher {
      *
      * @return A valid ProcessStreamDrainer. You are guaranteed to never get a
      * null.
-     * @throws GFLauncherException if the glassFishProcess has not launched yet
      * @see com.sun.enterprise.universal.process.ProcessStreamDrainer
      */
-    public final ProcessStreamDrainer getProcessStreamDrainer() throws GFLauncherException {
+    public final ProcessStreamDrainer getProcessStreamDrainer() {
         if (processStreamDrainer == null) {
-            throw new GFLauncherException("invalid_psd");
+            throw new IllegalStateException("Call to getProcessStreamDrainer() before it has been initialized!");
         }
-
         return processStreamDrainer;
     }
 
@@ -379,34 +366,19 @@ public abstract class GFLauncher {
      * Get the location of the server logfile
      *
      * @return The full path of the logfile
-     * @throws GFLauncherException if you call this method too early
      */
-    public String getLogFilename() throws GFLauncherException {
-        if (!logFilenameWasFixed) {
-            throw new GFLauncherException(I18N.get("internalError") + " call to getLogFilename() before it has been initialized");
+    public String getLogFilename() {
+        if (logFilenameWasFixed) {
+            return logFilename;
         }
-
-        return logFilename;
+        throw new IllegalStateException("Call to getLogFilename() before it has been initialized!");
     }
 
     /**
-     * Return the port number of the debug port, or -1 if debugging is not
-     * enabled.
-     *
-     * @return the debug port, or -1 if not debugging
+     * @return null or a port number
      */
-    public final int getDebugPort() {
+    public final Integer getDebugPort() {
         return debugPort;
-    }
-
-    /**
-     * Return true if suspend=y AND debugging is on. otherwise return false.
-     *
-     * @return true if suspending, or false if either not suspending or not
-     * debugging
-     */
-    public final boolean isDebugSuspend() {
-        return debugPort >= 0 && debugSuspend;
     }
 
     /**
@@ -428,58 +400,21 @@ public abstract class GFLauncher {
         return needsManualUpgrade;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ////// ALL private and package-private below ////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    abstract void internalLaunch() throws GFLauncherException;
-
-    void launchInstance() throws GFLauncherException {
-        if (isFakeLaunch()) {
-            return;
-        }
-
-        final boolean securityTokensAvailable = !callerParameters.securityTokens.isEmpty();
-        final List<String> cmds;
-
-        // Use launchctl bsexec on MacOS versions before 10.10
-        // otherwise use regular startup.
-        if (isDarwin() && useLaunchCtl(System.getProperty("os.version")) && !getInfo().isVerboseOrWatchdog()) {
-            cmds = new ArrayList<>();
-            cmds.add("launchctl");
-            cmds.add("bsexec");
-            cmds.add("/");
-            cmds.addAll(commandLine.toList());
-        } else if (commandLine.getFormat() == CommandFormat.Script) {
-            cmds = prepareWindowsEnvironment(commandLine, getInfo().getConfigDir().toPath(), securityTokensAvailable);
-        } else if (getInfo().isVerboseOrWatchdog()) {
-            cmds = new ArrayList<>();
-            cmds.addAll(commandLine.toList());
-        } else {
-            cmds = new ArrayList<>();
-            if (!isWindows()) {
-                cmds.add("nohup");
-            }
-            cmds.addAll(commandLine.toList());
-        }
+    private void launchInstance() throws GFLauncherException {
+        final List<String> securityTokens = callerParameters.getSecurityTokens();
+        final List<String> cmds = createCommand(!securityTokens.isEmpty());
 
         // When calling cluster nodes, this will be visible in the server.log too.
         System.err.println("Executing: " + cmds.stream().collect(Collectors.joining(" ")));
         System.err.println("Please look at the server log for more details...");
         ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-        if (getInfo().isVerboseOrWatchdog()) {
+        if (callerParameters.isVerboseOrWatchdog()) {
             processBuilder.redirectOutput(Redirect.INHERIT);
             processBuilder.redirectError(Redirect.INHERIT);
         }
 
         // Change the directory if there is one specified, o/w stick with the default.
-        try {
-            processBuilder.directory(getInfo().getConfigDir());
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+        processBuilder.directory(callerParameters.getConfigDir());
 
         // Run the glassFishProcess and attach Stream Drainers
         try {
@@ -490,28 +425,55 @@ public abstract class GFLauncher {
             // Startup GlassFish
             glassFishProcess = processBuilder.start();
 
-            String name = getInfo().getDomainName();
+            String name = callerParameters.getDomainName();
 
             // verbose trumps watchdog.
-            if (getInfo().isVerbose()) {
-                processStreamDrainer = redirect(name, glassFishProcess);
-            } else if (getInfo().isWatchdog()) {
-                processStreamDrainer = dispose(name, glassFishProcess);
+            if (callerParameters.isIgnoreOutput()) {
+                processStreamDrainer = ProcessStreamDrainer.dispose(name, glassFishProcess);
+            } else if (callerParameters.isVerbose()) {
+                processStreamDrainer = ProcessStreamDrainer.redirect(name, glassFishProcess);
+            } else if (callerParameters.isWatchdog()) {
+                processStreamDrainer = ProcessStreamDrainer.dispose(name, glassFishProcess);
             } else {
-                processStreamDrainer = save(name, glassFishProcess);
+                processStreamDrainer = ProcessStreamDrainer.save(name, glassFishProcess);
             }
             handleDeadProcess(glassFishProcess, processStreamDrainer);
-            if (securityTokensAvailable) {
-                writeSecurityTokens(glassFishProcess, processStreamDrainer, callerParameters.securityTokens);
+            if (!securityTokens.isEmpty()) {
+                writeSecurityTokens(glassFishProcess, processStreamDrainer, securityTokens);
             }
         } catch (Exception e) {
             throw new GFLauncherException("jvmfailure", e, e);
         }
 
         // If verbose, hang around until the domain stops
-        if (getInfo().isVerboseOrWatchdog()) {
+        if (callerParameters.isVerboseOrWatchdog()) {
             wait(glassFishProcess);
         }
+    }
+
+    private List<String> createCommand(final boolean securityTokensAvailable) throws GFLauncherException {
+        final List<String> cmds;
+        // Use launchctl bsexec on MacOS versions before 10.10
+        // otherwise use regular startup.
+        if (isDarwin() && useLaunchCtl(System.getProperty("os.version")) && !callerParameters.isVerboseOrWatchdog()) {
+            cmds = new ArrayList<>();
+            cmds.add("launchctl");
+            cmds.add("bsexec");
+            cmds.add("/");
+            cmds.addAll(commandLine.toList());
+        } else if (commandLine.getFormat() == CommandFormat.Script) {
+            cmds = prepareWindowsEnvironment(commandLine, callerParameters.getConfigDir().toPath(), securityTokensAvailable);
+        } else if (callerParameters.isVerboseOrWatchdog()) {
+            cmds = new ArrayList<>();
+            cmds.addAll(commandLine.toList());
+        } else {
+            cmds = new ArrayList<>();
+            if (!isWindows()) {
+                cmds.add("nohup");
+            }
+            cmds.addAll(commandLine.toList());
+        }
+        return cmds;
     }
 
     boolean isFakeLaunch() {
@@ -549,22 +511,14 @@ public abstract class GFLauncher {
         return startTime;
     }
 
-    abstract List<File> getMainModulepath() throws GFLauncherException;
-
-    abstract List<File> getMainClasspath() throws GFLauncherException;
-
-    abstract String getMainClass() throws GFLauncherException;
-
     final Map<String, String> getEnvProps() {
         return asenvProps;
     }
-
 
     private ASenvPropertyReader getAsEnvConfReader() {
         if (isFakeLaunch()) {
             return new ASenvPropertyReader(callerParameters.getInstallDir());
         }
-
         return new ASenvPropertyReader();
     }
 
@@ -601,7 +555,7 @@ public abstract class GFLauncher {
                     try {
                         debugPort = Integer.parseInt(attribute.substring(10));
                     } catch (NumberFormatException ex) {
-                        debugPort = -1;
+                        debugPort = null;
                     }
                 }
 
@@ -798,7 +752,7 @@ public abstract class GFLauncher {
     }
 
     void initCommandLine() throws GFLauncherException {
-        final boolean useScript = !getInfo().isVerboseOrWatchdog() && isSurviveWinUserSession();
+        final boolean useScript = !callerParameters.isVerboseOrWatchdog() && isSurviveWinUserSession();
         final CommandLine cmdLine = new CommandLine(useScript ? CommandFormat.Script : CommandFormat.ProcessBuilder);
         cmdLine.append(javaExe);
         if (modulepath.length > 0) {
@@ -814,7 +768,7 @@ public abstract class GFLauncher {
             cmdLine.append("-DWALL_CLOCK_START=" + CLIStartTime);
         }
 
-        if (debugPort >= 0) {
+        if (debugPort != null) {
             cmdLine.appendSystemOption(DEBUG_MODE_PROPERTY, TRUE.toString());
         }
 
@@ -828,7 +782,7 @@ public abstract class GFLauncher {
         addIgnoreNull(cmdLine, getMainClass());
 
         try {
-            addIgnoreNull(cmdLine, getInfo().getArgsAsList());
+            addIgnoreNull(cmdLine, callerParameters.getArgsAsList());
         } catch (GFLauncherException gfle) {
             throw gfle;
         } catch (Exception e) {
@@ -900,7 +854,7 @@ public abstract class GFLauncher {
         if (callerParameters.isUpgrade() && domainXMLjvmOptions.sysProps.containsKey("java.security.manager")) {
 
             GFLauncherLogger.info(GFLauncherLogger.copy_server_policy);
-            Path source = callerParameters.installDir.toPath().resolve(Path.of("lib", "templates", "server.policy"));
+            Path source = callerParameters.getInstallDir().toPath().resolve(Path.of("lib", "templates", "server.policy"));
             Path target = callerParameters.getConfigDir().toPath().resolve("server.policy");
             try {
                 Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -908,7 +862,7 @@ public abstract class GFLauncher {
                 // the actual error is wrapped differently depending on
                 // whether the problem was with the source or target
                 Throwable cause = ioe.getCause() == null ? ioe : ioe.getCause();
-                throw new GFLauncherException(I18N.get("copy_server_policy_error", cause.getMessage()), ioe);
+                throw new GFLauncherException("copy_server_policy_error", ioe, cause.getMessage());
             }
         }
     }
@@ -930,7 +884,7 @@ public abstract class GFLauncher {
                 if (FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
                     GFLauncherLogger.fine("rename_osgi_cache_succeeded", osgiCacheDir, backupOsgiCacheDir);
                 } else {
-                    throw new GFLauncherException(I18N.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
+                    throw new GFLauncherException("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir);
                 }
             }
         }
@@ -967,22 +921,21 @@ public abstract class GFLauncher {
     }
 
     private String getMonitoringAgentJvmOptionString() throws GFLauncherException {
-        File libMonDir = new File(getInfo().getInstallDir(), LIBMON_NAME);
+        File libMonDir = new File(callerParameters.getInstallDir(), LIBMON_NAME);
         File flashlightJarFile = new File(libMonDir, FLASHLIGHT_AGENT_NAME);
 
         if (flashlightJarFile.isFile()) {
             return "javaagent:" + flashlightJarFile.toPath().toAbsolutePath().normalize();
         }
-        String msg = I18N.get("no_flashlight_agent", flashlightJarFile);
         GFLauncherLogger.warning(GFLauncherLogger.NO_FLASHLIGHT_AGENT, flashlightJarFile);
-        throw new GFLauncherException(msg);
+        throw new GFLauncherException("no_flashlight_agent", flashlightJarFile);
     }
 
 
     private List<String> getSpecialSystemProperties() throws GFLauncherException {
         Map<String, String> props = new HashMap<>();
-        props.put(INSTALL_ROOT.getSystemPropertyName(), getInfo().getInstallDir().getAbsolutePath());
-        props.put(INSTANCE_ROOT.getSystemPropertyName(), getInfo().getInstanceRootDir().getAbsolutePath());
+        props.put(INSTALL_ROOT.getSystemPropertyName(), callerParameters.getInstallDir().getAbsolutePath());
+        props.put(INSTANCE_ROOT.getSystemPropertyName(), callerParameters.getInstanceRootDir().getAbsolutePath());
 
         return propsToJvmOptions(props);
     }
@@ -1027,6 +980,19 @@ public abstract class GFLauncher {
             GFLauncherLogger.setConsoleLevel(java.util.logging.Level.INFO);
         } else {
             GFLauncherLogger.setConsoleLevel(java.util.logging.Level.WARNING);
+        }
+    }
+
+    private static Long resolvePidBeforeRestart() {
+        String pid = System.getProperty("AS_RESTART_PREVIOUS_PID");
+        if (pid == null) {
+            return null;
+        }
+        try {
+            return Long.valueOf(pid);
+        } catch (NumberFormatException e) {
+            LOG.log(WARNING, "Cannot parse pid {0} required for waiting for the death of the parent process.", pid);
+            return null;
         }
     }
 
@@ -1232,8 +1198,7 @@ public abstract class GFLauncher {
         if (ev == 0) {
             return null;
         }
-        String output = drainer.getOutErrString();
-        return I18N.get("server_process_died", ev, output);
+        return "The server exited prematurely with exit code " + ev
+            + ".\nBefore it died, it produced the following output:\n\n" + drainer.getOutErrString();
     }
-
 }

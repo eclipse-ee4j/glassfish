@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,27 +67,22 @@ public class EmbeddedSetDocRootTest {
 
     @Test
     public void testEmbeddedWebAPIConfig() throws Exception {
-        VirtualServer vs = (VirtualServer)
-                embedded.createVirtualServer("test-server", root);
+        VirtualServer vs = embedded.createVirtualServer("test-server", root);
         VirtualServerConfig config = new VirtualServerConfig();
         config.setHostNames("localhost");
         vs.setConfig(config);
         embedded.addVirtualServer(vs);
-        Context context = (Context) embedded.createContext(root, contextRoot, null);
-
-        URL servlet = new URL("http://localhost:8080/"+contextRoot);
+        Context context = embedded.createContext(root, contextRoot, null);
+        URL servlet = new URL("http://localhost:8080/" + contextRoot);
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
 
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+            StringBuilder sb = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
-
      }
 
     @AfterAll

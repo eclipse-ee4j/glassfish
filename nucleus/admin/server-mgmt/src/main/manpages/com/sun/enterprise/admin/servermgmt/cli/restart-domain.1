@@ -10,6 +10,7 @@ SYNOPSIS
         [--force[=<force(default:true)>]]
         [--help|-?]
         [--kill[=<kill(default:false)>]]
+        [--server-output|-o=<server-output(default:false)>]]
         [--timeout <timeout>]
         [domain_name]
 
@@ -88,6 +89,18 @@ OPTIONS
            true
                The domain is killed. The subcommand uses functionality of the
                operating system to terminate the domain process.
+
+       --server-output, -o
+           Specifies if the command should or should not print the server output.
+           If not set, server prints the output just when the command failed.
+
+           Possible values are as follows:
+
+           true
+              The output of the server startup will be printed after the command finishes.
+
+           false
+               The output of the server startup will not be printed.
 
        --timeout
             Specifies timeout in seconds to evaluate the expected result.

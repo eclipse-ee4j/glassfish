@@ -23,6 +23,7 @@ asadmin start-local-instance
 [--help|-?]
 [--node <node>]
 [--nodedir <nodedir>]
+[--server-output|-o=<server-output(default:false)>]]
 [--sync <sync(default:normal)>]
 [--timeout <timeout>]
 [--verbose|-v[=<verbose(default:false)>]]
@@ -74,6 +75,7 @@ Possible values are as follows:
     number for JPDA debugging is displayed.
   `false`;;
     The instance is started with JPDA debugging disabled (default).
+
 `--dry-run`::
 `-n`::
   Suppresses actual starting of the instance. Instead,
@@ -90,6 +92,18 @@ Possible values are as follows:
   Specifies the directory that contains the instance's node directory.
   The instance's files are stored in the instance's node directory. The
   default is as-install``/nodes``.
+
+`--server-output`::
+`-o`::
+   Specifies if the command should or should not print the server output.
+   If not set, server prints the output just when the command failed.
+   Possible values are as follows:
+
+   `true`;;
+    The output of the server startup will be printed after the command finishes.
+   `false`;;
+     The output of the server startup will not be printed.
+
 `--sync`::
   The type of synchronization between the DAS and the instance's files
   when the instance is started. +

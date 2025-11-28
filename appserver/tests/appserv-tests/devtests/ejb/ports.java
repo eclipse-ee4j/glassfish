@@ -59,13 +59,13 @@ public class ports {
         while (true) {
             counter++;
             try (ServerSocket socket = new ServerSocket(0)) {
-                final int port = socket.getLocalPort();
+                final String port = Integer.toString(socket.getLocalPort());
                 socket.setSoTimeout(1);
                 if (excluded.contains(port) && counter >= 20) {
                     throw new IllegalStateException("Cannot open random port, tried 20 times. Port " + port
                         + " is excluded and we were not able to find another.");
                 }
-                return Integer.toString(port);
+                return port;
             } catch (IOException e) {
                 if (counter >= 20) {
                     throw new IllegalStateException("Cannot open random port, tried 20 times.", e);

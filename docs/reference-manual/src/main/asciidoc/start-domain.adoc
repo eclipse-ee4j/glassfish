@@ -23,6 +23,7 @@ asadmin start-domain
 [--drop-interrupted-commands[=<drop-interrupted-commands(default:false)>]]
 [--dry-run|-n[=<dry-run(default:false)>]]
 [--help|-?]
+[--server-output|-o=<server-output(default:false)>]]
 [--suspend|-s[=<suspend(default:false)>]]
 [--timeout <timeout>]
 [--upgrade[=<upgrade(default:false)>]]
@@ -100,6 +101,17 @@ asadmin-options::
   including all options. Reviewing this command can be useful to confirm
   JVM options and when troubleshooting startup issues. +
   The default value is `false`.
+
+`--server-output`::
+`-o`::
+   Specifies if the command should or should not print the server output.
+   If not set, server prints the output just when the command failed.
+   Possible values are as follows:
+
+   `true`;;
+    The output of the server startup will be printed after the command finishes.
+   `false`;;
+     The output of the server startup will not be printed.
 
 `--suspend`::
 `-s`::

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.util.IASSecurityException;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -191,10 +192,13 @@ public final class FileRealm extends Realm {
         _logger.log(FINE, "FileRealm : " + JAAS_CONTEXT_PARAM + "={0}", jaasCtx);
 
         try {
+            final File realmFile;
             if (isEmbeddedServer()) {
-                file = writeConfigFileToTempDir(file).getAbsolutePath();
+                realmFile = writeConfigFileToTempDir(file).getAbsoluteFile();
+            } else {
+                realmFile = new File(file);
             }
-            fileRealmHelper = new FileRealmHelper(file);
+            fileRealmHelper = new FileRealmHelper(realmFile);
         } catch (IOException ioe) {
             throw new BadRealmException(MessageFormat.format("Unable to create keyfile: {0}", ioe.toString()));
         }

@@ -23,6 +23,7 @@ asadmin restart-domain
 [--force[=<force(default:true)>]]
 [--help|-?]
 [--kill[=<kill(default:false)>]]
+[--server-output|-o=<server-output(default:false)>]]
 [--timeout <timeout>]
 [domain_name]
 ----
@@ -55,9 +56,7 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--debug`::
   Specifies whether the domain is restarted with
-  http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
-  Platform Debugger Architecture (JPDA)]
-  (https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
+  https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html[Java Platform Debugger Architecture (JPDA)]
   debugging enabled.
   Possible values are as follows:
 
@@ -96,6 +95,17 @@ The default is the current setting of this option for the domain that
   `true`;;
     The domain is killed. The subcommand uses functionality of the
     operating system to terminate the domain process.
+
+`--server-output`::
+`-o`::
+   Specifies if the command should or should not print the server output.
+   If not set, server prints the output just when the command failed.
+   Possible values are as follows:
+
+   `true`;;
+    The output of the server startup will be printed after the command finishes.
+   `false`;;
+     The output of the server startup will not be printed.
 
 `--timeout`::
   Specifies timeout in seconds to evaluate the expected result.

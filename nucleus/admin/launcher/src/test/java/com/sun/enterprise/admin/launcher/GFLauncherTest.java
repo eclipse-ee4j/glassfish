@@ -20,12 +20,14 @@ package com.sun.enterprise.admin.launcher;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -43,7 +45,7 @@ public class GFLauncherTest {
     private static File installDir;
     private static File domainsDir;
     private GFLauncher launcher;
-    private GFLauncherInfo info;
+    private GFLauncherInfo launchParams;
 
 
     @BeforeAll
@@ -65,8 +67,8 @@ public class GFLauncherTest {
     @BeforeEach
     public void initLauncher() throws Exception {
         launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
-        info = launcher.getInfo();
-        info.setInstallDir(installDir);
+        launchParams = launcher.getParameters();
+        launchParams.setInstallDir(installDir);
         launcher.setMode(GFLauncher.LaunchType.fake);
     }
 
@@ -88,7 +90,7 @@ public class GFLauncherTest {
      */
     @Test
     public void domain1WithDiagOptions() throws Exception {
-        info.setDomainName("domain1");
+        launchParams.setDomainName("domain1");
         launcher.setup();
         launcher.launch();
         CommandLine cmdline = launcher.getCommandLine();
@@ -102,7 +104,7 @@ public class GFLauncherTest {
      */
     @Test
     public void domain2WithoutDiagOptions() throws Exception {
-        info.setDomainName("domain2");
+        launchParams.setDomainName("domain2");
         launcher.setup();
         launcher.launch();
         CommandLine cmdline = launcher.getCommandLine();
@@ -117,7 +119,7 @@ public class GFLauncherTest {
      */
     @Test
     public void missingDomain() throws Exception {
-        info.setDomainName("NoSuchDomain");
+        launchParams.setDomainName("NoSuchDomain");
         GFLauncherException e = assertThrows(GFLauncherException.class, launcher::setup);
         assertEquals("The domain root dir is not pointing to a directory.  This is what I was looking for: ["
             + new File(domainsDir, "NoSuchDomain").getAbsolutePath() + "]", e.getMessage());
@@ -130,7 +132,7 @@ public class GFLauncherTest {
      */
     @Test
     public void brokenDomainXml() throws Exception {
-        info.setDomainName("baddomain");
+        launchParams.setDomainName("baddomain");
         MiniXmlParserException e = assertThrows(MiniXmlParserException.class, launcher::setup);
         assertEquals("Xml Parser Error: javax.xml.stream.XMLStreamException:"
             + " ParseError at [row,col]:[57,7]\n"
@@ -143,10 +145,10 @@ public class GFLauncherTest {
      */
     @Test
     public void domain1FromSGES2() throws Exception {
-        info.setDomainName("domain1");
+        launchParams.setDomainName("domain1");
         launcher.setup();
         launcher.launch();
-        assertTrue(launcher.getLogFilename().endsWith("server.log"));
+        assertThat(launcher.getLogFile().getFileName(), equalTo(Path.of("server.log")));
     }
 
     /**
@@ -154,18 +156,18 @@ public class GFLauncherTest {
      */
     @Test
     public void noLogService() throws Exception {
-        info.setDomainName("domainNoLog");
+        launchParams.setDomainName("domainNoLog");
         launcher.launch();
         launcher.setup();
-        assertTrue(launcher.getLogFilename().endsWith("server.log"));
+        assertThat(launcher.getLogFile().getFileName(), equalTo(Path.of("server.log")));
     }
 
     @Test
     public void dropInterruptedCommands() throws Exception {
-        info.setDomainName("domainNoLog");
-        info.setDropInterruptedCommands(true);
+        launchParams.setDomainName("domainNoLog");
+        launchParams.setDropInterruptedCommands(true);
         launcher.setup();
         launcher.launch();
-        assertTrue(launcher.getJvmOptions().contains("-Dorg.glassfish.job-manager.drop-interrupted-commands=true"));
+        assertThat(launcher.getCommandLine(), hasItems("-Dorg.glassfish.job-manager.drop-interrupted-commands=true"));
     }
 }

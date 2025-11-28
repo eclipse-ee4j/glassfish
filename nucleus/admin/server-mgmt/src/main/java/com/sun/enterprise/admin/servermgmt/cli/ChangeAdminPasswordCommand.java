@@ -29,6 +29,7 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.Console;
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 
@@ -174,9 +175,9 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
 
         try {
             GFLauncher launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
-            GFLauncherInfo info = launcher.getInfo();
-            info.setDomainName(domainName);
-            info.setDomainParentDir(domainDir);
+            GFLauncherInfo launchParams = launcher.getParameters();
+            launchParams.setDomainName(domainName);
+            launchParams.setDomainParentDir(domainDir);
             launcher.setup();
 
             //If secure admin is enabled and if new password is null
@@ -187,7 +188,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
                 }
             }
 
-            String adminKeyFile = launcher.getAdminRealmKeyFile();
+            File adminKeyFile = launcher.getAdminRealmKeyFile();
 
             if (adminKeyFile == null) {
                 //Cannot change password locally for non file realms

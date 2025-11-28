@@ -242,7 +242,7 @@ public class Asadmin {
      */
     private AsadminResult exec(final Integer timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = Arrays.asList(args);
-        LOG.log(TRACE, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
+        LOG.log(INFO, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
         if (asadmin.getName().endsWith(".java")) {
             command.add(JAVA_EXECUTABLE);

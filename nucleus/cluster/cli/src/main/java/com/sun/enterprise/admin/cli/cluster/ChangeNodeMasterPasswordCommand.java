@@ -83,9 +83,8 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
 
             ArrayList<String> serverNames = getInstanceDirs(serverDir);
             for (String serverName: serverNames) {
-                if (isRunning(serverDir, serverName)) {
-                    throw new CommandException(strings.get("instance.is.running",
-                            serverName));
+                if (isRunning(serverName)) {
+                    throw new CommandException(strings.get("instance.is.running", serverName));
                 }
             }
 
@@ -213,23 +212,23 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
     }
 
 
-    private boolean isRunning(File nodeDirChild, String serverName) throws CommandException {
+    private boolean isRunning(String serverName) throws CommandException {
+        File serverDir = new File(nodeDirChild, serverName);
+        File configDir = new File(serverDir, "config");
+        File domainXml = new File(configDir, "domain.xml");
         try {
-            File serverDir = new File(nodeDirChild, serverName);
-            File configDir = new File(serverDir, "config");
-            File domainXml = new File(configDir, "domain.xml");
             if (!domainXml.exists()) {
                 return false;
             }
             MiniXmlParser parser = new MiniXmlParser(domainXml, serverName);
             List<HostAndPort> addrSet = parser.getAdminAddresses();
             if (addrSet.isEmpty()) {
-                throw new CommandException(strings.get("NoAdminPort"));
+                throw new CommandException("Cannot find admin port in domain.xml file");
             }
             HostAndPort addr = addrSet.get(0);
             return ProcessUtils.isListening(addr);
-        } catch (MiniXmlParserException ex) {
-            throw new CommandException(strings.get("NoAdminPortEx", ex), ex);
+        } catch (MiniXmlParserException e) {
+            throw new CommandException("Invalid XML: " + domainXml, e);
         }
     }
 

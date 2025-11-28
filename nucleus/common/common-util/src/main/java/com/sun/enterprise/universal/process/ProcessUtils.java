@@ -30,6 +30,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.nio.channels.ClosedByInterruptException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -38,7 +42,6 @@ import java.util.function.Supplier;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
@@ -56,7 +59,8 @@ public final class ProcessUtils {
 
     private static final Logger LOG = System.getLogger(ProcessUtils.class.getName());
 
-    private static final int SOCKET_TIMEOUT = 5000;
+    /** 1 second is long enough for local connection */
+    private static final int SOCKET_CONNECT_TIMEOUT = 1000;
     private static final String[] PATH = getSystemPath();
 
     private ProcessUtils() {
@@ -74,6 +78,24 @@ public final class ProcessUtils {
      */
     public static boolean waitWhileIsAlive(final long pid, Duration timeout, boolean printDots) {
         return waitFor(() -> !isAlive(pid), timeout, printDots);
+    }
+
+    /**
+     * Blocks until the pid file contains a new PID or timeout comes first.
+     * Doesn't check if the state of the process.
+     *
+     * @param oldPid process identifier
+     * @param pidFile file which will contain the new PID at some point
+     * @param timeout
+     * @param printDots true to print dots to STDOUT while waiting. One dot per second.
+     * @return true if the new PID was detected before timeout. False otherwise.
+     */
+    public static boolean waitForNewPid(final long oldPid, final File pidFile, Duration timeout, boolean printDots) {
+        Supplier<Boolean> predicate = () -> {
+            final Long newPid = loadPid(pidFile);
+            return newPid != null && newPid.longValue() != oldPid;
+        };
+        return waitFor(predicate, timeout, printDots);
     }
 
 
@@ -128,64 +150,91 @@ public final class ProcessUtils {
 
     /**
      * Blocks until the endpoint closes the connection or timeout comes first.
+     * <p>
+     * The important difference between this and {@link #isListening(HostAndPort)} is that
+     * this method connects to an existing endpoint and stays connected until the endpoint
+     * really disconnects.<br>
+     * If you would combine {@link #waitFor(Supplier, Duration, boolean)} and
+     * negated {@link #isListening(HostAndPort)}, your connection could be refused, but
+     * that doesn't mean that another process is free to bind with the port again.
+     * <p>
+     * This method is not suitable for endpoints in an unknown state, because it would
+     * then use whole connect timeout if the endpoint is not listening.
      *
      * @param endpoint endpoint host and port to use.
-     * @param timeout
+     * @param timeout must not be null
      * @param printDots true to print dots to STDOUT while waiting. One dot per second.
      * @return true if the connection was closed before timeout. False otherwise.
      */
     public static boolean waitWhileListening(HostAndPort endpoint, Duration timeout, boolean printDots) {
-        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
-        try (Socket server = new Socket()) {
-            server.setSoTimeout((int) timeout.toMillis());
-            // Max 5 seconds to connect. It is an extreme value for local endpoint.
-            try {
-                server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
-            } catch (IOException e) {
-                LOG.log(TRACE, "Unable to connect - server is probably down.!", e);
-                return true;
-            }
-            try {
-                int result = server.getInputStream().read();
-                if (result == -1) {
-                    LOG.log(TRACE, "Input stream closed - server probably stopped!");
+        final Supplier<Boolean> action = () -> {
+            try (Socket server = new Socket()) {
+                server.setSoTimeout(timeout == null ? 0 : (int) timeout.toMillis());
+                try {
+                    server.connect(endpoint.toInetSocketAddress(), SOCKET_CONNECT_TIMEOUT);
+                } catch (IOException e) {
+                    LOG.log(TRACE, "Unable to connect - server is probably down.!", e);
                     return true;
                 }
-                LOG.log(ERROR, "We were able to read something: {0}. Returning false.", result);
-                return false;
-            } catch (SocketTimeoutException e) {
-                LOG.log(TRACE, "Timeout while reading. Returning false.", e);
-                return false;
-            } catch (SocketException e) {
-                LOG.log(TRACE, "Socket read failed. Returning true.", e);
+                while (true) {
+                    try {
+                        int result = server.getInputStream().read();
+                        if (result == -1) {
+                            LOG.log(TRACE, "Input stream closed - server probably stopped!");
+                            return true;
+                        }
+                        LOG.log(TRACE, "We were able to read something: {0}. Continuing.", result);
+                    } catch (SocketTimeoutException | ClosedByInterruptException e) {
+                        LOG.log(TRACE, "Socket read waiting timed out; returning false.", e);
+                        return false;
+                    } catch (SocketException  e) {
+                        LOG.log(TRACE, "Socket read waiting finished; returning true.", e);
+                        return true;
+                    }
+                }
+            } catch (IOException ex) {
+                LOG.log(WARNING, "An attempt to open a socket to " + endpoint
+                    + " resulted in exception. Therefore we assume the server has stopped.", ex);
                 return true;
             }
-        } catch (Exception ex) {
-            LOG.log(WARNING, "An attempt to open a socket to " + endpoint
-                + " resulted in exception. Therefore we assume the server has stopped.", ex);
-            return true;
-        } finally {
-            DotPrinter.stopWaiting(dotPrinter);
-        }
+        };
+        LOG.log(DEBUG, () -> "Waiting until endpoint " + endpoint + " stops listening.");
+        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
+        final Instant start = Instant.now();
+        final boolean result = action.get();
+        DotPrinter.stopWaiting(dotPrinter);
+        final long millis = Duration.between(start, Instant.now()).toMillis();
+        LOG.log(result ? DEBUG : WARNING, () -> "Waiting finished after " + millis + " ms. Endpoint " + endpoint
+            + (result ? " stopped" : " did not stop") + " listening.");
+        return result;
     }
-
 
     /**
      * @param endpoint endpoint host and port to use.
      * @return true if the endpoint is listening on socket
      */
     public static boolean isListening(HostAndPort endpoint) {
-        try (Socket server = new Socket()) {
-            // Max 5 seconds to connect. It is an extreme value for local endpoint.
-            server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
-            return true;
-        } catch (Exception ex) {
+        try (SocketChannel channel = SocketChannel.open()) {
+            channel.configureBlocking(false);
+            channel.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()));
+
+            try (Selector selector = Selector.open()) {
+                channel.register(selector, SelectionKey.OP_CONNECT);
+                if (selector.select(SOCKET_CONNECT_TIMEOUT) == 0) {
+                    // Timeout
+                    return false;
+                }
+                channel.finishConnect();
+                // Successfully connected = port is listening
+                return true;
+            }
+        } catch (IOException e) {
             LOG.log(TRACE, "An attempt to open a socket to " + endpoint
-                + " resulted in exception. Therefore we assume the server has stopped.", ex);
+                + " resulted in exception. Therefore we assume the server has stopped.", e);
+            // Connection failed
             return false;
         }
     }
-
 
     /**
      * Kill the process with the given Process ID and wait until it's gone - that means
@@ -238,10 +287,9 @@ public final class ProcessUtils {
      */
     public static boolean waitFor(Supplier<Boolean> sign, Duration timeout, boolean printDots) {
         LOG.log(DEBUG, "waitFor(sign={0}, timeout={1}, printDots={2})", sign, timeout, printDots);
-        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
         final Instant start = Instant.now();
-        try {
-            final Instant deadline = timeout == null ? null : start.plus(timeout);
+        final Instant deadline = timeout == null ? null : start.plus(timeout);
+        final Supplier<Boolean> action = () -> {
             while (deadline == null || Instant.now().isBefore(deadline)) {
                 if (sign.get()) {
                     return true;
@@ -249,10 +297,14 @@ public final class ProcessUtils {
                 Thread.onSpinWait();
             }
             return false;
-        } finally {
-            DotPrinter.stopWaiting(dotPrinter);
-            LOG.log(INFO, "Waiting finished after {0} ms.", Duration.between(start, Instant.now()).toMillis());
-        }
+        };
+        final DotPrinter dotPrinter = DotPrinter.startWaiting(printDots);
+        final Boolean result = action.get();
+        DotPrinter.stopWaiting(dotPrinter);
+        final long millis = Duration.between(start, Instant.now()).toMillis();
+        LOG.log(result ? DEBUG : INFO,
+            () -> "Waiting finished after " + millis + " ms. Action " + (result ? "succeeded." : "timed out."));
+        return result;
     }
 
 
@@ -327,7 +379,7 @@ public final class ProcessUtils {
 
     private static class DotPrinter extends Thread {
 
-        public DotPrinter() {
+        private DotPrinter() {
             super("DotPrinter");
             setDaemon(true);
         }

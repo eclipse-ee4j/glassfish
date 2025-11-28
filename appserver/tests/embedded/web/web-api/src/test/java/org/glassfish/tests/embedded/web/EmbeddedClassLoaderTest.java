@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,13 +31,13 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.web.Context;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.config.WebContainerConfig;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EmbeddedClassLoaderTest {
 
@@ -103,9 +103,9 @@ public class EmbeddedClassLoaderTest {
                 }
             }
 
-            MatcherAssert.assertThat(sb.toString(),
-                    both(containsString("Class TestCacaoList loaded successfully from listener"))
-                            .and(containsString("Class TestCacaoList loaded successfully from servlet")));
+            assertThat(sb.toString(), both(
+                     containsString("Class TestCacaoList loaded successfully from listener"))
+                .and(containsString("Class TestCacaoList loaded successfully from servlet")));
         } finally {
             wc.removeContext(context);
         }

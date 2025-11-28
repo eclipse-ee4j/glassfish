@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -566,18 +566,12 @@ public class ProgramOptions {
      * @return the help
      */
     public boolean isHelp() {
-        boolean help = false;
         if (options.containsKey(HELP)) {
             String value = options.getOne(HELP);
-            if (ok(value)) {
-                help = Boolean.parseBoolean(value);
-            } else {
-                help = true;
-            }
-        } else {
-            help = env.getBooleanOption(HELP);
+            // --help=true or --help
+            return ok(value) ? Boolean.parseBoolean(value) : true;
         }
-        return help;
+        return env.getBooleanOption(HELP);
     }
 
     /**

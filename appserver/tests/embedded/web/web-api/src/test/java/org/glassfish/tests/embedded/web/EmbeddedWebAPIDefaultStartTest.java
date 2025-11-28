@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,9 +34,11 @@ import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.WebListener;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests WebContainer#start correctly starts the server with default 8080 port
@@ -68,9 +70,10 @@ public class EmbeddedWebAPIDefaultStartTest {
         embedded.addWebListener(httpListener);
 
         List<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
-        Assertions.assertTrue(listenerList.size()==1);
-        for (WebListener listener : embedded.getWebListeners())
+        assertTrue(listenerList.size()==1);
+        for (WebListener listener : embedded.getWebListeners()) {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
+        }
 
         Deployer deployer = glassfish.getDeployer();
 
@@ -94,24 +97,22 @@ public class EmbeddedWebAPIDefaultStartTest {
 
         System.out.println("Deployed " + appName);
 
-        Assertions.assertTrue(appName != null);
+        assertTrue(appName != null);
 
         URL servlet = new URL("http://localhost:8080/classes/hello");
         URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
         StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
         }
-        in.close();
-        System.out.println(inputLine);
-        Assertions.assertEquals("Hello World!", sb.toString());
+        assertEquals("Hello World!", sb.toString());
 
         Thread.sleep(1000);
 
-        if (appName!=null)
-            deployer.undeploy(appName);
+        deployer.undeploy(appName);
     }
 
     @AfterAll

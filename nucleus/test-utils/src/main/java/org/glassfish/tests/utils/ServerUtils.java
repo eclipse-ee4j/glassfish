@@ -89,7 +89,6 @@ public class ServerUtils {
             try (ServerSocket socket = new ServerSocket(0)) {
                 final int port = socket.getLocalPort();
                 socket.setSoTimeout(1);
-                socket.setReuseAddress(true);
                 if (excluded.contains(port) && counter >= 20) {
                     throw new IllegalStateException("Cannot open random port, tried 20 times. Port " + port
                         + " is excluded and we were not able to find another.");

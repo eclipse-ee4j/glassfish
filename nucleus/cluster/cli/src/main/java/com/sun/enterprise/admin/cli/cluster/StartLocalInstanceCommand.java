@@ -17,14 +17,15 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.launcher.GFLauncher;
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherFactory;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
+import com.sun.enterprise.admin.servermgmt.cli.ServerLifeSignCheck;
 import com.sun.enterprise.admin.servermgmt.cli.StartServerCommand;
 import com.sun.enterprise.admin.servermgmt.cli.StartServerHelper;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
+import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.ObjectAnalyzer;
 
 import java.io.File;
@@ -41,11 +42,8 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
-import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
  * Start a local server instance.
@@ -65,15 +63,29 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
     private boolean debug;
 
     @Param(name = "dry-run", shortName = "n", optional = true, defaultValue = "false")
-    private boolean dry_run;
+    private boolean dryRun;
 
     @Param(optional = true)
     private Integer timeout;
 
-    private GFLauncherInfo info;
-    private GFLauncher launcher;
+    @Param(name = "check-pid-file", optional = true, defaultValue = "true")
+    private boolean checkPidFile;
 
-    private StartServerHelper helper;
+    @Param(name = "check-process-alive", optional = true, defaultValue = "true")
+    private boolean checkProcessAlive;
+
+    @Param(name = "check-admin-port", optional = true, defaultValue = "true")
+    private boolean checkAdminEndpoint;
+
+    @Param(name = "server-output", shortName = "o",  optional = true)
+    private Boolean printServerOutput;
+
+    @Param(name = "custom-endpoints", optional = true)
+    private String customEndpoints;
+
+    private GFLauncherInfo launchParameters;
+    private GFLauncher launcher;
+    private StartServerHelper startServerHelper;
 
     @Override
     public RuntimeType getType() {
@@ -87,14 +99,10 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
         return false;
     }
 
-    /**
-     * @return timeout for the command
-     */
     @Override
     public Duration getTimeout() {
         return timeout == null ? WAIT_FOR_DAS_TIME_MS : Duration.ofSeconds(timeout);
     }
-
 
     @Override
     protected void validate() throws CommandException {
@@ -107,8 +115,6 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
         }
     }
 
-    /**
-     */
     @Override
     protected int executeCommand() throws CommandException {
         logger.finer(() -> toString());
@@ -127,84 +133,60 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
         }
 
         try {
-            // createLauncher needs to go before the helper is created!!
-            createLauncher();
-            final String mpv = getMasterPassword();
+            // createLauncher needs to go before the startServerHelper is created!!
+            launcher = createLauncher();
 
-            helper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), launcher, mpv, getTimeout());
+            final List<HostAndPort> userEndpoints = StartServerHelper.parseCustomEndpoints(customEndpoints);
+            final ServerLifeSignCheck signOfLife = new ServerLifeSignCheck("instance " + getInstanceName(),
+                printServerOutput, checkPidFile, checkProcessAlive, checkAdminEndpoint, userEndpoints);
+            startServerHelper = new StartServerHelper(programOpts.isTerse(), getTimeout(), getServerDirs(), launcher, signOfLife);
 
-            if (!helper.prepareForLaunch()) {
-                return ERROR;
-            }
-
-            if (dry_run) {
+            if (dryRun) {
                 logger.log(Level.FINE, Strings.get("dry_run_msg"));
-                logger.log(Level.INFO, getLauncher().getCommandLine().toString("\n"));
+                logger.log(Level.INFO, launcher.getCommandLine().toString("\n"));
                 return SUCCESS;
             }
 
-            getLauncher().launch();
+            launcher.launch();
 
-            if (!verbose && !watchdog) {
-                helper.waitForServerStart();
-                helper.report();
-                return SUCCESS;
+            if (verbose || watchdog) {
+                return startServerHelper.talkWithUser();
             }
-
-            // we can potentially loop forever here...
-            while (true) {
-                int returnValue = getLauncher().getExitValue();
-                switch (returnValue) {
-                    case RESTART_NORMAL:
-                        logger.info(Strings.get("restart"));
-                        break;
-                    case RESTART_DEBUG_ON:
-                        logger.info(Strings.get("restartChangeDebug", "on"));
-                        getInfo().setDebug(true);
-                        break;
-                    case RESTART_DEBUG_OFF:
-                        logger.info(Strings.get("restartChangeDebug", "off"));
-                        getInfo().setDebug(false);
-                        break;
-                    default:
-                        return returnValue;
-                }
-
-                if (env.debug()) {
-                    setProperty(CLIConstants.WALL_CLOCK_START_PROP, Long.toString(System.currentTimeMillis()), true);
-                }
-                getLauncher().relaunch();
-            }
-        } catch (GFLauncherException gfle) {
-            throw new CommandException(gfle.getMessage());
-        } catch (MiniXmlParserException me) {
-            throw new CommandException(me);
+            final String report = startServerHelper.waitForServerStart(getTimeout());
+            logger.info(report);
+            return SUCCESS;
+        } catch (GFLauncherException e) {
+            throw new CommandException(e.getMessage(), e);
+        } catch (MiniXmlParserException e) {
+            throw new CommandException(e.getMessage(), e);
         }
     }
 
-    /**
-     * Create a launcher for the instance specified by arguments to
-     * this command.  The launcher is for a server of the specified type.
-     * Sets the launcher and info fields.
-     */
     @Override
-    public void createLauncher() throws GFLauncherException, MiniXmlParserException {
-        setLauncher(GFLauncherFactory.getInstance(getType()));
-        setInfo(getLauncher().getInfo());
-        getInfo().setInstanceName(instanceName);
-        getInfo().setInstanceRootDir(instanceDir);
-        getInfo().setVerbose(verbose);
-        getInfo().setWatchdog(watchdog);
-        getInfo().setDebug(debug);
-        getInfo().setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(), programOpts.getClassPath(),
-            respawnArgs());
+    public final GFLauncher createLauncher() throws GFLauncherException, MiniXmlParserException, CommandException {
+        final GFLauncher gfLauncher = GFLauncherFactory.getInstance(getType());
+        this.launchParameters = gfLauncher.getInfo();
+        launchParameters.setInstanceName(instanceName);
+        launchParameters.setInstanceRootDir(instanceDir);
+        launchParameters.setVerbose(verbose);
+        launchParameters.setIgnoreOutput(printServerOutput == Boolean.FALSE);
+        launchParameters.setWatchdog(watchdog);
+        launchParameters.setDebug(debug);
+        launchParameters.setRespawnInfo(programOpts.getClassName(), programOpts.getModulePath(),
+            programOpts.getClassPath(), respawnArgs());
+        launchParameters.setAsadminAdminAddress(getUserProvidedAdminAddress());
+        gfLauncher.setup();
+        launchParameters.addSecurityToken(MASTER_PASSWORD, getMasterPassword());
+        return gfLauncher;
+    }
 
-        getLauncher().setup();
+    @Override
+    public String toString() {
+        return ObjectAnalyzer.toStringWithSuper(this);
     }
 
     /**
-     * Return the asadmin command line arguments necessary to
-     * start this server instance.
+     * @return the asadmin command line arguments necessary to start this server instance.
      */
     private String[] respawnArgs() {
         List<String> args = new ArrayList<>(15);
@@ -236,33 +218,5 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
 
         logger.log(Level.FINER, "Respawn args: {0}", args);
         return args.toArray(String[]::new);
-    }
-
-    private GFLauncher getLauncher() {
-        if(launcher == null) {
-            throw new RuntimeException(Strings.get("internal.error", "GFLauncher was not initialized"));
-        }
-
-        return launcher;
-    }
-    private void setLauncher(GFLauncher gfl) {
-        launcher = gfl;
-    }
-
-    private GFLauncherInfo getInfo() {
-        if (info == null) {
-            throw new RuntimeException(Strings.get("internal.error", "GFLauncherInfo was not initialized"));
-        }
-        return info;
-    }
-
-
-    private void setInfo(GFLauncherInfo inf) {
-        info = inf;
-    }
-
-    @Override
-    public String toString() {
-        return ObjectAnalyzer.toStringWithSuper(this);
     }
 }

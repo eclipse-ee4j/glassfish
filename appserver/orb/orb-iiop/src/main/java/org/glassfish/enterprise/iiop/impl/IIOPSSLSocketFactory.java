@@ -32,7 +32,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +92,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
      * @todo provide an interface to the admin, so that whenever a iiop-listener
      * is added / removed, we modify the hashtable,
      */
-    private final Map portToSSLInfo = new Hashtable();
+    private final Map<Integer, SSLInfo> portToSSLInfo = new Hashtable<>();
     /* this is stored for the client side of SSL Connections.
      * Note: There will be only 1 ctx for the client side, as we will reuse the
      * ctx for all SSL connections
@@ -175,8 +178,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 }
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE,"IIOPSSLSocketFactory initialization failed.", e);
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("IIOPSSLSocketFactory initialization failed.", e);
         }
     }
 
@@ -251,25 +253,23 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
      */
     @Override
     public ServerSocket createServerSocket(String type, InetSocketAddress inetSocketAddress) throws IOException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Creating server socket for type =" + type
-                    + " inetSocketAddress =" + inetSocketAddress);
-        }
+        LOG.log(Level.INFO, "Creating server socket for type =" + type + " inetSocketAddress =" + inetSocketAddress);
 
-        if(type.equals(SSL_MUTUALAUTH) || type.equals(SSL) ||
-            type.equals(PERSISTENT_SSL)) {
+        if (type.equals(SSL_MUTUALAUTH) || type.equals(SSL) || type.equals(PERSISTENT_SSL)) {
             return createSSLServerSocket(type, inetSocketAddress);
         }
-        ServerSocket serverSocket = null;
+        final ServerSocket serverSocket;
         if (orb.getORBData().acceptorSocketType().equals(SOCKETCHANNEL)) {
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             serverSocket = serverSocketChannel.socket();
         } else {
             serverSocket = new ServerSocket();
         }
-
-         serverSocket.bind(inetSocketAddress);
-         return serverSocket;
+        final Action<ServerSocket> action = () -> {
+            serverSocket.bind(inetSocketAddress);
+            return serverSocket;
+        };
+        return repeat(action, Duration.ofSeconds(10L));
     }
 
     /**
@@ -339,7 +339,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         }
         int port = inetSocketAddress.getPort();
         Integer iport = Integer.valueOf(port);
-        SSLInfo sslInfo = (SSLInfo)portToSSLInfo.get(iport);
+        SSLInfo sslInfo = portToSSLInfo.get(iport);
         if (sslInfo == null) {
             throw new IOException("No SSL info found for port " + iport);
         }
@@ -351,42 +351,21 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             String[] socketCiphers = ssf.getDefaultCipherSuites();
             ciphers = mergeCiphers(socketCiphers, ssl3TlsCiphers, ssl2Ciphers);
         }
-
-        String cs[] = null;
-
-        if (LOG.isLoggable(Level.FINE)) {
-            cs = ssf.getSupportedCipherSuites();
-            for (String element : cs) {
-                LOG.log(Level.FINE, "Cipher Suite: " + element);
-            }
+        LOG.log(Level.FINE, () -> "Supported cipher Suites: " + Arrays.toString(ssf.getSupportedCipherSuites()));
+        final Action<ServerSocket> action = () -> ssf.createServerSocket(port, BACKLOG, inetSocketAddress.getAddress());
+        final ServerSocket ss = repeat(action, Duration.ofSeconds(10L));
+        if (ciphers != null) {
+            ((SSLServerSocket) ss).setEnabledCipherSuites(ciphers);
         }
-        ServerSocket ss = null;
-        try {
-            // bugfix for 6349541
-            // specify the ip address to bind to, 50 is the default used
-            // by the ssf implementation when only the port is specified
-            ss = ssf.createServerSocket(port, BACKLOG, inetSocketAddress.getAddress());
-            if (ciphers != null) {
-                ((SSLServerSocket) ss).setEnabledCipherSuites(ciphers);
-            }
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, "createServerSocket failed", new Object[] {type, port});
-            LOG.log(Level.SEVERE, "", e);
-            throw e;
-        }
-
         try {
             if (type.equals(SSL_MUTUALAUTH)) {
                 LOG.log(Level.FINE, "Setting Mutual auth");
                 ((SSLServerSocket) ss).setNeedClientAuth(true);
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Setting Mutual auth failed.", e);
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(), e);
         }
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Created server socket:" + ss);
-        }
+        LOG.log(Level.FINE, () -> "Created server socket: " + ss);
         return ss;
     }
 
@@ -424,9 +403,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 LOG.log(Level.FINE, "createSSLSocket failed.", new Object[] {host, port});
                 LOG.log(Level.FINE, "", e);
             }
-            IOException e2 = new IOException("Error opening SSL socket to host=" + host + " port=" + port);
-            e2.initCause(e);
-            throw e2;
+            throw new IOException("Error opening SSL socket to host=" + host + " port=" + port, e);
         }
         return socket;
     }
@@ -550,6 +527,20 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
     }
 
 
+    private static <T> T repeat(Action<T> action, Duration timeout) throws IOException {
+        final Instant deadline = Instant.now().plus(timeout);
+        while (true) {
+            try {
+                return action.get();
+            } catch (Exception e) {
+                if (Instant.now().isAfter(deadline)) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+
     class SSLInfo {
         private final SSLContext ctx;
         private String[] ssl3TlsCiphers = null;
@@ -572,5 +563,10 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         String[] getSsl2Ciphers() {
             return ssl2Ciphers;
         }
+    }
+
+    @FunctionalInterface
+    private interface Action<T> {
+        T get() throws IOException;
     }
 }

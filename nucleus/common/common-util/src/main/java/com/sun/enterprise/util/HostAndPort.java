@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,8 @@
 
 package com.sun.enterprise.util;
 
-import java.util.StringTokenizer;
+import java.net.InetSocketAddress;
+import java.util.Objects;
 
 /**
  * Represents a host and a port in a convenient package that also
@@ -30,55 +32,68 @@ public class HostAndPort {
     /**
      * Construct a HostAndPort object.
      *
-     * @param   host    the host name
-     * @param   port    the port number
-     * @param   secure  does this host require a secure (SSL) connection?
+     * @param host the host name, must not be null.
+     * @param port the port number, must not be zero.
+     * @param secure does this endpoint require a secure connection?
      */
     public HostAndPort(String host, int port, boolean secure) {
-        this.host = host;
+        this.host = Objects.requireNonNull(host, "Host name is mandatory.");
         this.port = port;
         this.secure = secure;
-    }
-
-    public HostAndPort(HostAndPort rhs) {
-        this(rhs.host, rhs.port, rhs.secure);
-    }
-
-    public HostAndPort(String host, int port) {
-        this(host, port, false);
+        if (port == 0) {
+            throw new IllegalArgumentException("Zero port is not allowed.");
+        }
     }
 
     /**
-     * Construct a new HostAndPort from a string of the form "host:port".
-     *
-     * @param  str string of the form "host:port"
+     * @return true for HTTPS, false for HTTP
      */
-    public HostAndPort(String str) {
-        StringTokenizer tokenizer = new StringTokenizer(str, ":", false);
-
-        host = tokenizer.nextToken();
-
-        final String portString = tokenizer.nextToken();
-        port = Integer.parseInt(portString);
-        secure = false;
-    }
-
     public boolean isSecure() {
         return secure;
     }
 
+    /**
+     * @return hostname, never null.
+     */
     public String getHost() {
         return host;
     }
 
+    /**
+     * @return port number.
+     */
     public int getPort() {
-        if (port == 0) {
-            return secure ? 8181 : 8080;    // default ports
-        } else {
-            return port;
-        }
+        return port;
     }
 
+    /**
+     * @return new {@link InetSocketAddress}
+     */
+    public InetSocketAddress toInetSocketAddress() {
+        return new InetSocketAddress(getHost(), getPort());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(host, port, secure);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        HostAndPort other = (HostAndPort) obj;
+        return Objects.equals(host, other.host) && port == other.port && secure == other.secure;
+    }
+
+    @Override
     public String toString() {
         return host + ":" + port;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,22 +28,35 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.tests.embedded.ejb.remoteejb.RemoteEJBInf;
 import org.glassfish.tests.embedded.ejb.remoteejb.SampleEjb;
 import org.glassfish.tests.embedded.ejb.remoteejb.TimerEjb;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author bhavanishankar@java.net
  */
 public class EJBTest {
 
-    GlassFish glassfish;
+    private static GlassFish glassfish;
+
+    @BeforeAll
+    static void init() throws Exception {
+        glassfish = GlassFishRuntime.bootstrap().newGlassFish();
+        glassfish.start();
+    }
+
+    @AfterAll
+    static void close() throws Exception {
+        if (glassfish != null) {
+            glassfish.dispose();
+        }
+    }
 
     @Test
     public void test() throws Exception {
-
-        glassfish = GlassFishRuntime.bootstrap().newGlassFish();
-        glassfish.start();
-
 
         Deployer deployer = glassfish.getDeployer();
         URI uri = new File(System.getProperty("project.directory"), "target/remoteejb.jar").toURI();
@@ -55,7 +68,7 @@ public class EJBTest {
         System.out.println("Looking up SampleEJB.");
         SampleEjb sampleEjb = (SampleEjb) ic.lookup("java:global/remoteejb/SampleEjb");
         System.out.println("Invoking SampleEjb [" + sampleEjb + "]");
-        Assertions.assertEquals(sampleEjb.saySomething(), "Hello World");
+        assertEquals(sampleEjb.saySomething(), "Hello World");
         System.out.println("SampleEjb tested successfully");
 
         System.out.println("Looking up TimerEjb.");
@@ -65,32 +78,16 @@ public class EJBTest {
         System.out.println("Verifying TimerEjb [" + timerEjb + "]");
         Thread.sleep(4000);
         boolean result = timerEjb.verifyTimer();
-        Assertions.assertTrue(result);
+        assertTrue(result);
         System.out.println("TimerEJB tested successfully.");
 
 
-//        ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
-//        try {
-            System.out.println("Looking up RemoteEJB.");
-//            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-            RemoteEJBInf remoteEjb = (RemoteEJBInf) ic.lookup("java:global/remoteejb/RemoteEJB");
-            System.out.println("Invoking RemoteEJB [" + remoteEjb + "]");
-            Assertions.assertEquals(remoteEjb.sayHi(), "Hi Bhavani");
-            System.out.println("RemoteEjb tested successfully");
-//        } finally {
-//            Thread.currentThread().setContextClassLoader(oldCL);
-//        }
-
-        glassfish.stop();
-        glassfish.dispose();
+        System.out.println("Looking up RemoteEJB.");
+        RemoteEJBInf remoteEjb = (RemoteEJBInf) ic.lookup("java:global/remoteejb/RemoteEJB");
+        System.out.println("Invoking RemoteEJB [" + remoteEjb + "]");
+        assertEquals(remoteEjb.sayHi(), "Hi Bhavani");
+        System.out.println("RemoteEjb tested successfully");
 
         System.out.println("EmbeddedTest completed.");
-
     }
-
-    @Test
-    public void test2() throws Exception {
-
-    }
-
 }

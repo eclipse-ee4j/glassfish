@@ -31,6 +31,8 @@ import org.junit.jupiter.api.Test;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.emptyOrNullString;
@@ -39,7 +41,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 /**
@@ -55,7 +56,7 @@ public class LoggingRestITest extends RestTestBase {
     public static void fillUpLog() {
         // The server log may become empty due to log rotation.
         // Restart domain to fill it up.
-        AsadminResult result = getAsadmin().exec("restart-domain", "--timeout", "60");
+        AsadminResult result = getAsadmin().exec("restart-domain", "--timeout", "60", "domain1");
         assertThat(result, asadminOK());
     }
 
@@ -100,7 +101,8 @@ public class LoggingRestITest extends RestTestBase {
         // Depends on the order of tests, there may be rolled file too.
         assertAll(
             () -> assertThat("InstanceLogFileNames", logFileNames.length(), greaterThanOrEqualTo(1)),
-            () -> assertThat(logFileNames.get(0).toString(), startsWith("server.log"))
+            () -> assertThat(logFileNames.get(0).toString(),
+                anyOf(startsWith("restart.log"), startsWith("server.log")))
         );
     }
 

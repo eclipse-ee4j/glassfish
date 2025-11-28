@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package org.glassfish.main.admin.test;
 
 import java.util.stream.Stream;
@@ -22,6 +23,7 @@ import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -54,36 +56,9 @@ public class StartServITest {
         }
     }
 
-    @ParameterizedTest
-    @ArgumentsSource(StartServArgumentsProvider.class)
-    public void startServerInForeground(StartServ startServ) {
-        try {
-            AsadminResult result = startServ.withTextToWaitFor("Total startup time including CLI").exec(STARTSERV_DOMAIN_NAME);
-            assertThat(result, asadminOK());
-        } finally {
-            ASADMIN.exec("stop-domain", STARTSERV_DOMAIN_NAME);
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(StartServArgumentsProvider.class)
-    @DisabledOnOs(value = WINDOWS, disabledReason = "startserv.bat is just trivial and doesn't give the error output")
-    public void reportCorrectErrorIfAlreadyRunning(StartServ startServ) {
-        try {
-            AsadminResult result = startServ.withTextToWaitFor("Total startup time including CLI").exec(STARTSERV_DOMAIN_NAME);
-            assertThat(result, asadminOK());
-            result = startServ.withNoTextToWaitFor().exec(STARTSERV_DOMAIN_NAME);
-            assertThat(result.getStdErr(), containsString("There is a process already using the admin port"));
-        } finally {
-            ASADMIN.exec("stop-domain", STARTSERV_DOMAIN_NAME);
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(StartServArgumentsProvider.class)
-    public void reportCorrectErrorIfInvalidCommand(StartServ startServ) {
-        AsadminResult result = startServ.withNoTextToWaitFor().exec(NOT_EXISTING_DOMAIN_NAME);
-        assertThat(result.getStdErr(), containsString("There is no such domain directory"));
+    @AfterEach
+    void stopDomain() {
+        ASADMIN.exec("stop-domain", STARTSERV_DOMAIN_NAME);
     }
 
     @AfterAll
@@ -92,6 +67,30 @@ public class StartServITest {
         if (result.getOutput().contains(STARTSERV_DOMAIN_NAME)) {
             ASADMIN.exec("delete-domain", STARTSERV_DOMAIN_NAME);
         }
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(StartServArgumentsProvider.class)
+    public void startServerInForeground(StartServ startServ) {
+        AsadminResult result = startServ.withTextToWaitFor("Total startup time including CLI").exec(STARTSERV_DOMAIN_NAME);
+        assertThat(result, asadminOK());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(StartServArgumentsProvider.class)
+    @DisabledOnOs(value = WINDOWS, disabledReason = "startserv.bat is just trivial and doesn't give the error output")
+    public void reportCorrectErrorIfAlreadyRunning(StartServ startServ) {
+        AsadminResult result = startServ.withTextToWaitFor("Total startup time including CLI").exec(STARTSERV_DOMAIN_NAME);
+        assertThat(result, asadminOK());
+        result = startServ.withNoTextToWaitFor().exec(STARTSERV_DOMAIN_NAME);
+        assertThat(result.getStdErr(), containsString("There is a process already using the admin port"));
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(StartServArgumentsProvider.class)
+    public void reportCorrectErrorIfInvalidCommand(StartServ startServ) {
+        AsadminResult result = startServ.withNoTextToWaitFor().exec(NOT_EXISTING_DOMAIN_NAME);
+        assertThat(result.getStdErr(), containsString("There is no such domain directory"));
     }
 
     static class StartServArgumentsProvider implements ArgumentsProvider {

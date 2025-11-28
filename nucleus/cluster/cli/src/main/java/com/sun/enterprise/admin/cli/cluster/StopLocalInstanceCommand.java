@@ -75,16 +75,6 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
         return timeout == null ?  null : Duration.ofSeconds(timeout);
     }
 
-    /**
-     * Big trouble if you allow the super implementation to run
-     * because it creates directories.  If this command is called with
-     * an instance that doesn't exist -- new dirs will be created which
-     * can cause other problems.
-     */
-    @Override
-    protected void initInstance() throws CommandException {
-        super.initInstance();
-    }
 
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
@@ -99,7 +89,10 @@ public class StopLocalInstanceCommand extends LocalInstanceCommand {
             return instanceNotRunning();
         }
 
-        HostAndPort addr = getAdminAddress(getServerDirs().getServerName());
+        HostAndPort addr = getReachableAdminAddress();
+        if (addr == null) {
+            return instanceNotRunning();
+        }
         programOpts.setHostAndPort(addr);
         logger.log(Level.FINER, "Stopping server at {0}", addr);
 

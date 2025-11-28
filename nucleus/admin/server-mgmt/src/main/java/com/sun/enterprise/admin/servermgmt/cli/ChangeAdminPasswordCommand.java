@@ -172,9 +172,8 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             throw new CommandException(strings.get("CannotExecuteLocally"));
         }
 
-        GFLauncher launcher = null;
         try {
-            launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
+            GFLauncher launcher = GFLauncherFactory.getInstance(RuntimeType.DAS);
             GFLauncherInfo info = launcher.getInfo();
             info.setDomainName(domainName);
             info.setDomainParentDir(domainDir);
@@ -183,31 +182,28 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             //If secure admin is enabled and if new password is null
             //throw new exception
             if (launcher.isSecureAdminEnabled()) {
-                if ((newpassword == null) || (newpassword.isEmpty())) {
+                if (newpassword == null || newpassword.isEmpty()) {
                     throw new CommandException(strings.get("NullNewPassword"));
                 }
             }
 
             String adminKeyFile = launcher.getAdminRealmKeyFile();
 
-            if (adminKeyFile != null) {
-                //This is a FileRealm, instantiate it.
-                FileRealmHelper helper = new FileRealmHelper(adminKeyFile);
-
-                //Authenticate the old password
-                String[] groups = helper.authenticate(programOpts.getUser(), password.toCharArray());
-                if (groups == null) {
-                    throw new CommandException(strings.get("InvalidCredentials", programOpts.getUser()));
-                }
-                helper.updateUser(programOpts.getUser(), programOpts.getUser(), newpassword.toCharArray(), null);
-                helper.persist();
-                return SUCCESS;
-
-            } else {
+            if (adminKeyFile == null) {
                 //Cannot change password locally for non file realms
                 throw new CommandException(strings.get("NotFileRealmCannotChangeLocally"));
-
             }
+            //This is a FileRealm, instantiate it.
+            FileRealmHelper helper = new FileRealmHelper(adminKeyFile);
+
+            //Authenticate the old password
+            String[] groups = helper.authenticate(programOpts.getUser(), password.toCharArray());
+            if (groups == null) {
+                throw new CommandException(strings.get("InvalidCredentials", programOpts.getUser()));
+            }
+            helper.updateUser(programOpts.getUser(), programOpts.getUser(), newpassword.toCharArray(), null);
+            helper.persist();
+            return SUCCESS;
 
         } catch (MiniXmlParserException ex) {
             throw new CommandException(ex);

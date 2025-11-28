@@ -420,7 +420,7 @@ public abstract class LocalServerCommand extends CLICommand {
         final ServerLifeSignChecker checker = new ServerLifeSignChecker(lifeSignCheck, pidFile, adminEndpointsSupplier, printDots);
         final GlassFishProcess process = GlassFishProcess.of(pid);
         final ServerLifeSigns signs = checker.watchStartup(process, startTimeout);
-        final String report = report(signs);
+        final String report = report(signs, lifeSignCheck.isPrintServerOutput(signs.isError()));
         if (signs.isError()) {
             throw new CommandException(report);
         }
@@ -437,7 +437,7 @@ public abstract class LocalServerCommand extends CLICommand {
         return error + "\n" + restartLog;
     }
 
-    private String report(ServerLifeSigns signs) {
+    private String report(ServerLifeSigns signs, boolean printOutput) {
         final StringBuilder report = new StringBuilder(2048);
         report.append('\n').append(signs.getSummary());
         if (signs.getSuggestion() != null) {
@@ -448,7 +448,7 @@ public abstract class LocalServerCommand extends CLICommand {
         if (situationReport != null) {
             report.append(signs.getSituationReport());
         }
-        if (signs.isError()) {
+        if (printOutput) {
             final String restartLog = loadRestartLog(serverDirs.getRestartLogFile());
             if (restartLog != null) {
                 report.append('\n').append(restartLog);

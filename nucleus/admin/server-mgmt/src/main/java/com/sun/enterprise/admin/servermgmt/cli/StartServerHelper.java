@@ -169,9 +169,7 @@ public final class StartServerHelper {
         }
         // Print output just if user explicitly asked
         // or start failed and user did not explicitly forbid the print.
-        if (launcher.getPidBeforeRestart() != null
-            || lifeSignCheck.getPrintServerOutput() == Boolean.TRUE
-            || (signs.isError() && lifeSignCheck.getPrintServerOutput() != Boolean.FALSE)) {
+        if (launcher.getPidBeforeRestart() != null || lifeSignCheck.isPrintServerOutput(signs.isError())) {
             report.append("\n\n").append(getProcessOutput());
         }
         return report.append('\n').toString();

@@ -175,7 +175,6 @@ public class RestartDomainCommand extends StopDomainCommand {
         opts.add("--check-admin-port");
         opts.add(Boolean.toString(checkAdminEndpoint));
         if (printServerOutput != null) {
-            // TODO: At this moment works just when the domain was not running
             opts.add("--server-output");
             opts.add(Boolean.toString(printServerOutput));
         }

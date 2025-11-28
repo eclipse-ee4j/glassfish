@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              version="4.0"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd">
+    <application>
+        <resource-bundle>
+            <base-name>i18n.messages</base-name>  <!-- i18n/messages_*.properties -->
+            <var>msg</var>
+        </resource-bundle>
+    </application>
+</faces-config>

@@ -33,9 +33,7 @@
     <name>Jakarta Data TCK Web Runner for GlassFish using NoSQL Entities</name>
 
     <properties>
-        <jnosql.version>1.1.11-SNAPSHOT</jnosql.version>
-        <jnosql.mongo.artifacts>jnosql-mongodb,mongodb-driver-sync,bson-record-codec,bson,
-            mongodb-driver-core,mongodb-driver-sync,jnosql-database-commons</jnosql.mongo.artifacts>
+        <jnosql.version>1.1.11</jnosql.version>
         <glassfish.version.main>8</glassfish.version.main>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
@@ -189,20 +187,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>copy-deps</id>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
-                            <includeArtifactIds>${jnosql.mongo.artifacts}</includeArtifactIds>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                    <phase>test-compile</phase>
+                    <configuration>
+                        <finalName>jnosql</finalName>
+                        <outputDirectory>target</outputDirectory>
+                        <descriptors>
+                            <descriptor>src/test/assembly/jnosql-mongo-deps.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
 
             <!-- Surefire plugin - Entrypoint for Junit5 -->
             <plugin>
@@ -220,7 +226,7 @@
                     <systemPropertyVariables>
                         <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                         <glassfish.home>${glassfish.home}</glassfish.home>
-                        <jnosql.mongo.artifacts>${jnosql.mongo.artifacts}</jnosql.mongo.artifacts>
+                        <jnosql.mongo.artifacts>${project.build.directory}/jnosql-mongo-deps</jnosql.mongo.artifacts>
 
                         <jakarta.tck.profile>core</jakarta.tck.profile>
                         <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>

@@ -29,5 +29,6 @@ public class ArquillianExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder builder) {
         builder.service(ApplicationArchiveProcessor.class, JakartaNoSqlProcessor.class);
+        builder.service(ApplicationArchiveProcessor.class, JNoSQLMongoProcessor.class);
     }
 }

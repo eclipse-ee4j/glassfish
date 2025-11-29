@@ -40,7 +40,7 @@ import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
 import org.glassfish.embeddable.client.UserError;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.xml.sax.SAXException;
 
 import static java.util.logging.Level.CONFIG;
@@ -87,7 +87,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
     private boolean sendPassword = true;
 
-    private GlassFishORBHelper orbHelper;
+    private GlassFishORBLocator orbLocator;
 
     /** caller-provided message security configurations */
     private final List<MessageSecurityConfig> messageSecurityConfigs = new ArrayList<>();
@@ -183,7 +183,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
     private void prepareHabitat() throws URISyntaxException {
         ACCModulesManager.initialize(Thread.currentThread().getContextClassLoader());
-        orbHelper = ACCModulesManager.getService(GlassFishORBHelper.class);
+        orbLocator = ACCModulesManager.getService(GlassFishORBLocator.class);
     }
 
     /**
@@ -220,11 +220,10 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         }
 
         if (isSSLRequired(targetServers, containerProperties)) {
-            orbHelper.setCSIv2Prop(ORB_SSL_CLIENT_REQUIRED, "true");
+            orbLocator.setCSIv2Prop(ORB_SSL_CLIENT_REQUIRED, "true");
         }
 
         logger.log(CONFIG, "Using endpoint address(es): {0}", sb.toString());
-
     }
 
     /**

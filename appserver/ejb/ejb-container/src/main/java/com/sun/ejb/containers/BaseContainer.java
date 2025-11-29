@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -142,7 +142,6 @@ import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.glassfish.ejb.spi.EjbContainerInterceptor;
 import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
@@ -765,9 +764,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected void initializeProtocolManager() {
         try {
-            GlassFishORBHelper orbHelper = ejbContainerUtilImpl.getORBHelper();
-            protocolMgr = orbHelper.getProtocolManager();
-
+            protocolMgr = ejbContainerUtilImpl.getOrbLocator().getProtocolManager();
         } catch (Throwable t) {
             throw new RuntimeException(
                     "IIOP Protocol Manager initialization failed.  " + "Possible cause is that ORB is not available in this "

@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.ServerContext;
@@ -154,7 +154,7 @@ public class TransactionServiceProperties {
                     int jtsServerId = DEFAULT_SERVER_ID; // default value
 
                     if (isORBAvailable) {
-                        jtsServerId = serviceLocator.<GlassFishORBHelper>getService(GlassFishORBHelper.class).getORBInitialPort();
+                        jtsServerId = serviceLocator.getService(GlassFishORBLocator.class).getORBInitialPort();
                         if (jtsServerId == 0) {
                             // XXX Can this ever happen?
                             jtsServerId = DEFAULT_SERVER_ID; // default value

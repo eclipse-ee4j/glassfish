@@ -17,11 +17,6 @@ package org.glassfish.main.jnosql.nosql.metadata;
 
 import jakarta.annotation.PostConstruct;
 
-import org.eclipse.jnosql.mapping.metadata.ClassInformationNotFoundException;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
-import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
-
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +26,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.jnosql.mapping.metadata.ClassConverter;
+import org.eclipse.jnosql.mapping.metadata.ClassInformationNotFoundException;
+import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
+import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
+import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionClassConverter;
 
 /**

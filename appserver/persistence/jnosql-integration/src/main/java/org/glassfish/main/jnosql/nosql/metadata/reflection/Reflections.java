@@ -17,15 +17,12 @@ package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.nosql.Column;
-
+import jakarta.nosql.DiscriminatorColumn;
 import jakarta.nosql.DiscriminatorValue;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
-
-import jakarta.nosql.DiscriminatorColumn;
 import jakarta.nosql.Inheritance;
 import jakarta.nosql.MappedSuperclass;
-import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -42,6 +39,8 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 
 import static java.util.Objects.requireNonNull;
 

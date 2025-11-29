@@ -15,11 +15,10 @@
 package org.glassfish.main.jnosql.nosql;
 
 
-import org.eclipse.jnosql.mapping.core.Converters;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-
 import jakarta.inject.Inject;
 
+import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 
 /**

@@ -15,15 +15,15 @@
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
 
-import org.eclipse.jnosql.mapping.metadata.ConstructorMetadata;
-import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
-import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.eclipse.jnosql.mapping.metadata.ConstructorMetadata;
+import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
+import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;

@@ -14,11 +14,11 @@
  */
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
-import org.eclipse.jnosql.mapping.metadata.ConstructorMetadata;
-import org.eclipse.jnosql.mapping.metadata.ParameterMetaData;
-
 import java.lang.reflect.Constructor;
 import java.util.List;
+
+import org.eclipse.jnosql.mapping.metadata.ConstructorMetadata;
+import org.eclipse.jnosql.mapping.metadata.ParameterMetaData;
 record DefaultConstructorMetadata(Constructor<?> constructor,
                                   List<ParameterMetaData> parameters) implements ConstructorMetadata {
 

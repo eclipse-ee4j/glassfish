@@ -24,9 +24,10 @@ import java.util.Set;
 
 import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.jakartapersistence.mapping.metadata.JakartaPersistenceClassScanner;
-import org.glassfish.api.deployment.ApplicationPersistenceInfo;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
+import org.glassfish.persistence.jpa.JPADeployer;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -48,8 +49,9 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
         if (deploymentContext != null) {
             Boolean enabled = deploymentContext.getTransientAppMetaData(JPA_DATA_ENABLED_META_DATA_KEY, Boolean.class);
             if (enabled == null) {
-                ApplicationPersistenceInfo persistenceInfo = deploymentContext.getModuleMetaData(ApplicationPersistenceInfo.class);
-                enabled = !persistenceInfo.getEntityManagerFactories().isEmpty();
+                ApplicationInfo appInfo = deploymentContext.getModuleMetaData(ApplicationInfo.class);
+                final JPADeployer jpaDeployer = getJPADeployer();
+                enabled = !jpaDeployer.getEntityManagerFactories(appInfo).isEmpty();
                 deploymentContext.addTransientAppMetaData(JPA_DATA_ENABLED_META_DATA_KEY, enabled);
             }
             return enabled;

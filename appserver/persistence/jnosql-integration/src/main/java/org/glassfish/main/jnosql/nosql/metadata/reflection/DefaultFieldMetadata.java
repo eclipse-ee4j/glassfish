@@ -16,12 +16,13 @@ package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
 
 import jakarta.nosql.AttributeConverter;
-import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 /**
  * Class that represents {@link FieldMetadata} a default field

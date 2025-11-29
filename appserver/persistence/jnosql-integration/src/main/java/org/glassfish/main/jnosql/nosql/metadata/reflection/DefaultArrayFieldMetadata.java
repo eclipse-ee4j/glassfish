@@ -17,10 +17,6 @@ package org.glassfish.main.jnosql.nosql.metadata.reflection;
 import jakarta.nosql.AttributeConverter;
 import jakarta.nosql.Embeddable;
 import jakarta.nosql.Entity;
-import org.eclipse.jnosql.communication.TypeReference;
-import org.eclipse.jnosql.communication.Value;
-import org.eclipse.jnosql.mapping.metadata.ArrayFieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -29,6 +25,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import org.eclipse.jnosql.communication.TypeReference;
+import org.eclipse.jnosql.communication.Value;
+import org.eclipse.jnosql.mapping.metadata.ArrayFieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 final class DefaultArrayFieldMetadata extends AbstractFieldMetadata implements ArrayFieldMetadata {
 

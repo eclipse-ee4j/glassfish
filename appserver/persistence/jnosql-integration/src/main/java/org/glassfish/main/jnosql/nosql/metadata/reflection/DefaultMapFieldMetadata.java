@@ -17,10 +17,6 @@ package org.glassfish.main.jnosql.nosql.metadata.reflection;
 import jakarta.nosql.AttributeConverter;
 import jakarta.nosql.Embeddable;
 import jakarta.nosql.Entity;
-import org.eclipse.jnosql.communication.TypeSupplier;
-import org.eclipse.jnosql.communication.Value;
-import org.eclipse.jnosql.mapping.metadata.MapFieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -29,12 +25,17 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Objects;
 
+import org.eclipse.jnosql.communication.TypeSupplier;
+import org.eclipse.jnosql.communication.Value;
+import org.eclipse.jnosql.mapping.metadata.MapFieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
+
 final class DefaultMapFieldMetadata extends AbstractFieldMetadata implements MapFieldMetadata {
 
     private final TypeSupplier<?> typeSupplier;
 
     private final Class<?> keyType;
-    
+
     private final Class<?> valueType;
 
     private final boolean embeddableField;

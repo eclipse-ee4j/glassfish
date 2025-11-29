@@ -33,6 +33,7 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -512,6 +513,19 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                 applicationRegistry.get(deployCommandParameters.name),
                 persistenceUnitLoader.getEntityManagerFactory());
         }
+    }
+
+    /**
+     * Get read-only list of EMFs for persistence units defined in application represented by {@code applicationInfo}
+     * @param applicationInfo Identifies the application
+     * @return Read-only list of EMFs
+     */
+    public List<EntityManagerFactory> getEntityManagerFactories(ApplicationInfo applicationInfo) {
+        @SuppressWarnings("unchecked")
+        List<EntityManagerFactory> emfsCreatedForThisApp = applicationInfo.getTransientAppMetaData(ENTITY_MANAGER_FACTORY_KEY, List.class);
+        return emfsCreatedForThisApp != null
+                ? Collections.unmodifiableList(emfsCreatedForThisApp)
+                : List.of();
     }
 
     /**

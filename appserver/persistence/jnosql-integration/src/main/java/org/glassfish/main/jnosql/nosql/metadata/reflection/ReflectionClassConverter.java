@@ -15,12 +15,6 @@
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
 import jakarta.nosql.Convert;
-import org.eclipse.jnosql.mapping.metadata.ClassConverter;
-import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
-import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.CollectionFieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -31,6 +25,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import org.eclipse.jnosql.mapping.metadata.ClassConverter;
+import org.eclipse.jnosql.mapping.metadata.CollectionFieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
+import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.collectingAndThen;

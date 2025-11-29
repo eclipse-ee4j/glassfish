@@ -15,14 +15,14 @@
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.jnosql.mapping.metadata.ConstructorMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
 import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 

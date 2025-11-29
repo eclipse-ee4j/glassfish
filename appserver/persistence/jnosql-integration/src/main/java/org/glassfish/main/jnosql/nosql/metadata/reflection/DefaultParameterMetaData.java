@@ -15,11 +15,12 @@
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
 import jakarta.nosql.AttributeConverter;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
-import org.eclipse.jnosql.mapping.metadata.ParameterMetaData;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import org.eclipse.jnosql.mapping.metadata.MappingType;
+import org.eclipse.jnosql.mapping.metadata.ParameterMetaData;
 
 class DefaultParameterMetaData implements ParameterMetaData {
 

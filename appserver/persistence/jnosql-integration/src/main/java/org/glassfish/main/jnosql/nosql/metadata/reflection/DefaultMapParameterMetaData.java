@@ -17,13 +17,14 @@ package org.glassfish.main.jnosql.nosql.metadata.reflection;
 import jakarta.nosql.AttributeConverter;
 import jakarta.nosql.Embeddable;
 import jakarta.nosql.Entity;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+
 import org.eclipse.jnosql.communication.TypeSupplier;
 import org.eclipse.jnosql.communication.Value;
 import org.eclipse.jnosql.mapping.metadata.MapParameterMetaData;
 import org.eclipse.jnosql.mapping.metadata.MappingType;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 
 class DefaultMapParameterMetaData extends DefaultParameterMetaData implements MapParameterMetaData {
 

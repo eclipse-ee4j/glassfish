@@ -14,19 +14,20 @@
  */
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
+import jakarta.nosql.AttributeConverter;
 import jakarta.nosql.Embeddable;
 import jakarta.nosql.Entity;
-import org.eclipse.jnosql.communication.TypeSupplier;
-import jakarta.nosql.AttributeConverter;
-import org.eclipse.jnosql.mapping.metadata.CollectionSupplier;
-import org.eclipse.jnosql.mapping.metadata.CollectionParameterMetaData;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 import java.util.ServiceLoader;
+
+import org.eclipse.jnosql.communication.TypeSupplier;
+import org.eclipse.jnosql.mapping.metadata.CollectionParameterMetaData;
+import org.eclipse.jnosql.mapping.metadata.CollectionSupplier;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 class DefaultCollectionParameterMetaData extends DefaultParameterMetaData implements CollectionParameterMetaData {
 

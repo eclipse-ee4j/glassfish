@@ -14,11 +14,8 @@
  */
 package org.glassfish.main.jnosql.nosql.metadata.reflection;
 
-import jakarta.nosql.NoSQLException;
-import org.eclipse.jnosql.communication.Value;
 import jakarta.nosql.AttributeConverter;
-import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
+import jakarta.nosql.NoSQLException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -27,6 +24,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.eclipse.jnosql.communication.Value;
+import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 /**
  * Base class to all {@link FieldMetadata}

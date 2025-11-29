@@ -41,6 +41,7 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
+import org.glassfish.persistence.jpa.JPADeployer;
 
 /**
  *
@@ -85,13 +86,19 @@ abstract public class BaseGlassFishClassScanner {
 
     protected DeploymentContext getDeploymentContext() {
         final ServiceLocator locator = Globals.getDefaultHabitat();
-        DeploymentContext deploymentContext
-                = locator != null
+        return locator != null
                 ? locator
                         .getService(Deployment.class)
                         .getCurrentDeploymentContext()
                 : null;
-        return deploymentContext;
+    }
+
+    protected JPADeployer getJPADeployer() {
+        final ServiceLocator locator = Globals.getDefaultHabitat();
+        return locator != null
+                ? locator
+                        .getService(JPADeployer.class)
+                : null;
     }
 
     protected Set<Class<?>> findClassesWithAnnotation(Class<?> annotation) {

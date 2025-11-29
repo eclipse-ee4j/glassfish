@@ -17,12 +17,13 @@ package org.glassfish.main.jnosql.nosql.metadata.reflection;
 import jakarta.nosql.AttributeConverter;
 import jakarta.nosql.Embeddable;
 import jakarta.nosql.Entity;
-import org.eclipse.jnosql.mapping.metadata.ArrayParameterMetaData;
-import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.util.Collection;
+
+import org.eclipse.jnosql.mapping.metadata.ArrayParameterMetaData;
+import org.eclipse.jnosql.mapping.metadata.MappingType;
 
 class DefaultArrayParameterMetaData extends DefaultParameterMetaData implements ArrayParameterMetaData {
 

@@ -118,8 +118,8 @@ public class GlassFishJakartaPersistenceClassScannerTest {
                 return new MockInstance<U>() {
                     @Override
                     public U get() {
-                        if (subtype.isAssignableFrom(ApplicationContext.class)) {
-                            return subtype.cast(new ApplicationContext(types));
+                        if (subtype.isAssignableFrom(JakartaDataApplicationContext.class)) {
+                            return subtype.cast(new JakartaDataApplicationContext(types));
                         }
                         throw new UnsupportedOperationException("Not supported yet.");
                     }

@@ -79,7 +79,7 @@ abstract public class BaseGlassFishClassScanner {
             return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
         } else {
             // After deployment, we retrieve types stored in the app context defined in the CDI extension
-            final ApplicationContext appContext = CDI.current().select(ApplicationContext.class).get();
+            final JakartaDataApplicationContext appContext = CDI.current().select(JakartaDataApplicationContext.class).get();
             return appContext.getTypes();
         }
     }

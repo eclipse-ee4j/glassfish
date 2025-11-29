@@ -21,8 +21,10 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
@@ -34,13 +36,17 @@ import org.glassfish.main.jnosql.nosql.metadata.NoSqlEntitiesMetadata;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
 /**
- * Registers JNoSQL CDI beans that are needed for JNoSQL but not for Jakarta Data over JPA
+ * Registers JNoSQL CDI beans that are needed for JNoSQL but not for Jakarta
+ * Data over JPA
  *
- * TODO - veto JNoSQL CDI beans provided by the app if they conflict with beans registered by this extension.
- * If delegation is disabled, veto our beans instead
+ * TODO - veto JNoSQL CDI beans provided by the app if they conflict with beans
+ * registered by this extension. If delegation is disabled, veto our beans
+ * instead
+ *
  * @author Ondro Mihalyi
  */
 public class JNoSqlIntegrationExtension implements Extension {
+
     private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
 
     /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
@@ -48,16 +54,29 @@ public class JNoSqlIntegrationExtension implements Extension {
      */
     void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
-        addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager)
-                .types(EntitiesMetadata.class)
-                .scope(ApplicationScoped.class);
+        defineJNoSqlBeans(afterBeanDiscovery, beanManager);
+    }
 
-        addBean(GlassFishEntityConverter.class, afterBeanDiscovery, beanManager)
-                .types(EntityConverter.class)
-                .scope(ApplicationScoped.class);
+    /*
+     * Exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
+     * Exposes them as alternatives so that they override any beans defined in the app
+     */
+    private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
-        addBean(EventPersistManager.class, afterBeanDiscovery, beanManager)
-                .scope(ApplicationScoped.class);
+        List<BeanConfigurator<?>> configurations = List.of(
+                addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager)
+                        .types(EntitiesMetadata.class),
+                addBean(GlassFishEntityConverter.class, afterBeanDiscovery, beanManager)
+                        .types(EntityConverter.class),
+                addBean(EventPersistManager.class, afterBeanDiscovery, beanManager)
+        );
+        for (BeanConfigurator<?> configurator : configurations) {
+            configurator
+                    .scope(ApplicationScoped.class)
+                    // enable as alternative to override beans in case they are added as application libraries
+                    .alternative(true)
+                    .priority(100);
+        }
     }
 
 }

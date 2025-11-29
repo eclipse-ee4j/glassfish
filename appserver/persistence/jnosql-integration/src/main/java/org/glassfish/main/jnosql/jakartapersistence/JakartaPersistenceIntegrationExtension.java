@@ -23,8 +23,10 @@ import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
@@ -50,9 +52,8 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
  * that it can be disabled independent of other modules. Then it's probably also
  * good to move CDI-JPA integration from weld-integration into the jpa-container
  * TODO - rename to jakarta-data container, and implement a container, following
- * the JPA container in the jpa-container module
- * TODO - veto JNoSQL CDI beans provided by the app if they conflict with beans registered by this extension.
- * If delegation is disabled, veto our beans instead
+ * the JPA container in the jpa-container module TODO - If delegation is
+ * disabled, do not override JNoSQL beans if they are defined in the app
  *
  * @author Ondro Mihalyi
  */
@@ -68,11 +69,12 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
 
         final Types types = getTypes();
 
-        afterBeanDiscovery.<ApplicationContext>addBean()
-                .types(ApplicationContext.class)
+        afterBeanDiscovery.<JakartaDataApplicationContext>addBean()
+                .types(JakartaDataApplicationContext.class)
                 .scope(Dependent.class) // Dependent scope is OK because the state is provided via constructor
-                .createWith(ctx -> new ApplicationContext(types));
+                .createWith(ctx -> new JakartaDataApplicationContext(types));
 
+        // is this needed? Isn't it loaded by service loader?
         addBean(GlassFishJakartaPersistenceClassScanner.class, afterBeanDiscovery, beanManager)
                 .types(ClassScanner.class, GlassFishJakartaPersistenceClassScanner.class)
                 .scope(ApplicationScoped.class);
@@ -87,7 +89,10 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
     }
 
-    // exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
+    /*
+     * Exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
+     * Exposes them as alternatives so that they override any beans defined in the app
+     */
     private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
         /* This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
            In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
@@ -103,26 +108,22 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                     .createWith(ctx -> null);
         }
 
-        addBean(Converters.class, afterBeanDiscovery, beanManager)
-                .scope(ApplicationScoped.class);
+        List<BeanConfigurator<?>> configurations = List.of(
+                addBean(Converters.class, afterBeanDiscovery, beanManager),
+                addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager),
+                addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager),
+                addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager),
+                addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager),
+                addBean(PersistenceUnitCacheProvider.class, afterBeanDiscovery, beanManager)
+        );
 
-        addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager)
-                .scope(ApplicationScoped.class);
-
-        addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager)
-                .scope(ApplicationScoped.class);
-
-        addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
-                .types(EnsureTransactionInterceptor.class)
-                .alternative(true)
-                .priority(Interceptor.Priority.PLATFORM_BEFORE)
-                .scope(ApplicationScoped.class);
-
-        addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager)
-                .scope(ApplicationScoped.class);
-
-        addBean(PersistenceUnitCacheProvider.class, afterBeanDiscovery, beanManager)
-                .scope(ApplicationScoped.class);
+        for (BeanConfigurator<?> configurator : configurations) {
+            configurator
+                    .scope(ApplicationScoped.class)
+                    // enable as alternative to override beans in case they are added as application libraries
+                    .alternative(true)
+                    .priority(100);
+        }
     }
 
     private static Types getTypes() {

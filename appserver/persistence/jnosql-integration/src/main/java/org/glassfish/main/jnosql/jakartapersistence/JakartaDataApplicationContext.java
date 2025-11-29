@@ -23,11 +23,11 @@ import org.glassfish.hk2.classmodel.reflect.Types;
  *
  * @author Ondro Mihalyi
  */
-public class ApplicationContext {
+public class JakartaDataApplicationContext {
 
     final Types types;
 
-    public ApplicationContext(Types types) {
+    public JakartaDataApplicationContext(Types types) {
         this.types = types;
     }
 

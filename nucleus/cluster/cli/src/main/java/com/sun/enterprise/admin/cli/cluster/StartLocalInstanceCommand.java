@@ -165,7 +165,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand implem
     @Override
     public final GFLauncher createLauncher() throws GFLauncherException, MiniXmlParserException, CommandException {
         final GFLauncher gfLauncher = GFLauncherFactory.getInstance(getType());
-        this.launchParameters = gfLauncher.getInfo();
+        this.launchParameters = gfLauncher.getParameters();
         launchParameters.setInstanceName(instanceName);
         launchParameters.setInstanceRootDir(instanceDir);
         launchParameters.setVerbose(verbose);

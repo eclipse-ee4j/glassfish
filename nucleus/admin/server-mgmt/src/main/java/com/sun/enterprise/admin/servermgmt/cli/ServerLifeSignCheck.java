@@ -105,4 +105,12 @@ public class ServerLifeSignCheck {
     public List<HostAndPort> getCustomEndpoints() {
         return customEndpoints;
     }
+
+    /**
+     * @param wasError
+     * @return if the output should be printed or not.
+     */
+    public boolean isPrintServerOutput(boolean wasError) {
+        return getPrintServerOutput() == Boolean.TRUE || (wasError && getPrintServerOutput() == null);
+    }
 }

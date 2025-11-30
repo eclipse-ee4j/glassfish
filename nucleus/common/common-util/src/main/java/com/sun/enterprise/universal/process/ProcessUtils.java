@@ -204,7 +204,7 @@ public final class ProcessUtils {
         final boolean result = action.get();
         DotPrinter.stopWaiting(dotPrinter);
         final long millis = Duration.between(start, Instant.now()).toMillis();
-        LOG.log(result ? DEBUG : WARNING, () -> "Waiting finished after " + millis + " ms. Endpoint " + endpoint
+        LOG.log(DEBUG, () -> "Waiting finished after " + millis + " ms. Endpoint " + endpoint
             + (result ? " stopped" : " did not stop") + " listening.");
         return result;
     }
@@ -302,7 +302,7 @@ public final class ProcessUtils {
         final Boolean result = action.get();
         DotPrinter.stopWaiting(dotPrinter);
         final long millis = Duration.between(start, Instant.now()).toMillis();
-        LOG.log(result ? DEBUG : INFO,
+        LOG.log(DEBUG,
             () -> "Waiting finished after " + millis + " ms. Action " + (result ? "succeeded." : "timed out."));
         return result;
     }
@@ -394,7 +394,6 @@ public final class ProcessUtils {
                     System.out.flush();
                 }
             } catch (InterruptedException e) {
-                System.out.println();
                 Thread.currentThread().interrupt();
             }
         }

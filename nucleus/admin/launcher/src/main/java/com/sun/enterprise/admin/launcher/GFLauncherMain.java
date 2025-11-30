@@ -43,7 +43,7 @@ public class GFLauncherMain {
     public static void main(String[] args) {
         try {
             GFLauncher launcher = GFLauncherFactory.getInstance(DAS);
-            launcher.getInfo().addArgs(args);
+            launcher.getParameters().addArgs(args);
             launcher.setup();
             launcher.launch();
         } catch (GFLauncherException | MiniXmlParserException ex) {

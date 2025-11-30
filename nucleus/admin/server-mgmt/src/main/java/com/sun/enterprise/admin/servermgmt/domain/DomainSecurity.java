@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,8 +43,7 @@ public class DomainSecurity extends MasterPasswordFileManager {
      * @param password Password.
      */
     void processAdminKeyFile(File keyFile, String user, String password, final String[] adminUserGroups) throws IOException {
-        final String keyFilePath = keyFile.getAbsolutePath();
-        final FileRealmHelper fileRealm = new FileRealmHelper(keyFilePath);
+        final FileRealmHelper fileRealm = new FileRealmHelper(keyFile.getAbsoluteFile());
         final String[] group = adminUserGroups;
         fileRealm.addUser(user, password.toCharArray(), group);
         fileRealm.persist();

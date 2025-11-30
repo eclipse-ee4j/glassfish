@@ -10,6 +10,7 @@ SYNOPSIS
         [--drop-interrupted-commands[=<drop-interrupted-commands(default:false)>]]
         [--dry-run|-n[=<dry-run(default:false)>]]
         [--help|-?]
+        [--server-output|-o=<server-output(default:false)>]]
         [--suspend|-s[=<suspend(default:false)>]]
         [--timeout <timeout>]
         [--upgrade[=<upgrade(default:false)>]]
@@ -97,6 +98,18 @@ OPTIONS
        --help, -?
            Displays the help text for the subcommand.
 
+       --server-output, -o
+           Specifies if the command should or should not print the server output.
+           If not set, server prints the output just when the command failed.
+
+           Possible values are as follows:
+
+           true
+              The output of the server startup will be printed after the command finishes.
+
+           false
+               The output of the server startup will not be printed.
+
        --suspend, -s
            Specifies whether the domain is started with Java Platform Debugger
            Architecture (JPDA) debugging enabled and suspends the newly started VM
@@ -106,18 +119,18 @@ OPTIONS
 
            Possible values are as follows:
 
-          true
+           true
               The instance is started with JPDA debugging enabled and a suspend policy
               of `SUSPEND_ALL`. The port number for JPDA debugging is displayed.
 
-          false
+           false
               The instance is started with JPDA debugging disabled (default).
 
        --timeout
-            Specifies timeout in seconds to evaluate the expected result.
-            If the timeout is exceeded, the command fails - however it does
-            not mean it did not make any changes. The domain status is unknown
-            in such case.
+           Specifies timeout in seconds to evaluate the expected result.
+           If the timeout is exceeded, the command fails - however it does
+           not mean it did not make any changes. The domain status is unknown
+           in such case.
 
        --upgrade
            Specifies whether the configuration of the domain administration

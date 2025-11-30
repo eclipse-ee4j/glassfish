@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
+import com.sun.enterprise.admin.servermgmt.util.CommandAction;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
@@ -23,13 +24,12 @@ import java.io.File;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.function.Supplier;
 
 import org.glassfish.api.admin.CommandException;
 
-import static java.lang.System.Logger.Level.DEBUG;
+import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
 
 public class ServerLifeSignChecker {
     private static final Logger LOG = System.getLogger(ServerLifeSignChecker.class.getName());
@@ -55,41 +55,47 @@ public class ServerLifeSignChecker {
      * @param process
      * @param timeout
      * @return true if we can make the final decision.
+     * @throws CommandException
      */
-    public ServerLifeSigns watchStartup(GlassFishProcess process, Duration timeout) {
+    public ServerLifeSigns watchStartup(GlassFishProcess process, Duration timeout) throws CommandException {
         final ServerLifeSigns signs = new ServerLifeSigns();
-        if (timeout != null && timeout.isNegative()) {
-            signs.situationReport = createSituationReport(process);
-            return createTimeoutReport(signs);
-        }
-        if (!checks.isPidFile() && !checks.isProcessAlive() && !checks.isAdminEndpoint() && !checks.isCustomEndpoints()) {
-            signs.summary = "All checks of the server state were disabled. Assuming the server is running.";
-            signs.situationReport = createSituationReport(process);
-            signs.suggestion = getSuggestions();
-            return signs;
-        }
-        final boolean wasTimeout = !waitFor(process, timeout);
-        signs.situationReport = createSituationReport(process);
-        if (wasTimeout) {
-            return createTimeoutReport(signs);
-        }
-        if (process.isAlive()) {
-            signs.summary = "Successfully started the " + checks.getServerTitleAndName() + ".";
-            return signs;
-        }
-        signs.error = true;
-        signs.suggestion = getSuggestions();
-        final Integer exitCode = process.exitCode();
-        if (exitCode == null) {
-            signs.summary = "The process died.";
-        } else {
-            signs.summary = "The startup command return code was " + exitCode + " which means that the start ";
-            if (exitCode == 0) {
-                signs.summary += "succeded, however later the process stopped for some reason.";
-            } else {
-                signs.summary += "failed.";
+        final CommandAction action = ()  -> {
+            if (timeout != null && timeout.isNegative()) {
+                signs.situationReport = createSituationReport(process);
+                createTimeoutReport(signs);
+                return;
             }
-        }
+            if (!checks.isPidFile() && !checks.isProcessAlive() && !checks.isAdminEndpoint() && !checks.isCustomEndpoints()) {
+                signs.summary = "All checks of the server state were disabled. Assuming the server is running.";
+                signs.situationReport = createSituationReport(process);
+                signs.suggestion = getSuggestions();
+                return;
+            }
+            final boolean wasTimeout = !waitFor(process, timeout);
+            signs.situationReport = createSituationReport(process);
+            if (wasTimeout) {
+                createTimeoutReport(signs);
+                return;
+            }
+            if (process.isAlive()) {
+                signs.summary = "Successfully started the " + checks.getServerTitleAndName() + ".";
+                return;
+            }
+            signs.error = true;
+            signs.suggestion = getSuggestions();
+            final Integer exitCode = process.exitCode();
+            if (exitCode == null) {
+                signs.summary = "The process died.";
+            } else {
+                signs.summary = "The startup command return code was " + exitCode + " which means that the start ";
+                if (exitCode == 0) {
+                    signs.summary += "succeded, however later the process stopped for some reason.";
+                } else {
+                    signs.summary += "failed.";
+                }
+            }
+        };
+        step("Waiting until start of " + checks.getServerTitleAndName() + " completes.", timeout, action);
         return signs;
     }
 
@@ -178,7 +184,8 @@ public class ServerLifeSignChecker {
     private void appendEndpoints(List<HostAndPort> endpoints, final StringBuilder report) {
         for (HostAndPort endpoint : endpoints) {
             final boolean listening = ProcessUtils.isListening(endpoint);
-            report.append("\n    ").append(endpoint.getHost()).append(':').append(endpoint.getPort());
+            report.append("\n    ").append(endpoint.isSecure() ? "https://" : "http://").append(endpoint.getHost())
+                .append(':').append(endpoint.getPort());
             report.append(' ').append(listening ? "is" : "is not").append(" reachable.");
         }
     }
@@ -217,25 +224,6 @@ public class ServerLifeSignChecker {
         }
         return true;
     }
-
-    public static Duration step(String message, Duration timeout, Action action) throws CommandException {
-        if (timeout != null && timeout.isNegative()) {
-            return timeout;
-        }
-        if (message != null) {
-            LOG.log(DEBUG, message);
-        }
-        Instant start = Instant.now();
-        action.action();
-        Duration stopDuration = Duration.between(start, Instant.now());
-        return timeout == null ? null : timeout.minus(stopDuration);
-    }
-
-    @FunctionalInterface
-    public interface Action {
-        void action() throws CommandException;
-    }
-
 
     public static final class ServerLifeSigns {
         private boolean error;

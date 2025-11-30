@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,8 @@
 package com.sun.enterprise.admin.launcher;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -79,10 +81,6 @@ public class GFLauncherLogger {
     @LogMessageInfo(message = "Could not locate the flashlight agent here: {0}", comment = "catastrophic error", cause = "see message", action = "Find the agent file.", level = "SEVERE")
     public static final String NO_FLASHLIGHT_AGENT = "NCLS-GFLAUNCHER-00003";
 
-    @LogMessageInfo(message = "Will copy glassfish/lib/templates/server.policy file to domain before upgrading.", comment = "Upgrade Information", level = "INFO")
-
-    public static final String copy_server_policy = "NCLS-GFLAUNCHER-00004";
-
     @LogMessageInfo(message = "JVM invocation command line:\n{0}", comment = "Routine Information", cause = "NA", action = "NA", level = "INFO")
     public static final String COMMAND_LINE = "NCLS-GFLAUNCHER-00005";
 
@@ -122,12 +120,13 @@ public class GFLauncherLogger {
      * @param logFile The logfile
      * @throws GFLauncherException if the info object has not been setup
      */
-    static void addLogFileHandler(String logFile) throws GFLauncherException {
+    static void addLogFileHandler(Path logFile) throws GFLauncherException {
         try {
             if (logFile == null || logfileHandler != null) {
                 return;
             }
-            logfileHandler = new FileHandler(logFile, true);
+            Files.createDirectories(logFile.getParent());
+            logfileHandler = new FileHandler(logFile.toString(), true);
             logfileHandler.setFormatter(new ODLLogFormatter());
             logfileHandler.setLevel(INFO);
             LOG.addHandler(logfileHandler);

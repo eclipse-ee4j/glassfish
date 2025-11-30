@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -107,13 +107,12 @@ public final class FileRealmHelper {
      * @param keyfile Full path to the keyfile to read for user data.
      * @exception IOException If the configuration parameters identify a corrupt keyfile
      */
-    public FileRealmHelper(String keyfileName) throws IOException {
-        keyfile = new File(keyfileName);
-
+    public FileRealmHelper(File keyfile) throws IOException {
+        this.keyfile = keyfile;
         // if not existent, try to create
         if (!keyfile.exists()) {
             if (keyfile.createNewFile() == false) {
-                throw new IOException(sm.getString("filerealm.badwrite", keyfileName));
+                throw new IOException(sm.getString("filerealm.badwrite", keyfile));
             }
         }
 

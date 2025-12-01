@@ -14,7 +14,6 @@
  */
 package org.glassfish.main.jnosql.nosql.metadata;
 
-
 import jakarta.annotation.PostConstruct;
 
 import java.util.Locale;
@@ -32,21 +31,22 @@ import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionClassConverter;
 
+
 /**
- * The default implementation of {@link EntityMetadata}.
- * It's storage the class information in a {@link ConcurrentHashMap}
+ * The default implementation of {@link EntityMetadata}. It's storage the class
+ * information in a {@link ConcurrentHashMap}
  */
 public class NoSqlEntitiesMetadata implements EntitiesMetadata {
 
     private final Map<String, EntityMetadata> mappings;
 
-    private final  Map<Class<?>, EntityMetadata> classes;
+    private final Map<Class<?>, EntityMetadata> classes;
 
-    private final  Map<String, EntityMetadata> findBySimpleName;
+    private final Map<String, EntityMetadata> findBySimpleName;
 
-    private final  Map<String, EntityMetadata> findByClassName;
+    private final Map<String, EntityMetadata> findByClassName;
 
-    private final  Map<Class<?>, Map<String, InheritanceMetadata>> findDiscriminatorByParent;
+    private final Map<Class<?>, Map<String, InheritanceMetadata>> findDiscriminatorByParent;
 
     public NoSqlEntitiesMetadata() {
         this.mappings = new ConcurrentHashMap<>();
@@ -64,7 +64,7 @@ public class NoSqlEntitiesMetadata implements EntitiesMetadata {
         ClassConverter converter = new ReflectionClassConverter();
         EntityMetadata metadata = converter.apply(type);
         if (metadata.hasEntityName()) {
-            mappings.put(type.getName().toUpperCase(Locale.US), metadata);
+            mappings.put(metadata.name().toUpperCase(Locale.US), metadata);
         }
         this.findBySimpleName.put(type.getSimpleName(), metadata);
         this.findByClassName.put(type.getName(), metadata);
@@ -112,8 +112,8 @@ public class NoSqlEntitiesMetadata implements EntitiesMetadata {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{"
-                + "mappings-size=" + mappings.size() +
-                ", classes=" + classes +
-                '}';
+                + "mappings-size=" + mappings.size()
+                + ", classes=" + classes
+                + '}';
     }
 }

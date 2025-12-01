@@ -24,6 +24,7 @@ import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArch
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import ee.jakarta.tck.data.standalone.entity.EntityTests;
@@ -33,6 +34,8 @@ import ee.jakarta.tck.data.standalone.entity.EntityTests;
  * @author Ondro Mihalyi
  */
 public class JakartaNoSqlProcessor implements ApplicationArchiveProcessor {
+
+    public static final String MP_CONFIG_CONTENT_KEY = "microprofile-config";
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {
@@ -49,6 +52,10 @@ public class JakartaNoSqlProcessor implements ApplicationArchiveProcessor {
                           com.sun.tdk.signaturetest.core.Log.class.getPackage(),
                           CommandLineParserException.class.getPackage()
                       );
+            final String mpConfigContent = System.getProperty(MP_CONFIG_CONTENT_KEY);
+            if (mpConfigContent != null) {
+                webArchive.addAsResource(new StringAsset(mpConfigContent), "META-INF/microprofile-config.properties");
+            }
             if (Boolean.getBoolean("org.glassfish.data.tck.global-transaction")) {
                  webArchive.add(new ClassLoaderAsset("in-container/META-INF/services/org.junit.jupiter.api.extension.Extension"),
                           "WEB-INF/classes/" + "META-INF/services/org.junit.jupiter.api.extension.Extension");

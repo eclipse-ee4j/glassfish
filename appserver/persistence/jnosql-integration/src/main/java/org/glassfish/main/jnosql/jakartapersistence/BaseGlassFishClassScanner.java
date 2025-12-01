@@ -19,7 +19,6 @@ import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.DataRepository;
 import jakarta.data.repository.Repository;
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.Entity;
 
 import java.util.Collection;
@@ -30,18 +29,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
-import org.glassfish.hk2.classmodel.reflect.ExtensibleType;
 import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
 import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
-import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
+import org.glassfish.main.jnosql.hk2types.Hk2TypesUtil;
 import org.glassfish.persistence.jpa.JPADeployer;
+
+import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
 
 /**
  *
@@ -70,29 +68,6 @@ abstract public class BaseGlassFishClassScanner {
         return true;
     }
 
-    /* TODO: Optimization - cache all sets returned from methods into the ApplicationContext or deployment context */
-    protected Types getTypes() {
-        DeploymentContext deploymentContext = getDeploymentContext();
-        if (deploymentContext != null) {
-            // During deployment, we can retrieve Types from the context.
-            // We can't access CDI context at this point as this class is not in a bean archive.
-            return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
-        } else {
-            // After deployment, we retrieve types stored in the app context defined in the CDI extension
-            final JakartaDataApplicationContext appContext = CDI.current().select(JakartaDataApplicationContext.class).get();
-            return appContext.getTypes();
-        }
-    }
-
-    protected DeploymentContext getDeploymentContext() {
-        final ServiceLocator locator = Globals.getDefaultHabitat();
-        return locator != null
-                ? locator
-                        .getService(Deployment.class)
-                        .getCurrentDeploymentContext()
-                : null;
-    }
-
     protected JPADeployer getJPADeployer() {
         final ServiceLocator locator = Globals.getDefaultHabitat();
         return locator != null
@@ -111,20 +86,8 @@ abstract public class BaseGlassFishClassScanner {
                 .filter(ClassModel.class::isInstance)
                 .filter(type -> type.getAnnotation(annotationClassName) != null)
                 .map(ClassModel.class::cast)
-                .map(this::typeModelToClass)
+                .map(Hk2TypesUtil::typeModelToClass)
                 .collect(Collectors.toSet());
-    }
-
-    private Class<?> typeModelToClass(ExtensibleType<?> type) throws RuntimeException {
-        return classForName(type.getName());
-    }
-
-    private Class<?> classForName(String name) {
-        try {
-            return Thread.currentThread().getContextClassLoader().loadClass(name);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected Stream<Class<?>> repositoriesStream() {
@@ -155,7 +118,7 @@ abstract public class BaseGlassFishClassScanner {
                 .filter(this::doesNotHaveUnsupportedMainEntity)
                 .filter(predicate)
                 .map(GeneralInterfaceModel::toTypeModel)
-                .map(this::typeModelToClass);
+                .map(Hk2TypesUtil::typeModelToClass);
     }
 
     private boolean doesNotHaveUnsupportedMainEntity(GeneralInterfaceModel interf) {

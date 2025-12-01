@@ -31,6 +31,7 @@ import org.glassfish.persistence.jpa.JPADeployer;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
+import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentContext;
 
 /**
  * Server global implementation of class scanner for JPA repositories. Must be stateless.
@@ -62,21 +63,21 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
     @Override
     public Set<Class<?>> entities() {
         final Set<Class<?>> result = findClassesWithAnnotation(Entity.class);
-        LOG.log(DEBUG, () -> "Found entities: " + result);
+        LOG.log(DEBUG, () -> "Found JPA entities: " + result);
         return result;
     }
 
     @Override
     public Set<Class<?>> repositories() {
         Set<Class<?>> result = repositoriesStream().collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected repository interfaces: " + result);
+        LOG.log(DEBUG, () -> "Detected JPA repository interfaces: " + result);
         return result;
     }
 
     @Override
     public Set<Class<?>> embeddables() {
         Set<Class<?>> result = findClassesWithAnnotation(Embeddable.class);
-        LOG.log(DEBUG, () -> "Detected embeddables: " + result);
+        LOG.log(DEBUG, () -> "Detected JPA embeddables: " + result);
         return result;
     }
 
@@ -91,14 +92,14 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
     @Override
     public Set<Class<?>> repositoriesStandard() {
         Set<Class<?>> result = repositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected standard repository interfaces: " + result);
+        LOG.log(DEBUG, () -> "Detected standard JPA repository interfaces: " + result);
         return result;
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
         Set<Class<?>> result = repositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected custom interfaces: " + result);
+        LOG.log(DEBUG, () -> "Detected custom JPA interfaces: " + result);
         return result;
     }
 

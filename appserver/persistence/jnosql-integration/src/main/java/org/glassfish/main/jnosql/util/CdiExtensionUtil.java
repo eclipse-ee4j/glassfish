@@ -31,6 +31,8 @@ import java.util.function.Function;
  */
 public final class CdiExtensionUtil {
 
+    public static final int INTEGRATION_BEANS_PRIORITY = 100;
+
     private CdiExtensionUtil() {
         // utility class
     }

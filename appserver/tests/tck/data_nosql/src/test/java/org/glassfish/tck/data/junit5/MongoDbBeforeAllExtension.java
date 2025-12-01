@@ -25,6 +25,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
+import static org.glassfish.tck.data.arquillian.JakartaNoSqlProcessor.MP_CONFIG_CONTENT_KEY;
+
 /**
  * Starts MongoDB docker container before all tests
  *
@@ -42,7 +44,7 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
     public void beforeAll(ExtensionContext context) throws Exception {
         mongodb.start();
         // set GlassFish system properties for the Arquillian GlassFish connector
-        System.setProperty("glassfish.systemProperties",
+        System.setProperty(MP_CONFIG_CONTENT_KEY,
                 Stream.of(
                         "jnosql.document.database=tck",
                         "jnosql.mongodb.host=" + mongodb.getHost() + ":" + mongodb.getFirstMappedPort()

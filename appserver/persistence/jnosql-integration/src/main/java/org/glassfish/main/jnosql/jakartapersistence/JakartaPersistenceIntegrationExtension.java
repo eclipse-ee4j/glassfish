@@ -42,6 +42,7 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
@@ -122,7 +123,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                     .scope(ApplicationScoped.class)
                     // enable as alternative to override beans in case they are added as application libraries
                     .alternative(true)
-                    .priority(100);
+                    .priority(CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY);
         }
     }
 

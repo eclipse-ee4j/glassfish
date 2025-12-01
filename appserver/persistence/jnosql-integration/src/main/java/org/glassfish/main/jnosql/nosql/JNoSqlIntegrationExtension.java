@@ -18,6 +18,7 @@ package org.glassfish.main.jnosql.nosql;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
@@ -27,11 +28,14 @@ import jakarta.interceptor.Interceptor;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.eclipse.jnosql.mapping.DatabaseQualifier;
+import org.eclipse.jnosql.mapping.document.DocumentTemplate;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 import org.glassfish.main.jnosql.jakartapersistence.JakartaPersistenceIntegrationExtension;
 import org.glassfish.main.jnosql.nosql.metadata.NoSqlEntitiesMetadata;
+import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
@@ -68,14 +72,17 @@ public class JNoSqlIntegrationExtension implements Extension {
                         .types(EntitiesMetadata.class),
                 addBean(GlassFishEntityConverter.class, afterBeanDiscovery, beanManager)
                         .types(EntityConverter.class),
-                addBean(EventPersistManager.class, afterBeanDiscovery, beanManager)
+                addBean(EventPersistManager.class, afterBeanDiscovery, beanManager),
+                addBean(GlassFishDocumentTemplate.class, afterBeanDiscovery, beanManager)
+                .types(DocumentTemplate.class)
+                .qualifiers(Default.Literal.INSTANCE, DatabaseQualifier.ofDocument())
         );
         for (BeanConfigurator<?> configurator : configurations) {
             configurator
                     .scope(ApplicationScoped.class)
                     // enable as alternative to override beans in case they are added as application libraries
                     .alternative(true)
-                    .priority(100);
+                    .priority(CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY);
         }
     }
 

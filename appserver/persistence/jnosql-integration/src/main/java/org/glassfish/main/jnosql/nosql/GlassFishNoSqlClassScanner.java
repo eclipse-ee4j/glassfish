@@ -25,7 +25,9 @@ import java.util.Set;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
+import org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 /**
@@ -34,7 +36,9 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
  *
  * @author Ondro Mihalyi
  */
-public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implements ClassScanner {
+public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implements ClassScanner {
+
+    private static final System.Logger LOG = System.getLogger(GlassFishJakartaPersistenceClassScanner.class.getName());
 
     @Override
     protected boolean isEnabled() {
@@ -43,18 +47,23 @@ public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implem
 
     @Override
     public Set<Class<?>> entities() {
-        return findClassesWithAnnotation(Entity.class);
+        final Set<Class<?>> result = findClassesWithAnnotation(Entity.class);
+        LOG.log(DEBUG, () -> "Found NoSql entities: " + result);
+        return result;
     }
 
     @Override
     public Set<Class<?>> repositories() {
-        return repositoriesStream()
-                .collect(toUnmodifiableSet());
+        Set<Class<?>> result = repositoriesStream().collect(toUnmodifiableSet());
+        LOG.log(DEBUG, () -> "Detected NoSql repository interfaces: " + result);
+        return result;
     }
 
     @Override
     public Set<Class<?>> embeddables() {
-        return findClassesWithAnnotation(Embeddable.class);
+        Set<Class<?>> result = findClassesWithAnnotation(Embeddable.class);
+        LOG.log(DEBUG, () -> "Detected JNoSql embeddables: " + result);
+        return result;
     }
 
     @Override
@@ -67,14 +76,16 @@ public class GlassFishNosqlClassScanner extends BaseGlassFishClassScanner implem
 
     @Override
     public Set<Class<?>> repositoriesStandard() {
-        return repositoriesStreamMatching(this::isSupportedStandardInterface)
-                .collect(toUnmodifiableSet());
+        Set<Class<?>> result = repositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
+        LOG.log(DEBUG, () -> "Detected standard NoSql repository interfaces: " + result);
+        return result;
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
-        // TOTO Return NoSQL custom repositories if they are not supported by Jakarta Persistence
-        return Set.of();
+        Set<Class<?>> result = repositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
+        LOG.log(DEBUG, () -> "Detected custom NoSql interfaces: " + result);
+        return result;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -93,12 +93,16 @@ public class JspReloadGeneratedServletIfUpdatedTest {
     private void doHttpGet(String expectedText) throws Exception {
         HttpURLConnection connection = GlassFishTestEnvironment.openConnection(8080,
             "/reload/" + JSP_FILE_NAME + ".jsp");
-        connection.setRequestMethod("GET");
-        String line = HttpParser.readResponseInputStream(connection).trim();
-        assertAll(
-            () -> assertEquals(200, connection.getResponseCode(), "Wrong response code."),
-            () -> assertEquals(expectedText, line, "Wrong response body.")
-        );
+        try {
+            connection.setRequestMethod("GET");
+            String line = HttpParser.readResponseInputStream(connection).trim();
+            assertAll(
+                () -> assertEquals(200, connection.getResponseCode(), "Wrong response code."),
+                () -> assertEquals(expectedText, line, "Wrong response body.")
+            );
+        } finally {
+            connection.disconnect();
+        }
     }
 
 

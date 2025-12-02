@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,56 +18,47 @@
 package org.glassfish.tests.applicationDispatcher;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WebTest {
 
-    private static int count = 0;
-    private static int EXPECTED_COUNT = 1;
+    private static final int EXPECTED_COUNT = 1;
 
     private String contextPath = "test";
-
-    @BeforeAll
-    public static void setup() throws IOException {
-    }
 
     @Test
     public void testWeb() throws Exception {
         goGet("localhost", 8080, "ApplicationDispatcher", contextPath+"/ServletTest");
     }
 
-    private static void goGet(String host, int port,
-                              String result, String contextPath) throws Exception {
-        try {
-            URL servlet = new URL("http://localhost:8080/test");
-            URLConnection yc = servlet.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
+
+    private static void goGet(String host, int port, String result, String contextPath) throws Exception {
+        URL servlet = new URL("http://localhost:8080/test");
+        HttpURLConnection connection = (HttpURLConnection) servlet.openConnection();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String line = null;
-            int index, lineNum=0;
+            int index, lineNum = 0;
+            int count = 0;
             while ((line = in.readLine()) != null) {
                 index = line.indexOf("::");
-                System.out.println(lineNum+": "+line);
+                System.out.println(lineNum + ": " + line);
                 if (index != -1) {
-                    String status = line.substring(index+2);
-                    if (status.equalsIgnoreCase("PASS")){
+                    String status = line.substring(index + 2);
+                    if (status.equalsIgnoreCase("PASS")) {
                         count++;
                     }
                 }
                 lineNum++;
             }
-            Assertions.assertTrue(count==EXPECTED_COUNT);
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw e;
+            assertEquals(EXPECTED_COUNT, count);
+        } finally {
+            connection.disconnect();
         }
-   }
-
+    }
 }

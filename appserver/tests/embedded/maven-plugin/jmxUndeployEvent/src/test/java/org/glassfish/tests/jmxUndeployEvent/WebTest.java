@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,12 +21,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class WebTest {
 
@@ -38,18 +38,15 @@ public class WebTest {
 
     @Test
     public void testWeb() throws Exception {
-        URL url = new URL("http://localhost:8080/"+contextPath+"/ServletTest");
-        URLConnection conn = url.openConnection();
-        if (conn instanceof HttpURLConnection) {
-            HttpURLConnection urlConnection = (HttpURLConnection)conn;
+        URL url = new URL("http://localhost:8080/" + contextPath + "/ServletTest");
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
             urlConnection.setDoOutput(true);
-            DataOutputStream out =
-                    new DataOutputStream(urlConnection.getOutputStream());
+            DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
             out.writeByte(1);
-            int responseCode=  urlConnection.getResponseCode();
-            System.out.println("responseCode: " + responseCode);
-            MatcherAssert.assertThat(urlConnection.getResponseCode(), CoreMatchers.is(404));
+            assertThat(urlConnection.getResponseCode(), CoreMatchers.is(404));
+        } finally {
+            urlConnection.disconnect();
         }
    }
-
 }

@@ -107,16 +107,18 @@ public class FormAuthHttpClient {
 
     private HttpCookie createSession(String relativePath) throws IOException {
         final HttpURLConnection connection = openConnection(baseUrl.getPort(), baseUrl.getPath() + "/" + relativePath);
-        connection.setRequestMethod("GET");
-        assertThat(connection.getResponseCode(), equalTo(200));
-        try (InputStream is = connection.getInputStream()) {
-            final String text = new String(is.readAllBytes(), UTF_8);
-            assertThat(text,
-                stringContainsInOrder("<title>Login Page</title>", "Please login", "j_username", "j_password"));
-            final HttpCookie sessionId = cookieManager.getCookieStore().getCookies().stream()
-                .filter(c -> c.getName().equals("JSESSIONID")).findFirst().get();
-            is.readAllBytes();
-            return sessionId;
+        try {
+            connection.setRequestMethod("GET");
+            assertThat(connection.getResponseCode(), equalTo(200));
+            try (InputStream is = connection.getInputStream()) {
+                final String text = new String(is.readAllBytes(), UTF_8);
+                assertThat(text,
+                    stringContainsInOrder("<title>Login Page</title>", "Please login", "j_username", "j_password"));
+                final HttpCookie sessionId = cookieManager.getCookieStore().getCookies().stream()
+                    .filter(c -> c.getName().equals("JSESSIONID")).findFirst().get();
+                is.readAllBytes();
+                return sessionId;
+            }
         } finally {
             connection.disconnect();
         }

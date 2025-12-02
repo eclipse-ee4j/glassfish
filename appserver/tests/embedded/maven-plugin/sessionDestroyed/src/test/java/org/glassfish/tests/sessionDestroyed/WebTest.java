@@ -18,59 +18,48 @@
 package org.glassfish.tests.sessionDestroyed;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WebTest {
 
-    private static int count = 0;
-    private static int EXPECTED_COUNT = 1;
+    private static final int EXPECTED_COUNT = 1;
 
     private String contextPath = "test";
-
-    @BeforeAll
-    public static void setup() throws IOException {
-    }
 
     @Test
     public void testWeb() throws Exception {
         goGet("localhost", 8080, "DESTROYED", contextPath+"/ServletTest");
     }
 
-    private static void goGet(String host, int port,
-                              String result, String contextPath) throws Exception {
-        try {
-            URL servlet = new URL("http://localhost:8080/"+contextPath);
-            URLConnection yc = servlet.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
+    private static void goGet(String host, int port, String result, String contextPath) throws Exception {
+        URL servlet = new URL("http://localhost:8080/" + contextPath);
+        HttpURLConnection connection = (HttpURLConnection) servlet.openConnection();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String line = null;
-            int index;
+            int count = 0;
             while ((line = in.readLine()) != null) {
-                index = line.indexOf(result);
+                int index = line.indexOf(result);
                 System.out.println(line);
                 if (index != -1) {
                     index = line.indexOf(":");
-                    String status = line.substring(index+1);
+                    String status = line.substring(index + 1);
 
-                    if (status.equalsIgnoreCase("PASS")){
+                    if (status.equalsIgnoreCase("PASS")) {
                         count++;
                     } else {
                         return;
                     }
                 }
             }
-            Assertions.assertTrue(count==EXPECTED_COUNT);
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw e;
+            assertEquals(EXPECTED_COUNT, count);
+        } finally {
+            connection.disconnect();
         }
-   }
-
+    }
 }

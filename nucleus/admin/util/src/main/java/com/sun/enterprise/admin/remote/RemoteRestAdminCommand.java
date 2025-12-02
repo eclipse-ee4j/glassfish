@@ -19,17 +19,12 @@ package com.sun.enterprise.admin.remote;
 
 import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
 import com.sun.enterprise.admin.remote.reader.CliActionReport;
-import com.sun.enterprise.admin.remote.reader.ProprietaryReader;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
-import com.sun.enterprise.admin.remote.sse.GfSseEventReceiver;
-import com.sun.enterprise.admin.remote.sse.GfSseEventReceiverProprietaryReader;
 import com.sun.enterprise.admin.remote.sse.GfSseInboundEvent;
-import com.sun.enterprise.admin.remote.writer.ProprietaryWriter;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
 import com.sun.enterprise.admin.util.AuthenticationInfo;
 import com.sun.enterprise.admin.util.CachedCommandModel;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.HttpConnectorAddress;
 import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
@@ -53,22 +48,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.AdminCommandState;
 import org.glassfish.api.admin.AuthenticationException;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel;
@@ -76,13 +65,11 @@ import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.Payload;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -117,10 +104,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     private static final String COMMAND_NAME_REGEXP = "^[a-zA-Z_][-a-zA-Z0-9_]*$";
     private static final String READ_TIMEOUT = "AS_ADMIN_READTIMEOUT";
     public static final String COMMAND_MODEL_MATCH_HEADER = "X-If-Command-Model-Match";
-    private static final String MEDIATYPE_TXT = "text/plain";
-    private static final String MEDIATYPE_JSON = "application/json";
-    private static final String MEDIATYPE_MULTIPART = "multipart/*";
-    private static final String MEDIATYPE_SSE = "text/event-stream";
     private static final String EOL = StringUtils.EOL;
     private static final int defaultReadTimeout; // read timeout for URL conns
 
@@ -128,10 +111,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     // return output string rather than printing it
     protected String output;
     private Map<String, String> attrs;
-    private boolean doUpload = false;
-    private boolean addedUploadOption = false;
+    private boolean doUpload;
     private RestPayloadImpl.Outbound outboundPayload;
-    private String usage;
     private File fileOutputDir;
     private StringBuilder passwordOptions;
     private String manpage;
@@ -140,12 +121,12 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
 
     // constructor parameters
     protected String name;
-    protected String host;
-    private String canonicalHostCache; //Used by getCanonicalHost() to cache resolved value
-    protected int port;
+    protected final String host;
+    private String canonicalHostCache;
+    protected final int port;
     protected boolean secure;
-    protected boolean detach;
-    protected boolean notify;
+    private final boolean detach;
+    private final boolean notify;
     protected String user;
     protected char[] password;
     protected Logger logger;
@@ -158,17 +139,17 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     protected List<String> operands;
 
     private CommandModel commandModel;
-    private boolean commandModelFromCache = false;
+    private boolean commandModelFromCache;
     private int readTimeout = defaultReadTimeout;
     private int connectTimeout = -1;
     private boolean interactive = true;
 
-    private final List<Header> requestHeaders = new ArrayList<>();
-    private boolean closeSse = false;
+//    private final List<Header> requestHeaders = new ArrayList<>();
+    private final AtomicBoolean closeSse = new AtomicBoolean();
 
     private boolean enableCommandModelCache = true;
 
-    private OutputStream userOut;
+    private final String commandCacheKey;
 
     /*
      * Set a default read timeout for URL connections.
@@ -189,49 +170,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * content-type used for each file-transfer part of a payload to or from the server
      */
     private static final String FILE_PAYLOAD_MIME_TYPE = "application/octet-stream";
-
-    /**
-     * Interface to enable factoring out common HTTP connection management code.
-     * <p>
-     * The implementation of this interface must implement
-     * <ul>
-     * <li>{@link #prepareConnection} - to perform all pre-connection configuration - set headers, chunking, etc. as well as
-     * writing any payload to the outbound connection. In short anything needed prior to the URLConnection#connect
-     * invocation.
-     * <p>
-     * The caller will invoke this method after it has invoked {@link URL#openConnection} but before it invokes
-     * {@link URL#connect}.
-     * <li>{@link #useConnection} - to read from the input stream, etc. The caller will invoke this method after it has
-     * successfully invoked {@link URL#connect}.
-     * </ul>
-     * Because the caller might have to work with multiple URLConnection objects (as it follows redirection, for example)
-     * this contract allows the caller to delegate to the HttpCommand implementation multiple times to configure each of the
-     * URLConnections objects, then to invoke useConnection only once after it has the "final" URLConnection object. For
-     * this reason be sure to implement prepareConnection so that it can be invoked multiple times.
-     *
-     */
-    interface HttpCommand {
-
-        /**
-         * Configures the HttpURLConnection (headers, chuncking, etc.) according to the needs of this use of the connection and
-         * then writes any required outbound payload to the connection.
-         * <p>
-         * This method might be invoked multiple times before the connection is actually connected, so it should be serially
-         * reentrant. Note that the caller will
-         *
-         * @param urlConnection the connection to be configured
-         */
-        void prepareConnection(HttpURLConnection urlConnection) throws IOException;
-
-        /**
-         * Uses the configured and connected connection to read data, process it, etc.
-         *
-         * @param urlConnection the connection to be used
-         * @throws CommandException
-         * @throws IOException
-         */
-        void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
-    }
 
     public RemoteRestAdminCommand(String name, String host, int port, boolean secure, String user, char[] password,
         Logger logger, boolean notify, boolean detach) throws CommandException {
@@ -258,6 +196,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         this.authToken = authToken;
         this.prohibitDirectoryUploads = prohibitDirectoryUploads;
         checkName();
+        this.commandCacheKey = AdminCacheUtils.createCommandCacheKey(name, getCanonicalHost(), port);
     }
 
     /**
@@ -274,7 +213,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         report.setMessage(message);
         report.setActionExitCode(exitCode);
         setActionReport(report);
-        this.closeSse = true;
+        this.closeSse.set(true);
     }
 
     /**
@@ -289,7 +228,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * If set, the raw response from the command is written to the specified stream.
      */
     public void setUserOut(OutputStream userOut) {
-        this.userOut = userOut;
     }
 
     /**
@@ -349,7 +287,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         if (commandModel == null && enableCommandModelCache) {
             long startNanos = System.nanoTime();
             try {
-                commandModel = getCommandModelFromCache();
+                commandModel = CommandModelHttpCommand.fromCache(commandCacheKey, detach, notify);
                 if (commandModel != null) {
                     this.commandModelFromCache = true;
                     if (logger.isLoggable(FINEST)) {
@@ -363,118 +301,13 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                     }
                 }
             } catch (Exception ex) {
-                if (logger.isLoggable(FINEST)) {
-                    logger.log(FINEST, "Can not get data from cache under key " + createCommandCacheKey(), ex);
-                }
+                logger.log(FINEST, "Can not get data from cache under key " + commandCacheKey, ex);
             }
         }
         if (commandModel == null) {
             fetchCommandModel();
         }
         return commandModel;
-    }
-
-    private CommandModel getCommandModelFromCache() {
-        String cachedModel = AdminCacheUtils.getCache().get(createCommandCacheKey(), String.class);
-        if (cachedModel == null) {
-            return null;
-        }
-        cachedModel = cachedModel.trim();
-        int ind = cachedModel.indexOf('\n');
-        if (ind < 0) {
-            return null;
-        }
-        String eTag = cachedModel.substring(0, ind);
-        if (!eTag.startsWith("ETag:")) {
-            return null;
-        }
-        eTag = eTag.substring(5).trim();
-        if (logger.isLoggable(FINEST)) {
-            logger.log(FINEST, "Cached command model ETag is {0}", eTag);
-        }
-        String content = cachedModel.substring(ind + 1).trim();
-        CachedCommandModel result = parseMetadata(content, eTag);
-        return result;
-    }
-
-    /**
-     * Parse the JSon metadata for the command.
-     *
-     * @param str the string
-     * @return the etag to compare the command cache model
-     */
-    private CachedCommandModel parseMetadata(String str, String etag) {
-        if (logger.isLoggable(FINER)) { // XXX - assume "debug" == "FINER"
-            logger.finer("------- RAW METADATA RESPONSE ---------");
-            logger.log(FINER, "ETag: {0}", etag);
-            logger.finer(str);
-            logger.finer("------- RAW METADATA RESPONSE ---------");
-        }
-        if (str == null) {
-            return null;
-        }
-        try {
-            boolean sawFile = false;
-            JSONObject obj = new JSONObject(str);
-            obj = obj.getJSONObject("command");
-            CachedCommandModel cm = new CachedCommandModel(obj.getString("@name"), etag);
-            cm.dashOk = obj.optBoolean("@unknown-options-are-operands", false);
-            cm.managedJob = obj.optBoolean("@managed-job", false);
-            cm.setUsage(obj.optString("usage", null));
-            Object optns = obj.opt("option");
-            if (!JSONObject.NULL.equals(optns)) {
-                JSONArray jsonOptions;
-                if (optns instanceof JSONArray) {
-                    jsonOptions = (JSONArray) optns;
-                } else {
-                    jsonOptions = new JSONArray();
-                    jsonOptions.put(optns);
-                }
-                for (int i = 0; i < jsonOptions.length(); i++) {
-                    JSONObject jsOpt = jsonOptions.getJSONObject(i);
-                    String type = jsOpt.getString("@type");
-                    ParamModelData opt = new ParamModelData(jsOpt.getString("@name"), typeOf(type), jsOpt.optBoolean("@optional", false),
-                            jsOpt.optString("@default"), jsOpt.optString("@short"), jsOpt.optBoolean("@obsolete", false),
-                            jsOpt.optString("@alias"));
-                    opt.param._acceptableValues = jsOpt.optString("@acceptable-values");
-                    if ("PASSWORD".equals(type)) {
-                        opt.param._password = true;
-                        opt.prompt = jsOpt.optString("@prompt");
-                        opt.promptAgain = jsOpt.optString("@prompt-again");
-                    } else if ("FILE".equals(type)) {
-                        sawFile = true;
-                    }
-                    if (jsOpt.optBoolean("@primary", false)) {
-                        opt.param._primary = true;
-                    }
-                    if (jsOpt.optBoolean("@multiple", false)) {
-                        if (opt.type == File.class) {
-                            opt.type = File[].class;
-                        } else {
-                            opt.type = List.class;
-                        }
-                        opt.param._multiple = true;
-                    }
-                    cm.add(opt);
-                }
-            }
-            if (sawFile) {
-                cm.add(new ParamModelData("upload", Boolean.class, true, null));
-                addedUploadOption = true;
-                cm.setAddedUploadOption(true);
-            }
-            if (notify) {
-                cm.add(new ParamModelData("notify", Boolean.class, false, "false"));
-            }
-            if (detach) {
-                cm.add(new ParamModelData("detach", Boolean.class, false, "false"));
-            }
-            this.usage = cm.getUsage();
-            return cm;
-        } catch (JSONException ex) {
-            logger.log(FINER, "Can not parse command metadata", ex);
-            return null;
-        }
     }
 
     /**
@@ -490,13 +323,13 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     public void setFileOutputDirectory(File dir) {
         fileOutputDir = dir;
     }
-
-    /**
-     * Return a modifiable list of headers to be added to the request.
-     */
-    public List<Header> headers() {
-        return requestHeaders;
-    }
+//
+//    /**
+//     * Return a modifiable list of headers to be added to the request.
+//     */
+//    public List<Header> headers() {
+//        return requestHeaders;
+//    }
 
     protected boolean useSse() throws CommandException {
         return getCommandModel().isManagedJob();
@@ -690,155 +523,21 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * Actually execute the remote command.
      */
     private void executeRemoteCommand(final ParameterMap params) throws CommandException {
-        doHttpCommand(getCommandURI(), "POST", new HttpCommand() {
-
-            @Override
-            public void prepareConnection(final HttpURLConnection urlConnection) throws IOException {
-                try {
-                    if (useSse()) {
-                        urlConnection.addRequestProperty("Accept", MEDIATYPE_SSE);
-                    } else {
-                        urlConnection.addRequestProperty("Accept", MEDIATYPE_JSON + "; q=0.8, " + MEDIATYPE_MULTIPART + "; q=0.9");
-                    }
-                } catch (CommandException cex) {
-                    throw new IOException(cex.getLocalizedMessage(), cex);
-                }
-                // add any user-specified headers
-                for (Header h : requestHeaders) {
-                    urlConnection.addRequestProperty(h.getName(), h.getValue());
-                }
-                //Write data
-                ParamsWithPayload pwp;
-                if (doUpload) {
-                    urlConnection.setChunkedStreamingMode(0);
-                    pwp = new ParamsWithPayload(outboundPayload, params);
-                } else {
-                    pwp = new ParamsWithPayload(null, params);
-                }
-                ProprietaryWriter writer = ProprietaryWriterFactory.getWriter(pwp);
-                logger.log(FINER, () -> "Writer to use " + writer.getClass().getName());
-                writer.writeTo(pwp, urlConnection);
+        final ExecHttpCommand command = new ExecHttpCommand(params, detach, useSse(), closeSse, doUpload,
+            outboundPayload, fileOutputDir, e -> fireEvent(e.getName(), e), this::downloadPayloadFromManaged);
+        final ActionReport report = doHttpCommand(getCommandURI(), "POST", command);
+        if (report == null) {
+            // if closeSse was set by closeSse method, it is ok,
+            // DetachListener set the job id and the report and we are done.
+            if (!closeSse.get()) {
+                this.output = null;
+                throw new CommandException("Empty response from server.");
             }
-
-            @Override
-            public void useConnection(final HttpURLConnection urlConnection) throws CommandException, IOException {
-                String resultMediaType = urlConnection.getContentType();
-                if (logger.isLoggable(FINER)) {
-                    logger.log(FINER, "Result type is {0}", resultMediaType);
-                    logger.log(FINER, "URL connection is {0}", urlConnection.getClass().getName());
-                }
-                if (resultMediaType != null && resultMediaType.startsWith(MEDIATYPE_SSE)) {
-                    String instanceId = null;
-                    boolean retryableCommand = false;
-                    try {
-                        logger.log(FINEST, "Response is SSE - about to read events");
-                        closeSse = false;
-                        final ProprietaryReader<GfSseEventReceiver> reader = new GfSseEventReceiverProprietaryReader();
-                        final GfSseEventReceiver eventReceiver = reader.readFrom(urlConnection.getInputStream(), resultMediaType);
-                        GfSseInboundEvent event;
-                        do {
-                            event = eventReceiver.readEvent();
-                            if (event != null) {
-                                logger.log(FINEST, "Event: {0}", event.getName());
-                                fireEvent(event.getName(), event);
-                                if (AdminCommandState.EVENT_STATE_CHANGED.equals(event.getName())) {
-                                    AdminCommandState acs = event.getData(AdminCommandState.class, MEDIATYPE_JSON);
-                                    if (acs.getId() != null) {
-                                        instanceId = acs.getId();
-                                        logger.log(FINEST, "Command instance ID: {0}", instanceId);
-                                    }
-                                    if (acs.getState() == AdminCommandState.State.COMPLETED
-                                            || acs.getState() == AdminCommandState.State.RECORDED
-                                            || acs.getState() == AdminCommandState.State.REVERTED) {
-                                        if (acs.getActionReport() != null) {
-                                            setActionReport(acs.getActionReport());
-                                        }
-                                        closeSse = true;
-                                        if (!acs.isOutboundPayloadEmpty()) {
-                                            logger.log(FINEST, "Romote command holds data. Must load it");
-                                            downloadPayloadFromManaged(instanceId);
-                                        }
-                                    } else if (acs.getState() == AdminCommandState.State.FAILED_RETRYABLE) {
-                                        logger.log(INFO, strings.get("remotecommand.failedretryable", acs.getId()));
-                                        if (acs.getActionReport() != null) {
-                                            setActionReport(acs.getActionReport());
-                                        }
-                                        closeSse = true;
-                                    } else if (acs.getState() == AdminCommandState.State.RUNNING_RETRYABLE) {
-                                        logger.log(FINEST, "Command stores checkpoint and is retryable");
-                                        retryableCommand = true;
-                                    }
-                                }
-                            }
-                        } while (event != null && !eventReceiver.isClosed() && !closeSse);
-                        if (closeSse) {
-                            try {
-                                eventReceiver.close();
-                            } catch (Exception exc) {
-                            }
-                        }
-                    } catch (IOException ioex) {
-                        if (instanceId != null && "Premature EOF".equals(ioex.getMessage())) {
-                            if (retryableCommand) {
-                                throw new CommandException(
-                                        strings.get("remotecommand.lostConnection.retryableCommand", new Object[] { instanceId }), ioex);
-                            } else {
-                                throw new CommandException(strings.get("remotecommand.lostConnection", new Object[] { instanceId }), ioex);
-                            }
-                        } else {
-                            throw new CommandException(ioex.getMessage(), ioex);
-                        }
-                    } catch (Exception ex) {
-                        throw new CommandException(ex.getMessage(), ex);
-                    }
-                } else {
-                    ProprietaryReader<ParamsWithPayload> reader = ProprietaryReaderFactory.getReader(ParamsWithPayload.class,
-                            resultMediaType);
-                    if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-                        ActionReport report;
-                        if (reader == null) {
-                            report = new CliActionReport();
-                            report.setActionExitCode(ExitCode.FAILURE);
-                            report.setMessage(urlConnection.getResponseMessage());
-                        } else {
-                            report = reader.readFrom(urlConnection.getErrorStream(), resultMediaType).getActionReport();
-                        }
-                        setActionReport(report);
-                    } else {
-                        ParamsWithPayload pwp = reader.readFrom(urlConnection.getInputStream(), resultMediaType);
-                        if (pwp.getPayloadInbound() == null) {
-                            setActionReport(pwp.getActionReport());
-                        } else if (resultMediaType.startsWith("multipart/")) {
-                            RestPayloadImpl.Inbound inbound = pwp.getPayloadInbound();
-                            setActionReport(pwp.getActionReport());
-                            if (logger.isLoggable(FINER)) {
-                                logger.log(FINER, "------ PAYLOAD ------");
-                                Iterator<Payload.Part> parts = inbound.parts();
-                                while (parts.hasNext()) {
-                                    Payload.Part part = parts.next();
-                                    logger.log(FINER, " - {0} [{1}]", new Object[] { part.getName(), part.getContentType() });
-                                }
-                                logger.log(FINER, "---- END PAYLOAD ----");
-                            }
-                            PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null,  null);
-                            try {
-                                downloadedFilesMgr.processParts(inbound);
-                            } catch (CommandException cex) {
-                                throw cex;
-                            } catch (Exception ex) {
-                                throw new CommandException(ex.getMessage(), ex);
-                            }
-                        }
-                    }
-                }
+        } else {
+            setActionReport(report);
+            if (report.getActionExitCode() == ExitCode.FAILURE) {
+                throw new CommandException("Remote failure: " + this.output);
             }
-        });
-        if (actionReport == null) {
-            this.output = null;
-            throw new CommandException(strings.get("emptyResponse"));
-        }
-        if (actionReport.getActionExitCode() == ExitCode.FAILURE) {
-            throw new CommandException(strings.getString("remote.failure.prefix", "remote failure:") + " " + this.output);
         }
     }
 
@@ -853,22 +552,23 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             params.add("DEFAULT", jobId);
             command.executeCommand(params);
         } catch (CommandException ex) {
-            logger.log(WARNING, strings.getString("remote.sse.canNotGetPayload", "Cannot retrieve payload. {0}"), ex.getMessage());
+            logger.log(WARNING, "Cannot retrieve payload.", ex);
         }
     }
 
-    protected void setActionReport(ActionReport ar) {
-        this.actionReport = ar;
-        if (ar == null) {
+    protected void setActionReport(ActionReport report) {
+        logger.log(FINEST, "setActionReport(report={0})", report);
+        this.actionReport = report;
+        if (report == null) {
             this.output = null;
         } else {
             StringBuilder sb = new StringBuilder();
-            if (ar instanceof CliActionReport) {
-                addCombinedMessages((CliActionReport) ar, sb);
-            } else if (ar.getMessage() != null) {
-                sb.append(ar.getMessage());
+            if (report instanceof CliActionReport) {
+                addCombinedMessages((CliActionReport) report, sb);
+            } else if (report.getMessage() != null) {
+                sb.append(report.getMessage());
             }
-            addSubMessages("", ar.getTopMessagePart(), sb);
+            addSubMessages("", report.getTopMessagePart(), sb);
             this.output = sb.toString();
             if (logger.isLoggable(FINER)) {
                 logger.log(FINER, "------ ACTION REPORT ------");
@@ -932,8 +632,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         }
     }
 
-    private void doHttpCommand(String uriString, String httpMethod, HttpCommand cmd) throws CommandException {
-        doHttpCommand(uriString, httpMethod, cmd, false /* isForMetadata */);
+    private <T> T doHttpCommand(String uriString, String httpMethod, HttpCommand<T> cmd) throws CommandException {
+        return doHttpCommand(uriString, httpMethod, cmd, false /* isForMetadata */);
     }
 
     /**
@@ -949,8 +649,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * @param cmd the HttpCommand object
      * @throws CommandException if anything goes wrong
      */
-    private void doHttpCommand(String uriString, String httpMethod, HttpCommand cmd, boolean isForMetadata) throws CommandException {
-        HttpURLConnection urlConnection;
+    private <T> T doHttpCommand(String uriString, String httpMethod, HttpCommand<T> cmd, boolean isForMetadata) throws CommandException {
         /*
          * There are various reasons we might retry the command - an authentication
          * challenges from the DAS, shifting from an insecure connection to
@@ -981,7 +680,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
          */
         HttpConnectorAddress url = getHttpConnectorAddress(host, port, shouldUseSecure);
         url.setInteractive(interactive);
-
+        T result = null;
         do {
             /*
              * Any code that wants to trigger a retry will say so explicitly.
@@ -999,77 +698,67 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 if (authInfo != null) {
                     url.setAuthenticationInfo(authInfo);
                 }
-                urlConnection = (HttpURLConnection) url.openConnection(uriString);
-                urlConnection.setRequestProperty("User-Agent", responseFormatType);
-                if (passwordOptions != null) {
-                    urlConnection.setRequestProperty("X-passwords", passwordOptions.toString());
-                }
-                urlConnection.addRequestProperty("Cache-Control", "no-cache");
-                urlConnection.addRequestProperty("Pragma", "no-cache");
-
-                if (authToken != null) {
-                    /*
-                     * If this request is for metadata then we expect to reuse
-                     * the auth token.
-                     */
-                    urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
-                            (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
-                }
-                if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
-                    urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
-                    if (logger.isLoggable(FINER)) {
-                        logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection(uriString);
+                try {
+                    urlConnection.setRequestProperty("User-Agent", responseFormatType);
+                    urlConnection.addRequestProperty("Cache-Control", "no-cache");
+                    urlConnection.addRequestProperty("Pragma", "no-cache");
+                    if (passwordOptions != null) {
+                        urlConnection.setRequestProperty("X-passwords", passwordOptions.toString());
                     }
-                }
-                urlConnection.setRequestMethod(httpMethod);
-                urlConnection.setReadTimeout(readTimeout);
-                if (connectTimeout >= 0) {
-                    urlConnection.setConnectTimeout(connectTimeout);
-                }
-                addAdditionalHeaders(urlConnection);
-                urlConnection.addRequestProperty("X-Requested-By", "cli");
-                cmd.prepareConnection(urlConnection);
-                urlConnection.connect();
-                /*
-                 * We must handle redirection from http to https explicitly
-                 * because, even if the HttpURLConnection's followRedirect is
-                 * set to true, the Java SE implementation does not do so if the
-                 * procotols are different.
-                 */
-                String redirection = checkConnect(urlConnection);
-                if (redirection != null) {
+                    if (authToken != null) {
+                        /*
+                         * If this request is for metadata then we expect to reuse
+                         * the auth token.
+                         */
+                        urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
+                                (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
+                    }
+                    if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
+                        urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
+                        if (logger.isLoggable(FINER)) {
+                            logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                        }
+                    }
+                    urlConnection.setRequestMethod(httpMethod);
+                    urlConnection.setReadTimeout(readTimeout);
+                    if (connectTimeout >= 0) {
+                        urlConnection.setConnectTimeout(connectTimeout);
+                    }
+                    addAdditionalHeaders(urlConnection);
+                    urlConnection.addRequestProperty("X-Requested-By", "cli");
+                    cmd.prepareConnection(urlConnection);
+                    urlConnection.connect();
                     /*
-                     * Log at FINER; at FINE it would appear routinely when used from
-                     * asadmin.
+                     * We must handle redirection from http to https explicitly
+                     * because, even if the HttpURLConnection's followRedirect is
+                     * set to true, the Java SE implementation does not do so if the
+                     * procotols are different.
                      */
-                    logger.log(FINER, "Following redirection to " + redirection);
-                    url = followRedirection(url, redirection);
-                    shouldTryCommandAgain = true;
-                    /*
-                     * Record that, during the retry of this request, we should
-                     * use https.
-                     */
-                    shouldUseSecure = url.isSecure();
+                    String redirection = checkConnect(urlConnection);
+                    if (redirection != null) {
+                        // Log at FINER; at FINE it would appear routinely when used from asadmin.
+                        logger.log(FINER, () -> "Following redirection to " + redirection);
+                        url = followRedirection(url, redirection);
+                        shouldTryCommandAgain = true;
+                        // During the retry of this request, we should use https.
+                        shouldUseSecure = url.isSecure();
+                        // If this is a metadata request, the real request should use https.
+                        secure = true;
+                        continue;
+                    }
 
                     /*
-                     * Record that, if this is a metadata request, the real
-                     * request should use https also.
+                     * No redirection, so we have established the connection.
+                     * Now delegate again to the command processing to use the
+                     * now-created connection.
                      */
-                    secure = true;
-
+                    result = cmd.useConnection(urlConnection);
+                    processHeaders(urlConnection);
+                    logger.finer("doHttpCommand succeeds");
+                } finally {
                     urlConnection.disconnect();
-
-                    continue;
                 }
-
-                /*
-                 * No redirection, so we have established the connection.
-                 * Now delegate again to the command processing to use the
-                 * now-created connection.
-                 */
-                cmd.useConnection(urlConnection);
-                processHeaders(urlConnection);
-                logger.finer("doHttpCommand succeeds");
             } catch (AuthenticationException authEx) {
 
                 logger.log(FINER, "DAS has challenged for credentials");
@@ -1140,6 +829,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             }
         } while (shouldTryCommandAgain);
         outboundPayload = null; // no longer needed
+        return result;
     }
 
     /**
@@ -1274,7 +964,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * @return usage text
      */
     public String getUsage() {
-        return usage;
+        return commandModel instanceof CachedCommandModel ? ((CachedCommandModel) commandModel).getUsage() : null;
     }
 
     /**
@@ -1319,86 +1009,22 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     /**
      * Fetch the command metadata from the remote server.
      */
-    protected void fetchCommandModel() throws CommandException {
-        final long startNanos = System.nanoTime();
-        commandModel = null; //For sure not be used during request header construction
-        doHttpCommand(getCommandURI(), "GET", new HttpCommand() {
-
-            @Override
-            public void prepareConnection(HttpURLConnection urlConnection) {
-                urlConnection.setRequestProperty("Accept", MEDIATYPE_JSON);
-            }
-
-            @Override
-            public void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException {
-                String eTag = urlConnection.getHeaderField("ETag");
-                if (eTag != null) {
-                    eTag = eTag.trim();
-                    if (eTag.startsWith("W/")) {
-                        eTag = eTag.substring(2).trim();
-                    }
-                    if (eTag.startsWith("\"")) {
-                        eTag = eTag.substring(1);
-                    }
-                    if (eTag.endsWith("\"")) {
-                        eTag = eTag.substring(0, eTag.length() - 1);
-                    }
-                }
-                String json = ProprietaryReaderFactory.<String>getReader(String.class, urlConnection.getContentType())
-                        .readFrom(urlConnection.getInputStream(), urlConnection.getContentType());
-                commandModel = parseMetadata(json, eTag);
-                if (commandModel != null) {
-                    commandModelFromCache = false;
-                    if (logger.isLoggable(FINEST)) {
-                        logger.log(FINEST, "Command model for {0} command fetched from remote server. [Duration: {1} nanos]",
-                                new Object[] { name, System.nanoTime() - startNanos });
-                    }
-                    try {
-                        StringBuilder forCache = new StringBuilder(json.length() + 40);
-                        forCache.append("ETag: ").append(eTag);
-                        forCache.append("\n");
-                        forCache.append(json);
-                        AdminCacheUtils.getCache().put(createCommandCacheKey(), forCache.toString());
-                    } catch (Exception ex) {
-                        if (logger.isLoggable(WARNING)) {
-                            logger.log(WARNING, AdminLoggerInfo.mCantPutToCache, new Object[] { createCommandCacheKey() });
-                        }
-                    }
-                } else {
-                    throw new InvalidCommandException(strings.get("unknownError"));
-                }
-            }
-        });
+    public final void fetchCommandModel() throws CommandException {
+        // For sure not be used during request header construction
+        commandModel = null;
+        CommandModelHttpCommand httpCommand = new CommandModelHttpCommand(name, commandCacheKey, detach, notify);
+        commandModelFromCache = false;
+        commandModel = doHttpCommand(getCommandURI(), "GET", httpCommand);
     }
 
     public String getManPage() throws CommandException {
         if (manpage == null) {
-            doHttpCommand(getCommandURI() + "/manpage", "GET", new HttpCommand() {
-
-                @Override
-                public void prepareConnection(HttpURLConnection urlConnection) {
-                    urlConnection.setRequestProperty("Accept", MEDIATYPE_TXT);
-                }
-
-                @Override
-                public void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException {
-                    manpage = ProprietaryReaderFactory.<String>getReader(String.class, urlConnection.getContentType())
-                            .readFrom(urlConnection.getInputStream(), urlConnection.getContentType());
-                }
-            });
+            manpage = doHttpCommand(getCommandURI() + "/manpage", "GET", new ManPageHttpCommand());
         }
         return manpage;
     }
 
-    private String createCommandCacheKey() {
-        StringBuilder result = new StringBuilder(getCanonicalHost().length() + name.length() + 12);
-        result.append("cache/");
-        result.append(getCanonicalHost()).append('_').append(port);
-        result.append('/').append(name);
-        return result.toString();
-    }
-
-    protected String getCanonicalHost() {
+    private String getCanonicalHost() {
         if (canonicalHostCache == null) {
             try {
                 InetAddress address = InetAddress.getByName(host);
@@ -1411,22 +1037,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             }
         }
         return canonicalHostCache;
-    }
-
-    private Class<?> typeOf(String type) {
-        if (type.equals("STRING")) {
-            return String.class;
-        } else if (type.equals("BOOLEAN")) {
-            return Boolean.class;
-        } else if (type.equals("FILE")) {
-            return File.class;
-        } else if (type.equals("PASSWORD")) {
-            return String.class;
-        } else if (type.equals("PROPERTIES")) {
-            return Properties.class;
-        } else {
-            return String.class;
-        }
     }
 
     /**
@@ -1484,7 +1094,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             }
         }
 
-        if (addedUploadOption) {
+        if (commandModel instanceof CachedCommandModel && ((CachedCommandModel) commandModel).isAddedUploadOption()) {
             logger.finer("removing --upload option");
             //options.remove("upload");    // remove it
             // XXX - no remove method, have to copy it
@@ -1574,5 +1184,4 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         thread.setDaemon(true);
         thread.start();
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,7 +52,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
 
     private static final Logger logger = LogFacade.getLogger();
 
-    protected static final ResourceBundle rb = logger.getResourceBundle();
+    private static final ResourceBundle rb = logger.getResourceBundle();
 
     private final WebContainer container;
     private final WebModuleConfig wmInfo;
@@ -90,7 +90,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         wmInfo.setDeploymentContext(null);
 
         if (results.isEmpty()) {
-            logger.log(Level.SEVERE, "webApplication.unknownError");
+            logger.log(Level.SEVERE, "WEB0670: Unknown error, loadWebModule returned null, file a bug");
             return false;
         }
 

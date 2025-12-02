@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -34,8 +35,12 @@ public class ConnectionUtils {
      * @return The string returned from that URL, or empty string if there was a problem contacting the URL
      */
     public static String getURL(String urlstr) {
-        URLConnection urlc = openConnection(urlstr);
-        return getContent(urlc);
+        HttpURLConnection urlc = openConnection(urlstr);
+        try {
+            return getContent(urlc);
+        } finally {
+            urlc.disconnect();
+        }
     }
 
     /**
@@ -45,8 +50,8 @@ public class ConnectionUtils {
      * @return The string returned from that connection, or empty string if there was a problem contacting the URL
      */
     public static String getContent(URLConnection connection) {
-        try (
-                BufferedReader ir = new BufferedReader(new InputStreamReader(connection.getInputStream(), ISO_8859_1)); StringWriter ow = new StringWriter()) {
+        try (BufferedReader ir = new BufferedReader(new InputStreamReader(connection.getInputStream(), ISO_8859_1));
+            StringWriter ow = new StringWriter()) {
             String line;
             while ((line = ir.readLine()) != null) {
                 ow.write(line);
@@ -58,13 +63,11 @@ public class ConnectionUtils {
         }
     }
 
-    public static URLConnection openConnection(String url) {
+    public static HttpURLConnection openConnection(String url) {
         try {
-            return new URL(url).openConnection();
+            return (HttpURLConnection) new URL(url).openConnection();
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
-
-
 }

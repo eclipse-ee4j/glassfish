@@ -82,14 +82,18 @@ public class EjbDependsOnByFileNameTest {
     @Test
     public void testEjbLinkSyntax() throws Exception{
         HttpURLConnection connection = openConnection(8080, "/ejblinksyntax/inspector");
-        connection.setRequestMethod("GET");
-        assertAll(
-            () -> assertEquals(200, connection.getResponseCode()),
-            () -> assertEquals(
-                "Cat of color: brown (file-name#) and creature with name: Z",
-                readResponseInputStream(connection)
-            )
-        );
+        try {
+            connection.setRequestMethod("GET");
+            assertAll(
+                () -> assertEquals(200, connection.getResponseCode()),
+                () -> assertEquals(
+                    "Cat of color: brown (file-name#) and creature with name: Z",
+                    readResponseInputStream(connection)
+                )
+            );
+        } finally {
+            connection.disconnect();
+        }
     }
 
     private static File createDeployment() {

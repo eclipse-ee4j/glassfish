@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.System.Logger.Level.INFO;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,49 +65,61 @@ public class AccessEJBWebTest {
     @Test
     void testAccessLocalEJBByCDI() throws Exception {
         String message = RandomGenerator.generateRandomString();
-        HttpURLConnection connection = GlassFishTestEnvironment
-                .openConnection(8080, "/local_ejb_cdi?message=" + message);
-        connection.setRequestMethod("GET");
-        assertAll(
+        HttpURLConnection connection = openConnection(8080, "/local_ejb_cdi?message=" + message);
+        try {
+            connection.setRequestMethod("GET");
+            assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
                 () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
-        );
+            );
+        } finally {
+            connection.disconnect();
+        }
     }
 
     @Test
     void testAccessLocalEJBByJNDI() throws Exception {
         String message = RandomGenerator.generateRandomString();
-        HttpURLConnection connection = GlassFishTestEnvironment
-                .openConnection(8080, "/local_ejb_jndi?message=" + message);
-        connection.setRequestMethod("GET");
-        assertAll(
+        HttpURLConnection connection = openConnection(8080, "/local_ejb_jndi?message=" + message);
+        try {
+            connection.setRequestMethod("GET");
+            assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
                 () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
-        );
+            );
+        } finally {
+            connection.disconnect();
+        }
     }
 
     @Test
     void testAccessRemoteEJBByCDI() throws Exception {
         String message = RandomGenerator.generateRandomString();
-        HttpURLConnection connection = GlassFishTestEnvironment
-                .openConnection(8080, "/remote_ejb_cdi?message=" + message);
-        connection.setRequestMethod("GET");
-        assertAll(
+        HttpURLConnection connection = openConnection(8080, "/remote_ejb_cdi?message=" + message);
+        try {
+            connection.setRequestMethod("GET");
+            assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
                 () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
-        );
+            );
+        } finally {
+            connection.disconnect();
+        }
     }
 
     @Test
     void testAccessRemoteEJBByJNDI() throws Exception {
         String message = RandomGenerator.generateRandomString();
-        HttpURLConnection connection = GlassFishTestEnvironment
-                .openConnection(8080, "/remote_ejb_jndi?message=" + message);
-        connection.setRequestMethod("GET");
-        assertAll(
+        HttpURLConnection connection = openConnection(8080, "/remote_ejb_jndi?message=" + message);
+        try {
+            connection.setRequestMethod("GET");
+            assertAll(
                 () -> assertEquals(200, connection.getResponseCode()),
                 () -> assertEquals(message, HttpParser.readResponseInputStream(connection).trim())
-        );
+            );
+        } finally {
+            connection.disconnect();
+        }
     }
 
     private static File createDeployment() {

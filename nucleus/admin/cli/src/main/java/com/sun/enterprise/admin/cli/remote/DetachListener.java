@@ -27,7 +27,6 @@ import java.lang.System.Logger;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
 import org.glassfish.api.admin.AdminCommandState;
-import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
@@ -41,13 +40,12 @@ import static java.lang.System.Logger.Level.TRACE;
 public class DetachListener implements AdminCommandListener<GfSseInboundEvent> {
 
     private static final Logger LOG = System.getLogger(DetachListener.class.getName());
-    private static final LocalStringsImpl I18N = new LocalStringsImpl(DetachListener.class);
 
-    private final RemoteRestAdminCommand rac;
+    private final RemoteRestAdminCommand command;
     private final boolean terse;
 
     public DetachListener(RemoteRestAdminCommand rac, boolean terse) {
-        this.rac = rac;
+        this.command = rac;
         this.terse = terse;
     }
 
@@ -55,16 +53,16 @@ public class DetachListener implements AdminCommandListener<GfSseInboundEvent> {
     public void onAdminCommandEvent(String name, GfSseInboundEvent event) {
         LOG.log(TRACE, "onAdminCommandEvent(name={0}, event={1})", name, event);
         try {
-            AdminCommandState acs = event.getData(AdminCommandState.class, "application/json");
-            String id = acs.getId();
+            final AdminCommandState acs = event.getData(AdminCommandState.class, "application/json");
+            final String id = acs.getId();
             if (StringUtils.ok(id)) {
                 if (terse) {
-                    rac.closeSse(id, ExitCode.SUCCESS);
+                    command.closeSse(id, ExitCode.SUCCESS);
                 } else {
-                    rac.closeSse(I18N.get("detach.jobid", id), ExitCode.SUCCESS);
+                    command.closeSse("Job ID: " + id, ExitCode.SUCCESS);
                 }
             } else {
-                LOG.log(ERROR, I18N.getString("detach.noid", "Command was started but id was not retrieved. Cannot detach."));
+                LOG.log(ERROR, "Command was started but id was not retrieved. Cannot detach.");
             }
         } catch (IOException ex) {
             LOG.log(ERROR, "Failed to retrieve event data.", ex);

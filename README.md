@@ -1,9 +1,83 @@
-# Eclipse GlassFish
-
 ## About
 
-Eclipse GlassFish is a [Jakarta EE compatible implementation](compatibility)
-sponsored by the Eclipse Foundation.
+**Eclipse GlassFish** is a lightweight yet powerful open-source application server that fully implements the **[Jakarta EE](compatibility)** platform. Designed for flexibility, scalability, and reliability, it provides a production-ready environment that adheres strictly to open standards without proprietary dependencies.
+
+GlassFish delivers comprehensive support for all required and optional **Jakarta EE APIs**, successfully passing all corresponding **Technology Compatibility Kits (TCKs)**. It includes an advanced administration console, clustering capabilities, and a rich set of tools that streamline both development and deployment. Continuously maintained under the **Eclipse Foundation**, GlassFish remains a robust and standards-compliant choice for modern enterprise applications.
+
+<style>
+/* Inline CSS to create banner-style panels in a responsive grid */
+.gf-grid{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;padding:0}
+.gf-card{flex:1 1 calc(33.333% - 12px);box-sizing:border-box;padding:14px;border-radius:8px;background:#f6f9ff;border:1px solid #d0e0ff;min-width:220px}
+.gf-card h3{margin:0 0 6px;font-size:2rem}
+.gf-card p{margin:0;font-size:1.5rem;color:#222}
+@media (max-width:900px){.gf-card{flex:1 1 calc(50% - 12px)}}
+@media (max-width:520px){.gf-card{flex:1 1 100%}}
+</style>
+
+<div class="gf-grid">
+
+<div class="gf-card">
+<h3>Standards-Based</h3>
+<p>Full Jakarta EE support for portability and low vendor lock-in.</p>
+</div>
+
+<div class="gf-card">
+<h3>Modular & Lightweight</h3>
+<p>Component architecture lets you run minimal or full profiles to save resources.</p>
+</div>
+
+<div class="gf-card">
+<h3>Fast Startup</h3>
+<p>Optimized boot times for development and container scaling.</p>
+</div>
+
+<div class="gf-card">
+<h3>Admin & Automation</h3>
+<p>GUI, CLI and REST APIs for management and CI/CD automation.</p>
+</div>
+
+<div class="gf-card">
+<h3>High Availability</h3>
+<p>Clustering and session failover for resilient applications.</p>
+</div>
+
+<div class="gf-card">
+<h3>Transactions</h3>
+<p>Distributed JTA transactions with recovery for data integrity.</p>
+</div>
+
+<div class="gf-card">
+<h3>Security</h3>
+<p>TLS, RBAC, realms and audit logging for compliance and protection.</p>
+</div>
+
+<div class="gf-card">
+<h3>Persistence</h3>
+<p>Standard JPA and JDBC pooling for predictable data access.</p>
+</div>
+
+<div class="gf-card">
+<h3>Messaging & Integration</h3>
+<p>JMS and JCA connectors for reliable integration with systems.</p>
+</div>
+
+<div class="gf-card">
+<h3>Web & Microservices</h3>
+<p>Servlets, JAX-RS, WebSocket and MicroProfile features for modern apps.</p>
+</div>
+
+<div class="gf-card">
+<h3>Observability</h3>
+<p>Metrics, health checks and diagnostics for SRE and monitoring tools.</p>
+</div>
+
+<div class="gf-card">
+<h3>Cloud Ready</h3>
+<p>Container-friendly and tunable for cost-efficient cloud deployment.</p>
+</div>
+
+</div>
+
 
 ## Latest News
 
@@ -23,7 +97,7 @@ Faster Deployment was achieved by improved file handling; the team replaced cust
 
 ## March 14, 2025 -- Eclipse GlassFish 7.0.23 Available
 
-The key feature for this release is making SSH nodes work on the Windows operating system, and while at it improve the way they work on Linux. The team mainly focussed on this work, and a lot of effort went into it. We're really happy to have achieved the goal to have it fully working. Next to that some important fixes were done for logging and specifically a regression for the security principal was fixed.
+The key feature for this release is making SSH nodes work on the Windows operating system, and while at it improve the way they work on Linux. The team mainly focused on this work, and a lot of effort went into it. We're really happy to have achieved the goal to have it fully working. Next to that some important fixes were done for logging and specifically a regression for the security principal was fixed.
 
 Download links are available from the [GlassFish Download page](download.md).
 
@@ -83,7 +157,7 @@ With much joy we present you Eclipse GlassFish 7.0.16.
 
 Download links are available from the [GlassFish Download page](download.md).
 
-In this summer 2024 release of GlassFish we added several new features. Specifically new is an admin command logger, which logs graphical interactions with the admin UI for usage in scripts. GlassFish now also allows resource references in persistence.xml, and we added a great new feature where we are creating temporary snapshots of the external application libraries during application startup, so any update of these is not longer system dependent. We also did a major refactoring of the aging TLS code and optimized the GJULE logging.
+In this summer 2024 release of GlassFish we added several new features. Specifically new is an admin command logger, which logs graphical interactions with the admin UI for usage in scripts. GlassFish now also allows resource references in persistence.xml, and we added a great new feature where we are creating temporary snapshots of the external application libraries during application startup, so any update of these is no longer system dependent. We also did a major refactoring of the aging TLS code and optimized the GJULE logging.
 
 
 ## May 31, 2024 -- Eclipse GlassFish 7.0.15 Available

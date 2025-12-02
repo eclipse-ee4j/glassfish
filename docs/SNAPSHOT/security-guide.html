@@ -1650,19 +1650,24 @@ domain-dir<code>/config</code> directory:</p>
 <dl>
 <dt class="hdlist1">Keystore file</dt>
 <dd>
-<p>The <code>keystore.jks</code> file contains Eclipse GlassFish certificate,
+<p>The <code>keystore.p12</code> file contains Eclipse GlassFish certificate,
 including its private key. The keystore file is protected with a
 password.<br>
 Each keystore entry has a unique alias. After installation, the
-Eclipse GlassFish keystore has a single entry with an alias of <code>s1as</code>.</p>
+Eclipse GlassFish keystore has a single entry with an alias of <code>s1as</code>.<br>
+NOTE: For legacy compatibility, JKS format keystores (<code>keystore.jks</code>)
+are still supported, but PKCS12 format is recommended as it is the
+industry standard and default format since Java 9.</p>
 </dd>
 <dt class="hdlist1">Truststore file</dt>
 <dd>
-<p>The <code>cacerts.jks</code> file contains the Eclipse GlassFish trusted
+<p>The <code>cacerts.p12</code> file contains the Eclipse GlassFish trusted
 certificates, including public keys for other entities. For a trusted
 certificate, the server has confirmed that the public key in the
 certificate belongs to the certificate&#8217;s owner. Trusted certificates
-generally include those of CAs.</p>
+generally include those of CAs.<br>
+NOTE: For legacy compatibility, JKS format truststores (<code>cacerts.jks</code>)
+are still supported, but PKCS12 format is recommended.</p>
 </dd>
 </dl>
 </div>
@@ -2976,14 +2981,12 @@ Always generate the certificate in the directory containing the keystore
 and truststore files. The default is domain-dir<code>/config</code>.</p>
 </li>
 <li>
-<p>Generate the certificate in the keystore file, <code>keystore.jks</code>, using
+<p>Generate the certificate in the keystore file, <code>keystore.p12</code>, using
 the following command format:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -genkey -alias keyAlias-keyalg RSA
- -keypass changeit
- -storepass changeit
-keystore keystore.jks</code></pre>
+<pre class="CodeRay highlight"><code>keytool -genkey -alias keyAlias -keyalg RSA -keypass changeit
+ -storepass changeit -keysize 4096 -keystore keystore.p12</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3000,9 +3003,8 @@ new password for <code>changeit</code>. The default key password alias is <code>
 <code>client.cer</code> if you prefer), using the following command format:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -export -alias keyAlias-storepass changeit
- -file server.cer
- -keystore keystore.jks</code></pre>
+<pre class="CodeRay highlight"><code>keytool -export -alias keyAlias -storepass changeit
+ -file server.cer -keystore keystore.p12</code></pre>
 </div>
 </div>
 </li>
@@ -3011,14 +3013,12 @@ new password for <code>changeit</code>. The default key password alias is <code>
 <a href="#to-sign-a-certificate-by-using-keytool">To Sign a Certificate by Using <code>keytool</code></a>.</p>
 </li>
 <li>
-<p>Create the <code>cacerts.jks</code> truststore file and add the certificate to
+<p>Create the <code>cacerts.p12</code> truststore file and add the certificate to
 the truststore, using the following command format:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts
--alias keyAlias
- -file server.cer
--keystore cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts -alias keyAlias
+ -file server.cer -keystore cacerts.p12
  -keypass changeit</code></pre>
 </div>
 </div>
@@ -3039,7 +3039,7 @@ asking if you want to trust the certificate.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>Certificate was added to keystore
-[Saving cacerts.jks]</code></pre>
+[Saving cacerts.p12]</code></pre>
 </div>
 </div>
 </li>
@@ -3053,6 +3053,19 @@ asking if you want to trust the certificate.</p>
 <p>Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
 Using an RSA Key Algorithm</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example shows the legacy JKS format. For new deployments,
+consider using PKCS12 format as shown in Example 1-11a.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>RSA is public-key encryption technology developed by RSA Data Security,
 Inc.</p>
@@ -3062,6 +3075,22 @@ Inc.</p>
 <pre class="CodeRay highlight"><code>keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
 -dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file}
 -storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div id="ghlii-pkcs12" class="paragraph">
+<p>Example 1-11a Creating a Self-Signed Certificate in a PKCS12 Keystore by
+Using an RSA Key Algorithm</p>
+</div>
+<div class="paragraph">
+<p>PKCS12 is the recommended keystore format and has been the default
+since Java 9. RSA is public-key encryption technology developed by
+RSA Data Security, Inc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
+-dname ${dn.name} -keypass ${key.pass}
+-keystore ${keystore.file} -storepass ${keystore.pass}</code></pre>
 </div>
 </div>
 <div id="ghlew" class="paragraph">
@@ -3127,7 +3156,7 @@ certificate.</p>
 <p>Delete the default self-signed certificate:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -delete -alias s1as -keystore keystore.jks -storepass &lt;store_passwd&gt;</code></pre>
+<pre class="CodeRay highlight"><code>keytool -delete -alias s1as -keystore keystore.p12 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3140,7 +3169,7 @@ keystore.</p>
 <p>Generate a new key pair for the application server:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -genkeypair -keyalg &lt;key_alg&gt; -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -genkeypair -keyalg &lt;key_alg&gt; -keystore keystore.p12
 -validity &lt;val_days&gt; -alias s1as</code></pre>
 </div>
 </div>
@@ -3166,7 +3195,7 @@ of the certificate does not match the name of the site.</p>
 <p>Generate a Certificate Signing Request (CSR):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -certreq -alias s1as -file &lt;certreq_file&gt; -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -certreq -alias s1as -file &lt;certreq_file&gt; -keystore keystore.p12
 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
@@ -3193,11 +3222,11 @@ intermediate CA certificates and store them in local files.</p>
 <li>
 <p>Import the CA certificate (if not already present) and any
 intermediate CA certificates (if not already present) indicated by the
-CA into the truststore <code>cacerts.jks</code>:</p>
+CA into the truststore <code>cacerts.p12</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts -alias &lt;CA-Name&gt; -file ca.cert
- -keystore cacerts.jks -storepass &lt;store_passwd&gt;</code></pre>
+ -keystore cacerts.p12 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -3207,7 +3236,7 @@ you obtained from the CA, as stored in a file such as <code>s1as.cert</code>:</p
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts -alias s1as -file s1as.cert
-   -keystore keystore.jks -storepass &lt;store_passwd&gt;</code></pre>
+   -keystore keystore.p12 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4011,7 +4040,10 @@ The <code>keytool</code> command is available in the <code>$JAVA_HOME/bin</code>
 Use the following syntax:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.p12
++
++NOTE: The above examples show PKCS12 format (.p12) which is the recommended
++format since Java 9. For legacy JKS format compatibility, use `.jks` file extension.
 -file cert-name</code></pre>
 </div>
 </div>
@@ -4045,7 +4077,7 @@ alias called "OID self-signed certificate," you would use the following command:
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;OID self signed certificate&quot; -keystore \
-/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer</code></pre>
+/glassfish7/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer</code></pre>
 </div>
 </div>
 </li>
@@ -4132,7 +4164,10 @@ The <code>keytool</code> command is available in the <code>$JAVA_HOME/bin</code>
 Use the following syntax:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.p12
++
++NOTE: The above examples show PKCS12 format (.p12) which is the recommended
++format since Java 9. For legacy JKS format compatibility, use `.jks` file extensions.
 -file cert-name</code></pre>
 </div>
 </div>
@@ -4166,7 +4201,7 @@ alias called "OVD self-signed certificate," you would use the following command:
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;OVD self signed certificate&quot; -keystore \
-/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer</code></pre>
+/glassfish7/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer</code></pre>
 </div>
 </div>
 </li>
@@ -6297,11 +6332,13 @@ self-signed certificate for remote instances.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Both private keys are stored in the domain-wide DAS keystore file, keystore.jks.</p>
+<p>Both private keys are stored in the domain-wide DAS keystore file, keystore.p12
+(PKCS12 format, recommended). For legacy compatibility, keystore.jks (JKS format) is also supported.</p>
 </li>
 <li>
 <p>Both public certificates are stored in the domain-wide DAS truststore
-file, cacerts.jks.</p>
+file, cacerts.p12 (PKCS12 format, recommended). For legacy compatibility,
+cacerts.jks (JKS format) is also supported.</p>
 </li>
 </ul>
 </div>
@@ -6370,7 +6407,7 @@ change it with the <code>change-master-password</code> subcommand.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -list -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -list -keystore keystore.p12
 Enter keystore password:
 Keystore type: JKS
 Keystore provider: SUN
@@ -6549,7 +6586,7 @@ the <code>s1as</code> alias before doing so.</p>
 <p>If you decide to use the <code>s1as</code> and <code>glassfish-instance</code> aliases with
 your own certificates, you will first need to disable secure admin (if
 enabled) and then change or delete the exiting <code>s1as</code> alias from both
-the <code>keystore.jks</code> keystore and <code>cacerts.jks</code> truststore for the DAS.
+the <code>keystore.p12</code> keystore and <code>cacerts.p12</code> truststore for the DAS.
 You can use the <code>--changealias</code> or <code>--delete</code> option of <code>keytool</code> to
 accomplish this. Then, import your own certificates.</p>
 </div>
@@ -6628,7 +6665,7 @@ you can use keytool to display the DN of a certificate:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -v -list -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -v -list -keystore keystore.p12
 Enter keystore password:
 Keystore type: JKS
 Keystore provider: SUN
@@ -6713,7 +6750,7 @@ truststore, you can use keytool to display the alias of a certificate:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -v -list -keystore cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -v -list -keystore cacerts.p12
 Enter keystore password:
 Keystore type: JKS
 Keystore provider: SUN
@@ -7564,11 +7601,11 @@ however, you can use any JDBC-compliant database.</p>
 </div>
 <div class="paragraph">
 <p>The directory and filename location of a private keystore, such as
-keystore.jks</p>
+keystore.p12.</p>
 </div>
 <div class="paragraph">
 <p>The directory and filename location of a Root Certificate Authority (CA)
-keystore, such as cacerts.jks.</p>
+keystore, such as cacerts.p12.</p>
 </div>
 <div class="paragraph">
 <p>For example, operating systems provide utilities such as umask and chmod
@@ -8058,7 +8095,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-09-25 12:51:49 UTC
+Last updated 2025-12-02 22:02:48 UTC
 </div>
 </div>
 </body>

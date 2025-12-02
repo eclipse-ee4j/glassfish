@@ -1,0 +1,46 @@
+<a class=sr-only href=#content>Skip to main content</a>
+<header class="header-wrapper header-default-bg-img" id=header-wrapper>
+  <div class="clearfix toolbar-container-wrapper">
+    <div class=container>
+      <div class="text-right toolbar-row row hidden-print">
+        <div class="col-md-24 row-toolbar-col">
+          <ul class=list-inline>
+            <li><a href=https://accounts.eclipse.org/user/edit data-tab-destination=tab-profile><i class="fa fa-edit fa-fw"></i>Edit my account</a></li>
+            <li><a class="toolbar-link toolbar-manage-cookies dropdown-toggle"><i class="fa fa-wrench"></i>Manage Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=navbar-wrapper>
+    <div class=container>
+      <div class=row id=header-row>
+        <div class="col-sm-5 col-md-4" id=header-left>
+          <div class=wrapper-logo-default><a title="Hugo Solstice Theme" href=https://www.eclipse.org><img width=140 class="logo-eclipse-default img-responsive hidden-xs" src=https://www.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-foundation-white-orange.svg alt="Hugo Solstice Theme"></a></div>
+        </div>
+        <div class="col-sm-20 col-md-20 margin-top-10" id=main-menu-wrapper>
+          <div class="float-right hidden-xs" id=btn-call-for-action>
+            {% if site.links.download %}
+            <div id=btn-call-for-action><a href="{{ site.links.download }}" class="btn btn-huge btn-warning"><i class="fa fa-download"></i>Download</a></div>
+            {% else %}
+            <div id=btn-call-for-action><a href="https://www.eclipse.org/downloads/" class="btn btn-huge btn-warning"><i class="fa fa-download"></i>Download</a></div>
+            {% endif %}
+          </div>
+          <div class="navbar float-sm-right yamm" id=main-menu>
+            <div class="navbar-collapse collapse reset float-right" id=navbar-main-menu>
+              <ul class="nav navbar-nav">
+                {% include nav.html %}
+              </ul>
+            </div>
+            <div class=navbar-header>
+              <button type=button class=navbar-toggle data-toggle=collapse data-target=#navbar-main-menu>
+              <span class=sr-only>Toggle navigation</span>
+              <span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
+              <div class=wrapper-logo-mobile><a class="navbar-brand visible-xs" title="Hugo Solstice Theme" href=https://www.eclipse.org><img width=140 class="logo-eclipse-default-mobile img-responsive" src=https://www.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-foundation-white-orange.svg alt="Hugo Solstice Theme"></a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

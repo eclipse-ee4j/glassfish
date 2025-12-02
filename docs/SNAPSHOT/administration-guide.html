@@ -1622,10 +1622,10 @@ variable references. Variable references are used to refer to values that are ei
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.glassfish.variableexpansion.envvars.disabled</code> -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of Eclipse GlassFish</p>
+<p><code>org.glassfish.variableExpansion.envDisabled</code> -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of Eclipse GlassFish</p>
 </li>
 <li>
-<p><code>org.glassfish.variableexpansion.envvars.preferred</code> - changes the priority - values are resolved first from environment variables and then from system properties</p>
+<p><code>org.glassfish.variableExpansion.envPreferred</code> - changes the priority - values are resolved first from environment variables and then from system properties</p>
 </li>
 </ul>
 </div>
@@ -1652,6 +1652,11 @@ variable references. Variable references are used to refer to values that are ei
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/nodes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.configName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server-config</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.configRoot</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The config directory in the domain</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/config</code></p></td>
@@ -1660,6 +1665,11 @@ variable references. Variable references are used to refer to values that are ei
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.derbyRoot</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for the Apache Derby database</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/javadb</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.domainName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the domain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>domain1</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.domainsRoot</code></p></td>
@@ -9553,11 +9563,14 @@ subcommand.</p>
 -XX: UnlockDiagnosticVMOptions
 -Dcom.sun.enterprise.config.config_environment_factory_class=com.sun.enterprise.
 config.serverbeans.AppserverConfigEnvironmentFactory
--Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
+-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12
 -XX:NewRatio=2
 -Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
 -Djdbc.drivers=org.apache.derby.jdbc.ClientDriver
--Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks
+-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12
+
+# NOTE: PKCS12 format (.p12) is recommended. For legacy compatibility,
+# JKS format (.jks) is also supported.
 -client
 -Djava.ext.dirs=${com.sun.aas.javaRoot}/lib/ext${path.separator}${com.sun.aas.ja
 vaRoot}/jre/lib/ext${path.separator}${com.sun.aas.instanceRoot}/lib/ext${path.se
@@ -32752,7 +32765,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-09-25 12:43:47 UTC
+Last updated 2025-12-02 21:55:23 UTC
 </div>
 </div>
 </body>

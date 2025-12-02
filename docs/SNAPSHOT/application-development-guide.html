@@ -14824,7 +14824,9 @@ organization does not already have one.</p>
 <p>Replace the Eclipse GlassFish self-signed certificate with the
 trusted certificate by importing the trusted certificate into the
 Eclipse GlassFish keystore using the <code>s1as</code> alias. By default, the
-keystore is located at domain-dir`/config/keystore.jks`.</p>
+keystore is located at domain-dir`/config/keystore.p12` (PKCS12 format,
+recommended). For legacy compatibility, JKS format keystores
+(<code>keystore.jks</code>) are also supported.</p>
 <div class="paragraph">
 <p>For more information about importing a trusted certificate into the
 domain keystore, see "<a href="security-guide.html#administering-jsse-certificates">Administering JSSE Certificates</a>"
@@ -20755,7 +20757,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-09-25 12:45:43 UTC
+Last updated 2025-12-02 21:57:10 UTC
 </div>
 </div>
 </body>

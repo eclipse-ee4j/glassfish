@@ -46,7 +46,9 @@ layout: documentation
 
 ## Documentation for GlassFish Docker images {#docker}
 
-The Eclipse GlassFish project publishes Docker Images of GlassFish Server at [ghcr.io/eclipse-ee4j/glassfish](https://ghcr.io/eclipse-ee4j/glassfish).
+The documentation for the official Docker images is here:
+
+* [Eclipse GlassFish Docker Images](https://github.com/eclipse-ee4j/glassfish.docker/wiki)
 
 ## IDE plugins {#ide-plugins}
 

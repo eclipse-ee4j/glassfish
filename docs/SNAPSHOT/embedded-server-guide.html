@@ -98,6 +98,24 @@
 </ul>
 </li>
 <li><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></li>
+<li><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a>
+<ul class="sectlevel2">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#enabling-monitoring-modules">Enabling Monitoring Modules</a>
+<ul class="sectlevel3">
+<li><a href="#method-1-command-line">Method 1: Command Line</a></li>
+<li><a href="#method-2-properties-file">Method 2: Properties File</a></li>
+</ul>
+</li>
+<li><a href="#accessing-monitoring-data">Accessing Monitoring Data</a>
+<ul class="sectlevel3">
+<li><a href="#using-visualvm">Using VisualVM</a></li>
+<li><a href="#exposing-jmx-on-a-specific-port">Exposing JMX on a Specific Port</a></li>
+<li><a href="#available-monitoring-modules">Available Monitoring Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></li>
 <li><a href="#restrictions-for-embedded-glassfish-server">Restrictions for Embedded Eclipse GlassFish</a></li>
 </ul>
@@ -656,6 +674,9 @@ ability to program in the Java language is assumed.</p>
 <p><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></p>
 </li>
 <li>
+<p><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a></p>
+</li>
+<li>
 <p><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></p>
 </li>
 <li>
@@ -1016,10 +1037,9 @@ or info in the application descriptors.</p>
     [--help] [applications or admin commands...]</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code></code></pre>
-</div>
+<div class="paragraph">
+<p>Command line options with a value can be specified in two forms:
+<code>--option=value</code> (e.g., <code>--httpPort=8090</code>) or <code>--option value</code> (e.g., <code>--httpPort 8090</code>).</p>
 </div>
 <div class="paragraph">
 <p><code>--properties=FILE</code></p>
@@ -1045,7 +1065,12 @@ The value will be treated as a command to execute at startup.</p>
 <li>
 <p>Keys that start with the "deploy." prefix, followed by any text. The
 value will be treated as an application to deploy at startup, as if it
-was specified on the command line.
+was specified on the command line.</p>
+</li>
+<li>
+<p>If a property name doesn&#8217;t match any already supported patterns and is not
+a recognized GlassFish property, it will be set as a system property, if
+it&#8217;s not already defined.
 For example, the $Eclipse GlassFish domain directory can be specified with the
 usual Embedded $Eclipse GlassFish property
 "glassfish.embedded.tmpdir=myDomainDir", as well as with the property
@@ -3542,6 +3567,170 @@ command when you invoke Embedded Eclipse GlassFish. For example:</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="monitoring-embedded-glassfish-server-with-jmx"><a class="anchor" href="#monitoring-embedded-glassfish-server-with-jmx"></a>Monitoring Embedded Eclipse GlassFish with JMX</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish supports monitoring through JMX MBeans, similar to regular Eclipse GlassFish Server. However, you must attache the flashlight agent on command line to enable monitoring functionality.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AMX (Application Management Extensions) monitoring is only available in <code>glassfish-embedded-all.jar</code>. The <code>glassfish-embedded-web.jar</code> does not include AMX support, which limits the available monitoring MBeans.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>To enable monitoring in Embedded Eclipse GlassFish, you need the flashlight agent JAR file:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Download from Maven Central: <code>org.glassfish.main.flashlight:flashlight-agent</code></p>
+</li>
+<li>
+<p>Or use from an existing Eclipse GlassFish installation: <code>glassfish/lib/monitor/flashlight-agent.jar</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enabling-monitoring-modules"><a class="anchor" href="#enabling-monitoring-modules"></a>Enabling Monitoring Modules</h3>
+<div class="paragraph">
+<p>By default, the monitoring service and MBeans support are enabled, but no monitoring modules are active. You can enable specific monitoring modules using one of two methods:</p>
+</div>
+<div class="sect3">
+<h4 id="method-1-command-line"><a class="anchor" href="#method-1-command-line"></a>Method 1: Command Line</h4>
+<div class="paragraph">
+<p>Start Embedded Eclipse GlassFish with the <code>enable-monitoring</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="method-2-properties-file"><a class="anchor" href="#method-2-properties-file"></a>Method 2: Properties File</h4>
+<div class="paragraph">
+<p>Create a <code>glassfish.properties</code> file in the current directory with monitoring configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH
+configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then start Embedded Eclipse GlassFish:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-monitoring-data"><a class="anchor" href="#accessing-monitoring-data"></a>Accessing Monitoring Data</h3>
+<div class="paragraph">
+<p>Once monitoring modules are enabled, you can access monitoring data through JMX clients such as VisualVM or JConsole.</p>
+</div>
+<div class="sect3">
+<h4 id="using-visualvm"><a class="anchor" href="#using-visualvm"></a>Using VisualVM</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Connect to the Embedded Eclipse GlassFish process in VisualVM</p>
+</li>
+<li>
+<p>Install the MBeans extension if not already available</p>
+</li>
+<li>
+<p>Navigate to the MBeans tab</p>
+</li>
+<li>
+<p>Execute the <code>bootAMX</code> operation first (this is required, same as with regular Eclipse GlassFish Server)</p>
+</li>
+<li>
+<p>Monitoring data will be available under the <code>amx</code> node, in nodes that end with <code>-mon</code>, such as <code>thread-pool-mon</code> or <code>request-mon</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="exposing-jmx-on-a-specific-port"><a class="anchor" href="#exposing-jmx-on-a-specific-port"></a>Exposing JMX on a Specific Port</h4>
+<div class="paragraph">
+<p>To allow remote JMX connections, you can expose the JMX server on a specific port by adding JVM system properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar \
+     -Dcom.sun.management.jmxremote \
+     -Dcom.sun.management.jmxremote.port=8686 \
+     -Dcom.sun.management.jmxremote.authenticate=false \
+     -Dcom.sun.management.jmxremote.ssl=false \
+     -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Exposing JMX without authentication and SSL is not secure and should only be used in development environments. JMX MBeans include management beans that allow executing administrative operations on Eclipse GlassFish, which could be exploited by unauthorized users. In production environments, always enable authentication and SSL for JMX connections.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="available-monitoring-modules"><a class="anchor" href="#available-monitoring-modules"></a>Available Monitoring Modules</h4>
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish supports the same monitoring modules as regular Eclipse GlassFish Server, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>thread-pool</code> - Thread pool statistics</p>
+</li>
+<li>
+<p><code>http-service</code> - HTTP service metrics</p>
+</li>
+<li>
+<p><code>web-container</code> - Web container statistics</p>
+</li>
+<li>
+<p><code>ejb-container</code> - EJB container metrics</p>
+</li>
+<li>
+<p><code>transaction-service</code> - Transaction service data</p>
+</li>
+<li>
+<p><code>jvm</code> - JVM statistics</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For comprehensive information about available monitoring modules and their metrics, see <a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a> in the Eclipse GlassFish Administration Guide.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="default-java-persistence-data-source-for-embedded-glassfish-server"><a class="anchor" href="#default-java-persistence-data-source-for-embedded-glassfish-server"></a>Default Java Persistence Data Source for Embedded Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -3675,7 +3864,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-09-25 12:46:56 UTC
+Last updated 2025-12-02 21:58:17 UTC
 </div>
 </div>
 </body>

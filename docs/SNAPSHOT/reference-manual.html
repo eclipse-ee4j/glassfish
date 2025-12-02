@@ -6636,11 +6636,16 @@ requires superuser privileges.</p>
 </dd>
 <dt class="hdlist1"><code>JAVA_DEBUGGER_PORT</code></dt>
 <dd>
-<p>This property specifies the port number of the port that is used for
-connections to the Java Platform Debugger Architecture (JPDA)
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
-debugger. Valid values are 1-65535. On UNIX, creating sockets that
-listen on ports 1-1024 requires superuser privileges.</p>
+<p>  This property specifies the port number of the port that is used for
+  connections to the Specifies whether the domain is restarted with
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
+debugging enabled.</p>
+<div class="literalblock">
+<div class="content">
+<pre>debugger. Valid values are 1-65535. On UNIX, creating sockets that
+listen on ports 1-1024 requires superuser privileges.</pre>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><code>JMS_PROVIDER_PORT</code></dt>
 <dd>
@@ -7856,9 +7861,7 @@ requires superuser privileges.</p>
 <dd>
 <p>This property specifies the port number of the port that is used for
 connections to the
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture (JPDA)</a>
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugger. Valid values are 1-65535. On UNIX, creating sockets that
 listen on ports 1-1024 requires superuser privileges.</p>
 </dd>
@@ -9778,8 +9781,10 @@ certificate is called the domain&#8217;s SSL server certificate. When the
 domain is contacted by a web browser over a secure channel (HTTPS),
 this certificate is presented by the domain. The master password is
 supposed to protect the store (a file) that contains this certificate.
-This file is called <code>keystore.jks</code> and is created in the configuration
-directory of the domain created. If however, this option is chosen,
+This file is called <code>keystore.p12</code> (PKCS12 format) and is
+created in the configuration directory of the domain created. For legacy
+compatibility, JKS format (<code>keystore.jks</code>) is also supported. If however,
+this option is chosen,
 the master password is saved on the disk in the domain&#8217;s configuration
 location. The master password is stored in a file called
 <code>master-password</code>, which is a Java JCEKS type keystore. The reason for
@@ -9855,9 +9860,7 @@ privileges.</p>
 <dd>
 <p>This property specifies the port number of the port that is used for
 connections to the
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture (JPDA)</a>
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugger. Valid values are 1-65535. On UNIX, creating sockets that
 listen on ports 1-1024 requires superuser privileges.</p>
 </dd>
@@ -12110,8 +12113,7 @@ requires superuser privileges.</p>
 <dt class="hdlist1"><code>JAVA_DEBUGGER_PORT</code></dt>
 <dd>
 <p>This property specifies the port number of the port that is used for
-connections to the Java Platform Debugger Architecture (JPDA)
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+connections to the <a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugger. Valid values are 1-65535. On UNIX, creating sockets that
 listen on ports 1-1024 requires superuser privileges.</p>
 </dd>
@@ -13087,7 +13089,7 @@ following properties are available:</p>
 <dd>
 <p>Specifies the database server for this connection pool.</p>
 </dd>
-<dt class="hdlist1"><code>port</code></dt>
+<dt class="hdlist1"><code>portNumber</code></dt>
 <dd>
 <p>Specifies the port on which the database server listens for
 requests.</p>
@@ -14440,7 +14442,7 @@ does not re-create the option.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>If a property <code>org.glassfish.envPreferredToProperties</code> is defined as <code>true</code> (in any source except environment variables), then environment variables take precedence over other sources, instead of being the last resolved source. It&#8217;s also possible to override options and system properties defined in JVM options with an environment variable that either has the same name, or same name if case is ignored and non-alphanumeric characters are replaced with the <code>_</code> character. For example, a property <code>-Dmy.name</code> can be defined by redefined by environment variables <code>my.name</code>, <code>my_name</code>, or <code>MY_NAME</code>.</p>
+<p>If a property <code>org.glassfish.variableExpansion.envPreferred</code> is defined as <code>true</code> (in any source except environment variables), then environment variables take precedence over other sources, instead of being the last resolved source. It&#8217;s also possible to override options and system properties defined in JVM options with an environment variable that either has the same name, or same name if case is ignored and non-alphanumeric characters are replaced with the <code>_</code> character. For example, a property <code>-Dmy.name</code> can be defined by redefined by environment variables <code>my.name</code>, <code>my_name</code>, or <code>MY_NAME</code>. If a property <code>org.glassfish.variableExpansion.envDisabled</code> is defined as <code>true</code>, then environment variables are ignored.</p>
 </div>
 <div class="admonitionblock caution">
 <table>
@@ -15284,8 +15286,7 @@ requires superuser privileges.</p>
 <dt class="hdlist1"><code>JAVA_DEBUGGER_PORT</code></dt>
 <dd>
 <p>This property specifies the port number of the port that is used for
-connections to the Java Platform Debugger Architecture (JPDA)
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+connections to the <a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugger. Valid values are 1-65535. On UNIX, creating sockets that
 listen on ports 1-1024 requires superuser privileges.</p>
 </dd>
@@ -38596,12 +38597,15 @@ configured, an error occurs. The default is false.</p>
 -XX: UnlockDiagnosticVMOptions
 -Dcom.sun.enterprise.config.config_environment_factory_class=
 com.sun.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory
--Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
+-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12
 -XX:NewRatio=2
 -DANTLR_USE_DIRECT_CLASS_LOADING=true
 -Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
 -Djdbc.drivers=org.apache.derby.jdbc.ClientDriver
--Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks
+-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12
+
+# NOTE: PKCS12 format (.p12) is recommended. For legacy compatibility,
+# JKS format (.jks) is also supported.
 -client
 -Djava.ext.dirs=${com.sun.aas.javaRoot}/lib/ext${path.separator}${
 com.sun.aas.javaRoot}/jre/lib/ext${path.separator}${com.sun.aas.instanceRoot}
@@ -45429,6 +45433,7 @@ Command remove-library executed successfully.</code></pre>
 [--force[=&lt;force(default:true)&gt;]]
 [--help|-?]
 [--kill[=&lt;kill(default:false)&gt;]]
+[--server-output|-o=&lt;server-output(default:false)&gt;]]
 [--timeout &lt;timeout&gt;]
 [domain_name]</code></pre>
 </div>
@@ -45473,9 +45478,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dt class="hdlist1"><code>--debug</code></dt>
 <dd>
 <p>Specifies whether the domain is restarted with
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture (JPDA)</a>
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugging enabled.
 Possible values are as follows:</p>
 <div class="dlist">
@@ -45537,6 +45540,25 @@ Java platform to terminate the domain process (default).</p>
 <dd>
 <p>The domain is killed. The subcommand uses functionality of the
 operating system to terminate the domain process.</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1"><code>--server-output</code></dt>
+<dt class="hdlist1"><code>-o</code></dt>
+<dd>
+<p>Specifies if the command should or should not print the server output.
+If not set, server prints the output just when the command failed.
+Possible values are as follows:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>true</code></dt>
+<dd>
+<p>The output of the server startup will be printed after the command finishes.</p>
+</dd>
+<dt class="hdlist1"><code>false</code></dt>
+<dd>
+<p>The output of the server startup will not be printed.</p>
 </dd>
 </dl>
 </div>
@@ -45722,9 +45744,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dt class="hdlist1"><code>--debug</code></dt>
 <dd>
 <p>Specifies whether the instance is restarted with
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture
-(JPDA)</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugging enabled. Possible values are as follows:</p>
 <div class="dlist">
 <dl>
@@ -45928,9 +45948,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dt class="hdlist1"><code>--debug</code></dt>
 <dd>
 <p>Specifies whether the instance is restarted with
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture (JPDA)</a>
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugging enabled.
 Possible values are as follows:</p>
 <div class="dlist">
@@ -48648,6 +48666,7 @@ reference page for the operating system that you are using:</p>
 [--drop-interrupted-commands[=&lt;drop-interrupted-commands(default:false)&gt;]]
 [--dry-run|-n[=&lt;dry-run(default:false)&gt;]]
 [--help|-?]
+[--server-output|-o=&lt;server-output(default:false)&gt;]]
 [--suspend|-s[=&lt;suspend(default:false)&gt;]]
 [--timeout &lt;timeout&gt;]
 [--upgrade[=&lt;upgrade(default:false)&gt;]]
@@ -48765,6 +48784,25 @@ displays the full java command that would be used to start the domain,
 including all options. Reviewing this command can be useful to confirm
 JVM options and when troubleshooting startup issues.<br>
 The default value is <code>false</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--server-output</code></dt>
+<dt class="hdlist1"><code>-o</code></dt>
+<dd>
+<p>Specifies if the command should or should not print the server output.
+If not set, server prints the output just when the command failed.
+Possible values are as follows:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>true</code></dt>
+<dd>
+<p>The output of the server startup will be printed after the command finishes.</p>
+</dd>
+<dt class="hdlist1"><code>false</code></dt>
+<dd>
+<p>The output of the server startup will not be printed.</p>
+</dd>
+</dl>
+</div>
 </dd>
 <dt class="hdlist1"><code>--suspend</code></dt>
 <dt class="hdlist1"><code>-s</code></dt>
@@ -49026,9 +49064,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dt class="hdlist1"><code>--debug</code></dt>
 <dd>
 <p>Specifies whether the instance is started with
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture (JPDA)</a>
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugging enabled.<br>
 Possible values are as follows:</p>
 <div class="dlist">
@@ -49223,6 +49259,7 @@ Command start-instance executed successfully.</code></pre>
 [--help|-?]
 [--node &lt;node&gt;]
 [--nodedir &lt;nodedir&gt;]
+[--server-output|-o=&lt;server-output(default:false)&gt;]]
 [--sync &lt;sync(default:normal)&gt;]
 [--timeout &lt;timeout&gt;]
 [--verbose|-v[=&lt;verbose(default:false)&gt;]]
@@ -49277,9 +49314,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dt class="hdlist1"><code>-d</code></dt>
 <dd>
 <p>Specifies whether the instance is started with
-<a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
-Platform Debugger Architecture (JPDA)</a>
-(<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a>)
+<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html">Java Platform Debugger Architecture (JPDA)</a>
 debugging enabled.</p>
 <div class="paragraph">
 <p>Possible values are as follows:</p>
@@ -49318,6 +49353,25 @@ contains only one node directory. Otherwise, this option is required.</p>
 <p>Specifies the directory that contains the instance&#8217;s node directory.
 The instance&#8217;s files are stored in the instance&#8217;s node directory. The
 default is as-install<code>/nodes</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--server-output</code></dt>
+<dt class="hdlist1"><code>-o</code></dt>
+<dd>
+<p>Specifies if the command should or should not print the server output.
+If not set, server prints the output just when the command failed.
+Possible values are as follows:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>true</code></dt>
+<dd>
+<p>The output of the server startup will be printed after the command finishes.</p>
+</dd>
+<dt class="hdlist1"><code>false</code></dt>
+<dd>
+<p>The output of the server startup will not be printed.</p>
+</dd>
+</dl>
+</div>
 </dd>
 <dt class="hdlist1"><code>--sync</code></dt>
 <dd>
@@ -55384,7 +55438,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-09-25 12:50:03 UTC
+Last updated 2025-12-02 22:01:07 UTC
 </div>
 </div>
 </body>

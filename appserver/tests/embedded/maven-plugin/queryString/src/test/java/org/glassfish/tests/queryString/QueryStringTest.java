@@ -20,39 +20,38 @@ package org.glassfish.tests.queryString;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WebTest {
+public class QueryStringTest {
 
     private static final int EXPECTED_COUNT = 1;
 
-    private String contextPath = "/test";
-
     @Test
     public void testWeb() throws Exception {
-        goGet("localhost", 8080, "TEST", contextPath+"/ServletTest");
-    }
-
-    private static void goGet(String host, int port, String result, String contextPath) throws Exception {
-        contextPath += "?url=" + contextPath;
-        System.out.println("Connecting " + contextPath);
-        URL servlet = new URL("http://localhost:8080/" + contextPath);
-        // URL servlet = new URL("http://localhost:8080/test/ServletTest?TEST=PASS");
-        HttpURLConnection connection = (HttpURLConnection) servlet.openConnection();
+        String servletName = "ServletTest";
+        String context = "test/" + servletName;
+        String basicUrl = "http://localhost:8080/" + context;
+        URL url = URI.create(basicUrl + "?url=" + servletName).toURL();
+        System.out.println("Connecting " + url);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(false);
+        String contextPathInHtml = null;
+        String redirectLocation = connection.getHeaderField("Location");
+        assertEquals(basicUrl + "?TEST=PASS", redirectLocation);
         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String line = null;
             while ((line = in.readLine()) != null) {
-                int index = line.indexOf(result);
                 System.out.println("[Server response]" + line);
-
-                int pos = line.indexOf("Location");
+                String pattern = "<a href=\"";
+                int pos = line.indexOf(pattern);
                 if (pos != -1) {
-                    contextPath = line.substring(pos + "Location:".length()).trim();
-                    in.close();
+                    int pos2 = line.lastIndexOf("\">here</a>");
+                    contextPathInHtml = line.substring(pos + pattern.length(), pos2);
                     break;
                 }
             }
@@ -60,13 +59,15 @@ public class WebTest {
             connection.disconnect();
         }
 
-        servlet = new URL("http://localhost:8080/" + contextPath);
-        HttpURLConnection connection2 = (HttpURLConnection) servlet.openConnection();
+        assertEquals(redirectLocation, contextPathInHtml);
+
+        URL redirectedUrl = URI.create(redirectLocation).toURL();
+        HttpURLConnection connection2 = (HttpURLConnection) redirectedUrl.openConnection();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection2.getInputStream()))) {
             String line;
             int count = 0;
             while ((line = in.readLine()) != null) {
-                int index = line.indexOf(result);
+                int index = line.indexOf("TEST");
                 System.out.println("[Redirect response]" + line);
 
                 if (index != -1) {

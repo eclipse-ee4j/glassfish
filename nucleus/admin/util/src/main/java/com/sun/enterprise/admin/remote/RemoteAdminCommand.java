@@ -1068,7 +1068,7 @@ public class RemoteAdminCommand {
     /**
      * Fetch the command metadata from the remote server.
      */
-    protected void fetchCommandModel() throws CommandException {
+    public void fetchCommandModel() throws CommandException {
         long startNanos = System.nanoTime();
         commandModel = null; //For sure not be used during request header construction
 
@@ -1121,7 +1121,7 @@ public class RemoteAdminCommand {
         });
         if (commandModel == null) {
             if (metadataErrors == null) {
-                throw new InvalidCommandException(strings.get("unknownError"));
+                throw new InvalidCommandException("Unknown error - no metadata errors available.");
             }
             throw new InvalidCommandException(metadataErrors.toString());
         }

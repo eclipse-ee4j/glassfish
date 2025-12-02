@@ -139,11 +139,6 @@ public class RemoteCLICommand extends CLICommand {
             }
         }
 
-        @Override
-        public void fetchCommandModel() throws CommandException {
-            super.fetchCommandModel();
-        }
-
         /**
          * If we're interactive, prompt for a new username and password. Return true if we're successful in collecting new
          * information (and thus the caller should try the request again).
@@ -695,17 +690,6 @@ public class RemoteCLICommand extends CLICommand {
         }
     }
 
-    //    /**
-    //     * We do all our help processing in executeCommand.
-    //     */
-    //    @Override
-    //    protected boolean checkHelp()
-    //            throws CommandException, CommandValidationException {
-    //        return false;
-    //    }
-    /**
-     * Runs the command using the specified arguments.
-     */
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
         try {
@@ -716,10 +700,6 @@ public class RemoteCLICommand extends CLICommand {
                 rac.registerListener(EVENT_STATE_CHANGED, new DetachListener(rac, programOpts.isTerse()));
             }
 
-            /*if (programOpts.isNotifyCommand()) {
-                rac.registerListener(AdminCommandState.EVENT_STATE_CHANGED,
-                        new NotifyListener(logger, rac, programOpts.isTerse()));
-            }*/
             try {
                 output = rac.executeCommand(options);
             } finally {
@@ -727,7 +707,7 @@ public class RemoteCLICommand extends CLICommand {
             }
             ar = rac.getActionReport();
             if (!returnActionReport && !returnOutput) {
-                if (!output.isEmpty()) {
+                if (output != null && !output.isEmpty()) {
                     logger.info(output);
                 }
             }

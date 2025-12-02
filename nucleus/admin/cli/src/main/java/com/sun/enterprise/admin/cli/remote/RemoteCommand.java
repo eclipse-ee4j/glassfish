@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -107,11 +107,6 @@ public class RemoteCommand extends CLICommand {
             Logger logger, String authToken) throws CommandException {
             super(name, host, port, secure, user, password, logger, getCommandScope(), authToken, true /* prohibitDirectoryUploads */);
             sessionCache = AsadminSecurityUtil.getGfClientSessionFile(host, port);
-        }
-
-        @Override
-        public void fetchCommandModel() throws CommandException {
-            super.fetchCommandModel();
         }
 
         /**

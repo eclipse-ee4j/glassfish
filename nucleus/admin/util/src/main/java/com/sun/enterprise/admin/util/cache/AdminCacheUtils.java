@@ -44,35 +44,17 @@ public class AdminCacheUtils {
 
     public DataProvider getProvider(final Class clazz) {
         DataProvider result = providers.get(clazz);
-        if (result == null) {
-            //Use hardcoded data providers - fastest and not problematic
-            for (DataProvider provider : allProviders) {
-                if (provider.accept(clazz)) {
-                    providers.put(clazz, provider);
-                    return provider;
-                }
-            }
-            //            ServiceLocator habitat = Globals.getDefaultHabitat();
-            //            if (habitat != null) {
-            //                List<DataProvider> allServices = habitat.getAllServices(DataProvider.class);
-            //                for (DataProvider provider : allServices) {
-            //                    if (provider.accept(clazz)) {
-            //                        providers.put(clazz, provider);
-            //                        return provider;
-            //                    }
-            //                }
-            //            }
-            //            for (DataProvider provider : dataProviderLoader) {
-            //                if (provider.accept(clazz)) {
-            //                    providers.put(clazz, provider);
-            //                    return provider;
-            //                }
-            //            }
-
-            return null;
-        } else {
+        if (result != null) {
             return result;
         }
+        //Use hardcoded data providers - fastest and not problematic
+        for (DataProvider provider : allProviders) {
+            if (provider.accept(clazz)) {
+                providers.put(clazz, provider);
+                return provider;
+            }
+        }
+        return null;
     }
 
     public final boolean validateKey(final String key) {
@@ -90,4 +72,11 @@ public class AdminCacheUtils {
         return instance;
     }
 
+    public static String createCommandCacheKey(String name, String host, int port) {
+        StringBuilder result = new StringBuilder(host.length() + name.length() + 12);
+        result.append("cache/");
+        result.append(host).append('_').append(port);
+        result.append('/').append(name);
+        return result.toString();
+    }
 }

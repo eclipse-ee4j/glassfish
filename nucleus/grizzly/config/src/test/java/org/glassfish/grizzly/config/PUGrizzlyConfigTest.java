@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,7 +72,7 @@ public class PUGrizzlyConfigTest {
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
                 helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            final String httpContent = helper.getContent(new URL("http://localhost:38082").openConnection());
+            final String httpContent = helper.getContent(new URL("http://localhost:38082"));
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent);
 
             final String xProtocolContent = getXProtocolContent("localhost", 38082);
@@ -93,11 +93,11 @@ public class PUGrizzlyConfigTest {
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
                 helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            final String httpContent1 = helper.getContent(new URL("http://localhost:38082").openConnection());
+            final String httpContent1 = helper.getContent(new URL("http://localhost:38082"));
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent1);
 
             HttpsURLConnection.setDefaultSSLSocketFactory(helper.getSSLSocketFactory());
-            final String httpContent2 = helper.getContent(new URL("https://localhost:38082").openConnection());
+            final String httpContent2 = helper.getContent(new URL("https://localhost:38082"));
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent2);
         } finally {
             if (grizzlyConfig != null) {

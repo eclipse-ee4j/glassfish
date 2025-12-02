@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,8 @@ package org.glassfish.grizzly.config.test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URLConnection;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;
@@ -47,11 +48,12 @@ public final class GrizzlyConfigTestHelper {
     }
 
 
-    public String getContent(URLConnection connection) {
+    public String getContent(URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             return new String(connection.getInputStream().readAllBytes(), UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot get content from " + connection, e);
+        } finally {
+            connection.disconnect();
         }
     }
 

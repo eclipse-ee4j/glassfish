@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package org.glassfish.tests.embedded.jsptest;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,20 +29,15 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JspTest {
 
-//    private static int count = 0;
-    private static int EXPECTED_COUNT = 3;
+    private static final int EXPECTED_COUNT = 3;
 
     private String contextPath = "test";
-
-    @BeforeAll
-    public static void setup() throws IOException {
-    }
 
     @Test
     public void testWeb() throws Exception {
@@ -61,46 +55,47 @@ public class JspTest {
     }
 
     private static void goGet(String url, String result) throws Exception {
+        disableCertValidation();
+        URL servlet = new URL(url);
+        HttpURLConnection uc = (HttpURLConnection) servlet.openConnection();
         try {
-            disableCertValidation();
-            URL servlet = new URL(url);
-            HttpURLConnection uc = (HttpURLConnection)servlet.openConnection();
             System.out.println("\nURLConnection = " + uc + " : ");
             if (uc.getResponseCode() != 200) {
                 throw new Exception("Servlet did not return 200 OK response code");
             }
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    uc.getInputStream()));
-            String line = null;
-            boolean found = false;
-            int index;
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-                index = line.indexOf(result);
-                if (index != -1) {
-                    found = true;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()))) {
+                String line = null;
+                boolean found = false;
+                int index;
+                while ((line = in.readLine()) != null) {
+                    System.out.println(line);
+                    index = line.indexOf(result);
+                    if (index != -1) {
+                        found = true;
+                    }
                 }
+                assertTrue(found);
+                System.out.println("\n***** SUCCESS **** Found [" + result + "] in the response.*****\n");
             }
-            Assertions.assertTrue(found);
-            System.out.println("\n***** SUCCESS **** Found [" + result + "] in the response.*****\n");
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
+        } finally {
+            uc.disconnect();
         }
     }
 
     public static void disableCertValidation() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
 
+            @Override
             public void checkClientTrusted(X509Certificate[] certs, String authType) {
                 return;
             }
 
+            @Override
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 return;
             }

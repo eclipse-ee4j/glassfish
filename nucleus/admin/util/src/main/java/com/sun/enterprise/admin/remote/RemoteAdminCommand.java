@@ -565,31 +565,25 @@ public class RemoteAdminCommand {
 
             @Override
             public void useConnection(final HttpURLConnection urlConnection) throws CommandException, IOException {
-                InputStream in = urlConnection.getInputStream();
-
-                String responseContentType = urlConnection.getContentType();
-
-                Payload.Inbound inboundPayload = PayloadImpl.Inbound.newInstance(responseContentType, in);
-
-                if (inboundPayload == null) {
-                    throw new IOException(strings.get("NoPayloadSupport", responseContentType));
-                }
-                PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null,
-                    new PayloadFilesManager.ActionReportHandler() {
-
-                        @Override
-                        public void handleReport(InputStream reportStream) throws Exception {
+                try (InputStream in = urlConnection.getInputStream()) {
+                    String responseContentType = urlConnection.getContentType();
+                    Payload.Inbound inboundPayload = PayloadImpl.Inbound.newInstance(responseContentType, in);
+                    if (inboundPayload == null) {
+                        throw new IOException(strings.get("NoPayloadSupport", responseContentType));
+                    }
+                    PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null,
+                        reportStream -> {
                             int responseCode = urlConnection.getResponseCode();
                             Charset charset = HttpParser.getCharsetFromHeader(responseContentType);
                             handleResponse(options, reportStream, charset, responseCode, userOut);
-                        }
-                    });
-                try {
-                    downloadedFilesMgr.processParts(inboundPayload);
-                } catch (CommandException cex) {
-                    throw cex;
-                } catch (Exception ex) {
-                    throw new CommandException(ex.getMessage(), ex);
+                        });
+                    try {
+                        downloadedFilesMgr.processParts(inboundPayload);
+                    } catch (CommandException cex) {
+                        throw cex;
+                    } catch (Exception ex) {
+                        throw new CommandException(ex.getMessage(), ex);
+                    }
                 }
             }
         });
@@ -613,7 +607,6 @@ public class RemoteAdminCommand {
      * @throws CommandException if anything goes wrong
      */
     private void doHttpCommand(String uriString, String httpMethod, HttpCommand cmd, boolean isForMetadata) throws CommandException {
-        HttpURLConnection urlConnection;
         /*
          * There are various reasons we might retry the command - an authentication
          * challenges from the DAS, shifting from an insecure connection to
@@ -659,87 +652,76 @@ public class RemoteAdminCommand {
              */
             shouldTryCommandAgain = false;
             try {
+                final AuthenticationInfo authInfo = authenticationInfo();
                 if (logger.isLoggable(FINER)) {
                     logger.log(FINER, "URI: {0}", uriString);
-                    logger.log(FINER, "URL: {0}", url.toString());
                     logger.log(FINER, "URL: {0}", url.toURL(uriString).toString());
+                    logger.log(FINER, "Method: {0}", httpMethod);
                     logger.log(FINER, "Password options: {0}", passwordOptions);
-                    logger.log(FINER, "Using auth info: User: {0}, Password: {1}",
-                            new Object[] { user, (password != null && password.length > 0) ? "<non-null>" : "<null>" });
+                    logger.log(FINER, "Using auth info: {0}", authInfo);
                 }
-                final AuthenticationInfo authInfo = authenticationInfo();
                 if (authInfo != null) {
                     url.setAuthenticationInfo(authInfo);
                 }
-                urlConnection = (HttpURLConnection) url.openConnection(uriString);
-                urlConnection.setRequestProperty("User-Agent", responseFormatType);
-                if (passwordOptions != null) {
-                    urlConnection.setRequestProperty("X-passwords", passwordOptions.toString());
-                }
-
-                if (authToken != null) {
-                    /*
-                     * If this request is for metadata then we expect to reuse
-                     * the auth token.
-                     */
-                    urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
-                            (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
-                }
-                if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
-                    urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
-                    if (logger.isLoggable(FINER)) {
-                        logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection(uriString);
+                try {
+                    urlConnection.setRequestProperty("User-Agent", responseFormatType);
+                    urlConnection.addRequestProperty("Cache-Control", "no-cache");
+                    urlConnection.addRequestProperty("Pragma", "no-cache");
+                    if (passwordOptions != null) {
+                        urlConnection.setRequestProperty("X-passwords", passwordOptions.toString());
                     }
-                }
-                urlConnection.setRequestMethod(httpMethod);
-                urlConnection.setReadTimeout(readTimeout);
-                if (connectTimeout >= 0) {
-                    urlConnection.setConnectTimeout(connectTimeout);
-                }
-                addAdditionalHeaders(urlConnection);
+                    if (authToken != null) {
+                        /*
+                         * If this request is for metadata then we expect to reuse
+                         * the auth token.
+                         */
+                        urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
+                                (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
+                    }
+                    if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {
+                        urlConnection.setRequestProperty(COMMAND_MODEL_MATCH_HEADER, ((CachedCommandModel) commandModel).getETag());
+                        if (logger.isLoggable(FINER)) {
+                            logger.log(FINER, "CommandModel ETag: {0}", ((CachedCommandModel) commandModel).getETag());
+                        }
+                    }
+                    urlConnection.setRequestMethod(httpMethod);
+                    urlConnection.setReadTimeout(readTimeout);
+                    if (connectTimeout >= 0) {
+                        urlConnection.setConnectTimeout(connectTimeout);
+                    }
+                    addAdditionalHeaders(urlConnection);
 
-                cmd.prepareConnection(urlConnection);
-                urlConnection.connect();
-                /*
-                 * We must handle redirection from http to https explicitly
-                 * because, even if the HttpURLConnection's followRedirect is
-                 * set to true, the Java SE implementation does not do so if the
-                 * procotols are different.
-                 */
-                String redirection = checkConnect(urlConnection);
-                if (redirection != null) {
+                    cmd.prepareConnection(urlConnection);
+                    urlConnection.connect();
                     /*
-                     * Log at FINER; at FINE it would appear routinely when used from
-                     * asadmin.
+                     * We must handle redirection from http to https explicitly
+                     * because, even if the HttpURLConnection's followRedirect is
+                     * set to true, the Java SE implementation does not do so if the
+                     * procotols are different.
                      */
-                    logger.log(FINER, "Following redirection to " + redirection);
-                    url = followRedirection(url, redirection);
-                    shouldTryCommandAgain = true;
-                    /*
-                     * Record that, during the retry of this request, we should
-                     * use https.
-                     */
-                    shouldUseSecure = url.isSecure();
+                    String redirection = checkConnect(urlConnection);
+                    if (redirection != null) {
+                        // Log at FINER; at FINE it would appear routinely when used from asadmin.
+                        logger.log(FINER, () -> "Following redirection to " + redirection);
+                        url = followRedirection(url, redirection);
+                        shouldTryCommandAgain = true;
+                        // Record that, during the retry of this request, we should use https.
+                        shouldUseSecure = url.isSecure();
 
-                    /*
-                     * Record that, if this is a metadata request, the real
-                     * request should use https also.
-                     */
-                    secure = true;
+                        // Record that, if this is a metadata request, the real request should use https also.
+                        secure = true;
+                        continue;
+                    }
 
+                    // No redirection, so we have established the connection.
+                    // Now delegate again to the command processing to use the now-created connection.
+                    cmd.useConnection(urlConnection);
+                    processHeaders(urlConnection);
+                    logger.finer("doHttpCommand succeeds");
+                } finally {
                     urlConnection.disconnect();
-
-                    continue;
                 }
-
-                /*
-                 * No redirection, so we have established the connection.
-                 * Now delegate again to the command processing to use the
-                 * now-created connection.
-                 */
-                cmd.useConnection(urlConnection);
-                processHeaders(urlConnection);
-                logger.finer("doHttpCommand succeeds");
             } catch (AuthenticationException authEx) {
 
                 logger.log(FINER, "DAS has challenged for credentials");
@@ -789,8 +771,6 @@ public class RemoteAdminCommand {
                 logger.log(FINER, "Was able to update the credentials so will retry with the updated ones");
                 askedUserForCredentials = true;
                 shouldTryCommandAgain = true;
-                continue;
-
             } catch (ConnectException ce) {
                 logger.finer("doHttpCommand: connect exception " + ce);
                 // this really means nobody was listening on the remote server

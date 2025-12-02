@@ -26,14 +26,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessHandle.Info;
 import java.lang.System.Logger;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedByInterruptException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -169,6 +165,8 @@ public final class ProcessUtils {
     public static boolean waitWhileListening(HostAndPort endpoint, Duration timeout, boolean printDots) {
         final Supplier<Boolean> action = () -> {
             try (Socket server = new Socket()) {
+                // Force RST on close
+                server.setSoLinger(true, 0);
                 server.setSoTimeout(timeout == null ? 0 : (int) timeout.toMillis());
                 try {
                     server.connect(endpoint.toInetSocketAddress(), SOCKET_CONNECT_TIMEOUT);
@@ -214,24 +212,14 @@ public final class ProcessUtils {
      * @return true if the endpoint is listening on socket
      */
     public static boolean isListening(HostAndPort endpoint) {
-        try (SocketChannel channel = SocketChannel.open()) {
-            channel.configureBlocking(false);
-            channel.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()));
-
-            try (Selector selector = Selector.open()) {
-                channel.register(selector, SelectionKey.OP_CONNECT);
-                if (selector.select(SOCKET_CONNECT_TIMEOUT) == 0) {
-                    // Timeout
-                    return false;
-                }
-                channel.finishConnect();
-                // Successfully connected = port is listening
-                return true;
-            }
+        try (Socket socket = new Socket()) {
+            // Force RST on close
+            socket.setSoLinger(true, 0);
+            socket.connect(endpoint.toInetSocketAddress(), SOCKET_CONNECT_TIMEOUT);
+            return true;
         } catch (IOException e) {
             LOG.log(TRACE, "An attempt to open a socket to " + endpoint
                 + " resulted in exception. Therefore we assume the server has stopped.", e);
-            // Connection failed
             return false;
         }
     }

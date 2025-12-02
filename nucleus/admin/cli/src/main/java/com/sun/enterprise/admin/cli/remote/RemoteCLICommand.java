@@ -40,7 +40,6 @@ import java.io.BufferedReader;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
@@ -90,7 +89,6 @@ public class RemoteCLICommand extends CLICommand {
     private ActionReport ar;
     private String usage;
     private String responseFormatType;
-    private OutputStream userOut;
     private File outputDir;
     //Options from first round if reexecuted because of CommandModel update
     protected ParameterMap reExecutedOptions;
@@ -497,17 +495,6 @@ public class RemoteCLICommand extends CLICommand {
     }
 
     /**
-     * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
-     * superclass. This variant is used by the RemoteDeploymentFacility class to control and capture the output.
-     */
-    public RemoteCLICommand(String name, ProgramOptions po, Environment env, String responseFormatType, OutputStream userOut)
-            throws CommandException {
-        this(name, po, env);
-        this.responseFormatType = responseFormatType;
-        this.userOut = userOut;
-    }
-
-    /**
      * Helper for situation, where {@code CommandModel} is from cache and something shows, that server side signature of
      * command was changed
      */
@@ -574,9 +561,6 @@ public class RemoteCLICommand extends CLICommand {
 
             if (responseFormatType != null) {
                 rac.setResponseFormatType(responseFormatType);
-            }
-            if (userOut != null) {
-                rac.setUserOut(userOut);
             }
 
             /*

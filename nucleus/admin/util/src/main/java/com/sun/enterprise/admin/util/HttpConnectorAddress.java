@@ -221,11 +221,11 @@ public final class HttpConnectorAddress {
     }
 
     private String getUser() {
-        return authInfo != null ? authInfo.getUser() : "";
+        return authInfo == null ? "" : authInfo.getUser();
     }
 
     private char[] getPassword() {
-        return authInfo != null ? authInfo.getPassword() : "".toCharArray();
+        return authInfo == null ? "".toCharArray() : authInfo.getPassword();
     }
 
     private URLConnection openConnection(URL url) throws IOException {
@@ -239,9 +239,8 @@ public final class HttpConnectorAddress {
     private URLConnection setOptions(URLConnection uc) {
         uc.setDoOutput(true);
         uc.setUseCaches(false);
-        //uc.setRequestProperty("Content-type", "application/octet-stream");
-        uc.setRequestProperty("Connection", "Keep-Alive");
-        return this.setAuthentication(uc);
+        uc.setRequestProperty("Connection", "close");
+        return setAuthentication(uc);
     }
 
     private URLConnection setAuthentication(URLConnection uc) {

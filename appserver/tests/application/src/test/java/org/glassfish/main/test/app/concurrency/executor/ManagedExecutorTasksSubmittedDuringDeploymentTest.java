@@ -65,9 +65,14 @@ class ManagedExecutorTasksSubmittedDuringDeploymentTest {
     @Test
     void testSubmittedTaskExecuted() throws Exception {
         HttpURLConnection connection = GlassFishTestEnvironment.openConnection(8080, "/");
-        connection.setRequestMethod("GET");
-        assertEquals(200, connection.getResponseCode());
-        assertEquals("true", connection.getHeaderField(ManagedExecutorTasksSubmittedDuringDeploymentServlet.HEADER_EXECUTED));
+        try {
+            connection.setRequestMethod("GET");
+            assertEquals(200, connection.getResponseCode());
+            assertEquals("true",
+                connection.getHeaderField(ManagedExecutorTasksSubmittedDuringDeploymentServlet.HEADER_EXECUTED));
+        } finally {
+            connection.disconnect();
+        }
     }
 
 

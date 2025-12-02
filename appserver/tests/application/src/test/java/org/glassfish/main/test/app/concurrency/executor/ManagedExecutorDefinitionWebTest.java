@@ -67,8 +67,12 @@ class ManagedExecutorDefinitionWebTest {
     @Test
     void testCopyCompletableFutureTwice() throws Exception {
         HttpURLConnection connection = GlassFishTestEnvironment.openConnection(8080, "/");
-        connection.setRequestMethod("GET");
-        assertEquals(200, connection.getResponseCode());
+        try {
+            connection.setRequestMethod("GET");
+            assertEquals(200, connection.getResponseCode());
+        } finally {
+            connection.disconnect();
+        }
     }
 
 

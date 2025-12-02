@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,9 +33,9 @@ import jakarta.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -502,9 +502,11 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
 
             URL url = new URL(SecureAdmin.isEnabled(secureAdmin) ? "https" : "http",
                     adminListener.getAddress(), Integer.parseInt(adminListener.getPort()), "/management/domain");
-            URLConnection connection = url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             try (InputStream ignored = connection.getInputStream()) {
                 isRestStarted = true;
+            } finally {
+                connection.disconnect();
             }
         } catch (Exception e) {
            logger.log(Level.FINE, null, e);

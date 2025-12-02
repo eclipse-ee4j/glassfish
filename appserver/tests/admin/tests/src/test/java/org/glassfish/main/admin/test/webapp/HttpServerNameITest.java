@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,12 +55,14 @@ public class HttpServerNameITest {
     @ParameterizedTest(name = "[{index}] testServerName: {0}")
     public void testHostName(String description, String serverName, String expectedUrlPrefix) throws Exception {
         assertThat(ASADMIN.exec("set", SERVER_NAME_PROPERTY + "=" + serverName), asadminOK());
-
         final HttpURLConnection conn = GlassFishTestEnvironment.openConnection(HTTP_PORT, "/" + TEST_APP_NAME);
-        conn.setInstanceFollowRedirects(false);
-
-        assertThat(conn.getHeaderField("Location"), stringContainsInOrder(expectedUrlPrefix));
-        assertThat(getContent(conn), stringContainsInOrder("This document has moved <a href=\"" + expectedUrlPrefix));
+        try {
+            conn.setInstanceFollowRedirects(false);
+            assertThat(conn.getHeaderField("Location"), stringContainsInOrder(expectedUrlPrefix));
+            assertThat(getContent(conn), stringContainsInOrder("This document has moved <a href=\"" + expectedUrlPrefix));
+        } finally {
+            conn.disconnect();
+        }
     }
 
     @BeforeAll

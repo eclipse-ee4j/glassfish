@@ -87,28 +87,32 @@ public class SecureWebAppTest {
         final int port = secured ? 8181 : 8080;
         URL servlet = new URI(protocol + "://localhost:" + port + "/test/SecureWebAppTestServlet").toURL();
         HttpURLConnection uc = openConnection(secured, servlet);
-        System.out.println("URLConnection = " + uc);
-        if (uc.getResponseCode() != 200) {
-            throw new Exception("Servlet did not return 200 OK response code");
-        }
-        int count = 0;
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()))) {
-            String line;
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-                int index = line.indexOf(expectedBody);
-                if (index == -1) {
-                    continue;
-                }
-                index = line.indexOf(":");
-                String status = line.substring(index + 1);
-                if (!status.equalsIgnoreCase("PASS")) {
-                    return;
-                }
-                count++;
+        try {
+            System.out.println("URLConnection = " + uc);
+            if (uc.getResponseCode() != 200) {
+                throw new Exception("Servlet did not return 200 OK response code");
             }
+            int count = 0;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()))) {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    System.out.println(line);
+                    int index = line.indexOf(expectedBody);
+                    if (index == -1) {
+                        continue;
+                    }
+                    index = line.indexOf(":");
+                    String status = line.substring(index + 1);
+                    if (!status.equalsIgnoreCase("PASS")) {
+                        return;
+                    }
+                    count++;
+                }
+            }
+            assertEquals(3, count, "Expected count of successful tests");
+        } finally {
+            uc.disconnect();
         }
-        assertEquals(3, count, "Expected count of successful tests");
     }
 
     private static HttpURLConnection openConnection(boolean secured, URL endpoint)

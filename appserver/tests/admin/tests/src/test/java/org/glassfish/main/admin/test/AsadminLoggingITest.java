@@ -16,8 +16,6 @@
 
 package org.glassfish.main.admin.test;
 
-import com.sun.enterprise.util.OS;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
@@ -74,13 +72,7 @@ public class AsadminLoggingITest {
     /** Fill up the server log. */
     @BeforeAll
     public static void fillUpServerLog() throws Exception {
-        if (OS.isWindowsForSure()) {
-            // For some reason windows can collide on debug port.
-            assertThat(ASADMIN.exec("stop-domain"), asadminOK());
-            assertThat(ASADMIN.exec("start-domain"), asadminOK());
-        } else {
-            assertThat(ASADMIN.exec("restart-domain"), asadminOK());
-        }
+        assertThat(ASADMIN.exec("restart-domain"), asadminOK());
     }
 
     @Test

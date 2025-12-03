@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -134,13 +134,12 @@ class ReferenceCleaner {
                 }
                 final Object threadLocalMap = threadLocalsField.get(thread);
                 if (threadLocalMap != null) {
-                    expungeStaleEntriesMethod.invoke(threadLocalMap);
+                    expungeStaleEntries(expungeStaleEntriesMethod, threadLocalMap);
                     checkThreadLocalMapForLeaks(threadLocalMap, tableField);
                 }
-
                 final Object inheritableMap = inheritableThreadLocalsField.get(thread);
                 if (inheritableMap != null) {
-                    expungeStaleEntriesMethod.invoke(inheritableMap);
+                    expungeStaleEntries(expungeStaleEntriesMethod, inheritableMap);
                     checkThreadLocalMapForLeaks(inheritableMap, tableField);
                 }
             }
@@ -177,6 +176,17 @@ class ReferenceCleaner {
         }
 
         return threads;
+    }
+
+
+    private void expungeStaleEntries(final Method expungeStaleEntriesMethod, final Object threadLocalMap)
+        throws ReflectiveOperationException {
+        try {
+            expungeStaleEntriesMethod.invoke(threadLocalMap);
+        } catch (NullPointerException e) {
+            // tab[staleSlot] can be null in ThreadLocalMap.expungeStaleEntry, seen in test logs
+            LOG.log(WARNING, "Detected NPE caused by the JDK code, cleanup of thread locals failed.", e);
+        }
     }
 
 

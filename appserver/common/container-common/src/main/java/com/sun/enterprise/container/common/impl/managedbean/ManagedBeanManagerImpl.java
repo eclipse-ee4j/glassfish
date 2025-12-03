@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -418,7 +418,9 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
 
             // Need to keep track of context in order to destroy properly
             Map<Object, CDIInjectionContext> bundleNonManagedObjs = cdiManagedBeanInstanceMap.get(bundleDescriptor);
-            bundleNonManagedObjs.put(callerObject, cdiContext);
+            if (bundleNonManagedObjs != null) {
+                bundleNonManagedObjs.put(callerObject, cdiContext);
+            }
 
         } else {
             JavaEEInterceptorBuilder interceptorBuilder = (JavaEEInterceptorBuilder) managedBeanDescriptor.getInterceptorBuilder();

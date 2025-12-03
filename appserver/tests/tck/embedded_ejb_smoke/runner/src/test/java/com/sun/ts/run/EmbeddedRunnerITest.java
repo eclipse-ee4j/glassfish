@@ -16,6 +16,7 @@
 package com.sun.ts.run;
 
 import com.sun.ts.lib.harness.ExecTSTestCmd;
+import com.sun.javatest.Status;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -80,13 +81,14 @@ public class EmbeddedRunnerITest {
                 "-Djava.util.logging.config.file=" + System.getProperty("glassfish.home") + "/glassfish/domains/domain1/config/logging.properties",
                 "-Dtest.ejb.stateful.timeout.wait.seconds=180 ",
                 "-Ddeliverable.class=com.sun.ts.lib.deliverable.cts.CTSDeliverable",
-
+                "--module-path", System.getProperty("glassfish.home") + "/glassfish/lib/bootstrap",
+                "--add-modules", "ALL-MODULE-PATH",
                 "--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED",
                 "--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED",
                 "--add-opens=java.base/java.lang=ALL-UNNAMED",
                 "--add-opens=java.base/java.util=ALL-UNNAMED",
                 "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED",
-                "--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED")
+                "--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke")
             ;
 
         if (System.getProperty("maven.tck.debug") != null && !System.getProperty("maven.tck.debug").isEmpty()) {
@@ -124,10 +126,8 @@ public class EmbeddedRunnerITest {
 
         return String.join(":", List.of(
             localRepository + "/org/glassfish/main/tests/tck/tsharness/" + glassfishVersion + "/tsharness-" + glassfishVersion + ".jar",
-            localRepository + "/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar",
             System.getProperty("glassfish.home") + "/glassfish/lib/embedded/glassfish-embedded-static-shell.jar",
             copiedEjbJar.toString()
         ));
     }
-
 }

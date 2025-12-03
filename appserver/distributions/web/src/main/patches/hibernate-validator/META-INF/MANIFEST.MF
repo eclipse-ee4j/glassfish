@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Created-By: Apache Maven Bundle Plugin 6.0.0
-Build-Jdk-Spec: 21
+Build-Jdk-Spec: 25
 Implementation-Title: hibernate-validator
 Implementation-URL: https://hibernate.org/validator/
 Implementation-Vendor: org.hibernate.validator
 Implementation-Vendor-Id: org.hibernate.validator
-Implementation-Version: 9.0.0.Final
+Implementation-Version: 9.1.0.Final
 Specification-Title: Jakarta Validation
 Specification-Version: 3.1
 Bundle-Description: Hibernate's Jakarta Validation reference implementat
@@ -14,62 +14,63 @@ Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-ManifestVersion: 2
 Bundle-Name: Hibernate Validator Engine
 Bundle-SymbolicName: org.hibernate.validator
-Bundle-Version: 9.0.0.Final
-Export-Package: org.hibernate.validator;version="9.0.0.Final";uses:="jak
+Bundle-Version: 9.1.0.Final
+Export-Package: org.hibernate.validator;version="9.1.0.Final";uses:="jak
  arta.validation,jakarta.validation.spi,jakarta.validation.valueextracti
  on,org.hibernate.validator.cfg,org.hibernate.validator.messageinterpola
  tion,org.hibernate.validator.metadata,org.hibernate.validator.spi.messa
  geinterpolation,org.hibernate.validator.spi.nodenameprovider,org.hibern
  ate.validator.spi.properties,org.hibernate.validator.spi.resourceloadin
- g,org.hibernate.validator.spi.scripting",org.hibernate.validator.cfg;ve
- rsion="9.0.0.Final";uses:="jakarta.validation,org.hibernate.validator.c
- fg.context",org.hibernate.validator.cfg.context;version="9.0.0.Final";u
- ses:="jakarta.validation,org.hibernate.validator.cfg,org.hibernate.vali
- dator.spi.group",org.hibernate.validator.cfg.defs;version="9.0.0.Final"
- ;uses:="jakarta.validation.constraints,org.hibernate.validator.cfg,org.
- hibernate.validator.constraints,org.hibernate.validator.constraints.tim
- e",org.hibernate.validator.cfg.defs.br;version="9.0.0.Final";uses:="org
- .hibernate.validator.cfg,org.hibernate.validator.constraints.br",org.hi
- bernate.validator.cfg.defs.kor;version="9.0.0.Final";uses:="org.hiberna
- te.validator.cfg,org.hibernate.validator.constraints.kor",org.hibernate
- .validator.cfg.defs.pl;version="9.0.0.Final";uses:="org.hibernate.valid
- ator.cfg,org.hibernate.validator.constraints.pl",org.hibernate.validato
- r.cfg.defs.ru;version="9.0.0.Final";uses:="org.hibernate.validator.cfg,
- org.hibernate.validator.constraints.ru",org.hibernate.validator.constra
- ints;version="9.0.0.Final";uses:="jakarta.validation,jakarta.validation
- .constraints,jakarta.validation.constraintvalidation",org.hibernate.val
- idator.constraints.br;version="9.0.0.Final";uses:="jakarta.validation,j
- akarta.validation.constraints,jakarta.validation.constraintvalidation,o
- rg.hibernate.validator.constraints",org.hibernate.validator.constraints
- .kor;version="9.0.0.Final";uses:="jakarta.validation",org.hibernate.val
- idator.constraints.pl;version="9.0.0.Final";uses:="jakarta.validation",
- org.hibernate.validator.constraints.ru;version="9.0.0.Final";uses:="jak
- arta.validation",org.hibernate.validator.constraints.time;version="9.0.
- 0.Final";uses:="jakarta.validation",org.hibernate.validator.constraintv
- alidation;version="9.0.0.Final";uses:="jakarta.validation,jakarta.valid
- ation.metadata,org.hibernate.validator.messageinterpolation,org.hiberna
- te.validator.spi.scripting",org.hibernate.validator.constraintvalidatio
- n.spi;version="9.0.0.Final";uses:="jakarta.validation",org.hibernate.va
- lidator.constraintvalidators;version="9.0.0.Final";uses:="jakarta.valid
- ation,org.hibernate.validator.constraints",org.hibernate.validator.engi
- ne;version="9.0.0.Final";uses:="jakarta.validation",org.hibernate.valid
- ator.group;version="9.0.0.Final";uses:="org.hibernate.validator.spi.gro
- up",org.hibernate.validator.messageinterpolation;version="9.0.0.Final";
- uses:="jakarta.el,jakarta.validation,org.hibernate.validator.spi.messag
- einterpolation,org.hibernate.validator.spi.resourceloading",org.hiberna
- te.validator.metadata;version="9.0.0.Final",org.hibernate.validator.par
- ameternameprovider;version="9.0.0.Final";uses:="com.thoughtworks.parana
- mer,jakarta.validation",org.hibernate.validator.path;version="9.0.0.Fin
- al";uses:="jakarta.validation",org.hibernate.validator.resourceloading;
- version="9.0.0.Final";uses:="org.hibernate.validator.spi.resourceloadin
- g",org.hibernate.validator.spi.cfg;version="9.0.0.Final";uses:="org.hib
- ernate.validator.cfg",org.hibernate.validator.spi.group;version="9.0.0.
- Final",org.hibernate.validator.spi.messageinterpolation;version="9.0.0.
- Final",org.hibernate.validator.spi.nodenameprovider;version="9.0.0.Fina
- l",org.hibernate.validator.spi.properties;version="9.0.0.Final",org.hib
- ernate.validator.spi.resourceloading;version="9.0.0.Final",org.hibernat
- e.validator.spi.scripting;version="9.0.0.Final";uses:="jakarta.validati
- on,javax.script"
+ g,org.hibernate.validator.spi.scripting,org.hibernate.validator.spi.tra
+ cking",org.hibernate.validator.cfg;version="9.1.0.Final";uses:="jakarta
+ .validation,org.hibernate.validator.cfg.context",org.hibernate.validato
+ r.cfg.context;version="9.1.0.Final";uses:="jakarta.validation,org.hiber
+ nate.validator.cfg,org.hibernate.validator.spi.group",org.hibernate.val
+ idator.cfg.defs;version="9.1.0.Final";uses:="jakarta.validation.constra
+ ints,org.hibernate.validator.cfg,org.hibernate.validator.constraints,or
+ g.hibernate.validator.constraints.time",org.hibernate.validator.cfg.def
+ s.br;version="9.1.0.Final";uses:="org.hibernate.validator.cfg,org.hiber
+ nate.validator.constraints.br",org.hibernate.validator.cfg.defs.kor;ver
+ sion="9.1.0.Final";uses:="org.hibernate.validator.cfg,org.hibernate.val
+ idator.constraints.kor",org.hibernate.validator.cfg.defs.pl;version="9.
+ 1.0.Final";uses:="org.hibernate.validator.cfg,org.hibernate.validator.c
+ onstraints.pl",org.hibernate.validator.cfg.defs.ru;version="9.1.0.Final
+ ";uses:="org.hibernate.validator.cfg,org.hibernate.validator.constraint
+ s.ru",org.hibernate.validator.constraints;version="9.1.0.Final";uses:="
+ jakarta.validation,jakarta.validation.constraints,jakarta.validation.co
+ nstraintvalidation",org.hibernate.validator.constraints.br;version="9.1
+ .0.Final";uses:="jakarta.validation,jakarta.validation.constraints,jaka
+ rta.validation.constraintvalidation,org.hibernate.validator.constraints
+ ",org.hibernate.validator.constraints.kor;version="9.1.0.Final";uses:="
+ jakarta.validation",org.hibernate.validator.constraints.pl;version="9.1
+ .0.Final";uses:="jakarta.validation",org.hibernate.validator.constraint
+ s.ru;version="9.1.0.Final";uses:="jakarta.validation",org.hibernate.val
+ idator.constraints.time;version="9.1.0.Final";uses:="jakarta.validation
+ ",org.hibernate.validator.constraintvalidation;version="9.1.0.Final";us
+ es:="jakarta.validation,jakarta.validation.metadata,org.hibernate.valid
+ ator.messageinterpolation,org.hibernate.validator.spi.scripting",org.hi
+ bernate.validator.constraintvalidation.spi;version="9.1.0.Final";uses:=
+ "jakarta.validation",org.hibernate.validator.constraintvalidators;versi
+ on="9.1.0.Final";uses:="jakarta.validation,org.hibernate.validator.cons
+ traints",org.hibernate.validator.engine;version="9.1.0.Final";uses:="ja
+ karta.validation",org.hibernate.validator.group;version="9.1.0.Final";u
+ ses:="org.hibernate.validator.spi.group",org.hibernate.validator.messag
+ einterpolation;version="9.1.0.Final";uses:="jakarta.el,jakarta.validati
+ on,org.hibernate.validator.spi.messageinterpolation,org.hibernate.valid
+ ator.spi.resourceloading",org.hibernate.validator.metadata;version="9.1
+ .0.Final",org.hibernate.validator.parameternameprovider;version="9.1.0.
+ Final";uses:="com.thoughtworks.paranamer,jakarta.validation",org.hibern
+ ate.validator.path;version="9.1.0.Final";uses:="jakarta.validation",org
+ .hibernate.validator.resourceloading;version="9.1.0.Final";uses:="org.h
+ ibernate.validator.spi.resourceloading",org.hibernate.validator.spi.cfg
+ ;version="9.1.0.Final";uses:="org.hibernate.validator.cfg",org.hibernat
+ e.validator.spi.group;version="9.1.0.Final",org.hibernate.validator.spi
+ .messageinterpolation;version="9.1.0.Final",org.hibernate.validator.spi
+ .nodenameprovider;version="9.1.0.Final",org.hibernate.validator.spi.pro
+ perties;version="9.1.0.Final",org.hibernate.validator.spi.resourceloadi
+ ng;version="9.1.0.Final",org.hibernate.validator.spi.scripting;version=
+ "9.1.0.Final";uses:="jakarta.validation,javax.script",org.hibernate.val
+ idator.spi.tracking;version="9.1.0.Final"
 Import-Package: jakarta.persistence;version="[3.0.0,4.0.0)";resolution:=
  optional,jakarta.validation;version="[3.1.1,4.0.0)",jakarta.validation.
  constraints;version="[3.1.1,4.0.0)",jakarta.validation.constraintvalida

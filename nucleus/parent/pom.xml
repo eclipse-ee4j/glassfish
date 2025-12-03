@@ -104,7 +104,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
-        <hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
@@ -152,13 +152,13 @@
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
-        <commons-io.version>2.20.0</commons-io.version>
-        <commons-lang3.version>3.19.0</commons-lang3.version>
+        <commons-io.version>2.21.0</commons-io.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.9</asm.version>
-        <jsch.version>2.27.5</jsch.version>
+        <jsch.version>2.27.7</jsch.version>
         <antlr2.version>2.7.7</antlr2.version>
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
@@ -181,7 +181,7 @@
         <slf4j.version>2.0.17</slf4j.version>
 
         <surefire.version>3.5.4</surefire.version>
-        <junit5-surefire-tree-reporter.version>1.4.0</junit5-surefire-tree-reporter.version>
+        <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1059,7 +1059,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.26.1</version>
+                            <version>12.2.0</version>
                         </dependency>
                     </dependencies>
                     <executions>

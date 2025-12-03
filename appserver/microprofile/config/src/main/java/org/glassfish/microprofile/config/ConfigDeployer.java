@@ -15,6 +15,8 @@
  */
 package org.glassfish.microprofile.config;
 
+import io.helidon.microprofile.config.ConfigCdiExtension;
+
 import java.util.ServiceLoader;
 
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
@@ -23,7 +25,10 @@ import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.Deployer;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
+import org.glassfish.weld.DeploymentImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.weld.WeldDeployer.WELD_DEPLOYMENT;
 
 @Service
 public class ConfigDeployer implements Deployer {
@@ -45,6 +50,8 @@ public class ConfigDeployer implements Deployer {
         final var resolver = ServiceLoader.load(ConfigProviderResolver.class).iterator().next();
         ConfigProviderResolver.setInstance(resolver);
 
+        enableCdiExtensions(deploymentContext);
+
         return new ConfigApplicationContainer(deploymentContext);
     }
 
@@ -57,5 +64,10 @@ public class ConfigDeployer implements Deployer {
     @Override
     public Object loadMetaData(Class aClass, DeploymentContext deploymentContext) {
         return null;
+    }
+
+    private void enableCdiExtensions(DeploymentContext context) {
+        DeploymentImpl deploymentImpl = context.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
+        deploymentImpl.addExtensions(new ConfigCdiExtension());
     }
 }

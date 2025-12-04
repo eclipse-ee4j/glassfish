@@ -68,6 +68,8 @@ public class ConfigDeployer implements Deployer {
 
     private void enableCdiExtensions(DeploymentContext context) {
         DeploymentImpl deploymentImpl = context.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class);
-        deploymentImpl.addExtensions(new ConfigCdiExtension());
+        if (deploymentImpl != null) {
+            deploymentImpl.addExtensions(new ConfigCdiExtension());
+        }
     }
 }

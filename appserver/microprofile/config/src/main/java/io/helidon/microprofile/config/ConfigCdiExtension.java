@@ -21,7 +21,6 @@ import io.helidon.common.NativeImageHelper;
 import io.helidon.config.ConfigException;
 import io.helidon.config.mp.MpConfig;
 
-import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -42,7 +41,6 @@ import jakarta.enterprise.inject.spi.ProcessBean;
 import jakarta.enterprise.inject.spi.ProcessObserverMethod;
 import jakarta.enterprise.inject.spi.ProcessSyntheticObserverMethod;
 import jakarta.enterprise.inject.spi.WithAnnotations;
-import jakarta.interceptor.Interceptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -73,12 +71,10 @@ import org.eclipse.microprofile.config.ConfigValue;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.config.spi.Converter;
-import org.glassfish.microprofile.config.ApplicationContext;
 
 import static java.util.Optional.ofNullable;
 
 /**
- * Must be in the {@link io.helidon.microprofile.config} package because it depends on package private Helidon classes.
  * Extension to enable config injection in CDI container (all of {@link io.helidon.config.Config},
  * {@link org.eclipse.microprofile.config.Config} and {@link ConfigProperty}).
  */
@@ -164,17 +160,17 @@ public class ConfigCdiExtension implements Extension {
     /**
      * Register a config producer bean for each {@link org.eclipse.microprofile.config.inject.ConfigProperty} injection.
      *
-     * @param afterBeanDiscovery event from CDI container
+     * @param abd event from CDI container
      */
-    private void registerConfigProducer(@Observes AfterBeanDiscovery afterBeanDiscovery) {
+    private void registerConfigProducer(@Observes AfterBeanDiscovery abd) {
         // we also must support injection of Config itself
-        afterBeanDiscovery.addBean()
+        abd.addBean()
                 .addTransitiveTypeClosure(org.eclipse.microprofile.config.Config.class)
                 .beanClass(org.eclipse.microprofile.config.Config.class)
                 .scope(ApplicationScoped.class)
                 .createWith(creationalContext -> new SerializableConfig());
 
-        afterBeanDiscovery.addBean()
+        abd.addBean()
                 .addTransitiveTypeClosure(io.helidon.config.Config.class)
                 .beanClass(io.helidon.config.Config.class)
                 .scope(ApplicationScoped.class)
@@ -201,14 +197,14 @@ public class ConfigCdiExtension implements Extension {
                 .collect(Collectors.toSet());
 
         types.forEach(type -> {
-            afterBeanDiscovery.addBean()
+            abd.addBean()
                     .addType(type)
                     .scope(Dependent.class)
                     .addQualifier(CONFIG_PROPERTY_LITERAL)
                     .produceWith(it -> produce(it.select(InjectionPoint.class).get()));
         });
 
-        configBeans.values().forEach(beanDescriptor -> afterBeanDiscovery.addBean()
+        configBeans.values().forEach(beanDescriptor -> abd.addBean()
                 .addType(beanDescriptor.type())
                 .addTransitiveTypeClosure(beanDescriptor.type())
                 // it is non-binding
@@ -217,15 +213,6 @@ public class ConfigCdiExtension implements Extension {
                 .produceWith(it -> beanDescriptor.produce(it.select(InjectionPoint.class).get(), ConfigProvider.getConfig())));
     }
 
-    /**
-     * Register a config producer bean for each {@link org.eclipse.microprofile.config.inject.ConfigProperty} injection.
-     *
-     * @param afterBeanDiscovery event from CDI container
-     */
-    private void defineApplicationContextBean(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        afterBeanDiscovery.addBean()
-                .read(beanManager.createAnnotatedType(ApplicationContext.class));
-    }
     /**
      * Validate all injection points are valid.
      *

@@ -32,7 +32,7 @@
     <name>TCK: Install Jakarta Faces TCK</name>
 
     <properties>
-        <tck.artifactFileName>jakarta-faces-tck-4.0.3.zip</tck.artifactFileName>
+        <tck.artifactFileName>jakarta-faces-tck-4.0.4.zip</tck.artifactFileName>
         <tck.artifactUrl>https://download.eclipse.org/jakartaee/faces/4.0/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 

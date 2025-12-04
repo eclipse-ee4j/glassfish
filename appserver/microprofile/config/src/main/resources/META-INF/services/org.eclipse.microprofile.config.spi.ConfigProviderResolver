@@ -1,1 +1,1 @@
-io.helidon.config.mp.MpConfigProviderResolver
+org.glassfish.microprofile.config.GlassFishConfigProviderResolver

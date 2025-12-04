@@ -17,12 +17,18 @@
 
 package org.glassfish.internal.data;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.internal.deployment.Deployment;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -35,6 +41,12 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @Singleton
 public class ApplicationRegistry {
+
+    @Inject
+    Provider<Deployment> deploymentServiceProvider;
+
+    @Inject
+    Provider<InvocationManager> invocationManagerProvider;
 
     private Map<String, ApplicationInfo> deployedApplications = new HashMap<>();
 
@@ -52,6 +64,28 @@ public class ApplicationRegistry {
 
     public Set<String> getAllApplicationNames() {
         return deployedApplications.keySet();
+    }
+
+    /**
+     * Return current application or null, if we're in context of the server, outside of a context of any application.
+     *
+     * @return Information about the current application
+     */
+    public ApplicationInfo getCurrentApplicationInfo() {
+        final Deployment deploymentService = deploymentServiceProvider.get();
+        DeploymentContext deploymentContext = deploymentService.getCurrentDeploymentContext();
+        if (deploymentContext != null) {
+            // during app deployment, we don't have current invocation, we retrieve it from the deployment
+            return deploymentContext.getModuleMetaData(ApplicationInfo.class);
+        }
+        final ComponentInvocation currentInvocation = invocationManagerProvider.get().getCurrentInvocation();
+        String applicationName = null;
+        if (currentInvocation != null && null != (applicationName = currentInvocation.getAppName())) {
+            // application started
+            return this.get(applicationName);
+        }
+        // we're not in a context related to an application
+        return null;
     }
 
 }

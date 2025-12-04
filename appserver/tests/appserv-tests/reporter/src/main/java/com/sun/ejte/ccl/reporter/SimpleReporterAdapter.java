@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,27 @@
 
 package com.sun.ejte.ccl.reporter;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 
 //public class SimpleReporterAdapter extends Thread implements Serializable {
 public class SimpleReporterAdapter implements Serializable {
+    public static final String PASS = "pass";
+    public static final String DID_NOT_RUN = "did_not_run";
+    public static final String FAIL = "fail";
+
     private boolean debug=true;
     private String testSuiteDescription;
-    private HashMap testCaseStatus;
-    public static String PASS = "pass";
-    public static String DID_NOT_RUN = "did_not_run";
-    public static String FAIL = "fail";
+    private HashMap<String, String> testCaseStatus = new HashMap<>();
     private String testSuiteName = "undefined";
-    private String testSuiteID = null;
+    private String testSuiteID;
     private String ws_home="sqe-pe";
-    private String outputDir=null;
-    private Reporter reporter=null;
-    private String resultFile="test_results";
-    private boolean isFileSet=false;
+    private String outputDir;
+    private Reporter reporter;
 
 
     public SimpleReporterAdapter()  {
@@ -51,8 +48,8 @@ public class SimpleReporterAdapter implements Serializable {
         reporter = null;
         try {
             outputDir = null;
+        } catch (Exception ex) {
         }
-        catch(Exception ex) { }
     }
 
 
@@ -65,45 +62,37 @@ public class SimpleReporterAdapter implements Serializable {
         try {
             outputDir = null;
             ws_home = ws_root;
+        } catch (Exception ex) {
         }
-        catch(Exception ex) { }
     }
 
     //used by webrunner
     public SimpleReporterAdapter(String resultFilePath,boolean isResultFileSet){
-        try{
-            this.isFileSet=true;
-            this.resultFile=resultFilePath;
-        }catch( Exception ex ){ }
     }
 
 
 
     public synchronized void addStatus(String s, String status)    {
-        if( testSuiteName.compareTo("undefined") == 0 ) {
+        if (testSuiteName.equals("undefined")) {
             int blankIndex = s.indexOf(" ");
-
-            if(blankIndex!=-1){
-                testSuiteName = s.substring(0, blankIndex);
-            } else {
+            if (blankIndex == -1) {
                 testSuiteName = s;
+            } else {
+                testSuiteName = s.substring(0, blankIndex);
             }
             testSuiteID = s + "ID";
         }
-        if( testCaseStatus == null ){
-            testCaseStatus = new HashMap(5);
-        }
-
         int blankIndex = s.indexOf(" ");
         String key = s;
-        if (blankIndex!=-1){
-            key = s.substring(s.indexOf( " " ));
+        if (blankIndex != -1) {
+            key = s.substring(s.indexOf(" "));
         }
-        if(debug)
-            System.out.println("Value of key is:"+key);
+        if (debug) {
+            System.out.println("Value of key is:" + key);
+        }
 
-        if( !testCaseStatus.containsKey( key ) ){
-            testCaseStatus.put( key , status.toLowerCase() );
+        if (!testCaseStatus.containsKey(key)) {
+            testCaseStatus.put(key, status.toLowerCase());
         }
     }
 
@@ -112,21 +101,24 @@ public class SimpleReporterAdapter implements Serializable {
     }
 
     public void printStatus() {
+        if (testSuiteID == null) {
+            System.err.println("The test suite id is null, reporter cannot continue.");
+        }
         try{
             //Reporter reporter;
-            Set keySets;
-            Iterator keySetsIT;
-            Properties p;
+            Set<String> keySets;
+            Iterator<String> keySetsIT;
 
-            if(testSuiteName.compareTo("undefined") == 0)
+            if(testSuiteName.equals("undefined")) {
                 testSuiteName = getTestSuiteName();
+            }
             String rootpath = (new File(".")).getAbsolutePath();
             String ejte_home = rootpath.substring(0, rootpath.indexOf(ws_home));
             outputDir = ejte_home + ws_home;
             reporter = Reporter.getInstance(ws_home);
-            if(debug)
-                System.out.println("Generating report at \t" + outputDir +
-                        File.separatorChar + "test_results.xml");
+            if(debug) {
+                System.out.println("Generating report at \t" + outputDir + File.separatorChar + "test_results.xml");
+            }
             reporter.setTestSuite(testSuiteID, testSuiteName, testSuiteDescription);
             reporter.addTest(testSuiteID, testSuiteID, testSuiteName);
             keySets = testCaseStatus.keySet();
@@ -162,29 +154,31 @@ public class SimpleReporterAdapter implements Serializable {
             //reporter.flush(testSuiteID);
             reporter.generateValidReport();
             createConfirmationFile();
-        }
-        catch( Throwable ex )        {
-            System.out.println( "Reporter exception occurred!" );
-            if(debug)
+        } catch (Throwable ex) {
+            System.out.println("Reporter exception occurred!");
+            if (debug) {
                 ex.printStackTrace();
+            }
         }
     }
 
     public void createConfirmationFile(){
-        try{
-            FileOutputStream fout = new FileOutputStream("RepRunConf.txt");
+        try (FileOutputStream fout = new FileOutputStream("RepRunConf.txt")) {
             String text = "Test has been reported";
             fout.write(text.getBytes());
-            fout.close();
         } catch (Exception e){
             System.out.println("Exception while creating confirmation file!");
-            if(debug)
+            if(debug) {
                 e.printStackTrace();
+            }
         }
     }
 
 
     public void printSummary(String s) {
+        if (testSuiteID == null) {
+            testSuiteID = s;
+        }
         printStatus();
     }
 
@@ -205,39 +199,5 @@ public class SimpleReporterAdapter implements Serializable {
     public void clearStatus()    {
         testCaseStatus.clear();
         testSuiteName = "undefined";
-    }
-
-    /**
-     *A dead function.
-     * J2EE server security contraints don't allow use of exec
-     */
-
-    public Properties getEnvVars() throws Throwable {
-        Process p = null;
-        Properties envVars = new Properties();
-        Runtime r = Runtime.getRuntime();
-        String OS = System.getProperty("os.name").toLowerCase();
-        // System.out.println(OS);
-        if (OS.indexOf("windows 9") > -1) {
-            p = r.exec( "command.com /c set" );
-        }
-        else if ( (OS.indexOf("nt") > -1) || (OS.indexOf("windows 2000") > -1) ) {
-            p = r.exec( "cmd.exe /c set" );
-        }
-        else {
-            p = r.exec( "env" );
-        }
-        BufferedReader br =
-            new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line;
-        while( (line = br.readLine()) != null ) {
-            int idx = line.indexOf( '=' );
-            String key = line.substring( 0, idx );
-            String value = line.substring( idx+1 );
-            envVars.setProperty( key, value );
-            if(debug)
-             System.out.println( key + " = " + value );
-        }
-        return envVars;
     }
 }

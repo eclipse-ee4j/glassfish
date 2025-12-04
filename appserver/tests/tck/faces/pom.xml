@@ -35,7 +35,7 @@
 
     <properties>
         <faces.version>4.0.1</faces.version>
-        <faces.tck.version>4.0.3</faces.tck.version>
+        <faces.tck.version>4.0.4</faces.tck.version>
         <tck.root>${project.build.directory}</tck.root>
         <tck.parentPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/pom.xml</tck.parentPomFile>
     </properties>
@@ -144,9 +144,9 @@
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="artifactId" value="project" replacement="${project.artifactId}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="1.0.7" replacement="${project.version}" />
+                                    element="version" value="1.0.9" replacement="${project.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="1.4" replacement="${omnifish.arquillian.version}" />
+                                    element="version" value="2.1.2" replacement="${omnifish.arquillian.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="version" value="${faces.tck.version}" replacement="${project.parent.version}" />
                                 <replace file="${tck.parentPomFile}">
@@ -165,11 +165,6 @@
                                     <exclude name="pom.xml"/>
                                     <replacetoken><![CDATA[<version>${faces.tck.version}</version>]]></replacetoken>
                                     <replacevalue><![CDATA[<version>${project.version}</version>]]></replacevalue>
-                                </replace>
-                                <replace dir="${tck.root}/faces-tck-${faces.tck.version}/tck">
-                                    <include name="**/pom.xml"/>
-                                    <replacetoken><![CDATA[<groupId>org.omnifaces.arquillian</groupId>]]></replacetoken>
-                                    <replacevalue><![CDATA[<groupId>ee.omnifish.arquillian</groupId>]]></replacevalue>
                                 </replace>
                             </target>
                         </configuration>

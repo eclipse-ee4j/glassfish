@@ -24,17 +24,17 @@ import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.test.app.mpconfig.lib.ConfigHolder;
-import org.glassfish.main.test.app.mpconfig.webapp.ConfigEndpoint;
 import org.glassfish.main.test.app.mpconfig.webapp.ConfigApplication;
+import org.glassfish.main.test.app.mpconfig.webapp.ConfigEndpoint;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
@@ -62,40 +62,32 @@ public class ApplicationScopedMpConfigTest {
     private static File libraryJar;
 
     @BeforeAll
-    public static void setup() throws IOException {
+    static void setup() throws IOException {
         libraryJar = createLibrary();
         assertThat(ASADMIN.exec("add-library", libraryJar.getAbsolutePath()), asadminOK());
     }
 
     @AfterAll
-    public static void cleanup() {
+    static void cleanup() {
         assertThat(ASADMIN.exec("remove-library", libraryJar.getName()), asadminOK());
     }
 
     @Test
-    @Order(1)
-    public void testApp1Config() throws IOException {
-        File app1 = createWebApp("app1");
-        final String appName = APP_NAME + "-app1";
+    void testApplicationsDontShareConfigStoredInSharedStaticField() throws IOException {
+        testAppConfig("app1");
+        testAppConfig("app2");
+    }
+
+    private void testAppConfig(String appId) throws IOException {
+        File app1 = createWebApp(appId);
+        final String appName = APP_NAME + "-" + appId;
         assertThat(ASADMIN.exec("deploy", "--force", "--contextroot", "app", "--name", appName, app1.getAbsolutePath()), asadminOK());
 
         String configValue = getConfigName();
-        assertThat(configValue, equalTo("app1"));
 
-        assertThat(ASADMIN.exec("undeploy", appName), asadminOK());
-    }
-
-    @Test
-    @Order(2)
-    public void testApp2Config() throws IOException {
-        File app2 = createWebApp("app2");
-        final String appName = APP_NAME + "-app2";
-        assertThat(ASADMIN.exec("deploy", "--force", "--contextroot", "app", "--name", appName, app2.getAbsolutePath()), asadminOK());
-
-        String configValue = getConfigName();
-        assertThat(configValue, equalTo("app2"));
-
-        assertThat(ASADMIN.exec("undeploy", appName), asadminOK());
+        Assertions.assertAll(
+                () -> assertThat(configValue, equalTo(appId)),
+                () -> assertThat(ASADMIN.exec("undeploy", appName), asadminOK()));
     }
 
     private String getConfigName() throws IOException {

@@ -23,13 +23,9 @@ import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigValue;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.eclipse.microprofile.config.spi.Converter;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.microprofile.config.util.LazyProperty;
 
 /**
@@ -99,7 +95,7 @@ class GlassFishConfig implements Config {
     }
 
     private Config getConfigDelegate() {
-        final ApplicationInfo currentApplicationInfo = getCurrentApplicationInfo();
+        final ApplicationInfo currentApplicationInfo = Globals.get(ApplicationRegistry.class).getCurrentApplicationInfo();
         Config config = null;
         if (currentApplicationInfo != null) {
             final GlassFishConfigs configs = LazyProperty.getOrSet(currentApplicationInfo, GlassFishConfig::getConfigsFromAppInfo, GlassFishConfigs::new, GlassFishConfig::setConfigsToAppInfo);
@@ -124,29 +120,6 @@ class GlassFishConfig implements Config {
 
     private void setConfigToConfigs(GlassFishConfigs cfgs, Config cfg) {
         cfgs.put(this, cfg);
-    }
-
-    private static ApplicationInfo getCurrentApplicationInfo() {
-        final Deployment deploymentService = Globals.get(Deployment.class);
-        DeploymentContext deploymentContext = null;
-        if (deploymentService != null) {
-            deploymentContext = deploymentService.getCurrentDeploymentContext();
-        }
-        if (deploymentContext != null) {
-            // during app deployment, we don't have current invocation, we retrieve it from the deployment
-            return deploymentContext.getModuleMetaData(ApplicationInfo.class);
-        }
-        final ComponentInvocation currentInvocation = Globals.get(InvocationManager.class).getCurrentInvocation();
-        String applicationName = null;
-        if (currentInvocation != null && null != (applicationName = currentInvocation.getAppName())) {
-            ApplicationRegistry applicationRegistry = Globals.get(ApplicationRegistry.class);
-            if (applicationRegistry != null) {
-                // application started
-                return applicationRegistry.get(applicationName);
-            }
-        }
-        // we're not in a context related to an application
-        return null;
     }
 
 }

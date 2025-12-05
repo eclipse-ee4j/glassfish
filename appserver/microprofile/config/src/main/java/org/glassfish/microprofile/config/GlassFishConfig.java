@@ -95,15 +95,15 @@ class GlassFishConfig implements Config {
     }
 
     private Config getConfigDelegate() {
-        final ApplicationInfo currentApplicationInfo = Globals.get(ApplicationRegistry.class).getCurrentApplicationInfo();
-        Config config = null;
-        if (currentApplicationInfo != null) {
-            final GlassFishConfigs configs = LazyProperty.getOrSet(currentApplicationInfo, GlassFishConfig::getConfigsFromAppInfo, GlassFishConfigs::new, GlassFishConfig::setConfigsToAppInfo);
-            config = LazyProperty.getOrSet(configs, this::getConfigFromConfigs, configProducer, this::setConfigToConfigs);
-        } else {
-            config = LazyProperty.getOrSet(this, GlassFishConfig::getDefaultConfigDelegate, configProducer, GlassFishConfig::setDefaultConfigDelegate);
-        }
-        return config;
+        return Globals.get(ApplicationRegistry.class).getCurrentApplicationInfo()
+                .map(currentApplicationInfo -> {
+                    final GlassFishConfigs configs = LazyProperty.getOrCreateAndSet(currentApplicationInfo,
+                            GlassFishConfig::getConfigsFromAppInfo, GlassFishConfigs::new, GlassFishConfig::setConfigsToAppInfo);
+                    return LazyProperty.getOrCreateAndSet(configs, this::getConfigFromConfigs, configProducer, this::setConfigToConfigs);
+                })
+                .orElseGet(() -> LazyProperty.getOrCreateAndSet(this, GlassFishConfig::getDefaultConfigDelegate,
+                        configProducer, GlassFishConfig::setDefaultConfigDelegate)
+                );
     }
 
     private static GlassFishConfigs getConfigsFromAppInfo(ApplicationInfo applicationInfo) {

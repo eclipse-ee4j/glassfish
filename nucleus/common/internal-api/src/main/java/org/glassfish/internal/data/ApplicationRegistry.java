@@ -23,6 +23,7 @@ import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.glassfish.api.deployment.DeploymentContext;
@@ -71,21 +72,21 @@ public class ApplicationRegistry {
      *
      * @return Information about the current application
      */
-    public ApplicationInfo getCurrentApplicationInfo() {
+    public Optional<ApplicationInfo> getCurrentApplicationInfo() {
         final Deployment deploymentService = deploymentServiceProvider.get();
         DeploymentContext deploymentContext = deploymentService.getCurrentDeploymentContext();
         if (deploymentContext != null) {
             // during app deployment, we don't have current invocation, we retrieve it from the deployment
-            return deploymentContext.getModuleMetaData(ApplicationInfo.class);
+            return Optional.ofNullable(deploymentContext.getModuleMetaData(ApplicationInfo.class));
         }
         final ComponentInvocation currentInvocation = invocationManagerProvider.get().getCurrentInvocation();
         String applicationName = null;
         if (currentInvocation != null && null != (applicationName = currentInvocation.getAppName())) {
             // application started
-            return this.get(applicationName);
+            return Optional.ofNullable(this.get(applicationName));
         }
         // we're not in a context related to an application
-        return null;
+        return Optional.empty();
     }
 
 }

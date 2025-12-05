@@ -33,7 +33,7 @@ public class GlassFishConfigProviderResolver extends ConfigProviderResolver {
     volatile private MpConfigProviderResolver resolverDelegate;
 
     private MpConfigProviderResolver getOrCreateResolverDelegate() {
-        return LazyProperty.getOrSet(
+        return LazyProperty.getOrCreateAndSet(
                 this,
                 GlassFishConfigProviderResolver::getResolverDelegate,
                 MpConfigProviderResolver::new,

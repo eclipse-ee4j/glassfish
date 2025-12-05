@@ -20,12 +20,30 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
+ * Utility class for lazy evaluation
  *
  * @author Ondro Mihalyi
  */
-public class LazyProperty {
+public final class LazyProperty {
 
-    public static <OBJ, PROP> PROP getOrSet(OBJ object, Function<OBJ, PROP> getter, Supplier<PROP> propertyProducer, BiConsumer<OBJ, PROP> setter) {
+    private LazyProperty() {
+    }
+
+    /**
+     * Returns a value lazily. Never returns {@code null}. If it would be {@code null}, it creates and sets the value
+     * in a thread-safe way and returns the newly created value.
+     * It's expected that the value set by the {@setter} will be returned by a subsequent call of the {@code getter}.
+     * Therefore subsequent calls to this method would return the value created and set in a previous call.
+     *
+     * @param <OBJ> Type of the object that getter and setter get value from or set value to
+     * @param <PROP> Type of the value to be returned by this method (type of the property to get or set)
+     * @param object Object to get value from or set value to
+     * @param getter Will be used to get the value from the {@code object} argument
+     * @param propertyProducer Produces a new value if {@code getter} returns {@code null}.
+     * @param setter Will be used to set the value produced by {@code propertyProducer} before the value is returned
+     * @return Value returned by {@code getter} or by {@code propertyProducer} if {@code getter} returns {@code null}
+     */
+    public static <OBJ, PROP> PROP getOrCreateAndSet(OBJ object, Function<OBJ, PROP> getter, Supplier<PROP> propertyProducer, BiConsumer<OBJ, PROP> setter) {
         PROP result = getter.apply(object);
         if (result == null) {
             synchronized (object) {

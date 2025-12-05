@@ -69,7 +69,7 @@
                 </plugin>
 
                 <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <environmentVariables>
                             <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
@@ -82,6 +82,34 @@
                             <arquillian.launch>arquillian-glassfish</arquillian.launch>
                         </systemPropertyVariables>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <glassfish.home>${glassfish.home}</glassfish.home>
+
+                            <!-- Use the Arquillian XML from the parent in each child module -->
+                            <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
+                            <arquillian.launch>arquillian-glassfish</arquillian.launch>
+                        </systemPropertyVariables>
+                        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.SurefireStatelessTestsetInfoReporter"/>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -70,7 +70,6 @@
 
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.2</version>
                     <configuration>
                         <environmentVariables>
                             <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
@@ -87,7 +86,6 @@
 
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.2</version>
                     <configuration>
                         <systemPropertyVariables>
                             <glassfish.home>${glassfish.home}</glassfish.home>
@@ -96,6 +94,7 @@
                             <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
                             <arquillian.launch>arquillian-glassfish</arquillian.launch>
                         </systemPropertyVariables>
+                        <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.SurefireStatelessTestsetInfoReporter"/>
                     </configuration>
                     <executions>
                         <execution>

@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>Eclipse GlassFish Quick Start Guide, Release 7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Eclipse GlassFish Quick Start Guide, Release 7</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+</ul>
+</li>
+<li><a href="#quick-start-for-basic-features">1 Quick Start for Basic Features</a>
+<ul class="sectlevel2">
+<li><a href="#about-this-quick-start-guide">About This Quick Start Guide</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+<li><a href="#default-administration-values">Default Administration Values</a></li>
+<li><a href="#starting-and-stopping-the-default-domain">Starting and Stopping the Default Domain</a>
+<ul class="sectlevel3">
+<li><a href="#to-start-the-default-domain">To Start the Default Domain</a></li>
+<li><a href="#to-stop-the-default-domain">To Stop the Default Domain</a></li>
+</ul>
+</li>
+<li><a href="#starting-and-stopping-the-database-server">Starting and Stopping the Database Server</a>
+<ul class="sectlevel3">
+<li><a href="#to-start-the-apache-derby-server">To Start the Apache Derby Server</a></li>
+<li><a href="#to-stop-the-apache-derby-server">To Stop the Apache Derby Server</a></li>
+</ul>
+</li>
+<li><a href="#starting-the-administration-console">Starting the Administration Console</a>
+<ul class="sectlevel3">
+<li><a href="#to-start-the-administration-console">To Start the Administration Console</a></li>
+</ul>
+</li>
+<li><a href="#deploying-and-undeploying-applications">Deploying and Undeploying Applications</a>
+<ul class="sectlevel3">
+<li><a href="#to-obtain-the-sample-application">To Obtain the Sample Application</a></li>
+<li><a href="#deploying-and-undeploying-the-sample-application-from-the-command-line">Deploying and Undeploying the Sample Application From the Command Line</a></li>
+<li><a href="#deploying-and-undeploying-applications-by-using-the-administration-console">Deploying and Undeploying Applications by Using the Administration Console</a></li>
+<li><a href="#deploying-and-undeploying-the-sample-application-automatically">Deploying and Undeploying the Sample Application Automatically</a></li>
+</ul>
+</li>
+<li><a href="#high-availability-clustering-and-load-balancing">High Availability Clustering and Load Balancing</a>
+<ul class="sectlevel3">
+<li><a href="#clusters-of-glassfish-server-instances">Clusters of Eclipse GlassFish Instances</a></li>
+<li><a href="#session-persistence-and-failover">Session Persistence and Failover</a></li>
+<li><a href="#load-balancing-for-clustered-configurations">Load Balancing for Clustered Configurations</a></li>
+</ul>
+</li>
+<li><a href="#for-more-information">For More Information</a>
+<ul class="sectlevel3">
+<li><a href="#product-documentation">Product Documentation</a></li>
+<li><a href="#tutorials">Tutorials</a></li>
+<li><a href="#jakarta-ee-examples">Jakarta EE Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quick Start Guide</p>
+</div>
+<div class="paragraph">
+<p>Release 7</p>
+</div>
+<div class="paragraph">
+<p>Contributed 2018 - 2024</p>
+</div>
+<div class="paragraph">
+<p>This book demonstrates key features of the Eclipse GlassFish product and
+enables you to quickly learn the basics. Step-by-step procedures
+introduce you to product features and Eclipse GlassFish 7 Quick Start Guide Eclipse GlassFish 7
+Quick Start Guide you to use them immediately.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Eclipse GlassFish Quick Start Guide, Release 7</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+<a href="http://www.eclipse.org/legal/epl-2.0" class="bare">http://www.eclipse.org/legal/epl-2.0</a>.</p>
+</div>
+<div class="paragraph">
+<p>SPDX-License-Identifier: EPL-2.0</p>
+</div>
+<div class="paragraph">
+<p>Oracle and Java are registered trademarks of Oracle and/or its
+affiliates. Other names may be trademarks of their respective owners.</p>
+</div>
+<div class="paragraph">
+<p>Intel and Intel Xeon are trademarks or registered trademarks of Intel
+Corporation. All SPARC trademarks are used under license and are
+trademarks or registered trademarks of SPARC International, Inc. AMD,
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or
+registered trademarks of Advanced Micro Devices. UNIX is a registered
+trademark of The Open Group.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="data:image/png;base64,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" alt="Eclipse Logo"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This documentation is part of the Java Enterprise Edition contribution
+to the Eclipse Foundation and is not intended for use in relation to
+Java Enterprise Edition or Orace GlassFish. The documentation is in the
+process of being revised to reflect the new Jakarta EE branding.
+Additional changes will be made as requirements and procedures evolve
+for Jakarta EE. Where applicable, references to Jakarta EE or Java
+Enterprise Edition should be considered references to Jakarta EE.</p>
+</div>
+<div class="paragraph">
+<p>Please see the Title page for additional license information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This book demonstrates key features of the Eclipse GlassFish product and
+enables you to quickly learn the basics. Step-by-step procedures
+introduce you to product features and enable you to use them
+immediately.</p>
+</div>
+<div class="paragraph">
+<p>This preface contains information about and conventions for the entire
+Eclipse GlassFish (Eclipse GlassFish) documentation
+set.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is developed through the GlassFish project
+open-source community at <code><a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a></code>. The
+GlassFish project provides a structured process for developing the
+Eclipse GlassFish platform that makes the new features of the Jakarta EE
+platform available faster, while maintaining the most important feature
+of Jakarta EE: compatibility. It enables Java developers to access the
+Eclipse GlassFish source code and to contribute to the development of the
+Eclipse GlassFish. The GlassFish project is designed to encourage
+communication between Oracle engineers and the community.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></p>
+</li>
+<li>
+<p><a href="#typographic-conventions">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="#symbol-conventions">Symbol Conventions</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
+<div class="paragraph">
+<p>The Eclipse GlassFish documentation set describes deployment planning and
+system installation. For an introduction to Eclipse GlassFish, refer to
+the books in the order in which they are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="release-notes.html#GSRLN">Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
+the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java
+Development Kit (JDK), and database drivers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the
+Eclipse GlassFish product.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to install the software
+and its components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="upgrade-guide.html#GSUPG">Upgrade Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to upgrade to the latest
+version of Eclipse GlassFish. This guide also describes differences
+between adjacent product releases and configuration options that can
+result in incompatibility with the product specifications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="deployment-planning-guide.html#GSPLG">Deployment Planning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to build a
+production deployment of Eclipse GlassFish that meets the requirements of
+your system and enterprise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor,
+and manage Eclipse GlassFish subsystems and components from the command
+line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code></a> utility. Instructions for
+performing these tasks from the Administration Console are provided in
+the Administration Console online help.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and
+administering Eclipse GlassFish security.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and
+deploy applications to the Eclipse GlassFish and provides information
+about deployment descriptors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and
+implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish. These
+applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs). This guide provides
+information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in
+embedded Eclipse GlassFish and to develop applications in which Eclipse GlassFish is embedded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to
+configure Eclipse GlassFish to provide higher availability and
+scalability through failover and load balancing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the
+performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you
+might encounter when using Eclipse GlassFish and explains how to solve
+them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you
+might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man
+page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features,
+compatibility issues, and existing bugs for Open Message Queue.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction
+to the technology, concepts, architecture, capabilities, and features of
+the Message Queue messaging service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up
+and manage a Message Queue messaging system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-jmx/toc.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes
+the application programming interface in Message Queue for
+programmatically configuring and monitoring Message Queue resources in
+conformance with the Java Management Extensions (JMX).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-java/toc.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides
+information about concepts and procedures for developing Java messaging
+applications (Java clients) that work with Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-c/toc.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides
+programming and reference information for developers working with
+Message Queue who want to use the C language binding to the Message
+Queue messaging service to send, receive, and process Message Queue
+messages.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="typographic-conventions"><a class="anchor" href="#typographic-conventions"></a>Typographic Conventions</h3>
+<div class="paragraph">
+<p>The following table describes the typographic changes that are used in
+this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 37%;">
+<col style="width: 49%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Typeface</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The names of commands, files, and directories, and
+onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Edit your <code>.login</code> file.</p>
+</div>
+<div class="paragraph">
+<p>Use <code>ls</code> <code>a</code> to list all files.</p>
+</div>
+<div class="paragraph">
+<p><code>machine_name% you have mail.</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What you type, contrasted with onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>machine_name%</code> <code>su</code></p>
+</div>
+<div class="paragraph">
+<p><code>Password:</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A placeholder to be replaced with a real name or value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The
+command to remove a file is <code>rm</code> filename.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Book titles, new terms, and terms to be emphasized (note
+that some emphasized items appear bold online)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Read Chapter 6 in the User&#8217;s Guide.</p>
+</div>
+<div class="paragraph">
+<p>A cache is a copy that is stored locally.</p>
+</div>
+<div class="paragraph">
+<p>Do not save the file.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="symbol-conventions"><a class="anchor" href="#symbol-conventions"></a>Symbol Conventions</h3>
+<div class="paragraph">
+<p>The following table explains symbols that might be used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 26%;">
+<col style="width: 28%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Symbol</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[ ]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains optional arguments and command options.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ls [-l]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The
+<code>-l</code> option is not required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ | }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains a set of choices for a required command option.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-d {y|n}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-d</code> option requires that you use either the <code>y</code>
+argument or the <code>n</code> argument.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${ }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates a variable reference.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${com.sun.javaRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">References the value of the <code>com.sun.javaRoot</code> variable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins simultaneous multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Control-A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the
+Control key while you press the A key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins consecutive multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ctrl+A+N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the
+Control key, release it, and then press the subsequent keys.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates menu item selection in a graphical user interface.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File &gt;
+New &gt; Templates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From the File menu, choose New. From the New submenu,
+choose Templates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quick-start-for-basic-features"><a class="anchor" href="#quick-start-for-basic-features"></a>1 Quick Start for Basic Features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Eclipse GlassFish provides a server for the
+development and deployment of Java Platform, Enterprise Edition (Jakarta EE
+platform) applications and web technologies based on Java technology.
+Eclipse GlassFish 7 provides the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A lightweight and extensible core based on OSGi Alliance standards</p>
+</li>
+<li>
+<p>A web container</p>
+</li>
+<li>
+<p>An easy-to-use Administration Console for configuration and management</p>
+</li>
+<li>
+<p>Support for high availability clustering and load balancing</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#about-this-quick-start-guide">About This Quick Start Guide</a></p>
+</li>
+<li>
+<p><a href="#default-paths-and-file-names">Default Paths and File Names</a></p>
+</li>
+<li>
+<p><a href="#default-administration-values">Default Administration Values</a></p>
+</li>
+<li>
+<p><a href="#starting-and-stopping-the-default-domain">Starting and Stopping the Default Domain</a></p>
+</li>
+<li>
+<p><a href="#starting-and-stopping-the-database-server">Starting and Stopping the Database Server</a></p>
+</li>
+<li>
+<p><a href="#starting-the-administration-console">Starting the Administration Console</a></p>
+</li>
+<li>
+<p><a href="#deploying-and-undeploying-applications">Deploying and Undeploying Applications</a></p>
+</li>
+<li>
+<p><a href="#high-availability-clustering-and-load-balancing">High Availability Clustering and Load Balancing</a></p>
+</li>
+<li>
+<p><a href="#for-more-information">For More Information</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="about-this-quick-start-guide"><a class="anchor" href="#about-this-quick-start-guide"></a>About This Quick Start Guide</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 Quick Start Guide demonstrates
+key features of the Eclipse GlassFish product and enables you to quickly
+learn the basics. Step-by-step procedures introduce you to product
+features and enable you to use them immediately.</p>
+</div>
+<div class="paragraph">
+<p>This guide assumes that you have already obtained and installed the
+Eclipse GlassFish 7 software. For more information about installing
+Eclipse GlassFish 7, see the
+<a href="https://github.com/eclipse-ee4j/glassfishdocumentation">Eclipse GlassFish Installation Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>Instructions and examples in this guide that apply to all supported
+operating systems use the forward slash character (<code>/</code>) as path
+separators in all file names and commands. Ensure that you use the
+correct character for the system on which Eclipse GlassFish is installed.
+For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>UNIX, Linux, or Mac OS X systems: as-install<code>/bin/asadmin</code></p>
+</li>
+<li>
+<p>Windows systems: as-install<code>\bin\asadmin</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This guide provides basic information only. For comprehensive
+information about Eclipse GlassFish and other entities mentioned in this
+guide, see <a href="#for-more-information">For More Information</a>.</p>
+</div>
+<div class="paragraph">
+<p>To review additional details about this release before you begin using
+the software, see the <a href="release-notes.html#GSRLN">Eclipse GlassFish
+Release Notes</a>. The Release Notes provide important information about
+the Eclipse GlassFish 7 release, including details about new features,
+information about known issues and possible workarounds, and tips for
+installing and working with Eclipse GlassFish 7 software.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="default-paths-and-file-names"><a class="anchor" href="#default-paths-and-file-names"></a>Default Paths and File Names</h3>
+<div class="paragraph">
+<p>The following table describes the default paths and file names that are
+used in this book.</p>
+</div>
+<div class="paragraph">
+<p>Table 1-1 Default Paths and File Names</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 35%;">
+<col style="width: 51%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Placeholder</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the base installation directory for Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac OS operating system:</p>
+</div>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+</div>
+<div class="paragraph">
+<p>Installations on the Windows operating system:</p>
+</div>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install-parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the parent of the base installation directory for Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac operating system:</p>
+</div>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+</div>
+<div class="paragraph">
+<p>Installations on the Windows operating system:</p>
+</div>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain is created by default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install<code>/domains/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain&#8217;s configuration is stored.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir<code>/</code>domain-name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instance-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory for a server instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir<code>/</code>instance-name</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="default-administration-values"><a class="anchor" href="#default-administration-values"></a>Default Administration Values</h3>
+<div class="paragraph">
+<p>The following table lists default administration values for Eclipse GlassFish.
+See <a href="#default-paths-and-file-names">Default Paths and File Names</a> for more
+information about the as-install and domain-dir placeholders.</p>
+</div>
+<div id="gixxy" class="paragraph">
+<p>Table 1-2 Default Administration Values</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Default Value or Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>domain1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Master password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeit</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf">
+<code>asadmin</code>(1M)</a> command-line utility</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install<code>/bin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir<code>/config</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir<code>/logs</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administration server port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4848</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8080</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8181</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pure JMX clients port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8686</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message Queue port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>7676</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3700</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3820</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL port with mutual authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3920</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="starting-and-stopping-the-default-domain"><a class="anchor" href="#starting-and-stopping-the-default-domain"></a>Starting and Stopping the Default Domain</h3>
+<div class="paragraph">
+<p>When you install Eclipse GlassFish, a default domain named <code>domain1</code> is
+created. The following procedures describe how to start and stop
+<code>domain1</code> when it is the only domain. For information about starting and
+stopping a domain when there are multiple domains, see
+"<a href="administration-guide.html#administering-domains">Administering Domains</a>" in Eclipse GlassFish Administration Guide.</p>
+</div>
+<div class="sect3">
+<h4 id="to-start-the-default-domain"><a class="anchor" href="#to-start-the-default-domain"></a>To Start the Default Domain</h4>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish software must be installed before you start the domain.</p>
+</div>
+<div class="paragraph">
+<p>Run the <code>asadmin start-domain</code> command without an operand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-domain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command starts the default domain, <code>domain1</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="to-stop-the-default-domain"><a class="anchor" href="#to-stop-the-default-domain"></a>To Stop the Default Domain</h4>
+<div class="paragraph">
+<p>Run the <code>asadmin stop-domain</code> command without an operand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin stop-domain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command stops the default domain, <code>domain1</code>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To determine whether a domain is running, use the <code>asadmin list-domains</code>
+command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin list-domains</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="starting-and-stopping-the-database-server"><a class="anchor" href="#starting-and-stopping-the-database-server"></a>Starting and Stopping the Database Server</h3>
+<div class="paragraph">
+<p>A database server is not started by default when you start the Eclipse GlassFish domain. If your applications require a database back end, you
+must start and stop the database server manually.</p>
+</div>
+<div class="paragraph">
+<p>The following procedures describe how to start and stop the Apache Derby
+server that is bundled with Eclipse GlassFish. For information about
+starting and stopping other database servers, see the documentation for
+your specific product.</p>
+</div>
+<div class="paragraph">
+<p>For the list of database products supported in this release, see the
+<a href="https://github.com/eclipse-ee4j/glassfishdocumentation">Eclipse GlassFish Release Notes</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about database connectivity, see
+"<a href="https://github.com/eclipse-ee4j/glassfishdocumentation">Administering Database
+Connectivity</a>" in Eclipse GlassFish Administration Guide.</p>
+</div>
+<div class="sect3">
+<h4 id="to-start-the-apache-derby-server"><a class="anchor" href="#to-start-the-apache-derby-server"></a>To Start the Apache Derby Server</h4>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>At least one Eclipse GlassFish domain must be started before you start
+the database server.</p>
+</div>
+<div class="paragraph">
+<p>Run the <code>asadmin start-database</code> command.</p>
+</div>
+<div class="paragraph">
+<p>The general form for the command is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-database --dbhome directory-path</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, to start the Apache Derby server from its default location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin start-database --dbhome as-install-parent/javadb</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="to-stop-the-apache-derby-server"><a class="anchor" href="#to-stop-the-apache-derby-server"></a>To Stop the Apache Derby Server</h4>
+<div class="paragraph">
+<p>Run the <code>asadmin stop-database</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin stop-database</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="starting-the-administration-console"><a class="anchor" href="#starting-the-administration-console"></a>Starting the Administration Console</h3>
+<div class="paragraph">
+<p>The Eclipse GlassFish Administration Console provides a browser interface
+for configuring, administering, and monitoring Eclipse GlassFish.</p>
+</div>
+<div class="sect3">
+<h4 id="to-start-the-administration-console"><a class="anchor" href="#to-start-the-administration-console"></a>To Start the Administration Console</h4>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>At least one Eclipse GlassFish domain must be started.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Type the URL in your browser.</p>
+<div class="paragraph">
+<p>The default URL for the Administration Console on the local host is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:4848</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If prompted, log in to the Administration Console.</p>
+<div class="paragraph">
+<p>You will be prompted to log in if you chose to require an administration
+password at the time Eclipse GlassFish was installed.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information, see the Administration Console online help.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploying-and-undeploying-applications"><a class="anchor" href="#deploying-and-undeploying-applications"></a>Deploying and Undeploying Applications</h3>
+<div class="paragraph">
+<p>The process of configuring and enabling applications to run within the
+Eclipse GlassFish framework is referred to as deployment.</p>
+</div>
+<div class="paragraph">
+<p>This section explains how to deploy, list, and undeploy applications.
+The procedures in this section use the <code>hello.war</code> sample application.
+The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#to-obtain-the-sample-application">To Obtain the Sample Application</a></p>
+</li>
+<li>
+<p><a href="#deploying-and-undeploying-the-sample-application-from-the-command-line">Deploying and Undeploying the Sample Application From the Command Line</a></p>
+</li>
+<li>
+<p><a href="#deploying-and-undeploying-applications-by-using-the-administration-console">Deploying and Undeploying Applications by Using the Administration Console</a></p>
+</li>
+<li>
+<p><a href="#deploying-and-undeploying-the-sample-application-automatically">Deploying and Undeploying the Sample Application Automatically</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="to-obtain-the-sample-application"><a class="anchor" href="#to-obtain-the-sample-application"></a>To Obtain the Sample Application</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download a copy of the <code>hello.war</code> sample application from
+<code><a href="https://glassfish.org/downloads/quickstart/hello.war" class="bare">https://glassfish.org/downloads/quickstart/hello.war</a></code>.</p>
+</li>
+<li>
+<p>Save the <code>hello.war</code> file in the directory of your choice.</p>
+<div class="paragraph">
+<p>This directory is referred to as sample-dir.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deploying-and-undeploying-the-sample-application-from-the-command-line"><a class="anchor" href="#deploying-and-undeploying-the-sample-application-from-the-command-line"></a>Deploying and Undeploying the Sample Application From the Command Line</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish provides <code>asadmin</code> subcommands for performing the
+following deployment-related tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#to-deploy-the-sample-application-from-the-command-line">To Deploy the Sample Application From the Command Line</a></p>
+</li>
+<li>
+<p><a href="#to-list-deployed-applications-from-the-command-line">To List Deployed Applications From the Command Line</a></p>
+</li>
+<li>
+<p><a href="#to-undeploy-the-sample-application-from-the-command-line">To Undeploy the Sample Application From the Command Line</a></p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="to-deploy-the-sample-application-from-the-command-line"><a class="anchor" href="#to-deploy-the-sample-application-from-the-command-line"></a>To Deploy the Sample Application From the Command Line</h5>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The sample application must be available before you start this task. To
+download the sample, see <a href="#to-obtain-the-sample-application">To Obtain the Sample Application</a>.
+At least one Eclipse GlassFish domain must be started before you deploy
+the sample application.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the <code>asadmin deploy</code> command.</p>
+<div class="paragraph">
+<p>The general form for the command is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin deploy war-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy the <code>hello.war</code> sample, the command is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin deploy sample-dir/hello.war</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Access the <code>hello</code> application by typing the following URL in your
+browser:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:8080/hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The application&#8217;s start page is displayed, and you are prompted to type
+your name.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Hi, my name is Duke. What's yours?</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Type your name and click Submit.</p>
+<div class="paragraph">
+<p>The application displays a customized response, giving you a personal
+<code>Hello</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>deploy</code> subcommand, see
+<a href="reference-manual.html#deploy"><code>deploy</code>(1)</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about deploying applications from the command line,
+see the <a href="application-deployment-guide.html#GSDPG">Eclipse GlassFish Application
+Deployment Guide</a>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-list-deployed-applications-from-the-command-line"><a class="anchor" href="#to-list-deployed-applications-from-the-command-line"></a>To List Deployed Applications From the Command Line</h5>
+<div class="paragraph">
+<p>Run the <code>asadmin list-applications</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin list-applications</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-undeploy-the-sample-application-from-the-command-line"><a class="anchor" href="#to-undeploy-the-sample-application-from-the-command-line"></a>To Undeploy the Sample Application From the Command Line</h5>
+<div class="paragraph">
+<p>Run the <code>asadmin undeploy</code> command.</p>
+</div>
+<div class="paragraph">
+<p>The general form for the command is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin undeploy war-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For war-name, use the literal <code>hello</code>, not the full <code>hello.war</code> name.</p>
+</div>
+<div class="paragraph">
+<p>For the <code>hello.war</code> example, the command is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/bin/asadmin undeploy hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>undeploy</code> subcommand, see
+<a href="reference-manual.html#undeploy"><code>undeploy</code>(1)</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deploying-and-undeploying-applications-by-using-the-administration-console"><a class="anchor" href="#deploying-and-undeploying-applications-by-using-the-administration-console"></a>Deploying and Undeploying Applications by Using the Administration Console</h4>
+<div class="paragraph">
+<p>The graphical Administration Console of Eclipse GlassFish enables you to
+perform the following deployment-related tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#to-deploy-the-sample-application-by-using-the-administration-console">To Deploy the Sample Application by Using the Administration Console</a></p>
+</li>
+<li>
+<p><a href="#to-view-deployed-applications-in-the-administration-console">To View Deployed Applications in the Administration Console</a></p>
+</li>
+<li>
+<p><a href="#to-undeploy-the-sample-application-by-using-the-administration-console">To Undeploy the Sample Application by Using the Administration Console</a></p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="to-deploy-the-sample-application-by-using-the-administration-console"><a class="anchor" href="#to-deploy-the-sample-application-by-using-the-administration-console"></a>To Deploy the Sample Application by Using the Administration Console</h5>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The sample application must be available before you start this task.
+To download the sample, see <a href="#to-obtain-the-sample-application">To Obtain the Sample Application</a>.
+At least one Eclipse GlassFish domain must be started before you deploy
+the sample application.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Launch the Administration Console by typing the following URL in
+your browser:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:4848</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click the Applications node in the tree on the left.</p>
+<div class="paragraph">
+<p>The Applications page is displayed.</p>
+</div>
+</li>
+<li>
+<p>Click the Deploy button.</p>
+<div class="paragraph">
+<p>The Deploy Applications or Modules page is displayed.</p>
+</div>
+</li>
+<li>
+<p>Select Packaged File to be Uploaded to the Server, and click Browse.</p>
+</li>
+<li>
+<p>Navigate to the location in which you saved the <code>hello.war</code> sample,
+select the file, and click Open.</p>
+<div class="paragraph">
+<p>You are returned to the Deploy Applications or Modules page.</p>
+</div>
+</li>
+<li>
+<p>Specify a description in the Description field, for example:</p>
+<div class="paragraph">
+<p><code>hello</code></p>
+</div>
+</li>
+<li>
+<p>Accept the other default settings, and click OK.</p>
+<div class="paragraph">
+<p>You are returned to the Applications page.</p>
+</div>
+</li>
+<li>
+<p>Select the check box next to the <code>hello</code> application and click the
+Launch link to run the application.</p>
+<div class="paragraph">
+<p>The default URL for the application is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:8080/hello/</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information, see the Administration Console online help.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-view-deployed-applications-in-the-administration-console"><a class="anchor" href="#to-view-deployed-applications-in-the-administration-console"></a>To View Deployed Applications in the Administration Console</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Launch the Administration Console by typing the following URL in
+your browser:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:4848</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click the Applications node in the tree on the left.</p>
+<div class="paragraph">
+<p>Expand the node to list deployed applications. Deployed applications are
+also listed in the table on the Applications page.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-undeploy-the-sample-application-by-using-the-administration-console"><a class="anchor" href="#to-undeploy-the-sample-application-by-using-the-administration-console"></a>To Undeploy the Sample Application by Using the Administration Console</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Launch the Administration Console by typing the following URL in your browser:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:4848</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click the Applications node in the tree on the left.</p>
+<div class="paragraph">
+<p>The Applications page is displayed.</p>
+</div>
+</li>
+<li>
+<p>Select the check box next to the <code>hello</code> sample application.</p>
+</li>
+<li>
+<p>Remove or disable the application.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To remove the application, click the Undeploy button.</p>
+</li>
+<li>
+<p>To disable the application, click the Disable button.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information, see the Administration Console online help.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deploying-and-undeploying-the-sample-application-automatically"><a class="anchor" href="#deploying-and-undeploying-the-sample-application-automatically"></a>Deploying and Undeploying the Sample Application Automatically</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish enables you to performing the following
+deployment-related tasks automatically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#to-deploy-the-sample-application-automatically">To Deploy the Sample Application Automatically</a></p>
+</li>
+<li>
+<p><a href="#to-undeploy-the-sample-application-automatically">To Undeploy the Sample Application Automatically</a></p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="to-deploy-the-sample-application-automatically"><a class="anchor" href="#to-deploy-the-sample-application-automatically"></a>To Deploy the Sample Application Automatically</h5>
+<div class="paragraph">
+<p>You can deploy applications automatically by placing them in the
+domain-dir<code>/autodeploy</code> directory, where domain-dir is the directory of
+the domain for which you want to configure automatic deployment. For
+this example, use the default domain, <code>domain1</code>, in the default
+domain-root-dir, which is as-install<code>/domains</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install/domains/domain1/autodeploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The sample application must be available before you start this task. To
+download the sample, see <a href="#to-obtain-the-sample-application">To Obtain the Sample Application</a>.</p>
+</div>
+<div class="paragraph">
+<p>Copy the application WAR file to the domain-dir<code>/autodeploy</code> directory.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>On UNIX, Linux, and Mac OS X systems, type this command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>cp sample-dir/hello.war as-install/domains/domain-dir/autodeploy</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>On Windows systems, type this command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>copy sample-dir\hello.war as-install\domains\domain-dir\autodeploy</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish automatically discovers and deploys the application.
+The default URL for the application is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:8080/hello/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="to-undeploy-the-sample-application-automatically"><a class="anchor" href="#to-undeploy-the-sample-application-automatically"></a>To Undeploy the Sample Application Automatically</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change to the domain&#8217;s <code>autodeploy</code> directory.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd as-install\domains\domain-dir\autodeploy</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the sample application&#8217;s WAR file to undeploy and remove the application.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On UNIX, Linux, and Mac OS X systems, type this command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>rm hello.war</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>On Windows systems, type this command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>del hello.war</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="high-availability-clustering-and-load-balancing"><a class="anchor" href="#high-availability-clustering-and-load-balancing"></a>High Availability Clustering and Load Balancing</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish enables multiple Eclipse GlassFish instances to be
+clustered to provide high availability through failure protection,
+scalability, and load balancing. The subsections that follow provide an
+overview of high availability clustering and load balancing for
+Eclipse GlassFish.</p>
+</div>
+<div class="sect3">
+<h4 id="clusters-of-glassfish-server-instances"><a class="anchor" href="#clusters-of-glassfish-server-instances"></a>Clusters of Eclipse GlassFish Instances</h4>
+<div class="paragraph">
+<p>A cluster is a collection of Eclipse GlassFish instances that work
+together as one logical entity. A cluster provides a runtime environment
+for one or more Java Platform, Enterprise Edition (Jakarta EE)
+applications. A cluster provides high availability through failure
+protection, scalability, and load balancing.</p>
+</div>
+<div class="paragraph">
+<p>A Eclipse GlassFish instance is a single Virtual Machine for the Java
+platform (Java Virtual Machine or JVM machine) on a single node in which
+Eclipse GlassFish is running. A node defines the host where the Eclipse GlassFish instance resides. The JVM machine must be compatible with the
+Java Platform, Enterprise Edition (Jakarta EE).</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish instances form the basis of an application deployment.
+An instance is a building block in the clustering, load balancing, and
+session persistence features of Eclipse GlassFish. Each instance belongs
+to a single domain and has its own directory structure, configuration,
+and deployed applications. Every instance contains a reference to a node
+that defines the host where the instance resides.</p>
+</div>
+<div class="paragraph">
+<p>For more information, see the following documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>"<a href="ha-administration-guide.html#administering-glassfish-server-nodes">Administering Eclipse GlassFish Nodes</a>" in Eclipse GlassFish High Availability Administration Guide</p>
+</li>
+<li>
+<p>"<a href="ha-administration-guide.html#administering-glassfish-server-clusters">Administering Eclipse GlassFish Clusters</a>" in
+Eclipse GlassFish High Availability Administration Guide</p>
+</li>
+<li>
+<p>"<a href="ha-administration-guide.html#administering-glassfish-server-instances">Administering Eclipse GlassFish Instances</a>" in
+Eclipse GlassFish High Availability Administration Guide</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="session-persistence-and-failover"><a class="anchor" href="#session-persistence-and-failover"></a>Session Persistence and Failover</h4>
+<div class="paragraph">
+<p>Storing session state data enables the session state to be recovered
+after the failover of an instance in a cluster. Recovering the session
+state enables the session to continue without loss of information.
+Eclipse GlassFish supports in-memory session replication on other servers
+in the cluster for maintaining HTTP session and stateful session bean data.</p>
+</div>
+<div class="paragraph">
+<p>For more information, see "<a href="ha-administration-guide.html#configuring-high-availability-session-persistence-and-failover">Configuring High
+Availability Session Persistence and Failover</a>" in Eclipse GlassFish High Availability Administration Guide.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="load-balancing-for-clustered-configurations"><a class="anchor" href="#load-balancing-for-clustered-configurations"></a>Load Balancing for Clustered Configurations</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish supports web server and hardware-based load balancing
+for clustered configurations. A load balancer is deployed with a
+cluster, and provides the following features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Allows an application or service to be scaled horizontally across
+multiple physical (or logical) hosts yet still present the user with a single URL</p>
+</li>
+<li>
+<p>Insulates the user from host failures or server crashes when used with
+session persistence</p>
+</li>
+<li>
+<p>Enhances security by hiding the internal network from the user</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish is compatible with the Apache HTTP
+server <code>mod_jk</code> module for load balancing.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish load balancing configurations can vary widely depending
+on the needs of your enterprise. For complete information about
+configuring load balancing in Eclipse GlassFish, see the following
+documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>"<a href="ha-administration-guide.html#configuring-http-load-balancing">
+Configuring HTTP Load Balancing</a>" in
+Eclipse GlassFish High Availability Administration Guide</p>
+</li>
+<li>
+<p>"<a href="ha-administration-guide.html#rmi-iiop-load-balancing-and-failover">
+RMI-IIOP Load Balancing and Failover</a>" in
+Eclipse GlassFish High Availability Administration Guide</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="for-more-information"><a class="anchor" href="#for-more-information"></a>For More Information</h3>
+<div class="paragraph">
+<p>Additional resources are available to help you learn more about
+Eclipse GlassFish 7 and related technologies.</p>
+</div>
+<div class="paragraph">
+<p>The following resources are described here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#product-documentation">Product Documentation</a></p>
+</li>
+<li>
+<p><a href="#tutorials">Tutorials</a></p>
+</li>
+<li>
+<p><a href="#jakarta-ee-examples">Jakarta EE Examples</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="product-documentation"><a class="anchor" href="#product-documentation"></a>Product Documentation</h4>
+<div class="paragraph">
+<p>Comprehensive product documentation is available and includes the
+following.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#GSRLN">Eclipse GlassFish Release Notes</a>:
+Latest details about new features, known issues, and tips for installing
+and working with Eclipse GlassFish software.</p>
+</li>
+<li>
+<p><a href="https://glassfish.org/docs/">Eclipse GlassFish</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="tutorials"><a class="anchor" href="#tutorials"></a>Tutorials</h4>
+<div class="paragraph">
+<p>The following tutorials provide working examples and detailed
+instructions for creating enterprise applications for the Jakarta EE platform.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/jakartaee-firstcup-examples">Your First Cup: An
+Introduction to the Jakarta EE Platform</a>. For beginning Jakarta EE
+programmers, this short tutorial explains the entire process for
+developing a simple enterprise application. The sample application is a
+web application that consists of a component that is based on the
+Enterprise JavaBeans specification, a JAX-RS web service, and a
+JavaServer Faces component for the web front end.</p>
+</li>
+<li>
+<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/">The Jakarta EE Tutorial</a>.
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jakarta-ee-examples"><a class="anchor" href="#jakarta-ee-examples"></a>Jakarta EE Examples</h4>
+<div class="paragraph">
+<p><a href="https://github.com/eclipse-ee4j/jakartaee-examples">Jakarta EE Examples</a> -
+The example applications demonstrate Jakarta EE technologies.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2025-12-05 01:53:28 UTC
+</div>
+</div>
+</body>
+</html>

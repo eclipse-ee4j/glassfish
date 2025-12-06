@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>Eclipse GlassFish Installation Guide, Release 7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Eclipse GlassFish Installation Guide, Release 7</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#installing-glassfish-server-5.0">1 Installing Eclipse GlassFish 7</a>
+<ul class="sectlevel2">
+<li><a href="#installation-requirements">Installation Requirements</a>
+<ul class="sectlevel3">
+<li><a href="#javassist-library-license-notice">Javassist Library License Notice</a></li>
+</ul>
+</li>
+<li><a href="#installation-files-for-eclipse-glassfish-7">Installation Files for Eclipse GlassFish 7</a>
+<ul class="sectlevel3">
+<li><a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a></li>
+<li><a href="#glassfish-server-installation-methods">Eclipse GlassFish Installation Methods</a></li>
+<li><a href="#choosing-an-installation-method">Choosing an Installation Method</a></li>
+<li><a href="#glassfish-server-zip-files">Eclipse GlassFish ZIP Files</a></li>
+</ul>
+</li>
+<li><a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>
+<ul class="sectlevel3">
+<li><a href="#to-install-glassfish-server-using-the-zip-file">To Install Eclipse GlassFish Using the ZIP File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#uninstalling-glassfish">2 Uninstalling GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#removing-a-glassfish-server-installation">Removing a Eclipse GlassFish Installation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Installation Guide</p>
+</div>
+<div class="paragraph">
+<p>Release 7</p>
+</div>
+<div class="paragraph">
+<p>Contributed 2018 - 2024</p>
+</div>
+<div class="paragraph">
+<p>This book contains instructions for installing and uninstalling
+Eclipse GlassFish software.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Eclipse GlassFish Installation Guide, Release 7</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2010, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+<a href="http://www.eclipse.org/legal/epl-2.0" class="bare">http://www.eclipse.org/legal/epl-2.0</a>.</p>
+</div>
+<div class="paragraph">
+<p>SPDX-License-Identifier: EPL-2.0</p>
+</div>
+<div class="paragraph">
+<p>Oracle and Java are registered trademarks of Oracle and/or its
+affiliates. Other names may be trademarks of their respective owners.</p>
+</div>
+<div class="paragraph">
+<p>Intel and Intel Xeon are trademarks or registered trademarks of Intel
+Corporation. All SPARC trademarks are used under license and are
+trademarks or registered trademarks of SPARC International, Inc. AMD,
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or
+registered trademarks of Advanced Micro Devices. UNIX is a registered
+trademark of The Open Group.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="data:image/png;base64,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" alt="Eclipse Logo"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This documentation is part of the Java Enterprise Edition contribution
+to the Eclipse Foundation and is not intended for use in relation to
+Java Enterprise Edition or Orace GlassFish. The documentation is in the
+process of being revised to reflect the new Jakarta EE branding.
+Additional changes will be made as requirements and procedures evolve
+for Jakarta EE. Where applicable, references to Jakarta EE or Java
+Enterprise Edition should be considered references to Jakarta EE.</p>
+</div>
+<div class="paragraph">
+<p>Please see the Title page for additional license information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This document contains instructions for installing and uninstalling
+Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>This preface contains information about and conventions for the entire
+Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is developed through the GlassFish project
+open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
+The GlassFish project provides a structured process for developing the
+Eclipse GlassFish platform that makes the new features of the Jakarta EE
+platform available faster, while maintaining the most important feature
+of Jakarta EE: compatibility. It enables Java developers to access the
+Eclipse GlassFish source code and to contribute to the development of the
+Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></p>
+</li>
+<li>
+<p><a href="#related-documentation">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="#typographic-conventions">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="#symbol-conventions">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="#default-paths-and-file-names">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
+<div class="paragraph">
+<p>The Eclipse GlassFish documentation set describes deployment planning and
+system installation. For an introduction to Eclipse GlassFish, refer to
+the books in the order in which they are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="release-notes.html#GSRLN">Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
+the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java
+Development Kit (JDK), and database drivers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish product.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to install the software and its components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="upgrade-guide.html#GSUPG">Upgrade Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to upgrade to the latest version of Eclipse GlassFish.
+This guide also describes differences between adjacent product releases and configuration
+options that can result in incompatibility with the product specifications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="deployment-planning-guide.html#GSPLG">Deployment Planning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to build a production deployment of Eclipse GlassFish that meets the requirements of
+your system and enterprise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+Instructions for performing these tasks from the Administration Console are provided
+in the Administration Console online help.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish security.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and deploy applications to the Eclipse GlassFish and provides information
+about deployment descriptors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="add-on-component-development-guide.html#GSACG">Add-On Component Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to use published interfaces of Eclipse GlassFish to develop add-on components
+for Eclipse GlassFish.
+This document explains how to perform only those tasks that ensure that the add-on component
+is suitable for Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in embedded Eclipse GlassFish and to develop applications
+in which Eclipse GlassFish is embedded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure Eclipse GlassFish to provide higher availability and
+scalability through failover and load balancing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish and explains how to solve them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
+the Message Queue messaging service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-jmx/toc.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
+programmatically configuring and monitoring Message Queue resources in
+conformance with the Java Management Extensions (JMX).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-java/toc.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
+applications (Java clients) that work with Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-c/toc.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
+Message Queue who want to use the C language binding to the Message
+Queue messaging service to send, receive, and process Message Queue messages.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
+<div class="paragraph">
+<p>The following tutorials explain how to develop Jakarta EE applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/jakartaee-firstcup-examples">
+Your First Cup: An Introduction to the Jakarta EE Platform</a>.
+For beginning Jakarta EE programmers, this short tutorial explains the entire
+process for developing a simple enterprise application.
+The sample application is a web application that consists of a component that is
+based on the Enterprise JavaBeans specification, a JAX-RS web service,
+and a JavaServer Faces component for the web front end.</p>
+</li>
+<li>
+<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Javadoc tool reference documentation for packages that are provided with
+Eclipse GlassFish is available as follows.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Jakarta EE specifications and API specification is
+located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
+</li>
+<li>
+<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+platform packages and nonplatform packages that are specific to the
+Eclipse GlassFish product, is located at
+<a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about creating enterprise applications in the NetBeans
+Integrated Development Environment (IDE), see the
+<a href="https://netbeans.apache.org/kb/docs/java-ee.html">
+NetBeans Documentation, Training &amp; Support page</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about the Derby database for use with
+the Eclipse GlassFish, see the <a href="https://db.apache.org/derby/index.html">Derby page</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Jakarta EE Samples project is a collection of sample applications that
+demonstrate a broad range of Jakarta EE technologies. The Jakarta EE Samples
+are bundled with the Jakarta EE Software Development Kit (SDK) and are also
+available from the repository
+(<code><a href="https://github.com/eclipse-ee4j/glassfish-samples" class="bare">https://github.com/eclipse-ee4j/glassfish-samples</a></code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="typographic-conventions"><a class="anchor" href="#typographic-conventions"></a>Typographic Conventions</h3>
+<div class="paragraph">
+<p>The following table describes the typographic changes that are used in
+this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 37%;">
+<col style="width: 49%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Typeface</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The names of commands, files, and directories, and onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Edit your <code>.login</code> file.</p>
+<p class="tableblock">Use <code>ls</code> <code>a</code> to list all files.</p>
+<p class="tableblock"><code>machine_name% you have mail.</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What you type, contrasted with onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>machine_name%</code> <code>su</code></p>
+<p class="tableblock"><code>Password:</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A placeholder to be replaced with a real name or value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The command to remove a file is <code>rm</code> filename.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Book titles, new terms, and terms to be emphasized (note that some emphasized items appear bold online)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read Chapter 6 in the User&#8217;s Guide.</p>
+<p class="tableblock">A cache is a copy that is stored locally.</p>
+<p class="tableblock">Do not save the file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="symbol-conventions"><a class="anchor" href="#symbol-conventions"></a>Symbol Conventions</h3>
+<div class="paragraph">
+<p>The following table explains symbols that might be used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 26%;">
+<col style="width: 28%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Symbol</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[ ]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains optional arguments and command options.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ls [-l]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-l</code> option is not required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ | }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains a set of choices for a required command option.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-d {y|n}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-d</code> option requires that you use either the <code>y</code> argument or the <code>n</code> argument.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${ }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates a variable reference.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${com.sun.javaRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">References the value of the <code>com.sun.javaRoot</code> variable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins simultaneous multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Control-A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key while you press the A key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins consecutive multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ctrl+A+N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key, release it, and then press the subsequent keys.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates menu item selection in a graphical user interface.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File &gt; New &gt; Templates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From the File menu, choose New. From the New submenu, choose Templates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="default-paths-and-file-names"><a class="anchor" href="#default-paths-and-file-names"></a>Default Paths and File Names</h3>
+<div class="paragraph">
+<p>The following table describes the default paths and file names that are
+used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Placeholder</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Represents the base installation directory for Eclipse GlassFish.
+In configuration files, as-install is represented as follows:
+<code>${com.sun.aas.installRoot}</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac OS operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install-parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the parent of the base installation directory for Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain is created by default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install<code>/domains/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain&#8217;s configuration is stored.
+In configuration files, domain-dir is represented as follows:
+<code>${com.sun.aas.instanceRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir/domain-name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instance-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory for a server instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir/instance-name</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-glassfish-server-5.0"><a class="anchor" href="#installing-glassfish-server-5.0"></a>1 Installing Eclipse GlassFish 7</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides instructions for installing Eclipse GlassFish 7
+software on Linux, Mac OS X, and Windows systems.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#installation-requirements">Installation Requirements</a></p>
+</li>
+<li>
+<p><a href="#GSING00023">Installation Files for Eclipse GlassFish 7</a></p>
+</li>
+<li>
+<p><a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="installation-requirements"><a class="anchor" href="#installation-requirements"></a>Installation Requirements</h3>
+<div class="paragraph">
+<p>Before installing Eclipse GlassFish 7, ensure that
+your system meets the requirements listed in "<a href="release-notes.html#hardware-and-software-requirements">Hardware
+and Software Requirements</a>" in Eclipse GlassFish
+Release Notes. If necessary, download and install the required JDK
+software. Problems are likely to arise if you attempt to install on a
+platform that is not supported or on a system that in some other way
+does not meet release requirements. Also see "<a href="release-notes.html#GSRLN00253">Known
+Issues</a>" in Eclipse GlassFish Release Notes for known
+issues related to installation.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>On Linux, macOS and Windows systems, JDK software is available from the
+<a href="https://adoptium.net/temurin/releases">Eclipse Temurin JDK downloads page</a>.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="javassist-library-license-notice"><a class="anchor" href="#javassist-library-license-notice"></a>Javassist Library License Notice</h4>
+<div class="paragraph">
+<p>You are receiving a copy of the Javassist (Java Programming Assistant)
+Library in source form at
+<code><a href="https://github.com/jboss-javassist/javassist/raw/refs/heads/master/javassist.jar" class="bare">https://github.com/jboss-javassist/javassist/raw/refs/heads/master/javassist.jar</a></code>
+and in object code form in the jar file
+<code>glassfish/modules/javassist.jar</code> included with the
+distribution. The terms of the Eclipse Foundation license do NOT apply to the
+Javassist (Java Programming Assistant) program; it is licensed under the
+following license, separately from the Eclipse Foundation programs you receive. If
+you do not wish to install this program, you may choose to not proceed
+with the installation of Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>"The contents of this file are subject to the Mozilla Public License
+Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+<code><a href="http://www.mozilla.org/MPL/" class="bare">http://www.mozilla.org/MPL/</a></code></p>
+</div>
+<div class="paragraph">
+<p>Software distributed under the License is distributed on an "AS
+IS"basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+the License for the specific language governing rights and limitations
+under the License. The Original Code is Javassist 3.14.0.GA. The Initial
+Developer of the Original Code is Shigeru Chiba. Portions created by
+Shigeru Chiba are Copyright &#169; 1999-2010. All Rights Reserved.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, the contents of this file may be used under the terms of
+GNU Lesser General Public License Version 2.1 or later (the "LGPL"), in
+which case the provisions of the LGPL License are applicable instead of
+those above. If you wish to allow use of your version of this file only
+under the terms of the LGPL License and not to allow others to use your
+version of this file under the MPL, indicate your decision by deleting
+the provisions above and replace them with the notice and other
+provisions required by the LGPL License. If you do not delete the
+provisions above, a recipient may use your version of this file under
+either the MPL or the LGPL License."</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Mozilla Public License Version 2.0
+==================================
+
+1. Definitions
+--------------
+
+1.1. "Contributor"
+    means each individual or legal entity that creates, contributes to
+    the creation of, or owns Covered Software.
+
+1.2. "Contributor Version"
+    means the combination of the Contributions of others (if any) used
+    by a Contributor and that particular Contributor's Contribution.
+
+1.3. "Contribution"
+    means Covered Software of a particular Contributor.
+
+1.4. "Covered Software"
+    means Source Code Form to which the initial Contributor has attached
+    the notice in Exhibit A, the Executable Form of such Source Code
+    Form, and Modifications of such Source Code Form, in each case
+    including portions thereof.
+
+1.5. "Incompatible With Secondary Licenses"
+    means
+
+    (a) that the initial Contributor has attached the notice described
+        in Exhibit B to the Covered Software; or
+
+    (b) that the Covered Software was made available under the terms of
+        version 1.1 or earlier of the License, but not also under the
+        terms of a Secondary License.
+
+1.6. "Executable Form"
+    means any form of the work other than Source Code Form.
+
+1.7. "Larger Work"
+    means a work that combines Covered Software with other material, in
+    a separate file or files, that is not Covered Software.
+
+1.8. "License"
+    means this document.
+
+1.9. "Licensable"
+    means having the right to grant, to the maximum extent possible,
+    whether at the time of the initial grant or subsequently, any and
+    all of the rights conveyed by this License.
+
+1.10. "Modifications"
+    means any of the following:
+
+    (a) any file in Source Code Form that results from an addition to,
+        deletion from, or modification of the contents of Covered
+        Software; or
+
+    (b) any new file in Source Code Form that contains any Covered
+        Software.
+
+1.11. "Patent Claims" of a Contributor
+    means any patent claim(s), including without limitation, method,
+    process, and apparatus claims, in any patent Licensable by such
+    Contributor that would be infringed, but for the grant of the
+    License, by the making, using, selling, offering for sale, having
+    made, import, or transfer of either its Contributions or its
+    Contributor Version.
+
+1.12. "Secondary License"
+    means either the GNU General Public License, Version 2.0, the GNU
+    Lesser General Public License, Version 2.1, the GNU Affero General
+    Public License, Version 3.0, or any later versions of those
+    licenses.
+
+1.13. "Source Code Form"
+    means the form of the work preferred for making modifications.
+
+1.14. "You" (or "Your")
+    means an individual or a legal entity exercising rights under this
+    License. For legal entities, "You" includes any entity that
+    controls, is controlled by, or is under common control with You. For
+    purposes of this definition, "control" means (a) the power, direct
+    or indirect, to cause the direction or management of such entity,
+    whether by contract or otherwise, or (b) ownership of more than
+    fifty percent (50%) of the outstanding shares or beneficial
+    ownership of such entity.
+
+2. License Grants and Conditions
+--------------------------------
+
+2.1. Grants
+
+Each Contributor hereby grants You a world-wide, royalty-free,
+non-exclusive license:
+
+(a) under intellectual property rights (other than patent or trademark)
+    Licensable by such Contributor to use, reproduce, make available,
+    modify, display, perform, distribute, and otherwise exploit its
+    Contributions, either on an unmodified basis, with Modifications, or
+    as part of a Larger Work; and
+
+(b) under Patent Claims of such Contributor to make, use, sell, offer
+    for sale, have made, import, and otherwise transfer either its
+    Contributions or its Contributor Version.
+
+2.2. Effective Date
+
+The licenses granted in Section 2.1 with respect to any Contribution
+become effective for each Contribution on the date the Contributor first
+distributes such Contribution.
+
+2.3. Limitations on Grant Scope
+
+The licenses granted in this Section 2 are the only rights granted under
+this License. No additional rights or licenses will be implied from the
+distribution or licensing of Covered Software under this License.
+Notwithstanding Section 2.1(b) above, no patent license is granted by a
+Contributor:
+
+(a) for any code that a Contributor has removed from Covered Software;
+    or
+
+(b) for infringements caused by: (i) Your and any other third party's
+    modifications of Covered Software, or (ii) the combination of its
+    Contributions with other software (except as part of its Contributor
+    Version); or
+
+(c) under Patent Claims infringed by Covered Software in the absence of
+    its Contributions.
+
+This License does not grant any rights in the trademarks, service marks,
+or logos of any Contributor (except as may be necessary to comply with
+the notice requirements in Section 3.4).
+
+2.4. Subsequent Licenses
+
+No Contributor makes additional grants as a result of Your choice to
+distribute the Covered Software under a subsequent version of this
+License (see Section 10.2) or under the terms of a Secondary License (if
+permitted under the terms of Section 3.3).
+
+2.5. Representation
+
+Each Contributor represents that the Contributor believes its
+Contributions are its original creation(s) or it has sufficient rights
+to grant the rights to its Contributions conveyed by this License.
+
+2.6. Fair Use
+
+This License is not intended to limit any rights You have under
+applicable copyright doctrines of fair use, fair dealing, or other
+equivalents.
+
+2.7. Conditions
+
+Sections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted
+in Section 2.1.
+
+3. Responsibilities
+-------------------
+
+3.1. Distribution of Source Form
+
+All distribution of Covered Software in Source Code Form, including any
+Modifications that You create or to which You contribute, must be under
+the terms of this License. You must inform recipients that the Source
+Code Form of the Covered Software is governed by the terms of this
+License, and how they can obtain a copy of this License. You may not
+attempt to alter or restrict the recipients' rights in the Source Code
+Form.
+
+3.2. Distribution of Executable Form
+
+If You distribute Covered Software in Executable Form then:
+
+(a) such Covered Software must also be made available in Source Code
+    Form, as described in Section 3.1, and You must inform recipients of
+    the Executable Form how they can obtain a copy of such Source Code
+    Form by reasonable means in a timely manner, at a charge no more
+    than the cost of distribution to the recipient; and
+
+(b) You may distribute such Executable Form under the terms of this
+    License, or sublicense it under different terms, provided that the
+    license for the Executable Form does not attempt to limit or alter
+    the recipients' rights in the Source Code Form under this License.
+
+3.3. Distribution of a Larger Work
+
+You may create and distribute a Larger Work under terms of Your choice,
+provided that You also comply with the requirements of this License for
+the Covered Software. If the Larger Work is a combination of Covered
+Software with a work governed by one or more Secondary Licenses, and the
+Covered Software is not Incompatible With Secondary Licenses, this
+License permits You to additionally distribute such Covered Software
+under the terms of such Secondary License(s), so that the recipient of
+the Larger Work may, at their option, further distribute the Covered
+Software under the terms of either this License or such Secondary
+License(s).
+
+3.4. Notices
+
+You may not remove or alter the substance of any license notices
+(including copyright notices, patent notices, disclaimers of warranty,
+or limitations of liability) contained within the Source Code Form of
+the Covered Software, except that You may alter any license notices to
+the extent required to remedy known factual inaccuracies.
+
+3.5. Application of Additional Terms
+
+You may choose to offer, and to charge a fee for, warranty, support,
+indemnity or liability obligations to one or more recipients of Covered
+Software. However, You may do so only on Your own behalf, and not on
+behalf of any Contributor. You must make it absolutely clear that any
+such warranty, support, indemnity, or liability obligation is offered by
+You alone, and You hereby agree to indemnify every Contributor for any
+liability incurred by such Contributor as a result of warranty, support,
+indemnity or liability terms You offer. You may include additional
+disclaimers of warranty and limitations of liability specific to any
+jurisdiction.
+
+4. Inability to Comply Due to Statute or Regulation
+---------------------------------------------------
+
+If it is impossible for You to comply with any of the terms of this
+License with respect to some or all of the Covered Software due to
+statute, judicial order, or regulation then You must: (a) comply with
+the terms of this License to the maximum extent possible; and (b)
+describe the limitations and the code they affect. Such description must
+be placed in a text file included with all distributions of the Covered
+Software under this License. Except to the extent prohibited by statute
+or regulation, such description must be sufficiently detailed for a
+recipient of ordinary skill to be able to understand it.
+
+5. Termination
+--------------
+
+5.1. The rights granted under this License will terminate automatically
+if You fail to comply with any of its terms. However, if You become
+compliant, then the rights granted under this License from a particular
+Contributor are reinstated (a) provisionally, unless and until such
+Contributor explicitly and finally terminates Your grants, and (b) on an
+ongoing basis, if such Contributor fails to notify You of the
+non-compliance by some reasonable means prior to 60 days after You have
+come back into compliance. Moreover, Your grants from a particular
+Contributor are reinstated on an ongoing basis if such Contributor
+notifies You of the non-compliance by some reasonable means, this is the
+first time You have received notice of non-compliance with this License
+from such Contributor, and You become compliant prior to 30 days after
+Your receipt of the notice.
+
+5.2. If You initiate litigation against any entity by asserting a patent
+infringement claim (excluding declaratory judgment actions,
+counter-claims, and cross-claims) alleging that a Contributor Version
+directly or indirectly infringes any patent, then the rights granted to
+You by any and all Contributors for the Covered Software under Section
+2.1 of this License shall terminate.
+
+5.3. In the event of termination under Sections 5.1 or 5.2 above, all
+end user license agreements (excluding distributors and resellers) which
+have been validly granted by You or Your distributors under this License
+prior to termination shall survive termination.
+
+************************************************************************
+*                                                                      *
+*  6. Disclaimer of Warranty                                           *
+*  -------------------------                                           *
+*                                                                      *
+*  Covered Software is provided under this License on an "as is"       *
+*  basis, without warranty of any kind, either expressed, implied, or  *
+*  statutory, including, without limitation, warranties that the       *
+*  Covered Software is free of defects, merchantable, fit for a        *
+*  particular purpose or non-infringing. The entire risk as to the     *
+*  quality and performance of the Covered Software is with You.        *
+*  Should any Covered Software prove defective in any respect, You     *
+*  (not any Contributor) assume the cost of any necessary servicing,   *
+*  repair, or correction. This disclaimer of warranty constitutes an   *
+*  essential part of this License. No use of any Covered Software is   *
+*  authorized under this License except under this disclaimer.         *
+*                                                                      *
+************************************************************************
+
+************************************************************************
+*                                                                      *
+*  7. Limitation of Liability                                          *
+*  --------------------------                                          *
+*                                                                      *
+*  Under no circumstances and under no legal theory, whether tort      *
+*  (including negligence), contract, or otherwise, shall any           *
+*  Contributor, or anyone who distributes Covered Software as          *
+*  permitted above, be liable to You for any direct, indirect,         *
+*  special, incidental, or consequential damages of any character      *
+*  including, without limitation, damages for lost profits, loss of    *
+*  goodwill, work stoppage, computer failure or malfunction, or any    *
+*  and all other commercial damages or losses, even if such party      *
+*  shall have been informed of the possibility of such damages. This   *
+*  limitation of liability shall not apply to liability for death or   *
+*  personal injury resulting from such party's negligence to the       *
+*  extent applicable law prohibits such limitation. Some               *
+*  jurisdictions do not allow the exclusion or limitation of           *
+*  incidental or consequential damages, so this exclusion and          *
+*  limitation may not apply to You.                                    *
+*                                                                      *
+************************************************************************
+
+8. Litigation
+-------------
+
+Any litigation relating to this License may be brought only in the
+courts of a jurisdiction where the defendant maintains its principal
+place of business and such litigation shall be governed by laws of that
+jurisdiction, without reference to its conflict-of-law provisions.
+Nothing in this Section shall prevent a party's ability to bring
+cross-claims or counter-claims.
+
+9. Miscellaneous
+----------------
+
+This License represents the complete agreement concerning the subject
+matter hereof. If any provision of this License is held to be
+unenforceable, such provision shall be reformed only to the extent
+necessary to make it enforceable. Any law or regulation which provides
+that the language of a contract shall be construed against the drafter
+shall not be used to construe this License against a Contributor.
+
+10. Versions of the License
+---------------------------
+
+10.1. New Versions
+
+Mozilla Foundation is the license steward. Except as provided in Section
+10.3, no one other than the license steward has the right to modify or
+publish new versions of this License. Each version will be given a
+distinguishing version number.
+
+10.2. Effect of New Versions
+
+You may distribute the Covered Software under the terms of the version
+of the License under which You originally received the Covered Software,
+or under the terms of any subsequent version published by the license
+steward.
+
+10.3. Modified Versions
+
+If you create software not governed by this License, and you want to
+create a new license for such software, you may create and use a
+modified version of this License if you rename the license and remove
+any references to the name of the license steward (except to note that
+such modified license differs from this License).
+
+10.4. Distributing Source Code Form that is Incompatible With Secondary
+Licenses
+
+If You choose to distribute Source Code Form that is Incompatible With
+Secondary Licenses under the terms of this version of the License, the
+notice described in Exhibit B of this License must be attached.
+
+Exhibit A - Source Code Form License Notice
+-------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+If it is not possible or desirable to put the notice in a particular
+file, then You may include the notice in a location (such as a LICENSE
+file in a relevant directory) where a recipient would be likely to look
+for such a notice.
+
+You may add additional accurate notices of copyright ownership.
+
+Exhibit B - "Incompatible With Secondary Licenses" Notice
+---------------------------------------------------------
+
+  This Source Code Form is "Incompatible With Secondary Licenses", as
+  defined by the Mozilla Public License, v. 2.0.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, the contents of this file may be used under the terms of
+the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+in which case the provisions of the LGPL are applicable instead of those
+above. If you wish to allow use of your version of this file only under
+the terms of the LGPL, and not to allow others to use your version of
+this file under the terms of the MPL, indicate your decision by deleting
+the provisions above and replace them with the notice and other
+provisions required by the LGPL. If you do not delete the provisions
+above, a recipient may use your version of this file under the terms of
+either the MPL or the LGPL.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSING00023"></a><a id="installation-files-for-glassfish-server-5.0"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installation-files-for-eclipse-glassfish-7"><a class="anchor" href="#installation-files-for-eclipse-glassfish-7"></a>Installation Files for Eclipse GlassFish 7</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a></p>
+</li>
+<li>
+<p><a href="#glassfish-server-installation-methods">Eclipse GlassFish Installation Methods</a></p>
+</li>
+<li>
+<p><a href="#choosing-an-installation-method">Choosing an Installation Method</a></p>
+</li>
+<li>
+<p><a href="#glassfish-server-zip-files">Eclipse GlassFish ZIP Files</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="glassfish-server-download-locations"><a class="anchor" href="#glassfish-server-download-locations"></a>Eclipse GlassFish Download Locations</h4>
+<div class="paragraph">
+<p>Installation files for Eclipse GlassFish 7 are
+available by download from the
+<a href="https://glassfish.org/download.html">Eclipse GlassFish Downloads</a>
+page.</p>
+</div>
+<div class="paragraph">
+<p>The Jakarta EE specifications are available from
+<a href="https://jakarta.ee/specifications/">Jakarta EE specifications page</a>
+and are not described in this document.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="glassfish-server-installation-methods"><a class="anchor" href="#glassfish-server-installation-methods"></a>Eclipse GlassFish Installation Methods</h4>
+<div class="paragraph">
+<p><a href="#ghtqe">Table 1-1</a> lists the various Eclipse GlassFish installation methods. The table also provides links to
+installation instructions for each method.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Before performing any Eclipse GlassFish installation, ensure that your
+environment adheres to the JDK guidelines in
+"<a href="release-notes.html#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the JDK Software</a>"
+in Eclipse GlassFish Release Notes.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="ghtqe" class="paragraph">
+<p>Table 1-1 Eclipse GlassFish 7 Installation Methods</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 39%;">
+<col style="width: 61%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Installation Method</th>
+<th class="tableblock halign-left valign-top">Installation Instructions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-platform ZIP file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each of the installation methods listed in <a href="#ghtqe">Table 1-1</a> also
+let you choose between installing the Full Platform or the Web Profile.
+These two distributions are explained in the next section.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="choosing-an-installation-method"><a class="anchor" href="#choosing-an-installation-method"></a>Choosing an Installation Method</h4>
+<div class="paragraph">
+<p>There are two general sets of questions you should consider when
+deciding which Eclipse GlassFish 7 installation method to use.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#zip-package">ZIP Package</a></p>
+</li>
+<li>
+<p><a href="#full-platform-or-web-profile-distribution">Full Platform or Web Profile Distribution</a></p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="zip-package"><a class="anchor" href="#zip-package"></a>ZIP Package</h5>
+<div class="paragraph">
+<p>The relative features and strengths of the Eclipse GlassFish ZIP packages
+are listed below.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ZIP Package</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Is simpler to install, but provides no configuration options during
+the installation</p>
+</li>
+<li>
+<p>Any additional configurations must be performed manually, after installation</p>
+</li>
+<li>
+<p>If uninstallation is desired, product must be uninstalled manually</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="full-platform-or-web-profile-distribution"><a class="anchor" href="#full-platform-or-web-profile-distribution"></a>Full Platform or Web Profile Distribution</h5>
+<div class="paragraph">
+<p>Each of the installation methods listed in <a href="#ghtqe">Table 1-1</a> also
+let you choose to install either the Eclipse GlassFish Full Platform or
+Web Profile distribution. <a href="#gkuap">Table 1-2</a> lists the features
+available in each of these two distributions. Note that some of these
+features are value-adds, and are not required by the Jakarta EE specification.</p>
+</div>
+<div id="gkuap" class="paragraph">
+<p>Table 1-2 Eclipse GlassFish Full Profile and Web Profile Features</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 69%;">
+<col style="width: 16%;">
+<col style="width: 15%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Full Platform</th>
+<th class="tableblock halign-left valign-top">Web Profile</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta EE 10 Platform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Security 3.0.0 supporting OpenID Connect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta JSON Processing 2.1.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta JSON Binding (JSON-B) 3.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Enterprise Beans (EJB) 4.0.1 Lite (Support for Local Container only)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transactions (JTA) 2.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OSGi-based microkernel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Web Technologies (Servlet 6.0.0, JSP 3.1.1, JSF 4.0.1, JSTL 3.0.2, EL 5.0.1)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grizzly 4.0.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Persistence {jakarta.persistence-api.version}, (EclipseLink 4.0.8), JDBC Connection Pooling</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Derby 10.16.1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web Administration Console and CLI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rapid Redeployment (Maintain session state on application redeploy)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OMG CORBA APIs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Debugging Support for Other Languages 2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Annotations  2.1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Dependency Injection 2.0.1.MR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Managed Beans 2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interceptors 2.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Contexts and Dependency Injection (CDI) 4.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Validation 3.0.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta RESTful Web Services  3.1.0 (Jersey)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Enterprise Beans (EJB) 4.0.1 Full API (Support for Remote Container)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Connectors {jakarta.resource-api.version}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta XML Web Services (JAX-WS) {jakarta.xml.ws-api.version}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta XML Binding (JAXB) 4.0.6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Enterprise Web Services 2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Web Services Metadata 3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Messaging (JMS) 3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Mail 2.1.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JACC 2.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Authentication Service Provider Interface for Containers 3.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta EE Application Deployment 1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CORBA 5.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>*</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>The Full Jakarta EE Platform contains the complete CORBA package. The OMG
+CORBA v3.0 APIs are available in the Jakarta EE Web Profile.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Transaction propagation not supported.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="glassfish-server-zip-files"><a class="anchor" href="#glassfish-server-zip-files"></a>Eclipse GlassFish ZIP Files</h4>
+<div class="paragraph">
+<p>The Eclipse GlassFish 7 multi-platform ZIP files
+are compatible with Linux, Mac OS, UNIX, and Windows operating</p>
+</div>
+<div class="paragraph">
+<p>systems. See <a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a> for a list
+of download locations.</p>
+</div>
+<div class="paragraph">
+<p><a href="#gkbac">Table 1-3</a> lists the available ZIP file downloads.</p>
+</div>
+<div id="gkbac" class="paragraph">
+<p>Table 1-3 Eclipse GlassFish Downloadable ZIP Files</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 31%;">
+<col style="width: 69%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ZIP File</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>glassfish-7.0.0.zip</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full Platform distribution of Eclipse GlassFish</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>glassfish-7.0.0-web.zip</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web Profile distribution Eclipse GlassFish</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-glassfish-server-from-a-zip-file"><a class="anchor" href="#installing-glassfish-server-from-a-zip-file"></a>Installing Eclipse GlassFish From a ZIP File</h3>
+<div class="paragraph">
+<p>This section describes how to install Eclipse GlassFish 7 using the multi-platform ZIP file. Eclipse GlassFish is
+installed by unzipping the file in the installation directory of your
+choice.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It is not possible to specify any Eclipse GlassFish configuration options
+during a ZIP file installation. Any configuration changes, such as
+creating domains, clusters, and server instances, must be made manually
+after installation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="to-install-glassfish-server-using-the-zip-file"><a class="anchor" href="#to-install-glassfish-server-using-the-zip-file"></a>To Install Eclipse GlassFish Using the ZIP File</h4>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that your system meets the requirements listed in
+"<a href="release-notes.html#hardware-and-software-requirements">Hardware and Software Requirements</a>"
+in Eclipse GlassFish Release Notes.</p>
+</div>
+<div class="paragraph">
+<p>Also see "<a href="release-notes.html#GSRLN00253">Known Issues</a>" in Eclipse GlassFish Release Notes for known issues related to installation.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download the desired Eclipse GlassFish 7 ZIP file.<br>
+See <a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a> for a list of
+download locations. See <a href="#gkbac">Table 1-3</a> for a list of available ZIP files.</p>
+</li>
+<li>
+<p>Change to the directory where you downloaded the ZIP file.</p>
+</li>
+<li>
+<p>Unzip the file.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Linux, and Mac OS X systems:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>unzip zip-file-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>zip-file-name is the name of the file that you downloaded.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>glassfish-7.0.0.zip</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Windows systems:</p>
+<div class="paragraph">
+<p>Unzip using your favorite file compression utility.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is extracted into a new <code>glassfish7</code> directory
+under your current directory. This <code>glassfish7</code> directory is referred to
+throughout the Eclipse GlassFish documentation set as as-install-parent.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Start Eclipse GlassFish using the instructions in the
+<a href="quick-start-guide.html#GSQSG">Eclipse GlassFish Quick Start Guide</a>.</p>
+<div class="paragraph">
+<p>The guide explains how to perform basic tasks such as starting the
+server, accessing the Administration Console, and deploying a sample application.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="uninstalling-glassfish"><a class="anchor" href="#uninstalling-glassfish"></a>2 Uninstalling GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to uninstall Eclipse GlassFish.</p>
+</div>
+<div class="sect2">
+<h3 id="removing-a-glassfish-server-installation"><a class="anchor" href="#removing-a-glassfish-server-installation"></a>Removing a Eclipse GlassFish Installation</h3>
+<div class="paragraph">
+<p>This procedure describes how to uninstall Eclipse GlassFish software that
+was installed using a ZIP file, as described in
+<a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>.</p>
+</div>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Stop all domains and other related processes, including command prompts
+using the installation directory or its subdirectories and any
+applications using Java SE files.</p>
+</div>
+<div class="paragraph">
+<p>To stop domains, use the <code>asadmin stop-domain</code> command. For more
+information about stopping a domain, see
+"<a href="administration-guide.html#to-stop-a-domain">To Stop a Domain</a>"
+in Eclipse GlassFish Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>If orphaned processes remain, identify and terminate the processes as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Solaris, Linux, and Mac OS X systems:</p>
+<div class="paragraph">
+<p>Use the <code>ps -ef</code> command and terminate the processes using the <code>kill</code> command.</p>
+</div>
+</li>
+<li>
+<p>Windows systems:</p>
+<div class="paragraph">
+<p>Use the Task Manager and terminate the processes.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Also see "<a href="release-notes.html#GSRLN00253">Known Issues</a>"
+in Eclipse GlassFish Release Notes for known issues related to uninstallation.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Save any files in the installation directory that you may want to keep.</p>
+</li>
+<li>
+<p>Manually delete installation directory and all its contents.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2025-12-05 01:52:24 UTC
+</div>
+</div>
+</body>
+</html>

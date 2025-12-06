@@ -1,0 +1,3070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>Eclipse GlassFish Upgrade Guide, Release 7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Eclipse GlassFish Upgrade Guide, Release 7</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#upgrading-an-installation-of-application-server-or-glassfish-server">1 Upgrading an Installation of Application Server or Eclipse GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#upgrade-paths">Upgrade Paths</a></li>
+<li><a href="#upgrade-procedure">Upgrade Procedure</a>
+<ul class="sectlevel3">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#steps">Steps</a></li>
+</ul>
+</li>
+<li><a href="#special-cases">Special Cases</a>
+<ul class="sectlevel3">
+<li><a href="#upgrade-of-clusters">Upgrade of Clusters</a></li>
+<li><a href="#correcting-cluster-config">Correcting Cluster configuration</a></li>
+<li><a href="#upgrading-installations-that-use-nss-cryptographic-tokens">Upgrading Installations Using NSS Cryptographic Tokens</a></li>
+</ul>
+</li>
+<li><a href="#troubleshooting">Troubleshooting</a>
+<ul class="sectlevel3">
+<li><a href="#cluster-profile-security-setting">Cluster Profile Security Setting</a></li>
+<li><a href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li><a href="#terminology">Terminology</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-server-upgrade-compatibility-issues">2 Eclipse GlassFish Upgrade Compatibility Issues</a>
+<ul class="sectlevel2">
+<li><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 7</a></li>
+<li><a href="#new-default-installation-directory">New Default Installation Directory</a></li>
+<li><a href="#changes-to-group-management-service-settings">Changes to Group Management Service Settings</a></li>
+<li><a href="#application-client-interoperability">Application Client Interoperability</a></li>
+<li><a href="#node-agent-support">Node Agent Support</a></li>
+<li><a href="#hadb-and-hadbm-command-support">HADB and <code>hadbm</code> Command Support</a></li>
+<li><a href="#command-line-interface-the-asadmin-command">Command Line Interface: The <code>asadmin</code> Command</a>
+<ul class="sectlevel3">
+<li><a href="#deprecated-asadmin-subcommands">Deprecated <code>asadmin</code> Subcommands</a></li>
+<li><a href="#deprecated-unsupported-and-obsolete-options">Deprecated, Unsupported, and Obsolete Options</a></li>
+</ul>
+</li>
+<li><a href="#applications-that-use-java-db">Applications That Use Java DB</a></li>
+<li><a href="#applications-that-use-persistence">Applications That Use Persistence</a></li>
+<li><a href="#http-service-to-network-service-changes">HTTP Service to Network Service Changes</a>
+<ul class="sectlevel3">
+<li><a href="#changes-to-dotted-names">Changes to Dotted Names</a></li>
+<li><a href="#changes-to-asadmin-subcommands">Changes to <code>asadmin</code> Subcommands</a></li>
+<li><a href="#remapping-of-http-service-attributes-and-properties">Remapping of HTTP Service Attributes and Properties</a></li>
+<li><a href="#new-network-service-elements-and-attributes">New Network Service Elements and Attributes</a></li>
+</ul>
+</li>
+<li><a href="#nss-cryptographic-token-support">NSS Cryptographic Token Support</a></li>
+</ul>
+</li>
+<li><a href="#appendix">Appendix</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#list-of-tables">List of Tables</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Upgrade Guide</p>
+</div>
+<div class="paragraph">
+<p>Release 7</p>
+</div>
+<div class="paragraph">
+<p>This guide explains how to upgrade to Eclipse GlassFish 7
+from previous Eclipse GlassFish and Sun GlassFish Enterprise
+Server product releases. Also included in this guide are instructions
+for upgrading configuration data and Jakarta EE applications from
+binary-compatible earlier versions of this software to work with
+Eclipse GlassFish 7. Finally, this guide describes
+compatibility issues that affect data and applications that are to be
+migrated.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Eclipse GlassFish Upgrade Guide, Release 7</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2025 Contributors to the Eclipse Foundation. All rights reserved.<br>
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+<a href="http://www.eclipse.org/legal/epl-2.0" class="bare">http://www.eclipse.org/legal/epl-2.0</a>.</p>
+</div>
+<div class="paragraph">
+<p>SPDX-License-Identifier: EPL-2.0</p>
+</div>
+<div class="paragraph">
+<p>Oracle and Java are registered trademarks of Oracle and/or its
+affiliates. Other names may be trademarks of their respective owners.</p>
+</div>
+<div class="paragraph">
+<p>Intel and Intel Xeon are trademarks or registered trademarks of Intel
+Corporation. All SPARC trademarks are used under license and are
+trademarks or registered trademarks of SPARC International, Inc. AMD,
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or
+registered trademarks of Advanced Micro Devices. UNIX is a registered
+trademark of The Open Group.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide explains how to upgrade to Eclipse GlassFish from previous
+of Eclipse GlassFish and Sun GlassFish Enterprise Server product releases.
+This guide also includes instructions for upgrading configuration
+data and Jakarta EE applications from binary-compatible earlier versions
+of this software to work with Eclipse GlassFish.
+Finally, this guide describes compatibility issues that affect data
+and applications that are to be migrated.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="upgrading-an-installation-of-application-server-or-glassfish-server"><a class="anchor" href="#upgrading-an-installation-of-application-server-or-glassfish-server"></a>1 Upgrading an Installation of Application Server or Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains how to upgrade to Eclipse GlassFish 7 from a previous version. The process involves replicating your existing configuration and applications in the new installation.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key Topics</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#upgrade-paths">Upgrade Paths</a></p>
+</li>
+<li>
+<p><a href="#upgrade-procedure">Upgrade Procedure</a></p>
+</li>
+<li>
+<p><a href="#special-cases">Special Cases (Clusters, Node Agents, NSS)</a></p>
+</li>
+<li>
+<p><a href="#troubleshooting">Troubleshooting</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="upgrade-paths"><a class="anchor" href="#upgrade-paths"></a>Upgrade Paths</h3>
+<div class="paragraph">
+<p>Choose one of the following upgrade paths:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Side-by-Side (Recommended)</dt>
+<dd>
+<p>Installs the new version in a separate directory, allowing you to test before switching to production.<br>
+<strong>Steps:</strong></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install Eclipse GlassFish 7 in a new directory.</p>
+</li>
+<li>
+<p>Manually copy the configuration from the old installation.</p>
+</li>
+<li>
+<p>Test the new installation.</p>
+</li>
+<li>
+<p>Update your production environment to use the new installation.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">In-Place (Not Recommended)</dt>
+<dd>
+<p>Replaces the existing installation. Requires manual steps and significant downtime.<br>
+<strong>Steps:</strong></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Move the current installation to a backup directory.</p>
+</li>
+<li>
+<p>Install Eclipse GlassFish 7 in the original location.</p>
+</li>
+<li>
+<p>Manually copy the configuration from the backup.</p>
+</li>
+<li>
+<p>Test the new installation. If issues arise, restore the backup.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="upgrade-procedure"><a class="anchor" href="#upgrade-procedure"></a>Upgrade Procedure</h3>
+<div class="paragraph">
+<p>Use the Upgrade Tool (<code>asadmin start-domain --upgrade</code>) to migrate configurations and applications.</p>
+</div>
+<div class="sect3">
+<h4 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Stop all domains on the source server.</p>
+</li>
+<li>
+<p>Install Eclipse GlassFish 7 (see Eclipse GlassFish Installation Guide).</p>
+</li>
+<li>
+<p>Copy custom/third-party libraries from the old installation to the new one.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="steps"><a class="anchor" href="#steps"></a>Steps</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Install Eclipse GlassFish 7</strong> in a new directory.</p>
+</li>
+<li>
+<p><strong>Copy configurations</strong> from the old installation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Domain directory (e.g., <code>glassfish/domains/domain1</code>)</p>
+</li>
+<li>
+<p>Nodes directory (if applicable, e.g., <code>glassfish/nodes</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Run the Upgrade Tool</strong>: <code>asadmin start-domain --upgrade`</code></p>
+</li>
+<li>
+<p><strong>Start the upgraded domain</strong>: <code>asadmin start-domain domain-name`</code></p>
+</li>
+<li>
+<p><strong>Verify the upgrade</strong> by logging into the Admin Console.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="special-cases"><a class="anchor" href="#special-cases"></a>Special Cases</h3>
+<div class="sect3">
+<h4 id="upgrade-of-clusters"><a class="anchor" href="#upgrade-of-clusters"></a>Upgrade of Clusters</h4>
+<div class="paragraph">
+<p>When upgrading from a clustered configuration, the older cluster
+information is retained in a new <code>domain.xml</code> file in the Eclipse GlassFish 7 installation directories. However, it is still necessary to
+manually re-create the server instances that are contained in the
+clusters.</p>
+</div>
+<div class="paragraph">
+<p>To do that:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Perform new (not upgrade) Eclipse GlassFish 7 installations on each
+node host. Eclipse GlassFish 7 installation instructions are provided
+in the <a href="installation-guide.html#GSING">
+Eclipse GlassFish Installation Guide</a>.</p>
+</li>
+<li>
+<p>Correct the node configuration on the upgraded DAS, if necessary.
+This procedure is described in <a href="#correcting-cluster-config">Correcting Cluster configuration</a>.</p>
+</li>
+<li>
+<p>Start the upgraded DAS.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; start-domain domain-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the upgrade succeeded, the migrated cluster configuration exists and
+the <code>get-health</code> subcommand lists the status of the clustered instances
+as not running.</p>
+</div>
+</li>
+<li>
+<p>Confirm that the cluster configuration exists and contains all its instances.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; get-health cluster-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, for the sample <code>cluster1</code> used in this procedure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; get-health cluster1
+instance1 not started
+instance2 not started
+Command get-health executed successfully.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Re-create the clustered server instances on each instance host.<br>
+The specific commands to use depend on your configuration.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If remote hosts cannot contact the DAS, export and import the
+instances' configuration data, as explained in
+"<a href="ha-administration-guide.html#to-resynchronize-an-instance-and-the-das-offline">
+To Resynchronize an Instance and the DAS Offline</a>"
+in Eclipse GlassFish High Availability Administration Guide.</p>
+</li>
+<li>
+<p>If remote hosts can contact the DAS, create each instance individually
+and resynchronize the instance with the DAS, as explained in the
+following sections:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>"<a href="ha-administration-guide.html#to-create-an-instance-locally">
+To Create an Instance Locally</a>"
+in Eclipse GlassFish High Availability Administration Guide</p>
+</li>
+<li>
+<p>"<a href="ha-administration-guide.html#to-resynchronize-an-instance-and-the-das-online">
+To Resynchronize an Instance and the DAS Online</a>"
+in Eclipse GlassFish High Availability Administration Guide<br>
+Note that the node name matches that used for the node agent in the 2.x
+installation. If you get an error stating that some attributes do not
+match the values in the DAS configuration, follow the instructions in
+<a href="#correcting-cluster-config">Correcting Cluster configuration</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>After creating the instances, manually copy the instance-dir<code>/imq</code>
+directory for each instance from the older source installation to the
+target Eclipse GlassFish 7 installation.</p>
+</li>
+<li>
+<p>If necessary, start the cluster.<br>
+For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; start-cluster cluster1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This step may or may not be necessary, depending on the procedure you
+used to create the server instances for the cluster.</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="gkyin" class="paragraph">
+<p>Example 2-3 Creating Two Local Instances</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to create two local instances in a
+cluster.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>host1$ asadmin --host dashost create-local-instance --node na1 --cluster cluster1 instance1
+host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster1 instance2</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>dashost</code></dt>
+<dd>
+<p>The name of the DAS host.</p>
+</dd>
+<dt class="hdlist1"><code>na1</code></dt>
+<dd>
+<p>The name of the node host.</p>
+</dd>
+<dt class="hdlist1"><code>cluster1</code></dt>
+<dd>
+<p>The name of the cluster.</p>
+</dd>
+<dt class="hdlist1"><code>instance1</code>, <code>instance2</code></dt>
+<dd>
+<p>The names of the instances.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="correcting-cluster-config"><a class="anchor" href="#correcting-cluster-config"></a>Correcting Cluster configuration</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 does not support node agents. If you&#8217;re upgrading from a version that supports them or you have issues in cluster configuration after an upgrade, after upgrading the DAS:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Install Eclipse GlassFish 7 on each node host</strong>.</p>
+</li>
+<li>
+<p><strong>Correct node configurations</strong> using <code>update-node-config</code> or <code>update-node-ssh</code>.</p>
+</li>
+<li>
+<p><strong>Re-create clusters and instances</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Use <code>create-local-instance</code> for each instance.</p>
+</li>
+<li>
+<p>Copy the <code>imq</code> directory from the old installation.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="upgrading-installations-that-use-nss-cryptographic-tokens"><a class="anchor" href="#upgrading-installations-that-use-nss-cryptographic-tokens"></a>Upgrading Installations Using NSS Cryptographic Tokens</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 does not support NSS. If you&#8217;re upgrading from a version that supports them, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Prepare for Upgrade</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Install Eclipse GlassFish 7 in a new directory.</p>
+</li>
+<li>
+<p>Copy the source domain to the new installation.</p>
+</li>
+<li>
+<p>Update <code>domain.xml</code> to remove NSS references and add JKS keystore paths.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Perform Post-Upgrade Configuration</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Migrate NSS keys to PKCS#12 using <code>keytool</code> and <code>certutil</code>.</p>
+</li>
+<li>
+<p>Update the master password if needed.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Upgrade PKCS#11 Hardware Tokens</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Configure the token using JDK-JSSE mechanisms.</p>
+</li>
+<li>
+<p>Update <code>domain.xml</code> to reference the hardware token.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>Troubleshooting</h3>
+<div class="sect3">
+<h4 id="cluster-profile-security-setting"><a class="anchor" href="#cluster-profile-security-setting"></a>Cluster Profile Security Setting</h4>
+<div class="paragraph">
+<p>If upgrading from Application Server 9.1 or Enterprise Server v2, ensure the <code>admin-service</code> element in <code>domain.xml</code> has:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>security-enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>when <code>type=das-and-server</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="common-issues"><a class="anchor" href="#common-issues"></a>Common Issues</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Cluster Profile Upgrade on Windows</strong>: Ensure file paths use double backslashes (<code>\\</code>).</p>
+</li>
+<li>
+<p><strong>Upgrade Verification</strong>: Check logs for errors and verify deployed applications.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="terminology"><a class="anchor" href="#terminology"></a>Terminology</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Source Domain Directory</dt>
+<dd>
+<p>Directory of the domain being upgraded (e.g., <code>c:\glassfish\domains\domain1</code>).</p>
+</dd>
+<dt class="hdlist1">Target Root Domain&#8217;s Directory</dt>
+<dd>
+<p>Directory where domains are created in the new installation (e.g., <code>c:\glassfish7\glassfish\domains</code>).</p>
+</dd>
+<dt class="hdlist1">Master Password</dt>
+<dd>
+<p>SSL certificate database password (default: <code>changeit</code>).</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="glassfish-server-upgrade-compatibility-issues"><a class="anchor" href="#glassfish-server-upgrade-compatibility-issues"></a>2 Eclipse GlassFish Upgrade Compatibility Issues</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes some compatibility issues between Eclipse GlassFish 7 and earlier product releases. This section also describes
+some compatibility issues that affect Java applications that run on
+earlier product releases with which Eclipse GlassFish 7 is
+binary-compatible. When you upgrade to Eclipse GlassFish 7, you must
+address these issues.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 7</a></p>
+</li>
+<li>
+<p><a href="#new-default-installation-directory">New Default Installation Directory</a></p>
+</li>
+<li>
+<p><a href="#changes-to-group-management-service-settings">Changes to Group Management Service Settings</a></p>
+</li>
+<li>
+<p><a href="#application-client-interoperability">Application Client Interoperability</a></p>
+</li>
+<li>
+<p><a href="#node-agent-support">Node Agent Support</a></p>
+</li>
+<li>
+<p><a href="#hadb-and-hadbm-command-support">HADB and <code>hadbm</code> Command Support</a></p>
+</li>
+<li>
+<p><a href="#command-line-interface-the-asadmin-command">Command Line Interface: The <code>asadmin</code> Command</a></p>
+</li>
+<li>
+<p><a href="#applications-that-use-java-db">Applications That Use Java DB</a></p>
+</li>
+<li>
+<p><a href="#applications-that-use-persistence">Applications That Use Persistence</a></p>
+</li>
+<li>
+<p><a href="#http-service-to-network-service-changes">HTTP Service to Network Service Changes</a></p>
+</li>
+<li>
+<p><a href="#nss-cryptographic-token-support">NSS Cryptographic Token Support</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="binary-compatible-releases-for-glassfish-server"><a class="anchor" href="#binary-compatible-releases-for-glassfish-server"></a>Binary-Compatible Releases For Eclipse GlassFish 7</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is NOT binary-compatible with the earlier releases of the software:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Sun GlassFish Enterprise Server v2.1.1 (Enterprise and Developer Profiles)</p>
+</li>
+<li>
+<p>Sun GlassFish Enterprise Server v3</p>
+</li>
+<li>
+<p>GlassFish Server Open Source Edition 3.0.1</p>
+</li>
+<li>
+<p>GlassFish Server Open Source Edition 3.1</p>
+</li>
+<li>
+<p>GlassFish Server Open Source Edition 3.1.1</p>
+</li>
+<li>
+<p>GlassFish Server Open Source Edition 4.x</p>
+</li>
+<li>
+<p>GlassFish Server Open Source Edition 5.x</p>
+</li>
+<li>
+<p>Eclipse GlassFish 6.x</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Java applications that run on these releases also work on Eclipse GlassFish 7 except for the compatibility issues that
+are listed in the remainder of this chapter.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The compatibility issues that are listed in the remainder of this
+chapter do not affect Java applications that run on Sun GlassFish
+Enterprise Server v3 and Eclipse GlassFish 3.0.1. The differences between
+Eclipse GlassFish 7 and the Enterprise Server v3 releases do not affect
+applications and data.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="new-default-installation-directory"><a class="anchor" href="#new-default-installation-directory"></a>New Default Installation Directory</h3>
+<div class="paragraph">
+<p>The default Eclipse GlassFish 7 installation directories are as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Solaris, Linux, and Mac OS X systems</dt>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>user-home-directory/glassfish7</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Windows systems</dt>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>SystemDrive\glassfish7</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="changes-to-group-management-service-settings"><a class="anchor" href="#changes-to-group-management-service-settings"></a>Changes to Group Management Service Settings</h3>
+<div class="paragraph">
+<p>The functionality of the Group Management Service (GMS) has not changed
+since Sun GlassFish Enterprise Server v2.1.1, but the names of GMS
+settings have been changed in the Administration Console to make them
+more understandable. These changes are made automatically during the
+upgrade process.</p>
+</div>
+<div class="paragraph">
+<p>Changes to settings on the Edit Group Management Service page in the
+Administration Console are summarized in the following table.</p>
+</div>
+<div id="gklho" class="paragraph">
+<p>Table 1-1 GMS Administration Console Settings Changes from 2.1.1 to 4.0</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old Setting Name</th>
+<th class="tableblock halign-left valign-top">New Setting Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol Maximum Trial</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum Missed Heartbeats</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol Timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Heartbeat Frequency</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ping Timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group Discovery Timeout</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verified Timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Failure Verification Wait Time</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The Merge Protocol settings from Sun GlassFish Enterprise Server v2.1.1
+are not supported and have been removed.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="application-client-interoperability"><a class="anchor" href="#application-client-interoperability"></a>Application Client Interoperability</h3>
+<div class="paragraph">
+<p>The Jakarta EE 10 platform specification imposes stricter requirements than
+Java EE 5 and older did on which JAR files can be visible to various modules
+within an EAR file. In particular, application clients must not have
+access to EJB JAR files or other JAR files in the EAR file unless they
+use a <code>Class-Path</code> header in the manifest file, or unless references use
+the standard Java SE mechanisms (extensions, for example), or use the
+Jakarta EE <code>library-directory</code> mechanism. Deployed Java EE 5 applications
+that are upgraded to Eclipse GlassFish 7 will have the <code>compatibility</code>
+property set to <code>v2</code> and will run without change on Eclipse GlassFish 7.
+You may, however, want to consider modifying the applications to
+conform to Jakarta EE 10 requirements.</p>
+</div>
+<div class="paragraph">
+<p>If your upgrade includes a deployed application with an application
+client, you will need to retrieve the client stubs using Eclipse GlassFish 7 in order to run the client. Use the
+<code>asadmin get-client-stubs</code> command.</p>
+</div>
+<div class="paragraph">
+<p>If you try to run the application client before retrieving the client
+stubs, you will see the following error message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Invalid or corrupt jarfile jar-file-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you commonly distribute application clients to remote systems from
+which users will run them, you must not only retrieve the client stubs,
+but you must also run the <code>package-appclient</code> utility for Eclipse GlassFish 7 to upgrade the Eclipse GlassFish system files. This utility
+creates a JAR file, which you can then expand on the remote systems.</p>
+</div>
+<div class="paragraph">
+<p>Application clients use EJBs, web services, or other enterprise
+components that are in the application server (on the server side). The
+application client and the application server must use the same version
+and implementation of the RMI-IIOP protocol. Eclipse GlassFish 7 does
+not support communication between different versions of the protocol
+implementation. You cannot run application clients with one version of
+the application server runtime with a server that has a different
+version. Most often, this would happen if you upgraded the server but
+had not upgraded all the application client installations. If you run
+the <code>package-appclient</code> utility, this issue will not arise.</p>
+</div>
+<div class="paragraph">
+<p>You can use the Java Web Start support to distribute and launch the
+application client. If the runtime on the server has changed since the
+end-user last used the application client, Java Web Start automatically
+retrieves the updated runtime. Java Web Start enables you to keep the
+clients and servers synchronized and using the same runtime.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="node-agent-support"><a class="anchor" href="#node-agent-support"></a>Node Agent Support</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 does not support node agents. When updating from
+installations of earlier product versions in which node agents were
+configured, the cluster definitions will be migrated, but the clustered
+instances themselves must be manually re-created. See
+<a href="#correcting-cluster-config">Correcting Cluster configuration</a> for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hadb-and-hadbm-command-support"><a class="anchor" href="#hadb-and-hadbm-command-support"></a>HADB and <code>hadbm</code> Command Support</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 does not support HADB or the <code>hadbm</code> management command.</p>
+</div>
+<div class="paragraph">
+<p>Instead of HADB, Eclipse GlassFish 7 supports high availability
+clustering by means of in-memory session state replication and
+ActiveCache for GlassFish.
+See "<a href="ha-administration-guide.html#high-availability-in-glassfish-server">
+High Availability in Eclipse GlassFish</a>" in
+Eclipse GlassFish High Availability Administration Guide
+for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="command-line-interface-the-asadmin-command"><a class="anchor" href="#command-line-interface-the-asadmin-command"></a>Command Line Interface: The <code>asadmin</code> Command</h3>
+<div class="paragraph">
+<p>The following sections describe changes to the command line utility <code>asadmin</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#deprecated-asadmin-subcommands">Deprecated <code>asadmin</code> Subcommands</a></p>
+</li>
+<li>
+<p><a href="#deprecated-unsupported-and-obsolete-options">Deprecated, Unsupported, and Obsolete Options</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about <code>asadmin</code> and its subcommands, see the
+<a href="reference-manual.html#GSRFM">Eclipse GlassFish Reference Manual</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="deprecated-asadmin-subcommands"><a class="anchor" href="#deprecated-asadmin-subcommands"></a>Deprecated <code>asadmin</code> Subcommands</h4>
+<div class="paragraph">
+<p>In Eclipse GlassFish 7, it is recommended that utility options of the
+<code>asadmin</code> command precede the subcommand. Utility options are options
+that control the behavior of the <code>asadmin</code> utility, as distinguished
+from subcommand options. Use of the following options after the
+subcommand is deprecated and will be removed in Eclipse GlassFish 7.1.0.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--host</code></p>
+</li>
+<li>
+<p><code>--port</code></p>
+</li>
+<li>
+<p><code>--user</code></p>
+</li>
+<li>
+<p><code>--passwordfile</code></p>
+</li>
+<li>
+<p><code>--terse</code></p>
+</li>
+<li>
+<p><code>--secure</code></p>
+</li>
+<li>
+<p><code>--echo</code></p>
+</li>
+<li>
+<p><code>--interactive</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deprecated-unsupported-and-obsolete-options"><a class="anchor" href="#deprecated-unsupported-and-obsolete-options"></a>Deprecated, Unsupported, and Obsolete Options</h4>
+<div class="paragraph">
+<p>Options in <a href="#gaeki">Table 1-2</a> are deprecated or no longer supported,
+or are obsolete and are ignored.</p>
+</div>
+<div id="gaeki" class="paragraph">
+<p>Table 1-2 Deprecated, Unsupported, and Obsolete Options for <code>asadmin</code>
+and Subcommands</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 67%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Affected Subcommands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--acceptlang</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--acls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--adminpassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all relevant subcommands. Use <code>--passwordfile</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autoapplyenabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-http-lb</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autohadb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autohadboverride</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>start-cluster</code> subcommand and the <code>stop-cluster</code> subcommand</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--blockingenabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-http-listener</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--configfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--defaultobj</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--defaultvs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated for the <code>create-http-listener</code> subcommand. Use <code>--default-virtual-server</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>restore-domain</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--devicesize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haadminpassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haadminpasswordfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haagentport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haproperty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--heartbeataddress</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated for the <code>create-cluster</code> subcommand. Use <code>--multicastaddress</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--heartbeatport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated for the <code>create-cluster</code> subcommand. Use <code>--multicastport</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--hosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--ignoreDescriptorItem</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replaced by the all lowercase option <code>--ignoredescriptoritem</code>
+in the <code>set-web-context-param</code> subcommand and the <code>set-web-env-entry</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all remote subcommands. Use <code>--passwordfile</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-domain</code> subcommand. Use <code>--domaindir</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--portbase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete only for the <code>create-cluster</code> subcommand.
+This option is still valid in other subcommands such as <code>create-domain</code>,
+<code>create-instance</code>, and <code>create-local-instance</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--resourcetype</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all relevant subcommands. Use <code>--restype</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--retrievefile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>export-http-lb-config</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--setenv</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>start-instance</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--target</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Obsolete only for the following subcommands:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create-connector-connection-pool</code></p>
+</li>
+<li>
+<p><code>create-resource-adapter-config</code></p>
+</li>
+<li>
+<p><code>delete-connector-connection-pool</code></p>
+</li>
+<li>
+<p><code>delete-connector-security-map</code></p>
+</li>
+<li>
+<p><code>delete-jdbc-connection-pool</code></p>
+</li>
+<li>
+<p><code>delete-resource-ref</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Replaced by an operand in the <code>list-custom-resources</code> subcommand and the
+<code>list-jndi-entries</code> subcommand.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="applications-that-use-java-db"><a class="anchor" href="#applications-that-use-java-db"></a>Applications That Use Java DB</h3>
+<div class="paragraph">
+<p>The directory location of Java DB in Eclipse GlassFish 7 has changed
+from its location in previous installations. Suppose that you have
+deployed applications that use Java DB databases in your previous server
+installation, and you upgrade your existing installation to Eclipse GlassFish 7. If you run the <code>asadmin start-database</code> command and
+successfully start Java DB, you could run into problems while trying to
+run applications that were deployed on your previous server
+installation.</p>
+</div>
+<div class="paragraph">
+<p>To solve this problem, you can copy the <code>databases</code> directory from your
+previous installation to as-install<code>/databases</code>. Make sure the database
+is not running when you do this.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can perform these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>asadmin start-database</code> command with the <code>--dbhome</code> option
+pointing to the <code>databases</code> directory in the older version of Java DB.
+For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin start-database --dbhome c:\glassfish\databases</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After upgrade, start Eclipse GlassFish 7.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="applications-that-use-persistence"><a class="anchor" href="#applications-that-use-persistence"></a>Applications That Use Persistence</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 and 3.0.1, and Sun GlassFish Enterprise Server v3
+use the persistence provider EclipseLink, while earlier versions used
+TopLink Essentials.</p>
+</div>
+<div class="paragraph">
+<p>An application that uses the container to create an <code>EntityManager</code> or
+<code>EntityManagerFactory</code> and that used Toplink Essentials as its provider
+will work in Eclipse GlassFish 7. The container creates an
+<code>EntityManager</code> if the application uses the <code>@PersistenceContext</code>
+annotation to inject an <code>EntityManager</code>, as in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@PersistenceContext</span>
+EntityManager em;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The container creates an <code>EntityManagerFactory</code> if the application uses
+the <code>@PersistenceUnit</code> annotation to inject an <code>EntityManagerFactory</code>,
+as in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@PersistenceUnit</span>
+EntityManagerFactory emf;
+
+EntityManager em = emf.createEntityManager();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the application is loaded, Eclipse GlassFish 7 will translate the
+provider to EclipseLink and will also translate <code>toplink.*</code> properties
+in the <code>persistence.xml</code> to corresponding EclipseLink properties. (The
+actual <code>persistence.xml</code> file remains unchanged.)</p>
+</div>
+<div class="paragraph">
+<p>Under certain circumstances, however, you may have to modify the
+<code>persistence.xml</code> file or your code:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If your application uses Java SE code to create the
+<code>EntityManagerFactory</code>, you will need to change your <code>persistence.xml</code>
+file for both the <code>provider</code> element and for any <code>toplink.*</code> properties
+to use the EclipseLink equivalents. An application uses Java SE code if
+it uses the <code>javax.persistence.Persistence</code> class to create the
+<code>EntityManagerFactory</code>, as in the following example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">EntityManagerFactory emf =
+    javax.persistence.Persistence.createEntityManagerFactory(<span class="string"><span class="delimiter">&quot;</span><span class="content">Order</span><span class="delimiter">&quot;</span></span>);
+EntityManager em = emf.createEntityManager();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, change the <code>provider</code> element to specify the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;provider&gt;</span>org.eclipse.persistence.jpa.PersistenceProvider<span class="tag">&lt;/provider&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If the application itself contains any TopLink Essentials-specific
+code and therefore contains casts to <code>oracle.toplink.*</code>, you must change
+the code to cast to <code>org.eclipse.persistence.*</code>. You can use the package
+renamer tool described on the
+<a href="http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages">
+Eclipse wiki</a>
+to do this. This tool is not provided with Eclipse GlassFish 7,
+however, so you must obtain it from the EclipseLink project download site.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="http-service-to-network-service-changes"><a class="anchor" href="#http-service-to-network-service-changes"></a>HTTP Service to Network Service Changes</h3>
+<div class="paragraph">
+<p>In Eclipse GlassFish 7, most HTTP Service settings are defined in the
+Network Service configuration that was introduced in Sun GlassFish
+Enterprise Server v3.</p>
+</div>
+<div class="paragraph">
+<p>The changes are described in the following sections.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#changes-to-dotted-names">Changes to Dotted Names</a></p>
+</li>
+<li>
+<p><a href="#changes-to-asadmin-subcommands">Changes to <code>asadmin</code> Subcommands</a></p>
+</li>
+<li>
+<p><a href="#remapping-of-http-service-attributes-and-properties">Remapping of HTTP Service Attributes and Properties</a></p>
+</li>
+<li>
+<p><a href="#new-network-service-elements-and-attributes">New Network Service Elements and Attributes</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="changes-to-dotted-names"><a class="anchor" href="#changes-to-dotted-names"></a>Changes to Dotted Names</h4>
+<div class="paragraph">
+<p>The dotted name hierarchy for the HTTP Service configuration in
+Eclipse GlassFish 7 is shown below. Elements that are no longer
+supported are <code>request-processing</code>, <code>keep-alive</code>, <code>connection-pool</code>,
+<code>http-protocol</code>, <code>http-file-cache</code>, and <code>http-listener</code>. During the
+upgrade process, these discontinued elements are remapped to the new
+configuration automatically and then deleted.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>config
+    http-service
+        access-log
+        request-processing
+        keep-alive
+        connection-pool
+        http-protocol
+        http-file-cache
+        http-listener
+            ssl
+            property
+        virtual-server
+            http-access-log
+            property
+        property
+    thread-pools
+        thread-pool</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The dotted name hierarchy for the Eclipse GlassFish 7 Network Service
+and HTTP Service configurations is shown below. The <code>network-config</code>
+element and all its children are new except for <code>ssl</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>config
+    network-config
+        transports
+            selection-key-handler
+            transport
+        protocols
+            protocol
+                http
+                    file-cache
+                port-unification
+                    protocol-finder
+                protocol-chain-instance-handler
+                    protocol-chain
+                protocol-filter
+                ssl
+        network-listeners
+            network-listener
+    http-service
+        access-log
+        virtual-server
+            http-access-log
+            property
+        property
+    thread-pools
+        thread-pool</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example compares the commands for setting a listener port
+for Sun GlassFish Enterprise Server v3 and Eclipse GlassFish 7. Note
+that the configuration for Enterprise Server v3 also applies to all
+earlier Enterprise Server 2.x releases.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Command for Sun GlassFish Enterprise Server v3 and earlier:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin set server-config.http-service.http-listener.http-1.listenerport=4321</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Command for Eclipse GlassFish 7:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin set server-config.network-config.network-listeners.network-\
+listener.http-1.listenerport=4321</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="changes-to-asadmin-subcommands"><a class="anchor" href="#changes-to-asadmin-subcommands"></a>Changes to <code>asadmin</code> Subcommands</h4>
+<div class="paragraph">
+<p>To accommodate the move of HTTP Service into the new Network Service
+configuration, <a href="reference-manual.html#asadmin"><code>asadmin</code></a> subcommands are changed as
+follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="reference-manual.html#create-ssl"><code>create-ssl</code></a> subcommand has a new <code>--type</code>
+parameter value, <code>network-listener</code>.</p>
+</li>
+<li>
+<p>The <a href="reference-manual.html#create-virtual-server"><code>create-virtual-server</code></a> SUBcommand has a new
+parameter, <code>--networklisteners</code>.</p>
+</li>
+<li>
+<p>The <a href="reference-manual.html#create-http-listener"><code>create-http-listener</code></a> subcommand adds a
+<code>network-listener</code> element to the domain configuration. The syntax and
+options of this commands are unchanged.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="remapping-of-http-service-attributes-and-properties"><a class="anchor" href="#remapping-of-http-service-attributes-and-properties"></a>Remapping of HTTP Service Attributes and Properties</h4>
+<div class="paragraph">
+<p>The following tables describe how attributes and properties in the HTTP
+Service configuration for Eclipse GlassFish 7 are remapped to
+attributes in the Network Service configuration for older product
+releases. If you use a configuration from a Sun GlassFish Enterprise
+Server v2 or v3 release, this remapping happens automatically and then
+discontinued elements are deleted.</p>
+</div>
+<div id="gipfy" class="paragraph">
+<p>Table 1-3 <code>com.sun.grizzly</code> Property Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 26%;">
+<col style="width: 41%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>com.sun.grizzly</code> Property</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>selector.timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>selector-poll-timeout-millis</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>displayConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>display-configuration</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enableSnoop</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>snoop-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>readTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read-timeout-millis</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>writeTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>write-timeout-millis</code></p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipfn" class="paragraph">
+<p>Table 1-4 <code>connection-pool</code> Attribute Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 41%;">
+<col style="width: 19%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>connection-pool</code> Attribute</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>queue-size-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-queue-size</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-pending-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-connections-count</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>receive-buffer-size-in-</code> <code>bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>request-body-buffer-size-</code>
+<code>bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>send-buffer-size-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>send-buffer-size-bytes</code></p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipcv" class="paragraph">
+<p>Table 1-5 <code>http-file-cache</code> Attribute Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 17%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>http-file-cache</code> Attribute</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file-caching-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file-cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-age-in-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file-cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-age-seconds</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>medium-file-space-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file-cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-cache-size-bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-files-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file-cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-files-count</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>globally-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>medium-file-size-limit-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>small-file-size-limit-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>small-file-space-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file-transmission-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hash-init-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipev" class="paragraph">
+<p>Table 1-6 <code>http-listener</code> Attribute Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37%;">
+<col style="width: 27%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>http-listener</code> Attribute</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>address</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>port</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acceptor-threads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acceptor-threads</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>security-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>security-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default-virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default-virtual-server</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server-name</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>redirect-port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>redirect-port</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xpowered-by</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xpowered-by</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>external-port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>family</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blocking-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipdo" class="paragraph">
+<p>Table 1-7 <code>http-listener</code> Property Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 15%;">
+<col style="width: 42%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>http-listener</code> Property</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxKeepAliveRequests</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-connections</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authPassthroughEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>auth-pass-through-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compression</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compression</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compressableMimeType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compressable-mime-type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noCompressionUserAgents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>no-compression-user-agents</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compressionMinSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compression-min-size-bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>restrictedUserAgents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>restricted-user-agents</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cometSupport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>comet-support-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectionUploadTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connection-upload-timeout-</code>
+<code>millis</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>disableUploadTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>upload-timeout-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chunkingDisabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chunking-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uriEncoding</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uri-encoding</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>traceEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trace-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rcmSupport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rcm-support-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jkEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network-</code> <code>listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jk-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>crlFile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>crl-file</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustAlgorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trust-algorithm</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustMaxCertLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trust-max-cert-length-bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tcpNoDelay</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tcp-no-delay</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bufferSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buffer-size-bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>use-nio-direct-bytebuffer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte-buffer-type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxyHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxiedProtocols</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>recycle-objects</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reader-threads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acceptor-queue-length</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reader-queue-length</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectionTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>monitoring-cache-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>monitoring-cache-refresh-in-</code> <code>millis</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl-cache-entries</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl3-session-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl-session-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipel" class="paragraph">
+<p>Table 1-8 <code>http-protocol</code> Attribute Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>http-protocol</code> Attribute</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>forced-response-type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>forced-response-type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default-response-type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default-response-type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dns-lookup-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipfa" class="paragraph">
+<p>Table 1-9 <code>http-service</code> Property Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>http-service</code> Property</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute or Property
+Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>accessLoggingEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code>, <code>virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access-logging-enabled</code> attribute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl-cache-entries</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl3-session-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl-session-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxyHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectionTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all other properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipea" class="paragraph">
+<p>Table 1-10 <code>keep-alive</code> Attribute Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>keep-alive</code> Attribute</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-connections</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-connections</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout-in-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout-seconds</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipdh" class="paragraph">
+<p>Table 1-11 <code>request-processing</code> Attribute Remapping</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 18%;">
+<col style="width: 39%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>request-processing</code> Attribute</th>
+<th class="tableblock halign-left valign-top">New Owning Element</th>
+<th class="tableblock halign-left valign-top">New Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-thread-pool-size</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>initial-thread-count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>min-thread-pool-size</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>header-buffer-length-in-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>header-buffer-length-bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>request-timeout-in-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>request-timeout-seconds</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-increment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipdv" class="paragraph">
+<p>Table 1-12 <code>ssl</code> Attribute Changes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 22%;">
+<col style="width: 44%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Previous Attribute or Property</th>
+<th class="tableblock halign-left valign-top">Previous Owning Element</th>
+<th class="tableblock halign-left valign-top">New <code>ssl</code>
+Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key-store</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trust-store</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>crlFile</code> property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>crl-file</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustAlgorithm</code> property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trust-algorithm</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustMaxCertLength</code> property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-listener</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trust-max-cert-length-bytes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all other <code>ssl</code> attributes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipcj" class="paragraph">
+<p>Table 1-13 <code>thread-pool</code> Attribute Changes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 44%;">
+<col style="width: 17%;">
+<col style="width: 39%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Previous Attribute</th>
+<th class="tableblock halign-left valign-top">Previous Owning Element</th>
+<th class="tableblock halign-left valign-top">New <code>thread-pool</code>
+Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-queue-size</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>idle-thread-timeout-in-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>idle-thread-timeout-seconds</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>num-work-queues</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all other <code>thread-pool</code> attributes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipep" class="paragraph">
+<p>Table 1-14 <code>virtual-server</code> Attribute Changes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 39%;">
+<col style="width: 24%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Previous Attribute or Property</th>
+<th class="tableblock halign-left valign-top">Previous Owning Element</th>
+<th class="tableblock halign-left valign-top">New
+<code>virtual-server</code> Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-listeners</code> attribute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network-listeners</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>accessLoggingEnabled</code> property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access-logging-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sso-enabled</code> property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sso-enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ssoCookieSecure</code> property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sso-cookie-secure</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all other <code>virtual-server</code> attributes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all other <code>virtual-server</code> properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>virtual-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unchanged,
+still properties</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="new-network-service-elements-and-attributes"><a class="anchor" href="#new-network-service-elements-and-attributes"></a>New Network Service Elements and Attributes</h4>
+<div class="paragraph">
+<p>The following tables describe the Network Service elements and
+attributes that were introduced in Sun GlassFish Enterprise Server v3.
+For attributes and properties remapped from discontinued elements to new
+elements, see <a href="#remapping-of-http-service-attributes-and-properties">Remapping of HTTP Service Attributes and
+Properties</a>.</p>
+</div>
+<div class="paragraph">
+<p>The new <code>file-cache</code> element has no new attributes. All of its
+attributes are remapped from the <code>http-file-cache</code> element. For details,
+see <a href="#gipcv">Table 1-5</a>.</p>
+</div>
+<div id="gipds" class="paragraph">
+<p>Table 1-15 New <code>http</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 32%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>adapter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.grizzly.tcp. StaticResourcesAdapter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional)
+Specifies the class name of the static resources adapter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-post-size-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2097152</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies the maximum size
+of <code>POST</code> actions.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For remapped <code>http</code> attributes, see <a href="#gipfn">Table 1-4</a>,
+<a href="#gipev">Table 1-6</a>, <a href="#gipdo">Table 1-7</a>, <a href="#gipel">Table 1-8</a>,
+<a href="#gipea">Table 1-10</a>, and <a href="#gipdh">Table 1-11</a>.</p>
+</div>
+<div id="gipey" class="paragraph">
+<p>Table 1-16 New <code>network-listener</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 18%;">
+<col style="width: 11%;">
+<col style="width: 71%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>name</code> of the <code>protocol</code> associated
+with this <code>network-listener</code>. Although this attribute is required, a
+<code>protocol</code> is automatically created with the same <code>name</code> as the
+<code>network-listener</code> when you use <code>asadmin create-http-listener</code> to create
+a <code>network-listener</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thread-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies the <code>name</code> of the
+<code>thread-pool</code> associated with this <code>network-listener</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>name</code> of the <code>transport</code> associated
+with this <code>network-listener</code>. Although this attribute is required, the
+default <code>transport</code> is used when you use <code>asadmin create-http-listener</code>
+to create a <code>network-listener</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For remapped <code>network-listener</code> attributes, see <a href="#gipev">Table 1-6</a>.</p>
+</div>
+<div id="gipfg" class="paragraph">
+<p>Table 1-17 New <code>port-unification</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 16%;">
+<col style="width: 65%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>port-unification</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the class name of the <code>port-unification</code>
+implementation.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipdj" class="paragraph">
+<p>Table 1-18 New <code>protocol</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 18%;">
+<col style="width: 17%;">
+<col style="width: 65%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>protocol</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For remapped <code>protocol</code> attributes, see <a href="#gipev">Table 1-6</a>.</p>
+</div>
+<div id="gipcr" class="paragraph">
+<p>Table 1-19 New <code>protocol-chain</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 17%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>protocol-chain</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the class name of the <code>protocol-chain</code>
+implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>STATELESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the type of protocol chain.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipfq" class="paragraph">
+<p>Table 1-20 New <code>protocol-chain-instance-handler</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 17%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the
+<code>protocol-chain-instance-handler</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the class name of the
+<code>protocol-chain-instance-handler</code> implementation.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipeq" class="paragraph">
+<p>Table 1-21 New <code>protocol-filter</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 17%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>protocol-filter</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the class name of the <code>protocol-filter</code>
+implementation.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipfd" class="paragraph">
+<p>Table 1-22 New <code>protocol-finder</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 17%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>protocol-finder</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the class name of the <code>protocol-finder</code>
+implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>name</code> of the <code>protocol</code> associated
+with this <code>protocol-finder</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipft" class="paragraph">
+<p>Table 1-23 New <code>selection-key-handler</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 16%;">
+<col style="width: 65%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>selection-key-handler</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the class name of the
+<code>selection-key-handler</code> implementation.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="gipfi" class="paragraph">
+<p>Table 1-24 New <code>ssl</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 17%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key-store</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies a key store.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trust-store</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies a trust store.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For remapped <code>ssl</code> attributes, see <a href="#gipdv">Table 1-12</a>.</p>
+</div>
+<div id="gipcc" class="paragraph">
+<p>Table 1-25 New <code>thread-pool</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 21%;">
+<col style="width: 32%;">
+<col style="width: 47%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.grizzly.http.StatsThreadPool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional)
+Specifies the class name of the <code>thread-pool</code> implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-queue-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies the maximum number of
+messages that can be queued until threads are available to process them.
+A value of <code>-1</code> specifies no limit.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For remapped <code>thread-pool</code> attributes, see <a href="#gipfn">Table 1-4</a>,
+<a href="#gipdh">Table 1-11</a>, and <a href="#gipcj">Table 1-13</a>.</p>
+</div>
+<div id="gipem" class="paragraph">
+<p>Table 1-26 New <code>transport</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 35%;">
+<col style="width: 27%;">
+<col style="width: 38%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a unique name for the <code>transport</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.grizzly. TCPSelectorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional)
+Specifies the class name of the <code>transport</code> implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>selection-key-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies the <code>name</code> of the
+<code>selection-key-handler</code> associated with this <code>transport</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>idle-key-timeout-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) Specifies the idle key
+timeout.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For remapped <code>transport</code> attributes, see <a href="#gipfy">Table 1-3</a>,
+<a href="#gipfn">Table 1-4</a>, <a href="#gipev">Table 1-6</a>, and <a href="#gipdo">Table
+1-7</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="nss-cryptographic-token-support"><a class="anchor" href="#nss-cryptographic-token-support"></a>NSS Cryptographic Token Support</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 does not support Network Security Services (NSS)
+cryptographic tokens. When upgrading to Eclipse GlassFish 7 from
+Enterprise Server v2.x, additional manual configuration steps must be
+performed. These steps are explained later in this guide, in
+<a href="#upgrading-installations-that-use-nss-cryptographic-tokens">Upgrading Installations
+That Use NSS Cryptographic Tokens</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix"><a class="anchor" href="#appendix"></a>Appendix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section contains information about and conventions for the entire
+Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is developed through the GlassFish project
+open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
+The GlassFish project provides a structured process for developing the
+Eclipse GlassFish platform that makes the new features of the Jakarta EE
+platform available faster, while maintaining the most important feature
+of Jakarta EE: compatibility. It enables Java developers to access the
+Eclipse GlassFish source code and to contribute to the development of the
+Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></p>
+</li>
+<li>
+<p><a href="#related-documentation">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="#typographic-conventions">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="#symbol-conventions">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="#default-paths-and-file-names">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
+<div class="paragraph">
+<p>The Eclipse GlassFish documentation set describes deployment planning and
+system installation. For an introduction to Eclipse GlassFish, refer to
+the books in the order in which they are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="release-notes.html#GSRLN">Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
+the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java
+Development Kit (JDK), and database drivers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish product.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to install the software and its components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="upgrade-guide.html#GSUPG">Upgrade Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to upgrade to the latest version of Eclipse GlassFish.
+This guide also describes differences between adjacent product releases and configuration
+options that can result in incompatibility with the product specifications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="deployment-planning-guide.html#GSPLG">Deployment Planning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to build a production deployment of Eclipse GlassFish that meets the requirements of
+your system and enterprise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+Instructions for performing these tasks from the Administration Console are provided
+in the Administration Console online help.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish security.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and deploy applications to the Eclipse GlassFish and provides information
+about deployment descriptors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="add-on-component-development-guide.html#GSACG">Add-On Component Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to use published interfaces of Eclipse GlassFish to develop add-on components
+for Eclipse GlassFish.
+This document explains how to perform only those tasks that ensure that the add-on component
+is suitable for Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in embedded Eclipse GlassFish and to develop applications
+in which Eclipse GlassFish is embedded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure Eclipse GlassFish to provide higher availability and
+scalability through failover and load balancing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish and explains how to solve them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
+the Message Queue messaging service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-jmx/toc.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
+programmatically configuring and monitoring Message Queue resources in
+conformance with the Java Management Extensions (JMX).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-java/toc.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
+applications (Java clients) that work with Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-c/toc.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
+Message Queue who want to use the C language binding to the Message
+Queue messaging service to send, receive, and process Message Queue messages.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
+<div class="paragraph">
+<p>The following tutorials explain how to develop Jakarta EE applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://eclipse-ee4j.github.io/jakartaee-firstcup/">
+Your First Cup: An Introduction to the Jakarta EE Platform</a>.
+For beginning Jakarta EE programmers, this short tutorial explains the entire
+process for developing a simple enterprise application.
+The sample application is a web application that consists of a component that is
+based on the Enterprise JavaBeans specification, a JAX-RS web service,
+and a JavaServer Faces component for the web front end.</p>
+</li>
+<li>
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/index.html">The Jakarta EE Tutorial</a>.
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Javadoc tool reference documentation for packages that are provided with
+Eclipse GlassFish is available as follows.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Jakarta EE specifications and API specification is
+located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
+</li>
+<li>
+<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+platform packages and non-platform packages that are specific to the
+Eclipse GlassFish product, is located at
+<a href="https://glassfish.org/documentation.html" class="bare">https://glassfish.org/documentation.html</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about creating enterprise applications in the NetBeans
+Integrated Development Environment (IDE), see the
+<a href="https://netbeans.apache.org/tutorial/main/kb/docs/java-ee/">
+NetBeans Documentation, Training &amp; Support page</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about the Apache Derby database for use with
+the Eclipse GlassFish, see the <a href="https://db.apache.org/derby/">Derby page</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Jakarta EE Examples project is a collection of code examples for Jakarta EE. It&#8217;s available from the repository (<code><a href="https://github.com/eclipse-ee4j/jakartaee-examples" class="bare">https://github.com/eclipse-ee4j/jakartaee-examples</a></code>).</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Samples project is a collection of sample applications that
+demonstrate a broad range of Jakarta EE technologies. The GlassFish Samples
+are are available from the repository
+(<code><a href="https://github.com/eclipse-ee4j/glassfish-samples" class="bare">https://github.com/eclipse-ee4j/glassfish-samples</a></code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="typographic-conventions"><a class="anchor" href="#typographic-conventions"></a>Typographic Conventions</h3>
+<div class="paragraph">
+<p>The following table describes the typographic changes that are used in
+this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 37%;">
+<col style="width: 49%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Typeface</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The names of commands, files, and directories, and onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Edit your <code>.login</code> file.</p>
+<p class="tableblock">Use <code>ls</code> <code>a</code> to list all files.</p>
+<p class="tableblock"><code>machine_name% you have mail.</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What you type, contrasted with onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>machine_name%</code> <code>su</code></p>
+<p class="tableblock"><code>Password:</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A placeholder to be replaced with a real name or value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The command to remove a file is <code>rm</code> filename.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Book titles, new terms, and terms to be emphasized (note that some emphasized items appear bold online)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read Chapter 6 in the User&#8217;s Guide.</p>
+<p class="tableblock">A cache is a copy that is stored locally.</p>
+<p class="tableblock">Do not save the file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="symbol-conventions"><a class="anchor" href="#symbol-conventions"></a>Symbol Conventions</h3>
+<div class="paragraph">
+<p>The following table explains symbols that might be used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 26%;">
+<col style="width: 28%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Symbol</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[ ]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains optional arguments and command options.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ls [-l]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-l</code> option is not required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ | }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains a set of choices for a required command option.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-d {y|n}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-d</code> option requires that you use either the <code>y</code> argument or the <code>n</code> argument.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${ }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates a variable reference.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${com.sun.javaRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">References the value of the <code>com.sun.javaRoot</code> variable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins simultaneous multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Control-A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key while you press the A key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins consecutive multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ctrl+A+N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key, release it, and then press the subsequent keys.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates menu item selection in a graphical user interface.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File &gt; New &gt; Templates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From the File menu, choose New. From the New submenu, choose Templates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="default-paths-and-file-names"><a class="anchor" href="#default-paths-and-file-names"></a>Default Paths and File Names</h3>
+<div class="paragraph">
+<p>The following table describes the default paths and file names that are
+used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Placeholder</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Represents the base installation directory for Eclipse GlassFish.
+In configuration files, as-install is represented as follows:
+<code>${com.sun.aas.installRoot}</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac OS operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install-parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the parent of the base installation directory for Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain is created by default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install<code>/domains/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain&#8217;s configuration is stored.
+In configuration files, domain-dir is represented as follows:
+<code>${com.sun.aas.instanceRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir/domain-name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instance-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory for a server instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir/instance-name</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="list-of-tables"><a class="anchor" href="#list-of-tables"></a>List of Tables</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gklho">1-1 GMS Administration
+Console Settings Changes from 2.1.1 to 4.0</a></p>
+</li>
+<li>
+<p><a href="#gaeki">1-2 Deprecated,
+Unsupported, and Obsolete Options for asadmin and Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gipfy">1-3 com.sun.grizzly
+Property Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipfn">1-4 connection-pool
+Attribute Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipcv">1-5 http-file-cache
+Attribute Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipev">1-6 http-listener
+Attribute Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipdo">1-7 http-listener Property
+Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipel">1-8 http-protocol
+Attribute Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipfa">1-9 http-service Property
+Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipea">1-10 keep-alive Attribute
+Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipdh">1-11 request-processing
+Attribute Remapping</a></p>
+</li>
+<li>
+<p><a href="#gipdv">1-12 ssl Attribute
+Changes</a></p>
+</li>
+<li>
+<p><a href="#gipcj">1-13 thread-pool Attribute
+Changes</a></p>
+</li>
+<li>
+<p><a href="#gipep">1-14 virtual-server
+Attribute Changes</a></p>
+</li>
+<li>
+<p><a href="#gipds">1-15 New http Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipey">1-16 New network-listener
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipfg">1-17 New port-unification
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipdj">1-18 New protocol
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipcr">1-19 New protocol-chain
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipfq">1-20 New
+protocol-chain-instance-handler Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipeq">1-21 New protocol-filter
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipfd">1-22 New protocol-finder
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipft">1-23 New
+selection-key-handler Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipfi">1-24 New ssl Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipcc">1-25 New thread-pool
+Attributes</a></p>
+</li>
+<li>
+<p><a href="#gipem">1-26 New transport
+Attributes</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2025-12-05 01:57:35 UTC
+</div>
+</div>
+</body>
+</html>

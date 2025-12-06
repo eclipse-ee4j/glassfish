@@ -4,7 +4,7 @@ layout: documentation
 
 # Eclipse GlassFish Documentation
 
-## Current Release - 7.0.25 {#current}
+## Current Release - 7.1.0 {#current}
 
 * [Add On Component Development Guide](docs/latest/add-on-component-development-guide.html)
   ([pdf](docs/latest/add-on-component-development-guide.pdf))
@@ -41,7 +41,7 @@ layout: documentation
 
 ### Documentation for other GlassFish versions {#older}
 
-* [Development version (7.1.0-SNAPSHOT)](docs#development)
+* [Development version (7.1.1-SNAPSHOT)](docs#development)
 * [5.1.0 release](docs#5.1.0)
 
 ## Documentation for GlassFish Docker images {#docker}
@@ -77,7 +77,7 @@ GlassFish, Jakarta EE Web Profile, and GlassFish Embedded, Jakarta EE Web Profil
 
 ## MicroProfile Documentation {#microprofile}
 
-GlassFish 7.0.25, Jakarta EE Platform, provides the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs:
+GlassFish 7.1.0, Jakarta EE Platform, provides the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs:
 
 * [MicroProfile Config 3.1](https://github.com/eclipse/microprofile-config/releases/tag/3.1)
 * [MicroProfile JWT RBAC 2.1](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1)

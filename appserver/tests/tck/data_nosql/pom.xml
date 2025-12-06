@@ -44,6 +44,7 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <jakarta.data.version>1.0.0</jakarta.data.version>
+        <jakarta.data.tck.version>1.0.1</jakarta.data.tck.version>
 
         <sigtest.version>2.3</sigtest.version>
         <weld.version>6.0.3.Final</weld.version>
@@ -70,7 +71,7 @@
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-tck</artifactId>
-            <version>1.0.0</version>
+            <version>${jakarta.data.tck.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.maven.plugins</groupId>

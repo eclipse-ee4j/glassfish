@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,6 +63,7 @@ public class Client {
             res  = false;
             System.out.println("ERROR calling EJB:");
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         System.out.println("EJB noted on destroy in try-with-resource: " + l.get(0));
@@ -77,7 +79,7 @@ public class Client {
         } catch (Exception e) {
             res  = false;
             System.out.println("ERROR calling EJB:");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             if (c != null)
                 c.close();

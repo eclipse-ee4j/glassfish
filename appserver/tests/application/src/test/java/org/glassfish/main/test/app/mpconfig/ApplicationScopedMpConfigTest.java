@@ -34,9 +34,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 
 import static java.lang.System.Logger.Level.INFO;
@@ -45,7 +43,6 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class ApplicationScopedMpConfigTest {
 
     private static final System.Logger LOG = System.getLogger(ApplicationScopedMpConfigTest.class.getName());

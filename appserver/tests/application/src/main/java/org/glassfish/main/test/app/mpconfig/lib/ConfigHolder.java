@@ -19,7 +19,10 @@ package org.glassfish.main.test.app.mpconfig.lib;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 
-public class ConfigHolder {
+public final class ConfigHolder {
+
+    private ConfigHolder() {
+    }
 
     public static final Config config = ConfigProvider.getConfig();
 }

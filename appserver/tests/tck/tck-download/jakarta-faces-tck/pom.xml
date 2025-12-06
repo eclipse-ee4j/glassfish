@@ -32,8 +32,9 @@
     <name>TCK: Install Jakarta Faces TCK</name>
 
     <properties>
-        <tck.artifactFileName>jakarta-faces-tck-4.0.3.zip</tck.artifactFileName>
-        <tck.artifactUrl>https://download.eclipse.org/jakartaee/faces/4.0/${tck.artifactFileName}</tck.artifactUrl>
+        <tck.artifactFileName>jakarta-faces-tck-4.0.4.zip</tck.artifactFileName>
+<!--        <tck.artifactUrl>https://download.eclipse.org/jakartaee/faces/4.0/${tck.artifactFileName}</tck.artifactUrl>-->
+        <tck.artifactUrl>https://download.eclipse.org/faces/jakartaee10/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>

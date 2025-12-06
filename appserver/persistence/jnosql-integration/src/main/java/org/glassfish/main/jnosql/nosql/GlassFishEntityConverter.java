@@ -20,6 +20,7 @@ import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.glassfish.main.jnosql.nosql.metadata.NoSqlEntitiesMetadata;
 
 /**
  * The GlassFish implementation of {@link EntityConverter}
@@ -27,7 +28,7 @@ import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 class GlassFishEntityConverter extends EntityConverter {
 
     @Inject
-    private EntitiesMetadata entities;
+    private NoSqlEntitiesMetadata entities;
 
     @Inject
     private Converters converters;

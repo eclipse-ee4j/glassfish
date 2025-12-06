@@ -15,6 +15,7 @@
 package org.glassfish.main.jnosql.nosql.metadata;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 import java.util.Locale;
 import java.util.Map;
@@ -30,41 +31,53 @@ import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionClassConverter;
+import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionGroupEntityMetadata;
 
 
 /**
- * The default implementation of {@link EntityMetadata}. It's storage the class
- * information in a {@link ConcurrentHashMap}
+ * The default implementation of {@link EntityMetadata}.
+ * It's storage the class information in a {@link ConcurrentHashMap}
  */
 public class NoSqlEntitiesMetadata implements EntitiesMetadata {
 
     private final Map<String, EntityMetadata> mappings;
 
-    private final Map<Class<?>, EntityMetadata> classes;
+    private final  Map<Class<?>, EntityMetadata> classes;
 
-    private final Map<String, EntityMetadata> findBySimpleName;
+    private final  Map<String, EntityMetadata> findBySimpleName;
 
-    private final Map<String, EntityMetadata> findByClassName;
+    private final  Map<String, EntityMetadata> findByClassName;
 
-    private final Map<Class<?>, Map<String, InheritanceMetadata>> findDiscriminatorByParent;
+    private final ClassConverter converter;
+
+    @Inject
+    private ReflectionGroupEntityMetadata extension;
 
     public NoSqlEntitiesMetadata() {
         this.mappings = new ConcurrentHashMap<>();
         this.classes = new ConcurrentHashMap<>();
         this.findBySimpleName = new ConcurrentHashMap<>();
         this.findByClassName = new ConcurrentHashMap<>();
-        this.findDiscriminatorByParent = new ConcurrentHashMap<>();
+        this.converter = new ReflectionClassConverter();
     }
 
     @PostConstruct
     public void init() {
+        classes.putAll(extension.classes());
+        classes.values().forEach(r -> {
+            findByClassName.put(r.className(), r);
+        });
+        extension.mappings().forEach((k, v) -> mappings.put(k.toUpperCase(Locale.US), v));
+        mappings.values().forEach(r -> {
+            findBySimpleName.put(r.simpleName(), r);
+            findByClassName.put(r.className(), r);
+        });
     }
 
     EntityMetadata load(Class<?> type) {
-        ClassConverter converter = new ReflectionClassConverter();
         EntityMetadata metadata = converter.apply(type);
         if (metadata.hasEntityName()) {
-            mappings.put(metadata.name().toUpperCase(Locale.US), metadata);
+            mappings.put(type.getName().toUpperCase(Locale.US), metadata);
         }
         this.findBySimpleName.put(type.getSimpleName(), metadata);
         this.findByClassName.put(type.getName(), metadata);
@@ -79,10 +92,6 @@ public class NoSqlEntitiesMetadata implements EntitiesMetadata {
     @Override
     public Map<String, InheritanceMetadata> findByParentGroupByDiscriminatorValue(Class<?> parent) {
         Objects.requireNonNull(parent, "parent is required");
-        return findDiscriminatorByParent.computeIfAbsent(parent, this::getDiscriminatorFromParent);
-    }
-
-    private Map<String, InheritanceMetadata> getDiscriminatorFromParent(Class<?> parent) {
         return this.classes.values().stream()
                 .flatMap(c -> c.inheritance().stream())
                 .filter(p -> p.isParent(parent))
@@ -93,7 +102,7 @@ public class NoSqlEntitiesMetadata implements EntitiesMetadata {
     public EntityMetadata findByName(String name) {
         Objects.requireNonNull(name, "name is required");
         return Optional.ofNullable(mappings.get(name.toUpperCase(Locale.US)))
-                .orElseThrow(() -> new ClassInformationNotFoundException("No entity found with the name: " + name));
+                .orElseThrow(() -> new ClassInformationNotFoundException("There is not entity found with the name: " + name));
 
     }
 
@@ -111,9 +120,10 @@ public class NoSqlEntitiesMetadata implements EntitiesMetadata {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{"
-                + "mappings-size=" + mappings.size()
-                + ", classes=" + classes
-                + '}';
+        return "NoSqlEntitiesMetadata{" + "mappings-size=" + mappings.size() +
+                ", classes=" + classes +
+                ", classConverter=" + converter +
+                ", extension=" + extension +
+                '}';
     }
 }

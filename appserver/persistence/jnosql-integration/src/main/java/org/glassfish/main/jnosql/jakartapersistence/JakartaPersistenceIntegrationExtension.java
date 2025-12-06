@@ -37,7 +37,6 @@ import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractReposito
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
-import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
@@ -74,11 +73,6 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .types(JakartaDataApplicationContext.class)
                 .scope(Dependent.class) // Dependent scope is OK because the state is provided via constructor
                 .createWith(ctx -> new JakartaDataApplicationContext(types));
-
-        // is this needed? Isn't it loaded by service loader?
-        addBean(GlassFishJakartaPersistenceClassScanner.class, afterBeanDiscovery, beanManager)
-                .types(ClassScanner.class, GlassFishJakartaPersistenceClassScanner.class)
-                .scope(ApplicationScoped.class);
 
         addBean(GlassFishRepositoryInterceptor.class, afterBeanDiscovery, beanManager)
                 .types(MethodInterceptor.class)

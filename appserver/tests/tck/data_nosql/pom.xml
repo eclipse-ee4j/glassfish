@@ -43,7 +43,6 @@
         <!-- Require at least Java 17 to compile -->
         <maven.compiler.release>17</maven.compiler.release>
 
-        <jakarta.data.version>1.0.0</jakarta.data.version>
         <jakarta.data.tck.version>1.0.1</jakarta.data.tck.version>
 
         <sigtest.version>2.3</sigtest.version>

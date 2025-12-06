@@ -30,11 +30,11 @@ import java.util.logging.Logger;
 
 import org.eclipse.jnosql.mapping.DatabaseQualifier;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 import org.glassfish.main.jnosql.jakartapersistence.JakartaPersistenceIntegrationExtension;
 import org.glassfish.main.jnosql.nosql.metadata.NoSqlEntitiesMetadata;
+import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionGroupEntityMetadata;
 import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
@@ -68,8 +68,8 @@ public class JNoSqlIntegrationExtension implements Extension {
     private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
         List<BeanConfigurator<?>> configurations = List.of(
-                addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager)
-                        .types(EntitiesMetadata.class),
+                addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager),
+                addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager),
                 addBean(GlassFishEntityConverter.class, afterBeanDiscovery, beanManager)
                         .types(EntityConverter.class),
                 addBean(EventPersistManager.class, afterBeanDiscovery, beanManager),

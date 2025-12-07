@@ -293,7 +293,7 @@ public class CreateJdbcConnectionPool implements AdminCommand {
             ResourceStatus result = connPoolMgr.create(domain.getResources(), attrList, properties, target);
             if (result.getStatus() == ResourceStatus.FAILURE) {
                 report.setMessage(I18N.getLocalString("create.jdbc.connection.pool.fail",
-                    "JDBC connection pool {0} creation failed", jdbc_connection_pool_id));
+                    "JDBC connection pool {0} creation failed", jdbc_connection_pool_id, result.getMessage()));
                 report.setFailureCause(result.getException());
                 report.setActionExitCode(ExitCode.FAILURE);
             } else {

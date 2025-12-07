@@ -49,11 +49,15 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
         assumeTrue(dockerAvailable, "Docker is not available on this environment");
 
         mongodb.start();
+
+        String mongoDbHost = mongodb.getHost() + ":" + mongodb.getFirstMappedPort();
+        System.out.println("Started MongoDB in Docker at " + mongoDbHost);
+
         // set GlassFish system properties for the Arquillian GlassFish connector
         System.setProperty(MP_CONFIG_CONTENT_KEY,
                 Stream.of(
                         "jnosql.document.database=tck",
-                        "jnosql.mongodb.host=" + mongodb.getHost() + ":" + mongodb.getFirstMappedPort()
+                        "jnosql.mongodb.host=" + mongoDbHost
                 ).collect(Collectors.joining("\n"))
         );
         System.out.println("Setting " + MP_CONFIG_CONTENT_KEY + " system property to:\n" + System.getProperty(MP_CONFIG_CONTENT_KEY).indent(4));

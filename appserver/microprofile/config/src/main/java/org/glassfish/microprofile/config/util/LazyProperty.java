@@ -47,6 +47,7 @@ public final class LazyProperty {
         PROP result = getter.apply(object);
         if (result == null) {
             synchronized (object) {
+                result = getter.apply(object);
                 if (result == null) {
                     result = propertyProducer.get();
                     setter.accept(object, result);

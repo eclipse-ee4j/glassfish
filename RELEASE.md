@@ -19,11 +19,12 @@ If any step failed, you have to resolve the issue and start from the appropriate
 6. Create a Draft PR based on this branch.
 7. Find the `Glassfish Full Profile Distribution` on the page of the release build under [glassfish-release](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish-release)
    and copy the URL of the zip file.
-8. Run the [TCKs](https://ci.eclipse.org/jakartaee-tck/view/EFTL-Certification-Jobs-10/) against the result artifact - alternatively
+8. Run the [TCKs](https://ci.eclipse.org/jakartaee-platform/job/JakartaEE-TCK/view/EFTL-Certification-Jobs-10/) against the result artifact - alternatively
 you can deploy to Maven Central Snapshots using [glassfish-deploy-snapshots](https://ci.eclipse.org/glassfish/job/glassfish-deploy-snapshot/)
-and refer zip from the build or from Maven Central Snapshots (same file).
-    1. Run the [platform TCK](https://ci.eclipse.org/jakartaee-tck/view/EFTL-Certification-Jobs-10/job/10/job/eftl-jakartaeetck-run-100/)
-    2. Run the [standalone TCK](https://ci.eclipse.org/jakartaee-tck/view/EFTL-Certification-Jobs-10/job/eftl-jakartaeetck-run-standalone/)
+and refer zip from the build or from Maven Central Snapshots (same file). As another alternative you can run the TCK on any other
+infrastructure.
+    1. Run the [platform TCK](https://ci.eclipse.org/jakartaee-platform/job/JakartaEE-TCK/view/EFTL-Certification-Jobs-10/job/10/job/eftl-jakartaeetck-run-100/)
+    2. Run the [standalone TCK](https://ci.eclipse.org/jakartaee-platform/job/JakartaEE-TCK/view/EFTL-Certification-Jobs-10/job/eftl-jakartaeetck-run-standalone/)
 9. Create the release on Github: click ["Draft a new release"](https://github.com/eclipse-ee4j/glassfish/releases)
 10. Create the release on Eclipse: ["Create a new release"](https://projects.eclipse.org/projects/ee4j.glassfish click)
 11. If it is a version with important feature changes, ask for a release review. Remember that it will take more than week.

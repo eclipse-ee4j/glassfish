@@ -111,6 +111,7 @@ public class DeploymentImpl implements CDI11Deployment {
     private final Map<ClassLoader, BeanDeploymentArchive> extensionBDAMap = new HashMap<>();
 
     private Iterable<Metadata<Extension>> extensions;
+    private List<Metadata<Extension>> dynamicExtensions = new ArrayList<>();
 
     private final Collection<EjbDescriptor> deployedEjbs = new LinkedList<>();
     private ArchiveFactory archiveFactory;
@@ -304,7 +305,28 @@ public class DeploymentImpl implements CDI11Deployment {
                 extensionsList.add(beanDeploymentArchiveExtension);
             }
         }
+        extensionsList.addAll(dynamicExtensions);
         return extensions = extensionsList;
+    }
+
+    record ExtensionMetadata(Extension extension) implements Metadata<Extension> {
+
+        @Override
+        public Extension getValue() {
+            return extension;
+        }
+
+        @Override
+        public String getLocation() {
+            return extension.toString();
+        }
+
+    }
+
+    public void addExtensions(Extension... extensions) {
+        for (Extension extension : extensions) {
+            dynamicExtensions.add(new ExtensionMetadata(extension));
+        }
     }
 
     @Override

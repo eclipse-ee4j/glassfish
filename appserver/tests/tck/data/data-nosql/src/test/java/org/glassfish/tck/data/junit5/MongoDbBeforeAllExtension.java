@@ -22,10 +22,12 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import static org.glassfish.tck.data.arquillian.JakartaNoSqlProcessor.MP_CONFIG_CONTENT_KEY;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Starts MongoDB docker container before all tests
@@ -42,6 +44,10 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
+
+        var dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
+        assumeTrue(dockerAvailable, "Docker is not available on this environment");
+
         mongodb.start();
         // set GlassFish system properties for the Arquillian GlassFish connector
         System.setProperty(MP_CONFIG_CONTENT_KEY,

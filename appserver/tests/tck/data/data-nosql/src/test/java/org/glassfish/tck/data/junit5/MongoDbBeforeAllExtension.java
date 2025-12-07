@@ -50,7 +50,7 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
                         "jnosql.mongodb.host=" + mongodb.getHost() + ":" + mongodb.getFirstMappedPort()
                 ).collect(Collectors.joining("\n"))
         );
-
+        System.out.println("Setting " + MP_CONFIG_CONTENT_KEY + " system property to:\n" + System.getProperty(MP_CONFIG_CONTENT_KEY).indent(4));
     }
 
     @Override

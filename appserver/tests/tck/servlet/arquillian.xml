@@ -4,7 +4,7 @@
     <defaultProtocol type="Servlet 6.0"/>
 
     <engine>
-        <property name="deploymentExportPath">target/</property>
+        <property name="deploymentExportPath">${project.build.directory}/deployments</property>
     </engine>
 
     <group qualifier="glassfish-servers" default="true">

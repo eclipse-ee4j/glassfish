@@ -26,6 +26,7 @@ import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.tck.data.arquillian.JakartaNoSqlProcessor.MP_CONFIG_CONTENT_KEY;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -37,6 +38,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  */
 @Order(10)
 public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCallback {
+
+    private static final System.Logger LOG = System.getLogger(MongoDbBeforeAllExtension.class.getName());
 
     private final GenericContainer<?> mongodb
             = new GenericContainer<>("mongo:latest")
@@ -52,7 +55,7 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
         mongodb.start();
 
         String mongoDbHost = mongodb.getHost() + ":" + mongodb.getFirstMappedPort();
-        System.out.println("Started MongoDB in Docker at " + mongoDbHost);
+        LOG.log(INFO, "Started MongoDB in Docker at " + mongoDbHost);
 
         // set GlassFish system properties for the Arquillian GlassFish connector
         System.setProperty(MP_CONFIG_CONTENT_KEY,
@@ -61,7 +64,7 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
                         "jnosql.mongodb.host=" + mongoDbHost
                 ).collect(Collectors.joining("\n"))
         );
-        System.out.println("Setting " + MP_CONFIG_CONTENT_KEY + " system property to:\n" + System.getProperty(MP_CONFIG_CONTENT_KEY).indent(4));
+        LOG.log(INFO, "Setting " + MP_CONFIG_CONTENT_KEY + " system property to:\n" + System.getProperty(MP_CONFIG_CONTENT_KEY).indent(4));
     }
 
     @Override

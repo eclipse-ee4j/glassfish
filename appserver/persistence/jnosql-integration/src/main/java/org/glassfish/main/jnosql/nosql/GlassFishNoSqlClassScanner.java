@@ -62,7 +62,7 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implem
     @Override
     public Set<Class<?>> embeddables() {
         Set<Class<?>> result = findClassesWithAnnotation(Embeddable.class);
-        LOG.log(DEBUG, () -> "Detected JNoSql embeddables: " + result);
+        LOG.log(DEBUG, () -> "Detected NoSql embeddables: " + result);
         return result;
     }
 

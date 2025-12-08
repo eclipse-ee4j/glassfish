@@ -25,6 +25,8 @@ import java.util.Set;
 import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.jakartapersistence.mapping.metadata.JakartaPersistenceClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.persistence.jpa.JPADeployer;
@@ -58,6 +60,14 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
             return enabled;
         }
         return true;
+    }
+
+    private JPADeployer getJPADeployer() {
+        final ServiceLocator locator = Globals.getDefaultHabitat();
+        return locator != null
+                ? locator
+                        .getService(JPADeployer.class)
+                : null;
     }
 
     @Override

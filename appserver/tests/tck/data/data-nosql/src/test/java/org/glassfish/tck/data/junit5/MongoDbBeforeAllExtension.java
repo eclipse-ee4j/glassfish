@@ -30,7 +30,8 @@ import static org.glassfish.tck.data.arquillian.JakartaNoSqlProcessor.MP_CONFIG_
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Starts MongoDB docker container before all tests
+ * Starts MongoDB docker container before all tests and sets a system property with MP Config.
+ * This property is then used by an Arquillian extension to create microprofile-config.properties file to configure JNoSQL.
  *
  * @author Ondro Mihalyi
  */

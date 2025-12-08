@@ -25,6 +25,10 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 
 /**
+ * Adds all transitive dependencies of the JNoSQL Mongo driver to the test app.
+ *
+ * Maven build prepares all transitive dependencies and sets the value of the
+ * {@code jnosql.mongo.artifacts} system property to point to the directory with them.
  *
  * @author Ondro Mihalyi
  */

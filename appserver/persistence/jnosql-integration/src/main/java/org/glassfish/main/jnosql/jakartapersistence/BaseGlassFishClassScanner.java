@@ -29,15 +29,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
 import org.glassfish.hk2.classmodel.reflect.ParameterizedInterfaceModel;
-import org.glassfish.internal.api.Globals;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.main.jnosql.hk2types.Hk2TypesUtil;
-import org.glassfish.persistence.jpa.JPADeployer;
 
 import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
 
@@ -66,14 +63,6 @@ abstract public class BaseGlassFishClassScanner {
      */
     protected boolean isEnabled() {
         return true;
-    }
-
-    protected JPADeployer getJPADeployer() {
-        final ServiceLocator locator = Globals.getDefaultHabitat();
-        return locator != null
-                ? locator
-                        .getService(JPADeployer.class)
-                : null;
     }
 
     protected Set<Class<?>> findClassesWithAnnotation(Class<?> annotation) {

@@ -43,9 +43,7 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
  * Registers JNoSQL CDI beans that are needed for JNoSQL but not for Jakarta
  * Data over JPA
  *
- * TODO - veto JNoSQL CDI beans provided by the app if they conflict with beans
- * registered by this extension. If delegation is disabled, veto our beans
- * instead
+ * TODO - If classloader delegation is disabled, veto our beans if the app provides alternatives
  *
  * @author Ondro Mihalyi
  */

@@ -21,6 +21,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
+import jakarta.interceptor.Interceptor;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -31,7 +32,7 @@ import java.util.function.Function;
  */
 public final class CdiExtensionUtil {
 
-    public static final int INTEGRATION_BEANS_PRIORITY = 100;
+    public static final int INTEGRATION_BEANS_PRIORITY = Interceptor.Priority.PLATFORM_AFTER;
 
     private CdiExtensionUtil() {
         // utility class

@@ -15,7 +15,6 @@
  */
 package org.glassfish.main.jnosql.nosql;
 
-import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
@@ -23,13 +22,14 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
-import jakarta.interceptor.Interceptor;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.mapping.DatabaseQualifier;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
+import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
+import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
 import org.glassfish.main.jnosql.jakartapersistence.JakartaPersistenceIntegrationExtension;
@@ -51,10 +51,7 @@ public class JNoSqlIntegrationExtension implements Extension {
 
     private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
 
-    /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
-       before it's used there
-     */
-    void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+    void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
     }
@@ -66,8 +63,10 @@ public class JNoSqlIntegrationExtension implements Extension {
     private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
         List<BeanConfigurator<?>> configurations = List.of(
-                addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager),
-                addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager),
+                addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager)
+                    .addType(GroupEntityMetadata.class),
+                addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager)
+                    .addType(EntitiesMetadata.class),
                 addBean(GlassFishEntityConverter.class, afterBeanDiscovery, beanManager)
                         .types(EntityConverter.class),
                 addBean(EventPersistManager.class, afterBeanDiscovery, beanManager),

@@ -37,7 +37,6 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -53,7 +52,6 @@ import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
 import static com.sun.enterprise.universal.process.ProcessUtils.loadPid;
 import static com.sun.enterprise.universal.process.ProcessUtils.waitForNewPid;
 import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileIsAlive;
-import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileListening;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
@@ -350,35 +348,22 @@ public abstract class LocalServerCommand extends CLICommand {
      * Waits until server stops
      *
      * @param pid
-     * @param adminAddress
      * @param timeout can be null
      * @return remaining time
      * @throws CommandException if we time out.
      */
-    protected final Duration waitForStop(final Long pid, final HostAndPort adminAddress, final Duration timeout)
+    protected final Duration waitForStop(final long pid, final Duration timeout)
         throws CommandException {
-        LOG.log(DEBUG, "waitForStop(pid={0}, oldAdminAddress={1}, timeout={2})", pid, adminAddress, timeout);
-        final Instant start = Instant.now();
+        LOG.log(DEBUG, "waitForStop(pid={0}, timeout={1})", pid, timeout);
         final boolean printDots = !programOpts.isTerse();
-        final Duration portTimeout;
-        if (pid == null) {
-            portTimeout = timeout;
-        } else {
-            portTimeout = step("Waiting for process with pid " + pid + " to stop.", timeout,
-                () -> waitWhileIsAlive(pid, timeout, printDots));
-            if (ProcessUtils.isAlive(pid)) {
-                throw new CommandException("Timed out waiting for the server process to stop.");
-            }
+        final Duration remainingTimeout = step("Waiting for process with pid " + pid + " to stop.", timeout,
+            () -> waitWhileIsAlive(pid, timeout, printDots));
+        if (ProcessUtils.isAlive(pid)) {
+            throw new CommandException("Timed out waiting for the server process to stop.");
         }
-        if (adminAddress == null) {
-            return portTimeout;
-        }
-        final boolean portIsFree = waitWhileListening(adminAddress, portTimeout, printDots);
-        if (portIsFree) {
-            return timeout == null ? null : timeout.minus(Duration.between(start, Instant.now()));
-        }
-        throw new CommandException("Timed out waiting for the server to stop after " + timeout.toMillis() + " ms");
+        return remainingTimeout;
     }
+
 
     /**
      * Waits until server is running - with different pid

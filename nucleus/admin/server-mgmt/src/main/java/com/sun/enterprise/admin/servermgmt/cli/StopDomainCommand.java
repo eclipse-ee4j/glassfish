@@ -35,6 +35,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
+import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
 
 /**
  * The stop-domain command.
@@ -186,10 +187,19 @@ public class StopDomainCommand extends LocalDomainCommand {
     }
 
     private void localShutdown(Long pid, Duration stopTimeout, boolean printDots) throws CommandException {
+        final PortWatcher portWatcher = PortWatcher.watch(addr, printDots);
         final RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
         cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
         try {
-            waitForStop(pid, addr, stopTimeout);
+            final Duration portTimeout;
+            if (pid == null) {
+                portTimeout = stopTimeout;
+            } else {
+                portTimeout = step(null, stopTimeout, () -> waitForStop(pid, stopTimeout));
+            }
+            if (!portWatcher.get(portTimeout)) {
+                throw new CommandException("Timed out waiting for the server process to stop listening on " + addr);
+            }
         } catch (CommandException e) {
             // The domain server may have died so fast we didn't have time to
             // get the (always successful!!) return data.  This is NOT AN ERROR!
@@ -200,7 +210,6 @@ public class StopDomainCommand extends LocalDomainCommand {
                     LOG.log(Level.WARNING, "The stop-domain command timed out."
                         + " We will try to kill the process with PID " + prevPid);
                     ProcessUtils.kill(prevPid, stopTimeout, printDots);
-                    return;
                 } catch (Exception ex) {
                     e.addSuppressed(ex);
                 }

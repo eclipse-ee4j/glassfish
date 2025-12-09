@@ -75,8 +75,8 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
 
         final Duration timeout = getRestartTimeout();
         final Duration startTimeout;
-        if (isLocal()) {
-            startTimeout = step(null, timeout, () -> waitForStop(oldPid, null, timeout));
+        if (isLocal() && oldPid != null) {
+            startTimeout = step(null, timeout, () -> waitForStop(oldPid, timeout));
         } else {
             startTimeout = timeout;
         }

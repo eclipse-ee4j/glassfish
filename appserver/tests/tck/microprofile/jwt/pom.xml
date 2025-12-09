@@ -30,6 +30,12 @@
     <artifactId>glassfish-external-tck-microprofile-jwt</artifactId>
     <name>TCK: MicroProfile JWT</name>
     <description>Aggregates dependencies and runs the MicroProfile JWT TCK</description>
+    
+    <properties>
+        <!-- Needed in PublicKeyAsJWKLocationURLTest.createLocationURLDeployment() which cannot use regular injection -->
+        <glassfish.httpPort>8080</glassfish.httpPort>
+        <glassfish.baseUrl>http://localhost:${glassfish.httpPort}/</glassfish.baseUrl>
+    </properties>
 
     <dependencies>
         <!--  This is the MP-JWT TCK base extension and utility classes archive. -->
@@ -106,6 +112,7 @@
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.home}</glassfish.home>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
+                        <mp.jwt.tck.jwks.baseURL>${glassfish.baseUrl}</mp.jwt.tck.jwks.baseURL>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

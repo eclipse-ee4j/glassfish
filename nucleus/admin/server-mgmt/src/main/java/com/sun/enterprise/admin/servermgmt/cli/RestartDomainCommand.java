@@ -106,8 +106,8 @@ public class RestartDomainCommand extends StopDomainCommand {
 
         final Duration timeout = getRestartTimeout();
         final Duration startTimeout;
-        if (isLocal()) {
-            startTimeout = step(null, timeout, () -> waitForStop(oldPid, null, timeout));
+        if (isLocal() && oldPid != null) {
+            startTimeout = step(null, timeout, () -> waitForStop(oldPid, timeout));
         } else {
             startTimeout = timeout;
         }

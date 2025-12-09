@@ -9,11 +9,7 @@
 
     <container qualifier="arquillian-glassfish">
         <configuration>
-            <property name="debug">true</property>
             <property name="allowConnectingToRunningServer">false</property>
-            <property name="adminHost">localhost</property>
-            <property name="adminPort">4848</property>
-            <property name="enableDerby">${enableDerby:false}</property>
             <property name="outputToConsole">true</property>
         </configuration>
     </container>

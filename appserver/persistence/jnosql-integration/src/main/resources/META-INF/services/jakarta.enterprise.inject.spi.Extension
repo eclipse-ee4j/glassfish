@@ -1,2 +1,3 @@
-org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.JakartaPersistenceIntegrationExtension
+org.glassfish.main.jnosql.jakartapersistence.JakartaPersistenceIntegrationExtension
+org.glassfish.main.jnosql.nosql.JNoSqlIntegrationExtension
 org.eclipse.jnosql.jakartapersistence.mapping.spi.JakartaPersistenceExtension

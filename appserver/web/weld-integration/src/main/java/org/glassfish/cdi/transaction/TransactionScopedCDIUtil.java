@@ -63,7 +63,7 @@ public class TransactionScopedCDIUtil {
     }
 
     /* Copied from JSF */
-    public static Bean createHelperBean(BeanManager beanManager, Class beanClass) {
+    public static Bean createHelperBean(BeanManager beanManager, Class<?> beanClass) {
         BeanWrapper result = null;
         AnnotatedType annotatedType = beanManager.createAnnotatedType(beanClass);
         result = new BeanWrapper(beanClass);

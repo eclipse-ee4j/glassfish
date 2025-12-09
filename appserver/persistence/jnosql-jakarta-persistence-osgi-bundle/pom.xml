@@ -95,6 +95,7 @@
                             *;scope=compile|runtime
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
+                        <Embed-StripVersion>true</Embed-StripVersion>
                         <Export-Package>org.eclipse.jnosql.jakartapersistence.communication,*</Export-Package>
                     </instructions>
                 </configuration>
@@ -108,12 +109,12 @@
                 </executions>
             </plugin>
 
-            <!-- Unpack source JARs from dependencies -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <!-- Unpack source JARs from dependencies -->
                         <id>unpack-sources</id>
                         <phase>prepare-package</phase>
                         <goals>
@@ -127,6 +128,19 @@
                             <includeGroupIds>org.eclipse.jnosql.mapping,
                                 org.eclipse.jnosql.communication,
                                 ee.omnifish</includeGroupIds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Unpack dependencies to patch -->
+                        <id>unpack-to-patch</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/dependencies-to-patch</outputDirectory>
+                            <includeArtifactIds>jnosql-communication-query</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
                 </executions>
@@ -152,10 +166,85 @@
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>${basedir}/src/assembly/sources.xml</descriptor>
+                                <descriptor>${basedir}/src/main/assembly/sources.xml</descriptor>
                             </descriptors>
                             <attach>true</attach>
                             <finalName>${project.build.finalName}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile-jnosql-communication-query-patch</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <compileSourceRoots>${basedir}/src/patches/jnosql-communication-query/java</compileSourceRoots>
+                            <outputDirectory>${project.build.directory}/patched/jnosql-communication-query/classes</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b2</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>apply-patches</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:for="ant:for">
+                                <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="maven.plugin.classpath" />
+
+                                <macrodef name="jarupdate">
+                                    <attribute name="basedir"/>
+                                    <attribute name="destfile"/>
+                                    <sequential>
+                                        <fail message="File is missing: @{destfile}">
+                                            <condition>
+                                                <not>
+                                                    <available file="@{destfile}" />
+                                                </not>
+                                            </condition>
+                                        </fail>
+                                        <echo>PATCHING @{destfile}</echo>
+                                        <zip update="true" basedir="@{basedir}" destfile="@{destfile}" whenempty="fail" />
+                                    </sequential>
+                                </macrodef>
+
+                                <!-- Patch jnosql-communication-query -->
+                                <jarupdate basedir="${project.build.directory}/patched/jnosql-communication-query/classes" destfile="${project.build.directory}/dependencies-to-patch/jnosql-communication-query.jar" />
+
+                                <!-- Copy patched jnosql-communication-query into the final bundle -->
+                                <jarupdate basedir="${project.build.directory}/dependencies-to-patch" destfile="${project.build.directory}/${project.build.finalName}.jar" />
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

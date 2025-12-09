@@ -1,0 +1,18 @@
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian  https://www.jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    <defaultProtocol type="Servlet 6.0"/>
+
+    <engine>
+        <property name="deploymentExportPath">${project.build.directory}/deployments</property>
+    </engine>
+
+    <container qualifier="http" default="true">
+        <configuration>
+            <property name="httpsPortAsDefault">false</property>
+<!--                <property name="suspend">true</property>-->
+            <property name="enableDerby">true</property>
+        </configuration>
+    </container>
+!
+</arquillian>

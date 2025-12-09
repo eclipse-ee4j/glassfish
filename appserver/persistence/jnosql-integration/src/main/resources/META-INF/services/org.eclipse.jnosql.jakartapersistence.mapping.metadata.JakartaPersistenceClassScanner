@@ -1,1 +1,1 @@
-org.glassfish.main.jnosql.jakartapersistence.mapping.glassfishcontext.GlassFishJakartaPersistenceClassScanner
+org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner

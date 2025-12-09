@@ -125,6 +125,9 @@
         <jakarta.rest-api.version>4.0.0</jakarta.rest-api.version>
         <jersey.version>4.0.0</jersey.version>
 
+        <!-- Jakarta Persistence -->
+        <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
+
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.5</jakarta.mail-api.version>
         <angus.mail.version>2.0.5</angus.mail.version>
@@ -337,6 +340,13 @@
                 <version>${jersey.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Jakarta Persistence -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>${jakarta.persistence-api.version}</version>
             </dependency>
 
             <!-- Jakarta Mail -->
@@ -722,6 +732,12 @@
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-suite-engine</artifactId>
+                <version>${junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
                 <version>${junit-platform.version}</version>
                 <scope>test</scope>
             </dependency>

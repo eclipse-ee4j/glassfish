@@ -33,7 +33,7 @@
 
     <properties>
         <tck.artifactFileName>jakarta-security-tck-4.0.1.zip</tck.artifactFileName>
-        <tck.artifactUrl>https://download.eclipse.org/security/jakartaee10/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
+        <tck.artifactUrl>https://download.eclipse.org/security/jakartaee11/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>

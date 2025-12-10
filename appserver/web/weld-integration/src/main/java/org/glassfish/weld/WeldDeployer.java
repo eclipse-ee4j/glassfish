@@ -29,6 +29,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 
 import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.inject.Inject;
@@ -183,7 +184,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
     @Override
     public MetaData getMetaData() {
-        return new MetaData(true, null, new Class[] { Application.class });
+        return new MetaData(true, new Class[] {CDI.class}, new Class[] { Application.class });
     }
 
     @Override

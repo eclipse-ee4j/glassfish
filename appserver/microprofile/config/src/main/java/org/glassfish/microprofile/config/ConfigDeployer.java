@@ -17,8 +17,11 @@ package org.glassfish.microprofile.config;
 
 import io.helidon.microprofile.config.ConfigCdiExtension;
 
+import jakarta.enterprise.inject.spi.CDI;
+
 import java.util.ServiceLoader;
 
+import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.ApplicationContainer;
@@ -35,7 +38,7 @@ public class ConfigDeployer implements Deployer {
 
     @Override
     public MetaData getMetaData() {
-        return null;
+        return new MetaData(true, new Class[] {Config.class}, new Class[] {CDI.class});
     }
 
     @Override

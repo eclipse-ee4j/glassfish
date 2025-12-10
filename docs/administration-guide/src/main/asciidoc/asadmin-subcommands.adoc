@@ -140,9 +140,9 @@ xref:reference-manual.adoc#osgi[`osgi`]::
   Remote Shell Commands].
 xref:reference-manual.adoc#osgi-shell[`osgi-shell`]::
   Provides interactive access to the Apache Felix Gogo remote shell for
-  the execution of OSGi shell commands. For procedural information in
-  this guide, see xref:overview.adoc#to-run-apache-felix-gogo-remote-shell-commands[To Run Apache Felix Gogo
-  Remote Shell Commands].
+    the execution of OSGi shell commands. For procedural information in
+    this guide, see xref:overview.adoc#to-run-apache-felix-gogo-remote-shell-commands[To Run Apache Felix Gogo
+    Remote Shell Commands].
 xref:reference-manual.adoc#set[`set`]::
   Sets the values of one or more configurable attributes. For procedural
   information in this guide, see xref:monitoring.adoc#configuring-monitoring[Configuring

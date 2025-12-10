@@ -162,7 +162,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
             Class<?> messageListenerType_1 = messageListenerType_;
             if (isModernMessageListener(messageListenerType_1)) {
                 // Generate interface and subclass for EJB 3.2 No-interface MDB VIew
-                MessageBeanInterfaceGenerator generator = new MessageBeanInterfaceGenerator(classLoader);
+                MessageBeanInterfaceGenerator generator = new MessageBeanInterfaceGenerator();
                 messageBeanInterface = generator.generateMessageBeanInterface(beanClass);
                 messageBeanSubClass = generator.generateMessageBeanSubClass(beanClass, messageBeanInterface);
             }

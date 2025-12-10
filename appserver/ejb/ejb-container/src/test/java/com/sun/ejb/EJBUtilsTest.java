@@ -71,7 +71,7 @@ public class EJBUtilsTest {
         Class<?> newClass = EJBUtils.loadGeneratedGenericEJBHomeClass(loader, GeneratorTestExperiment.class);
         assertNotNull(newClass);
         assertTrue(newClass.isInterface());
-        assertEquals("com.sun.ejb.codegen.GenericEJBHome_Generated", newClass.getName());
+        assertEquals(GeneratorTestExperiment.class.getPackageName() + ".GenericEJBHome_Generated", newClass.getName());
         assertSame(newClass, factory.ensureGenericHome(GeneratorTestExperiment.class));
     }
 

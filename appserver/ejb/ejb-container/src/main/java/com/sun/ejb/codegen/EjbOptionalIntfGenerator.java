@@ -66,26 +66,25 @@ public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
     private static final String DELEGATE_FIELD_NAME = "__ejb31_delegate";
 
     private final Map<String, byte[]> classMap = new HashMap<>();
-    private final ClassLoader loader;
     private ProtectionDomain protectionDomain;
 
-    public EjbOptionalIntfGenerator(ClassLoader loader) {
-        this.loader = loader;
+    public EjbOptionalIntfGenerator() {
     }
 
-    public Class<?> loadClass(final String name) throws ClassNotFoundException {
+    public Class<?> loadClass(final String className, final Class<?> anchorClass) throws ClassNotFoundException {
         Class<?> clz = null;
+        ClassLoader loader = anchorClass.getClassLoader();
         try {
-            clz = loader.loadClass(name);
+            clz = loader.loadClass(className);
         } catch (ClassNotFoundException cnfe) {
-            final byte[] classData = classMap.get(name);
+            final byte[] classData = classMap.get(className);
             if (classData != null) {
-                PrivilegedAction<Class<?>> action = () -> defineClass(loader, name, classData, protectionDomain);
+                PrivilegedAction<Class<?>> action = () -> defineClass(loader, anchorClass, anchorClass.getPackageName(), className, classData);
                 clz = AccessController.doPrivileged(action);
             }
         }
         if (clz == null) {
-            throw new ClassNotFoundException(name);
+            throw new ClassNotFoundException(className);
         }
         return clz;
     }

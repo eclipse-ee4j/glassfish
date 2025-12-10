@@ -81,7 +81,7 @@ public class AsmSerializableBeanGenerator extends BeanGeneratorBase {
         cw.visitEnd();
 
         PrivilegedAction<Class<?>> action =
-                () -> defineClass(loader, subClassName, cw.toByteArray(), superClass.getProtectionDomain());
+                () -> defineClass(loader, superClass, getPackageName(subClassName), subClassName, cw.toByteArray());
 
         return AccessController.doPrivileged(action);
     }

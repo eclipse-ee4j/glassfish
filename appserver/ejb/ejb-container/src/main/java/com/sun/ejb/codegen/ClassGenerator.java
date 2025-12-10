@@ -20,11 +20,9 @@ import com.sun.enterprise.loader.ASURLClassLoader;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -45,29 +43,6 @@ import static java.util.logging.Level.CONFIG;
 public final class ClassGenerator {
 
     private static final Logger LOG = Logger.getLogger(ClassGenerator.class.getName());
-
-    private static Method defineClassMethod;
-    private static Method defineClassMethodSM;
-
-    static {
-        try {
-            final PrivilegedExceptionAction<Void> action = () -> {
-                final Class<?> cl = Class.forName("java.lang.ClassLoader");
-                final String name = "defineClass";
-                defineClassMethod = cl.getDeclaredMethod(name, String.class, byte[].class, int.class, int.class);
-                defineClassMethod.setAccessible(true);
-                defineClassMethodSM = cl.getDeclaredMethod(
-                    name, String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
-                defineClassMethodSM.setAccessible(true);
-                return null;
-            };
-            AccessController.doPrivileged(action);
-            LOG.config("ClassLoader methods capable of generating classes were successfully detected.");
-        } catch (final Exception e) {
-            throw new Error("Could not initialize access to ClassLoader.defineClass method.", e);
-        }
-    }
-
 
     private ClassGenerator() {
         // hidden
@@ -103,12 +78,17 @@ public final class ClassGenerator {
     /**
      * Calls the {@link Lookup}'s defineClass method to create a new class.
      *
+     * In most cases, use {@link #defineClass(java.lang.ClassLoader, java.lang.Class, java.lang.String, java.lang.String, byte[])}
+     * instead. That method is safe to use even in cases that are not compatible with the Java module system.
+     * This method should be called only if the packages of `anchorClass` and `className` are the same.
+     *
      * @param anchorClass the class used as an "orientation" class. See the {@link Lookup} class for more info.
-     * @param className expected binary name or null
+     * @param className expected binary name or null. Must have the same package as `anchorClass`
      * @param classData the valid bytes that make up the class data.
      * @return the new generated class
      * @throws ClassDefinitionException invalid data, missing dependency, or another error related
      *             to the class generation
+     *
      */
     public static Class<?> defineClass(final Class<?> anchorClass, final String className, final byte[] classData) {
         LOG.log(CONFIG, "Defining class: {0} with anchorClass: {1}", new Object[] {className, anchorClass});
@@ -133,7 +113,12 @@ public final class ClassGenerator {
      * @return the new generated class
      * @throws ClassDefinitionException invalid data, missing dependency, or another error related
      *             to the class generation
+     *
+     * @deprecated Use {@link #defineClass(java.lang.ClassLoader, java.lang.Class, java.lang.String, java.lang.String, byte[])}
+     * or {@link #defineClass(java.lang.Class, java.lang.String, byte[])} methods instead.
+     * Those methods support the Java Module system.
      */
+    @Deprecated
     public static Class<?> defineClass(final ClassLoader loader, final String className, final byte[] classData)
         throws ClassDefinitionException {
         return defineClass(loader, className, classData, 0, classData.length);
@@ -151,13 +136,17 @@ public final class ClassGenerator {
      * @return the new generated class
      * @throws ClassDefinitionException invalid data, missing dependency, or another error related
      *             to the class generation
+     * @deprecated Use {@link #defineClass(java.lang.ClassLoader, java.lang.Class, java.lang.String, java.lang.String, byte[])}
+     * or {@link #defineClass(java.lang.Class, java.lang.String, byte[])} methods instead.
+     * Those methods support the Java Module system.
      */
+    @Deprecated
     public static Class<?> defineClass(final ClassLoader loader, final String className, final byte[] classData,
         final int offset, final int length) throws ClassDefinitionException {
         LOG.log(CONFIG, "Defining class: {0} by loader: {1}", new Object[] {className, loader});
         final PrivilegedAction<Class<?>> action = () -> {
             try {
-                return (Class<?>) defineClassMethod.invoke(loader, className, classData, 0, length);
+                return (Class<?>) ClassLoaderMethods.defineClassMethod.invoke(loader, className, classData, 0, length);
             } catch (final Exception | NoClassDefFoundError | ClassFormatError e) {
                 throw new ClassDefinitionException(className, loader, e);
             }
@@ -176,7 +165,11 @@ public final class ClassGenerator {
      * @return the new generated class
      * @throws ClassDefinitionException invalid data, missing dependency, or another error related
      *             to the class generation
+     * @deprecated Use {@link #defineClass(java.lang.ClassLoader, java.lang.Class, java.lang.String, java.lang.String, byte[])}
+     * or {@link #defineClass(java.lang.Class, java.lang.String, byte[])} methods instead.
+     * Those methods support the Java Module system.
      */
+    @Deprecated
     public static Class<?> defineClass(final ClassLoader loader, final String className, final byte[] classData,
         final ProtectionDomain protectionDomain) throws ClassDefinitionException {
         return defineClass(loader, className, classData, 0, classData.length, protectionDomain);
@@ -195,7 +188,11 @@ public final class ClassGenerator {
      * @return the new generated class
      * @throws ClassDefinitionException invalid data, missing dependency, or another error related
      *             to the class generation
+     * @deprecated Use {@link #defineClass(java.lang.ClassLoader, java.lang.Class, java.lang.String, java.lang.String, byte[])}
+     * or {@link #defineClass(java.lang.Class, java.lang.String, byte[])} methods instead.
+     * Those methods support the Java Module system.
      */
+    @Deprecated
     public static Class<?> defineClass(
         final ClassLoader loader, final String className,
         final byte[] classData, final int offset, final int length,
@@ -203,7 +200,7 @@ public final class ClassGenerator {
         LOG.log(CONFIG, "Defining class: {0} by loader: {1}", new Object[] {className, loader});
         final PrivilegedAction<Class<?>> action = () -> {
             try {
-                return (Class<?>) defineClassMethodSM.invoke(loader, className, classData, 0, length, protectionDomain);
+                return (Class<?>) ClassLoaderMethods.defineClassMethodSM.invoke(loader, className, classData, 0, length, protectionDomain);
             } catch (final Exception | NoClassDefFoundError | ClassFormatError e) {
                 throw new ClassDefinitionException(className, loader, e);
             }
@@ -236,7 +233,7 @@ public final class ClassGenerator {
         }
         // The bootstrap CL used by embedded glassfish doesn't remember generated classes
         // Further ClassLoader.findClass calls will fail.
-        if (anchorClass == null || loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
+        if (anchorClass == null || loader.getClass() == ASURLClassLoader.class) {
             return false;
         }
         // Use MethodHandles.Lookup only if the anchor class has the same package

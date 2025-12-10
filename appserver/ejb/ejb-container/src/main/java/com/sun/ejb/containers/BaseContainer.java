@@ -641,9 +641,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 addToGeneratedMonitoredMethodInfo(clz);
 
                 this.optIntfClassName = EJBUtils.getGeneratedOptionalInterfaceName(ejbClass.getName());
-                optIntfClassLoader = new EjbOptionalIntfGenerator(loader);
+                optIntfClassLoader = new EjbOptionalIntfGenerator();
                 optIntfClassLoader.generateOptionalLocalInterface(ejbClass, optIntfClassName);
-                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optIntfClassName);
+                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optIntfClassName, ejbClass);
             }
 
             if (isStatelessSession || isSingleton) {
@@ -1321,7 +1321,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 ejbOptionalLocalBusinessHomeProxyInterfaces[0] = IndirectlySerializable.class;
 
                 String optionalIntfName = EJBUtils.getGeneratedOptionalInterfaceName(ejbClass.getName());
-                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optionalIntfName);
+                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optionalIntfName, ejbClass);
                 ejbOptionalLocalBusinessHomeProxyInterfaces[1] = ejbGeneratedOptionalLocalBusinessIntfClass;
 
                 // Portable JNDI name for no-interface view.
@@ -3051,7 +3051,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                 // Process generated Optional Local Business interface
                 String optClassName = EJBUtils.getGeneratedOptionalInterfaceName(ejbClass.getName());
-                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optClassName);
+                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optClassName, ejbClass);
                 Method[] methods = ejbGeneratedOptionalLocalBusinessIntfClass.getMethods();
                 for (Method method : methods) {
                     addInvocationInfo(method, MethodDescriptor.EJB_LOCAL, ejbGeneratedOptionalLocalBusinessIntfClass, false, true);
@@ -3334,9 +3334,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
         optIntfClassLoader.generateOptionalLocalInterfaceSubClass(ejbClass, beanSubClassName, ejbGeneratedOptionalLocalBusinessIntfClass);
 
-        optIntfClassLoader.loadClass(ejbGeneratedOptionalLocalBusinessIntfClass.getName());
+        optIntfClassLoader.loadClass(ejbGeneratedOptionalLocalBusinessIntfClass.getName(), ejbClass);
 
-        Class subClass = optIntfClassLoader.loadClass(beanSubClassName);
+        Class subClass = optIntfClassLoader.loadClass(beanSubClassName, ejbClass);
         OptionalLocalInterfaceProvider provider = (OptionalLocalInterfaceProvider) subClass.getConstructor().newInstance();
         provider.setOptionalLocalIntfProxy(proxy);
         localBusinessObjImpl.mapClientObject(ejbClass.getName(), provider);

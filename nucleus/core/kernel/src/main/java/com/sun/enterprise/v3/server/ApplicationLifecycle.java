@@ -953,7 +953,6 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         if (results.contains(deployer)) {
             return;
         }
-        results.add(deployer);
         if (deployer.getMetaData() != null) {
             for (Class<?> required : deployer.getMetaData().requires()) {
                 if (dc.getModuleMetaData(required) != null) {
@@ -976,17 +975,17 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 }
             }
         }
+        results.add(deployer);
     }
 
     private void addRecursively(LinkedList<ApplicationMetaDataProvider<?>> results,
             Map<Class<?>, ApplicationMetaDataProvider<?>> providers, ApplicationMetaDataProvider<?> provider) {
-        results.addFirst(provider);
-
         for (Class<?> type : provider.getMetaData().requires()) {
             if (providers.containsKey(type)) {
                 addRecursively(results, providers, providers.get(type));
             }
         }
+        results.addFirst(provider);
     }
 
     @Override

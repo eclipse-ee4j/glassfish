@@ -161,8 +161,8 @@ public class SnifferManagerImpl implements SnifferManager {
         }
         for (String annotationName : annotationNames) {
             Type type = types.getBy(annotationName);
-            if (type instanceof AnnotationType) {
-                Collection<AnnotatedElement> elements = ((AnnotationType) type).allAnnotatedTypes();
+            if (type instanceof AnnotationType annotationType) {
+                Collection<AnnotatedElement> elements = annotationType.allAnnotatedTypes();
                 for (AnnotatedElement element : elements) {
                     if (checkPath) {
                         final Type t = getDeclaringType(element);

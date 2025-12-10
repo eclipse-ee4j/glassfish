@@ -125,7 +125,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.1</version>
                     <configuration>
                         <!--
                             If the war contains just REST services and no servlets,

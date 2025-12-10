@@ -165,6 +165,7 @@
         <antlr2.version>2.7.7</antlr2.version>
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
+        <!-- Warning: updating Ant to e.g. 1.10.5 will cause ElementStarITest.testLoadBalancerConfigs to fail -->
         <ant.version>1.10.2</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
         <jackson.version>2.20.1</jackson.version>
@@ -890,7 +891,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -961,7 +962,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -1135,11 +1136,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
                     </configuration>
@@ -1151,7 +1152,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.6.2</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1161,7 +1162,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.8.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -1178,7 +1179,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -1279,24 +1280,812 @@
                                 <!--
                                    Exclude several versions that we never want to update to since they are OLDER than
                                    what we currently use.
-
-                                   Note that we actually want to specify the version per artefact, but this is currently
-                                   broken.
-                                   See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
                                 -->
-                                <ignoredVersions>3.2-b..,2.5.0-b..,5.0-jdk8-rc.,20030911,10.0-b..</ignoredVersions>
-
                                 <ruleSet>
                                     <rules>
+                                        <rule>
+                                            <groupId>antlr</groupId>
+                                            <artifactId>antlr</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>20030911</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.external</groupId>
+                                            <artifactId>ant</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>3.2-b..</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>10.0-b..</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.hk2</groupId>
+                                            <artifactId>osgi-resource-locator</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>2.5.0-b..</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>2.4.0</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+                                        <rule>
+                                            <groupId>org.glassfish.external</groupId>
+                                            <artifactId>ant</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2,)</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <!-- Jakarta EE 12 major versions to exclude -->
+                                        <rule>
+                                            <groupId>jakarta.activation</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.annotation</groupId>
+                                            <artifactId>jakarta.annotation-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.authentication</groupId>
+                                            <artifactId>jakarta.authentication-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.authorization</groupId>
+                                            <artifactId>jakarta.authorization-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.security.enterprise</groupId>
+                                            <artifactId>jakarta.security.enterprise-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.data</groupId>
+                                            <artifactId>jakarta.data-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[1.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.enterprise</groupId>
+                                            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.el</groupId>
+                                            <artifactId>jakarta.el-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[6.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.nosql</groupId>
+                                            <artifactId>jakarta.nosql-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[1.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.servlet</groupId>
+                                            <artifactId>jakarta.servlet-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[6.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.servlet.jsp</groupId>
+                                            <artifactId>jakarta.servlet.jsp-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.servlet.jsp.jstl</groupId>
+                                            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.validation</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.faces</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[5.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.enterprise.concurrent</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.interceptor</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.3,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.websocket</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.3,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.persistence</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.3,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-B.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.platform</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[12.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.enterprise</groupId>
+                                            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*CR.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*RC.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Beta.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Alpha.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.enterprise</groupId>
+                                            <artifactId>jakarta.enterprise.lang-model</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*CR.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*RC.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Beta.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Alpha.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.ws.rs</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.mail</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.3,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.mvc</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish</groupId>
+                                            <artifactId>jakarta.enterprise.concurrent</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.jsftemplating</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.grizzly</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.hk2</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.jersey</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.expressly</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[6.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.tyrus</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.3,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.wasp</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.soteria</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.epicyro</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish.exousia</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.glassfish</groupId>
+                                            <artifactId>jakarta.faces</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.2,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
                                         <rule>
                                             <groupId>org.glassfish.main</groupId>
                                             <ignoreVersions>
                                                 <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[9.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
                                                     <type>regex</type>
-                                                    <version>8.0.0-JDK17-M.*</version>
+                                                    <version>.*-M.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
+
+                                        <rule>
+                                            <groupId>org.eclipse.angus</groupId>
+                                            <artifactId>angus-activation</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.eclipse.microprofile.jwt</groupId>
+                                            <artifactId>microprofile-jwt-auth-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.3,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.eclipse.angus</groupId>
+                                            <artifactId>angus-mail</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[2.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.hibernate.validator</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[10.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*CR.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Beta.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Alpha.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.jboss.weld</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[7.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*CR.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Beta.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*Alpha.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>io.helidon.microprofile.config</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[5.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                                 <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-BETA.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-ALPHA.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.omnifaces</groupId>
+                                            <artifactId>microprofile-jwt-auth</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>org.slf4j</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
                                     </rules>
                                 </ruleSet>
                             </configuration>
@@ -1668,7 +2457,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.13</jacoco.version>
+                <jacoco.version>0.8.14</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

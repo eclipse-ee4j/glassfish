@@ -873,6 +873,17 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <!--
+                         osgiversion-maven-plugin is used implicitly in modules
+                         of glassfish-jar packaging, as configured by
+                         glassfish-build-maven-plugin (GlassFishJarLifecycle.java).
+                         Managing it here allows its version to be under control.
+                    -->
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>osgiversion-maven-plugin</artifactId>
+                    <version>${hk2.plugin.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>consolidatedbundle-maven-plugin</artifactId>
                     <version>${hk2.plugin.version}</version>

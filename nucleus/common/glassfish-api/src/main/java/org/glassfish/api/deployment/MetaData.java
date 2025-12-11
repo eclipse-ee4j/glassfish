@@ -69,9 +69,11 @@ public class MetaData {
     }
 
     /**
-     * Returns the list of types of metadata this deployer will require to run successfully the prepare method.
+     * Returns the list of types of metadata this deployer will optionally require to run successfully the prepare method.
+     * If no provider provides the type, the metadata will not be available. If any provider provides the type,
+     * that provider will be loaded before the provider that requires it.
      *
-     * @return list of metadata required type;
+     * @return list of types of optionally required metadata
      */
     public Class<?>[] requires() {
         if (requires == null) {

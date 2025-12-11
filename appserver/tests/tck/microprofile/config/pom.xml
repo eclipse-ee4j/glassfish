@@ -99,6 +99,9 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <dependenciesToScan>
+                        <dependency>org.eclipse.microprofile.config:microprofile-config-tck</dependency>
+                    </dependenciesToScan>
 
                     <!-- Required for org.eclipse.microprofile.config.tck.CDIPropertyNameMatchingTest -->
                     <environmentVariables>

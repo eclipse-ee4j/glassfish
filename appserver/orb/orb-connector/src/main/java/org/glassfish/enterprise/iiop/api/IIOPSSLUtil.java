@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,10 @@
 
 package org.glassfish.enterprise.iiop.api;
 
+import com.sun.corba.ee.spi.transport.SocketInfo;
+
 import java.security.SecureRandom;
+import java.util.List;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
@@ -24,6 +28,7 @@ import javax.net.ssl.TrustManager;
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
+
 /**
  * This class tries to avoid the need for orb-iiop to
  * depend on some security modules for getting SSL related info
@@ -31,12 +36,9 @@ import org.omg.PortableInterceptor.IORInfo;
  */
 @Contract
 public interface IIOPSSLUtil {
-    public Object getAppClientSSL();
-    public void setAppClientSSL(Object ssl);
-    public KeyManager[] getKeyManagers(String certNickname);
-    public TrustManager[] getTrustManagers();
-    public SecureRandom getInitializedSecureRandom();
-    public Object getSSLPortsAsSocketInfo(Object ior);
-    public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, Object socketInfos);
-
+    KeyManager[] getKeyManagers(String certNickname);
+    TrustManager[] getTrustManagers();
+    SecureRandom getInitializedSecureRandom();
+    List<SocketInfo> getSSLPortsAsSocketInfo(com.sun.corba.ee.spi.ior.IOR ior);
+    TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,7 +60,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
             */
             _iiopUtils = Globals.getDefaultHabitat().getService(IIOPUtils.class);
             Collection<org.glassfish.grizzly.config.dom.ThreadPool> tpCol = _iiopUtils.getAllThreadPools();
-            org.glassfish.grizzly.config.dom.ThreadPool[] allThreadPools = tpCol.toArray(new org.glassfish.grizzly.config.dom.ThreadPool[tpCol.size()]);
+            org.glassfish.grizzly.config.dom.ThreadPool[] allThreadPools = tpCol.toArray(org.glassfish.grizzly.config.dom.ThreadPool[]::new);
             for (int i = 0; i < allThreadPools.length; i++) {
                 createThreadPools(allThreadPools[i], i);
             }

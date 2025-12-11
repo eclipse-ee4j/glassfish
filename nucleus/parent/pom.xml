@@ -94,6 +94,19 @@
             </snapshots>
         </repository>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>central-snapshots</id>
+            <name>Maven Central Snapshots</name>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
@@ -147,7 +160,7 @@
 
         <!-- ORB -->
         <pfl.version>5.1.0</pfl.version>
-        <glassfish-corba.version>5.0.0</glassfish-corba.version>
+        <glassfish-corba.version>5.1.0-SNAPSHOT</glassfish-corba.version>
         <gmbal.version>4.1.0</gmbal.version>
 
         <shoal.version>3.1.0</shoal.version>

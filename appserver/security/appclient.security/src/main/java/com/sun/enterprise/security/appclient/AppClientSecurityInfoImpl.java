@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.security.appclient;
 
+import com.sun.enterprise.iiop.security.IIOPSSLUtilImpl;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;
 import com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo;
@@ -41,7 +42,6 @@ import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.Ssl;
 import org.glassfish.appclient.client.acc.config.TargetServer;
-import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
 import org.jvnet.hk2.annotations.Service;
 
@@ -68,7 +68,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
     private List<MessageSecurityConfig> msgSecConfigs;
 
     @Inject
-    protected SSLUtils sslUtils;
+    private SSLUtils sslUtils;
 
     @Inject
     private SecurityServicesUtil securityServicesUtil;
@@ -77,7 +77,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
     private Util util;
 
     @Inject
-    private IIOPSSLUtil appClientSSLUtil;
+    private IIOPSSLUtilImpl appClientSSLUtil;
 
     @Override
     public void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> configs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth) {
@@ -85,10 +85,10 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         // Security init
         this.isJWS = isJWS;
         this.useGUIAuth = useGUIAuth;
-        if (handler != null) {
-            this.callbackHandler = handler;
-        } else {
+        if (handler == null) {
             this.callbackHandler = new LoginCallbackHandler(useGUIAuth);
+        } else {
+            this.callbackHandler = handler;
         }
         this.targetServers = tServers;
         this.msgSecConfigs = configs;
@@ -181,9 +181,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
 
             }
 
-            // XXX do not use NSS in this release
-            sslUtils.setAppclientSsl(convert(ssl));
-            this.appClientSSLUtil.setAppClientSSL(convert(ssl));
+            this.sslUtils.setAppclientSsl(convert(ssl));
         } catch (Exception ex) {
             LOG.log(ERROR, "setSSLData failed.", ex);
         }

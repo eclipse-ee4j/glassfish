@@ -143,7 +143,6 @@ import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
 import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
 import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
 import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
-import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
 
 /**
  * Application Loader is providing useful methods to load applications
@@ -966,7 +965,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 } else {
                     ApplicationMetaDataProvider<?> provider = typeByProvider.get(required);
                     if (provider == null) {
-                        LOG.log(SEVERE, inconsistentLifecycleState, required);
+                        LOG.log(FINE, () -> "Nothing is providing " + required + ", this should be treated as an optional dependny");
                     } else {
                         LinkedList<ApplicationMetaDataProvider<?>> providers = new LinkedList<>();
 

@@ -965,7 +965,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 } else {
                     ApplicationMetaDataProvider<?> provider = typeByProvider.get(required);
                     if (provider == null) {
-                        LOG.log(FINE, () -> "Nothing is providing " + required + ", this should be treated as an optional dependny");
+                        LOG.log(FINE, () -> "Nothing is providing " + required + ", this should be treated as an optional dependancy");
                     } else {
                         LinkedList<ApplicationMetaDataProvider<?>> providers = new LinkedList<>();
 

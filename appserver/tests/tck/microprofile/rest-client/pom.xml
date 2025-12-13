@@ -153,6 +153,10 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <dependenciesToScan>
+                        <dependency>org.eclipse.microprofile.rest.client:microprofile-rest-client-tck</dependency>
+                    </dependenciesToScan>
+                
                     <systemPropertyVariables>
                         <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
                         <ee.omnifish.arquillian.prependDeploySequence>true</ee.omnifish.arquillian.prependDeploySequence>

@@ -888,10 +888,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                             serviceName = deployer.getClass().getSimpleName();
                         }
 
-                        report.failure(LOG, serviceName + " deployer requires " + dependency + " but no other deployer provides it",
-                                null);
-
-                        return null;
+                        LOG.log(WARNING, serviceName + " deployer requires " + dependency + " but no other deployer provides it");
                     }
                 }
             }

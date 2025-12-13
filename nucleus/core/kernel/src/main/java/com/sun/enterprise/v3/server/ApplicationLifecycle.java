@@ -893,7 +893,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     deployer.loadMetaData(null, context);
                 } else {
                     Class<?>[] provides = metadata.provides();
-                    if (provides == null || provides.length == 0) {
+                    if (isEmpty(provides)) {
                         deployer.loadMetaData(null, context);
                     } else {
                         for (Class<?> provide : provides) {
@@ -942,10 +942,11 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
     private boolean areSomeContainersNotStarted(final String[] containerNames) {
         for (String containerName : containerNames) {
-            if (null == containerRegistry.getContainer(containerName)) {
+            if (containerRegistry.getContainer(containerName) == null) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -955,6 +956,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         if (results.contains(deployer)) {
             return;
         }
+
         if (deployer.getMetaData() != null) {
             for (Class<?> required : deployer.getMetaData().requires()) {
                 if (dc.getModuleMetaData(required) != null) {

@@ -340,17 +340,7 @@ class JarFileManager implements Closeable {
         LOG.log(DEBUG, "JAR files were closed.");
     }
 
-    private static void closeJarFileViaURL(final File file) {
-        try {
-            JarURLConnection jarURLConnection = openJarRoot(file.toPath());
-            jarURLConnection.setUseCaches(true);
 
-            jarURLConnection.getJarFile()
-                            .close();
-        } catch (IOException e) {
-            LOG.log(WARNING, "Could not close the jarFile " + file, e);
-        }
-    }
 
     public static JarURLConnection openJarRoot(Path jarPath) throws IOException {
         // Make URL of the form: jar:file:/.../x.jar!/
@@ -361,17 +351,42 @@ class JarFileManager implements Closeable {
     }
 
     private static void closeJarResource(final JarResource jarResource) {
-        // We need to close the Jar file via its URL, so we get hold
-        // of the potentially cached version. Caching of jarFiles in the
-        // OpenJDK is done by sun.net.www.protocol.jar.JarFileFactory
+        // We need to try to close the Jar file via its URL first, so we can release
+        // a potentially cached version.
+
+        // Caching of jarFiles in the OpenJDK is done by
+        // "sun.net.www.protocol.jar.JarFileFactory"
+        //
         // Of course this is an implementation detail, but in the Open JDK
         // it has worked like this for a long time and will likely stay for
         // some time to come.
-        closeJarFileViaURL(jarResource.file);
+        try {
+            JarURLConnection jarURLConnection = openJarRoot(jarResource.file.toPath());
+
+            // We set use caches specifically to true, so we get the cached jarFile (see below)
+            // if any jar file was cached.
+            jarURLConnection.setUseCaches(true);
+
+            // This one has to return the cached jarFile. Once we have the actual cached
+            // jarFile (and not a new instance that just happens to point to the same jar on disk),
+            // we can clean it from the cache.
+            //
+            // Although, again, an implementation detail, this is because the actual cached
+            // instance has a listener attached:
+            // "sun.net.www.protocol.jar.URLJarFile.URLJarFileCloseController"
+            //
+            // This listener is capable of clearing the cache.
+            jarURLConnection.getJarFile()
+                            .close();
+
+        } catch (IOException e) {
+            LOG.log(WARNING, "Could not close the jarFile " + jarResource.file, e);
+        }
+
 
         try {
-            // Also close the jar file in the conventional way. Noop if
-            // closeJarFileViaURL already did its work.
+            // Also close the jar file in the conventional way. NOOP if
+            // the code above already did its work.
             jarResource.jarFile.close();
         } catch (IOException e) {
             LOG.log(WARNING, "Could not close the jarFile " + jarResource.jarFile, e);

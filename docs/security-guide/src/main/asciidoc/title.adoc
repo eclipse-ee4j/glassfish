@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Security Guide, Release 7
+title={productName} Security Guide, Release 8
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Security Guide, Release 7
+= {productName} Security Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Security Guide
 
-Release 7
+Release 8
 
 Contributed 2018 - 2024
 
@@ -23,7 +23,7 @@ This book provides instructions for configuring and administering
 
 '''''
 
-{productName} Security Guide, Release 7
+{productName} Security Guide, Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

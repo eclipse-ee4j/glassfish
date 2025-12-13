@@ -15,8 +15,8 @@ message layer security for web services in the {productName} environment.
 
 [NOTE]
 ====
-Message security (JSR 196) is supported only in the Full Platform
-Profile of {productName}, not in the Web Profile.
+Message security (Jakarta Authentication) is supported only in both the Full Platform
+Profile of {productName}, as in the Web Profile.
 ====
 
 The following topics are addressed here:

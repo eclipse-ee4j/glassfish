@@ -37,12 +37,15 @@
     <properties>
         <site.output.dir>${project.build.directory}/staging</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
+        
         <!-- the directory where the current snapshot is published -->
         <docs.snapshot.dir>${site.output.dir}/docs/SNAPSHOT</docs.snapshot.dir>
+        
         <!-- add a new property for each new release -->
         <docs.5x.dir>${site.output.dir}/docs/${glassfish.version.5x}</docs.5x.dir>
         <docs.6x.dir>${site.output.dir}/docs/${glassfish.version.6x}</docs.6x.dir>
         <docs.7x.dir>${site.output.dir}/docs/${glassfish.version.7x}</docs.7x.dir>
+        <docs.8x.dir>${site.output.dir}/docs/${glassfish.version.8x}</docs.8x.dir>
     </properties>
 
     <build>
@@ -69,6 +72,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    
                     <!--
                         Get the collection of documentation for
                         the current (under development) release.
@@ -91,6 +95,29 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    
+                    <!--
+                        Get the collection of documentation for the 8.x release.
+                    -->
+                    <execution>
+                        <id>get-8x</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>META-INF/**</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.docs</groupId>
+                                    <artifactId>glassfish-documentation</artifactId>
+                                    <version>${glassfish.version.8x.artifact}</version>
+                                    <outputDirectory>${docs.8x.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    
                     <!--
                         Get the collection of documentation for the 7.x release.
                     -->
@@ -112,6 +139,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    
                     <!--
                         Get the collection of documentation for the 6.x release.
                     -->
@@ -133,6 +161,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    
                     <!--
                         Get the collection of documentation for the 5.1.0 release.
                     -->
@@ -154,6 +183,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    
                     <!--
                         Copy the hello.war to the docs directory.
                     -->

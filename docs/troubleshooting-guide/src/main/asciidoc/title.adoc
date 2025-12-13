@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Troubleshooting Guide, Release 7
+title={productName} Troubleshooting Guide, Release 8
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= {productName} Troubleshooting Guide, Release 7
+= {productName} Troubleshooting Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Troubleshooting Guide
 
-Release 7
+Release 8
 
 Contributed 2018 - 2024
 
@@ -23,7 +23,7 @@ This guide describes common problems that you might encounter when using
 
 '''''
 
-{productName} Troubleshooting Guide, Release 7
+{productName} Troubleshooting Guide, Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

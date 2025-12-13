@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Deployment Planning Guide, Release 7
+title={productName} Deployment Planning Guide, Release 8
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Deployment Planning Guide, Release 7
+= {productName} Deployment Planning Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Deployment Planning Guide
 
-Release 7
+Release 8
 
 Contributed 2018 - 2024
 
@@ -22,7 +22,7 @@ This book explains how to build a production deployment of {productName}.
 
 '''''
 
-{productName} Deployment Planning Guide, Release 7
+{productName} Deployment Planning Guide, Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

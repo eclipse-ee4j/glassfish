@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Application Development Guide, Release 7
+title={productName} Application Development Guide, Release 8
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Application Development Guide, Release 7
+= {productName} Application Development Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Application Development Guide
 
-Release 7
+Release 8
 
 Contributed 2018 - 2024
 
@@ -29,7 +29,7 @@ applications using Oracle servers and software.
 '''''
 
 {productName} Application Development Guide,
-Release 7
+Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

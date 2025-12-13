@@ -331,20 +331,10 @@ class JarFileManager implements Closeable {
                 continue;
             }
 
-            final JarFile toClose = jarResource.jarFile;
+            final JarResource toClose = jarResource.copy();
             jarResource.jarFile = null;
 
-            // We need to close the Jar file via its URL, so we get hold
-            // of the potentially cached version. Caching of jarFiles in the
-            // OpenJDK is done by sun.net.www.protocol.jar.JarFileFactory
-            // Of course this is an implementation detail, but in the Open JDK
-            // it has worked like this for a long time and will likely stay for
-            // some time to come.
-            closeJarFileViaURL(jarResource.file);
-
-            // Also close the jar file in the conventional way. Noop if
-            // closeJarFileViaURL already did its work.
-            closeJarFile(toClose);
+            closeJarResource(toClose);
         }
 
         LOG.log(DEBUG, "JAR files were closed.");
@@ -370,11 +360,21 @@ class JarFileManager implements Closeable {
                .openConnection();
     }
 
-    private static void closeJarFile(final JarFile jarFile) {
+    private static void closeJarResource(final JarResource jarResource) {
+        // We need to close the Jar file via its URL, so we get hold
+        // of the potentially cached version. Caching of jarFiles in the
+        // OpenJDK is done by sun.net.www.protocol.jar.JarFileFactory
+        // Of course this is an implementation detail, but in the Open JDK
+        // it has worked like this for a long time and will likely stay for
+        // some time to come.
+        closeJarFileViaURL(jarResource.file);
+
         try {
-            jarFile.close();
+            // Also close the jar file in the conventional way. Noop if
+            // closeJarFileViaURL already did its work.
+            jarResource.jarFile.close();
         } catch (IOException e) {
-            LOG.log(WARNING, "Could not close the jarFile " + jarFile, e);
+            LOG.log(WARNING, "Could not close the jarFile " + jarResource.jarFile, e);
         }
     }
 
@@ -385,6 +385,12 @@ class JarFileManager implements Closeable {
 
         JarResource(File file) {
             this.file = file;
+        }
+
+        JarResource copy() {
+            JarResource copy = new JarResource(file);
+            copy.jarFile = jarFile;
+            return copy;
         }
     }
 

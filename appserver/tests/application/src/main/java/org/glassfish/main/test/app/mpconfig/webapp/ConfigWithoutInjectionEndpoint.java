@@ -16,11 +16,20 @@
 
 package org.glassfish.main.test.app.mpconfig.webapp;
 
-import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 
-@ApplicationPath("")
-public class ConfigApplication extends Application {
+@Path("/config")
+public class ConfigWithoutInjectionEndpoint {
 
+    @GET
+    @Path("name")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getName() {
+        return ConfigProvider.getConfig().getValue("name", String.class);
+    }
 }

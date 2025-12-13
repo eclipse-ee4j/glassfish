@@ -143,7 +143,6 @@ import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
 import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
 import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
 import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
-import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
 
 /**
  * Application Loader is providing useful methods to load applications
@@ -875,24 +874,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             }
         }
 
-        for (Deployer<?, ?> deployer : containerInfosByDeployers.keySet()) {
-            if (deployer.getMetaData() != null) {
-                for (Class<?> dependency : deployer.getMetaData().requires()) {
-                    if (!typeByDeployer.containsKey(dependency) && !typeByProvider.containsKey(dependency)) {
-
-                        Service s = deployer.getClass().getAnnotation(Service.class);
-                        String serviceName;
-                        if (s != null && s.name() != null && s.name().length() > 0) {
-                            serviceName = s.name();
-                        } else {
-                            serviceName = deployer.getClass().getSimpleName();
-                        }
-
-                        LOG.log(WARNING, serviceName + " deployer requires " + dependency + " but no other deployer provides it");
-                    }
-                }
-            }
-        }
+        logMessageIfRequiredDependenciesNotAvailable(containerInfosByDeployers, typeByDeployer, typeByProvider);
 
         // ok everything is satisfied, just a matter of running things in order
         List<Deployer<?, ?>> orderedDeployers = new ArrayList<>();
@@ -935,6 +917,29 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         return sortedEngineInfos;
     }
 
+    private void logMessageIfRequiredDependenciesNotAvailable(Map<Deployer, EngineInfo> containerInfosByDeployers, Map<Class<?>, Deployer<?, ?>> typeByDeployer, Map<Class<?>, ApplicationMetaDataProvider<?>> typeByProvider) {
+        if (LOG.isLoggable(FINE)) {
+            for (Deployer<?, ?> deployer : containerInfosByDeployers.keySet()) {
+                if (deployer.getMetaData() != null) {
+                    for (Class<?> dependency : deployer.getMetaData().requires()) {
+                        if (!typeByDeployer.containsKey(dependency) && !typeByProvider.containsKey(dependency)) {
+
+                            Service s = deployer.getClass().getAnnotation(Service.class);
+                            String serviceName;
+                            if (s != null && s.name() != null && s.name().length() > 0) {
+                                serviceName = s.name();
+                            } else {
+                                serviceName = deployer.getClass().getSimpleName();
+                            }
+
+                            LOG.fine(() -> serviceName + " deployer requires " + dependency + " but no other deployer provides it");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private boolean areSomeContainersNotStarted(final String[] containerNames) {
         for (String containerName : containerNames) {
             if (null == containerRegistry.getContainer(containerName)) {
@@ -960,7 +965,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 } else {
                     ApplicationMetaDataProvider<?> provider = typeByProvider.get(required);
                     if (provider == null) {
-                        LOG.log(SEVERE, inconsistentLifecycleState, required);
+                        LOG.log(FINE, () -> "Nothing is providing " + required + ", this should be treated as an optional dependancy");
                     } else {
                         LinkedList<ApplicationMetaDataProvider<?>> providers = new LinkedList<>();
 

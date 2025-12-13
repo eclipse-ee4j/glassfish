@@ -205,13 +205,6 @@ public class KernelLoggerInfo {
     public static final String applicationMetaDataProvider = LOGMSG_PREFIX + "-00027";
 
     @LogMessageInfo(
-            message = "Inconsistent state - nothing is providing {0} yet it passed validation",
-            cause = "An unexpected condition during lifecycle processing.",
-            action = "Check the system logs and contact support.",
-            level = "SEVERE")
-    public static final String inconsistentLifecycleState = LOGMSG_PREFIX + "-00028";
-
-    @LogMessageInfo(
             message = "Cannot start container {0}, exception: {1}",
             cause = "An unexpected condition during lifecycle processing.",
             action = "Check the system logs and contact support.",

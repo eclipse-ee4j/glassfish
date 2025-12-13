@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -69,9 +69,11 @@ public class MetaData {
     }
 
     /**
-     * Returns the list of types of metadata this deployer will require to run successfully the prepare method.
+     * Returns the list of types of metadata this deployer will optionally require to run successfully the prepare method.
+     * If no provider provides the type, the metadata will not be available. If any provider provides the type,
+     * that provider will be loaded before the provider that requires it.
      *
-     * @return list of metadata required type;
+     * @return list of types of optionally required metadata
      */
     public Class<?>[] requires() {
         if (requires == null) {

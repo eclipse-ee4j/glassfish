@@ -23,17 +23,13 @@ import java.net.HttpURLConnection;
 import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
-import org.glassfish.main.test.app.mpconfig.lib.ConfigHolder;
 import org.glassfish.main.test.app.mpconfig.webapp.ConfigApplication;
-import org.glassfish.main.test.app.mpconfig.webapp.ConfigWithLibraryEndpoint;
+import org.glassfish.main.test.app.mpconfig.webapp.ConfigWithoutInjectionEndpoint;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -43,11 +39,9 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ApplicationScopedMpConfigTest {
+public class MpConfigIwthoutInjectionTest {
 
-    private static final System.Logger LOG = System.getLogger(ApplicationScopedMpConfigTest.class.getName());
-
-    private static final String SHARED_LIBRARY_NAME = "mpconfig-lib";
+    private static final System.Logger LOG = System.getLogger(MpConfigIwthoutInjectionTest.class.getName());
 
     private static final String APP_NAME = "mpconfig-app";
 
@@ -56,26 +50,9 @@ public class ApplicationScopedMpConfigTest {
     @TempDir
     private static File tempDir;
 
-    private static File libraryJar;
-
-    @BeforeAll
-    static void setup() throws IOException {
-        libraryJar = createLibrary();
-        assertThat(ASADMIN.exec("add-library", libraryJar.getAbsolutePath()), asadminOK());
-    }
-
-    @AfterAll
-    static void cleanup() {
-        assertThat(ASADMIN.exec("remove-library", libraryJar.getName()), asadminOK());
-    }
-
     @Test
     void testApplicationsDontShareConfigStoredInSharedStaticField() throws IOException {
-        testAppConfig("app1");
-        testAppConfig("app2");
-    }
-
-    private void testAppConfig(String appId) throws IOException {
+        String appId = "testapp";
         File app1 = createWebApp(appId);
         final String appName = APP_NAME + "-" + appId;
         assertThat(ASADMIN.exec("deploy", "--force", "--contextroot", "app", "--name", appName, app1.getAbsolutePath()), asadminOK());
@@ -98,24 +75,14 @@ public class ApplicationScopedMpConfigTest {
         }
     }
 
-    // create a shared library with Config stored in a static field, so that it's shared across applications
-    private static File createLibrary() {
-        JavaArchive library = ShrinkWrap.create(JavaArchive.class, SHARED_LIBRARY_NAME + ".jar")
-            .addClass(ConfigHolder.class);
-
-        LOG.log(INFO, library.toString(true));
-
-        File libraryFile = new File(tempDir, SHARED_LIBRARY_NAME + ".jar");
-        library.as(ZipExporter.class).exportTo(libraryFile, true);
-        return libraryFile;
-    }
-
     private static File createWebApp(String configValue) {
         String configProperties = "name=" + configValue;
 
         WebArchive webApp = ShrinkWrap.create(WebArchive.class)
-            .addClass(ConfigWithLibraryEndpoint.class)
+            .addClass(ConfigWithoutInjectionEndpoint.class)
             .addClass(ConfigApplication.class)
+                // Using microprofile-config.properties is essential for this test - it triggers ConfigDeployer
+                // even if no Config annotation is in the app
             .addAsResource(new StringAsset(configProperties), "META-INF/microprofile-config.properties");
 
         LOG.log(INFO, webApp.toString(true));

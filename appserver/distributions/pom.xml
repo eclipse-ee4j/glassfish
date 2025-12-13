@@ -234,6 +234,20 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!-- To disable checking extracted sources -->
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>checkstyle</id>
+                            <phase>disabled</phase>
+                        </execution>
+                        <execution>
+                            <id>checkstyle-poms</id>
+                            <phase>disabled</phase>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>

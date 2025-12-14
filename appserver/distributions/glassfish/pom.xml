@@ -83,6 +83,24 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-krazo-annotatedtypeprocessor</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir
+                                    dir="${project.basedir}/src/main/patches/krazo-core/org/eclipse/krazo/cdi/types" />
+
+                                <copy
+                                    file="${project.build.directory}/dependency/org/eclipse/krazo/cdi/types/AnnotatedTypeProcessor.class"
+                                    tofile="${project.basedir}/src/main/patches/krazo-core/org/eclipse/krazo/cdi/types/AnnotatedTypeProcessor.class"
+                                    overwrite="true" />
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>apply-patches</id>
                     </execution>
                 </executions>

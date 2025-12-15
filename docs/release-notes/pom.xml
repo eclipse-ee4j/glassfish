@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.docs</groupId>
         <artifactId>documentation-generators-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M15</version>
         <relativePath>../parent</relativePath>
     </parent>
 

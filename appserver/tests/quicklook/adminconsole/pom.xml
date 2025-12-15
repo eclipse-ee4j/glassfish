@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>adminconsole</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>8.0.0-M15</version>
     <name>Admin Console Quicklook Tests</name>
     <packaging>jar</packaging>
     <parent>

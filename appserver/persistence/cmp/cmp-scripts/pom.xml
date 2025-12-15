@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M15</version>
     </parent>
 
     <artifactId>cmp-scripts</artifactId>

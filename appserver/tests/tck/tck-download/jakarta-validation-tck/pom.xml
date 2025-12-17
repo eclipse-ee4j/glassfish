@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck-download</artifactId>
+        <version>8.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jakarta-validation-tck</artifactId>
+    <packaging>pom</packaging>
+    <name>TCK: Install Jakarta validation TCK</name>
+
+    <properties>
+        <tck.test.validation.version>3.1.1</tck.test.validation.version>
+        <tck.test.validation.file>validation-tck-dist-${tck.test.validation.version}.zip</tck.test.validation.file>
+        <tck.test.validation.url>https://download.eclipse.org/jakartaee/bean-validation/3.1/${tck.test.validation.file}</tck.test.validation.url>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.download-maven-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <configuration>
+                    <url>${tck.test.validation.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-validation-tck</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-parent-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/validation-tck-dist-${tck.test.validation.version}/src/pom.xml</file>
+                            <groupId>jakarta.validation</groupId>
+                            <artifactId>validation-tck-parent</artifactId>
+                            <version>${tck.test.validation.version}</version>
+                            <packaging>pom</packaging>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-install-the-tests-jar</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/validation-tck-dist-${tck.test.validation.version}/artifacts/validation-tck-tests-${tck.test.validation.version}.jar</file>
+                            <groupId>jakarta.validation</groupId>
+                            <artifactId>validation-tck-tests</artifactId>
+                            <version>${tck.test.validation.version}</version>
+                            <packaging>jar</packaging>
+                         </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-test-suite-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/validation-tck-dist-${tck.test.validation.version}/artifacts/tck-tests.xml</file>
+                            <groupId>jakarta.validation</groupId>
+                            <artifactId>validation-tck-tests</artifactId>
+                            <version>${tck.test.validation.version}</version>
+                            <packaging>xml</packaging>
+                            <classifier>suite</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

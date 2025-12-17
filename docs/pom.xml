@@ -18,36 +18,21 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../appserver</relativePath>
     </parent>
+
     <groupId>org.glassfish.main.docs</groupId>
     <artifactId>docs</artifactId>
     <packaging>pom</packaging>
-    <name>Eclipse GlassFish Documentation</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <glassfish.version.5x>5.1.0</glassfish.version.5x>
-        <glassfish.version.6x>6.2.5</glassfish.version.6x>
-        <glassfish.version.7x>7.1.0</glassfish.version.7x>
-        <glassfish.version.latest>${glassfish.version.7x}</glassfish.version.latest>
-        <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
-        <microprofile.version.latest>6.1</microprofile.version.latest>
-        <microprofile.release-notes.latest>https://microprofile.io/compatible/6-1/</microprofile.release-notes.latest>
-        <microprofile-config.version.latest>3.1</microprofile-config.version.latest>
-        <microprofile-config.release-notes.latest>https://github.com/eclipse/microprofile-config/releases/tag/3.1</microprofile-config.release-notes.latest>
-        <microprofile-jwt.version.latest>2.1</microprofile-jwt.version.latest>
-        <microprofile-jwt.release-notes.latest>https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1</microprofile-jwt.release-notes.latest>
-        <microprofile-rest-client.version.latest>3.0</microprofile-rest-client.version.latest>
-        <microprofile-rest-client.release-notes.latest>https://github.com/eclipse/microprofile-rest-client/releases/tag/3.0</microprofile-rest-client.release-notes.latest>
-    </properties>
+    <name>Eclipse GlassFish Documentation</name>
 
     <modules>
         <module>parent</module>
@@ -71,6 +56,27 @@
         <module>distribution</module>
         <module>sample-app</module>
     </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <glassfish.version.5x>5.1.0</glassfish.version.5x>
+        <glassfish.version.6x>6.2.5</glassfish.version.6x>
+        <glassfish.version.7x>7.0.25</glassfish.version.7x>
+        <glassfish.version.8x>8.0.0</glassfish.version.8x>
+        <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
+        <glassfish.version.8x.artifact>${glassfish.version.7x}</glassfish.version.8x.artifact>
+
+        <glassfish.version.latest>${glassfish.version.8x}</glassfish.version.latest>
+
+        <microprofile.version.latest>6.1</microprofile.version.latest>
+        <microprofile.release-notes.latest>https://microprofile.io/compatible/6-1/</microprofile.release-notes.latest>
+        <microprofile-config.version.latest>3.1</microprofile-config.version.latest>
+        <microprofile-config.release-notes.latest>https://github.com/eclipse/microprofile-config/releases/tag/3.1</microprofile-config.release-notes.latest>
+        <microprofile-jwt.version.latest>2.1</microprofile-jwt.version.latest>
+        <microprofile-jwt.release-notes.latest>https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1</microprofile-jwt.release-notes.latest>
+        <microprofile-rest-client.version.latest>3.0</microprofile-rest-client.version.latest>
+        <microprofile-rest-client.release-notes.latest>https://github.com/eclipse/microprofile-rest-client/releases/tag/3.0</microprofile-rest-client.release-notes.latest>
+    </properties>
 
     <build>
         <plugins>

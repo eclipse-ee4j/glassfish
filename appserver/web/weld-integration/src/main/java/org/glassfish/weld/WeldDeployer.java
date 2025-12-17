@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +29,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 
 import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.inject.Inject;
@@ -68,6 +69,7 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
@@ -121,8 +123,7 @@ import static org.jboss.weld.bootstrap.spi.EEModuleDescriptor.ModuleType.WEB;
 import static org.jboss.weld.manager.BeanManagerLookupService.lookupBeanManager;
 
 @Service
-public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer>
-    implements PostConstruct, EventListener {
+public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationContainer> implements PostConstruct, EventListener {
 
     private static final Logger LOG = CDILoggerInfo.getLogger();
 
@@ -135,7 +136,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     // Note...this constant is also defined in org.apache.catalina.connector.AsyncContextImpl.  If it changes here it must
     // change there as well.  The reason it is duplicated is so that a dependency from web-core to gf-weld-connector
     // is not necessary.
-    private static final String WELD_LISTENER = "org.jboss.weld.module.web.servlet.WeldListener";
+    private static final String WELD_LISTENER = "org.jboss.weld.module.web.servlet.WeldInitialListener";
     private static final String WELD_TERMINATION_LISTENER = "org.jboss.weld.module.web.servlet.WeldTerminalListener";
     private static final String WELD_SHUTDOWN = "weld_shutdown";
 
@@ -183,7 +184,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
     @Override
     public MetaData getMetaData() {
-        return new MetaData(true, null, new Class[] { Application.class });
+        return new MetaData(true, new Class[] {CDI.class}, new Class[] { Application.class });
     }
 
     @Override
@@ -367,21 +368,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         }
     }
 
-    @Override
-    protected void generateArtifacts(DeploymentContext dc) throws DeploymentException {
-
-    }
-
-    @Override
-    protected void cleanArtifacts(DeploymentContext dc) throws DeploymentException {
-
-    }
-
-    @Override
-    public <V> V loadMetaData(Class<V> type, DeploymentContext context) {
-        return null;
-    }
-
     public BeanDeploymentArchive getBeanDeploymentArchiveForBundle(BundleDescriptor bundle) {
         LOG.log(FINEST, "getBeanDeploymentArchiveForBundle(bundle.class={0})", bundle.getClass());
         return bundleToBeanDeploymentArchive.get(bundle);
@@ -485,6 +471,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             invocationManager.preInvoke(componentInvocation);
             Iterable<Metadata<Extension>> extensions = deploymentImpl.getExtensions();
             LOG.log(FINE, () -> "Starting extensions: " + extensions);
+            if (events != null) {
+                events.send(new Event<>(Deployment.CDI_BEFORE_EXTENSIONS_STARTED, appInfo), false);
+            }
             bootstrap.startExtensions(extensions);
             bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
 
@@ -505,13 +494,13 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
 
     private ComponentInvocation createComponentInvocation(ApplicationInfo applicationInfo) {
-        BundleDescriptor bundleDescriptor = applicationInfo.getTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR,
-            BundleDescriptor.class);
-        String componentEnvId = DOLUtils.getComponentEnvId((JndiNameEnvironment) bundleDescriptor);
+        JndiNameEnvironment bundleDescriptor = applicationInfo.getTransientAppMetaData(KEY_BUNDLE_DESCRIPTOR,
+            JndiNameEnvironment.class);
+        String componentEnvId = DOLUtils.getComponentEnvId(bundleDescriptor);
         LOG.log(Level.FINE,
             () -> "Computed component env id=" + componentEnvId + " for application name=" + applicationInfo.getName());
         ComponentInvocation componentInvocation = new ComponentInvocation(componentEnvId, SERVLET_INVOCATION,
-            applicationInfo, applicationInfo.getName(), applicationInfo.getName());
+            applicationInfo, applicationInfo.getName(), DOLUtils.getModuleName(bundleDescriptor));
 
         componentInvocation.setJNDIEnvironment(bundleDescriptor);
         return componentInvocation;

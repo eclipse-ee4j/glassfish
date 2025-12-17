@@ -23,9 +23,6 @@ import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import jakarta.inject.Inject;
 
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.deployment.ApplicationContainer;
@@ -39,16 +36,13 @@ import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Represents an app client module, either stand-alone or nested inside
- * an EAR, loaded on the server.
+ * Represents an app client module, either stand-alone or nested inside an EAR, loaded on the server.
  * <p>
- * The primary purpose of this class is to implement Java Web Start support for
- * launches of this app client.  Other than in that sense, app clients do not
- * run in the server.  To support a client for Java Web Start launches, this
- * class figures out what static content (JAR files) and dynamic content (JNLP
- * documents) are needed by the client.  It then generates the required
- * dynamic content templates and submits them and the static content to a
- * Grizzly adapter which actually serves the data in response to requests.
+ * The primary purpose of this class is to implement Java Web Start support for launches of this app client. Other than
+ * in that sense, app clients do not run in the server. To support a client for Java Web Start launches, this class
+ * figures out what static content (JAR files) and dynamic content (JNLP documents) are needed by the client. It then
+ * generates the required dynamic content templates and submits them and the static content to a Grizzly adapter which
+ * actually serves the data in response to requests.
  *
  * @author tjquinn
  */
@@ -57,17 +51,16 @@ import org.jvnet.hk2.annotations.Service;
 public class AppClientServerApplication implements ApplicationContainer<ApplicationClientDescriptor> {
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     @Inject
     private ProcessEnvironment processEnv;
 
-
-    private DeploymentContext dc;
+    private DeploymentContext deploymentContext;
 
     private AppClientDeployerHelper helper;
 
-    private ApplicationClientDescriptor acDesc;
+    private ApplicationClientDescriptor applicationClientDescriptor;
     private Application appDesc;
 
     private String deployedAppName;
@@ -75,10 +68,11 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
     private JavaWebStartInfo jwsInfo;
 
     public void init(final DeploymentContext dc, final AppClientDeployerHelper helper) {
-        this.dc = dc;
+        this.deploymentContext = dc;
         this.helper = helper;
-        acDesc = helper.appClientDesc();
-        appDesc = acDesc.getApplication();
+
+        applicationClientDescriptor = helper.appClientDesc();
+        appDesc = applicationClientDescriptor.getApplication();
         deployedAppName = dc.getCommandParameters(DeployCommandParameters.class).name();
     }
 
@@ -88,7 +82,7 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
 
     @Override
     public ApplicationClientDescriptor getDescriptor() {
-        return acDesc;
+        return applicationClientDescriptor;
     }
 
     public AppClientDeployerHelper helper() {
@@ -96,17 +90,16 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
     }
 
     public boolean matches(final String appName, final String moduleName) {
-        return (appName.equals(deployedAppName)
-                && (moduleName != null &&
-                    (moduleName.equals(acDesc.getModuleName())
-                     || acDesc.getModuleName().equals(moduleName + ".jar"))));
+        return
+            appName.equals(deployedAppName) &&
+            (moduleName != null &&
+            (moduleName.equals(applicationClientDescriptor.getModuleName()) || applicationClientDescriptor.getModuleName().equals(moduleName + ".jar")));
     }
 
     @Override
     public boolean start(ApplicationContext startupContext) throws Exception {
         return start();
     }
-
 
     boolean start() {
         if (processEnv.getProcessType().isEmbedded()) {
@@ -121,7 +114,7 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
     }
 
     private JavaWebStartInfo newJavaWebStartInfo() {
-        final JavaWebStartInfo info = habitat.getService(JavaWebStartInfo.class);
+        final JavaWebStartInfo info = serviceLocator.getService(JavaWebStartInfo.class);
         info.init(this);
         return info;
     }
@@ -159,13 +152,11 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
     public ClassLoader getClassLoader() {
         // This cannot be null or it prevents the framework from invoking unload
         // on the deployer for this app.
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
-            "AppClientServer(" + deployedAppName + ")", new URL[0]);
-        return AccessController.doPrivileged(action);
+        return new GlassfishUrlClassLoader("AppClientServer(" + deployedAppName + ")", new URL[0]);
     }
 
     public DeploymentContext dc() {
-        return dc;
+        return deploymentContext;
     }
 
     public String registrationName() {
@@ -177,7 +168,7 @@ public class AppClientServerApplication implements ApplicationContainer<Applicat
         if (appDesc.isVirtual()) {
             moduleExpression = appDesc.getRegistrationName();
         } else {
-            moduleExpression = appDesc.getRegistrationName() + "/" + acDesc.getModuleName();
+            moduleExpression = appDesc.getRegistrationName() + "/" + applicationClientDescriptor.getModuleName();
         }
         return moduleExpression;
     }

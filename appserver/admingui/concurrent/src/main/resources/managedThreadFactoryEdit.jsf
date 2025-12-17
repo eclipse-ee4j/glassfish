@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2025 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +40,7 @@
 
     gf.buildResourceUrl(base="#{pageSession.parentUrl}/#{pageSession.childType}", resourceName="#{pageSession.Name}", url="#{pageSession.selfUrl}");
     gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}", valueMap="#{pageSession.valueMap}");
-    setPageSessionAttribute(key="convertToFalseList" value={"enabled", "contextInfoEnabled"});
+    setPageSessionAttribute(key="convertToFalseList" value={"enabled", "contextInfoEnabled", "useVirtualThreads"});
     setPageSessionAttribute(key="skipAttrsList", value={"jndiName"});
     
     gf.restRequest(endpoint="#{pageSession.selfUrl}/property" method="GET" result="#{requestScope.propTable}");

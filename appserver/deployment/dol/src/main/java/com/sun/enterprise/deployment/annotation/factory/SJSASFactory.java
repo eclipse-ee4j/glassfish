@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.deployment.annotation.factory;
 
+import com.sun.enterprise.deployment.util.DOLUtils;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -38,6 +40,8 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * This factory is responsible for initializing a ready to use AnnotationProcessor.
@@ -83,17 +87,6 @@ public class SJSASFactory extends Factory {
 
             systemProcessor.pushAnnotationHandler(annotationTypeName, new LazyAnnotationHandler(descriptor));
             annotationClassNames.add("L" + annotationTypeName.replace('.', '/') + ";");
-
-            // In the current set of the annotations processed by the
-            // deployment layer, the only annotation that should be
-            // processed even when metadata-complete atribute value is true
-            // is jakarta.annotation.ManagedBean. If there are more annotations
-            // falling in this category in the future, add them to this list
-            if (annotationTypeName.equals("jakarta.annotation.ManagedBean")) {
-                systemProcessorMetaDataComplete.pushAnnotationHandler(annotationTypeName,
-                    new LazyAnnotationHandler(descriptor));
-                annotationClassNamesMetaDataComplete.add("L" + annotationTypeName.replace('.', '/') + ";");
-            }
         }
     }
 
@@ -124,6 +117,7 @@ public class SJSASFactory extends Factory {
         if (answers == null || answers.isEmpty()) {
             return null;
         }
+        DOLUtils.getLogger().log(DEBUG, "AnnotationHandler: " + onMe + " has matches: " + answers);
         return answers.get(0);
     }
 

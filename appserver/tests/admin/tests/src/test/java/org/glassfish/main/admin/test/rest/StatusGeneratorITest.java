@@ -41,7 +41,6 @@ public class StatusGeneratorITest extends RestTestBase {
                 () -> assertThat(response.readEntity(String.class),
                     stringContainsInOrder("All Commands used in REST Admin",
                         "Missing Commands not used in REST Admin",
-                        "create-instance",
                         "REST-REDIRECT Commands defined on ConfigBeans",
                         "Commands to Resources Mapping Usage in REST Admin",
                         "Resources with Delete Commands in REST Admin (not counting RESTREDIRECT")

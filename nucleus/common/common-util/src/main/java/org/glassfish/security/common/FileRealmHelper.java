@@ -40,78 +40,72 @@ import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 /**
  * Helper class for implementing file password authentication.
  *
- * <P>This class provides administration methods for the file realm. It is
- * used by the FileRealm class to provide the FileRealm functionality.  But
- * some administration classes that need direct access to the File without
- * using the security module use this class directly.
+ * <P>
+ * This class provides administration methods for the file realm. It is used by the FileRealm class to provide the
+ * FileRealm functionality. But some administration classes that need direct access to the File without using the
+ * security module use this class directly.
  *
- * <P>Format of the keyfile used by this class is one line per user
- * containing <code>username;password;groups</code> where:
+ * <P>
+ * Format of the keyfile used by this class is one line per user containing <code>username;password;groups</code> where:
  * <ul>
- *   <li>username - Name string.
- *   <li>password - A salted SHA hash (SSHA) of the user password or "RESET"
- *   <li>groups - A comma separated list of group memberships.
+ * <li>username - Name string.
+ * <li>password - A salted SHA hash (SSHA) of the user password or "RESET"
+ * <li>groups - A comma separated list of group memberships.
  * </ul>
- * <P>If the password is "RESET", then the password must be reset before
- * that user can authenticate.
+ * <P>
+ * If the password is "RESET", then the password must be reset before that user can authenticate.
  *
- * <P>The file realm needs the following properties in its configuration:
+ * <P>
+ * The file realm needs the following properties in its configuration:
  * <ul>
- *   <li>file - Full path to the keyfile to load
- *   <li>jaas-ctx - JAAS context name used to access LoginModule for
- *       authentication.
+ * <li>file - Full path to the keyfile to load
+ * <li>jaas-ctx - JAAS context name used to access LoginModule for authentication.
  * </ul>
  *
  * @author Tom Mueller
  */
-
-public final class FileRealmHelper
-{
+public final class FileRealmHelper {
     // These are property names which should be in auth-realm in server.xml
-    public static final String PARAM_KEYFILE="file";
+    public static final String PARAM_KEYFILE = "file";
 
     // Separators in keyfile (user;pwd-info;group[,group]*)
-    private static final String FIELD_SEP=";";
-    private static final String GROUP_SEP=",";
-    private static final String COMMENT="#";
+    private static final String FIELD_SEP = ";";
+    private static final String GROUP_SEP = ",";
+    private static final String COMMENT = "#";
 
     // Valid non-alphanumeric/whitespace chars in user/group name
-    public static final String MISC_VALID_CHARS="_-.";
+    public static final String MISC_VALID_CHARS = "_-.";
 
     // Number of bytes of salt for SSHA
-    private static final int SALT_SIZE=8;
+    private static final int SALT_SIZE = 8;
 
     // Contains cache of keyfile data
-    private final HashMap<String,User> userTable = new HashMap<>();  // user=>FileRealmUser
-    private final HashMap<String,Integer> groupSizeMap = new HashMap<>(); // maps of groups with value cardinality of group
+    private final HashMap<String, User> userTable = new HashMap<>(); // user=>FileRealmUser
+    private final HashMap<String, Integer> groupSizeMap = new HashMap<>(); // maps of groups with value cardinality of group
     private final File keyfile;
 
     private static final String SSHA_TAG = "{SSHA}";
     private static final String algoSHA = "SHA";
     private static final String algoSHA256 = "SHA-256";
     private static final String resetKey = "RESET";
-    private static final StringManager sm =
-        StringManager.getManager(FileRealmHelper.class);
+    private static final StringManager sm = StringManager.getManager(FileRealmHelper.class);
+
     /**
      * Constructor.
      *
-     * <P>The created FileRealmHelper instance is not registered in the
-     * Realm registry. This constructor can be used by admin tools
-     * to create a FileRealmHelper instance which can be edited by adding or
-     * removing users and then saved to disk, without affecting the
-     * installed realm instance.
+     * <P>
+     * The created FileRealmHelper instance is not registered in the Realm registry. This constructor can be used by admin
+     * tools to create a FileRealmHelper instance which can be edited by adding or removing users and then saved to disk,
+     * without affecting the installed realm instance.
      *
-     * <P>The file provided should always exist. A default (empty) keyfile
-     * is installed with the server so this should always be the case
-     * unless the user has manually deleted this file.  If this file
-     * path provided does not point to an existing file this constructor
-     * will first attempt to create it. If this succeeds the constructor
-     * returns normally and an empty keyfile will have been created; otherwise
-     * an exception is thrown.
+     * <P>
+     * The file provided should always exist. A default (empty) keyfile is installed with the server so this should always
+     * be the case unless the user has manually deleted this file. If this file path provided does not point to an existing
+     * file this constructor will first attempt to create it. If this succeeds the constructor returns normally and an empty
+     * keyfile will have been created; otherwise an exception is thrown.
      *
      * @param keyfile Full path to the keyfile to read for user data.
-     * @exception IOException If the configuration parameters
-     *     identify a corrupt keyfile
+     * @exception IOException If the configuration parameters identify a corrupt keyfile
      */
     public FileRealmHelper(File keyfile) throws IOException {
         this.keyfile = keyfile;
@@ -121,6 +115,7 @@ public final class FileRealmHelper
                 throw new IOException(sm.getString("filerealm.badwrite", keyfile));
             }
         }
+
         loadKeyFile();
     }
 
@@ -129,8 +124,7 @@ public final class FileRealmHelper
      *
      * @return enumeration of user names (strings)
      */
-    public Set<String> getUserNames()
-    {
+    public Set<String> getUserNames() {
         return userTable.keySet();
     }
 
@@ -140,69 +134,60 @@ public final class FileRealmHelper
      * @param name Name of the user whose information is desired.
      * @return The user object, or null if the user doesn't exist.
      */
-    public FileRealmHelper.User getUser(String name)
-    {
+    public FileRealmHelper.User getUser(String name) {
         return userTable.get(name);
     }
 
-
     /**
-     * Returns names of all the groups in this particular realm.
-     * Note that this will not return assign-groups.
+     * Returns names of all the groups in this particular realm. Note that this will not return assign-groups.
      *
      * @return enumeration of group names (strings)
      */
-    public Set<String> getGroupNames()
-    {
+    public Set<String> getGroupNames() {
         return groupSizeMap.keySet();
     }
 
-
     /**
      * Returns the name of all the groups that this user belongs to.
-     * @param username Name of the user in this realm whose group listing
-     *     is needed.
-     * @return Array of group names (strings) or null if the user does
-     *     not exist.
+     *
+     * @param username Name of the user in this realm whose group listing is needed.
+     * @return Array of group names (strings) or null if the user does not exist.
      */
-    public String[] getGroupNames(String username)
-    {
-        User ud = userTable.get(username);
-        if (ud == null) {
+    public String[] getGroupNames(String username) {
+        User user = userTable.get(username);
+        if (user == null) {
             return null;
         }
-        return ud.getGroups();
-    }
 
+        return user.getGroups();
+    }
 
     /**
      * Authenticates a user.
      *
-     * <P>This method is invoked by the FileLoginModule in order to
-     * authenticate a user in the file realm. The authentication decision
-     * is kept within the realm class implementation in order to keep
-     * the password cache in a single location with no public accessors,
-     * to simplify future improvements.
+     * <P>
+     * This method is invoked by the FileLoginModule in order to authenticate a user in the file realm. The authentication
+     * decision is kept within the realm class implementation in order to keep the password cache in a single location with
+     * no public accessors, to simplify future improvements.
      *
-     * @param user Name of user to authenticate.
+     * @param username Name of user to authenticate.
      * @param password Password provided by client.
-     * @returns Array of group names the user belongs to, or null if
-     *      authentication fails.
+     * @returns Array of group names the user belongs to, or null if authentication fails.
      */
-    public String[] authenticate(String user, char[] password)
-    {
-        User ud = userTable.get(user);
-        if (ud == null) {
+    public String[] authenticate(String username, char[] password) {
+        User user = userTable.get(username);
+        if (user == null) {
             return null;
         }
-        if (resetKey.equals(ud.getAlgo())) {
-             return null;
+
+        if (resetKey.equals(user.getAlgo())) {
+            return null;
         }
 
         boolean ok = false;
 
         try {
-            ok = SSHA.verify(ud.getSalt(), ud.getHash(), convertCharArrayToByteArray(password, UTF_8), ud.getAlgo());
+            ok = SSHA.verify(user.getSalt(), user.getHash(), convertCharArrayToByteArray(password, UTF_8), user.getAlgo());
         } catch (Exception e) {
             return null;
         }
@@ -211,20 +196,20 @@ public final class FileRealmHelper
             return null;
         }
 
-        return ud.getGroups();
+        return user.getGroups();
     }
 
     /**
      * Test whether their is a user in the FileRealm that has a password that
      * has been set, i.e., something other than the resetKey.
      */
-    public boolean hasAuthenticatableUser()
-    {
-        for (User ud : userTable.values()) {
-            if (!resetKey.equals(ud.getAlgo())) {
+    public boolean hasAuthenticatableUser() {
+        for (User user : userTable.values()) {
+            if (!resetKey.equals(user.getAlgo())) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -237,15 +222,15 @@ public final class FileRealmHelper
      * @param userName true if the string is a username, false if it is
      * a group name
      *
+     * @param String the name to be validated
+     * @param boolean true if the string is a username, false if it is a group name
+     *
      */
-    private static boolean isValid(String s, boolean userName)
-    {
-        for (int i=0; i<s.length(); i++) {
+    private static boolean isValid(String s, boolean userName) {
+        for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (!Character.isLetterOrDigit(c) &&
-                !Character.isWhitespace(c) &&
-                MISC_VALID_CHARS.indexOf(c) == -1) {
-                if (userName && (c == '@')){
+            if (!Character.isLetterOrDigit(c) && !Character.isWhitespace(c) && MISC_VALID_CHARS.indexOf(c) == -1) {
+                if (userName && (c == '@')) {
                     continue;
                 }
                 return false;
@@ -254,26 +239,20 @@ public final class FileRealmHelper
         return true;
     }
 
-
     /**
      * Validates syntax of a user name.
      *
-     * <P>This method throws an exception if the provided value is not
-     * valid. The message of the exception provides a reason why it is
-     * not valid. This is used internally by add/modify User to
-     * validate the client-provided values. It is not necessary for
-     * the client to call these methods first. However, these are
-     * provided as public methods for convenience in case some client
-     * (e.g. GUI client) wants to provide independent field validation
-     * prior to calling add/modify user.
+     * <P>
+     * This method throws an exception if the provided value is not valid. The message of the exception provides a reason
+     * why it is not valid. This is used internally by add/modify User to validate the client-provided values. It is not
+     * necessary for the client to call these methods first. However, these are provided as public methods for convenience
+     * in case some client (e.g. GUI client) wants to provide independent field validation prior to calling add/modify user.
      *
      * @param name User name to validate.
      * @throws IllegalArgumentException Thrown if the value is not valid.
      *
      */
-    public static void validateUserName(String name)
-        throws IllegalArgumentException
-    {
+    public static void validateUserName(String name) throws IllegalArgumentException {
         if (name == null || name.length() == 0) {
             String msg = sm.getString("filerealm.noname");
             throw new IllegalArgumentException(msg);
@@ -290,31 +269,25 @@ public final class FileRealmHelper
         }
     }
 
-
     /**
      * Validates syntax of a password.
      *
-     * <P>This method throws an exception if the provided value is not
-     * valid. The message of the exception provides a reason why it is
-     * not valid. This is used internally by add/modify User to
-     * validate the client-provided values. It is not necessary for
-     * the client to call these methods first. However, these are
-     * provided as public methods for convenience in case some client
-     * (e.g. GUI client) wants to provide independent field validation
-     * prior to calling add/modify user.
+     * <P>
+     * This method throws an exception if the provided value is not valid. The message of the exception provides a reason
+     * why it is not valid. This is used internally by add/modify User to validate the client-provided values. It is not
+     * necessary for the client to call these methods first. However, these are provided as public methods for convenience
+     * in case some client (e.g. GUI client) wants to provide independent field validation prior to calling add/modify user.
      *
      * @param pwd Password to validate.
      * @throws IllegalArgumentException Thrown if the value is not valid.
      *
      */
-    public static void validatePassword(char[] pwd)
-        throws IllegalArgumentException
-    {
+    public static void validatePassword(char[] pwd) throws IllegalArgumentException {
         if (Arrays.equals(null, pwd)) {
             String msg = sm.getString("filerealm.emptypwd");
             throw new IllegalArgumentException(msg);
         }
-        for(char c:pwd) {
+        for (char c : pwd) {
             if (Character.isSpaceChar(c)) {
                 String msg = sm.getString("filerealm.badspacespwd");
                 throw new IllegalArgumentException(msg);
@@ -322,26 +295,20 @@ public final class FileRealmHelper
         }
     }
 
-
     /**
      * Validates syntax of a group name.
      *
-     * <P>This method throws an exception if the provided value is not
-     * valid. The message of the exception provides a reason why it is
-     * not valid. This is used internally by add/modify User to
-     * validate the client-provided values. It is not necessary for
-     * the client to call these methods first. However, these are
-     * provided as public methods for convenience in case some client
-     * (e.g. GUI client) wants to provide independent field validation
-     * prior to calling add/modify user.
+     * <P>
+     * This method throws an exception if the provided value is not valid. The message of the exception provides a reason
+     * why it is not valid. This is used internally by add/modify User to validate the client-provided values. It is not
+     * necessary for the client to call these methods first. However, these are provided as public methods for convenience
+     * in case some client (e.g. GUI client) wants to provide independent field validation prior to calling add/modify user.
      *
      * @param group Group name to validate.
      * @throws IllegalArgumentException Thrown if the value is not valid.
      *
      */
-    public static void validateGroupName(String group)
-        throws IllegalArgumentException
-    {
+    public static void validateGroupName(String group) throws IllegalArgumentException {
         if (group == null || group.length() == 0) {
             String msg = sm.getString("filerealm.nogroup");
             throw new IllegalArgumentException(msg);
@@ -358,23 +325,20 @@ public final class FileRealmHelper
         }
     }
 
-
     /**
      * Validates syntax of a list of group names.
      *
-     * <P>This is equivalent to calling validateGroupName on every element
-     * of the groupList.
+     * <P>
+     * This is equivalent to calling validateGroupName on every element of the groupList.
      *
      * @param groupList Array of group names to validate.
      * @throws IllegalArgumentException Thrown if the value is not valid.
      *
      *
      */
-    public static void validateGroupList(String[] groupList)
-        throws IllegalArgumentException
-    {
+    public static void validateGroupList(String[] groupList) throws IllegalArgumentException {
         if (groupList == null || groupList.length == 0) {
-            return;             // empty list is ok
+            return; // empty list is ok
         }
 
         for (String element : groupList) {
@@ -382,7 +346,6 @@ public final class FileRealmHelper
         }
 
     }
-
 
     /**
      * Adds new user to file realm. User cannot exist already.
@@ -393,10 +356,7 @@ public final class FileRealmHelper
      * @throws IllegalArgumentException If there are problems adding user.
      *
      */
-    public synchronized void addUser(String name, char[] password,
-                        String[] groupList)
-        throws IllegalArgumentException
-    {
+    public synchronized void addUser(String name, char[] password, String[] groupList) throws IllegalArgumentException {
         validateUserName(name);
         validatePassword(password);
         validateGroupList(groupList);
@@ -411,7 +371,6 @@ public final class FileRealmHelper
         userTable.put(name, ud);
     }
 
-
     /**
      * Remove user from file realm. User must exist.
      *
@@ -419,9 +378,7 @@ public final class FileRealmHelper
      * @throws IllegalArgumentException If user does not exist.
      *
      */
-    public synchronized void removeUser(String name)
-        throws IllegalArgumentException
-    {
+    public synchronized void removeUser(String name) throws IllegalArgumentException {
         if (!userTable.containsKey(name)) {
             String msg = sm.getString("filerealm.nouser", name);
             throw new IllegalArgumentException(msg);
@@ -445,35 +402,31 @@ public final class FileRealmHelper
      * @param groups List of groups to which user belongs.
      * @throws IllegalArgumentException If there are problems adding user.
      */
-    public synchronized void updateUser(String name, String newName, char[] password,
-                           String[] groups)
-        throws IllegalArgumentException
-    {
-                                // user to modify must exist first
+    public synchronized void updateUser(String name, String newName, char[] password, String[] groups) throws IllegalArgumentException {
+        // user to modify must exist first
         validateUserName(name);
         if (!userTable.containsKey(name)) {
             String msg = sm.getString("filerealm.nouser", name);
             throw new IllegalArgumentException(msg);
         }
 
-                                // do general validation
+        // do general validation
         validateUserName(newName);
         validateGroupList(groups);
         if (password != null) { // null here means re-use previous so is ok
             validatePassword(password);
         }
 
-                                // can't duplicate unless modifying itself
+        // can't duplicate unless modifying itself
         if (!name.equals(newName) && userTable.containsKey(newName)) {
             String msg = sm.getString("filerealm.dupuser", name);
             throw new IllegalArgumentException(msg);
         }
 
-
         User oldUser = userTable.get(name);
         assert (oldUser != null);
 
-                                // create user using new name
+        // create user using new name
         User newUser = new User(newName);
 
         // set groups as provided by parameter
@@ -486,21 +439,20 @@ public final class FileRealmHelper
         }
 
         // use old password if no new pwd given
-        if (password==null) {
+        if (password == null) {
             newUser.setSalt(oldUser.getSalt());
             newUser.setHash(oldUser.getHash());
-            //If the original algo was RESET, change it to
-            //the default - SHA-256
-            if(oldUser.getAlgo().equals(resetKey)) {
+            // If the original algo was RESET, change it to
+            // the default - SHA-256
+            if (oldUser.getAlgo().equals(resetKey)) {
                 newUser.setAlgo(algoSHA256);
-            }
-            else {
+            } else {
                 newUser.setAlgo(oldUser.getAlgo());
             }
 
         } else {
             setPassword(newUser, password);
-            //ALways update passwords with SHA-256 algo
+            // ALways update passwords with SHA-256 algo
             newUser.setAlgo(algoSHA256);
         }
         userTable.remove(name);
@@ -508,9 +460,9 @@ public final class FileRealmHelper
     }
 
     /**
-     * Write keyfile data out to disk. The file generation is sychronized
-     * within this class only, caller is responsible for any other
-     * file locking or revision management as deemed necessary.
+     * Write keyfile data out to disk. The file generation is sychronized within this class only, caller is responsible for
+     * any other file locking or revision management as deemed necessary.
+     *
      * @throws IOException if there is a failure
      */
     public synchronized void persist() throws IOException {
@@ -529,23 +481,20 @@ public final class FileRealmHelper
     }
 
     /**
-     * Add group names to the groups table. It is assumed all entries are
-     * valid group names.
+     * Add group names to the groups table. It is assumed all entries are valid group names.
      *
      */
     private void addGroupNames(String[] groupList) {
         if (groupList != null) {
             for (String element : groupList) {
                 Integer groupSize = groupSizeMap.get(element);
-                groupSizeMap.put(element,Integer.valueOf((groupSize != null) ?
-                    (groupSize.intValue() + 1): 1));
+                groupSizeMap.put(element, Integer.valueOf((groupSize != null) ? (groupSize.intValue() + 1) : 1));
             }
         }
     }
 
     /**
-     * This method reduces the group size by 1 and remove group name from
-     * internal group list if resulting group size is 0.
+     * This method reduces the group size by 1 and remove group name from internal group list if resulting group size is 0.
      */
     private void reduceGroups(String[] groupList) {
         if (groupList != null) {
@@ -571,7 +520,6 @@ public final class FileRealmHelper
         reduceGroups(oldGroupList);
     }
 
-
     /**
      * Load keyfile from config and populate internal cache.
      */
@@ -589,7 +537,6 @@ public final class FileRealmHelper
         }
     }
 
-
     /**
      * Encodes one user entry containing info stored in FileRealmUser object.
      *
@@ -599,8 +546,7 @@ public final class FileRealmHelper
      * @throws IASSecurityException Thrown on failure.
      *
      */
-    private static String encodeUser(String name, User ud, String algo)
-    {
+    private static String encodeUser(String name, User ud, String algo) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(name);
@@ -626,29 +572,24 @@ public final class FileRealmHelper
         return sb.toString();
     }
 
-
     /**
      * Decodes a line from the keyfile.
      *
      * @param encodedLine A line from the keyfile containing user data.
-     * @param newGroupSizeMap Groups found in the encodedLine are added to
-     *      this map.
+     * @param newGroupSizeMap Groups found in the encodedLine are added to this map.
      * @returns FileRealmUser Representing the loaded user.
      * @throws IllegalArgumentException Thrown on failure.
      *
      */
-    private static User decodeUser(String encodedLine,
-                                            Map newGroupSizeMap)
-        throws IllegalArgumentException
-    {
+    private static User decodeUser(String encodedLine, Map newGroupSizeMap) throws IllegalArgumentException {
         StringTokenizer st = new StringTokenizer(encodedLine, FIELD_SEP);
-        String algo  = algoSHA256;
+        String algo = algoSHA256;
 
         String user = null;
         String pwdInfo = null;
         String groupList = null;
 
-        try {                   // these must be present
+        try { // these must be present
             user = st.nextToken();
             pwdInfo = st.nextToken();
         } catch (Exception e) {
@@ -665,7 +606,7 @@ public final class FileRealmHelper
             ud.setAlgo(resetKey);
         } else {
 
-            if(encodedLine.contains(SSHA_TAG)) {
+            if (encodedLine.contains(SSHA_TAG)) {
                 algo = algoSHA;
             }
 
@@ -685,21 +626,18 @@ public final class FileRealmHelper
         List<String> membership = new ArrayList<>();
 
         if (groupList != null) {
-            StringTokenizer gst = new StringTokenizer(groupList,
-                                                      GROUP_SEP);
+            StringTokenizer gst = new StringTokenizer(groupList, GROUP_SEP);
             while (gst.hasMoreTokens()) {
                 String g = gst.nextToken();
                 membership.add(g);
-                Integer groupSize = (Integer)newGroupSizeMap.get(g);
-                newGroupSizeMap.put(g, Integer.valueOf((groupSize != null) ?
-                    (groupSize.intValue() + 1) : 1));
+                Integer groupSize = (Integer) newGroupSizeMap.get(g);
+                newGroupSizeMap.put(g, Integer.valueOf((groupSize != null) ? (groupSize.intValue() + 1) : 1));
             }
         }
         ud.setGroups(membership.toArray(new String[membership.size()]));
 
         return ud;
     }
-
 
     /**
      * Produce a user with given data.
@@ -710,9 +648,7 @@ public final class FileRealmHelper
      * @returns FileRealmUser Representing the created user.
      *
      */
-    private static User createNewUser(String name, char[] pwd,
-                                               String[] groups)
-    {
+    private static User createNewUser(String name, char[] pwd, String[] groups) {
         User ud = new User(name);
 
         if (groups == null) {
@@ -720,7 +656,7 @@ public final class FileRealmHelper
         }
         ud.setGroups(groups);
 
-        //Always create new users with SHA-256
+        // Always create new users with SHA-256
         ud.setAlgo(algoSHA256);
 
         setPassword(ud, pwd);
@@ -728,19 +664,15 @@ public final class FileRealmHelper
         return ud;
     }
 
-
     /**
-     * Sets the password in a user object. Of course the password is not
-     * really stored so a salt is generated, hash computed, and these two
-     * values are stored in the user object provided.
+     * Sets the password in a user object. Of course the password is not really stored so a salt is generated, hash
+     * computed, and these two values are stored in the user object provided.
      *
      */
-    private static void setPassword(User user, char[] pwd)
-        throws IllegalArgumentException
-    {
+    private static void setPassword(User user, char[] pwd) throws IllegalArgumentException {
         assert (user != null);
-        //Copy the password to another reference before storing it to the
-        //instance field.
+        // Copy the password to another reference before storing it to the
+        // instance field.
         final byte[] pwdBytes;
         try {
             pwdBytes = convertCharArrayToByteArray(pwd, UTF_8);
@@ -752,7 +684,7 @@ public final class FileRealmHelper
         SECURE_RANDOM.nextBytes(salt);
         user.setSalt(salt);
         String algo = user.getAlgo();
-        if(algo == null) {
+        if (algo == null) {
             algo = algoSHA256;
         }
 
@@ -780,7 +712,6 @@ public final class FileRealmHelper
             this.name = name;
         }
 
-
         /**
          * Constructor.
          *
@@ -799,7 +730,6 @@ public final class FileRealmHelper
             this.algo = algo;
         }
 
-
         /**
          * Gets the name of the Principal as a java.lang.String
          *
@@ -810,14 +740,12 @@ public final class FileRealmHelper
             return name;
         }
 
-
         /**
          * Returns salt value.
          */
         public byte[] getSalt() {
             return salt;
         }
-
 
         /**
          * Set salt value.
@@ -826,7 +754,6 @@ public final class FileRealmHelper
             this.salt = salt;
         }
 
-
         /**
          * Get hash value.
          */
@@ -834,14 +761,12 @@ public final class FileRealmHelper
             return hash;
         }
 
-
         /**
          * Set hash value.
          */
         public void setHash(byte[] hash) {
             this.hash = hash;
         }
-
 
         /**
          * Return the names of the groups this user belongs to.
@@ -852,14 +777,12 @@ public final class FileRealmHelper
             return groups;
         }
 
-
         /**
          * Set group membership.
          */
         public void setGroups(String[] grp) {
             this.groups = grp;
         }
-
 
         /**
          * @return the algo
@@ -868,14 +791,12 @@ public final class FileRealmHelper
             return algo;
         }
 
-
         /**
          * @param algo the algo to set
          */
         public void setAlgo(String algo) {
             this.algo = algo;
         }
-
 
         @Override
         public boolean equals(Object obj) {
@@ -903,7 +824,6 @@ public final class FileRealmHelper
             }
             return super.equals(obj);
         }
-
 
         @Override
         public int hashCode() {

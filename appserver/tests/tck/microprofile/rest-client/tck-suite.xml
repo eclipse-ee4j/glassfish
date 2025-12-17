@@ -18,6 +18,9 @@
 -->
 
 <suite name="MicroProfile Rest Client TCK" verbose="2" configfailurepolicy="continue" >
+    <listeners>
+        <listener class-name="org.glassfish.microprofile.rest.client.tck.client.ProgressListener" />
+    </listeners>
     <test name="MicroProfile Rest Client TCK">
         <packages>
             <package name="org.eclipse.microprofile.rest.client.tck.*" />

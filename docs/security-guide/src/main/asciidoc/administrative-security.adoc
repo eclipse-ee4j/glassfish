@@ -355,8 +355,8 @@ Please look at the server log for more details...
 Waiting for domain1 to start .
 Waiting finished after 1 830 ms.
 Successfully started the domain : domain1
-domain  Location: glassfish7/glassfish/domains/domain1
-Log File: glassfish7/glassfish/domains/domain1/logs/server.log
+domain  Location: glassfish8/glassfish/domains/domain1
+Log File: glassfish8/glassfish/domains/domain1/logs/server.log
 Admin Port: 4 848
 Command start-domain executed successfully.
 

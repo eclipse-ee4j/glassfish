@@ -308,7 +308,7 @@ public final class LDAPRealm extends Realm {
      * does not support this operation.
      */
     @Override
-    public Enumeration<String> getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
+    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {
         Vector<String> groupNames = groupCache.get(username);
 
         if (groupNames == null) {

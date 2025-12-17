@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -107,7 +107,6 @@
         <echo>|          Web Profile        |</echo>
         <echo>+-----------------------------+</echo>
 
-        <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
@@ -138,10 +137,8 @@
         <echo>|         Web Profile         |</echo>
         <echo>+-----------------------------+</echo>
 
-        <antcall target="add-quicklook-policy-grants" />
-        <property name="env.security_manager" value="ON" />
 
-        <antcall target="start_server_with_security_manager_enabled" />
+        <antcall target="start_server" />
         <antcall target="build-deploy" />
 
         <antcall target="runtest">
@@ -151,8 +148,7 @@
         <antcall target="undeploy" />
         <antcall target="quicklook-summary_wd" />
 
-        <antcall target="remove-quicklook-policy-grants" />
-        <antcall target="stop_server_with_security_manager_enabled" />
+        <antcall target="stop_server" />
 
         <copy file="test-output/emailable-report.html" tofile="test-output/QL-WP-report.html" />
         <antcall target="check-logged-messages" />
@@ -172,7 +168,6 @@
         <echo>|                             |</echo>
         <echo>+-----------------------------+</echo>
 
-        <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
@@ -207,7 +202,6 @@
         <echo>|                             |</echo>
         <echo>+-----------------------------+</echo>
 
-        <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
@@ -243,12 +237,9 @@
         <echo>+-----------------------------+</echo>
 
 
-        <antcall target="add-quicklook-policy-grants" />
-        <property name="env.security_manager" value="ON" />
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
-        <antcall target="enable-security-manager" />
         <antcall target="stop-server" />
         <antcall target="start-server-felix" />
         <antcall target="build-deploy" />
@@ -261,8 +252,6 @@
         <antcall target="undeploy" />
         <antcall target="undeploy-gd" />
         <antcall target="quicklook-summary" />
-        <antcall target="remove-quicklook-policy-grants" />
-        <antcall target="disable-security-manager" />
         <antcall target="stop-server" />
         <antcall target="stop-derby" />
         <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
@@ -301,20 +290,15 @@
     <!--  S T A R T    S E R V E R  -->
 
 
-    <target name="start_server_with_security_manager_enabled">
-        <property name="env.security_manager" value="ON" />
+    <target name="start_server">
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
-        <antcall target="enable-security-manager" />
         <antcall target="stop-server" />
         <antcall target="start-server-felix" />
     </target>
 
-    <target name="stop_server_with_security_manager_enabled">
-        <property name="env.security_manager" value="ON" />
-        <antcall target="disable-security-manager" />
-        <antcall target="stop-server" />
+    <target name="stop_server">
         <antcall target="stop-derby" />
     </target>
 
@@ -394,7 +378,6 @@
         <run-quicklook-test path="adminconsole" target="build" />
         -->
         <run-quicklook-test path="rest" target="build" />
-        <!--<run-quicklook-test path="osgitest/basicosgi" target="build"/>-->
         <run-quicklook-test path="web/helloworld" target="build-deploy" />
         <run-quicklook-test path="web/jsfastrologer" target="build-deploy" />
         <run-quicklook-test path="web/jsfinjection" target="build-deploy" />
@@ -422,7 +405,6 @@
         <run-quicklook-test path="jms/injection" target="build-deploy" />
         <run-quicklook-test path="wsit/JaxwsFromWsdl" target="build-deploy" />
         <run-quicklook-test path="wsit/jsr109tester" target="build-deploy" />
-        <run-quicklook-test path="security/appperms" target="build-deploy" />
     </target>
 
 
@@ -516,7 +498,6 @@
          <run-quicklook-test path="weld/osgiweld" target="undeploy" />
          <run-quicklook-test path="weld/extensions" target="undeploy" />
          <run-quicklook-test path="jms/injection" target="undeploy" />
-
          <record name="${basedir}/undeploy.output" action="stop" />
      </target>
 
@@ -524,9 +505,6 @@
         <run-quicklook-test path="ejb/singleton" target="undeploy" />
         <run-quicklook-test path="ejb/remoteview" target="undeploy" />
         <run-quicklook-test path="ejb/cmp" target="undeploy" />
-        <!-- <ant dir="wsit/JaxwsFromWsdl" target="undeploy"/>
-        <ant dir="wsit/jsr109tester" target="undeploy"/>-->
-        <run-quicklook-test path="security/appperms" target="undeploy" />
     </target>
 
     <!-- Target is re-defined here as someone (who?) didn't want to specify ws.root property -->

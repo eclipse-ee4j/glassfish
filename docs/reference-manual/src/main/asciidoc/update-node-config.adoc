@@ -55,7 +55,7 @@ asadmin-options::
 `--installdir`::
   The full path to the parent of the base installation directory of the
   {productName} software on the host, for example,
-  `/export/glassfish7`.
+  `/export/glassfish8`.
 `--nodedir`::
   The path to the directory that is to contain {productName}
   instances that are created on the node. If a relative path is

@@ -29,9 +29,6 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.security.CodeSource;
-import java.security.PermissionCollection;
-import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,11 +38,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.glassfish.appclient.common.ClientClassLoaderDelegate;
 import org.glassfish.embeddable.client.ApplicationClientClassLoader;
 import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Application client classloader
@@ -72,7 +67,6 @@ public class TransformingClassLoader extends GlassfishUrlClassLoader {
     private final boolean shouldTransform;
     private final List<ClassFileTransformer> transformers = Collections.synchronizedList(new ArrayList<>());
 
-    private ClientClassLoaderDelegate clientCLDelegate;
 
     /**
      * @param parent
@@ -85,14 +79,12 @@ public class TransformingClassLoader extends GlassfishUrlClassLoader {
         if (instance != null) {
             throw new IllegalStateException("Already set");
         }
-        PrivilegedAction<TransformingClassLoader> action = () -> {
-            return parent instanceof ApplicationClientClassLoader
-                // Parent already comes with user dependencies
-                ? new TransformingClassLoader(new URL[0], parent, shouldTransform)
-                // Otherwise adopt system class path, environment options, whatever.
-                : new TransformingClassLoader(createClassPath(), parent, shouldTransform);
-        };
-        instance = doPrivileged(action);
+        instance = parent instanceof ApplicationClientClassLoader
+            // Parent already comes with user dependencies
+            ? new TransformingClassLoader(new URL[0], parent, shouldTransform)
+            // Otherwise adopt system class path, environment options, whatever.
+            : new TransformingClassLoader(createClassPath(), parent, shouldTransform);
+
         return instance;
     }
 
@@ -103,13 +95,11 @@ public class TransformingClassLoader extends GlassfishUrlClassLoader {
     private TransformingClassLoader(URL[] classpath, ClassLoader parent, boolean shouldTransform) {
         super("Transformer", classpath, parent);
         this.shouldTransform = shouldTransform;
-        this.clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public TransformingClassLoader(URL[] urls, ClassLoader parent) {
         super("Transformer", urls, parent);
         this.shouldTransform = false;
-        this.clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public synchronized void appendURL(final URL url) {
@@ -125,8 +115,7 @@ public class TransformingClassLoader extends GlassfishUrlClassLoader {
 
     synchronized TransformingClassLoader shadow() {
         if (shadow == null) {
-            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(getURLs(), getParent());
-            shadow = doPrivileged(action);
+            shadow = new TransformingClassLoader(getURLs(), getParent());
         }
         return shadow;
     }
@@ -169,26 +158,6 @@ public class TransformingClassLoader extends GlassfishUrlClassLoader {
             return baos.toByteArray();
         } catch (IOException e) {
             throw new ClassNotFoundException(className, e);
-        }
-    }
-
-    @Override
-    protected PermissionCollection getPermissions(CodeSource codesource) {
-        if (System.getSecurityManager() == null) {
-            return super.getPermissions(codesource);
-        }
-
-        // When security manager is enabled, find the declared permissions
-        if (clientCLDelegate.getCachedPerms(codesource) != null) {
-            return clientCLDelegate.getCachedPerms(codesource);
-        }
-
-        return clientCLDelegate.getPermissions(codesource, super.getPermissions(codesource));
-    }
-
-    public void processDeclaredPermissions() throws IOException {
-        if (clientCLDelegate == null) {
-            clientCLDelegate = new ClientClassLoaderDelegate(this);
         }
     }
 

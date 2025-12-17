@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,6 @@ import com.sun.logging.LogDomains;
 
 import java.io.ByteArrayInputStream;
 import java.net.Socket;
-import java.security.PrivilegedAction;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -317,22 +316,18 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
      *
      * This method currently only works for PasswordCredential tokens.
      */
-    private void createAuthCred(SecurityContext sc, byte[] authtok, ORB orb) throws Exception {
+    private void createAuthCred(SecurityContext securityContext, byte[] authtok, ORB orb) throws Exception {
         LOG.log(Level.FINE, "Constructing a PasswordCredential from client authentication token");
+
         /* create a GSSUPToken from the authentication token */
         GSSUPToken tok = GSSUPToken.getServerSideInstance(orb, codec, authtok);
 
         final PasswordCredential pwdcred = tok.getPwdcred();
-        final SecurityContext fsc = sc;
         LOG.log(Level.FINE, "Password credential = {0}", pwdcred);
         LOG.log(Level.FINE, "Adding PasswordCredential to subject's PrivateCredentials");
-        PrivilegedAction<Void> action = () -> {
-            fsc.subject.getPrivateCredentials().add(pwdcred);
-            return null;
-        };
-        java.security.AccessController.doPrivileged(action);
-        sc = fsc;
-        sc.authcls = PasswordCredential.class;
+
+        securityContext.subject.getPrivateCredentials().add(pwdcred);
+        securityContext.authcls = PasswordCredential.class;
     }
 
     private void handle_null_service_context(ServerRequestInfo ri, ORB orb) {

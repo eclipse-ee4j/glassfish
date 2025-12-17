@@ -26,8 +26,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Collection;
@@ -357,16 +355,8 @@ class ReferenceCleaner {
     }
 
 
-    private static void setAccessible(final AccessibleObject acessible) {
-        if (System.getSecurityManager() == null) {
-            acessible.setAccessible(true);
-        } else {
-            PrivilegedAction<Void> action = () -> {
-                acessible.setAccessible(true);
-                return null;
-            };
-            AccessController.doPrivileged(action);
-        }
+    private static void setAccessible(final AccessibleObject accessible) {
+        accessible.setAccessible(true);
     }
 
 

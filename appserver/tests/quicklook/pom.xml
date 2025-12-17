@@ -32,7 +32,7 @@
 
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>quicklook</artifactId>
-    <version>7.1.1-SNAPSHOT</version>
+    <version>8.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Glassfish Quicklook Bundle</name>
@@ -97,16 +97,16 @@
                                 <if>
                                     <equals arg1="${start.wd.security}" arg2="true" />
                                     <then>
-                                        <ant dir="." antfile="build.xml" target="start_server_with_security_manager_enabled">
-                                            <property name="glassfish.home" value="${glassfish.home}" />
+                                        <ant dir="." antfile="build.xml" target="start_server">
+                                            <property name="glassfish.home" value="${glassfish.home}"/>
                                         </ant>
                                     </then>
                                 </if>
                                 <if>
                                     <equals arg1="${stop.wd.security}" arg2="true" />
                                     <then>
-                                        <ant dir="." antfile="build.xml" target="stop_server_with_security_manager_enabled">
-                                            <property name="glassfish.home" value="${glassfish.home}" />
+                                        <ant dir="." antfile="build.xml" target="stop_server">
+                                            <property name="glassfish.home" value="${glassfish.home}"/>
                                         </ant>
                                     </then>
                                 </if>

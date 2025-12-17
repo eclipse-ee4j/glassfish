@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,13 +20,11 @@ package org.glassfish.security.services.impl;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.common.AppservAccessController;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.glassfish.security.services.api.authentication.ImpersonationService;
-import org.glassfish.security.services.common.Secure;
 import org.glassfish.security.services.config.LoginModuleConfig;
 import org.glassfish.security.services.config.SecurityConfiguration;
 import org.glassfish.security.services.config.SecurityProvider;
@@ -62,7 +60,6 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @Singleton
-@Secure(accessPermissionName = "security/service/authentication")
 public class AuthenticationServiceImpl implements AuthenticationService, PostConstruct {
     @Inject
     private Domain domain;
@@ -177,15 +174,14 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
         return loginEx(cbh, subject);
     }
 
-    private Subject loginEx(CallbackHandler handler, Subject subject)
-        throws LoginException {
+    private Subject loginEx(CallbackHandler handler, Subject subject) throws LoginException {
         // Use the supplied Subject or create a new Subject
         Subject _subject = subject;
         if (_subject == null) {
             _subject = new Subject();
         }
 
-        ClassLoader tcl = null;
+        ClassLoader contextClassloader = null;
         boolean restoreTcl = false;
         try {
             // Unable to login without a JAAS Configuration instance
@@ -201,21 +197,10 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
             }
 
             // When needed, setup the Context ClassLoader so JAAS can load the LoginModule(s)
-            tcl = (ClassLoader) AppservAccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return Thread.currentThread().getContextClassLoader();
-                }
-            });
-            final ClassLoader ccl = serverContext.getCommonClassLoader();
-            if (!ccl.equals(tcl)) {
-                AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-                    @Override
-                    public Object run() {
-                        Thread.currentThread().setContextClassLoader(ccl);
-                        return null;
-                    }
-                });
+            contextClassloader = Thread.currentThread().getContextClassLoader();
+            final ClassLoader commonClassLoader = serverContext.getCommonClassLoader();
+            if (!commonClassLoader.equals(contextClassloader)) {
+                Thread.currentThread().setContextClassLoader(commonClassLoader);
                 restoreTcl = true;
             }
 
@@ -224,22 +209,15 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
             context.login();
         } catch (Exception exc) {
             // TODO - Address Audit/Log/Debug handling options
-            if (exc instanceof LoginException) {
-                throw (LoginException) exc;
+            if (exc instanceof LoginException loginException) {
+                throw loginException;
             }
 
             throw (LoginException) new LoginException(
                 "AuthenticationService: "+ exc.getMessage()).initCause(exc);
         } finally {
             if (restoreTcl) {
-                final ClassLoader cl = tcl;
-                AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-                    @Override
-                    public Object run() {
-                        Thread.currentThread().setContextClassLoader(cl);
-                        return null;
-                    }
-                });
+                Thread.currentThread().setContextClassLoader(contextClassloader);
             }
         }
 
@@ -248,8 +226,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
     }
 
     @Override
-    public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
-        throws LoginException {
+    public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual) throws LoginException {
         return impersonationService.impersonate(user, groups, subject, virtual);
     }
 
@@ -268,6 +245,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
         if (Globals.getDefaultBaseServiceLocator() == null) {
             Globals.setDefaultHabitat(locator);
         }
+
         // TODO - Dynamic configuration changes?
         initialize(AuthenticationServiceFactory.getAuthenticationServiceConfiguration(domain));
     }
@@ -281,8 +259,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
      *
      * @throws LoginException when unable to obtain data from the CallbackHandler
      */
-    private void setupPasswordCredential(Subject subject, CallbackHandler callbackHandler)
-        throws LoginException {
+    private void setupPasswordCredential(Subject subject, CallbackHandler callbackHandler) throws LoginException {
         String username = null;
         char[] password = null;
 
@@ -301,23 +278,13 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
                 callbackHandler.handle(callbacks);
                 username = ((NameCallback) callbacks[0]).getName();
                 password = ((PasswordCallback) callbacks[1]).getPassword();
-            } catch (IOException ioe) {
+            } catch (IOException | UnsupportedCallbackException  ioe) {
                 throw (LoginException) new LoginException("AuthenticationService unable to create PasswordCredential: "+ ioe.getMessage()).initCause(ioe);
-            } catch (UnsupportedCallbackException uce) {
-                throw (LoginException) new LoginException("AuthenticationService unable to create PasswordCredential: "+ uce.getMessage()).initCause(uce);
             }
         }
 
         // Add the PasswordCredential to the Subject
-        final Subject s = subject;
-        final PasswordCredential pc = new PasswordCredential(username, password, realmName);
-        AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-            @Override
-            public Object run() {
-                s.getPrivateCredentials().add(pc);
-                return null;
-            }
-        });
+        subject.getPrivateCredentials().add(new PasswordCredential(username, password, realmName));
     }
 
     /**

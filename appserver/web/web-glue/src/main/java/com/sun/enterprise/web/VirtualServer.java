@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,8 +46,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -589,9 +587,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                     webModuleConfig.setLocation(docroot);
                     webModuleConfig.setDescriptor(webBundleDescriptor);
                     webModuleConfig.setParentLoader(EmbeddedWebContainer.class.getClassLoader());
-                    PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(
-                        EmbeddedWebContainer.class.getClassLoader());
-                    WebappClassLoader cloader = AccessController.doPrivileged(action);
+                    WebappClassLoader cloader = new WebappClassLoader(EmbeddedWebContainer.class.getClassLoader());
                     webModuleConfig.setAppClassLoader(cloader);
                 }
             }
@@ -628,8 +624,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             webModuleConfig.setLocation(new File(docroot));
             webModuleConfig.setDescriptor(webBundleDescriptor);
             webModuleConfig.setParentLoader(serverContext.getCommonClassLoader());
-            PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(serverContext.getCommonClassLoader());
-            WebappClassLoader loader = AccessController.doPrivileged(action);
+            WebappClassLoader loader = new WebappClassLoader(serverContext.getCommonClassLoader());
             loader.start();
             webModuleConfig.setAppClassLoader(loader);
 
@@ -715,9 +710,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                     webModuleConfig.setDescriptor(webBundleDescriptor);
                     webModuleConfig.setLocation(docroot);
                     webModuleConfig.setParentLoader(EmbeddedWebContainer.class.getClassLoader());
-                    PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(
-                        EmbeddedWebContainer.class.getClassLoader());
-                    WebappClassLoader cloader = AccessController.doPrivileged(action);
+                    WebappClassLoader cloader = new WebappClassLoader(EmbeddedWebContainer.class.getClassLoader());
                     webModuleConfig.setAppClassLoader(cloader);
 
                 }

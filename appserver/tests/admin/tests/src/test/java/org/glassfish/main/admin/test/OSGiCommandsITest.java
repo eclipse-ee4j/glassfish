@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,13 +37,13 @@ import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.Thread.sleep;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -48,19 +51,19 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class OSGiCommandsITest {
 
+    private static final Logger LOGGER = System.getLogger(OSGiCommandsITest.class.getName());
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin(true);
 
     @BeforeAll
     public static void waitOsgiReady() throws Exception {
-        long timeout = System.currentTimeMillis() + 10_000L;
-        while (System.currentTimeMillis() < timeout) {
+        for (int i = 0; i < 50; i++) {
             AsadminResult result = ASADMIN.exec("osgi", "lb");
             if (!result.isError()) {
                 return;
             }
-            Thread.yield();
+            LOGGER.log(Level.INFO, "Waiting for OSGi to be ready...");
+            sleep(Duration.ofMillis(200));
         }
-        fail("Timeout 10 s when waiting for OSGi to be ready");
     }
 
     @Test

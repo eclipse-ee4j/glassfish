@@ -31,8 +31,6 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
@@ -72,8 +70,7 @@ public class MainClassLaunchable implements Launchable {
         // There is no developer-provided descriptor possible so just use a default one.
         if (acDesc == null) {
             ReadableArchive tempArchive = null;
-            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
-            final TransformingClassLoader tempLoader = AccessController.doPrivileged(action);
+            final TransformingClassLoader tempLoader = new TransformingClassLoader(loader.getURLs(), loader.getParent());
             tempArchive = createArchive(tempLoader, mainClass);
             final AppClientArchivist acArchivist = getArchivist(tempArchive, tempLoader);
             archivist.setClassLoader(tempLoader);

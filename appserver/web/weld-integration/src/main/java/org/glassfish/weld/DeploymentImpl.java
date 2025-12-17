@@ -27,7 +27,6 @@ import jakarta.enterprise.inject.spi.Extension;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -64,10 +63,9 @@ import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 import static com.sun.enterprise.util.Utility.isAnyEmpty;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.lang.System.getSecurityManager;
-import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 import static java.util.stream.Collectors.toList;
 import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
 import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
@@ -113,6 +111,7 @@ public class DeploymentImpl implements CDI11Deployment {
     private final Map<ClassLoader, BeanDeploymentArchive> extensionBDAMap = new HashMap<>();
 
     private Iterable<Metadata<Extension>> extensions;
+    private List<Metadata<Extension>> dynamicExtensions = new ArrayList<>();
 
     private final Collection<EjbDescriptor> deployedEjbs = new LinkedList<>();
     private ArchiveFactory archiveFactory;
@@ -235,9 +234,13 @@ public class DeploymentImpl implements CDI11Deployment {
             LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
         }
 
+        // Add the new archive to all existing archives
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
             beanDeploymentArchive.getBeanDeploymentArchives().add(newBeanDeploymentArchive);
         }
+
+        // Add the existing archives archives to the new archive
+        newBeanDeploymentArchive.getBeanDeploymentArchives().addAll(beanDeploymentArchives);
 
         if (LOG.isLoggable(FINE)) {
             LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,
@@ -274,13 +277,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         if (!buildExtensions.isEmpty()) {
             try {
-                LiteExtensionTranslator extension = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<LiteExtensionTranslator>() {
-                    @Override
-                    public LiteExtensionTranslator run() {
-                        return new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
-                    }
-                }) : new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
-                extensionsList.add(new MetadataImpl<>(extension));
+                extensionsList.add(new MetadataImpl<>(new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader())));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -308,7 +305,28 @@ public class DeploymentImpl implements CDI11Deployment {
                 extensionsList.add(beanDeploymentArchiveExtension);
             }
         }
+        extensionsList.addAll(dynamicExtensions);
         return extensions = extensionsList;
+    }
+
+    record ExtensionMetadata(Extension extension) implements Metadata<Extension> {
+
+        @Override
+        public Extension getValue() {
+            return extension;
+        }
+
+        @Override
+        public String getLocation() {
+            return extension.toString();
+        }
+
+    }
+
+    public void addExtensions(Extension... extensions) {
+        for (Extension extension : extensions) {
+            dynamicExtensions.add(new ExtensionMetadata(extension));
+        }
     }
 
     @Override
@@ -774,7 +792,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         try {
             // Each appLib in context.getAppLibs is a URI of the form
-            // "file:/glassfish/runtime/trunk/glassfish7/glassfish/domains/domain1/lib/applibs/mylib.jar"
+            // "file:/glassfish/runtime/trunk/glassfish8/glassfish/domains/domain1/lib/applibs/mylib.jar"
             // parentArchiveAppLibs are the app libs in the manifest of the root archive and any embedded
             // archives.
             List<URI> rootArchiveAppLibs = context.getAppLibs();
@@ -804,7 +822,8 @@ public class DeploymentImpl implements CDI11Deployment {
                                 if (libArchive != null) {
                                     try {
                                         libArchive.close();
-                                    } catch (Exception ignore) {
+                                    } catch (Exception ex) {
+                                        LOG.log(WARNING, ex, () -> "Could not open " + rootArchiveAppLib + " as app lib and scan it for CDI beans.");
                                     }
                                 }
                             }

@@ -10,6 +10,7 @@ SYNOPSIS
            [--contextinfoenabled={false|true}]
            [--contextinfo={Classloader|JNDI|Security|WorkArea}]
            [--threadpriority threadpriority]
+           [--use-virtual-threads={false|true}]
            [--description description]
            [--property property]
            [--target target]
@@ -44,6 +45,12 @@ OPTIONS
        --threadpriority
            Specifies the priority to assign to created threads. The default
            value is 5.
+
+       --use-virtual-threads
+           Determines whether virtual threads should be created instead of usual
+           platform threads. Virtual threads are available only in Java 21 or
+           newer. In case of earlier version it will fallback to platform threads.
+           The default value is true.
 
        --description
            Descriptive details about the resource.

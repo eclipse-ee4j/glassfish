@@ -19,141 +19,70 @@
 
 <project name="db-targets" default="all" basedir=".">
 
-    <!-- Store the java version -->
-    <property name="java.version" value="${java.version}" />
+<target name="start-derby" depends="setOSConditions" >
+    <antcall target="start-derby-unix"/>
+    <antcall target="start-derby-windows"/>
+</target>
 
-    <!-- Parse the major version -->
-    <condition property="jdk24.or.higher">
-        <or>
-            <matches string="${java.version}" pattern="^2[456789](\.|$)" />
-            <matches string="${java.version}" pattern="^[3-9][0-9]+(\.|$)" />
-        </or>
-    </condition>
+<target name="start-derby-windows" if="isWindows">
+    <exec executable="cmd" spawn="true">
+        <arg value="/c"/>
+        <arg value="${glassfish.home}\bin\asadmin.bat"/>
+        <arg value="start-database"/>
+    </exec>
+</target>
 
-    <target name="start-derby" depends="setOSConditions">
-        <antcall target="start-derby-unix"/>
-        <antcall target="start-derby-windows"/>
-    </target>
+<target name="start-derby-unix" if="isUnix">
+    <exec executable="${glassfish.home}/bin/asadmin" spawn="true">
+        <arg value="start-database"/>
+    </exec>
+</target>
 
-    <target name="start-derby-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c"/>
-            <arg value="${glassfish.home}\bin\asadmin.bat"/>
-            <arg value="start-database"/>
-        </exec>
-    </target>
+<target name="stop-derby" depends="setOSConditions" >
+    <antcall target="stop-derby-unix"/>
+    <antcall target="stop-derby-windows"/>
+</target>
 
-    <target name="start-derby-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin" spawn="true">
-            <arg value="start-database"/>
-        </exec>
-    </target>
+<target name="stop-derby-windows" if="isWindows">
+    <exec executable="cmd" spawn="true">
+        <arg value="/c"/>
+        <arg value="${glassfish.home}\bin\asadmin.bat"/>
+        <arg value="stop-database"/>
+    </exec>
+</target>
 
-    <target name="stop-derby" depends="setOSConditions" >
-        <antcall target="stop-derby-unix"/>
-        <antcall target="stop-derby-windows"/>
-    </target>
+<target name="stop-derby-unix" if="isUnix">
+    <exec executable="${glassfish.home}/bin/asadmin">
+        <arg value="stop-database"/>
+    </exec>
+</target>
 
-    <target name="stop-derby-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c"/>
-            <arg value="${glassfish.home}\bin\asadmin.bat"/>
-            <arg value="stop-database"/>
-        </exec>
-    </target>
+<target name="startDerby" depends="initprop">
+    <echo message="Starting Derby DB servers in the Network Mode"/>
 
-    <target name="stop-derby-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <arg value="stop-database"/>
-        </exec>
-    </target>
-
-    <target name="enable-security-manager" depends="setOSConditions" unless="jdk24.or.higher">
-        <antcall target="enable-security-manager-unix"/>
-        <antcall target="enable-security-manager-windows"/>
-    </target>
-
-    <target name="enable-security-manager-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c"/>
-            <arg value="${glassfish.home}\bin\asadmin.bat"/>
-            <arg line="create-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="enable-security-manager-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <arg line="create-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="disable-security-manager" depends="setOSConditions">
-        <antcall target="disable-security-manager-unix"/>
-        <antcall target="disable-security-manager-windows"/>
-    </target>
-
-    <target name="disable-security-manager-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c"/>
-            <arg value="${glassfish.home}\bin\asadmin.bat"/>
-            <arg line="delete-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="disable-security-manager-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <arg line="delete-jvm-options"/>
-            <arg line="-Djava.security.manager"/>
-        </exec>
-    </target>
-
-    <target name="add-quicklook-policy-grants">
-        <move file="${glassfish.home}/domains/domain1/config/server.policy"
-        tofile="${glassfish.home}/domains/domain1/config/server_policy.orig"/>
-        <concat append="true"
-          destfile="${glassfish.home}/domains/domain1/config/server.policy">
-            <fileset file="${glassfish.home}/domains/domain1/config/server_policy.orig"/>
-            <fileset file="${basedir}/weld/numberguess/numberguess.policy"/>
-            <fileset file="${basedir}/weld/extensions/extensions.policy"/>
-            <fileset file="${basedir}/osgitest/basicosgi/security.policy"/>
-        </concat>
-    </target>
-
-    <target name="remove-quicklook-policy-grants">
-        <delete file="${glassfish.home}/domains/domain1/config/server.policy"/>
-        <move file="${glassfish.home}/domains/domain1/config/server_policy.orig"
-        tofile="${glassfish.home}/domains/domain1/config/server.policy"/>
-    </target>
-
-    <target name="startDerby" depends="initprop">
-        <echo message="Starting Derby DB servers in the Network Mode"/>
-
-        <java classname="org.apache.derby.drda.NetworkServerControl"
+    <java classname="org.apache.derby.drda.NetworkServerControl"
           classpathref="db.class.path" fork="true" spawn="true">
-            <sysproperty key="derby.system.home" value="${derby.home}"/>
-            <arg line="-h localhost -p ${db.port} start"/>
-        </java>
-        <echo message="Finished starting datbase"/>
-    </target>
+        <sysproperty key="derby.system.home" value="${derby.home}"/>
+        <arg line="-h localhost -p ${db.port} start"/>
+    </java>
+    <echo message="Finished starting datbase"/>
+</target>
 
-    <target name="stopDerby" depends="initprop">
-        <echo message="Stopping Derby DB servers in the Network Mode"/>
+<target name="stopDerby" depends="initprop">
+    <echo message="Stopping Derby DB servers in the Network Mode"/>
 
-        <java classname="org.apache.derby.drda.NetworkServerControl"
+    <java classname="org.apache.derby.drda.NetworkServerControl"
           classpathref="db.class.path" fork="true">
-            <sysproperty key="derby.system.home" value="${derby.home}"/>
-            <arg line="shutdown -h localhost -p ${db.port}"/>
-        </java>
-        <echo message="Finished stopping datbase"/>
-    </target>
+        <sysproperty key="derby.system.home" value="${derby.home}"/>
+        <arg line="shutdown -h localhost -p ${db.port}"/>
+    </java>
+    <echo message="Finished stopping datbase"/>
+</target>
 
-    <target name="sql-common" depends="initprop">
-        <echo message="sql.file = ${sql.file}"/>
-        <echo message="db.class.path = ${db.class.path}"/>
-        <sql
+<target name="sql-common" depends="initprop">
+  <echo message="sql.file = ${sql.file}"/>
+  <echo message="db.class.path = ${db.class.path}"/>
+  <sql
     driver="${db.driver}"
     url="${db.url}"
     userid="${db.user}"
@@ -162,19 +91,19 @@
     onerror="continue"
     print="yes"
     classpath="${db.class.path}">
-        </sql>
-    </target>
+  </sql>
+</target>
 
-    <target name="create-db" depends="initprop,delete-db"
+<target name="create-db" depends="initprop,delete-db"
         description="Create database tables and populate database." >
-        <echo>database=${db.type}</echo>
-        <echo>driver=${db.driver}</echo>
-        <echo>url=${db.url}</echo>
-        <echo>user=${db.user}</echo>
-        <echo>password=${db.password}</echo>
-        <echo>db.class.path=db.class.path</echo>
+    <echo>database=${db.type}</echo>
+    <echo>driver=${db.driver}</echo>
+    <echo>url=${db.url}</echo>
+    <echo>user=${db.user}</echo>
+    <echo>password=${db.password}</echo>
+    <echo>db.class.path=db.class.path</echo>
 
-        <sql driver="${db.driver}"
+    <sql driver="${db.driver}"
          encoding="utf-8"
          url="${db.url}"
          userid="${db.user}"
@@ -184,22 +113,22 @@
          print="true"
          autocommit="false"
          onerror="abort" >
-            <transaction src="sql/create_${db.type}.sql"/>
-            <transaction>
+        <transaction src="sql/create_${db.type}.sql"/>
+        <transaction>
             select city from web_customer where cust_id=1;
             select * from web_customer where custname Like 'Alice_1';
         </transaction>
 
-        </sql>
+    </sql>
 
-    </target>
-    <target name="delete-db"
+</target>
+<target name="delete-db"
         description="Deletes the database tables." depends="initprop">
-        <echo>driver=${db.driver}</echo>
-        <echo>url=${db.url}</echo>
-        <echo>user=${db.user}</echo>
-        <echo>password=${db.password}</echo>
-        <sql driver="${db.driver}"
+    <echo>driver=${db.driver}</echo>
+    <echo>url=${db.url}</echo>
+    <echo>user=${db.user}</echo>
+    <echo>password=${db.password}</echo>
+    <sql driver="${db.driver}"
          encoding="utf-8"
          url="${db.url}"
          userid="${db.user}"
@@ -208,13 +137,13 @@
          delimiter="${db.delimiter}"
          autocommit="true"
          onerror="continue">
-            <transaction src="sql/drop_${db.type}.sql"/>
-        </sql>
-    </target>
+        <transaction src="sql/drop_${db.type}.sql"/>
+    </sql>
+</target>
 
-    <target name="initprop" >
-        <echo message="JavaDB Database Location : ${derby.home}" />
-        <property name="ips.derby" value="${glassfish.home}/../javadb"/>
-        <property name="db.class.path" value="${derby.home}/lib/derbyshared.jar:${derby.home}/lib/derbytools.jar:${derby.home}/lib/derbyclient.jar:${ips.derby}/lib/derbyclient.jar"/>
-    </target>
+<target name="initprop" >
+    <echo message="JavaDB Database Location : ${derby.home}" />
+    <property name="ips.derby" value="${glassfish.home}/../javadb"/>
+    <property name="db.class.path" value="${derby.home}/lib/derbyshared.jar:${derby.home}/lib/derbytools.jar:${derby.home}/lib/derbyclient.jar:${ips.derby}/lib/derbyclient.jar"/>
+</target>
 </project>

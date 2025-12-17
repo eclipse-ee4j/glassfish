@@ -31,7 +31,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>7.1.1-SNAPSHOT</version>
+    <version>8.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -96,15 +96,15 @@
     </distributionManagement>
     <properties>
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
-        <expressly.version>5.0.0</expressly.version>
+        <jakarta.el-api.version>6.0.1</jakarta.el-api.version>
+        <expressly.version>6.0.0</expressly.version>
 
         <!-- Jakarta Servlet -->
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
-        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
-        <hibernate-validator.version>8.0.3.Final</hibernate-validator.version>
+        <jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
+        <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
@@ -114,16 +114,19 @@
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>3.1.1</hk2.version>
-        <hk2.plugin.version>3.1.1</hk2.plugin.version>
+        <hk2.version>4.0.0-M3</hk2.version>
+        <hk2.plugin.version>4.0.0-M3</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.4</jakarta.xml.bind-api.version>
         <jakarta.jaxb-impl.version>4.0.6</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
-        <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.11</jersey.version>
+        <jakarta.rest-api.version>4.0.0</jakarta.rest-api.version>
+        <jersey.version>4.0.0</jersey.version>
+
+        <!-- Jakarta Persistence -->
+        <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.5</jakarta.mail-api.version>
@@ -134,14 +137,10 @@
         <angus.activation.version>2.0.3</angus.activation.version>
 
         <!-- Jakarta Annotations -->
-        <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
-
-        <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
-        <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
+        <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
         <!-- GlassFish Components -->
-        <grizzly.version>4.0.2</grizzly.version>
+        <grizzly.version>4.1.0-M1</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.3.0</glassfish-management-api.version>
 
@@ -156,17 +155,20 @@
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
-        <commons-io.version>2.20.0</commons-io.version>
-        <commons-lang3.version>3.19.0</commons-lang3.version>
+        <commons-io.version>2.21.0</commons-io.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.9</asm.version>
-        <jsch.version>2.27.3</jsch.version>
-        <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.15</ant.version>
+        <jsch.version>2.27.7</jsch.version>
+        <antlr2.version>2.7.7</antlr2.version>
+        <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
+        <antlr4.version>4.13.2</antlr4.version>
+        <!-- Warning: updating Ant to e.g. 1.10.5 will cause ElementStarITest.testLoadBalancerConfigs to fail -->
+        <ant.version>1.10.2</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.20.0</jackson.version>
+        <jackson.version>2.20.1</jackson.version>
         <jackson.version2>2.20</jackson.version2>
         <fasterxml.classmate.version>1.7.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
@@ -179,11 +181,11 @@
         <junit.version>5.14.0</junit.version>
         <junit-platform.version>1.14.0</junit-platform.version>
         <jmh.version>1.37</jmh.version>
-        <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
+        <osgi-resource-locator.version>3.0.0</osgi-resource-locator.version>
         <slf4j.version>2.0.17</slf4j.version>
 
         <surefire.version>3.5.4</surefire.version>
-        <junit5-surefire-tree-reporter.version>1.4.0</junit5-surefire-tree-reporter.version>
+        <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -194,7 +196,7 @@
         <deploy.skip>false</deploy.skip>
 
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2025-12-05T02:05:15Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-10-03T11:11:49Z</project.build.outputTimestamp>
 
         <!-- Show to developers by default -->
         <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
@@ -219,7 +221,7 @@
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
         <test.enableDefaultLogCfg>true</test.enableDefaultLogCfg>
-        <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish7/glassfish</glassfish.distribution.dir>
+        <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish8/glassfish</glassfish.distribution.dir>
 
         <!-- Do not autopublish by default -->
         <release.autopublish>false</release.autopublish>
@@ -341,6 +343,13 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- Jakarta Persistence -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>${jakarta.persistence-api.version}</version>
+            </dependency>
+
             <!-- Jakarta Mail -->
             <dependency>
                 <groupId>jakarta.mail</groupId>
@@ -372,28 +381,6 @@
                 <version>${jakarta.annotation-api.version}</version>
             </dependency>
 
-            <!-- Jakarta EE Security + Authentication/Authorization -->
-            <dependency>
-                <groupId>jakarta.security.enterprise</groupId>
-                <artifactId>jakarta.security.enterprise-api</artifactId>
-                <version>${jakarta.security-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.authentication</groupId>
-                <artifactId>jakarta.authentication-api</artifactId>
-                <version>${jakarta.authentication-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.authorization</groupId>
-                <artifactId>jakarta.authorization-api</artifactId>
-                <version>${jakarta.authorization-api.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jakarta.servlet</groupId>
-                        <artifactId>jakarta.servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
 
             <!-- GlassFish Components -->
@@ -707,7 +694,17 @@
             <dependency>
                 <groupId>antlr</groupId>
                 <artifactId>antlr</artifactId>
-                <version>2.7.7</version>
+                <version>${antlr2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.external</groupId>
+                <artifactId>antlr</artifactId>
+                <version>${antlr2-repackaged.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jvnet.mimepull</groupId>
@@ -736,6 +733,12 @@
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-suite-engine</artifactId>
+                <version>${junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
                 <version>${junit-platform.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -888,7 +891,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -899,7 +902,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.14.1</version>
                     <configuration>
-                        <release>17</release>
+                        <release>21</release>
                         <excludes>
                             <exclude>**/.ade_path/**</exclude>
                         </excludes>
@@ -959,7 +962,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -1084,7 +1087,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.26.1</version>
+                            <version>12.2.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -1133,11 +1136,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
                     </configuration>
@@ -1149,7 +1152,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.6.2</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1159,7 +1162,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.8.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -1176,7 +1179,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -1329,7 +1332,7 @@
                                             </ignoreVersions>
                                         </rule>
 
-                                        <!-- Jakarta EE 11 major versions to exclude -->
+                                        <!-- Jakarta EE 12 major versions to exclude -->
                                         <rule>
                                             <groupId>jakarta.activation</groupId>
                                             <ignoreVersions>
@@ -1350,7 +1353,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.0.0,)</version>
+                                                    <version>[3.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1365,7 +1368,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.1.0,)</version>
+                                                    <version>[3.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1380,7 +1383,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.0.0,)</version>
+                                                    <version>[3.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1395,11 +1398,49 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0.0,)</version>
+                                                    <version>[4.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.data</groupId>
+                                            <artifactId>jakarta.data-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[1.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.enterprise</groupId>
+                                            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4.2.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
@@ -1410,7 +1451,26 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[6.0.0,)</version>
+                                                    <version>[6.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.nosql</groupId>
+                                            <artifactId>jakarta.nosql-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[1.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1429,7 +1489,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[6.1.0,)</version>
+                                                    <version>[6.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1448,7 +1508,26 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0.0,)</version>
+                                                    <version>[4.1.0,)</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*-RC.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <rule>
+                                            <groupId>jakarta.servlet.jsp.jstl</groupId>
+                                            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[3.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1466,7 +1545,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.1.0,)</version>
+                                                    <version>[3.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1480,7 +1559,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.1,)</version>
+                                                    <version>[5.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1494,7 +1573,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.1,)</version>
+                                                    <version>[3.2,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1512,7 +1591,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.2,)</version>
+                                                    <version>[2.3,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1530,7 +1609,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.2,)</version>
+                                                    <version>[2.3,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1544,7 +1623,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.2,)</version>
+                                                    <version>[3.3,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1562,7 +1641,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[11.0,)</version>
+                                                    <version>[12.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1577,7 +1656,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.1,)</version>
+                                                    <version>[4.2,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1608,7 +1687,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.1,)</version>
+                                                    <version>[4.2,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1638,7 +1717,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0.0,)</version>
+                                                    <version>[4.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1652,7 +1731,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.2,)</version>
+                                                    <version>[2.3,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1666,7 +1745,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.0,)</version>
+                                                    <version>[3.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1681,32 +1760,11 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.1.0,)</version>
+                                                    <version>[3.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>.*-M.*</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-
-                                        <rule>
-                                            <groupId>org.apache.derby</groupId>
-                                            <artifactId>derby</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[10.17,)</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-                                        <rule>
-                                            <groupId>org.glassfish.external</groupId>
-                                            <artifactId>derby</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[10.17,)</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
@@ -1730,7 +1788,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.1.0,)</version>
+                                                    <version>[4.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1744,7 +1802,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0.0,)</version>
+                                                    <version>[4.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1758,7 +1816,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0,)</version>
+                                                    <version>[4.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1772,7 +1830,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[6.0,)</version>
+                                                    <version>[6.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1782,21 +1840,11 @@
                                         </rule>
 
                                         <rule>
-                                            <groupId>org.glassfish.mq</groupId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[6.6,)</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-
-                                        <rule>
                                             <groupId>org.glassfish.tyrus</groupId>
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.2,)</version>
+                                                    <version>[2.3,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1810,7 +1858,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0,)</version>
+                                                    <version>[4.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1824,7 +1872,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0,)</version>
+                                                    <version>[4.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1838,7 +1886,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.1,)</version>
+                                                    <version>[3.2,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1852,7 +1900,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.0,)</version>
+                                                    <version>[3.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1867,7 +1915,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.1,)</version>
+                                                    <version>[4.2,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1881,7 +1929,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[8.0,)</version>
+                                                    <version>[9.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1896,7 +1944,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.1.0,)</version>
+                                                    <version>[2.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1911,7 +1959,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.2,)</version>
+                                                    <version>[2.3,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1926,29 +1974,11 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[2.1.0,)</version>
+                                                    <version>[2.2.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>.*-M.*</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-
-                                        <rule>
-                                            <groupId>org.eclipse.persistence</groupId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[5.0,6.0)</version>
-                                                </ignoreVersion>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>.*-M.*</version>
-                                                </ignoreVersion>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>.*-B.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
@@ -1958,7 +1988,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[9.0,)</version>
+                                                    <version>[10.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -1984,7 +2014,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[6.0,)</version>
+                                                    <version>[7.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -2010,7 +2040,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[4.0,)</version>
+                                                    <version>[5.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -2037,7 +2067,7 @@
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[3.0,)</version>
+                                                    <version>[3.1,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>
@@ -2230,7 +2260,7 @@
                     <instructions>
                         <_include>-osgi.bundle</_include>
                         <_noimportjava>true</_noimportjava>
-                        <_runee>JavaSE-17</_runee>
+                        <_runee>JavaSE-21</_runee>
                     </instructions>
                 </configuration>
             </plugin>
@@ -2427,7 +2457,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.13</jacoco.version>
+                <jacoco.version>0.8.14</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>
@@ -2453,8 +2483,7 @@
                     </plugins>
                 </pluginManagement>
                 <plugins>
-                    <plugin>
-                        <!-- Generates @argLine for surefire and failsafe plugins -->
+                    <plugin><!-- Generates @argLine for surefire and failsafe plugins -->
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <executions>

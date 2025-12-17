@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2024 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,21 +18,26 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.docs</groupId>
         <artifactId>docs</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>documentation-generators-parent</artifactId>
     <packaging>pom</packaging>
+
     <name>Eclipse GlassFish Documentation parent pom</name>
 
     <properties>
         <maven.site.skip>true</maven.site.skip>
         <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
-        <asciidoctorj.pdf.version>2.3.20</asciidoctorj.pdf.version>
+        <asciidoctorj.pdf.version>2.3.23</asciidoctorj.pdf.version>
+        <asciidoc.pdf.skip>false</asciidoc.pdf.skip>
+        <asciidoc.html.skip>false</asciidoc.html.skip>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
         <productName>Eclipse GlassFish</productName>
@@ -119,6 +125,7 @@
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
+                            <skip>${asciidoc.html.skip}</skip>
                             <backend>html</backend>
                             <sourceDirectory>${bookDirectory}</sourceDirectory>
                             <sourceDocumentName>book.adoc</sourceDocumentName>
@@ -146,6 +153,7 @@
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
+                            <skip>${asciidoc.pdf.skip}</skip>
                             <backend>pdf</backend>
                             <sourceDirectory>${bookDirectory}</sourceDirectory>
                             <sourceDocumentName>book.adoc</sourceDocumentName>
@@ -200,6 +208,7 @@
                             <goal>attach-artifact</goal>
                         </goals>
                         <configuration>
+                            <skip>${asciidoc.pdf.skip}</skip>
                             <artifacts>
                                 <artifact>
                                     <file>${project.build.directory}/pdf/${pdf.fileName}</file>

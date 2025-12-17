@@ -16,7 +16,7 @@
 */
 
 def mvnVersion = '3.9.11'
-def javaVersion = '17'
+def javaVersion = '21'
 def jdkTool = "temurin-jdk${javaVersion}-latest"
 def mvnTool = "apache-maven-${mvnVersion}"
 

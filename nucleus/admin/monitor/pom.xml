@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>nucleus-admin</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>monitoring-core</artifactId>
@@ -32,10 +32,6 @@
 
     <name>admin-monitoring</name>
     <description>Glassfish Appserver Admin Monitoring Infrastructure</description>
-
-    <properties>
-        <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-    </properties>
 
     <developers>
         <developer>
@@ -48,6 +44,10 @@
             </roles>
         </developer>
     </developers>
+
+    <properties>
+        <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
+    </properties>
 
     <dependencies>
         <dependency>

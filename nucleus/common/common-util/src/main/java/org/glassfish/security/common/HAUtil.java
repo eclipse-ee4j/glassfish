@@ -24,8 +24,10 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface HAUtil {
-    public String getClusterName();
-    public String getInstanceName();
-    public boolean isHAEnabled();
+    String getClusterName();
+
+    String getInstanceName();
+
+    boolean isHAEnabled();
 
 }

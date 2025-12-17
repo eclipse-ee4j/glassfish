@@ -133,6 +133,19 @@ public class SystemPropertyConstants {
     }
 
     /**
+<<<<<<< HEAD
+     * Returns the component identifier associated with the INSTALL_ROOT. For example if INSTALL_ROOT is
+     * /home/glassfish8/glassfish the component name will "glassfish".
+     *
+     * @return String representing the component identifier.
+     */
+    public static final String getComponentName() {
+        return new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).getName();
+    }
+
+    /**
+=======
+>>>>>>> refs/remotes/origin/master
      * Returns the default timeout in milliseconds used in some Admin commands.
      *
      * @return The value of the system property {@link SystemPropertyConstants#DEFAULT_ADMIN_TIMEOUT_PROPERTY} or the

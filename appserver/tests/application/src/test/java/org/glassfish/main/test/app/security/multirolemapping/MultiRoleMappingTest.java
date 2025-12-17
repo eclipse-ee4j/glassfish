@@ -150,7 +150,7 @@ public class MultiRoleMappingTest {
 
         earFile = new File(tempDir, APP_NAME + ".ear");
         earArchive.as(ZipExporter.class).exportTo(earFile, true);
-        assertThat(ASADMIN.exec("deploy", "--target", "server", earFile.getAbsolutePath()), asadminOK());
+        assertThat(ASADMIN.exec(10000000, "deploy", "--target", "server", earFile.getAbsolutePath()), asadminOK());
     }
 
 

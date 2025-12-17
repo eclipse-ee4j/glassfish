@@ -70,7 +70,10 @@ public class CreateManagedThreadFactory implements AdminCommand {
     @Param(name="threadpriority", alias="threadPriority", defaultValue=""+Thread.NORM_PRIORITY, optional=true)
     private Integer threadpriority;
 
-    @Param(optional=true)
+    @Param(name = "usevirtualthreads", alias = "useVirtualThreads", defaultValue = "false", optional = true)
+    protected Boolean useVirtualThreads;
+
+    @Param(optional = true)
     private String description;
 
     @Param(name="property", optional=true, separator=':')
@@ -100,6 +103,7 @@ public class CreateManagedThreadFactory implements AdminCommand {
         attrList.set(ConcurrencyTagNames.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.set(ConcurrencyTagNames.CONTEXT_INFO, contextinfo);
         attrList.set(ConcurrencyTagNames.THREAD_PRIORITY, threadpriority.toString());
+        attrList.set(ConcurrencyTagNames.USE_VIRTUAL_THREADS, useVirtualThreads.toString());
         attrList.set(ServerTags.DESCRIPTION, description);
         attrList.set(ResourceConstants.ENABLED, enabled.toString());
         ResourceStatus rs;

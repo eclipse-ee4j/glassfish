@@ -27,6 +27,8 @@ import java.io.PrintWriter;
 
 public class DefaultP2RTestServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
+
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getMethod();

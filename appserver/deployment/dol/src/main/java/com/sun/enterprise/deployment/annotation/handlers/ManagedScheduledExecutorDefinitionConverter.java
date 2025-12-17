@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,8 +71,11 @@ class ManagedScheduledExecutorDefinitionConverter extends
         LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
         ManagedScheduledExecutorDefinitionData data = new ManagedScheduledExecutorDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
-
+        data.setUseVirtualThreads(annotation.virtual());
         if (annotation.hungTaskThreshold() < 0) {
             data.setHungTaskThreshold(0);
         } else {
@@ -88,21 +91,27 @@ class ManagedScheduledExecutorDefinitionConverter extends
 
 
     @Override
-    void merge(ManagedScheduledExecutorDefinitionData annotationData, ManagedScheduledExecutorDefinitionData descriptorData) {
-        LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
-        if (!annotationData.getName().equals(descriptorData.getName())) {
+    void merge(ManagedScheduledExecutorDefinitionData annotation, ManagedScheduledExecutorDefinitionData descriptor) {
+        LOG.log(Level.DEBUG, "merge(annotation={0}, descriptor={1})", annotation, descriptor);
+        if (!annotation.getName().equals(descriptor.getName())) {
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
-                + annotationData.getName() + " x " + descriptorData.getName());
+                + annotation.getName() + " x " + descriptor.getName());
         }
-        if (descriptorData.getHungTaskThreshold() <= 0 && annotationData.getHungTaskThreshold() != 0) {
-            descriptorData.setHungTaskThreshold(annotationData.getHungTaskThreshold());
+
+        mergeQualifiers(annotation, descriptor);
+
+        if (!descriptor.getUseVirtualThreads()) {
+            descriptor.setUseVirtualThreads(annotation.getUseVirtualThreads());
         }
-        if (descriptorData.getMaxAsync() <= 0) {
-            descriptorData.setMaxAsync(annotationData.getMaxAsync());
+        if (descriptor.getHungTaskThreshold() <= 0 && annotation.getHungTaskThreshold() != 0) {
+            descriptor.setHungTaskThreshold(annotation.getHungTaskThreshold());
         }
-        if (descriptorData.getContext() == null && annotationData.getContext() != null
-            && !annotationData.getContext().isBlank()) {
-            descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));
+        if (descriptor.getMaxAsync() <= 0) {
+            descriptor.setMaxAsync(annotation.getMaxAsync());
+        }
+        if (descriptor.getContext() == null && annotation.getContext() != null
+            && !annotation.getContext().isBlank()) {
+            descriptor.setContext(TranslatedConfigView.expandValue(annotation.getContext()));
         }
     }
 }

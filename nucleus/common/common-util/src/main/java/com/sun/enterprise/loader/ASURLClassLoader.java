@@ -18,7 +18,6 @@
 package com.sun.enterprise.loader;
 
 import com.sun.appserv.server.util.PreprocessorUtil;
-import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.i18n.StringManager;
@@ -83,8 +82,7 @@ import static java.util.logging.Level.INFO;
  * @author Sivakumar Thyagarajan
  * @since  JDK 1.4
  */
-public class ASURLClassLoader extends GlassfishUrlClassLoader
-    implements JasperAdapter, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader {
+public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperAdapter, InstrumentableClassLoader, PreDestroy {
 
     static {
         registerAsParallelCapable();
@@ -610,27 +608,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         };
         return AccessController.doPrivileged(action);
     }
-
-
-    @Override
-    public void addEEPermissions(PermissionCollection eePc) throws SecurityException {
-        // sm on
-        if (System.getSecurityManager() != null) {
-            System.getSecurityManager().checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
-
-            permissionsHolder.setEEPermissions(eePc);
-        }
-    }
-
-
-    @Override
-    public void addDeclaredPermissions(PermissionCollection declaredPc) throws SecurityException {
-        if (System.getSecurityManager() != null) {
-            System.getSecurityManager().checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
-            permissionsHolder.setDeclaredPermissions(declaredPc);
-        }
-    }
-
 
     @Override
     protected PermissionCollection getPermissions(CodeSource codeSource) {

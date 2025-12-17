@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,8 +29,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -123,8 +122,7 @@ interface Launchable {
                 final ReadableArchive facadeRA,
                 final ReadableArchive clientRA) throws IOException, SAXException {
             archivist.setAnnotationProcessingRequested(true);
-            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
-            final TransformingClassLoader tempLoader = AccessController.doPrivileged(action);
+            final TransformingClassLoader tempLoader = new TransformingClassLoader(loader.getURLs(), loader.getParent());
             archivist.setClassLoader(tempLoader);
 
             final ApplicationClientDescriptor acDesc = archivist.open(facadeRA, clientRA);

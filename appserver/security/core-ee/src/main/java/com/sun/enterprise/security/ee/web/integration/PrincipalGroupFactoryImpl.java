@@ -41,6 +41,7 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
         if (webSecurityManagerFactory.get() == null) {
             webSecurityManagerFactory = new WeakReference<>(Globals.get(WebSecurityManagerFactory.class));
         }
+
         return webSecurityManagerFactory.get();
     }
 
@@ -49,28 +50,29 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
         if (webSecurityManagerFactory.get() != null) {
             return webSecurityManagerFactory.get();
         }
+
         return _getWebSecurityManagerFactory();
     }
 
 
     @Override
     public UserPrincipal getPrincipalInstance(String name, String realm) {
-        WebSecurityManagerFactory fact = getWebSecurityManagerFactory();
-        UserPrincipal p = fact.getAdminPrincipal(name, realm);
-        if (p == null) {
-            p = new UserNameAndPassword(name);
+        UserPrincipal userPrincipal = getWebSecurityManagerFactory().getAdminPrincipal(name, realm);
+        if (userPrincipal == null) {
+            userPrincipal = new UserNameAndPassword(name);
         }
-        return p;
+
+        return userPrincipal;
     }
 
 
     @Override
     public Group getGroupInstance(String name, String realm) {
-        WebSecurityManagerFactory fact = getWebSecurityManagerFactory();
-        Group g = fact.getAdminGroup(name, realm);
-        if (g == null) {
-            g = new Group(name);
+        Group group = getWebSecurityManagerFactory().getAdminGroup(name, realm);
+        if (group == null) {
+            group = new Group(name);
         }
-        return g;
+
+        return group;
     }
 }

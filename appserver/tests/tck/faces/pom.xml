@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,42 +24,54 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-faces</artifactId>
+    <artifactId>tck-faces</artifactId>
     <packaging>pom</packaging>
     <name>TCK: Faces</name>
 
     <description>This verifies the compliance of Eclipse Glassfish using the Jakarta Faces standalone TCK</description>
 
     <properties>
-        <faces.version>4.0.1</faces.version>
-        <faces.tck.version>4.0.4</faces.tck.version>
+        <faces.version>${jakarta.faces-api.version}</faces.version>
+        <faces.tck.version>4.1.1</faces.tck.version>
         <tck.root>${project.build.directory}</tck.root>
         <tck.parentPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/pom.xml</tck.parentPomFile>
+        <selenium.version>4.20.0</selenium.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.glassfish.main.tests.tck</groupId>
-                <artifactId>jakarta-faces-tck</artifactId>
-                <type>zip</type>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-                <version>3.3.4</version>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
         <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.main</groupId>
             <artifactId>glassfish-jul-extension</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>tck-faces-download</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-devtools-v124</artifactId>
+            <version>${selenium.version}</version>
         </dependency>
     </dependencies>
 
@@ -70,7 +82,7 @@
                 <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>unpack-tck</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -79,11 +91,19 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.glassfish.main.tests.tck</groupId>
-                                    <artifactId>jakarta-faces-tck</artifactId>
+                                    <artifactId>tck-faces-download</artifactId>
                                     <type>zip</type>
                                     <version>${project.version}</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${tck.root}</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${glassfish.root}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -144,9 +164,9 @@
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="artifactId" value="project" replacement="${project.artifactId}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="1.0.9" replacement="${project.version}" />
+                                    element="version" value="1.0.9" replacement="${project.parent.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
-                                    element="version" value="2.1.2" replacement="${omnifish.arquillian.version}" />
+                                    element="version" value="1.4" replacement="${omnifish.arquillian.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="version" value="${faces.tck.version}" replacement="${project.parent.version}" />
                                 <replace file="${tck.parentPomFile}">
@@ -159,12 +179,23 @@
                                     match="\s*&lt;dependencyManagement&gt;.*?&lt;/dependencyManagement&gt;"
                                     replace="">
                                 </replaceregexp>
+                                <replaceregexp
+                                    flags="gs"
+                                    file="${tck.parentPomFile}"
+                                    match="\s*&lt;rerunFailingTestsCount&gt;.*?&lt;/rerunFailingTestsCount&gt;"
+                                    replace="">
+                                </replaceregexp>
 
                                 <replace dir="${tck.root}/faces-tck-${faces.tck.version}/tck">
                                     <include name="**/pom.xml"/>
                                     <exclude name="pom.xml"/>
                                     <replacetoken><![CDATA[<version>${faces.tck.version}</version>]]></replacetoken>
                                     <replacevalue><![CDATA[<version>${project.version}</version>]]></replacevalue>
+                                </replace>
+                                <replace dir="${tck.root}/faces-tck-${faces.tck.version}/tck">
+                                    <include name="**/pom.xml"/>
+                                    <replacetoken><![CDATA[<groupId>org.omnifaces.arquillian</groupId>]]></replacetoken>
+                                    <replacevalue><![CDATA[<groupId>ee.omnifish.arquillian</groupId>]]></replacevalue>
                                 </replace>
                             </target>
                         </configuration>
@@ -176,34 +207,90 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <executable>${maven.executable}</executable>
-                    <arguments>
-                        <argument>-B</argument>
-                        <argument>-e</argument>
-                        <argument>-s</argument>
-                        <argument>${maven.settings.xml}</argument>
-                        <argument>-f</argument>
-                        <argument>${tck.parentPomFile}</argument>
-                        <argument>clean</argument>
-                        <argument>install</argument>
-                        <argument>-Dglassfish.version=${glassfish.version}</argument>
-                        <argument>-Dmojarra.version=${mojarra.version}</argument>
-                    </arguments>
                     <environmentVariables>
                         <LC_ALL>C</LC_ALL>
                         <LANGUAGE>en</LANGUAGE>
                     </environmentVariables>
+                    <inheritIo>true</inheritIo>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>run-tck</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>-e</argument>
+                                <argument>-s</argument>
+                                <argument>${maven.settings.xml}</argument>
+                                <argument>-f</argument>
+                                <argument>${tck.parentPomFile}</argument>
+                                <argument>clean</argument>
+                                <argument>install</argument>
+                                <argument>-Pcustom</argument>
+                                <argument>-Dglassfish.version=${glassfish.version}</argument>
+                                <argument>-Dglassfish.root=${glassfish.root}</argument>
+                                <argument>-Dglassfish.home=${glassfish.home}</argument>
+                                <argument>-Dmojarra.version=${mojarra.version}</argument>
+                                <argument>-Dsigtest.api.groupId=org.glassfish</argument>
+                                <argument>-Dsigtest.api.artifactId=jakarta.faces</argument>
+                                <argument>-Dsigtest.api.version=${mojarra.version}</argument>
+                                <!-- FIXME: Incompatible with current browsers, fixed in Faces TCK master but not in 4.1.1  -->
+                                <argument>-Dtest.selenium=false</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>custom</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>run-tck</id>
+                                <configuration>
+                                    <arguments>
+                                        <argument>-e</argument>
+                                        <argument>-s</argument>
+                                        <argument>${maven.settings.xml}</argument>
+                                        <argument>-f</argument>
+                                        <argument>${tck.parentPomFile}</argument>
+                                        <argument>clean</argument>
+                                        <argument>install</argument>
+                                        <argument>-Pcustom</argument>
+                                        <argument>-Dglassfish.version=${glassfish.version}</argument>
+                                        <argument>-Dglassfish.root=${glassfish.root}</argument>
+                                        <argument>-Dglassfish.home=${glassfish.home}</argument>
+                                        <argument>-Dmojarra.version=${mojarra.version}</argument>
+                                        <argument>-Dsigtest.api.groupId=org.glassfish</argument>
+                                        <argument>-Dsigtest.api.artifactId=jakarta.faces</argument>
+                                        <argument>-Dsigtest.api.version=${mojarra.version}</argument>
+                                        <!-- FIXME: Incompatible with current browsers, fixed in Faces TCK master but not in 4.1.1  -->
+                                        <argument>-Dtest.selenium=false</argument>
+                                        <argument>-pl</argument>
+                                        <argument>${tck.modules}</argument>
+                                        <argument>-am</argument>
+                                        <argument>-amd</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

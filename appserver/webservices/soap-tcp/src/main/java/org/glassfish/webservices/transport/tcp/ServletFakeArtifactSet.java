@@ -490,7 +490,7 @@ public final class ServletFakeArtifactSet extends BaseDistributedPropertySet {
         }
 
         @Override
-        public void addHeader(final String string,final  String string0) {
+        public void addHeader(final String string, final String string0) {
         }
 
         @Override
@@ -594,6 +594,11 @@ public final class ServletFakeArtifactSet extends BaseDistributedPropertySet {
         @Override
         public int getStatus() {
             return 200;
+        }
+
+        @Override
+        public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+
         }
     }
 }

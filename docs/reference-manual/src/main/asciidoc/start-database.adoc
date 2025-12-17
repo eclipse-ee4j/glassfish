@@ -163,7 +163,7 @@ heap memory size to 128 megabytes and the maximum heap memory size to
 ----
 asadmin> start-database --jvmoptions="-Xms128m -Xmx512m" --terse=true
 Starting database in the background.
-Log redirected to /export/glassfish7/glassfish/databases/derby.log.
+Log redirected to /export/glassfish8/glassfish/databases/derby.log.
 ----
 
 === Exit Status

@@ -22,9 +22,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -51,17 +48,15 @@ public final class ClassGenerator {
 
     static {
         try {
-            final PrivilegedExceptionAction<Void> action = () -> {
-                final Class<?> cl = Class.forName("java.lang.ClassLoader");
-                final String name = "defineClass";
-                defineClassMethod = cl.getDeclaredMethod(name, String.class, byte[].class, int.class, int.class);
-                defineClassMethod.setAccessible(true);
-                defineClassMethodSM = cl.getDeclaredMethod(
-                    name, String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
-                defineClassMethodSM.setAccessible(true);
-                return null;
-            };
-            AccessController.doPrivileged(action);
+            final Class<?> cl = Class.forName("java.lang.ClassLoader");
+            final String name = "defineClass";
+
+            defineClassMethod = cl.getDeclaredMethod(name, String.class, byte[].class, int.class, int.class);
+            defineClassMethod.setAccessible(true);
+            defineClassMethodSM = cl.getDeclaredMethod(
+                name, String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
+            defineClassMethodSM.setAccessible(true);
+
             LOG.config("ClassLoader methods capable of generating classes were successfully detected.");
         } catch (final Exception e) {
             throw new Error("Could not initialize access to ClassLoader.defineClass method.", e);
@@ -92,11 +87,9 @@ public final class ClassGenerator {
         final String targetPackageName, final String className,  final byte[] classData) {
         if (useMethodHandles(loader, anchorClass, targetPackageName)) {
             return defineClass(anchorClass, className, classData);
-        } else if (System.getSecurityManager() == null) {
-            return defineClass(loader, className, classData, anchorClass.getProtectionDomain());
-        } else {
-            return defineClass(loader, className, classData);
         }
+
+        return defineClass(loader, className, classData, anchorClass.getProtectionDomain());
     }
 
 
@@ -112,15 +105,13 @@ public final class ClassGenerator {
      */
     public static Class<?> defineClass(final Class<?> anchorClass, final String className, final byte[] classData) {
         LOG.log(CONFIG, "Defining class: {0} with anchorClass: {1}", new Object[] {className, anchorClass});
-        final PrivilegedAction<Class<?>> action = () -> {
-            try {
-                final Lookup lookup = MethodHandles.privateLookupIn(anchorClass, MethodHandles.lookup());
-                return lookup.defineClass(classData);
-            } catch (IllegalAccessException e) {
-                throw new ClassDefinitionException(className,anchorClass, e);
-            }
-        };
-        return AccessController.doPrivileged(action);
+
+        try {
+            return MethodHandles.privateLookupIn(anchorClass, MethodHandles.lookup())
+                                .defineClass(classData);
+        } catch (IllegalAccessException e) {
+            throw new ClassDefinitionException(className,anchorClass, e);
+        }
     }
 
 
@@ -155,14 +146,12 @@ public final class ClassGenerator {
     public static Class<?> defineClass(final ClassLoader loader, final String className, final byte[] classData,
         final int offset, final int length) throws ClassDefinitionException {
         LOG.log(CONFIG, "Defining class: {0} by loader: {1}", new Object[] {className, loader});
-        final PrivilegedAction<Class<?>> action = () -> {
-            try {
-                return (Class<?>) defineClassMethod.invoke(loader, className, classData, 0, length);
-            } catch (final Exception | NoClassDefFoundError | ClassFormatError e) {
-                throw new ClassDefinitionException(className, loader, e);
-            }
-        };
-        return AccessController.doPrivileged(action);
+
+        try {
+            return (Class<?>) defineClassMethod.invoke(loader, className, classData, 0, length);
+        } catch (final Exception | NoClassDefFoundError | ClassFormatError e) {
+            throw new ClassDefinitionException(className, loader, e);
+        }
     }
 
 
@@ -201,14 +190,12 @@ public final class ClassGenerator {
         final byte[] classData, final int offset, final int length,
         final ProtectionDomain protectionDomain) throws ClassDefinitionException {
         LOG.log(CONFIG, "Defining class: {0} by loader: {1}", new Object[] {className, loader});
-        final PrivilegedAction<Class<?>> action = () -> {
-            try {
-                return (Class<?>) defineClassMethodSM.invoke(loader, className, classData, 0, length, protectionDomain);
-            } catch (final Exception | NoClassDefFoundError | ClassFormatError e) {
-                throw new ClassDefinitionException(className, loader, e);
-            }
-        };
-        return AccessController.doPrivileged(action);
+
+        try {
+            return (Class<?>) defineClassMethodSM.invoke(loader, className, classData, 0, length, protectionDomain);
+        } catch (final Exception | NoClassDefFoundError | ClassFormatError e) {
+            throw new ClassDefinitionException(className, loader, e);
+        }
     }
 
 

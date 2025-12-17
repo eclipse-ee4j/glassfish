@@ -54,7 +54,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -771,11 +770,6 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
      */
     private boolean isProgrammaticServletContextListenerRegistrationAllowed;
 
-    /**
-     * Security manager responsible for enforcing permission check on ServletContext#getClassLoader
-     */
-    private MySecurityManager mySecurityManager;
-
     /** Iterable over all ServletContainerInitializers that were discovered */
     private ServiceLoader<ServletContainerInitializer> servletContainerInitializers;
 
@@ -813,11 +807,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     public StandardContext() {
         pipeline.setBasic(new StandardContextValve());
         namingResources.setContainer(this);
-        if (Globals.IS_SECURITY_ENABLED) {
-            mySecurityManager = AccessController.doPrivileged(new PrivilegedCreateSecurityManager());
-        }
     }
-
 
     @Override
     public String getEncodedPath() {
@@ -2532,9 +2522,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         if (webappLoader == null) {
             return null;
         }
-        if (mySecurityManager != null) {
-            mySecurityManager.checkGetClassLoaderPermission(webappLoader);
-        }
+
         return webappLoader;
     }
 

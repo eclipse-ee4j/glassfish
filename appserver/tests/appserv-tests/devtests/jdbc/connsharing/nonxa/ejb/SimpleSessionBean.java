@@ -264,7 +264,7 @@ public class SimpleSessionBean implements SessionBean {
         con3.close();
 
         // See server.log file in 
-        // ./glassfish/target/glassfish7/glassfish/domains/domain1/logs/server.log 
+        // ./glassfish/target/glassfish8/glassfish/domains/domain1/logs/server.log 
         // for the test output of:
         System.out.println("Conn 1 : " + physicalConn1);
         System.out.println("Conn 2 : " + physicalConn2);

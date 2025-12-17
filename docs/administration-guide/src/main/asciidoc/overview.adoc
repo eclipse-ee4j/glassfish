@@ -1013,7 +1013,7 @@ obtaining the GlassFish OSGi Web Console.
 GlassFish OSGi Admin Console component.
 * If you are obtaining the console from the Maven repository, download
 and unzip the required files.
-2. Download the following files to the parent of the `glassfish7`
+2. Download the following files to the parent of the `glassfish8`
 directory of your {productName} installation.
 http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip[`glassfish-osgi-http-3.1.2.zip`]
 +

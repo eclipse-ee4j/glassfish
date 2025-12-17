@@ -70,7 +70,6 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
 import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
-import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.synchronizedMap;
 import static java.util.logging.Level.FINE;
 import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
@@ -576,16 +575,10 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
 
             try {
                 Field proxyField = managedBean.getClass().getDeclaredField("__ejb31_delegate");
+                if (!proxyField.trySetAccessible()) {
+                    throw new InaccessibleObjectException("Unable to make accessible: " + proxyField);
+                }
 
-                doPrivileged(new java.security.PrivilegedExceptionAction<Object>() {
-                    @Override
-                    public Object run() throws Exception {
-                        if (!proxyField.trySetAccessible()) {
-                            throw new InaccessibleObjectException("Unable to make accessible: " + proxyField);
-                        }
-                        return null;
-                    }
-                });
                 Proxy proxy = (Proxy) proxyField.get(managedBean);
                 InterceptorInvoker invoker = (InterceptorInvoker) Proxy.getInvocationHandler(proxy);
                 managedBeanInstance = invoker.getTargetInstance();

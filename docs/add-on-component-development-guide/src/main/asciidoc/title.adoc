@@ -1,11 +1,11 @@
 type=page
 status=published
-title={productName} Add-On Component Development Guide, Release 7
+title={productName} Add-On Component Development Guide, Release 8
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Add-On Component Development Guide, Release 7
+= {productName} Add-On Component Development Guide, Release 8
 
 
 [[eclipse-glassfish-server]]
@@ -13,9 +13,9 @@ prev=lot.html
 
 Add-On Component Development Guide
 
-Release 7
+Release 8
 
-Contributed 2018 - 2024
+Contributed 2018 - 2025
 
 This document explains how to use published interfaces of {productName} to develop add-on components for {productName}. This document explains how to perform only those tasks that
 ensure that the add-on component is suitable for {productName}.
@@ -32,7 +32,7 @@ program in the Java language.
 '''''
 
 {productName} Add-On Component Development Guide,
-Release 7
+Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

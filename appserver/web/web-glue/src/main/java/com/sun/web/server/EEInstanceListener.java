@@ -32,15 +32,10 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.security.auth.AuthPermission;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.InstanceEvent;
@@ -59,7 +54,6 @@ import org.glassfish.web.LogFacade;
 
 import static com.sun.enterprise.security.integration.SecurityConstants.WEB_PRINCIPAL_CLASS;
 import static com.sun.enterprise.util.Utility.isOneOf;
-import static java.security.Policy.getPolicy;
 import static java.text.MessageFormat.format;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
@@ -84,8 +78,6 @@ public final class EEInstanceListener implements InstanceListener {
 
     private static final Logger _logger = LogFacade.getLogger();
     private static final ResourceBundle _rb = _logger.getResourceBundle();
-
-    private static AuthPermission doAsPrivilegedPerm = new AuthPermission("doAsPrivileged");
 
     private InvocationManager invocationManager;
     private JavaEETransactionManager eeTransactionManager;
@@ -171,12 +163,6 @@ public final class EEInstanceListener implements InstanceListener {
                 if (principal != null && principal == basePrincipal && principal.getClass().getName().equals(WEB_PRINCIPAL_CLASS)) {
                     securityContext.setSecurityContextWithPrincipal(principal);
                 } else if (principal != basePrincipal && principal != getCurrentCallerPrincipal()) {
-
-                    // The wrapper has overridden getUserPrincipal
-                    // reject the request if the wrapper does not have
-                    // the necessary permission.
-
-                    checkObjectForDoAsPermission(httpServletRequest);
                     securityContext.setSecurityContextWithPrincipal(principal);
                 }
             }
@@ -256,21 +242,6 @@ public final class EEInstanceListener implements InstanceListener {
         }
 
         return currentSecurityContext.getCallerPrincipal();
-    }
-
-    private static void checkObjectForDoAsPermission(final Object o) throws AccessControlException {
-        if (System.getSecurityManager() != null) {
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                @Override
-                public Void run() {
-                    if (!getPolicy().implies(o.getClass().getProtectionDomain(), doAsPrivilegedPerm)) {
-                        throw new AccessControlException("permission required to override getUserPrincipal", doAsPrivilegedPerm);
-                    }
-
-                    return null;
-                }
-            });
-        }
     }
 
     private void handleAfterEvent(InstanceEvent event, InstanceEvent.EventType eventType) {

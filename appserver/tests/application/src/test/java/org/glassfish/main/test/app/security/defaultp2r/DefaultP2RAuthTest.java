@@ -18,7 +18,7 @@ package org.glassfish.main.test.app.security.defaultp2r;
 
 import java.io.File;
 import java.lang.System.Logger;
-import java.net.URL;
+import java.net.URI;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.HttpClient10;
@@ -41,7 +41,6 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
 
 public class DefaultP2RAuthTest {
 
@@ -98,16 +97,20 @@ public class DefaultP2RAuthTest {
 
     @Test
     void p2rEnabled() throws Exception {
+        LOG.log(INFO, "Running p2rEnabled");
+
         assertThat(ASADMIN.exec("set", SERVER_CFG_PROPERTY + "=true"), asadminOK());
         assertThat(ASADMIN.exec("deploy", "--target", "server", warFile.getAbsolutePath()), asadminOK());
 
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet"),
+        HttpClient10 client = new HttpClient10(new URI("http://localhost:8080/" + APP_NAME + "/TestServlet").toURL(),
             USER_NAME, USER_PASSWORD);
+
         HttpResponse responseFoo = client.send("FOO", null);
         assertAll(
             () -> assertThat(responseFoo.responseLine, equalTo("HTTP/1.1 200 OK")),
             () -> assertThat(responseFoo.body, equalTo("doFoo with bobby"))
         );
+
         HttpResponse responseGet = client.send("GET", null);
         assertAll(
             () -> assertThat(responseGet.responseLine, equalTo("HTTP/1.1 200 OK")),
@@ -118,11 +121,14 @@ public class DefaultP2RAuthTest {
 
     @Test
     void p2rDisabled() throws Exception {
+        LOG.log(INFO, "Running p2rDisabled");
+
         assertThat(ASADMIN.exec("set", SERVER_CFG_PROPERTY + "=false"), asadminOK());
         assertThat(ASADMIN.exec("deploy", "--target", "server", warFile.getAbsolutePath()), asadminOK());
 
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet"),
+        HttpClient10 client = new HttpClient10(new URI("http://localhost:8080/" + APP_NAME + "/TestServlet").toURL(),
             USER_NAME, USER_PASSWORD);
+
         HttpResponse responseGet = client.send("GET", null);
         assertThat(responseGet.responseLine, equalTo("HTTP/1.1 403 Forbidden"));
     }

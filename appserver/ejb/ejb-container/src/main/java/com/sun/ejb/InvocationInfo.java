@@ -17,7 +17,7 @@
 package com.sun.ejb;
 
 import com.sun.ejb.containers.interceptors.InterceptorManager;
-import com.sun.enterprise.security.ee.authorize.cache.CachedPermission;
+import com.sun.enterprise.security.ee.authorization.cache.CachedPermission;
 
 import java.lang.reflect.Method;
 
@@ -95,6 +95,7 @@ public class InvocationInfo {
         return asyncMethodFlag;
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Invocation Info for ejb " + ejbName + "\t");

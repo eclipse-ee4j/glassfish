@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Application Deployment Guide, Release 7
+title={productName} Application Deployment Guide, Release 8
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Application Deployment Guide, Release 7
+= {productName} Application Deployment Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Application Deployment Guide
 
-Release 7
+Release 8
 
 Contributed 2018 - 2024
 
@@ -25,7 +25,7 @@ includes information about deployment descriptors.
 '''''
 
 {productName} Application Deployment Guide,
-Release 7
+Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

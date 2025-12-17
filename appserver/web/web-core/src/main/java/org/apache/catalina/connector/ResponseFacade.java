@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -26,10 +26,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.UnsupportedCharsetException;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +34,6 @@ import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import org.apache.catalina.LogFacade;
-import org.apache.catalina.security.SecurityUtil;
 
 import static org.apache.catalina.LogFacade.NULL_RESPONSE_OBJECT;
 
@@ -186,11 +182,7 @@ public class ResponseFacade implements HttpServletResponse {
             return;
         }
 
-        if (SecurityUtil.isPackageProtectionEnabled()) {
-            AccessController.doPrivileged(new SetContentTypePrivilegedAction(type));
-        } else {
-            response.setContentType(type);
-        }
+        response.setContentType(type);
     }
 
     @Override
@@ -216,28 +208,8 @@ public class ResponseFacade implements HttpServletResponse {
             return;
         }
 
-        if (SecurityUtil.isPackageProtectionEnabled()) {
-            try {
-                AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-
-                    @Override
-                    public Void run() throws IOException {
-                        response.setAppCommitted(true);
-
-                        response.flushBuffer();
-                        return null;
-                    }
-                });
-            } catch (PrivilegedActionException e) {
-                Exception ex = e.getException();
-                if (ex instanceof IOException) {
-                    throw (IOException) ex;
-                }
-            }
-        } else {
-            response.setAppCommitted(true);
-            response.flushBuffer();
-        }
+        response.setAppCommitted(true);
+        response.flushBuffer();
     }
 
     @Override
@@ -338,6 +310,13 @@ public class ResponseFacade implements HttpServletResponse {
 
         response.setAppCommitted(true);
         response.sendRedirect(location);
+    }
+
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+        checkResponseNull();
+
+        response.sendRedirect(location, sc, clearBuffer);
     }
 
     @Override

@@ -29,10 +29,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +47,6 @@ import org.apache.catalina.HttpResponse;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.RequestUtil;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.CookieHeaderGenerator;
@@ -74,8 +69,6 @@ import static org.apache.catalina.connector.Constants.PROXY_JROUTE;
 import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderName;
 import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderValue;
 import static org.glassfish.web.util.HtmlEntityEncoder.encodeXSS;
-
-// END S1AS 6170450
 
 /**
  * Wrapper object for the Coyote response.
@@ -797,15 +790,9 @@ public class Response implements HttpResponse, HttpServletResponse {
                 while (index < len && Character.isWhitespace(type.charAt(index))) {
                     index++;
                 }
-                if (index + 7 < len &&
-                    type.charAt(index)     == 'c' &&
-                    type.charAt(index + 1) == 'h' &&
-                    type.charAt(index + 2) == 'a' &&
-                    type.charAt(index + 3) == 'r' &&
-                    type.charAt(index + 4) == 's' &&
-                    type.charAt(index + 5) == 'e' &&
-                    type.charAt(index + 6) == 't' &&
-                    type.charAt(index + 7) == '=') {
+                if (index + 7 < len && type.charAt(index) == 'c' && type.charAt(index + 1) == 'h' && type.charAt(index + 2) == 'a'
+                        && type.charAt(index + 3) == 'r' && type.charAt(index + 4) == 's' && type.charAt(index + 5) == 'e'
+                        && type.charAt(index + 6) == 't' && type.charAt(index + 7) == '=') {
                     isCharacterEncodingSet = true;
                 }
             }
@@ -1172,16 +1159,8 @@ public class Response implements HttpResponse, HttpServletResponse {
         sendRedirect(location, true);
     }
 
-    /**
-     * Sends a temporary or permanent redirect to the specified redirect location URL.
-     *
-     * @param location Location URL to redirect to
-     * @param isTemporary true if the redirect is supposed to be temporary, false if permanent
-     *
-     * @throws IllegalStateException if this response has already been committed
-     * @throws IOException if an input/output error occurs
-     */
-    public void sendRedirect(String location, boolean isTemporary) throws IOException {
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
         if (isCommitted()) {
             throw new IllegalStateException(rb.getString(CANNOT_CALL_SEND_REDIRECT_EXCEPTION));
         }
@@ -1192,7 +1171,9 @@ public class Response implements HttpResponse, HttpServletResponse {
         }
 
         // Clear any data content that has been buffered
-        resetBuffer();
+        if (clearBuffer) {
+            resetBuffer();
+        }
 
         // Generate a temporary redirect to the specified location
         try {
@@ -1203,11 +1184,7 @@ public class Response implements HttpResponse, HttpServletResponse {
                 absolute = toAbsolute(location);
             }
 
-            if (isTemporary) {
-                setStatus(SC_MOVED_TEMPORARILY);
-            } else {
-                setStatus(SC_MOVED_PERMANENTLY);
-            }
+            setStatus(sc);
             setHeader("Location", absolute);
 
             // According to RFC2616 section 10.3.3 302 Found,
@@ -1285,9 +1262,7 @@ public class Response implements HttpResponse, HttpServletResponse {
         }
 
         try {
-            grizzlyResponse.setHeader(
-                getSafeHeaderName(name),
-                getSafeHeaderValue(value));
+            grizzlyResponse.setHeader(getSafeHeaderName(name), getSafeHeaderValue(value));
         } catch (Exception e) {
             try {
                 grizzlyResponse.sendError(403, "Forbidden");
@@ -1376,16 +1351,7 @@ public class Response implements HttpResponse, HttpServletResponse {
             return false;
         }
 
-        if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
-                @Override
-                public Boolean run() {
-                    return Boolean.valueOf(doIsEncodeable(connectorRequest, session, location));
-                }
-            })).booleanValue();
-        } else {
-            return doIsEncodeable(connectorRequest, session, location);
-        }
+        return doIsEncodeable(connectorRequest, session, location);
     }
 
     private boolean doIsEncodeable(Request hreq, Session session, String location) {
@@ -1499,25 +1465,7 @@ public class Response implements HttpResponse, HttpServletResponse {
                     String relativePath = connectorRequest.getDecodedRequestURI();
                     relativePath = relativePath.substring(0, relativePath.lastIndexOf('/'));
 
-                    String encodedURI = null;
-                    final String frelativePath = relativePath;
-
-                    if (SecurityUtil.isPackageProtectionEnabled()) {
-                        try {
-                            encodedURI = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
-                                @Override
-                                public String run() throws IOException {
-                                    return urlEncoder.encodeURL(frelativePath);
-                                }
-                            });
-                        } catch (PrivilegedActionException pae) {
-                            IllegalArgumentException iae = new IllegalArgumentException(location);
-                            iae.initCause(pae.getCause());
-                            throw iae;
-                        }
-                    } else {
-                        encodedURI = urlEncoder.encodeURL(relativePath);
-                    }
+                    String encodedURI = urlEncoder.encodeURL(relativePath);
 
                     redirectURLCharChunk.append(encodedURI, 0, encodedURI.length());
                     redirectURLCharChunk.append('/');
@@ -1645,37 +1593,9 @@ public class Response implements HttpResponse, HttpServletResponse {
      * @return The cookie's string representation
      */
     protected String getCookieString(final Cookie cookie) {
-        String cookieValue = null;
-
-        if (SecurityUtil.isPackageProtectionEnabled()) {
-            cookieValue = AccessController.doPrivileged(new PrivilegedAction<String>() {
-                @Override
-                public String run() {
-                    return CookieHeaderGenerator.generateHeader(
-                            cookie.getName(),
-                            cookie.getValue(),
-                            cookie.getMaxAge(),
-                            cookie.getDomain(),
-                            cookie.getPath(),
-                            cookie.getSecure(),
-                            cookie.isHttpOnly(),
-                            cookie.getAttributes());
-                }
-            });
-        } else {
-            cookieValue =
-                CookieHeaderGenerator.generateHeader(
-                    cookie.getName(),
-                    cookie.getValue(),
-                    cookie.getMaxAge(),
-                    cookie.getDomain(),
-                    cookie.getPath(),
-                    cookie.getSecure(),
-                    cookie.isHttpOnly(),
-                    cookie.getAttributes());
-        }
-
-        return cookieValue;
+        return CookieHeaderGenerator.generateHeader(
+            cookie.getName(), cookie.getValue(), cookie.getMaxAge(), cookie.getDomain(),
+            cookie.getPath(), cookie.getSecure(), cookie.isHttpOnly(), cookie.getAttributes());
     }
 
     /**
@@ -1815,5 +1735,6 @@ public class Response implements HttpResponse, HttpServletResponse {
             log.log(Level.WARNING, localName + " " + message, t);
         }
     }
+
 
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,19 +31,21 @@ import org.glassfish.security.services.api.authorization.AzEnvironment;
 import org.glassfish.security.services.api.authorization.AzResource;
 import org.glassfish.security.services.api.authorization.AzSubject;
 import org.glassfish.security.services.api.authorization.RoleMappingService;
-import org.glassfish.security.services.common.Secure;
 import org.glassfish.security.services.config.SecurityProvider;
 import org.glassfish.security.services.impl.ServiceLogging;
 import org.glassfish.security.services.spi.authorization.RoleMappingProvider;
 import org.jvnet.hk2.annotations.Service;
 
 @Service (name="simpleRoleMapping")
-@Secure(accessPermissionName="security/service/rolemapper/provider/simple")
 @PerLookup
 public class SimpleRoleMappingProviderImpl implements RoleMappingProvider {
     private static final Level DEBUG_LEVEL = Level.FINER;
-    private static final Logger _logger =
-        Logger.getLogger(ServiceLogging.SEC_PROV_LOGGER,ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger _logger = Logger.getLogger(ServiceLogging.SEC_PROV_LOGGER,ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
+
+    @LogMessageInfo(
+        message = "Role Mapping Provider supplied an invalid resource: {0}",
+        level = "WARNING")
+    private static final String ROLEPROV_BAD_RESOURCE = "SEC-PROV-00150";
 
     private static final String ADMIN = "Admin";
 
@@ -113,8 +116,4 @@ public class SimpleRoleMappingProviderImpl implements RoleMappingProvider {
         return null;
     }
 
-    @LogMessageInfo(
-        message = "Role Mapping Provider supplied an invalid resource: {0}",
-        level = "WARNING")
-    private static final String ROLEPROV_BAD_RESOURCE = "SEC-PROV-00150";
 }

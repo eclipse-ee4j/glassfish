@@ -1358,7 +1358,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
       }
     ],
     "entity":{
-      "installDir":"\/export\/glassfish7",
+      "installDir":"\/export\/glassfish8",
       "name":"sj01",
       "nodeDir":null,
       "nodeHost":
@@ -1439,7 +1439,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
       }
     ],
     "entity":{
-      "installDir":"\/export\/glassfish7",
+      "installDir":"\/export\/glassfish8",
       "name":"sj01",
       "nodeDir":null,
       "nodeHost":
@@ -2117,7 +2117,7 @@ Line breaks and white space are added to enhance readability.
       }
     ],
     "entity":{
-      "installDir":"\/export\/glassfish7",
+      "installDir":"\/export\/glassfish8",
       "name":"sj01",
       "nodeDir":null,
       "nodeHost":
@@ -2384,7 +2384,7 @@ Line breaks and white space are added to enhance readability.
    </entry>
    <entry key="entity">
     <map>
-     <entry key="installDir" value="/export/glassfish7"/>
+     <entry key="installDir" value="/export/glassfish8"/>
      <entry key="name" value="sj01"/>
      <entry key="nodeDir" value=""/>
      <entry key="type" value="SSH"/>
@@ -3020,7 +3020,7 @@ Line breaks and white space are added to enhance readability.
       "recordNumber":475,
       "loggedDateTimeInMS":1300743782815,
       "loggedLevel":"INFO",
-      "productName":"glassfish7",
+      "productName":"glassfish8",
       "loggerName":"org.glassfish.admingui",
       "nameValuePairs": "_ThreadID=25;_ThreadName=Thread-1;",
       "messageID":"",
@@ -3030,7 +3030,7 @@ Line breaks and white space are added to enhance readability.
       "recordNumber":474,
       "loggedDateTimeInMS":1300728893368,
       "loggedLevel":"INFO",
-      "productName":"glassfish7",
+      "productName":"glassfish8",
       "loggerName":"jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter",
       "nameValuePairs":"_ThreadID=238;_ThreadName=Thread-1;",
       "messageID":"",
@@ -3040,7 +3040,7 @@ Line breaks and white space are added to enhance readability.
       "recordNumber":473,
       "loggedDateTimeInMS":1300728893367,
       "loggedLevel":"INFO",
-      "productName":"glassfish7",
+      "productName":"glassfish8",
       "loggerName":"jakarta.enterprise.system.core.com.sun.enterprise.v3.server",
       "nameValuePairs":"_ThreadID=238;_ThreadName=Thread-1;",
       "messageID":"CORE10010",
@@ -3128,15 +3128,15 @@ Line breaks and white space are added to enhance readability.
  <record loggedDateTimeInMS="1300743782815" loggedLevel="INFO"
  loggerName="org.glassfish.admingui" messageID=""
  nameValuePairs="_ThreadID=25;_ThreadName=Thread-1;"
- productName="glassfish7" recordNumber="475"/>
+ productName="glassfish8" recordNumber="475"/>
  <record loggedDateTimeInMS="1300728893368" loggedLevel="INFO"
  loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter"
   messageID="" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;"
-  productName="glassfish7" recordNumber="474"/>
+  productName="glassfish8" recordNumber="474"/>
  <record loggedDateTimeInMS="1300728893367" loggedLevel="INFO"
  loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.server"
  messageid="core10010" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;"
- productName="glassfish7" recordNumber="473"/>
+ productName="glassfish8" recordNumber="473"/>
 </records>
 ----
 

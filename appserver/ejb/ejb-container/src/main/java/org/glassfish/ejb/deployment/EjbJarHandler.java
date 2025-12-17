@@ -21,8 +21,6 @@ import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
@@ -34,11 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.stream.XMLStreamException;
@@ -53,6 +47,7 @@ import org.glassfish.ejb.LogFacade;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.util.logging.Level.SEVERE;
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -88,25 +83,21 @@ public class EjbJarHandler extends AbstractArchiveHandler {
     public String getVersionIdentifier(ReadableArchive archive) {
         String versionIdentifier = null;
         try {
-            GFEjbJarXMLParser gfXMLParser = new GFEjbJarXMLParser(archive);
-            versionIdentifier = gfXMLParser.extractVersionIdentifierValue(archive);
-        } catch (XMLStreamException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            versionIdentifier = new GFEjbJarXMLParser(archive).extractVersionIdentifierValue(archive);
+        } catch (XMLStreamException | IOException e) {
+            LOG.log(SEVERE, e.getMessage(), e);
         }
+
         return versionIdentifier;
     }
 
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader("EjbJarHandler", parent);
-        ASURLClassLoader cloader = AccessController.doPrivileged(action);
-
+        ASURLClassLoader cloader = new ASURLClassLoader("EjbJarHandler", parent);
         try {
             String compatProp = context.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY);
-            // if user does not specify the compatibility property
+            // If user does not specify the compatibility property
             // let's see if it's defined in glassfish-ejb-jar.xml
             if (compatProp == null) {
                 GFEjbJarXMLParser gfEjbJarXMLParser = new GFEjbJarXMLParser(context.getSource());
@@ -116,7 +107,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 }
             }
 
-            // if user does not specify the compatibility property
+            // If user does not specify the compatibility property
             // let's see if it's defined in sun-ejb-jar.xml
             if (compatProp == null) {
                 SunEjbJarXMLParser sunEjbJarXMLParser = new SunEjbJarXMLParser(context.getSourceDir());
@@ -126,7 +117,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 }
             }
 
-            // if the compatibility property is set to "v2", we should add
+            // If the compatibility property is set to "v2", we should add
             // all the jars under the ejb module root to maintain backward
             // compatibility of v2 jar visibility
             if (compatProp != null && compatProp.equals("v2")) {
@@ -139,21 +130,14 @@ public class EjbJarHandler extends AbstractArchiveHandler {
 
             cloader.addURL(context.getSource().getURI().toURL());
             cloader.addURL(context.getScratchDir("ejb").toURI().toURL());
-            // add libraries referenced from manifest
+            // Add libraries referenced from manifest
             for (URL url : getManifestLibraries(context)) {
                 cloader.addURL(url);
             }
-
-            try {
-                AccessController.doPrivileged(new PermsArchiveDelegate.SetPermissionsAction(
-                    SMGlobalPolicyUtil.CommponentType.ejb, context, cloader));
-            } catch (PrivilegedActionException e) {
-                throw new SecurityException(e.getException());
-            }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         return cloader;
     }
 

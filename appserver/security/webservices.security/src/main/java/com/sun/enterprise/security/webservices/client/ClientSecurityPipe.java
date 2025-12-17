@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.security.webservices.client;
 
-import com.sun.enterprise.security.ee.jmac.callback.ClientContainerCallbackHandler;
+import com.sun.enterprise.security.ee.authentication.jakarta.callback.ClientContainerCallbackHandler;
 import com.sun.enterprise.security.webservices.LogUtils;
 import com.sun.enterprise.security.webservices.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;

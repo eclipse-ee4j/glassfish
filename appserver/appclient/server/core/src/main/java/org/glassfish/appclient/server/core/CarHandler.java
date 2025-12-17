@@ -19,8 +19,6 @@ package org.glassfish.appclient.server.core;
 
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -29,9 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,12 +50,14 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 @Service(name = CarArchiveType.ARCHIVE_TYPE)
 public class CarHandler extends AbstractArchiveHandler {
 
+    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
+            JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+
     @Inject
     @Named(CarArchiveType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
-    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+
 
     @Override
     public String getArchiveType() {
@@ -89,26 +86,18 @@ public class CarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader("CarHandler", parent);
-        ASURLClassLoader cloader = AccessController.doPrivileged(action);
+        ASURLClassLoader cloader = new ASURLClassLoader("CarHandler", parent);
         try {
             cloader.addURL(context.getSource().getURI().toURL());
-            // add libraries referenced from manifest
+
+            // Add libraries referenced from manifest
             for (URL url : getManifestLibraries(context)) {
                 cloader.addURL(url);
             }
-
-            try {
-                AccessController.doPrivileged(new PermsArchiveDelegate.SetPermissionsAction(
-                    SMGlobalPolicyUtil.CommponentType.car, context, cloader));
-            } catch (PrivilegedActionException e) {
-                throw new SecurityException(e.getException());
-            }
-
-
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+
         return cloader;
     }
 

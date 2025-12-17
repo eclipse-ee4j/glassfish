@@ -75,7 +75,8 @@ might cause great damage to companies or individual clients that use the
 Web site. Understanding the security ramifications of each resource will
 help you protect it properly.
 
-See Also: https://www.oracle.com/us/products/ondemand/index.html [[gksce]] [[read-security-publications]]
+[[gksce]][[read-security-publications]]
+See Also: `https://www.oracle.com/us/products/ondemand/index.html`
 
 ==== Read Security Publications
 

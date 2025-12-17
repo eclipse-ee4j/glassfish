@@ -158,7 +158,7 @@ public final class CertificateRealm extends Realm {
      *
      */
     @Override
-    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException, InvalidOperationException {
+    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {
         // This is called during web container role check, not during
         // EJB container role checks... fix RI for consistency.
 

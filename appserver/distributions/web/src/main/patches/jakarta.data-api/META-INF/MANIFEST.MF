@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 6.0.0
+Build-Jdk-Spec: 21
+Bundle-Description: Jakarta Data 1.0 API jar
+Bundle-DocURL: https://www.eclipse.org
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jakarta Data API jar
+Bundle-SymbolicName: jakarta.data-api
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 1.0
+Export-Package: jakarta.data.page.impl;uses:="jakarta.data.page";version
+ ="1.0.0",jakarta.data;version="1.0.0",jakarta.data.exceptions;version="
+ 1.0.0",jakarta.data.metamodel;uses:="jakarta.data";version="1.0.0",jaka
+ rta.data.metamodel.impl;uses:="jakarta.data,jakarta.data.metamodel";ver
+ sion="1.0.0",jakarta.data.page;version="1.0.0",jakarta.data.repository;
+ uses:="jakarta.data,jakarta.data.page";version="1.0.0",jakarta.data.spi
+ ;version="1.0.0",jakarta.data.metamodel.impl.impl;version="1.0.0"
+Extension-Name: jakarta.data
+Implementation-Version: 1.0.1
+Import-Package: jakarta.data,jakarta.data.metamodel,jakarta.data.page,ja
+ va.lang,java.lang.annotation,java.lang.invoke,java.lang.runtime,java.ut
+ il,java.util.stream
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
+Specification-Vendor: Eclipse Foundation
+Specification-Version: 1.0
+Tool: Bnd-7.0.0.202310060912
+

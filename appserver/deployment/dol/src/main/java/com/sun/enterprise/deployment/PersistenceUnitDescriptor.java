@@ -44,12 +44,14 @@ public class PersistenceUnitDescriptor extends Descriptor {
     private String transactionType = "JTA";
     private String description;
     private String provider;
+    private String scope;
     private SimpleJndiName jtaDataSource;
     private SimpleJndiName nonJtaDataSource;
 
     private final List<String> mappingFiles = new ArrayList<>();
     private final List<String> jarFiles = new ArrayList<>();
     private final List<String> classes = new ArrayList<>();
+    private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
     private boolean excludeUnlistedClasses;
@@ -115,6 +117,14 @@ public class PersistenceUnitDescriptor extends Descriptor {
         this.provider = value;
     }
 
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
     public SimpleJndiName getJtaDataSource() {
         return jtaDataSource;
     }
@@ -157,6 +167,13 @@ public class PersistenceUnitDescriptor extends Descriptor {
     public void addClass(String className) {
         classes.add(className);
 
+    }
+
+    public List<String> getQualifiers() {
+        return Collections.unmodifiableList(qualifiers);
+    }
+    public void addQualifier(String qualifier) {
+        qualifiers.add(qualifier);
     }
 
     public Properties getProperties() {

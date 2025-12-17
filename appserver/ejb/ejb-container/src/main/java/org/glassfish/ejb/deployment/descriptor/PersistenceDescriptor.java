@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,8 +25,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -790,22 +788,19 @@ public final class PersistenceDescriptor extends Descriptor {
 
 
     private Field getField(final Class<?> c, final String name) throws NoSuchFieldException {
-        // This privileged block is needed because this code can be
-        // called when application code is on the stack, which is not
-        // allowed to reflect on private members of classes.
-        PrivilegedAction<Field> action = () -> {
-            try {
-                // this is needed for EJB2.0 CMP beans whose
-                // generated fields are private.
-                return c.getDeclaredField(name);
-            } catch (NoSuchFieldException ex) {
-                return null;
-            }
-        };
-        Field field = AccessController.doPrivileged(action);
+        Field field;
+        try {
+            // This is needed for EJB2.0 CMP beans whose
+            // generated fields are private.
+            field = c.getDeclaredField(name);
+        } catch (NoSuchFieldException ex) {
+            return null;
+        }
+
         if (field == null) {
             field = c.getField(name);
         }
+
         return field;
     }
 

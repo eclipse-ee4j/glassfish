@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.tests.tck</groupId>
@@ -34,27 +34,30 @@
     <name>TCK: Parent</name>
 
     <modules>
-        <module>embedded_ejb_smoke</module>
-
+        <module>glassfish-runner</module>
         <module>tck-download</module>
+        <module>activation</module>
+        <module>authentication</module>
+        <module>authorization</module>
+        <module>cdi</module>
+        <module>concurrency</module>
+        <module>connectors</module>
+        <module>data</module>
+        <module>expression-language</module>
+        <module>enterprise-beans</module>
+        <module>faces</module>
+
         <module>platform-tck-runner</module>
 
-        <module>activation</module>
-        <module>expression_language</module>
         <module>rest</module>
         <module>rest_cdi</module>
-        <module>faces</module>
-        <module>connectors</module>
         <module>pages</module>
         <module>pages_tags</module>
         <module>pages_debugging</module>
         <module>servlet</module>
         <module>security</module>
-        <module>authentication</module>
-        <module>authorization</module>
-        <module>cdi</module>
         <module>microprofile</module>
-        <module>concurrency</module>
+        <module>mvc</module>
         <module>validation</module>
         <module>websocket</module>
         <module>jsonp</module>
@@ -66,7 +69,7 @@
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
 
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.directoryName>glassfish7</glassfish.directoryName>
+        <glassfish.directoryName>glassfish8</glassfish.directoryName>
         <glassfish.home>${glassfish.root}/${glassfish.directoryName}</glassfish.home>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
 
@@ -115,13 +118,19 @@
             </dependency>
             <dependency>
                <groupId>ee.omnifish.arquillian</groupId>
-               <artifactId>glassfish-client-ee10</artifactId>
+               <artifactId>glassfish-client-ee11</artifactId>
                <version>${omnifish.arquillian.version}</version>
                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>ee.omnifish.arquillian</groupId>
                 <artifactId>arquillian-glassfish-server-managed</artifactId>
+                <version>${omnifish.arquillian.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ee.omnifish.arquillian</groupId>
+                <artifactId>arquillian-glassfish-server-remote</artifactId>
                 <version>${omnifish.arquillian.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -160,10 +169,52 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- To disable checking extracted sources -->
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>checkstyle</id>
+                            <phase>disabled</phase>
+                        </execution>
+                        <execution>
+                            <id>checkstyle-poms</id>
+                            <phase>disabled</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
+             <!-- To disable bringing license files -->
+            <plugin>
+                 <artifactId>maven-dependency-plugin</artifactId>
+                 <executions>
+                     <execution>
+                        <id>unpack-resource</id>
+                        <phase>disable</phase>
+                     </execution>
+                 </executions>
+            </plugin>
+            <!-- Block our annotation processing to be inherited -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-hk2-config</id>
+                        <phase>disable</phase>
+                    </execution>
+                    <execution>
+                        <id>process-annotations</id>
+                        <phase>disable</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- To disable usage of our default MANIFEST.MF -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <!-- To disable usage of our default MANIFEST.MF -->
                 <configuration combine.self="override" />
             </plugin>
             <!-- Deploy this pom, but no children except ... -->
@@ -188,12 +239,26 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <excluded.groups>se</excluded.groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+                <excluded.groups>javaee-full,se</excluded.groups>
+            </properties>
+        </profile>
+    </profiles>
 </project>

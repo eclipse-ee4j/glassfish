@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Eclipse Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,8 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -244,13 +247,15 @@ class JarFileManager implements Closeable {
             LOG.log(WARNING, "Invalid file: " + file, e);
             return null;
         }
+
         final URL source;
         try {
-            source = new URL("jar:" + codeBase + "!/" + entryPath);
+            source = URI.create("jar:" + codeBase + "!/" + entryPath).toURL();
         } catch (MalformedURLException e) {
             LOG.log(WARNING, "Cannot create valid URL of file " + file + " and entry path " + entryPath, e);
             return null;
         }
+
         final ResourceEntry entry = new ResourceEntry(codeBase, source);
         try {
             entry.manifest = jarFile.getManifest();
@@ -258,6 +263,7 @@ class JarFileManager implements Closeable {
             LOG.log(WARNING, "Failed to get manifest from " + jarFile.getName(), e);
             return null;
         }
+
         entry.lastModified = file.lastModified();
         final int contentLength = (int) jarEntry.getSize();
         try (InputStream binaryStream = jarFile.getInputStream(jarEntry)) {
@@ -268,14 +274,20 @@ class JarFileManager implements Closeable {
             LOG.log(WARNING, "Failed to read entry data for " + name, e);
             return null;
         }
+
         return entry;
     }
 
 
     private static void extractResource(JarFile jarFile, File loaderDir, String pathPrefix) {
         LOG.log(DEBUG, "extractResource(jarFile={0}, loaderDir={1}, pathPrefix={2})", jarFile, loaderDir, pathPrefix);
-        Iterator<JarEntry> jarEntries = jarFile.versionedStream()
-                .filter(jarEntry -> !jarEntry.isDirectory() && !jarEntry.getName().endsWith(".class")).iterator();
+
+        Iterator<JarEntry> jarEntries =
+            jarFile.versionedStream()
+                   .filter(
+                       jarEntry -> !jarEntry.isDirectory() &&
+                       !jarEntry.getName().endsWith(".class")).iterator();
+
         while (jarEntries.hasNext()) {
             JarEntry jarEntry = jarEntries.next();
             File resourceFile = new File(loaderDir, jarEntry.getName());
@@ -299,11 +311,11 @@ class JarFileManager implements Closeable {
         }
     }
 
-
     private void closeJarFilesIfNotUsed() {
         if (!isJarsOpen()) {
             return;
         }
+
         final long unusedFor = (System.currentTimeMillis() - lastJarFileAccess) / 1000L;
         if (unusedFor <= SECONDS_TO_CLOSE_UNUSED_JARS) {
             return;
@@ -318,22 +330,68 @@ class JarFileManager implements Closeable {
             if (jarResource.jarFile == null) {
                 continue;
             }
-            final JarFile toClose = jarResource.jarFile;
+
+            final JarResource toClose = jarResource.copy();
             jarResource.jarFile = null;
-            closeJarFile(toClose);
+
+            closeJarResource(toClose);
         }
+
         LOG.log(DEBUG, "JAR files were closed.");
     }
 
 
-    private static void closeJarFile(final JarFile jarFile) {
-        try {
-            jarFile.close();
-        } catch (IOException e) {
-            LOG.log(WARNING, "Could not close the jarFile " + jarFile, e);
-        }
+
+    public static JarURLConnection openJarRoot(Path jarPath) throws IOException {
+        // Make URL of the form: jar:file:/.../x.jar!/
+        return (JarURLConnection)
+            URI.create("jar:" + jarPath.toUri() + "!/")
+               .toURL()
+               .openConnection();
     }
 
+    private static void closeJarResource(final JarResource jarResource) {
+        // We need to try to close the Jar file via its URL first, so we can release
+        // a potentially cached version.
+
+        // Caching of jarFiles in the OpenJDK is done by
+        // "sun.net.www.protocol.jar.JarFileFactory"
+        //
+        // Of course this is an implementation detail, but in the Open JDK
+        // it has worked like this for a long time and will likely stay for
+        // some time to come.
+        try {
+            JarURLConnection jarURLConnection = openJarRoot(jarResource.file.toPath());
+
+            // We set use caches specifically to true, so we get the cached jarFile (see below)
+            // if any jar file was cached.
+            jarURLConnection.setUseCaches(true);
+
+            // This one has to return the cached jarFile. Once we have the actual cached
+            // jarFile (and not a new instance that just happens to point to the same jar on disk),
+            // we can clean it from the cache.
+            //
+            // Although, again, an implementation detail, this is because the actual cached
+            // instance has a listener attached:
+            // "sun.net.www.protocol.jar.URLJarFile.URLJarFileCloseController"
+            //
+            // This listener is capable of clearing the cache.
+            jarURLConnection.getJarFile()
+                            .close();
+
+        } catch (IOException e) {
+            LOG.log(WARNING, "Could not close the jarFile " + jarResource.file, e);
+        }
+
+
+        try {
+            // Also close the jar file in the conventional way. NOOP if
+            // the code above already did its work.
+            jarResource.jarFile.close();
+        } catch (IOException e) {
+            LOG.log(WARNING, "Could not close the jarFile " + jarResource.jarFile, e);
+        }
+    }
 
     private static class JarResource {
 
@@ -342,6 +400,12 @@ class JarFileManager implements Closeable {
 
         JarResource(File file) {
             this.file = file;
+        }
+
+        JarResource copy() {
+            JarResource copy = new JarResource(file);
+            copy.jarFile = jarFile;
+            return copy;
         }
     }
 

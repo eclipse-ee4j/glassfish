@@ -244,13 +244,6 @@ public class SecurityLoggerInfo {
     public static final String usernamePasswordEnteringSecurityError = LOGMSG_PREFIX + "-05039";
 
     @LogMessageInfo(
-            message = "Exception in security AccessController action.",
-            cause = "Running a privileged action.",
-            action = "Check the server logs and contact support.",
-            level = "SEVERE")
-    public static final String securityAccessControllerActionError = LOGMSG_PREFIX + "-05043";
-
-    @LogMessageInfo(
             message = "Audit: Authentication refused for [{0}].",
             level = "INFO")
     public static final String auditAtnRefusedError = LOGMSG_PREFIX + "-05046";

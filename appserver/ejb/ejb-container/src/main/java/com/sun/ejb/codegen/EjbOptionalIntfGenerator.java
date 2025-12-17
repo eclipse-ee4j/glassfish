@@ -25,8 +25,6 @@ import com.sun.enterprise.deployment.util.TypeUtil;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,13 +78,14 @@ public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
         } catch (ClassNotFoundException cnfe) {
             final byte[] classData = classMap.get(name);
             if (classData != null) {
-                PrivilegedAction<Class<?>> action = () -> defineClass(loader, name, classData, protectionDomain);
-                clz = AccessController.doPrivileged(action);
+                clz = defineClass(loader, name, classData, protectionDomain);
             }
         }
+
         if (clz == null) {
             throw new ClassNotFoundException(name);
         }
+
         return clz;
     }
 

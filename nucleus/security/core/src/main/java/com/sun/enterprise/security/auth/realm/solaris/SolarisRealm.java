@@ -119,7 +119,7 @@ public final class SolarisRealm extends Realm {
      * support this operation.
      */
     @Override
-    public Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
+    public Enumeration getGroupNames(String username) throws NoSuchUserException {
         Vector v = (Vector) groupCache.get(username);
         if (v == null) {
             v = loadGroupNames(username);

@@ -256,7 +256,7 @@ public class EJBHomeInvocationHandler extends EJBHomeImpl implements InvocationH
      */
     protected Object invokeTargetBeanMethod(BaseContainer container, Method beanClassMethod, EjbInvocation inv,
         Object target, Object[] params) throws Throwable {
-        return container.invokeTargetBeanMethod(beanClassMethod, inv, target, params, null);
+        return container.invokeTargetBeanMethod(beanClassMethod, inv, target, params);
     }
 
 

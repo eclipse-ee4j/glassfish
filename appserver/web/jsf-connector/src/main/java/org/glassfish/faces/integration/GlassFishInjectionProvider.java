@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,24 +37,15 @@ import jakarta.servlet.ServletContext;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
-import org.glassfish.hk2.classmodel.reflect.Type;
-import org.glassfish.hk2.classmodel.reflect.Types;
 
-import static java.security.AccessController.doPrivileged;
 import static java.util.logging.Level.FINE;
 import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
 
@@ -74,9 +65,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
     private CDIService cdiService;
 
     /**
-     * <p>
      * Constructs a new <code>GlassFishInjectionProvider</code> instance.
-     * </p>
      *
      * @param servletContext
      */
@@ -91,64 +80,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
 
     @Override
     public Map<String, List<ScannedAnnotation>> getAnnotatedClassesInCurrentModule(ServletContext servletContext) throws InjectionProviderException {
-
-        DeploymentContext dc = (DeploymentContext) servletContext.getAttribute(Constants.DEPLOYMENT_CONTEXT_ATTRIBUTE);
-        Types types = dc.getTransientAppMetaData(Types.class.getName(), Types.class);
-        Collection<Type> allTypes = types.getAllTypes();
-        Collection<AnnotationModel> annotations = null;
-        Map<String, List<ScannedAnnotation>> classesByAnnotation = new HashMap<String, List<ScannedAnnotation>>();
-        List<ScannedAnnotation> classesWithThisAnnotation = null;
-        for (final Type cur : allTypes) {
-            annotations = cur.getAnnotations();
-            ScannedAnnotation toAdd = null;
-            for (AnnotationModel curAnnotation : annotations) {
-                String curAnnotationName = curAnnotation.getType().getName();
-                if (null == (classesWithThisAnnotation = classesByAnnotation.get(curAnnotationName))) {
-                    classesWithThisAnnotation = new ArrayList<ScannedAnnotation>();
-                    classesByAnnotation.put(curAnnotationName, classesWithThisAnnotation);
-                }
-                toAdd = new ScannedAnnotation() {
-
-                    @Override
-                    public boolean equals(Object obj) {
-                        boolean result = false;
-                        if (obj instanceof ScannedAnnotation) {
-                            String otherName = ((ScannedAnnotation) obj).getFullyQualifiedClassName();
-                            if (null != otherName) {
-                                result = cur.getName().equals(otherName);
-                            }
-                        }
-
-                        return result;
-                    }
-
-                    @Override
-                    public int hashCode() {
-                        String str = getFullyQualifiedClassName();
-                        Collection<URI> obj = getDefiningURIs();
-                        int result = str != null ? str.hashCode() : 0;
-                        result = 31 * result + (obj != null ? obj.hashCode() : 0);
-                        return result;
-                    }
-
-                    @Override
-                    public String getFullyQualifiedClassName() {
-                        return cur.getName();
-                    }
-
-                    @Override
-                    public Collection<URI> getDefiningURIs() {
-                        return cur.getDefiningURIs();
-                    }
-
-                };
-                if (!classesWithThisAnnotation.contains(toAdd)) {
-                    classesWithThisAnnotation.add(toAdd);
-                }
-            }
-        }
-
-        return classesByAnnotation;
+        return null;
     }
 
     /**
@@ -168,7 +100,6 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
 
             if (cdiService.isCurrentModuleCDIEnabled()) {
                 cdiService.injectManagedObject(managedBean, getBundle());
-
             }
 
         } catch (InjectionException ie) {
@@ -232,7 +163,6 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
         if (currentInvocation.getInvocationType() != SERVLET_INVOCATION) {
             throw new InjectionException("Wrong invocation type");
         }
-
 
         JndiNameEnvironment componentEnv = (JndiNameEnvironment) currentInvocation.jndiEnvironment;
 
@@ -329,23 +259,16 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
      */
     private void invokeLifecycleMethod(final Method lifecycleMethod, final Object instance) throws InjectionException {
         try {
-
             if (LOGGER.isLoggable(FINE)) {
                 LOGGER.fine("Calling lifecycle method " + lifecycleMethod + " on class " + lifecycleMethod.getDeclaringClass());
             }
 
             // Wrap actual value insertion in doPrivileged to
             // allow for private/protected field access.
-            doPrivileged(new java.security.PrivilegedExceptionAction<Object>() {
-                @Override
-                public java.lang.Object run() throws Exception {
-                    if (!lifecycleMethod.trySetAccessible()) {
-                        throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
-                    }
-                    lifecycleMethod.invoke(instance);
-                    return null;
-                }
-            });
+            if (!lifecycleMethod.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
+            }
+            lifecycleMethod.invoke(instance);
         } catch (Exception t) {
             String msg = "Exception attempting invoke lifecycle " + " method " + lifecycleMethod;
             LOGGER.log(FINE, msg, t);

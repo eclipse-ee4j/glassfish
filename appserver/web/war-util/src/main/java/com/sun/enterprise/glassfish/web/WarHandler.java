@@ -21,8 +21,6 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
@@ -36,9 +34,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +58,8 @@ import org.glassfish.web.loader.WebappClassLoader;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -75,14 +72,14 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 @Service(name = WarArchiveType.ARCHIVE_TYPE)
 public class WarHandler extends AbstractArchiveHandler {
 
+    private static final Logger LOG = LogFacade.getLogger();
+    private static final ResourceBundle I18N = LOG.getResourceBundle();
+
     private static final String GLASSFISH_WEB_XML = "WEB-INF/glassfish-web.xml";
     private static final String SUN_WEB_XML = "WEB-INF/sun-web.xml";
     private static final String WEBLOGIC_XML = "WEB-INF/weblogic.xml";
     private static final String WAR_CONTEXT_XML = "META-INF/context.xml";
     private static final String DEFAULT_CONTEXT_XML = "config/context.xml";
-
-    private static final Logger LOG = LogFacade.getLogger();
-    private static final ResourceBundle I18N = LOG.getResourceBundle();
 
     // the following two system properties need to be in sync with DOLUtils
     private static final boolean gfDDOverWLSDD = Boolean.valueOf(System.getProperty("gfdd.over.wlsdd"));
@@ -108,13 +105,11 @@ public class WarHandler extends AbstractArchiveHandler {
     @Override
     public String getVersionIdentifier(ReadableArchive archive) {
         try {
-            WebXmlParser webXmlParser = getWebXmlParser(archive);
-            return webXmlParser.getVersionIdentifier();
-        } catch (XMLStreamException e) {
-            LOG.log(Level.SEVERE, e.getMessage());
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage());
+            return getWebXmlParser(archive).getVersionIdentifier();
+        } catch (XMLStreamException | IOException e) {
+            LOG.log(SEVERE, e.getMessage());
         }
+
         return null;
     }
 
@@ -125,8 +120,7 @@ public class WarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(parent);
-        WebappClassLoader cloader = AccessController.doPrivileged(action);
+        WebappClassLoader cloader = new WebappClassLoader(parent);
         try {
             WebDirContext webDirContext = new WebDirContext();
             File base = new File(context.getSource().getURI());
@@ -141,7 +135,7 @@ public class WarHandler extends AbstractArchiveHandler {
                 cloader.setWorkDir(context.getScratchDir("jsp"));
             }
 
-             // add libraries referenced from manifest
+            // Add libraries referenced from manifest
             for (URL url : getManifestLibraries(context)) {
                 cloader.addRepository(url.toString());
             }
@@ -150,20 +144,10 @@ public class WarHandler extends AbstractArchiveHandler {
             configureLoaderAttributes(cloader, webXmlParser, base);
             configureLoaderProperties(cloader, webXmlParser, base);
             configureContextXmlAttribute(cloader, base, context);
-            try {
-                final DeploymentContext dc = context;
-                final ClassLoader cl = cloader;
-                AccessController.doPrivileged(
-                    new PermsArchiveDelegate.SetPermissionsAction(SMGlobalPolicyUtil.CommponentType.war, dc, cl));
-            } catch (PrivilegedActionException e) {
-                throw new SecurityException(e.getException());
-            }
-
-        } catch(XMLStreamException xse) {
-            LOG.log(Level.SEVERE, xse.getMessage(), xse);
-        } catch(IOException ioe) {
-            LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
+        } catch(XMLStreamException | IOException xse) {
+            LOG.log(SEVERE, xse.getMessage(), xse);
         }
+
         cloader.start();
         return cloader;
     }
@@ -197,7 +181,7 @@ public class WarHandler extends AbstractArchiveHandler {
     protected void configureLoaderAttributes(WebappClassLoader cloader, WebXmlParser webXmlParser, File base) {
         final boolean delegate = webXmlParser.isDelegate();
         cloader.setDelegate(delegate);
-        if (LOG.isLoggable(Level.FINE)) {
+        if (LOG.isLoggable(FINE)) {
             LOG.fine("WebModule[" + base + "]: Setting delegate to " + delegate);
         }
 
@@ -211,7 +195,7 @@ public class WarHandler extends AbstractArchiveHandler {
         String[] pathElements = extraClassPath.split(";|((?<!\\\\):)");
         for (String path : pathElements) {
             path = path.replace("\\:", ":");
-            if (LOG.isLoggable(Level.FINE)) {
+            if (LOG.isLoggable(FINE)) {
                 LOG.fine("WarHandler[" + base + "]: Adding " + path + " to the classpath");
             }
 
@@ -232,7 +216,7 @@ public class WarHandler extends AbstractArchiveHandler {
                     String msg = I18N.getString(LogFacade.CLASSPATH_ERROR);
                     Object[] params = { path };
                     msg = MessageFormat.format(msg, params);
-                    LOG.log(Level.SEVERE, msg, mue2);
+                    LOG.log(SEVERE, msg, mue2);
                 }
             }
         }

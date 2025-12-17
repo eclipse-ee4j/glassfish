@@ -29,8 +29,6 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -227,8 +225,7 @@ public class UndeployedLaunchable implements Launchable {
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         this.classLoader = loader;
         if (acDesc == null) {
-            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
-            final AppClientArchivist _archivist = getArchivist(AccessController.doPrivileged(action));
+            final AppClientArchivist _archivist = getArchivist(new TransformingClassLoader(loader.getURLs(), loader.getParent()));
 
             _archivist.setAnnotationProcessingRequested(true);
             acDesc = _archivist.open(clientRA);

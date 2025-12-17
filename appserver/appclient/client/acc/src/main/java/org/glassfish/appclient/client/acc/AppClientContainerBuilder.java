@@ -159,8 +159,6 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
         AppClientContainer container = ACCModulesManager.getService(AppClientContainer.class);
 
-        // process the packaged permissions.xml
-        container.processPermissions();
         container.setClient(client);
         CallbackHandler callbackHandler = callerSuppliedCallbackHandler == null
             ? getCallbackHandlerFromDescriptor(client.getDescriptor(classLoader).getCallbackHandler())

@@ -32,7 +32,7 @@ import org.osgi.framework.BundleContext;
 public class InstallRootBuilder implements BundleActivator {
 
     private static final Logger logger = Logger.getLogger("embedded-glassfish");
-    private static String resourceroot = "glassfish7/glassfish/";
+    private static String resourceroot = "glassfish8/glassfish/";
 
     public void start(BundleContext context) throws Exception {
         String installRoot = context.getProperty("com.sun.aas.installRoot");

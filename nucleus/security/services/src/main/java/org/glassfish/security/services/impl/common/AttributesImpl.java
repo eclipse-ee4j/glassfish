@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,11 @@
 
 package org.glassfish.security.services.impl.common;
 
-
 import java.util.Set;
 import java.util.TreeMap;
 
 import org.glassfish.security.services.api.common.Attribute;
 import org.glassfish.security.services.api.common.Attributes;
-
 
 public class AttributesImpl implements Attributes {
 
@@ -35,11 +34,12 @@ public class AttributesImpl implements Attributes {
     /**
      * Copy constructor
      */
-    public AttributesImpl( AttributesImpl other ) {
-        if ( null == other ) {
-            throw new NullPointerException( "Given illegal null AttributesImpl." );
+    public AttributesImpl(AttributesImpl other) {
+        if (other == null) {
+            throw new NullPointerException("Given illegal null AttributesImpl.");
         }
-        attributes = new TreeMap<>( other.attributes );
+
+        attributes = new TreeMap<>(other.attributes);
     }
 
     @Override
@@ -59,60 +59,60 @@ public class AttributesImpl implements Attributes {
 
     @Override
     public String getAttributeValue(String name) {
-        Attribute a = attributes.get(name);
-        if(a != null) {
-            return a.getValue();
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            return attribute.getValue();
         }
+
         return null;
     }
 
     @Override
     public Set<String> getAttributeValues(String name) {
-        Attribute a = attributes.get(name);
-        if(a != null) {
-            return a.getValues();
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            return attribute.getValues();
         }
+
         return null;
     }
 
     @Override
     public String[] getAttributeValuesAsArray(String name) {
-        Attribute a = attributes.get(name);
-        if(a != null) {
-            return a.getValuesAsArray();
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            return attribute.getValuesAsArray();
         }
+
         return null;
     }
 
     @Override
     public void addAttribute(String name, String value, boolean replace) {
-        Attribute a = attributes.get(name);
-        if(a != null && !replace) {
-            a.addValue(value);
-        }
-        else {
+        Attribute attribute = attributes.get(name);
+        if (attribute != null && !replace) {
+            attribute.addValue(value);
+        } else {
             attributes.put(name, new AttributeImpl(name, value));
         }
     }
 
     @Override
     public void addAttribute(String name, Set<String> values, boolean replace) {
-        Attribute a = attributes.get(name);
-        if(a != null && !replace) {
-            a.addValues(values);
-        }
-        else {
+        Attribute attribute = attributes.get(name);
+        if (attribute != null && !replace) {
+            attribute.addValues(values);
+        } else {
             attributes.put(name, new AttributeImpl(name, values));
         }
     }
 
     @Override
     public void addAttribute(String name, String[] values, boolean replace) {
-        Attribute a = attributes.get(name);
-        if(a != null && !replace) {
-            a.addValues(values);
-        }
-        else {
+        Attribute attribute = attributes.get(name);
+        if (attribute != null && !replace) {
+            attribute.addValues(values);
+        } else {
             attributes.put(name, new AttributeImpl(name, values));
         }
     }
@@ -124,33 +124,33 @@ public class AttributesImpl implements Attributes {
 
     @Override
     public void removeAttributeValue(String name, String value) {
-        Attribute a = attributes.get(name);
-        if (a != null) {
-            a.removeValue(value);
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            attribute.removeValue(value);
         }
     }
 
     @Override
     public void removeAttributeValues(String name, Set<String> values) {
-        Attribute a = attributes.get(name);
-        if (a != null) {
-            a.removeValues(values);
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            attribute.removeValues(values);
         }
     }
 
     @Override
     public void removeAttributeValues(String name, String[] values) {
-        Attribute a = attributes.get(name);
-        if (a != null) {
-            a.removeValues(values);
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            attribute.removeValues(values);
         }
     }
 
     @Override
     public void removeAllAttributeValues(String name) {
-        Attribute a = attributes.get(name);
-        if (a != null) {
-            a.clear();
+        Attribute attribute = attributes.get(name);
+        if (attribute != null) {
+            attribute.clear();
         }
     }
 

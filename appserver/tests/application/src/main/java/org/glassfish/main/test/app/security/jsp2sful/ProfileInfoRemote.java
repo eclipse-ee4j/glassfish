@@ -22,7 +22,7 @@ import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 /**
- * ProfileInfo Stateful Session Bean. Test JSR 115 authorization.
+ * ProfileInfo Stateful Session Bean. Test Jakarta Authorization.
  *
  * @author swchan2
  */

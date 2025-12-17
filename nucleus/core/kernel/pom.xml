@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>nucleus-core</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>kernel</artifactId>
@@ -61,6 +61,10 @@
             </roles>
         </developer>
     </developers>
+
+    <properties>
+        <commonClassLoader.tests.skip>false</commonClassLoader.tests.skip>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -287,6 +291,12 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>fastest</id>
+            <properties>
+                <commonClassLoader.tests.skip>true</commonClassLoader.tests.skip>
+            </properties>
+        </profile>
         <profile>
             <id>dev</id>
             <properties>

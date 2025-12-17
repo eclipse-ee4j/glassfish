@@ -26,6 +26,7 @@ import jakarta.inject.Inject;
 import java.util.Properties;
 
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -33,7 +34,6 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
-import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
@@ -42,6 +42,14 @@ import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.glassfish.api.admin.RestEndpoint.OpType.POST;
+import static org.glassfish.api.admin.RuntimeType.ALL;
+import static org.glassfish.config.support.CommandTarget.CLUSTER;
+import static org.glassfish.config.support.CommandTarget.DAS;
+import static org.glassfish.config.support.CommandTarget.DOMAIN;
+import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
@@ -50,48 +58,51 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
  * Create JDBC Resource Command
  *
  */
-@TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value = { DAS, DOMAIN, CLUSTER, STANDALONE_INSTANCE })
 @RestEndpoints({
-        @RestEndpoint(configBean=Resources.class,
-                opType=RestEndpoint.OpType.POST,
-                path="create-jdbc-resource",
-                description="create-jdbc-resource")
-})
-@ExecuteOn(RuntimeType.ALL)
-@Service(name="create-jdbc-resource")
+    @RestEndpoint(
+        configBean = Resources.class,
+        opType = POST,
+        path = "create-jdbc-resource",
+        description = "create-jdbc-resource") })
+@ExecuteOn(ALL)
+@Service(name = "create-jdbc-resource")
 @PerLookup
 @I18n("create.jdbc.resource")
 public class CreateJdbcResource implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJdbcResource.class);
 
-    @Param(name="connectionpoolid", alias="poolName")
+    @Param(name = "connectionpoolid", alias = "poolName")
     private String connectionPoolId;
 
-    @Param(optional=true, defaultValue="true")
+    @Param(optional = true, defaultValue = "true")
     private Boolean enabled;
 
-    @Param(optional=true)
+    @Param(optional = true)
     private String description;
 
-    @Param(name="property", optional=true, separator=':')
+    @Param(name = "property", optional = true, separator = ':')
     private Properties properties;
 
     @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
-    @Param(name="jndi_name", primary=true)
+    @Param(optional = true)
+    String sqlFileName;
+
+    @Param(name = "jndi_name", primary = true)
     private String jndiName;
 
     @Inject
     private Domain domain;
 
     @Inject
-    private JDBCResourceManager jdbcMgr;
+    private JDBCResourceManager jdbcResourceManager;
 
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the
+     * values the parameter values
      *
      * @param context information
      */
@@ -99,32 +110,45 @@ public class CreateJdbcResource implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        ResourceAttributes attrList = new ResourceAttributes();
-        attrList.set(JNDI_NAME, jndiName);
-        attrList.set(POOL_NAME, connectionPoolId);
-        attrList.set(DESCRIPTION, description);
-        attrList.set(ENABLED, enabled.toString());
-        ResourceStatus rs;
+        ResourceAttributes attributes = new ResourceAttributes();
+        attributes.set(JNDI_NAME, jndiName);
+        attributes.set(POOL_NAME, connectionPoolId);
+        attributes.set(DESCRIPTION, description);
+        attributes.set(ENABLED, enabled.toString());
+        ResourceStatus resourceStatus;
 
         try {
-            rs = jdbcMgr.create(domain.getResources(), attrList, properties, target);
-        } catch(Exception e) {
-            report.setMessage(localStrings.getLocalString("create.jdbc.resource.failed",
-                    "JDBC resource {0} creation failed", jndiName));
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            resourceStatus = jdbcResourceManager.create(domain.getResources(), attributes, properties, target);
+
+            if (sqlFileName != null && resourceStatus.getException() == null && resourceStatus.getStatus() != ResourceStatus.FAILURE) {
+                ResourceStatus executeStatus = jdbcResourceManager.executeSql(jndiName, sqlFileName);
+
+                resourceStatus =
+                    new ResourceStatus(
+                        executeStatus.getStatus(),
+                        (resourceStatus.getMessage() == null? "" : resourceStatus.getMessage()) + " " + executeStatus.getMessage(),
+                        resourceStatus.isAlreadyExists() || executeStatus.isAlreadyExists());
+            }
+
+        } catch (Exception e) {
+            report.setMessage(localStrings.getLocalString("create.jdbc.resource.failed", "JDBC resource {0} creation failed", jndiName));
+            report.setActionExitCode(FAILURE);
             report.setFailureCause(e);
             return;
         }
-        ActionReport.ExitCode ec = ActionReport.ExitCode.SUCCESS;
-        if (rs.getMessage() != null){
-             report.setMessage(rs.getMessage());
+
+        ExitCode exitCode = SUCCESS;
+        if (resourceStatus.getMessage() != null) {
+            report.setMessage(resourceStatus.getMessage());
         }
-        if (rs.getStatus() == ResourceStatus.FAILURE) {
-            ec = ActionReport.ExitCode.FAILURE;
-            if (rs.getException() != null) {
-                report.setFailureCause(rs.getException());
+
+        if (resourceStatus.getStatus() == ResourceStatus.FAILURE) {
+            exitCode = FAILURE;
+            if (resourceStatus.getException() != null) {
+                report.setFailureCause(resourceStatus.getException());
             }
         }
-        report.setActionExitCode(ec);
+
+        report.setActionExitCode(exitCode);
     }
 }

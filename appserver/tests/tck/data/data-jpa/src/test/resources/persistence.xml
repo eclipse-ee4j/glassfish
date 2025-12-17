@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~  Copyright (c) 2025 Contributors to the Eclipse Foundation
+  ~   All rights reserved. This program and the accompanying materials
+  ~   are made available under the terms of the Eclipse Public License v1.0
+  ~   and Apache License v2.0 which accompanies this distribution.
+  ~   The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+  ~   and the Apache License v2.0 is available at http://www.opensource.org/licenses/apache2.0.php.
+  ~
+  ~   You may elect to redistribute this code under either of these licenses.
+  ~
+  ~   Contributors:
+  ~
+  ~   Ondro Mihalyi
+  ~
+  -->
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="testPersistenceUnit" transaction-type="JTA">
+    <class>ee.jakarta.tck.data.core.cdi.Person</class>
+    <class>ee.jakarta.tck.data.framework.read.only.AsciiCharacter</class>
+    <class>ee.jakarta.tck.data.framework.read.only.NaturalNumber</class>
+    <class>ee.jakarta.tck.data.standalone.entity.Box</class>
+    <class>ee.jakarta.tck.data.standalone.entity.Coordinate</class>
+    <class>ee.jakarta.tck.data.standalone.persistence.Product</class>
+    <class>ee.jakarta.tck.data.web.validation.Rectangle</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <!-- EclipseLink specific properties -->
+      <property name="eclipselink.orm.throw.exceptions" value="true"/>
+      <property name="eclipselink.target-database" value="Derby"/>
+      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+<!--      <property name="eclipselink.debug" value="ALL"/>
+      <property name="eclipselink.logging.level" value="FINEST"/>-->
+      <property name="eclipselink.logging.level.sql" value="FINEST"/>
+      <!--<property name="eclipselink.logging.level.cache" value="FINEST"/>-->
+    </properties>
+  </persistence-unit>
+</persistence>

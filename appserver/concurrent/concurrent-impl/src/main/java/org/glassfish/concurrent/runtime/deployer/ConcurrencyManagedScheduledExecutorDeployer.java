@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import jakarta.inject.Singleton;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
-import org.glassfish.enterprise.concurrent.ContextServiceImpl;
-import org.glassfish.enterprise.concurrent.ManagedScheduledExecutorServiceImpl;
+import org.glassfish.concurro.AbstractManagedExecutorService;
+import org.glassfish.concurro.ContextServiceImpl;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
@@ -66,7 +66,7 @@ public class ConcurrencyManagedScheduledExecutorDeployer
     @Override
     public void deployResource(ManagedScheduledExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         ManagedScheduledExecutorDefinitionDescriptor descriptor = resource;
-        ManagedScheduledExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
+        AbstractManagedExecutorService service = createExecutorService(applicationName, moduleName, descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(toResourceName(descriptor), applicationName, moduleName);
         resourceNamingService.publishObject(resourceInfo, service, true);
     }
@@ -82,8 +82,8 @@ public class ConcurrencyManagedScheduledExecutorDeployer
     }
 
 
-    private ManagedScheduledExecutorServiceImpl createExecutorService(String applicationName, String moduleName,
-        ManagedScheduledExecutorDefinitionDescriptor descriptor) {
+    private AbstractManagedExecutorService createExecutorService(String applicationName, String moduleName,
+            ManagedScheduledExecutorDefinitionDescriptor descriptor) {
         ConcurrencyManagedScheduledExecutorServiceConfig config = new ConcurrencyManagedScheduledExecutorServiceConfig(descriptor);
         ManagedScheduledExecutorServiceCfg mesConfig = new ManagedScheduledExecutorServiceCfg(config);
         ContextServiceImpl contextService = runtime.findOrCreateContextService(descriptor, applicationName, moduleName);

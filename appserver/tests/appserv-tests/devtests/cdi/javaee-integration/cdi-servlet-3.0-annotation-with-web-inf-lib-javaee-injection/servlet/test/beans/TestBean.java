@@ -21,13 +21,14 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 import test.beans.artifacts.Preferred;
+import test.beans.artifacts.TestDatabase;
 
 @RequestScoped
 @Preferred
 public class TestBean implements TestBeanInterface{
     public static boolean testBeanInvoked = false;
 
-    @Inject //@TestDatabase
+    @Inject @TestDatabase
     EntityManager emf;
 
     @Override

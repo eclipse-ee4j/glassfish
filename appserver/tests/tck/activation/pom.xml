@@ -23,10 +23,10 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-activation</artifactId>
+    <artifactId>tck-activation</artifactId>
     <packaging>pom</packaging>
 
     <name>TCK: Activation</name>
@@ -35,6 +35,7 @@
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
         <tck.home>${project.build.directory}/activation-tck</tck.home>
+        <tck.artifactId>tck-activation-download</tck.artifactId>
     </properties>
 
     <dependencies>
@@ -45,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-activation-tck</artifactId>
+            <artifactId>${tck.artifactId}</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -88,7 +89,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>glassfish,jakarta-activation-tck</includeArtifactIds>
+                            <includeArtifactIds>glassfish,${tck.artifactId}</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>

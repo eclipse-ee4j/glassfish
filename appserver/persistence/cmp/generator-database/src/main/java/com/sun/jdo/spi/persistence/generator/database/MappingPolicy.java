@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,8 +30,6 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.sql.Types;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -586,6 +585,7 @@ public class MappingPolicy implements Cloneable {
      * @return clone of this MappingPolicy
      * @throws CloneNotSupportedException never thrown
      */
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         MappingPolicy mappingPolicyClone = (MappingPolicy) super.clone();
         mappingPolicyClone.namespaces = new HashMap();
@@ -621,22 +621,15 @@ public class MappingPolicy implements Cloneable {
             } else {
                 final ClassLoader loader =
                         MappingPolicy.class.getClassLoader();
-                in = (InputStream) AccessController.doPrivileged(
-                        new PrivilegedAction() {
+                if (loader != null) {
+                    in =loader.getResourceAsStream(
+                            resourceName);
+                } else {
+                    in =
+                        ClassLoader.getSystemResourceAsStream(
+                                resourceName);
+                }
 
-                            public Object run() {
-                                Object rc = null;
-                                if (loader != null) {
-                                    rc =loader.getResourceAsStream(
-                                            resourceName);
-                                } else {
-                                    rc =
-                                        ClassLoader.getSystemResourceAsStream(
-                                                resourceName);
-                                }
-                                return rc;
-                            }
-                        });
                 if (in == null) {
                     throw new IOException(I18NHelper.getMessage(messages,
                         "EXC_ResourceNotFound", resourceName));// NOI18N
@@ -1507,6 +1500,7 @@ public class MappingPolicy implements Cloneable {
      * @return A description of this MappingPolicy in string form.
      * Basically, all it's "interesting" values.
      */
+    @Override
     public String toString() {
         StringBuffer rc = new StringBuffer(
             "statementSeparator=" + statementSeparator // NOI18N

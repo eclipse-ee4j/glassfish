@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022, 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,11 +24,14 @@ import org.w3c.dom.Node;
 
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY_PRIORITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.QUALIFIER;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.USE_VIRTUAL_THREADS;
 import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedThreadFactoryDefinitionNode
     extends DeploymentDescriptorNode<ManagedThreadFactoryDefinitionDescriptor> {
+
 
     public ManagedThreadFactoryDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
@@ -45,6 +49,8 @@ public class ManagedThreadFactoryDefinitionNode
     protected Map<String, String> getDispatchTable() {
         Map<String, String> map = super.getDispatchTable();
         map.put(NAME, "setName");
+        map.put(QUALIFIER, "addQualifier");
+        map.put(USE_VIRTUAL_THREADS, "setUseVirtualThreads");
         map.put(MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, "setContext");
         map.put(MANAGED_THREAD_FACTORY_PRIORITY, "setPriority");
         return map;
@@ -55,6 +61,10 @@ public class ManagedThreadFactoryDefinitionNode
     public Node writeDescriptor(Node parent, String nodeName, ManagedThreadFactoryDefinitionDescriptor descriptor) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, NAME, descriptor.getName());
+        for (String qualifier : descriptor.getQualifiers()) {
+            appendTextChild(node, QUALIFIER, qualifier);
+        }
+        appendTextChild(node, USE_VIRTUAL_THREADS, descriptor.getUseVirtualThreads());
         appendTextChild(node, MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, descriptor.getContext());
         appendTextChild(node, MANAGED_THREAD_FACTORY_PRIORITY, String.valueOf(descriptor.getPriority()));
         return ResourcePropertyNode.write(node, descriptor);

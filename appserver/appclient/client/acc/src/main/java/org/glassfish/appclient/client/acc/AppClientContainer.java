@@ -40,8 +40,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
@@ -245,11 +243,6 @@ public class AppClientContainer implements ApplicationClientContainer {
         ClientMainClassSetting.setMainClass(client.getMainClass());
     }
 
-    void processPermissions() throws IOException {
-        // need to process the permissions files
-        classLoader.processDeclaredPermissions();
-    }
-
     protected Class<?> loadClass(final String className) throws ClassNotFoundException {
         return Class.forName(className, true, classLoader);
     }
@@ -293,7 +286,7 @@ public class AppClientContainer implements ApplicationClientContainer {
                 (TransformingClassLoader) getClassLoader(), inst, client.getAnchorDir(), connectorRuntime);
             for (PersistenceUnitDescriptor puDesc : referencedPUs) {
                 PersistenceUnitLoader pul = new PersistenceUnitLoader(puDesc, pcci);
-                desc.addEntityManagerFactory(puDesc.getName(), pul.getEMF());
+                desc.addEntityManagerFactory(puDesc.getName(), pul.getEntityManagerFactory());
             }
 
             cleanup.setEMFs(pcci.emfs());
@@ -350,8 +343,7 @@ public class AppClientContainer implements ApplicationClientContainer {
     }
 
     private boolean isEDTRunning() {
-        Map<Thread, StackTraceElement[]> threads = AccessController
-            .doPrivileged((PrivilegedAction<Map<Thread, StackTraceElement[]>>) Thread::getAllStackTraces);
+        Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
 
         logger.fine("Checking for EDT thread...");
         for (Map.Entry<Thread, StackTraceElement[]> entry : threads.entrySet()) {
@@ -575,11 +567,7 @@ public class AppClientContainer implements ApplicationClientContainer {
      */
     private static void prepareURLStreamHandling() {
         // Set the HTTPS URL stream handler.
-        PrivilegedAction<Void> action = () -> {
-            URL.setURLStreamHandlerFactory(new DirContextURLStreamHandlerFactory());
-            return null;
-        };
-        AccessController.doPrivileged(action);
+        URL.setURLStreamHandlerFactory(new DirContextURLStreamHandlerFactory());
     }
 
 
@@ -754,14 +742,7 @@ public class AppClientContainer implements ApplicationClientContainer {
         }
 
         void disable() {
-            java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-
-                @Override
-                public Object run() {
-                    Runtime.getRuntime().removeShutdownHook(cleanupThread);
-                    return null;
-                }
-            });
+            Runtime.getRuntime().removeShutdownHook(cleanupThread);
         }
 
         /**

@@ -71,7 +71,7 @@
             <param name="ejbjar.classes"
                    value="**/Singleton*.class,**/Hello*.class"/>
             <param name="appclientjar.classes"
-              value="**/Client.class,**/FooManagedBean*.class,**/Hello*.class"/>
+              value="**/Client.class,**/Hello*.class"/>
         </antcall>
     </target>
 

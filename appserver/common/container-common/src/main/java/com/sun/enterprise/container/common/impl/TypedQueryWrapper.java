@@ -17,6 +17,8 @@
 package com.sun.enterprise.container.common.impl;
 
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
@@ -47,12 +49,36 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implemen
     }
 
 
+    @Override
+    public TypedQuery<X> setTimeout(Integer timeout) {
+        super.setTimeout(timeout);
+        return this;
+    }
+
+    @Override
+    public TypedQuery<X> setCacheRetrieveMode(CacheRetrieveMode cacheRetrieveMode) {
+        super.setCacheRetrieveMode(cacheRetrieveMode);
+        return this;
+    }
+
+    @Override
+    public TypedQuery<X> setCacheStoreMode(CacheStoreMode cacheStoreMode) {
+        super.setCacheStoreMode(cacheStoreMode);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public X getSingleResultOrNull() {
+        return (X) super.getSingleResultOrNull();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<X> getResultList() {
         // If this method is called, the current instance is guarantied to be of type TypedQuery<X>
         // It is safe to cast here.
-        return (List<X>) super.getResultList();
+        return super.getResultList();
     }
 
     @SuppressWarnings("unchecked")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,9 +38,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,6 +58,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 
 import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
 import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
+import static com.sun.enterprise.util.Utility.isEmpty;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
@@ -138,12 +137,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     }
 
     private static class EjbIntfInfo {
-
         Set<EjbDescriptor> ejbs;
-
-        // Only set when there is one ejb in the set.
-        // Otherwise, value = NONE
-        EjbIntfType intfType;
     }
 
 
@@ -628,12 +622,9 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             EjbIntfInfo newInfo = new EjbIntfInfo();
             newInfo.ejbs = new HashSet<>();
             newInfo.ejbs.add(ejbDesc);
-            newInfo.intfType = intfType;
             intfInfoMap.put(intf, newInfo);
         } else {
             intfInfo.ejbs.add(ejbDesc);
-            // Since there's more than one match, reset intf type.
-            intfInfo.intfType = EjbIntfType.NONE;
         }
 
     }
@@ -793,38 +784,33 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * @exception RuntimeException
      */
     protected void computeRunAsPrincipalDefault(RunAsIdentityDescriptor runAs, Application application) {
-        // for backward compatibile
-        if (runAs != null && (runAs.getRoleName() == null || runAs.getRoleName().isEmpty())) {
+        // For backward compatibility
+        if (runAs != null && isEmpty(runAs.getRoleName())) {
             LOG.log(Level.WARNING, "enterprise.deployment.backend.emptyRoleName");
             return;
         }
 
-        if (runAs != null && (runAs.getPrincipal() == null || runAs.getPrincipal().isEmpty()) && application != null
-            && application.getRoleMapper() != null) {
+        if (runAs != null && isEmpty(runAs.getPrincipal()) && application != null  && application.getRoleMapper() != null) {
 
             String principalName = null;
             String roleName = runAs.getRoleName();
-            final Subject fs = application.getRoleMapper().getRoleToSubjectMapping().get(roleName);
-            if (fs != null) {
-                PrivilegedAction<String> action = () -> {
-                    Set<Principal> pset = fs.getPrincipals();
-                    if (pset.isEmpty()) {
-                        return null;
-                    }
-                    String name = pset.iterator().next().getName();
+            Subject subject = application.getRoleMapper().getRoleToSubjectMapping().get(roleName);
+            if (subject != null) {
+                Set<Principal> principals = subject.getPrincipals();
+                if (!principals.isEmpty()) {
+                    principalName = principals.iterator().next().getName();
                     LOG.log(Level.WARNING,
                         "The run-as principal {0} was assigned by the deployment system based"
                             + " on the specified role. Please consider defining an explicit run-as principal"
                             + " in the sun-specific deployment descriptor.",
-                        name);
-                    return name;
-                };
-                principalName = AccessController.doPrivileged(action);
+                            principalName);
+                }
             }
 
-            if (principalName == null || principalName.isEmpty()) {
+            if (isEmpty(principalName)) {
                 throw new RuntimeException("The RunAs role \"" + roleName + "\" is not mapped to a principal.");
             }
+
             runAs.setPrincipal(principalName);
         }
     }

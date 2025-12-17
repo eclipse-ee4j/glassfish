@@ -44,6 +44,8 @@ import test.beans.artifacts.Preferred;
 import test.util.JpaTest;
 
 import test.beans.wbinflib.TestBeanInWebInfLib;
+import test.beans.artifacts.TestDatabase;
+
 
 @WebServlet(name="mytest",
         urlPatterns={"/myurl"},
@@ -59,7 +61,7 @@ public class TestServlet extends HttpServlet {
     @PersistenceUnit(unitName = "pu1")
     private EntityManagerFactory emf_at_pu;
 
-    @Inject //@TestDatabase
+    @Inject @TestDatabase
     private EntityManager emf_at_inj;
 
     private @Resource

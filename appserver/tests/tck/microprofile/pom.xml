@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-microprofile</artifactId>
@@ -49,7 +49,7 @@
                     <executions>
                         <execution>
                             <id>unpack-glassfish</id>
-                            <phase>pre-integration-test</phase>
+                            <phase>process-test-classes</phase>
                             <goals>
                                 <goal>unpack</goal>
                             </goals>
@@ -77,8 +77,6 @@
                         <systemPropertyVariables>
                             <glassfish.home>${glassfish.home}</glassfish.home>
 
-                            <!-- Use the Arquillian XML from the parent in each child module -->
-                            <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
                             <arquillian.launch>arquillian-glassfish</arquillian.launch>
                         </systemPropertyVariables>
                     </configuration>
@@ -90,8 +88,6 @@
                         <systemPropertyVariables>
                             <glassfish.home>${glassfish.home}</glassfish.home>
 
-                            <!-- Use the Arquillian XML from the parent in each child module -->
-                            <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
                             <arquillian.launch>arquillian-glassfish</arquillian.launch>
                         </systemPropertyVariables>
                         <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.SurefireStatelessTestsetInfoReporter"/>

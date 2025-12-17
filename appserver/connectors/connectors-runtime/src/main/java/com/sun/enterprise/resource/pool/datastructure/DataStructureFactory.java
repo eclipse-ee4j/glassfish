@@ -22,8 +22,6 @@ import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.logging.LogDomains;
 
 import java.lang.reflect.Constructor;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,20 +57,14 @@ public class DataStructureFactory {
     }
 
     private static DataStructure initializeCustomDataStructureInPrivilegedMode(final String className, final String parameters, final int maxPoolSize, final ResourceHandler handler) throws PoolingException {
-        Object result = AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            @Override
-            public Object run() {
+        Object result = null;
+        try {
+            result = initializeDataStructure(className, parameters, maxPoolSize, handler);
+        } catch (Exception e) {
+            _logger.log(WARNING, "pool.datastructure.init.failure", className);
+            _logger.log(WARNING, "pool.datastructure.init.failure.exception", e);
+        }
 
-                Object result = null;
-                try {
-                    result = initializeDataStructure(className, parameters, maxPoolSize, handler);
-                } catch (Exception e) {
-                    _logger.log(WARNING, "pool.datastructure.init.failure", className);
-                    _logger.log(WARNING, "pool.datastructure.init.failure.exception", e);
-                }
-                return result;
-            }
-        });
         if (result != null) {
             return (DataStructure) result;
         } else {

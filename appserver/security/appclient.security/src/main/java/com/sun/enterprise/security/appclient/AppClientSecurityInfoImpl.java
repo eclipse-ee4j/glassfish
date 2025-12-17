@@ -25,7 +25,6 @@ import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.ee.J2EESecurityManager;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.enterprise.security.ssl.SSLUtils;
 
@@ -92,13 +91,6 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         }
         this.targetServers = tServers;
         this.msgSecConfigs = configs;
-
-        SecurityManager secMgr = System.getSecurityManager();
-        if (!isJWS && secMgr != null && !J2EESecurityManager.class.equals(secMgr.getClass())) {
-            J2EESecurityManager mgr = new J2EESecurityManager();
-            System.setSecurityManager(mgr);
-        }
-        LOG.log(DEBUG, "SEC9002: ACC: Security Manager is {0}", secMgr);
 
         // Set the parser to ConfigXMLParser
         setProperty("config.parser", DEFAULT_PARSER_CLASS, true);

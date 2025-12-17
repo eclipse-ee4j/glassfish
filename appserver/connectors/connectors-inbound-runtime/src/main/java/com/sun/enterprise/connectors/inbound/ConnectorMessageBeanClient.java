@@ -41,7 +41,6 @@ import jakarta.resource.spi.endpoint.MessageEndpoint;
 import jakarta.resource.spi.endpoint.MessageEndpointFactory;
 
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -55,6 +54,8 @@ import org.glassfish.ejb.spi.MessageBeanClient;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.server.ServerEnvironmentImpl;
+
+import static java.util.logging.Level.FINEST;
 
 /**
  * Main helper implementation for message-beans associated with
@@ -88,7 +89,6 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
 
     /** unique identification of a message-driven bean: appName:modlueID:beanName */
     private final String beanID_;
-
 
     /**
      * Creates an instance of <code>ConnectorMessageBeanClient</code>
@@ -155,8 +155,8 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
             throw new IllegalStateException("Unsupported message listener type");
         }
 
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, "ActivationSpecClassName = " + activationSpecClassName);
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, "ActivationSpecClassName = " + activationSpecClassName);
         }
         try {
             ActivationSpec activationSpec = getActivationSpec(aira, activationSpecClassName);
@@ -218,24 +218,25 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
                 }
             }
         }
+
         return resourceAdapterMid;
     }
 
-    private ActivationSpec getActivationSpec(ActiveInboundResourceAdapter aira, String activationSpecClassName)
-        throws Exception {
-        ClassLoader cl = aira.getClassLoader();
-        Class<?> aClass = cl.loadClass(activationSpecClassName);
+    private ActivationSpec getActivationSpec(ActiveInboundResourceAdapter activeInboundResourceAdapter, String activationSpecClassName) throws Exception {
+        ClassLoader classLoader = activeInboundResourceAdapter.getClassLoader();
+        Class<?> aClass = classLoader.loadClass(activationSpecClassName);
 
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, "classloader = " + aClass.getClassLoader());
-            logger.log(Level.FINEST, "classloader parent = " + aClass.getClassLoader().getParent());
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, "classloader = " + aClass.getClassLoader());
+            logger.log(FINEST, "classloader parent = " + aClass.getClassLoader().getParent());
         }
 
         ActivationSpec activationSpec = (ActivationSpec) aClass.getDeclaredConstructor().newInstance();
         Set<EnvironmentProperty> props = ConnectorsUtil.getMergedActivationConfigProperties(getDescriptor());
 
         SetMethodAction<EnvironmentProperty> action = new SetMethodAction<>(activationSpec, props);
-        AccessController.doPrivileged(action);
+        action.run();
+
         return activationSpec;
     }
 
@@ -250,6 +251,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
                 return msgListener;
             }
         }
+
         return null;
     }
 
@@ -286,7 +288,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      */
     @Override
     public void start() throws Exception {
-        logger.logp(Level.FINEST, "ConnectorMessageBeanClient", "start", "Starting the ConnectorMessageBeanClient");
+        logger.logp(FINEST, "ConnectorMessageBeanClient", "start", "Starting the ConnectorMessageBeanClient");
         started = true;
         synchronized (this) {
             myState = UNBLOCKED;
@@ -302,7 +304,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      */
     @Override
     public void close() {
-        logger.logp(Level.FINEST, "ConnectorMessageBeanClient", "close", "Closing the ConnectorMessageBeanClient");
+        logger.logp(FINEST, "ConnectorMessageBeanClient", "close", "Closing the ConnectorMessageBeanClient");
 
         started = false; //no longer available
 

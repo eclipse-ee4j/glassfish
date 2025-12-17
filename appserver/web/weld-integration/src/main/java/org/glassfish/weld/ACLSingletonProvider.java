@@ -18,8 +18,6 @@
 package org.glassfish.weld;
 
 import java.lang.System.Logger;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,9 +31,7 @@ import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.getSecurityManager;
 import static java.lang.Thread.currentThread;
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications.
@@ -92,8 +88,7 @@ public class ACLSingletonProvider extends SingletonProvider {
         private static ClassLoader bootstrapCL;
 
         static {
-            PrivilegedAction<ClassLoader> action = () -> Object.class.getClassLoader();
-            bootstrapCL = getSecurityManager() == null ? action.run() : AccessController.doPrivileged(action);
+            bootstrapCL = Object.class.getClassLoader();
         }
 
         @Override
@@ -125,11 +120,11 @@ public class ACLSingletonProvider extends SingletonProvider {
         }
 
         /**
-         * This is the most significant method of this class. This is what distingushes it from TCCLSIngleton.
+         * This is the most significant method of this class. This is what distinguishes it from TCCLSIngleton.
          *
          * <p>
          * It tries to obtain a class loader that's common to all modules of an application (ear). Since it runs in the context
-         * of Java EE, it can assume that Thread's context class loader is always set as application class loader. In GlassFish,
+         * of Jakarta EE, it can assume that Thread's context class loader is always set as application class loader. In GlassFish,
          * the class loader can vary for each module of an Ear. Thread's context class loader is set depending on which module
          * is handling the request.
          *
@@ -143,8 +138,7 @@ public class ACLSingletonProvider extends SingletonProvider {
          * @return a class loader that's common to all modules of a Jakarta EE application
          */
         private ClassLoader getClassLoader() {
-            PrivilegedAction<ClassLoader> action = () -> currentThread().getContextClassLoader();
-            ClassLoader contextClassLoader = getSecurityManager() == null ? action.run() : doPrivileged(action);
+            ClassLoader contextClassLoader = currentThread().getContextClassLoader();
 
             if (contextClassLoader == null) {
                 throw new RuntimeException("Thread's context class loader is null");
@@ -177,8 +171,7 @@ public class ACLSingletonProvider extends SingletonProvider {
 
         private ClassLoader getParent(ClassLoader classLoader) {
             LOG.log(TRACE, () -> "getParent(classLoader=" + classLoader + ")");
-            PrivilegedAction<ClassLoader> action = classLoader::getParent;
-            return getSecurityManager() == null ? action.run() : doPrivileged(action);
+            return classLoader.getParent();
         }
     }
 }

@@ -22,6 +22,7 @@
 <web-app>
     <display-name>jsp2sful</display-name>
     <distributable></distributable>
+
     <servlet>
         <servlet-name>LoginJsp</servlet-name>
         <jsp-file>/login.jsp</jsp-file>
@@ -36,6 +37,7 @@
             <role-link>employee</role-link>
         </security-role-ref>
     </servlet>
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>MySecureBit</web-resource-name>

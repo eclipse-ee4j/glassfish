@@ -286,11 +286,11 @@
     </init-param>
     <init-param>
       <param-name>compilerSourceVM</param-name>
-      <param-value>17</param-value>
+      <param-value>21</param-value>
     </init-param>
     <init-param>
       <param-name>compilerTargetVM</param-name>
-      <param-value>17</param-value>
+      <param-value>21</param-value>
     </init-param>
     <init-param>
       <param-name>system-jar-includes</param-name>

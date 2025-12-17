@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>admin-tests-parent</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>admin-tests</artifactId>
@@ -141,7 +141,7 @@
                         <configuration>
                             <includeArtifactIds>test-progress-admin-extension</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
-                            <outputDirectory>${project.build.directory}/glassfish7/glassfish/modules</outputDirectory>
+                            <outputDirectory>${project.build.directory}/glassfish8/glassfish/modules</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

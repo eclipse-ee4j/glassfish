@@ -31,8 +31,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -268,9 +266,7 @@ public class FacadeLaunchable implements Launchable {
              */
             archivist.setAnnotationProcessingRequested( ! isJWSLaunch);
 
-            PrivilegedAction<TransformingClassLoader> action = () -> new TransformingClassLoader(loader.getURLs(), loader.getParent());
-            final TransformingClassLoader tempLoader = AccessController.doPrivileged(action);
-
+            final TransformingClassLoader tempLoader = new TransformingClassLoader(loader.getURLs(), loader.getParent());
             archivist.setClassLoader(tempLoader);
 
             acDesc = archivist.open(combinedRA, mainClassNameToLaunch);

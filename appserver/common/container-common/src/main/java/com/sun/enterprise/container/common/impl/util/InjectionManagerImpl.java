@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +27,6 @@ import com.sun.enterprise.deployment.InjectionInfo;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 
-import jakarta.annotation.ManagedBean;
 import jakarta.inject.Inject;
 
 import java.lang.System.Logger;
@@ -67,12 +66,16 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
     @Inject
     private ComponentEnvManager componentEnvManager;
+
     @Inject
     private InvocationManager invocationManager;
+
     @Inject
     private GlassfishNamingManager glassfishNamingManager;
+
     @Inject
     private ServiceLocator serviceLocator;
+
     @Inject
     private ProcessEnvironment processEnvironment;
 
@@ -84,8 +87,9 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
         if (processEnvironment.getProcessType().isServer()) {
             try {
-                SimpleJndiName jndiName = new SimpleJndiName(InjectionManager.class.getName());
-                glassfishNamingManager.publishObject(jndiName, this, true);
+                glassfishNamingManager.publishObject(
+                    new SimpleJndiName(InjectionManager.class.getName()),
+                    this, true);
             } catch (NamingException ne) {
                 throw new RuntimeException(ne);
             }
@@ -104,12 +108,13 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         if (currentInvocation == null) {
             throw new InjectionException("Null invocation context");
         }
+
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(currentInvocation.getComponentId());
         if (componentEnv == null) {
             throw new InjectionException("No descriptor registered for current invocation: " + currentInvocation);
         }
-        inject(instance.getClass(), instance, componentEnv, null, invokePostConstruct);
 
+        inject(instance.getClass(), instance, componentEnv, null, invokePostConstruct);
     }
 
     @Override
@@ -128,11 +133,13 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         if (currentInvocation == null) {
             throw new InjectionException("Null invocation context");
         }
+
         String componentId = jndiName == null ? null : jndiName.toString();
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
         if (componentEnv == null) {
             throw new InjectionException("No descriptor registered for componentId: " + jndiName);
         }
+
         inject(instance.getClass(), instance, componentEnv, componentId, invokePostConstruct);
     }
 
@@ -142,6 +149,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         if (currentInvocation == null) {
             throw new InjectionException("Null invocation context");
         }
+
         String componentId = jndiName == null ? null : jndiName.toString();
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
         if (componentEnv == null) {
@@ -181,6 +189,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
         LOG.log(DEBUG, "invokeInstancePreDestroy(instance={0}, validate={1}); invocation={2}", instance, validate,
             currentInvocation);
+
         // if ComponentInv is null and validate is true, throw InjectionException;
         // if component JndiNameEnvironment is null and validate is true, throw InjectionException;
         // if validate is false, the above 2 null conditions are basically ignored,
@@ -199,6 +208,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             }
             return;
         }
+
         invokePreDestroy(instance.getClass(), instance, componentEnv);
     }
 
@@ -225,32 +235,20 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         T managedObject = null;
 
         try {
-            ManagedBean managedBeanAnnotation = clazz.getAnnotation(ManagedBean.class);
-
             ManagedBeanManager managedBeanManager = serviceLocator.getService(ManagedBeanManager.class);
+            CDIService cdiService = serviceLocator.getService(CDIService.class);
 
-            if (managedBeanAnnotation != null) {
-                // EE style @ManagedBean
+            if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
 
                 // Create , inject, and call PostConstruct via managed bean manager
                 managedObject = managedBeanManager.createManagedBean(clazz);
-
             } else {
-                CDIService cdiService = serviceLocator.getService(CDIService.class);
 
-                if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
+                // Not in a CDI-enabled module so just instantiate using new and perform injection
+                managedObject = clazz.getConstructor().newInstance();
 
-                    // Create , inject, and call PostConstruct via managed bean manager
-                    managedObject = managedBeanManager.createManagedBean(clazz);
-                } else {
-
-                    // Not in a CDI-enabled module and not annotated with @ManagedBean, so
-                    // just instantiate using new and perform injection
-                    managedObject = clazz.getConstructor().newInstance();
-
-                    // Inject and call PostConstruct
-                    injectInstance(managedObject);
-                }
+                // Inject and call PostConstruct
+                injectInstance(managedObject);
             }
         } catch (Exception e) {
             throw new InjectionException("Error creating managed object for class: " + clazz, e);
@@ -280,32 +278,21 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         T managedObject = null;
 
         try {
-            ManagedBean managedBeanAnnotation = clazz.getAnnotation(ManagedBean.class);
-
             ManagedBeanManager managedBeanMgr = serviceLocator.getService(ManagedBeanManager.class);
+            CDIService cdiService = serviceLocator.getService(CDIService.class);
 
-            if (managedBeanAnnotation != null) {
-                // EE style @ManagedBean
+            if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
 
                 // Create , inject, and call PostConstruct (if necessary) via managed bean manager
                 managedObject = managedBeanMgr.createManagedBean(clazz, invokePostConstruct);
 
             } else {
-                CDIService cdiService = serviceLocator.getService(CDIService.class);
+                // Not in a CDI-enabled module and not annoated with @ManagedBean, so
+                // just instantiate using new and perform injection
+                managedObject = clazz.getConstructor().newInstance();
 
-                if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
-
-                    // Create , inject, and call PostConstruct (if necessary) via managed bean manager
-                    managedObject = managedBeanMgr.createManagedBean(clazz, invokePostConstruct);
-
-                } else {
-                    // Not in a CDI-enabled module and not annoated with @ManagedBean, so
-                    // just instantiate using new and perform injection
-                    managedObject = clazz.getConstructor().newInstance();
-
-                    // Inject and call PostConstruct if necessary
-                    injectInstance(managedObject, invokePostConstruct);
-                }
+                // Inject and call PostConstruct if necessary
+                injectInstance(managedObject, invokePostConstruct);
             }
 
         } catch (Exception e) {
@@ -337,12 +324,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     @Override
     public void destroyManagedObject(Object managedObject, boolean validate) throws InjectionException {
         LOG.log(DEBUG, "destroyManagedObject(managedObject={0}, validate={1})", managedObject, validate);
-        Class<?> managedObjectClass = managedObject.getClass();
-
-        ManagedBean managedBeanAnn = managedObjectClass.getAnnotation(ManagedBean.class);
 
         ManagedBeanManager managedBeanManager = serviceLocator.getService(ManagedBeanManager.class);
-
         CDIService cdiService = serviceLocator.getService(CDIService.class);
 
         if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
@@ -351,10 +334,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             managedBeanManager.destroyManagedBean(managedObject, validate);
 
         } else {
-
-            // If the object's class has @ManagedBean it's a managed bean. Otherwise, ask
-            // managed bean manager.
-            if (managedBeanAnn != null || managedBeanManager.isManagedBean(managedObject)) {
+            // Ask managed bean manager.
+            if (managedBeanManager.isManagedBean(managedObject)) {
                 managedBeanManager.destroyManagedBean(managedObject, validate);
             } else {
                 invokeInstancePreDestroy(managedObject, validate);
@@ -504,35 +485,25 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                     }
 
                     if (target.isFieldInjectable()) {
-                        final Field f = getField(target, clazz);
-                        if (Modifier.isStatic(f.getModifiers()) && instance != null) {
+                        final Field injectableField = getField(target, clazz);
+                        if (Modifier.isStatic(injectableField.getModifiers()) && instance != null) {
                             throw new InjectionException(
                                 "Illegal use of static field on class that only supports instance-based injection: "
-                                    + f);
+                                    + injectableField);
                         }
 
-                        if (instance == null && !Modifier.isStatic(f.getModifiers())) {
+                        if (instance == null && !Modifier.isStatic(injectableField.getModifiers())) {
                             throw new InjectionException(MessageFormat.format(
-                                "Injected field: {0} on Application Client class: {1} must be declared static", f,
+                                "Injected field: {0} on Application Client class: {1} must be declared static", injectableField,
                                 clazz));
                         }
 
                         LOG.log(DEBUG, "Injecting dependency with logical name: {0} into field: {1} on class: {2}",
-                            next.getComponentEnvName(), f, clazz);
+                            next.getComponentEnvName(), injectableField, clazz);
 
                         // Wrap actual value insertion in doPrivileged to
                         // allow for private/protected field access.
-                        if (System.getSecurityManager() != null) {
-                            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                                @Override
-                                public java.lang.Object run() throws Exception {
-                                    f.set(instance, value);
-                                    return null;
-                                }
-                            });
-                        } else {
-                            f.set(instance, value);
-                        }
+                        injectableField.set(instance, value);
                     } else if (target.isMethodInjectable()) {
 
                         final Method method = getMethod(next, target, clazz);
@@ -552,19 +523,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                         LOG.log(DEBUG, "Injecting dependency with logical name: {0} into method: {1} on class: {2}",
                             next.getComponentEnvName(), method, clazz);
 
-                        if (System.getSecurityManager() != null) {
-                            // Wrap actual value insertion in doPrivileged to
-                            // allow for private/protected field access.
-                            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                                @Override
-                                public java.lang.Object run() throws Exception {
-                                    method.invoke(instance, value);
-                                    return null;
-                                }
-                            });
-                        } else {
-                            method.invoke(instance, value);
-                        }
+                        method.invoke(instance, value);
 
                     }
                 }
@@ -584,16 +543,10 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         try {
             // Wrap actual value insertion in doPrivileged to
             // allow for private/protected field access.
-            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                @Override
-                public java.lang.Object run() throws Exception {
-                    if (!lifecycleMethod.trySetAccessible()) {
-                        throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
-                    }
-                    lifecycleMethod.invoke(instance);
-                    return null;
-                }
-            });
+            if (!lifecycleMethod.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
+            }
+            lifecycleMethod.invoke(instance);
         } catch (Throwable t) {
             InjectionException ie = new InjectionException(
                 "Exception attempting invoke lifecycle method: " + lifecycleMethod);
@@ -603,79 +556,64 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
     }
 
-    private Field getField(InjectionTarget target, Class resourceClass) throws Exception {
+    private Field getField(InjectionTarget target, Class<?> resourceClass) throws Exception {
+        Field targetField = target.getField();
 
-        Field f = target.getField();
-
-        if (f == null) {
+        if (targetField == null) {
             try {
                 // Check for the given field within the resourceClass only.
                 // This does not include super-classes of this class.
-                f = resourceClass.getDeclaredField(target.getFieldName());
+                targetField = resourceClass.getDeclaredField(target.getFieldName());
 
-                final Field finalF = f;
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        if (!finalF.trySetAccessible()) {
-                            throw new InaccessibleObjectException("Unable to make accessible: " + finalF);
-                        }
-                        return null;
-                    }
-                });
+                if (!targetField.trySetAccessible()) {
+                    throw new InaccessibleObjectException("Unable to make accessible: " + targetField);
+                }
 
             } catch (java.lang.NoSuchFieldException nsfe) {
             }
 
-            if (f != null) {
-                target.setField(f);
+            if (targetField != null) {
+                target.setField(targetField);
             }
         }
 
-        if (f == null) {
+        if (targetField == null) {
             throw new Exception(MessageFormat.format("InjectionManager exception.  Field: {0} not found in class: {1}",
                 target.getFieldName(), resourceClass));
         }
 
-        return f;
+        return targetField;
     }
 
-    private Method getMethod(InjectionCapable resource, InjectionTarget target, Class resourceClass) throws Exception {
-        Method m = target.getMethod();
+    private Method getMethod(InjectionCapable resource, InjectionTarget target, Class<?> resourceClass) throws Exception {
+        Method targetMethod = target.getMethod();
 
-        if (m == null) {
+        if (targetMethod == null) {
             // Check for the method within the resourceClass only.
             // This does not include super-classses.
             for (Method next : resourceClass.getDeclaredMethods()) {
                 // Overloading is not supported for setter injection
                 // methods, so matching on method-name is sufficient.
                 if (next.getName().equals(target.getMethodName())) {
-                    m = next;
-                    target.setMethod(m);
+                    targetMethod = next;
+                    target.setMethod(targetMethod);
 
-                    final Method finalM = m;
-                    java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                        @Override
-                        public java.lang.Object run() throws Exception {
-                            if (!finalM.trySetAccessible()) {
-                                throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
-                            }
-                            return null;
-                        }
-                    });
+                    if (!targetMethod.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + targetMethod);
+                    }
 
                     break;
                 }
             }
         }
 
-        if (m == null) {
+        if (targetMethod == null) {
             throw new Exception(
                 MessageFormat.format("InjectionManager exception.  Method: void {0} ({1}) not found in class: {2}",
                     target.getMethodName(), resource.getInjectResourceType(), resourceClass));
         }
 
-        return m;
+        return targetMethod;
     }
 
     private Method getPostConstructMethod(InjectionInfo injInfo, Class resourceClass) throws InjectionException {

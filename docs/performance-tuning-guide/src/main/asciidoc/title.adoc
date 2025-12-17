@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} Performance Tuning Guide, Release 7
+title={productName} Performance Tuning Guide, Release 8
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= {productName} Performance Tuning Guide, Release 7
+= {productName} Performance Tuning Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 Performance Tuning Guide
 
-Release 7
+Release 8
 
 Contributed 2018 - 2024
 
@@ -22,7 +22,7 @@ This book describes how to get the best performance with {productName} 7.
 
 '''''
 
-{productName} Performance Tuning Guide, Release 7
+{productName} Performance Tuning Guide, Release 8
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

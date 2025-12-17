@@ -16,7 +16,6 @@
  */
 package org.glassfish.admin.rest.utils;
 
-
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 
@@ -35,7 +34,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +76,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.AdminAccessController;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.services.api.authorization.AuthorizationService;
-import org.glassfish.security.services.common.PrivilegedLookup;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
@@ -89,7 +86,6 @@ import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
 import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
-
 
 
 
@@ -111,7 +107,7 @@ public class ResourceUtil {
     static {
         String pattern = or(split("x", "X"), // AbcDef -> Abc|Def
                 split("X", "Xx"), // USArmy -> US|Army
-                //split("\\D","\\d"), // SSL2 -> SSL|2
+                // split("\\D","\\d"), // SSL2 -> SSL|2
                 split("\\d", "\\D") // SSL2Connector -> SSL|2|Connector
         );
         pattern = pattern.replace("x", "\\p{Lower}").replace("X", "\\p{Upper}");
@@ -364,7 +360,7 @@ public class ResourceUtil {
                     method = configBeanProxy.getMethod(methodName);
                 } catch (NoSuchMethodException e) {
                     // Method not found, so let's try a brute force method if the method
-                    // can't be found via the method above.  For example: for
+                    // can't be found via the method above. For example: for
                     // Ssl.getSSLInactivityTimeout(), we calculate getSslInactivityTimeout,
                     // which doesn't match due to case.
                     String booleanMethodName = getAttributeBooleanMethodName(attributeName);
@@ -381,7 +377,7 @@ public class ResourceUtil {
                         parameterMetaData.putAttribute(Constants.DEPRECATED, "true");
                     }
 
-                    //camelCase the attributeName before passing out
+                    // camelCase the attributeName before passing out
                     attributeName = eleminateHypen(attributeName);
 
                     methodMetaData.putParameterMetaData(attributeName, parameterMetaData);
@@ -409,7 +405,7 @@ public class ResourceUtil {
             for (String attributeName : attributeNames) {
                 String methodName = ResourceUtil.getAttributeMethodName(attributeName);
 
-                //camelCase the attributeName before passing out
+                // camelCase the attributeName before passing out
                 attributeName = Util.eleminateHypen(attributeName);
 
                 ParameterMetaData parameterMetaData = params.get(attributeName);
@@ -524,17 +520,17 @@ public class ResourceUtil {
             }
         }
 
-        //print(metaData);
+        // print(metaData);
         return metaData;
     }
 
-    //removes entries with empty value from the given Map
+    // removes entries with empty value from the given Map
     public static void purgeEmptyEntries(Map<String, String> data) {
 
-        //hack-2 : remove empty entries if the form has a hidden param for __remove_empty_entries__
+        // hack-2 : remove empty entries if the form has a hidden param for __remove_empty_entries__
         if ("true".equals(data.get("__remove_empty_entries__"))) {
             data.remove("__remove_empty_entries__");
-            //findbug
+            // findbug
             for (Iterator<Map.Entry<String, String>> i = data.entrySet().iterator(); i.hasNext();) {
                 Map.Entry<String, String> entry = i.next();
                 String value = entry.getValue();
@@ -620,7 +616,8 @@ public class ResourceUtil {
             String key = entry.getKey();
             for (String value : entry.getValue()) {
                 try {
-                    data.put(URLDecoder.decode(key, "UTF-8"), URLDecoder.decode(value, "UTF-8")); // TODO: Last one wins? Can't imagine we'll see List.size() > 1, but...
+                    data.put(URLDecoder.decode(key, "UTF-8"), URLDecoder.decode(value, "UTF-8")); // TODO: Last one wins? Can't imagine
+                                                                                                  // we'll see List.size() > 1, but...
                 } catch (UnsupportedEncodingException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -637,7 +634,7 @@ public class ResourceUtil {
         }
     }
 
-    //Construct parameter meta-data from the model
+    // Construct parameter meta-data from the model
     static ParameterMetaData getParameterMetaData(CommandModel.ParamModel paramModel) {
         Param param = paramModel.getParam();
         ParameterMetaData parameterMetaData = new ParameterMetaData();
@@ -653,7 +650,7 @@ public class ResourceUtil {
         return parameterMetaData;
     }
 
-    //Construct parameter meta-data from the attribute annotation
+    // Construct parameter meta-data from the attribute annotation
     static ParameterMetaData getParameterMetaData(Attribute attribute) {
         ParameterMetaData parameterMetaData = new ParameterMetaData();
         parameterMetaData.putAttribute(Constants.TYPE, getXsdType(attribute.dataType().toString()));
@@ -662,14 +659,14 @@ public class ResourceUtil {
             parameterMetaData.putAttribute(Constants.DEFAULT_VALUE, attribute.defaultValue());
         }
         parameterMetaData.putAttribute(Constants.KEY, Boolean.toString(attribute.key()));
-        //FIXME - Currently, Attribute class does not provide acceptable values.
-        //parameterMetaData.putAttribute(Contants.ACCEPTABLE_VALUES,
-        //    getXsdType(attribute.acceptableValues()));
+        // FIXME - Currently, Attribute class does not provide acceptable values.
+        // parameterMetaData.putAttribute(Contants.ACCEPTABLE_VALUES,
+        // getXsdType(attribute.acceptableValues()));
 
         return parameterMetaData;
     }
 
-    //rename the given input parameter
+    // rename the given input parameter
     private static boolean renameParameter(Map<String, String> data, String parameterToRename, String newName) {
         if ((data.containsKey(parameterToRename))) {
             String value = data.get(parameterToRename);
@@ -680,7 +677,7 @@ public class ResourceUtil {
         return false;
     }
 
-    //returns true only if the request is from browser
+    // returns true only if the request is from browser
     private static boolean isBrowser(HttpHeaders requestHeaders) {
         boolean isClientAcceptsHtml = false;
         MediaType media = requestHeaders.getMediaType();
@@ -767,9 +764,8 @@ public class ResourceUtil {
     }
 
     /*
-     * we try to prefer html by default for all browsers (safari, chrome,
-     * firefox). Same if the request is asking for "*" among all the possible
-     * AcceptableMediaTypes
+     * we try to prefer html by default for all browsers (safari, chrome, firefox). Same if the request is asking for "*"
+     * among all the possible AcceptableMediaTypes
      */
     public static String getResultType(HttpHeaders requestHeaders) {
         String result = "html";
@@ -782,7 +778,7 @@ public class ResourceUtil {
             if (mt.getSubtype().equals("*")) {
                 return result;
             }
-            if (firstOne == null) { //default to the first one if many are there.
+            if (firstOne == null) { // default to the first one if many are there.
                 firstOne = mt.getSubtype();
             }
         }
@@ -811,8 +807,8 @@ public class ResourceUtil {
     }
 
     /**
-     * REST can now be configured via RestConfig to show or hide the deprecated
-     * elements and attributes @return true if this model is deprecated
+     * REST can now be configured via RestConfig to show or hide the deprecated elements and attributes @return true if this
+     * model is deprecated
      */
     public static boolean isDeprecated(ConfigModel model) {
         try {
@@ -821,7 +817,7 @@ public class ResourceUtil {
             Deprecated dep = cbp.getAnnotation(Deprecated.class);
             return dep != null;
         } catch (MultiException e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
         return false;
 
@@ -830,7 +826,7 @@ public class ResourceUtil {
     public static Map<String, String> getResourceLinks(Dom dom, UriInfo uriInfo, boolean canShowDeprecated) {
         Map<String, String> links = new TreeMap<>();
 
-        for (String elementName : dom.model.getElementNames()) { //for each element
+        for (String elementName : dom.model.getElementNames()) { // for each element
             if (elementName.equals("*")) {
                 ConfigModel.Node node = (ConfigModel.Node) dom.model.getElement(elementName);
                 ConfigModel childModel = node.getModel();
@@ -893,14 +889,14 @@ public class ResourceUtil {
 
             if (list != null) {
                 for (ConfigModel el : list) {
-                    if (isOnlyATag(el)) { //this is just a tag element
+                    if (isOnlyATag(el)) { // this is just a tag element
                         retlist.addAll(getRealChildConfigModels(el, domDocument));
                     } else {
                         retlist.add(el);
                     }
                 }
-            } else {//https://glassfish.dev.java.net/issues/show_bug.cgi?id=12654
-                if (!isOnlyATag(childModel)) { //this is just a tag element
+            } else {// https://glassfish.dev.java.net/issues/show_bug.cgi?id=12654
+                if (!isOnlyATag(childModel)) { // this is just a tag element
                     retlist.add(childModel);
                 }
 
@@ -918,19 +914,19 @@ public class ResourceUtil {
     private static String getKey(Dom model) {
         String key = model.getKey();
         if (key == null) {
-            for (String s : model.getAttributeNames()) {//no key, by default use the name attr
+            for (String s : model.getAttributeNames()) {// no key, by default use the name attr
                 if (s.equals("name")) {
                     key = model.attribute(s);
                 }
             }
-            if (key == null)//nothing, so pick the first one
+            if (key == null)// nothing, so pick the first one
             {
                 Set<String> attributeNames = model.getAttributeNames();
                 if (!attributeNames.isEmpty()) {
                     key = model.attribute(attributeNames.iterator().next());
                 } else {
-                    //TODO carried forward from old generator. Should never reach here. But we do for ConfigExtension and WebModuleConfig
-                    key = "ThisIsAModelBug:NoKeyAttr"; //no attr choice fo a key!!! Error!!!
+                    // TODO carried forward from old generator. Should never reach here. But we do for ConfigExtension and WebModuleConfig
+                    key = "ThisIsAModelBug:NoKeyAttr"; // no attr choice fo a key!!! Error!!!
                     key = "";
                 }
 
@@ -942,7 +938,7 @@ public class ResourceUtil {
     public static Map<String, String> getResourceLinks(List<Dom> proxyList, UriInfo uriInfo) {
         Map<String, String> links = new TreeMap<>();
         Collections.sort(proxyList, new DomConfigurator());
-        for (Dom proxy : proxyList) { //for each element
+        for (Dom proxy : proxyList) { // for each element
             try {
                 links.put(getKey(proxy), getElementLink(uriInfo, getKey(proxy)));
             } catch (Exception e) {
@@ -976,7 +972,7 @@ public class ResourceUtil {
                 put("name", "GET");
             }
         });
-        if (getMetaData != null) { //are they extra params for a GET command?
+        if (getMetaData != null) { // are they extra params for a GET command?
             Map<String, Object> getMetaDataMap = new HashMap<>();
             if (getMetaData.sizeParameterMetaData() > 0) {
                 getMetaDataMap.put(MESSAGE_PARAMETERS, buildMethodMetadataMap(getMetaData));
@@ -988,9 +984,9 @@ public class ResourceUtil {
         Map<String, Object> postMetaDataMap = new HashMap<>();
         if (postMetaData != null) {
             postMetaDataMap.put("name", "POST");
-            //            if (postMetaData.sizeQueryParamMetaData() > 0) {
-            //                postMetaDataMap.put(QUERY_PARAMETERS, buildMethodMetadataMap(postMetaData, true));
-            //            }
+            // if (postMetaData.sizeQueryParamMetaData() > 0) {
+            // postMetaDataMap.put(QUERY_PARAMETERS, buildMethodMetadataMap(postMetaData, true));
+            // }
             if (postMetaData.sizeParameterMetaData() > 0) {
                 postMetaDataMap.put(MESSAGE_PARAMETERS, buildMethodMetadataMap(postMetaData));
             }
@@ -1028,8 +1024,7 @@ public class ResourceUtil {
     }
 
     /**
-     * returns true if the HTML viewer displays the deprecated elements or
-     * attributes of a config bean
+     * returns true if the HTML viewer displays the deprecated elements or attributes of a config bean
      */
     public static boolean canShowDeprecatedItems(ServiceLocator habitat) {
 
@@ -1050,7 +1045,8 @@ public class ResourceUtil {
         Subject subject = null;
         final AdminAccessController authenticator = habitat.getService(AdminAccessController.class);
         if (authenticator != null) {
-            // This is temporary workaround for a Grizzly issue that prohibits uploading (deploy)  files larger than 2MB when secure admin is enabled.
+            // This is temporary workaround for a Grizzly issue that prohibits uploading (deploy) files larger than 2MB when secure
+            // admin is enabled.
             // The workaround will not be required in trunk when the corresponding Grizzly issue is fixed.
             // Please see http://java.net/jira/browse/GLASSFISH-16665 for details
             // The workaround duplicates code from AdminAdapter.
@@ -1063,17 +1059,16 @@ public class ResourceUtil {
     /**
      * Indicates whether the subject can perform the action on the resource.
      *
-     * @param habitat ServiceLocator for finding services
+     * @param serviceLocator ServiceLocator for finding services
      * @param subject the Subject to be qualified
      * @param resource the resource affected by the action
      * @param action the action being attempted by the subject on the resource
      * @return true if the subject is allowed to perform the action, false otherwise
      * @throws URISyntaxException
      */
-    public static boolean isAuthorized(final ServiceLocator habitat, final Subject subject, final String resource, final String action)
-            throws URISyntaxException {
-        final AuthorizationService authorizationSvc = AccessController
-                .doPrivileged(new PrivilegedLookup<>(habitat, AuthorizationService.class));
+    public static boolean isAuthorized(final ServiceLocator serviceLocator, final Subject subject, final String resource, final String action) throws URISyntaxException {
+        final AuthorizationService authorizationSvc = serviceLocator.getService(AuthorizationService.class);
+
         return authorizationSvc.isAuthorized(subject, new URI("admin", resource, null), action);
     }
 }

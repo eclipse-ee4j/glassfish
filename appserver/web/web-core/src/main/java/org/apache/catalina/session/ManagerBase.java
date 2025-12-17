@@ -33,7 +33,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -47,13 +46,11 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//end HERCULES:added
 
 import javax.management.ObjectName;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.Engine;
-import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Session;
@@ -62,12 +59,11 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardHost;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
+import static java.util.logging.Level.FINE;
 
 /**
- * Minimal implementation of the <b>Manager</b> interface that supports
- * no session persistence or distributable capabilities.  This class may
- * be subclassed to create more sophisticated Manager implementations.
+ * Minimal implementation of the <b>Manager</b> interface that supports no session persistence or distributable
+ * capabilities. This class may be subclassed to create more sophisticated Manager implementations.
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.23.2.3 $ $Date: 2008/04/17 18:37:20 $
@@ -79,125 +75,103 @@ public abstract class ManagerBase implements Manager {
 
     // ----------------------------------------------------- Instance Variables
 
-    protected DataInputStream randomIS=null;
-    protected String devRandomSource="/dev/urandom";
+    protected DataInputStream randomIS = null;
+    protected String devRandomSource = "/dev/urandom";
 
     /**
      * The Container with which this Manager is associated.
      */
     protected Container container;
 
-
     /**
      * The debugging detail level for this component.
      */
     protected int debug = 0;
 
-
     /**
-     * The distributable flag for Sessions created by this Manager.  If this
-     * flag is set to <code>true</code>, any user attributes added to a
-     * session controlled by this Manager must be Serializable.
+     * The distributable flag for Sessions created by this Manager. If this flag is set to <code>true</code>, any user
+     * attributes added to a session controlled by this Manager must be Serializable.
      */
     protected boolean distributable;
 
-
     /**
-     * A String initialization parameter used to increase the entropy of
-     * the initialization of our random number generator.
+     * A String initialization parameter used to increase the entropy of the initialization of our random number generator.
      */
     protected String entropy = null;
 
-    //START OF 6364900
+    // START OF 6364900
     /**
-     * A SessionLocker used to lock sessions (curently only
-     * in the request dispatcher forward/include use case)
+     * A SessionLocker used to lock sessions (curently only in the request dispatcher forward/include use case)
      */
     protected SessionLocker sessionLocker = new BaseSessionLocker();
-    //END OF 6364900
+    // END OF 6364900
 
     /**
      * The descriptive information string for this implementation.
      */
     private static final String info = "ManagerBase/1.0";
 
-
     /**
-     * The default maximum inactive interval for Sessions created by
-     * this Manager.
+     * The default maximum inactive interval for Sessions created by this Manager.
      */
     protected int maxInactiveInterval = 60;
-
 
     /**
      * The session id length of Sessions created by this Manager.
      */
     protected int sessionIdLength = 16;
 
-
     /**
      * The descriptive name of this Manager implementation (for logging).
      */
     protected static final String name = "ManagerBase";
-
 
     /**
      * A random number generator to use when generating session identifiers.
      */
     private Random random = null;
 
-
     /**
-     * The Uuid Generator to be used
-     * when generating universally unique session identifiers.
-     * HERCULES: add
+     * The Uuid Generator to be used when generating universally unique session identifiers. HERCULES: add
      */
     protected UuidGenerator uuidGenerator = new UuidGeneratorImpl();
 
-
     /**
-     * The Java class name of the random number generator class to be used
-     * when generating session identifiers.
+     * The Java class name of the random number generator class to be used when generating session identifiers.
      */
     protected String randomClass = "java.security.SecureRandom";
-
 
     /**
      * The longest time (in seconds) that an expired session had been alive.
      */
     protected int sessionMaxAliveTime;
 
-
     /**
      * Average time (in seconds) that expired sessions had been alive.
      */
     protected int sessionAverageAliveTime;
-
 
     /**
      * Number of sessions that have expired.
      */
     protected int expiredSessions = 0;
 
-
     /**
-     * The set of currently active Sessions for this Manager, keyed by
-     * session identifier.
+     * The set of currently active Sessions for this Manager, keyed by session identifier.
      */
     protected Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 
     // Number of sessions created by this manager
-    protected int sessionCounter=0;
+    protected int sessionCounter = 0;
 
-    protected volatile int maxActive=0;
+    protected volatile int maxActive = 0;
 
     protected final Object maxActiveUpdateLock = new Object();
 
     // number of duplicated session ids - anything >0 means we have problems
-    protected int duplicates=0;
+    protected int duplicates = 0;
 
-    protected boolean initialized=false;
-
+    protected boolean initialized = false;
 
     /**
      * The property change support for this component.
@@ -205,80 +179,76 @@ public abstract class ManagerBase implements Manager {
     protected PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     /**
-     * Number of times a session was not created because the maximum number
-     * of active sessions had been reached.
+     * Number of times a session was not created because the maximum number of active sessions had been reached.
      */
     protected int rejectedSessions = 0;
 
-
     // ------------------------------------------------------- Security classes
-    private class PrivilegedSetRandomFile implements PrivilegedAction<DataInputStream>{
+    private class PrivilegedSetRandomFile implements PrivilegedAction<DataInputStream> {
 
-        public DataInputStream run(){
+        @Override
+        public DataInputStream run() {
             FileInputStream fileInputStream = null;
             try {
-                File f=new File( devRandomSource );
-                if( ! f.exists() ) return null;
+                File f = new File(devRandomSource);
+                if (!f.exists())
+                    return null;
                 fileInputStream = new FileInputStream(f);
-                randomIS= new DataInputStream( fileInputStream );
+                randomIS = new DataInputStream(fileInputStream);
                 randomIS.readLong();
-                if( log.isLoggable(Level.FINE))
-                    log.log(Level.FINE, "Opening " + devRandomSource);
+                if (log.isLoggable(FINE))
+                    log.log(FINE, "Opening " + devRandomSource);
                 return randomIS;
-            } catch (IOException ex){
+            } catch (IOException ex) {
                 return null;
-            } finally{
-                try{
-                    if ( fileInputStream != null )
+            } finally {
+                try {
+                    if (fileInputStream != null)
                         fileInputStream.close();
-                } catch (IOException ex){
+                } catch (IOException ex) {
                     ;
                 }
             }
         }
     }
 
-
     // ------------------------------------------------------------- Properties
 
     /**
-     * Return the UuidGenerator for this Manager.
-     * HERCULES:added
+     * Return the UuidGenerator for this Manager. HERCULES:added
      */
     public UuidGenerator getUuidGenerator() {
         return uuidGenerator;
     }
 
     /**
-     * Set the UuidGenerator for this Manager.
-     * HERCULES:added
+     * Set the UuidGenerator for this Manager. HERCULES:added
      */
     public void setUuidGenerator(UuidGenerator aUuidGenerator) {
         uuidGenerator = aUuidGenerator;
     }
 
-
     /**
      * Return the Container with which this Manager is associated.
      */
+    @Override
     public Container getContainer() {
         return container;
     }
-
 
     /**
      * Set the Container with which this Manager is associated.
      *
      * @param container The newly associated Container
      */
+    @Override
     public void setContainer(Container container) {
         Container oldContainer = this.container;
         this.container = container;
         support.firePropertyChange("container", oldContainer, this.container);
         // TODO: find a good scheme for the log names
-        //log=LogFactory.getLog("tomcat.manager." + container.getName());
+        // log=LogFactory.getLog("tomcat.manager." + container.getName());
     }
-
 
     /**
      * Return the debugging detail level for this component.
@@ -286,7 +256,6 @@ public abstract class ManagerBase implements Manager {
     public int getDebug() {
         return debug;
     }
-
 
     /**
      * Set the debugging detail level for this component.
@@ -297,41 +266,36 @@ public abstract class ManagerBase implements Manager {
         this.debug = debug;
     }
 
-    /** Returns the name of the implementation class.
+    /**
+     * Returns the name of the implementation class.
      */
     public String getClassName() {
         return this.getClass().getName();
     }
 
-
     /**
-     * Return the distributable flag for the sessions supported by
-     * this Manager.
+     * Return the distributable flag for the sessions supported by this Manager.
      */
+    @Override
     public boolean getDistributable() {
         return distributable;
     }
 
-
     /**
-     * Set the distributable flag for the sessions supported by this
-     * Manager.  If this flag is set, all user data objects added to
-     * sessions associated with this manager must implement Serializable.
+     * Set the distributable flag for the sessions supported by this Manager. If this flag is set, all user data objects
+     * added to sessions associated with this manager must implement Serializable.
      *
      * @param distributable The new distributable flag
      */
+    @Override
     public void setDistributable(boolean distributable) {
         boolean oldDistributable = this.distributable;
         this.distributable = distributable;
-        support.firePropertyChange("distributable",
-                                   Boolean.valueOf(oldDistributable),
-                                   Boolean.valueOf(this.distributable));
+        support.firePropertyChange("distributable", Boolean.valueOf(oldDistributable), Boolean.valueOf(this.distributable));
     }
 
-
     /**
-     * Return the entropy increaser value, or compute a semi-useful value
-     * if this String has not yet been set.
+     * Return the entropy increaser value, or compute a semi-useful value if this String has not yet been set.
      */
     public String getEntropy() {
         // Calculate a semi-useful value if this has not been set
@@ -339,7 +303,6 @@ public abstract class ManagerBase implements Manager {
             setEntropy(this.toString());
         return (this.entropy);
     }
-
 
     /**
      * Set the entropy increaser value.
@@ -352,107 +315,95 @@ public abstract class ManagerBase implements Manager {
         support.firePropertyChange("entropy", oldEntropy, this.entropy);
     }
 
-
     /**
-     * Return descriptive information about this Manager implementation and
-     * the corresponding version number, in the format
+     * Return descriptive information about this Manager implementation and the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
         return info;
     }
 
-
     /**
      * Same as getMaxInactiveIntervalSeconds
      */
+    @Override
     public int getMaxInactiveInterval() {
         return getMaxInactiveIntervalSeconds();
     }
 
-
     /**
-     * Return the default maximum inactive interval (in seconds)
-     * for Sessions created by this Manager.
+     * Return the default maximum inactive interval (in seconds) for Sessions created by this Manager.
      */
+    @Override
     public int getMaxInactiveIntervalSeconds() {
         return maxInactiveInterval;
     }
 
-
     /**
      * Same as setMaxInactiveIntervalSeconds
      */
+    @Override
     public void setMaxInactiveInterval(int interval) {
         setMaxInactiveIntervalSeconds(interval);
     }
 
-
     /**
-     * Set the default maximum inactive interval (in seconds)
-     * for Sessions created by this Manager.
+     * Set the default maximum inactive interval (in seconds) for Sessions created by this Manager.
      *
      * @param interval The new default value
      */
+    @Override
     public void setMaxInactiveIntervalSeconds(int interval) {
         int oldMaxInactiveInterval = this.maxInactiveInterval;
         this.maxInactiveInterval = interval;
-        support.firePropertyChange("maxInactiveInterval",
-                                   Integer.valueOf(oldMaxInactiveInterval),
-                                   Integer.valueOf(this.maxInactiveInterval));
+        support.firePropertyChange("maxInactiveInterval", Integer.valueOf(oldMaxInactiveInterval),
+                Integer.valueOf(this.maxInactiveInterval));
     }
 
-
     /**
-     * Gets the session id length (in bytes) of Sessions created by
-     * this Manager.
+     * Gets the session id length (in bytes) of Sessions created by this Manager.
      *
      * @return The session id length
      */
+    @Override
     public int getSessionIdLength() {
         return sessionIdLength;
     }
 
-
     /**
-     * Sets the session id length (in bytes) for Sessions created by this
-     * Manager.
+     * Sets the session id length (in bytes) for Sessions created by this Manager.
      *
      * @param idLength The session id length
      */
+    @Override
     public void setSessionIdLength(int idLength) {
 
         int oldSessionIdLength = this.sessionIdLength;
         this.sessionIdLength = idLength;
-        support.firePropertyChange("sessionIdLength",
-                                   Integer.valueOf(oldSessionIdLength),
-                                   Integer.valueOf(this.sessionIdLength));
+        support.firePropertyChange("sessionIdLength", Integer.valueOf(oldSessionIdLength), Integer.valueOf(this.sessionIdLength));
 
     }
 
-
     /**
-     * Gets the number of session creations that failed due to
-     * maxActiveSessions
+     * Gets the number of session creations that failed due to maxActiveSessions
      *
-     * @return number of session creations that failed due to
-     * maxActiveSessions
+     * @return number of session creations that failed due to maxActiveSessions
      */
+    @Override
     public int getRejectedSessions() {
         return rejectedSessions;
     }
 
-
     /**
-     * Sets the number of sessions that were not created because the maximum
-     * number of active sessions was reached.
+     * Sets the number of sessions that were not created because the maximum number of active sessions was reached.
      *
      * @param rejectedSessions Number of rejected sessions
      */
+    @Override
     public void setRejectedSessions(int rejectedSessions) {
         this.rejectedSessions = rejectedSessions;
     }
-
 
     /**
      * Return the descriptive short name of this Manager implementation.
@@ -464,44 +415,37 @@ public abstract class ManagerBase implements Manager {
     }
 
     /**
-     * Use /dev/random-type special device. This is new code, but may reduce
-     * the big delay in generating the random.
+     * Use /dev/random-type special device. This is new code, but may reduce the big delay in generating the random.
      *
-     *  You must specify a path to a random generator file. Use /dev/urandom
-     *  for linux ( or similar ) systems. Use /dev/random for maximum security
-     *  ( it may block if not enough "random" exist ). You can also use
-     *  a pipe that generates random.
+     * You must specify a path to a random generator file. Use /dev/urandom for linux ( or similar ) systems. Use
+     * /dev/random for maximum security ( it may block if not enough "random" exist ). You can also use a pipe that
+     * generates random.
      *
-     *  The code will check if the file exists, and default to java Random
-     *  if not found. There is a significant performance difference, very
-     *  visible on the first call to getSession ( like in the first JSP )
-     *  - so use it if available.
+     * The code will check if the file exists, and default to java Random if not found. There is a significant performance
+     * difference, very visible on the first call to getSession ( like in the first JSP ) - so use it if available.
      */
-    public void setRandomFile( String s ) {
-    // as a hack, you can use a static file - and genarate the same
-    // session ids ( good for strange debugging )
-        if (Globals.IS_SECURITY_ENABLED){
-            randomIS = AccessController.doPrivileged(new PrivilegedSetRandomFile());
-        } else {
-            FileInputStream fileInputStream = null;
-            try{
-                devRandomSource=s;
-                File f=new File( devRandomSource );
-                if( ! f.exists() ) return;
-                fileInputStream = new FileInputStream(f);
-                randomIS= new DataInputStream( fileInputStream);
-                randomIS.readLong();
-                if (log.isLoggable(Level.FINE))
-                    log.log(Level.FINE,  "Opening " + devRandomSource );
-            } catch( IOException ex ) {
-                randomIS=null;
-            } finally {
-                try{
-                    if ( fileInputStream != null )
-                        fileInputStream.close();
-                } catch (IOException ex){
-                    ;
-                }
+    public void setRandomFile(String s) {
+        // as a hack, you can use a static file - and genarate the same
+        // session ids ( good for strange debugging )
+        FileInputStream fileInputStream = null;
+        try {
+            devRandomSource = s;
+            File f = new File(devRandomSource);
+            if (!f.exists())
+                return;
+            fileInputStream = new FileInputStream(f);
+            randomIS = new DataInputStream(fileInputStream);
+            randomIS.readLong();
+            if (log.isLoggable(FINE))
+                log.log(FINE, "Opening " + devRandomSource);
+        } catch (IOException ex) {
+            randomIS = null;
+        } finally {
+            try {
+                if (fileInputStream != null)
+                    fileInputStream.close();
+            } catch (IOException ex) {
+                ;
             }
         }
     }
@@ -510,11 +454,9 @@ public abstract class ManagerBase implements Manager {
         return devRandomSource;
     }
 
-
     /**
-     * Return the random number generator instance we should use for
-     * generating session identifiers.  If there is no such generator
-     * currently defined, construct and seed a new one.
+     * Return the random number generator instance we should use for generating session identifiers. If there is no such
+     * generator currently defined, construct and seed a new one.
      */
     public synchronized Random getRandom() {
         if (this.random == null) {
@@ -523,29 +465,27 @@ public abstract class ManagerBase implements Manager {
             long t1 = seed;
             char entropy[] = getEntropy().toCharArray();
             for (int i = 0; i < entropy.length; i++) {
-                 long update = ((byte) entropy[i]) << ((i % 8) * 8);
-                 seed ^= update;
+                long update = ((byte) entropy[i]) << ((i % 8) * 8);
+                seed ^= update;
             }
             try {
-                 // Construct and seed a new random number generator
-                 Class<?> clazz = Class.forName(randomClass);
-                 this.random = (Random) clazz.newInstance();
-                 this.random.setSeed(seed);
+                // Construct and seed a new random number generator
+                Class<?> clazz = Class.forName(randomClass);
+                this.random = (Random) clazz.newInstance();
+                this.random.setSeed(seed);
             } catch (Exception e) {
-                 // Fall back to the simple case
-                String msg = MessageFormat.format(rb.getString(LogFacade.INIT_RANDOM_NUMBER_GENERATOR_EXCEPTION),
-                                                  randomClass);
-                 log.log(Level.SEVERE, msg, e);
-                 this.random = new java.util.Random();
-                 this.random.setSeed(seed);
+                // Fall back to the simple case
+                String msg = MessageFormat.format(rb.getString(LogFacade.INIT_RANDOM_NUMBER_GENERATOR_EXCEPTION), randomClass);
+                log.log(Level.SEVERE, msg, e);
+                this.random = new java.util.Random();
+                this.random.setSeed(seed);
             }
-            long t2=System.currentTimeMillis();
-            if( (t2-t1) > 100 )
-                 if (log.isLoggable(Level.FINE)) {
-                     String msg = MessageFormat.format(rb.getString(LogFacade.SEEDING_RANDOM_NUMBER_GENERATOR_CLASS),
-                                                       randomClass);
-                     log.log(Level.FINE, msg + " " + (t2-t1));
-                 }
+            long t2 = System.currentTimeMillis();
+            if ((t2 - t1) > 100)
+                if (log.isLoggable(FINE)) {
+                    String msg = MessageFormat.format(rb.getString(LogFacade.SEEDING_RANDOM_NUMBER_GENERATOR_CLASS), randomClass);
+                    log.log(FINE, msg + " " + (t2 - t1));
+                }
         }
 
         return (this.random);
@@ -558,14 +498,12 @@ public abstract class ManagerBase implements Manager {
         this.random = null;
     }
 
-
     /**
      * Return the random number generator class name.
      */
     public String getRandomClass() {
         return randomClass;
     }
-
 
     /**
      * Set the random number generator class name.
@@ -575,43 +513,41 @@ public abstract class ManagerBase implements Manager {
     public void setRandomClass(String randomClass) {
         String oldRandomClass = this.randomClass;
         this.randomClass = randomClass;
-        support.firePropertyChange("randomClass", oldRandomClass,
-                                   this.randomClass);
+        support.firePropertyChange("randomClass", oldRandomClass, this.randomClass);
     }
-
 
     /**
      * Gets the number of sessions that have expired.
      *
      * @return Number of sessions that have expired
      */
+    @Override
     public int getExpiredSessions() {
         return expiredSessions;
     }
-
 
     /**
      * Sets the number of sessions that have expired.
      *
      * @param expiredSessions Number of sessions that have expired
      */
+    @Override
     public void setExpiredSessions(int expiredSessions) {
         this.expiredSessions = expiredSessions;
     }
 
-    //START OF 6364900
+    // START OF 6364900
     /**
-     * set the pluggable sessionLocker for this manager
-     * by default it is pre-set to no-op BaseSessionLocker
+     * set the pluggable sessionLocker for this manager by default it is pre-set to no-op BaseSessionLocker
      */
     public void setSessionLocker(SessionLocker sessLocker) {
         sessionLocker = sessLocker;
     }
-    //END OF 6364900
+    // END OF 6364900
 
     // --------------------------------------------------------- Public Methods
     public void destroy() {
-        if (randomIS!=null) {
+        if (randomIS != null) {
             try {
                 randomIS.close();
             } catch (IOException ioe) {
@@ -619,83 +555,79 @@ public abstract class ManagerBase implements Manager {
                     log.log(Level.WARNING, LogFacade.FAILED_CLOSE_RANDOMIS_EXCEPTION);
                 }
             }
-            randomIS=null;
+            randomIS = null;
         }
-        initialized=false;
+        initialized = false;
         oname = null;
     }
 
     public void init() {
-        if( initialized ) return;
-        initialized=true;
+        if (initialized)
+            return;
+        initialized = true;
 
-        if( oname==null ) {
+        if (oname == null) {
             try {
-                StandardContext ctx=(StandardContext)this.getContainer();
-                domain=ctx.getEngineName();
+                StandardContext ctx = (StandardContext) this.getContainer();
+                domain = ctx.getEngineName();
                 distributable = ctx.getDistributable();
-                StandardHost hst=(StandardHost)ctx.getParent();
+                StandardHost hst = (StandardHost) ctx.getParent();
                 String path = ctx.getEncodedPath();
                 if (path.equals("")) {
                     path = "/";
                 }
-                oname=new ObjectName(domain + ":type=Manager,path="
-                + path + ",host=" + hst.getName());
+                oname = new ObjectName(domain + ":type=Manager,path=" + path + ",host=" + hst.getName());
             } catch (Exception e) {
                 log.log(Level.SEVERE, LogFacade.ERROR_REGISTERING_EXCEPTION_SEVERE, e);
             }
         }
-        if (log.isLoggable(Level.FINE)) {
-            log.log(Level.FINE, "Registering " + oname );
+        if (log.isLoggable(FINE)) {
+            log.log(FINE, "Registering " + oname);
         }
     }
-
 
     /**
      * Add this Session to the set of active Sessions for this Manager.
      *
      * @param session Session to be added
      */
+    @Override
     public void add(Session session) {
         sessions.put(session.getIdInternal(), session);
         int size = sessions.size();
         if (size > maxActive) {
-            synchronized(maxActiveUpdateLock) {
-                if( size > maxActive ) {
+            synchronized (maxActiveUpdateLock) {
+                if (size > maxActive) {
                     maxActive = size;
                 }
             }
         }
     }
 
-
     /**
      * Add a property change listener to this component.
      *
      * @param listener The listener to add
      */
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
 
-
     /**
-     * Construct and return a new session object, based on the default
-     * settings specified by this Manager's properties.  The session
-     * id will be assigned by this method, and available via the getId()
-     * method of the returned session.  If a new session cannot be created
-     * for any reason, return <code>null</code>.
-     * Hercules: modified
+     * Construct and return a new session object, based on the default settings specified by this Manager's properties. The
+     * session id will be assigned by this method, and available via the getId() method of the returned session. If a new
+     * session cannot be created for any reason, return <code>null</code>. Hercules: modified
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
      */
+    @Override
     public Session createSession() {
 
         // Recycle or create a Session instance
         Session session = null;
         session = createEmptySession();
-        //always lock
+        // always lock
         session.lockForeground();
 
         // Initialize the properties of the new session and return it
@@ -712,24 +644,20 @@ public abstract class ManagerBase implements Manager {
 
     }
 
-
     // START S1AS8PE 4817642
     /**
-     * Construct and return a new session object, based on the default
-     * settings specified by this Manager's properties, using the specified
-     * session id.
+     * Construct and return a new session object, based on the default settings specified by this Manager's properties,
+     * using the specified session id.
      *
-     * IMPLEMENTATION NOTE: This method must be kept in sync with the
-     * createSession method that takes no arguments.
+     * IMPLEMENTATION NOTE: This method must be kept in sync with the createSession method that takes no arguments.
      *
      * @param sessionId the session id to assign to the new session
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
      *
-     * @return the new session, or <code>null</code> if a session with the
-     * requested id already exists
+     * @return the new session, or <code>null</code> if a session with the requested id already exists
      */
+    @Override
     public Session createSession(String sessionId) {
 
         // Recycle or create a Session instance
@@ -741,10 +669,10 @@ public abstract class ManagerBase implements Manager {
         session.setCreationTime(System.currentTimeMillis());
         session.setMaxInactiveInterval(this.maxInactiveInterval);
 
-        //START OF 6364900
-        //always lock
+        // START OF 6364900
+        // always lock
         session.lockForeground();
-        //END OF 6364900
+        // END OF 6364900
 
         session.setId(sessionId);
         sessionCounter++;
@@ -754,12 +682,11 @@ public abstract class ManagerBase implements Manager {
     }
     // END S1AS8PE 4817642
 
-
     /**
-     * Get a session from the recycled ones or create a new empty one.
-     * The PersistentManager manager does not need to create session data
-     * because it reads it from the Store.
+     * Get a session from the recycled ones or create a new empty one. The PersistentManager manager does not need to create
+     * session data because it reads it from the Store.
      */
+    @Override
     public Session createEmptySession() {
         return (getNewSession());
     }
@@ -767,22 +694,19 @@ public abstract class ManagerBase implements Manager {
     @Override
     public void checkSessionAttribute(String name, Object value) {
         if (getDistributable() && !StandardSession.isSerializable(value)) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.NON_SERIALIZABLE_ATTRIBUTE_EXCEPTION),
-                                              name);
+            String msg = MessageFormat.format(rb.getString(LogFacade.NON_SERIALIZABLE_ATTRIBUTE_EXCEPTION), name);
             throw new IllegalArgumentException(msg);
         }
     }
 
     /**
-     * Return the active Session, associated with this Manager, with the
-     * specified session id (if any); otherwise return <code>null</code>.
+     * Return the active Session, associated with this Manager, with the specified session id (if any); otherwise return
+     * <code>null</code>.
      *
      * @param id The session id for the session to be returned
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
-     * @exception IOException if an input/output error occurs while
-     *  processing this request
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
+     * @exception IOException if an input/output error occurs while processing this request
      */
     @Override
     public Session findSession(String id) throws IOException {
@@ -798,20 +722,16 @@ public abstract class ManagerBase implements Manager {
     }
 
     /**
-     * Finds and returns the session with the given id that also satisfies
-     * the given version requirement.
+     * Finds and returns the session with the given id that also satisfies the given version requirement.
      *
-     * This overloaded version of findSession() will be invoked only if
-     * isSessionVersioningSupported() returns true. By default, this method
-     * delegates to the version of findSession() that does not take any
-     * session version number.
+     * This overloaded version of findSession() will be invoked only if isSessionVersioningSupported() returns true. By
+     * default, this method delegates to the version of findSession() that does not take any session version number.
      *
      * @param id The session id to match
      * @param version The session version requirement to satisfy
      *
-     * @return The session that matches the given id and also satisfies the
-     * given version requirement, or null if no such session could be found
-     * by this session manager
+     * @return The session that matches the given id and also satisfies the given version requirement, or null if no such
+     * session could be found by this session manager
      *
      * @exception IOException if an IO error occurred
      */
@@ -821,11 +741,9 @@ public abstract class ManagerBase implements Manager {
     }
 
     /**
-     * Returns true if this session manager supports session versioning, false
-     * otherwise.
+     * Returns true if this session manager supports session versioning, false otherwise.
      *
-     * @return true if this session manager supports session versioning, false
-     * otherwise.
+     * @return true if this session manager supports session versioning, false otherwise.
      */
     @Override
     public boolean isSessionVersioningSupported() {
@@ -833,18 +751,17 @@ public abstract class ManagerBase implements Manager {
     }
 
     /**
-     * clear out the sessions cache
-     * HERCULES:added
+     * clear out the sessions cache HERCULES:added
      */
     public void clearSessions() {
         sessions.clear();
     }
 
-
     /**
-     * Return the set of active Sessions associated with this Manager.
-     * If this Manager has no active Sessions, a zero-length array is returned.
+     * Return the set of active Sessions associated with this Manager. If this Manager has no active Sessions, a zero-length
+     * array is returned.
      */
+    @Override
     public Session[] findSessions() {
         // take a snapshot
         Collection<Session> sessionsValues = sessions.values();
@@ -855,12 +772,12 @@ public abstract class ManagerBase implements Manager {
         return list.toArray(new Session[list.size()]);
     }
 
-
     /**
      * Remove this Session from the active Sessions for this Manager.
      *
      * @param session Session to be removed
      */
+    @Override
     public void remove(Session session) {
         sessions.remove(session.getIdInternal());
     }
@@ -870,30 +787,27 @@ public abstract class ManagerBase implements Manager {
         return null;
     }
 
-
     /**
      * Remove a property change listener from this component.
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
 
-
     /**
-     * Change the session ID of the current session to a new randomly generated
-     * session ID.
+     * Change the session ID of the current session to a new randomly generated session ID.
      *
-     * @param session   The session to change the session ID for
+     * @param session The session to change the session ID for
      */
+    @Override
     public void changeSessionId(Session session) {
         session.setId(generateSessionId());
     }
 
-
     // ------------------------------------------------------ Protected Methods
-
 
     /**
      * Get new session class to be used in the doLoad() method.
@@ -902,49 +816,43 @@ public abstract class ManagerBase implements Manager {
         return new StandardSession(this);
     }
 
-
-    protected void getRandomBytes( byte bytes[] ) {
+    protected void getRandomBytes(byte bytes[]) {
         // Generate a byte array containing a session identifier
-        if( devRandomSource!=null && randomIS==null ) {
-            setRandomFile( devRandomSource );
+        if (devRandomSource != null && randomIS == null) {
+            setRandomFile(devRandomSource);
         }
-        if(randomIS!=null ) {
+        if (randomIS != null) {
             try {
-                int len=randomIS.read( bytes );
-                if( len==bytes.length ) {
+                int len = randomIS.read(bytes);
+                if (len == bytes.length) {
                     return;
                 }
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Got " + len + " " + bytes.length);
+                if (log.isLoggable(FINE)) {
+                    log.log(FINE, "Got " + len + " " + bytes.length);
                 }
-            } catch( Exception ex ) {
+            } catch (Exception ex) {
             }
-            devRandomSource=null;
-            randomIS=null;
+            devRandomSource = null;
+            randomIS = null;
         }
         getRandom().nextBytes(bytes);
     }
 
-
     /**
-     * Generate and return a new session identifier.
-     * Hercules:added
+     * Generate and return a new session identifier. Hercules:added
      */
     protected synchronized String generateSessionId(Object obj) {
         return uuidGenerator.generateUuid(obj);
     }
 
     /**
-     * Generate and return a new session identifier.
-     * Hercules:modified
+     * Generate and return a new session identifier. Hercules:modified
      */
     protected synchronized String generateSessionId() {
         return generateSessionId(new Object());
     }
 
-
     // ------------------------------------------------------ Protected Methods
-
 
     /**
      * Retrieve the enclosing Engine for this Manager.
@@ -953,17 +861,17 @@ public abstract class ManagerBase implements Manager {
      */
     public Engine getEngine() {
         Engine e = null;
-        for (Container c = getContainer(); e == null && c != null ; c = c.getParent()) {
+        for (Container c = getContainer(); e == null && c != null; c = c.getParent()) {
             if (c instanceof Engine) {
-                e = (Engine)c;
+                e = (Engine) c;
             }
         }
         return e;
     }
 
-
     /**
      * Retrieve the JvmRoute for the enclosing Engine.
+     *
      * @return the JvmRoute or null.
      */
     public String getJvmRoute() {
@@ -971,9 +879,7 @@ public abstract class ManagerBase implements Manager {
         return e == null ? null : e.getJvmRoute();
     }
 
-
     // -------------------------------------------------------- Package Methods
-
 
     /**
      * Log a message on the Logger associated with our Container (if any).
@@ -981,10 +887,10 @@ public abstract class ManagerBase implements Manager {
      * @param message Message to be logged
      * @deprecated
      */
+    @Deprecated
     protected void log(String message) {
         log.log(Level.INFO, neutralizeForLog(message));
     }
-
 
     /**
      * Log a message on the Logger associated with our Container (if any).
@@ -993,45 +899,44 @@ public abstract class ManagerBase implements Manager {
      * @param throwable Associated exception
      * @deprecated
      */
+    @Deprecated
     protected void log(String message, Throwable throwable) {
         log.log(Level.INFO, neutralizeForLog(message), throwable);
     }
 
-
     /**
      * Same as setSessionCount
      */
+    @Override
     public void setSessionCounter(int sessionCounter) {
         setSessionCount(sessionCounter);
     }
 
-
+    @Override
     public void setSessionCount(int sessionCounter) {
         this.sessionCounter = sessionCounter;
     }
 
-
     /**
      * Same as getSessionCount
      */
+    @Override
     public int getSessionCounter() {
         return getSessionCount();
     }
-
 
     /**
      * Total sessions created by this manager.
      *
      * @return sessions created
      */
+    @Override
     public int getSessionCount() {
         return sessionCounter;
     }
 
-
     /**
-     * Number of duplicated session IDs generated by the random source.
-     * Anything bigger than 0 means problems.
+     * Number of duplicated session IDs generated by the random source. Anything bigger than 0 means problems.
      *
      * @return
      */
@@ -1039,132 +944,121 @@ public abstract class ManagerBase implements Manager {
         return duplicates;
     }
 
-
     public void setDuplicates(int duplicates) {
         this.duplicates = duplicates;
     }
-
 
     /**
      * Returns the number of active sessions
      *
      * @return number of sessions active
      */
+    @Override
     public int getActiveSessions() {
         return sessions.size();
     }
-
 
     /**
      * Max number of concurent active sessions
      *
      * @return
      */
+    @Override
     public int getMaxActive() {
         return maxActive;
     }
 
-
+    @Override
     public void setMaxActive(int maxActive) {
         synchronized (maxActiveUpdateLock) {
             this.maxActive = maxActive;
         }
     }
 
-
     /**
      * Same as getSessionMaxAliveTimeSeconds
      */
+    @Override
     public int getSessionMaxAliveTime() {
         return getSessionMaxAliveTimeSeconds();
     }
 
-
     /**
-     * Gets the longest time (in seconds) that an expired session had been
-     * alive.
+     * Gets the longest time (in seconds) that an expired session had been alive.
      *
-     * @return Longest time (in seconds) that an expired session had been
-     * alive.
+     * @return Longest time (in seconds) that an expired session had been alive.
      */
+    @Override
     public int getSessionMaxAliveTimeSeconds() {
         return sessionMaxAliveTime;
     }
 
-
     /**
      * Same as setSessionMaxAliveTimeSeconds
      */
+    @Override
     public void setSessionMaxAliveTime(int sessionMaxAliveTime) {
         setSessionMaxAliveTimeSeconds(sessionMaxAliveTime);
     }
 
-
     /**
-     * Sets the longest time (in seconds) that an expired session had been
-     * alive.
+     * Sets the longest time (in seconds) that an expired session had been alive.
      *
-     * @param sessionMaxAliveTime Longest time (in seconds) that an expired
-     * session had been alive.
+     * @param sessionMaxAliveTime Longest time (in seconds) that an expired session had been alive.
      */
+    @Override
     public void setSessionMaxAliveTimeSeconds(int sessionMaxAliveTime) {
         this.sessionMaxAliveTime = sessionMaxAliveTime;
     }
 
-
     /**
      * Same as getSessionAverageAliveTimeSeconds
      */
+    @Override
     public int getSessionAverageAliveTime() {
         return getSessionAverageAliveTimeSeconds();
     }
 
-
     /**
-     * Gets the average time (in seconds) that expired sessions had been
-     * alive.
+     * Gets the average time (in seconds) that expired sessions had been alive.
      *
-     * @return Average time (in seconds) that expired sessions had been
-     * alive.
+     * @return Average time (in seconds) that expired sessions had been alive.
      */
+    @Override
     public int getSessionAverageAliveTimeSeconds() {
         return sessionAverageAliveTime;
     }
 
-
     /**
      * Same as setSessionAverageAliveTimeSeconds
      */
+    @Override
     public void setSessionAverageAliveTime(int sessionAverageAliveTime) {
         setSessionAverageAliveTimeSeconds(sessionAverageAliveTime);
     }
 
-
     /**
-     * Sets the average time (in seconds) that expired sessions had been
-     * alive.
+     * Sets the average time (in seconds) that expired sessions had been alive.
      *
-     * @param sessionAverageAliveTime Average time (in seconds) that expired
-     * sessions had been alive.
+     * @param sessionAverageAliveTime Average time (in seconds) that expired sessions had been alive.
      */
+    @Override
     public void setSessionAverageAliveTimeSeconds(int sessionAverageAliveTime) {
         this.sessionAverageAliveTime = sessionAverageAliveTime;
     }
-
 
     /**
      * For debugging: return a list of all session ids currently active
      *
      */
     public String listSessionIds() {
-        StringBuilder sb=new StringBuilder();
-        Iterator<String> keys=sessions.keySet().iterator();
-        while( keys.hasNext() ) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<String> keys = sessions.keySet().iterator();
+        while (keys.hasNext()) {
             sb.append(keys.next()).append(" ");
         }
         return sb.toString();
     }
-
 
     /**
      * For debugging: get a session attribute
@@ -1173,64 +1067,57 @@ public abstract class ManagerBase implements Manager {
      * @param key
      * @return
      */
-    public String getSessionAttribute( String sessionId, String key ) {
+    public String getSessionAttribute(String sessionId, String key) {
         Session s = sessions.get(sessionId);
-        if( s==null ) {
+        if (s == null) {
             /*
-            Do not log session ID
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.SESSION_NOT_FOUND, sessionId);
-            }
-            */
+             * Do not log session ID if (log.isLoggable(Level.INFO)) { log.log(Level.INFO, LogFacade.SESSION_NOT_FOUND, sessionId);
+             * }
+             */
             return null;
         }
-        Object o=s.getSession().getAttribute(key);
-        if( o==null ) return null;
+        Object o = s.getSession().getAttribute(key);
+        if (o == null)
+            return null;
         return o.toString();
     }
 
-
-    public void expireSession( String sessionId ) {
-        Session s=sessions.get(sessionId);
-        if( s==null ) {
+    public void expireSession(String sessionId) {
+        Session s = sessions.get(sessionId);
+        if (s == null) {
             /*
-            Do not log session ID
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.SESSION_NOT_FOUND, sessionId);
-            }
-            */
+             * Do not log session ID if (log.isLoggable(Level.INFO)) { log.log(Level.INFO, LogFacade.SESSION_NOT_FOUND, sessionId);
+             * }
+             */
             return;
         }
         s.expire();
     }
 
-
-    public String getLastAccessedTimeMillis( String sessionId ) {
-        Session s=sessions.get(sessionId);
-        if( s==null ) {
+    public String getLastAccessedTimeMillis(String sessionId) {
+        Session s = sessions.get(sessionId);
+        if (s == null) {
             /*
-            Do not log session ID
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.SESSION_NOT_FOUND, sessionId);
-            }
-            */
+             * Do not log session ID if (log.isLoggable(Level.INFO)) { log.log(Level.INFO, LogFacade.SESSION_NOT_FOUND, sessionId);
+             * }
+             */
             return "";
         }
         return new Date(s.getLastAccessedTime()).toString();
     }
 
-
-    //PWC Extension
-    //START OF RIMOD# 4820359 -- Support for iWS6.0 session managers
+    // PWC Extension
+    // START OF RIMOD# 4820359 -- Support for iWS6.0 session managers
     /**
      * Perform any operations when the request is finished.
      */
+    @Override
     public void update(HttpSession session) throws Exception {
         return;
     }
-    //END OF RIMOD# 4820359
+    // END OF RIMOD# 4820359
 
-    // -------------------- JMX and Registration  --------------------
+    // -------------------- JMX and Registration --------------------
     protected String domain;
     protected ObjectName oname;
 
@@ -1242,32 +1129,33 @@ public abstract class ManagerBase implements Manager {
         return domain;
     }
 
-    //START OF 6364900
+    @Override
     public void postRequestDispatcherProcess(ServletRequest request, ServletResponse response) {
-        //deliberate no-op
+        // deliberate no-op
         return;
     }
 
+    @Override
     public void preRequestDispatcherProcess(ServletRequest request, ServletResponse response) {
-        //deliberate no-op
+        // deliberate no-op
         return;
     }
 
+    @Override
     public boolean lockSession(ServletRequest request) throws ServletException {
         boolean result = false;
-        if(sessionLocker != null) {
+        if (sessionLocker != null) {
             result = sessionLocker.lockSession(request);
         }
         return result;
     }
 
+    @Override
     public void unlockSession(ServletRequest request) {
-        if(sessionLocker != null) {
+        if (sessionLocker != null) {
             sessionLocker.unlockSession(request);
         }
     }
-    //END OF 6364900
-
 
     /*
      * Releases any resources held by this session manager.

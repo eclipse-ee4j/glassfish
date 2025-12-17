@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-validation</artifactId>
@@ -40,8 +40,8 @@
     <dependencies>
         <dependency>
             <groupId>jakarta.validation</groupId>
-            <artifactId>beanvalidation-tck-tests</artifactId>
-            <version>3.0.1</version>
+            <artifactId>validation-tck-tests</artifactId>
+            <version>3.1.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
-            <version>4.0.4</version>
+            <version>4.1.0</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -130,7 +130,7 @@
                         <suiteXmlFile>suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <dependenciesToScan>
-                        <dependency>jakarta.validation:beanvalidation-tck-tests</dependency>
+                        <dependency>jakarta.validation:validation-tck-tests</dependency>
                     </dependenciesToScan>
                     <properties>
                         <property>

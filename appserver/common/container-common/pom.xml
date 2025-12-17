@@ -2,6 +2,7 @@
 <!--
 
     Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+    Copyright (c) 2024 Payara Foundation and/or its affiliates
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -25,7 +26,7 @@
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>common</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -115,7 +116,11 @@
             <groupId>org.glassfish.ha</groupId>
             <artifactId>ha-api</artifactId>
         </dependency>
-   </dependencies>
+        <dependency>
+            <groupId>org.glassfish.concurro</groupId>
+            <artifactId>concurro</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>

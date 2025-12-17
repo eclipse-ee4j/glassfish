@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,8 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1202,7 +1200,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             }
         }
         if (method.isDefault()) {
-            return ProxyHelper.invokeDefault(proxy, method, args);
+            return InvocationHandler.invokeDefault(proxy, method, args);
         }
         if (method.getAnnotation(ConfigExtensionMethod.class) != null) {
             final ConfigExtensionMethod cem = method.getAnnotation(ConfigExtensionMethod.class);
@@ -1571,25 +1569,10 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             this.dom = dom;
         }
 
-
         @Override
         public ConfigBeanProxy compute(final Class<?> proxyType) throws ComputationErrorException {
-            ClassLoader cl;
-            if (System.getSecurityManager() != null) {
-                cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-
-                    @Override
-                    public ClassLoader run() {
-                        return proxyType.getClassLoader();
-                    }
-                });
-            } else {
-                cl = proxyType.getClassLoader();
-            }
-
-            final ConfigBeanProxy retVal = (ConfigBeanProxy) Proxy.newProxyInstance(cl, new Class[] {proxyType}, dom);
-
-            return retVal;
+            return (ConfigBeanProxy)
+                Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] {proxyType}, dom);
         }
 
     }

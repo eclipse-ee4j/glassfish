@@ -28,32 +28,25 @@ import javax.naming.spi.ObjectFactory;
 
 import org.apache.naming.ResourceLinkRef;
 
-
 /**
- * <p>Object factory for resource links.</p>
+ * <p>
+ * Object factory for resource links.
+ * </p>
  *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:07 $
  */
 
-public class ResourceLinkFactory
-    implements ObjectFactory {
-
-
-    // ----------------------------------------------------------- Constructors
-
+public class ResourceLinkFactory implements ObjectFactory {
 
     // ------------------------------------------------------- Static Variables
-
 
     /**
      * Global naming context.
      */
-    private static Context globalContext = null;
-
+    private static Context globalContext;
 
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Set the global context (note: can only be used once).
@@ -61,31 +54,24 @@ public class ResourceLinkFactory
      * @param newGlobalContext new global context value
      */
     public static void setGlobalContext(Context newGlobalContext) {
-        if (globalContext != null)
+        if (globalContext != null) {
             return;
-        SecurityManager securityManager = System.getSecurityManager();
-        if (securityManager != null) {
-            securityManager.checkPermission(new RuntimePermission(
-                    ResourceLinkFactory.class.getName() + ".setGlobalContext"));
         }
+
         globalContext = newGlobalContext;
     }
 
-
     // -------------------------------------------------- ObjectFactory Methods
-
 
     /**
      * Create a new DataSource instance.
      *
      * @param obj The reference object describing the DataSource
      */
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx,
-                                    Hashtable<?,?> environment)
-        throws NamingException {
-
-        if (!(obj instanceof ResourceLinkRef))
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws NamingException {
+        if (!(obj instanceof ResourceLinkRef)) {
             return null;
+        }
 
         // Can we process this request?
         Reference ref = (Reference) obj;
@@ -101,10 +87,7 @@ public class ResourceLinkFactory
             return result;
         }
 
-        return (null);
-
-
+        return null;
     }
-
 
 }

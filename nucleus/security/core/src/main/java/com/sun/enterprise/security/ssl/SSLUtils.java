@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.security.ssl;
 
-import com.sun.enterprise.security.common.Util;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.enterprise.server.pluggable.SecuritySupport;
 
@@ -26,19 +25,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Permission;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Enumeration;
-import java.util.PropertyPermission;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
@@ -51,7 +46,6 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static java.util.Collections.list;
-import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 
@@ -247,8 +241,6 @@ public final class SSLUtils {
      * @return PrivateKeyEntry
      */
     public PrivateKeyEntry getPrivateKeyEntryFromTokenAlias(String certNickname) throws Exception {
-        checkPermission(KEYSTORE_PASSWORD.getSystemPropertyName());
-
         PrivateKeyEntry privateKeyEntry = null;
 
         if (certNickname != null) {
@@ -284,29 +276,6 @@ public final class SSLUtils {
         }
 
         return privateKeyEntry;
-    }
-
-    public static void checkPermission(String key) {
-        try {
-            // Checking a random permission to check if it is server.
-            if (Util.isEmbeddedServer() || Util.getDefaultHabitat() == null || Util.getInstance().isACC()
-                || Util.getInstance().isNotServerOrACC()) {
-                return;
-            }
-
-            if (Runtime.version().feature() < 24) {
-                Permission perm = new RuntimePermission("SSLPassword");
-                AccessController.checkPermission(perm);
-            }
-        } catch (AccessControlException e) {
-            String message = e.getMessage();
-            Permission perm = new PropertyPermission(key, "read");
-            if (message != null) {
-                message = message.replace(e.getPermission().toString(), perm.toString());
-            }
-
-            throw new AccessControlException(message, perm);
-        }
     }
 
     public String[] getSupportedCipherSuites() {

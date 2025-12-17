@@ -34,8 +34,6 @@ import jakarta.resource.spi.TransactionSupport.TransactionSupportLevel;
 import jakarta.resource.spi.security.PasswordCredential;
 
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -47,6 +45,10 @@ import javax.security.auth.Subject;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.config.types.Property;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+
 
 /**
  * This is an util class for creating poolObjects of the type
@@ -93,7 +95,7 @@ public final class ConnectionPoolObjectsUtils {
         try {
             connectorPoolObj.setTransactionSupport(getTransactionSupportFromRaXml(rarName));
         } catch (Exception e) {
-            LOG.log(Level.FINE, "error in setting txSupport", e);
+            LOG.log(FINE, "error in setting txSupport", e);
         }
         return connectorPoolObj;
     }
@@ -149,14 +151,14 @@ public final class ConnectionPoolObjectsUtils {
         try {
             connectorPoolObj.setTransactionSupport(getTransactionSupportFromRaXml(rarName));
         } catch (Exception ex) {
-            LOG.log(Level.FINE, "error in setting txSupport");
+            LOG.log(FINE, "error in setting txSupport");
         }
 
         // For SunRAPool, get the value of system property VALIDATE_ATMOST_EVERY_IDLE_SECS.
         final boolean validateAtmostEveryIdleSecs;
         if (validateAtmostEveryIdleSecsProperty != null && validateAtmostEveryIdleSecsProperty.equalsIgnoreCase("TRUE")) {
             validateAtmostEveryIdleSecs = true;
-            LOG.log(Level.FINE, "CCP.ValidateAtmostEveryIdleSecs.Set. PoolInfo {0}", poolInfo);
+            LOG.log(FINE, "CCP.ValidateAtmostEveryIdleSecs.Set. PoolInfo {0}", poolInfo);
         } else {
             validateAtmostEveryIdleSecs = false;
         }
@@ -188,7 +190,7 @@ public final class ConnectionPoolObjectsUtils {
                 containerEquivalentValue = ConnectorConstants.UNDEFINED_TRANSACTION_INT;
                 break;
         }
-        if (LOG.isLoggable(Level.FINE)) {
+        if (LOG.isLoggable(FINE)) {
             LOG.fine("convertSpecTxSupportToContainerTxSupport: passed in mcfTransactionSupport =>" + mcfTS + ", "
                 + "converted container equivalent value: " + containerEquivalentValue);
         }
@@ -220,7 +222,7 @@ public final class ConnectionPoolObjectsUtils {
             return txSupportIntVal;
         }
 
-        LOG.log(Level.FINE, "parseTransactionSupportString: passed in txSupport => {0}", txSupport);
+        LOG.log(FINE, "parseTransactionSupportString: passed in txSupport => {0}", txSupport);
 
         if (ConnectorConstants.NO_TRANSACTION_TX_SUPPORT_STRING.equals(txSupport)) {
             return ConnectorConstants.NO_TRANSACTION_INT;
@@ -241,8 +243,8 @@ public final class ConnectionPoolObjectsUtils {
         } catch (Exception e) {
             LOG.log(Level.WARNING, "getTransactionSupportFromRaXml", e);
         }
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE,
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE,
                 "isTxSupportConfigSane:: txSupport => " + txSupport + "  raXmlTxSupport => " + raXmlTxSupport);
         }
         return txSupport <= raXmlTxSupport;
@@ -271,32 +273,30 @@ public final class ConnectionPoolObjectsUtils {
             Method m = mcf.getClass().getMethod("get" + prop, (java.lang.Class[]) null);
             result = (String) m.invoke(mcf, (java.lang.Object[]) null);
         } catch (Throwable t) {
-            LOG.log(Level.FINE, t.getMessage(), t);
+            LOG.log(FINE, t.getMessage(), t);
         }
         return result == null ? "" : result;
     }
 
-    public static Subject createSubject(ManagedConnectionFactory mcf, final ResourcePrincipalDescriptor principalDescriptor) {
+    public static Subject createSubject(ManagedConnectionFactory managedConnectionFactory, final ResourcePrincipalDescriptor principalDescriptor) {
         final Subject tempSubject = new Subject();
         if (principalDescriptor == null) {
             return tempSubject;
         }
-        final PasswordCredential pc = principalDescriptor.toPasswordCredential();
-        if (pc != null) {
-            pc.setManagedConnectionFactory(mcf);
-            PrivilegedAction<Void> action = () -> {
-                tempSubject.getPrincipals().add(principalDescriptor.toPrincipalNameAndPassword());
-                tempSubject.getPrivateCredentials().add(pc);
-                return null;
-            };
-            AccessController.doPrivileged(action);
+
+        PasswordCredential passwordCredential = principalDescriptor.toPasswordCredential();
+
+        if (passwordCredential != null) {
+            passwordCredential.setManagedConnectionFactory(managedConnectionFactory);
+            tempSubject.getPrincipals().add(principalDescriptor.toPrincipalNameAndPassword());
+            tempSubject.getPrivateCredentials().add(passwordCredential);
         }
+
         return tempSubject;
     }
 
     public static boolean isPoolSystemPool(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp) {
-        String poolName = domainCcp.getName();
-        return isPoolSystemPool(poolName);
+        return isPoolSystemPool(domainCcp.getName());
     }
 
     public static boolean isPoolSystemPool(String poolName) {
@@ -375,7 +375,7 @@ public final class ConnectionPoolObjectsUtils {
                     conConnPool.setLazyConnectionAssoc(true);
                     conConnPool.setLazyConnectionEnlist(true);
                 } else {
-                    LOG.log(Level.SEVERE, "conn_pool_obj_utils.lazy_enlist-lazy_assoc-invalid-combination",
+                    LOG.log(SEVERE, "conn_pool_obj_utils.lazy_enlist-lazy_assoc-invalid-combination",
                         conConnPool.getName());
                     String i18nMsg = localStrings.getString("cpou.lazy_enlist-lazy_assoc-invalid-combination");
                     throw new RuntimeException(i18nMsg + conConnPool.getName());
@@ -390,6 +390,7 @@ public final class ConnectionPoolObjectsUtils {
         if (prop == null) {
             return defaultVal;
         }
+
         return Boolean.valueOf(((String) prop).toLowerCase(Locale.getDefault()));
     }
 

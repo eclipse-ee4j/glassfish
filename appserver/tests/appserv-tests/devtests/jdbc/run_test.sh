@@ -20,7 +20,7 @@ list_test_ids(){
 }
 
 test_run(){
-  ${S1AS_HOME}/bin/asadmin start-domain domain1
+  ${S1AS_HOME}/bin/asadmin start-domain $GLASSFISH_SUSPEND domain1
   ${S1AS_HOME}/bin/asadmin start-database
   cd ${APS_HOME}/devtests/jdbc
 

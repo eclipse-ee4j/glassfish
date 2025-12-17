@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.distributions</groupId>
@@ -182,7 +182,7 @@
                     </dependencies>
                     <executions>
                         <execution>
-                            <id>apply patches</id>
+                            <id>apply-patches</id>
                             <phase>prepare-package</phase>
                             <!--<phase>initialize</phase>-->
                             <goals>
@@ -196,8 +196,15 @@
                                         <attribute name="basedir"/>
                                         <attribute name="destfile"/>
                                         <sequential>
+                                            <fail message="File is missing: @{destfile}">
+                                                <condition>
+                                                    <not>
+                                                        <available file="@{destfile}" />
+                                                    </not>
+                                                </condition>
+                                            </fail>
                                             <echo>PATCHING @{destfile}</echo>
-                                            <zip update="true" basedir="@{basedir}" destfile="@{destfile}" />
+                                            <zip update="true" basedir="@{basedir}" destfile="@{destfile}" whenempty="fail" />
                                         </sequential>
                                     </macrodef>
 
@@ -211,12 +218,12 @@
                                                     </dirset>
                                                 </path>
                                                 <sequential>
-                                                    <basename property="patches.dir.name" file="@{patches.dir}"/>
-                                                    <jarupdate
-                                                        basedir="@{patches.dir}"
-                                                        destfile="${glassfish.modules}/${patches.dir.name}.jar"
-                                                    />
-                                                    <var name="patches.dir.name" unset="true"/>
+                                                    <basename property="patches.dir.name" file="@{patches.dir}" />
+                                                    <property name="patch.dest.file" value="${glassfish.modules}/${patches.dir.name}.jar" />
+
+                                                    <jarupdate basedir="@{patches.dir}" destfile="${patch.dest.file}" />
+                                                    <var name="patches.dir.name" unset="true" />
+                                                    <var name="patch.dest.file" unset="true" />
                                                 </sequential>
                                             </for>
                                         </then>
@@ -224,6 +231,20 @@
 
                                 </target>
                             </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- To disable checking extracted sources -->
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>checkstyle</id>
+                            <phase>disabled</phase>
+                        </execution>
+                        <execution>
+                            <id>checkstyle-poms</id>
+                            <phase>disabled</phase>
                         </execution>
                     </executions>
                 </plugin>

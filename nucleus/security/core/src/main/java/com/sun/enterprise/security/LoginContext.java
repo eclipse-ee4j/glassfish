@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package com.sun.enterprise.security;
 
 import com.sun.enterprise.security.auth.login.ClientPasswordLoginModule;
+import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
 import com.sun.enterprise.security.common.SecurityConstants;
@@ -54,7 +55,7 @@ public final class LoginContext {
      * Creates the LoginContext with the defauly callback handler
      */
     public LoginContext() {
-        this.handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(false);
+        this.handler = new LoginCallbackHandler(false);
     }
 
     /**
@@ -62,9 +63,9 @@ public final class LoginContext {
      * @deprecated Sets password as a system property
      */
     @Deprecated(forRemoval = true, since = "7.1.0")
-    public void login(String user, String pass) throws LoginException {
-        setProperty(ClientPasswordLoginModule.LOGIN_NAME, user, false);
-        setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, pass, false);
+    public void login(String username, String password) throws LoginException {
+        setProperty(ClientPasswordLoginModule.LOGIN_NAME, username, false);
+        setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password, false);
         // Since this is  a private api and the user is not supposed to use
         // this. We use the default the LoginCallbackHandler.
         LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD, handler);

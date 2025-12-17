@@ -58,12 +58,12 @@ public class SecurityContainer implements Container {
     /** This should never ever fail. */
     private static void initRoleMapperFactory() {
         try {
-            Class<?> c = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory");
-            if (c != null) {
-                Object o = c.getDeclaredConstructor().newInstance();
-                if (o != null && o instanceof SecurityRoleMapperFactory) {
-                    SecurityRoleMapperFactoryMgr.registerFactory((SecurityRoleMapperFactory) o);
-                }
+            Object o = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory")
+                            .getDeclaredConstructor()
+                            .newInstance();
+
+            if (o instanceof SecurityRoleMapperFactory securityRoleMapperFactory) {
+                SecurityRoleMapperFactoryMgr.registerFactory(securityRoleMapperFactory);
             }
         } catch (Exception cnfe) {
             LOG.log(Level.SEVERE,

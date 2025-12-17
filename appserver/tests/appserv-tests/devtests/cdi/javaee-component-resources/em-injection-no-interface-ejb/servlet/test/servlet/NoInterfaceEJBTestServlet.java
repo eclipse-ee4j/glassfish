@@ -53,6 +53,7 @@ public class NoInterfaceEJBTestServlet extends HttpServlet {
     TestBeanInterface testBeanEJB;
 
     @Inject
+    @InjectViaAtInject
     private EntityManager em;
 
     private @Resource

@@ -120,7 +120,7 @@ public class Util {
 
         } else {
             String embeddedServerName = getCurrentEmbeddedServerName();
-            File tempDir = FileUtils.USER_HOME.toPath().resolve(Path.of(".glassfish7-" + embeddedServerName, "config"))
+            File tempDir = FileUtils.USER_HOME.toPath().resolve(Path.of(".glassfish8-" + embeddedServerName, "config"))
                 .toFile();
             boolean mkDirSuccess = true;
             if (!tempDir.exists()) {

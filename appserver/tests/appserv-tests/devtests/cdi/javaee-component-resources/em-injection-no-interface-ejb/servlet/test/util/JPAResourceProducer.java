@@ -16,15 +16,18 @@
 
 package test.util;
 
+import test.beans.artifacts.InjectViaAtInject;
+
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-
 @Singleton
 public class JPAResourceProducer {
-    @Produces @PersistenceContext(unitName="pu1")
+    
+    
+    @Produces @InjectViaAtInject @PersistenceContext(unitName="pu1")
     EntityManager customerDatabasePersistenceUnit;
 
 }

@@ -23,20 +23,28 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-connectors</artifactId>
-    <packaging>pom</packaging>
-
+    <artifactId>tck-connectors</artifactId>
     <name>TCK: Connectors</name>
 
     <properties>
-        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
-        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
+        <glassfish.major>8</glassfish.major>
+        <glassfish.home>${project.build.directory}/glassfish${glassfish.major}</glassfish.home>
+        <glassfish.domain.dir>${glassfish.home}/glassfish/domains/domain1</glassfish.domain.dir>
+        <glassfish.lib.dir>${glassfish.home}/glassfish/lib</glassfish.lib.dir>
+        <whitebox.directory>${project.build.directory}/whiteboxes</whitebox.directory>
 
-        <tck.home>${project.build.directory}/connectors-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/connector</tck.tests.home>
+        <tck.version>11.0.1</tck.version>
+        <tck.arquillian.version>11.1.0</tck.arquillian.version>
+        <tck.test.user1>j2ee</tck.test.user1>
+        <tck.test.user2>javajoe</tck.test.user2>
+        <tck.reportDirectory>${project.build.directory}/report</tck.reportDirectory>
+        <tck.workDirectory>${project.build.directory}/work</tck.workDirectory>
+        <tck.tssql>${project.build.testOutputDirectory}/ts.sql</tck.tssql>
+        <tck.tsjte>${project.build.testOutputDirectory}/ts.jte</tck.tsjte>
+        <tck.clientDirectory>${project.build.directory}</tck.clientDirectory>
     </properties>
 
     <dependencies>
@@ -47,34 +55,134 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-connectors-tck</artifactId>
+            <artifactId>glassfish-runner</artifactId>
             <version>${project.version}</version>
-            <type>zip</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>connector</artifactId>
+            <version>${tck.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>common</artifactId>
+            <version>${tck.arquillian.version}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-lib</artifactId>
+            <version>${tck.arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-common</artifactId>
+            <version>${tck.arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-javatest</artifactId>
+            <version>${tck.arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>arquillian-protocol-appclient</artifactId>
+            <version>${tck.arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck.arquillian</groupId>
+            <artifactId>tck-porting-lib</artifactId>
+            <version>${tck.arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-spi</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>glassfish-client-ee11</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>2.0.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>2.0.17</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>io.github.download-maven-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>download-ant</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
-            </plugin>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </testResource>
+        </testResources>
 
+        <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <configuration>
@@ -93,252 +201,236 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>unpack-tck</id>
+                        <id>install-arquillian-libs</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>jakarta.tck.arquillian</groupId>
+                                    <artifactId>tck-porting-lib</artifactId>
+                                    <version>${tck.arquillian.version}</version>
+                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                    <destFileName>tck-porting-lib.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck.arquillian</groupId>
+                                    <artifactId>arquillian-protocol-lib</artifactId>
+                                    <version>${tck.arquillian.version}</version>
+                                    <outputDirectory>${glassfish.lib.dir}</outputDirectory>
+                                    <destFileName>arquillian-protocol-lib.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-whiteboxes</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>unpack-dependencies</goal>
+                            <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>jakarta-connectors-tck</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox</artifactId>
+                                    <version>${tck.version}</version>
+                                    <outputDirectory>${glassfish.lib.dir}</outputDirectory>
+                                    <destFileName>whitebox.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>annotated</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-anno_no_md.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>ibanno</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-ibanno_no_md.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>mdcomplete</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-mdcomplete.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>mixedmode</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-mixedmode.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>multianno</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-multianno.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox-notx</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-notx.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox-notx-param</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-notx-param.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox-tx</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-tx.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox-tx-param</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-tx-param.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox-xa</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-xa.rar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>whitebox-xa-param</artifactId>
+                                    <version>${tck.version}</version>
+                                    <type>rar</type>
+                                    <outputDirectory>${whitebox.directory}</outputDirectory>
+                                    <destFileName>whitebox-xa-param.rar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>${ant.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant-contrib</groupId>
-                        <artifactId>ant-contrib</artifactId>
-                        <version>1.0b3</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>ant</groupId>
-                                <artifactId>ant</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                </dependencies>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <skip>${skipITs}</skip>
+                    <dependenciesToScan>jakarta.tck:connector</dependenciesToScan>
+                    <systemPropertyVariables>
+                        <glassfish.home>${glassfish.home}</glassfish.home>
+                        <glassfish.enableDerby>true</glassfish.enableDerby>
+                        <glassfish.systemProperties>
+                            j2eelogin.name=${tck.test.user1}
+                            j2eelogin.password=${tck.test.user1}
+                            eislogin.name=cts1
+                            eislogin.password=cts1
+                        </glassfish.systemProperties>
+                        <glassfish.postBootCommands>
+                            --passwordfile ${project.build.testOutputDirectory}/${tck.test.user1}.pass create-file-user --groups staff:mgr ${tck.test.user1}
+                            --passwordfile ${project.build.testOutputDirectory}/${tck.test.user2}.pass create-file-user --groups guest ${tck.test.user2}
+                            create-jdbc-connection-pool --restype javax.sql.DataSource --datasourceclassname org.apache.derby.jdbc.ClientDataSource --property databaseName=derbyDB:serverName=localhost:portNumber=1527:user=cts1:password=cts1:createDatabase=create cts-derby-pool
+                            create-jdbc-resource --connectionpoolid cts-derby-pool jdbc/DB1
+                            create-jdbc-connection-pool --restype javax.sql.XADataSource --datasourceclassname org.apache.derby.jdbc.ClientXADataSource --property serverName=localhost:portNumber=1527:user=cts1:password=cts1:DatabaseName=derbyDB:connectionAttributes=";create\=true;" --steadypoolsize 32 --maxpoolsize 64 cts-derby-XA-pool
+                            create-jdbc-resource --connectionpoolid cts-derby-XA-pool eis/JDBCwhitebox-xa
+                            create-jdbc-resource --connectionpoolid cts-derby-XA-pool eis/JDBCwhitebox-notx
+                            list-jdbc-connection-pools
+                            ping-connection-pool cts-derby-XA-pool
+                            deploy ${whitebox.directory}/whitebox-tx.rar
+                            create-connector-connection-pool --raname whitebox-tx --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-tx-pool.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-tx-pool.rar eis/whitebox-tx
+                            deploy ${whitebox.directory}/whitebox-xa.rar
+                            create-connector-connection-pool --raname whitebox-xa --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-xa-pool.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-xa-pool.rar eis/whitebox-xa
+                            deploy ${whitebox.directory}/whitebox-notx.rar
+                            create-connector-connection-pool --raname whitebox-notx --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-notx-pool.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-notx-pool.rar eis/whitebox-notx
+                            deploy ${whitebox.directory}/whitebox-mdcomplete.rar
+                            create-connector-connection-pool --raname whitebox-mdcomplete --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-mdcomplete-pool.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-mdcomplete-pool.rar eis/whitebox-mdcomplete
+                            deploy ${whitebox.directory}/whitebox-anno_no_md.rar
+                            create-connector-connection-pool --raname whitebox-anno_no_md --property eisPrincipalName=cts1:userName=${tck.test.user1}:password=cts1:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-anno_no_md-pool.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-anno_no_md-pool.rar eis/whitebox-anno_no_md
+                            deploy ${whitebox.directory}/whitebox-mixedmode.rar
+                            create-connector-connection-pool --raname whitebox-mixedmode --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-mixedmode-pool.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-mixedmode-pool.rar eis/whitebox-mixedmode
+                            deploy ${whitebox.directory}/whitebox-multianno.rar
+                            create-connector-connection-pool --raname whitebox-multianno --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-multianno.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-multianno.rar eis/whitebox-multianno
+                            deploy ${whitebox.directory}/whitebox-tx-param.rar
+                            create-connector-connection-pool --raname whitebox-tx-param --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-tx-param.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-tx-param.rar eis/whitebox-tx-param
+                            deploy ${whitebox.directory}/whitebox-notx-param.rar
+                            create-connector-connection-pool --raname whitebox-notx-param --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-notx-param.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-notx-param.rar eis/whitebox-notx-param
+                            deploy ${whitebox.directory}/whitebox-xa-param.rar
+                            create-connector-connection-pool --raname whitebox-xa-param --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-xa-param.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-xa-param.rar eis/whitebox-xa-param
+                            deploy ${whitebox.directory}/whitebox-ibanno_no_md.rar
+                            create-connector-connection-pool --raname whitebox-ibanno_no_md --property eisPrincipalName=${tck.test.user1}:userName=${tck.test.user1}:password=${tck.test.user1}:TSRValue=comp/TransactionSynchronizationRegistry --connectiondefinition com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory cts-connector-pool-whitebox-ibanno_no_md.rar
+                            create-connector-resource --poolname cts-connector-pool-whitebox-ibanno_no_md.rar eis/whitebox-ibanno_no_md
+                            list-connector-resources
+                            list-jndi-entries
+                            create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/QueueConnectionFactory
+                            create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=MDB_QUEUE_REPLY MDB_QUEUE
+                            create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=MDB_QUEUE_REPLY MDB_QUEUE_REPLY
+                        </glassfish.postBootCommands>
+                    </systemPropertyVariables>
                 </configuration>
+
                 <executions>
                     <execution>
-                        <id>prepare-tck-and-glassfish</id>
-                        <phase>pre-integration-test</phase>
+                        <id>tck-appclient</id>
                         <goals>
-                            <goal>run</goal>
+                            <goal>integration-test</goal>
                         </goals>
                         <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                     classpathref="maven.plugin.classpath" />
-
-                                <macrodef name="tck-property-update">
-                                    <attribute name="key" />
-                                    <attribute name="value" />
-                                    <sequential>
-                                      <replaceregexp byline="true"
-                                        file="${tck.home}/bin/ts.jte"
-                                        match="@{key}=.*"
-                                        replace="@{key}=@{value}" />
-                                    </sequential>
-                                </macrodef>
-                                <macrodef name="tck-line-update">
-                                    <attribute name="pattern" />
-                                    <attribute name="replacement" />
-                                    <sequential>
-                                      <replaceregexp byline="true"
-                                        file="${tck.home}/bin/ts.jte"
-                                        match="@{pattern}"
-                                        replace="@{replacement}" />
-                                    </sequential>
-                                </macrodef>
-                                <macrodef name="tck-keystore-suffix">
-                                    <attribute name="file" />
-                                    <sequential>
-                                        <replaceregexp flags="g"
-                                          file="@{file}"
-                                          match="/cacerts\.jks"
-                                          replace="/cacerts.p12" />
-                                        <replaceregexp flags="g"
-                                          file="@{file}"
-                                          match="/keystore\.jks"
-                                          replace="/keystore.p12" />
-                                    </sequential>
-                                </macrodef>
-
-                                <tck-line-update
-                                    pattern="^(.*/)admin-cli.jar(.*)"
-                                    replacement="\1hk2.jar:${jaspic.home}/modules/jakarta.activation-api.jar\2" />
-                                <tck-line-update
-                                    pattern="^(.*\$\{JAVA_HOME\}/bin/java)(.*)"
-                                    replacement="\1 --module-path ${jaspic.home}/lib/bootstrap --add-modules ALL-MODULE-PATH \2" />
-
-                                <tck-property-update key="connector.home" value="${glassfish.home}/glassfish"/>
-                                <tck-property-update key="harness.log.traceflag" value="true"/>
-                                <tck-property-update key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
-
-                                <tck-property-update key="glassfish.admin.port" value="${port.admin}"/>
-                                <tck-property-update key="s1as.admin.port" value="${port.admin}"/>
-                                <tck-property-update key="database.port" value="${port.derby}"/>
-                                <tck-property-update key="orb.port" value="${port.orb}"/>
-                                <tck-property-update key="webServerHost" value="localhost"/>
-                                <tck-property-update key="webServerPort" value="${port.http}"/>
-                                <tck-property-update key="securedWebServicePort" value="${port.https}"/>
-                                <tck-property-update key="harness.log.port" value="${port.harness.log}"/>
-
-                                <tck-property-update key="report.dir" value="${tck.home}/connectorsreport/connectors"/>
-                                <tck-property-update key="work.dir" value="${tck.home}/connectorswork/connectors"/>
-
-                                <replace file="${tck.home}/bin/ts.jte">
-                                    <replacetoken><![CDATA[-XX\\\:MaxPermSize=512m:]]></replacetoken>
-                                    <replacevalue><![CDATA[]]></replacevalue>
-                                </replace>
-
-                                <tck-keystore-suffix file="${tck.home}/bin/xml/impl/glassfish/common.xml" />
-                                <tck-keystore-suffix file="${tck.home}/bin/xml/impl/glassfish/s1as.xml" />
-
-                                <limit maxwait="60">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="delete-domain"/>
-                                        <arg value="domain1" />
-                                    </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="create-domain"/>
-                                        <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
-                                        <arg value="--user=admin" />
-                                        <arg value="--nopassword" />
-                                        <arg value="domain1" />
-                                    </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="start-domain"/>
-                                    </exec>
-
-                                    <if>
-                                        <isset property="jacoco.version" />
-                                        <then>
-                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                                <env key="AS_JAVA" value="${java.home}"/>
-                                                <arg value="create-jvm-options" />
-                                                <arg value="--port=${port.admin}" />
-                                                <arg value="&quot;-javaagent\:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=${jacoco.includes}&quot;" />
-                                            </exec>
-                                        </then>
-                                    </if>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="create-jvm-options" />
-                                        <arg value="--port=${port.admin}" />
-                                        <arg value="&quot;-Djava.security.manager&quot;" />
-                                    </exec>
-
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="stop-domain"/>
-                                        <arg value="domain1"/>
-                                    </exec>
-                                </limit>
-
-                                <mkdir dir="${tck.home}/connectorsreport"/>
-                                <mkdir dir="${tck.home}/connectorsreport/connectors"/>
-                            </target>
+                            <groups>tck-appclient</groups>
+                            <includes>
+                                <include>**/ClientTest.*</include>
+                                <include>**/*EjbTest.*</include>
+                            </includes>
+                            <systemPropertyVariables>
+                                <arquillian.xml>arquillian-client.xml</arquillian.xml>
+                            </systemPropertyVariables>
                         </configuration>
                     </execution>
-
                     <execution>
-                        <id>configure-tck-tests</id>
-                        <phase>pre-integration-test</phase>
+                        <id>tck-javatest</id>
                         <goals>
-                            <goal>run</goal>
+                            <goal>integration-test</goal>
                         </goals>
                         <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
-                                <limit maxwait="20">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <arg value="start-domain"/>
-                                    </exec>
-                                </limit>
-
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                    <env key="JAVA_HOME" value="${java.home}"/>
-                                    <arg value="config.vi"  />
-                                </exec>
-
-                                <!-- Deploy single test -->
-                                <sequential if:set="run.test" >
-                                    <dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
-                                    <echo>Deploying from ${test.dir}</echo>
-
-                                    <exec executable="${ant.home}/bin/ant" dir="${test.dir}" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <env key="JAVA_HOME" value="${java.home}"/>
-                                        <arg value="deploy"  />
-                                    </exec>
-                                </sequential>
-
-                                <!-- Deploy all tests -->
-                                <sequential unless:set="run.test" >
-                                    <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" failonerror="true">
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                        <env key="JAVA_HOME" value="${java.home}"/>
-                                        <arg value="deploy.all"  />
-                                    </exec>
-                                </sequential>
-                            </target>
-                        </configuration>
-                    </execution>
-
-                     <execution>
-                        <id>run-tck-tests</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
-                                <echo level="info" message="Start running all tests" />
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                    <env key="JAVA_HOME" value="${java.home}"/>
-                                    <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="runclient.nobinaryfinder" if:set="run.test" />
-                                    <arg value="run.all" unless:set="run.test" />
-                                    <env key="LC_ALL" value="C" />
-                                </exec>
-
-                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                    <env key="AS_JAVA" value="${java.home}"/>
-                                    <arg value="stop-domain" />
-                                </exec>
-
-                                <if>
-                                    <not>
-                                        <equals arg1="${testResult}" arg2="0" />
-                                    </not>
-                                    <then>
-                                        <echo message="Running tests failed." />
-                                        <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
-                                        <fail status="${testResult}" message="${contents}" />
-                                    </then>
-                                </if>
-                            </target>
+                            <groups>tck-javatest</groups>
+                            <includes>
+                                <include>**/ClientTest.class</include>
+                                <include>**/*Servlet*.class</include>
+                                <include>**/*Jsp**.class</include>
+                            </includes>
+                            <systemPropertyVariables>
+                                <arquillian.xml>arquillian.xml</arquillian.xml>
+                            </systemPropertyVariables>
                         </configuration>
                     </execution>
                 </executions>

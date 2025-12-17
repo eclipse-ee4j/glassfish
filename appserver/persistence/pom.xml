@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.persistence</groupId>
@@ -36,6 +36,8 @@
         <module>common</module>
         <module>oracle-jdbc-driver-packages</module>
         <module>gf-jpa-connector</module>
+        <module>jnosql-jakarta-persistence-osgi-bundle</module>
+        <module>jnosql-integration</module>
         <module>jpa-container</module>
         <module>eclipselink-wrapper</module>
         <module>cmp</module>

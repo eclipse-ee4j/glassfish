@@ -17,7 +17,6 @@
 
 package org.apache.catalina.core;
 
-
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
@@ -41,91 +40,332 @@ import org.apache.catalina.Request;
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:27:34 $
  */
 
-public class DummyResponse
-    implements HttpResponse, HttpServletResponse {
+public class DummyResponse implements HttpResponse, HttpServletResponse {
 
     public DummyResponse() {
     }
 
+    @Override
+    public void setAppCommitted(boolean appCommitted) {
+    }
 
-    public void setAppCommitted(boolean appCommitted) {}
-    public boolean isAppCommitted() { return false; }
-    public Connector getConnector() { return null; }
-    public void setConnector(Connector connector) {}
-    public int getContentCount() { return -1; }
-    public Context getContext() { return null; }
-    public void setContext(Context context) {}
-    public boolean getIncluded() { return false; }
-    public void setIncluded(boolean included) {}
-    public String getInfo() { return null; }
-    public Request getRequest() { return null; }
-    public void setRequest(Request request) {}
-    public ServletResponse getResponse() { return null; }
-    public OutputStream getStream() { return null; }
-    public void setStream(OutputStream stream) {}
-    public void setSuspended(boolean suspended) {}
-    public boolean isSuspended() { return false; }
-    public void setError() {}
-    public boolean isError() { return false; }
+    @Override
+    public boolean isAppCommitted() {
+        return false;
+    }
+
+    @Override
+    public Connector getConnector() {
+        return null;
+    }
+
+    @Override
+    public void setConnector(Connector connector) {
+    }
+
+    @Override
+    public int getContentCount() {
+        return -1;
+    }
+
+    @Override
+    public Context getContext() {
+        return null;
+    }
+
+    @Override
+    public void setContext(Context context) {
+    }
+
+    @Override
+    public boolean getIncluded() {
+        return false;
+    }
+
+    @Override
+    public void setIncluded(boolean included) {
+    }
+
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public Request getRequest() {
+        return null;
+    }
+
+    @Override
+    public void setRequest(Request request) {
+    }
+
+    @Override
+    public ServletResponse getResponse() {
+        return null;
+    }
+
+    @Override
+    public OutputStream getStream() {
+        return null;
+    }
+
+    @Override
+    public void setStream(OutputStream stream) {
+    }
+
+    @Override
+    public void setSuspended(boolean suspended) {
+    }
+
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
+    public void setError() {
+    }
+
+    @Override
+    public boolean isError() {
+        return false;
+    }
+
+    @Override
     public ServletOutputStream createOutputStream() throws IOException {
         return null;
     }
-    public void finishResponse() throws IOException {}
-    public int getContentLength() { return -1; }
-    public String getContentType() { return null; }
-    public PrintWriter getReporter() { return null; }
-    public void recycle() {}
-    public void write(int b) throws IOException {}
-    public void write(byte b[]) throws IOException {}
-    public void write(byte b[], int off, int len) throws IOException {}
-    public void flushBuffer() throws IOException {}
-    public int getBufferSize() { return -1; }
-    public String getCharacterEncoding() { return null; }
-    public void setCharacterEncoding(String charEncoding) {}
+
+    @Override
+    public void finishResponse() throws IOException {
+    }
+
+    @Override
+    public int getContentLength() {
+        return -1;
+    }
+
+    @Override
+    public String getContentType() {
+        return null;
+    }
+
+    @Override
+    public PrintWriter getReporter() {
+        return null;
+    }
+
+    @Override
+    public void recycle() {
+    }
+
+    public void write(int b) throws IOException {
+    }
+
+    public void write(byte b[]) throws IOException {
+    }
+
+    public void write(byte b[], int off, int len) throws IOException {
+    }
+
+    @Override
+    public void flushBuffer() throws IOException {
+    }
+
+    @Override
+    public int getBufferSize() {
+        return -1;
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        return null;
+    }
+
+    @Override
+    public void setCharacterEncoding(String charEncoding) {
+    }
+
+    @Override
     public ServletOutputStream getOutputStream() throws IOException {
         return null;
     }
-    public Locale getLocale() { return null; }
-    public PrintWriter getWriter() throws IOException { return null; }
-    public boolean isCommitted() { return false; }
-    public void reset() {}
-    public void resetBuffer() {}
 
-    public void resetBuffer(boolean resetWriterStreamFlags) {}
-    public void setBufferSize(int size) {}
-    public void setContentLength(int length) {}
-    public void setContentLengthLong(long length) {}
-    public void setContentType(String type) {}
-    public void setLocale(Locale locale) {}
+    @Override
+    public Locale getLocale() {
+        return null;
+    }
 
-    public String getHeader(String name) { return null; }
-    public Collection<String> getHeaderNames() { return null; }
-    public Collection<String> getHeaders(String name) { return null; }
-    public void addSessionCookieInternal(final Cookie cookie) {}
-    public String getMessage() { return null; }
-    public int getStatus() { return -1; }
-    public void reset(int status, String message) {}
-    public void addCookie(Cookie cookie) {}
-    public void addDateHeader(String name, long value) {}
-    public void addHeader(String name, String value) {}
-    public void addIntHeader(String name, int value) {}
-    public boolean containsHeader(String name) { return false; }
-    public String encodeRedirectURL(String url) { return null; }
-    public String encodeRedirectUrl(String url) { return null; }
-    public String encodeURL(String url) { return null; }
-    public String encodeUrl(String url) { return null; }
-    public String encode(String url) { return null; }
-    public void sendAcknowledgement() throws IOException {}
-    public void sendError(int status) throws IOException {}
-    public void sendError(int status, String message) throws IOException {}
-    public void setError(int status, String message) {}
-    public void sendRedirect(String location) throws IOException {}
-    public void setDateHeader(String name, long value) {}
-    public void setHeader(String name, String value) {}
-    public void setIntHeader(String name, int value) {}
-    public void setStatus(int status) {}
-    public void setStatus(int status, String message) {}
-    public void setDetailMessage(String msg) {}
-    public String getDetailMessage() { return null; }
+    @Override
+    public PrintWriter getWriter() throws IOException {
+        return null;
+    }
+
+    @Override
+    public boolean isCommitted() {
+        return false;
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    @Override
+    public void resetBuffer() {
+    }
+
+    @Override
+    public void resetBuffer(boolean resetWriterStreamFlags) {
+    }
+
+    @Override
+    public void setBufferSize(int size) {
+    }
+
+    @Override
+    public void setContentLength(int length) {
+    }
+
+    @Override
+    public void setContentLengthLong(long length) {
+    }
+
+    @Override
+    public void setContentType(String type) {
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return null;
+    }
+
+    @Override
+    public void addSessionCookieInternal(final Cookie cookie) {
+    }
+
+    @Override
+    public String getMessage() {
+        return null;
+    }
+
+    @Override
+    public int getStatus() {
+        return -1;
+    }
+
+    @Override
+    public void reset(int status, String message) {
+    }
+
+    @Override
+    public void addCookie(Cookie cookie) {
+    }
+
+    @Override
+    public void addDateHeader(String name, long value) {
+    }
+
+    @Override
+    public void addHeader(String name, String value) {
+    }
+
+    @Override
+    public void addIntHeader(String name, int value) {
+    }
+
+    @Override
+    public boolean containsHeader(String name) {
+        return false;
+    }
+
+    @Override
+    public String encodeRedirectURL(String url) {
+        return null;
+    }
+
+    public String encodeRedirectUrl(String url) {
+        return null;
+    }
+
+    @Override
+    public String encodeURL(String url) {
+        return null;
+    }
+
+    public String encodeUrl(String url) {
+        return null;
+    }
+
+    @Override
+    public String encode(String url) {
+        return null;
+    }
+
+    @Override
+    public void sendAcknowledgement() throws IOException {
+    }
+
+    @Override
+    public void sendError(int status) throws IOException {
+    }
+
+    @Override
+    public void sendError(int status, String message) throws IOException {
+    }
+
+    @Override
+    public void setError(int status, String message) {
+    }
+
+    @Override
+    public void sendRedirect(String location) throws IOException {
+    }
+
+    @Override
+    public void setDateHeader(String name, long value) {
+    }
+
+    @Override
+    public void setHeader(String name, String value) {
+    }
+
+    @Override
+    public void setIntHeader(String name, int value) {
+    }
+
+    @Override
+    public void setStatus(int status) {
+    }
+
+    public void setStatus(int status, String message) {
+    }
+
+    @Override
+    public void setDetailMessage(String msg) {
+    }
+
+    @Override
+    public String getDetailMessage() {
+        return null;
+    }
+
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+    }
 
 }

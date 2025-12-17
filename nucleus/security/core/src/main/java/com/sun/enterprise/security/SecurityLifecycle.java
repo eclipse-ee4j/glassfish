@@ -58,9 +58,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     private static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
 
     @Inject
-    private PolicyLoader policyLoader;
-
-    @Inject
     private SecurityServicesUtil securityServicesUtil;
 
     @Inject
@@ -97,9 +94,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     public void onInitialization() {
         try {
             _logger.log(INFO, SecurityLoggerInfo.secServiceStartupEnter);
-
-            // Init Jakarta Authorization
-            policyLoader.loadPolicy();
 
             realmsManager.createRealms();
 

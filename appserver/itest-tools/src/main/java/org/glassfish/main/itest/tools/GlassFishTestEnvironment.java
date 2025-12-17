@@ -130,7 +130,6 @@ public class GlassFishTestEnvironment {
         return getAsadmin(true);
     }
 
-
     /**
      * @param terse true means suitable and minimized for easy parsing.
      * @return {@link Asadmin} command api for tests.
@@ -258,19 +257,40 @@ public class GlassFishTestEnvironment {
         final String protocol = secured ? "https" : "http";
         @SuppressWarnings("unchecked")
         final T connection = (T) new URL(protocol + "://localhost:" + port + context).openConnection();
-        connection.setReadTimeout(15000);
-        connection.setConnectTimeout(100);
+        if (System.getProperty("glassfish.suspend") != null) {
+            connection.setReadTimeout(0);
+            connection.setConnectTimeout(0);
+        } else {
+            connection.setReadTimeout(15000);
+            connection.setConnectTimeout(100);
+        }
         connection.setRequestProperty("X-Requested-By", "JUnit5Test");
         return connection;
     }
 
     /**
-     * Creates a {@link HttpURLConnection} for the given port and context.
+     * Creates a {@link HttpResponse} for the default port using unsecured HTTP.
+     *
+     * @param context - part of the url behind the <code>http://localhost:[port]</code>
+     * @return a new disconnected {@link HttpResponse}.
+     * @throws IOException
+     */
+    public static HttpResponse<String> getHttpResource(final String context) throws Exception {
+        String rootContext = context;
+        if (context != null && !context.startsWith("/")) {
+            rootContext = "/" + context;
+        }
+
+        return getHttpResource(false, 8080, rootContext);
+    }
+
+    /**
+     * Creates a {@link HttpResponse} for the given port and context.
      *
      * @param secured true for https, false for http
      * @param port
      * @param context - part of the url behind the <code>http://localhost:[port]</code>
-     * @return a new disconnected {@link HttpURLConnection}.
+     * @return a new disconnected {@link HttpResponse}.
      * @throws IOException
      */
     public static HttpResponse<String> getHttpResource(final boolean secured, final int port, final String context)
@@ -363,7 +383,7 @@ public class GlassFishTestEnvironment {
 
 
     private static File resolveGlassFishRoot() {
-        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish7", "glassfish")).toFile();
+        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish8", "glassfish")).toFile();
         if (gfDir == null || !gfDir.exists()) {
             throw new IllegalStateException("The expected GlassFish home directory doesn't exist: " + gfDir);
         }

@@ -17,6 +17,8 @@
 package com.sun.enterprise.container.common.impl;
 
 
+import jakarta.persistence.CacheRetrieveMode;
+import jakarta.persistence.CacheStoreMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.Parameter;
@@ -43,6 +45,24 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
 
     private StoreProcedureQueryWrapper(StoredProcedureQuery qDelegate, EntityManager emDelegate) {
         super(qDelegate, emDelegate);
+    }
+
+    @Override
+    public StoredProcedureQuery setCacheStoreMode(CacheStoreMode cacheStoreMode) {
+        super.setCacheStoreMode(cacheStoreMode);
+        return this;
+    }
+
+    @Override
+    public StoredProcedureQuery setCacheRetrieveMode(CacheRetrieveMode cacheRetrieveMode) {
+        super.setCacheRetrieveMode(cacheRetrieveMode);
+        return this;
+    }
+
+    @Override
+    public StoredProcedureQuery setTimeout(Integer timeout) {
+        super.setTimeout(timeout);
+        return this;
     }
 
     @Override

@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.security.auth.Subject;
 
@@ -88,8 +89,43 @@ public interface SecurityRoleMapper {
      * @param role the role object
      */
     void unassignRole(Role role);
+
     /**
      * @return a map of roles to the corresponding subjects
      */
     Map<String, Subject> getRoleToSubjectMapping();
+
+    /**
+     *
+     * @return
+     */
+    Map<String, Set<String>> getGroupToRolesMapping();
+
+
+    /**
+     *
+     * @return
+     */
+    Map<String, Set<String>> getCallerToRolesMapping();
+
+    /**
+     *
+     * @return
+     */
+    boolean isDefaultPrincipalToRoleMapping();
+
+    /**
+     * Extracts the groups from the GlassFish specific and potential other unknown principals.
+     *
+     * @param subject container for finding groups, may be null
+     * @return a list of (non-mapped) groups
+     */
+    Set<String> getGroups(Subject subject);
+
+    /**
+     *
+     * @param subject
+     * @return
+     */
+    Principal getCallerPrincipal(Subject subject);
 }

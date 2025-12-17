@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@
 package org.glassfish.security.services.impl.authorization;
 
 import java.net.URI;
-import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,15 +71,6 @@ public class AuthorizationServiceImplTest {
         assertSame(FAILED_INIT, impl.getInitializationState(), "FAILED_INIT");
         assertNotNull("getReasonInitializationFailed", impl.getReasonInitializationFailed());
     }
-
-
-    @Test
-    public void testIsPermissionGranted() throws Exception {
-        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
-        // Does not require service initialization
-        impl.isPermissionGranted(new Subject(), new AllPermission());
-    }
-
 
     @Test
     public void testIsAuthorized() throws Exception {

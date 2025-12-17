@@ -229,8 +229,8 @@ public class TckRunner {
         env.put("TS_HOME", cfg.getJakartaeeDir().getAbsolutePath());
         env.put("GF_BUNDLE_ZIP", this.glassfishZip.getAbsolutePath());
         env.put("GF_VI_BUNDLE_ZIP", this.glassfishZip.getAbsolutePath());
-        env.put("GF_HOME_RI", cfg.getTargetDir().getAbsolutePath() + "/ri/glassfish7");
-        env.put("GF_HOME_VI", cfg.getTargetDir().getAbsolutePath() + "/vi/glassfish7");
+        env.put("GF_HOME_RI", cfg.getTargetDir().getAbsolutePath() + "/ri/glassfish8");
+        env.put("GF_HOME_VI", cfg.getTargetDir().getAbsolutePath() + "/vi/glassfish8");
         env.put("GF_LOGGING_CFG_RI", cfg.getServerLoggingProperties().getAbsolutePath());
         env.put("GF_LOGGING_CFG_VI", cfg.getServerLoggingProperties().getAbsolutePath());
         env.put("DATABASE", "JavaDB");

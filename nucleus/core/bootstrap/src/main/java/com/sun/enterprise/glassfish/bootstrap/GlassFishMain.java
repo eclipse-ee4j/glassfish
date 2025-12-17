@@ -51,13 +51,13 @@ public class GlassFishMain {
 
     public static void main(final String[] args) {
         try {
-            checkJdkVersion();
+        checkJdkVersion();
 
             final String platformName = whichPlatform();
             // Set the system property to allow downstream code to know the platform on which GlassFish runs.
             setProperty(OSGI_PLATFORM.getPropertyName(), platformName, true);
             final OsgiPlatform platform = OsgiPlatform.valueOf(platformName);
-            STDOUT.println("Launching GlassFish on " + platform + " platform");
+        STDOUT.println("Launching GlassFish on " + platform + " platform");
 
             // FIXME: move to serverfiles
             final File installRoot = ServerFiles.detectInstallRoot();
@@ -66,7 +66,7 @@ public class GlassFishMain {
             final Properties properties = initProperties(args);
             STDOUT.println("Resolved properties: " + properties);
             final Path instanceRoot = findInstanceRoot(installRoot, properties);
-            final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
+        final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
             final StartupContextCfg cfg = StartupContextCfgFactory.createStartupContextCfg(platform, files, properties);
             final ClassLoader osgiCL = createOSGiFrameworkLauncherCL(cfg, getSystemClassLoader());
             try (GlassfishOsgiBootstrapClassLoader launcherCL = new GlassfishOsgiBootstrapClassLoader(installRoot, osgiCL)) {
@@ -80,10 +80,11 @@ public class GlassFishMain {
     }
 
 
+
     private static void checkJdkVersion() {
         int version = Runtime.version().feature();
-        if (version < 17) {
-            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {17, version});
+        if (version < 21) {
+            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {21, version});
             System.exit(1);
         }
     }

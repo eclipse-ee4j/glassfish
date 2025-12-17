@@ -1,7 +1,7 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,11 +54,10 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.data.ModuleInfo;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.Bindings;
 import org.glassfish.jersey.internal.inject.Binding;
-import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
@@ -91,9 +90,9 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
     @Override
     public void initialize(final InjectionManager injectionManager) {
         this.injectionManager = injectionManager;
-        final InstanceBinding<EjbComponentProvider> descriptor = Bindings.service(EjbComponentProvider.this)
-            .to(ResourceMethodInvocationHandlerProvider.class);
-        this.injectionManager.register(descriptor);
+        this.injectionManager.register(
+            Bindings.service(EjbComponentProvider.this)
+                    .to(ResourceMethodInvocationHandlerProvider.class));
     }
 
 

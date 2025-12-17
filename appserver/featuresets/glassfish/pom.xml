@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>featuresets</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -292,7 +292,6 @@
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>antlr</artifactId>
-            <version>${antlr.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

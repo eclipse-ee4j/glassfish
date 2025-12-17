@@ -10,6 +10,7 @@ SYNOPSIS
            [--enabled={false|true}]
            [--description description]
            [--property (property=value)[:name=value]*]
+           [--sqlFileName=sqlFileName]
            [--target target]
            jndi_name
 
@@ -36,6 +37,10 @@ OPTIONS
 
        --property
            Optional attribute name/value pairs for configuring the resource.
+           
+       --sqlFileName
+           File with SQL statements (one per line, terminated by a ";") to be executed against
+           the JDBC resource specified by the jndi_name operand. 
 
        --target
            This option helps specify the target to which you are deploying.

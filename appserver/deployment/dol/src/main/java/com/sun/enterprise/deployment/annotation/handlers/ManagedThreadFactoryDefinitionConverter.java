@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,6 +71,10 @@ class ManagedThreadFactoryDefinitionConverter extends
         LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
         ManagedThreadFactoryDefinitionData data = new ManagedThreadFactoryDefinitionData();
         data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        for (Class<?> clazz : annotation.qualifiers()) {
+            data.addQualifier(clazz.getCanonicalName());
+        }
+        data.setUseVirtualThreads(annotation.virtual());
         data.setContext(TranslatedConfigView.expandValue(annotation.context()));
         if (annotation.priority() <= 0) {
             data.setPriority(Thread.NORM_PRIORITY);
@@ -82,19 +86,24 @@ class ManagedThreadFactoryDefinitionConverter extends
 
 
     @Override
-    void merge(ManagedThreadFactoryDefinitionData annotationData,
-        ManagedThreadFactoryDefinitionData descriptorData) {
-        LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
-        if (!annotationData.getName().equals(descriptorData.getName())) {
+    void merge(ManagedThreadFactoryDefinitionData annotation, ManagedThreadFactoryDefinitionData descriptor) {
+        LOG.log(Level.DEBUG, "merge(annotation={0}, descriptor={1})", annotation, descriptor);
+        if (!annotation.getName().equals(descriptor.getName())) {
             throw new IllegalArgumentException("Cannot merge managed thread factories with different names: "
-                + annotationData.getName() + " x " + descriptorData.getName());
+                + annotation.getName() + " x " + descriptor.getName());
         }
-        if (descriptorData.getPriority() == -1 && annotationData.getPriority() != -1) {
-            descriptorData.setPriority(annotationData.getPriority());
+
+        mergeQualifiers(annotation, descriptor);
+
+        if (!descriptor.getUseVirtualThreads()) {
+            descriptor.setUseVirtualThreads(annotation.getUseVirtualThreads());
         }
-        if (descriptorData.getContext() == null && annotationData.getContext() != null
-            && !annotationData.getContext().isBlank()) {
-            descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));
+        if (descriptor.getPriority() == -1 && annotation.getPriority() != -1) {
+            descriptor.setPriority(annotation.getPriority());
+        }
+        if (descriptor.getContext() == null && annotation.getContext() != null
+            && !annotation.getContext().isBlank()) {
+            descriptor.setContext(TranslatedConfigView.expandValue(annotation.getContext()));
         }
     }
 }

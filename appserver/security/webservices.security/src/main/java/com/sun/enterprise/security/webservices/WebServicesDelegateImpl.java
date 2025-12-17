@@ -20,7 +20,7 @@ package com.sun.enterprise.security.webservices;
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
+import com.sun.enterprise.security.ee.authentication.jakarta.WebServicesDelegate;
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;

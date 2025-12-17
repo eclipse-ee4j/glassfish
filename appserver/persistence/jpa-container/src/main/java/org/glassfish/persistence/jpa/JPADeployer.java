@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,11 +33,10 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -48,19 +47,19 @@ import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.deployment.common.SimpleDeployer;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_DISABLED;
 import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
 
 /**
@@ -74,7 +73,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     private static Logger logger = LogDomains.getLogger(PersistenceUnitLoader.class, LogDomains.PERSISTENCE_LOGGER + ".jpadeployer");
 
     /** Key used to get/put emflists in transientAppMetadata */
-    private static final String EMF_KEY = EntityManagerFactory.class.toString();
+    private static final String ENTITY_MANAGER_FACTORY_KEY = EntityManagerFactory.class.toString();
 
     @Inject
     private ConnectorRuntime connectorRuntime;
@@ -104,70 +103,19 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
             new Class[] { Application.class } /* requires Application from dol */);
     }
 
-    @Override
-    protected void generateArtifacts(DeploymentContext dc) throws DeploymentException {
-        // Noting to generate yet!!
-    }
-
-    @Override
-    protected void cleanArtifacts(DeploymentContext deploymentContext) throws DeploymentException {
-        // Drop tables if needed on undeploy.
-        OpsParams params = deploymentContext.getCommandParameters(OpsParams.class);
-        if (params.origin.isUndeploy() && isDas()) {
-
-            boolean hasScopedResource = false;
-            String appName = params.name();
-            ApplicationInfo appInfo = applicationRegistry.get(appName);
-            Application application = appInfo.getMetaData(Application.class);
-            Set<BundleDescriptor> bundles = application.getBundleDescriptors();
-
-            // Iterate through all the bundles of the app and collect pu references in
-            // referencedPus
-            for (BundleDescriptor bundle : bundles) {
-                Collection<? extends PersistenceUnitDescriptor> pusReferencedFromBundle = bundle.findReferencedPUs();
-                for (PersistenceUnitDescriptor pud : pusReferencedFromBundle) {
-                    hasScopedResource = hasScopedResource(pud);
-                    if (hasScopedResource) {
-                        break;
-                    }
-                }
-            }
-
-            // If there are scoped resources, deploy them so that they are accessible for
-            // Java2DB to delete tables.
-            if (hasScopedResource) {
-                connectorRuntime.registerDataSourceDefinitions(application);
-            }
-
-            Java2DBProcessorHelper helper = new Java2DBProcessorHelper(deploymentContext);
-            helper.init();
-            helper.createOrDropTablesInDB(false, "JPA");
-
-            // If there are scoped resources, undeploy them.
-            if (hasScopedResource) {
-                connectorRuntime.unRegisterDataSourceDefinitions(application);
-            }
-        }
-    }
-
-    @Override
-    public <V> V loadMetaData(Class<V> type, DeploymentContext context) {
-        return null;
-    }
-
     /**
-     * EMFs for refered pus are created and stored in JPAApplication instance. The
+     * EntityManagerFactories for persistence units are created and stored in JPAApplication instance. The
      * JPAApplication instance is stored in given DeploymentContext to be retrieved
      * by load
      */
     @Override
-    public boolean prepare(DeploymentContext context) {
-        boolean prepared = super.prepare(context);
-        if (prepared) {
-            if (isEMFCreationRequired(context)) {
-                createEMFs(context);
-            }
+    public boolean prepare(DeploymentContext deploymentContext) {
+        boolean prepared = super.prepare(deploymentContext);
+
+        if (prepared && isEntityManagerFactoryCreationRequired(deploymentContext)) {
+            createEntityManagerFactories(deploymentContext);
         }
+
         return prepared;
     }
 
@@ -177,176 +125,86 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     }
 
     @Override
-    public void event(Event<?> event) {
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("JpaDeployer.event():" + event.name());
+    protected void cleanArtifacts(DeploymentContext deploymentContext) throws DeploymentException {
+        // Drop tables if needed on undeploy.
+        OpsParams params = deploymentContext.getCommandParameters(OpsParams.class);
+        if (params.origin.isUndeploy() && isDas()) {
+
+            Application application = applicationRegistry.get(params.name()).getMetaData(Application.class);
+
+            boolean hasScopedResource = hasScopedResource(application);
+
+            // If there are scoped resources, deploy them so that they are accessible for
+            // Java2DB to delete tables.
+            if (hasScopedResource) {
+                connectorRuntime.registerDataSourceDefinitions(application);
+            }
+
+            Java2DBProcessorHelper java2DBProcessor = new Java2DBProcessorHelper(deploymentContext);
+            java2DBProcessor.init();
+            java2DBProcessor.createOrDropTablesInDB(false, "JPA");
+
+            // If there are scoped resources, undeploy them.
+            if (hasScopedResource) {
+                connectorRuntime.unRegisterDataSourceDefinitions(application);
+            }
         }
+    }
+
+    @Override
+    public void event(Event<?> event) {
+        logger.log(FINE, () -> "JpaDeployer.event():" + event.name());
 
         if (event.is(APPLICATION_PREPARED)) {
             ExtendedDeploymentContext context = (ExtendedDeploymentContext) event.hook();
             DeployCommandParameters deployCommandParameters = context.getCommandParameters(DeployCommandParameters.class);
-            if (logger.isLoggable(FINE)) {
-                logger.fine("JpaDeployer.event(): Handling APPLICATION_PREPARED origin is:" + deployCommandParameters.origin);
-            }
 
-            // When create-application-ref is called for an already deployed app,
-            // APPLICATION_PREPARED will be sent on DAS
-            // Obviously there is no new emf created for this event and we need not do
-            // java2db also. Ignore the event
+            logger.log(FINE, () -> "JpaDeployer.event(): Handling APPLICATION_PREPARED origin is:" + deployCommandParameters.origin);
+
+            // When create-application-ref is called for an already deployed application,
+            // APPLICATION_PREPARED will be sent on DAS.
+            //
+            // Obviously there is no new EntityManagerFactory created for this event and we need not do
+            // java2db also. Ignore the event.
+            //
             // However, if target for create-application-ref is DAS => the app was deployed
-            // on other instance but now
-            // an application-ref is being created on DAS. Process the app
+            // on other instance but now/ an application-ref is being created on DAS. Process the app.
             if (!deployCommandParameters.origin.isCreateAppRef() || isTargetDas(deployCommandParameters)) {
-                Map<String, ExtendedDeploymentContext> deploymentContexts = context.getModuleDeploymentContexts();
-                for (DeploymentContext deploymentContext : deploymentContexts.values()) {
-                    // bundle level pus
+
+                // Bundle level persistence units
+                for (DeploymentContext deploymentContext : context.getModuleDeploymentContexts().values()) {
                     iterateInitializedPUsAtApplicationPrepare(deploymentContext);
                 }
-                // app level pus
+
+                // Application level persistence unit
                 iterateInitializedPUsAtApplicationPrepare(context);
             }
-        } else if (event.is(Deployment.APPLICATION_DISABLED)) {
+        } else if (event.is(APPLICATION_DISABLED)) {
             logger.fine("JpaDeployer.event(): APPLICATION_DISABLED");
-            // APPLICATION_DISABLED will be generated when an app is
-            // disabled/undeployed/appserver goes down.
-            // close all the emfs created for this app
+
+            // APPLICATION_DISABLED will be generated when an application is
+            // disabled or undeployed, or the appserver goes down.
+            //
+            // Close all the EntityManagerFactories created for this application.
             closeEntityManagerFactories((ApplicationInfo) event.hook());
         }
     }
 
-    /**
-     * Returns unique identifier for this pu within application
-     *
-     * @param pud The given pu
-     * @return Absolute pu root + pu name
-     */
-    private static String getUniquePuIdentifier(PersistenceUnitDescriptor pud) {
-        return pud.getAbsolutePuRoot() + pud.getName();
-    }
 
-    private static boolean isTargetDas(DeployCommandParameters deployCommandParameters) {
-        // TODO discuss with Hong. This comparison should be encapsulated somewhere
-        return "server".equals(deployCommandParameters.target);
-    }
 
-    private boolean isDas() {
-        return serverEnvironment.isDas() || serverEnvironment.isEmbedded();
-    }
+    // ### Private methods
 
-    private void closeEntityManagerFactories(ApplicationInfo appInfo) {
-        // Suppress warning required as there is no way to pass equivalent of
-        // List<EMF>.class to the method
-        @SuppressWarnings("unchecked")
-        List<EntityManagerFactory> emfsCreatedForThisApp = appInfo.getTransientAppMetaData(EMF_KEY, List.class);
-        if (emfsCreatedForThisApp != null) {
 
-            // Events are always dispatched to all registered listeners.
-            // emfsCreatedForThisApp will be null for an app that does not have PUs.
-
-            for (EntityManagerFactory entityManagerFactory : emfsCreatedForThisApp) {
-                entityManagerFactory.close();
-            }
-
-            // We no longer have the emfs in open state clear the list.
-            // On app enable(after a disable), for a cluster, the deployment framework calls
-            // prepare() for instances but not for DAS.
-            // So on DAS, at a disable, the emfs will be closed and we will not attempt to
-            // close emfs when appserver goes down even if the app is re-enabled.
-            emfsCreatedForThisApp.clear();
-        }
-    }
-
-    /**
-     * CreateEMFs and save them in persistence
-     *
-     * @param context
-     */
-    private void createEMFs(DeploymentContext context) {
-        Application application = context.getModuleMetaData(Application.class);
-        Set<BundleDescriptor> bundles = application.getBundleDescriptors();
-
-        // Iterate through all the bundles for the app and collect pu references in
-        // referencedPus
-        boolean hasScopedResource = false;
-        final List<PersistenceUnitDescriptor> referencedPus = new ArrayList<>();
-        for (BundleDescriptor bundle : bundles) {
-            Collection<? extends PersistenceUnitDescriptor> pusReferencedFromBundle = bundle.findReferencedPUs();
-            for (PersistenceUnitDescriptor pud : pusReferencedFromBundle) {
-                referencedPus.add(pud);
-                if (hasScopedResource(pud)) {
-                    hasScopedResource = true;
-                }
-            }
-        }
-        if (hasScopedResource) {
-            // Scoped resources are registered by connector runtime after prepare(). That is
-            // too late for JPA
-            // This is a hack to initialize connectorRuntime for scoped resources
-            connectorRuntime.registerDataSourceDefinitions(application);
-        }
-
-        // Iterate through all the PUDs for this bundle and if it is referenced, load
-        // the corresponding pu
-        PersistenceUnitDescriptorIterator pudIterator = new PersistenceUnitDescriptorIterator() {
-            @Override
-            void visitPUD(PersistenceUnitDescriptor pud, DeploymentContext context) {
-                if (referencedPus.contains(pud)) {
-                    boolean isDas = isDas();
-
-                    // While running in embedded mode, it is not possible to guarantee that entity
-                    // classes are not loaded by the app classloader before transformers are
-                    // installed.
-                    //
-                    // If that happens, weaving will not take place and EclipseLink will throw up.
-                    // Provide users an option to disable weaving by passing the flag.
-                    // Note that we enable weaving if not explicitly disabled by user
-                    boolean weavingEnabled = Boolean
-                            .parseBoolean(startupContext.getArguments().getProperty("org.glassfish.persistence.embedded.weaving.enabled", "true"));
-
-                    ProviderContainerContractInfo providerContainerContractInfo = weavingEnabled
-                            ? new ServerProviderContainerContractInfo(context, connectorRuntime, isDas)
-                            : new EmbeddedProviderContainerContractInfo(context, connectorRuntime, isDas);
-
-                    try {
-                        ((ExtendedDeploymentContext) context).prepareScratchDirs();
-                    } catch (IOException e) {
-                        // There is no way to recover if we are not able to create the scratch dirs.
-                        // Just rethrow the exception.
-                        throw new RuntimeException(e);
-                    }
-
-                    PersistenceUnitLoader persistenceUnitLoader = new PersistenceUnitLoader(pud, providerContainerContractInfo);
-                    // Store the puLoader in context. It is retrieved to execute java2db and to
-                    // store the loaded emfs in a JPAApplicationContainer object for cleanup
-                    context.addTransientAppMetaData(getUniquePuIdentifier(pud), persistenceUnitLoader);
-                }
-            }
-        };
-        pudIterator.iteratePUDs(context);
-    }
-
-    /**
-     * @return true if given <code>pud</code> is using scoped resource
-     */
-    private boolean hasScopedResource(PersistenceUnitDescriptor persistenceUnitDescriptor) {
-        boolean hasScopedResource = false;
-        SimpleJndiName jtaDataSource = persistenceUnitDescriptor.getJtaDataSource();
-        if (jtaDataSource != null && jtaDataSource.hasJavaPrefix()) {
-            hasScopedResource = true;
-        }
-
-        return hasScopedResource;
-    }
 
     /**
      * @param context
-     * @return true if emf creation is required false otherwise
+     * @return true if EntityManagerFactory creation is required false otherwise
      */
-    private boolean isEMFCreationRequired(DeploymentContext context) {
+    private boolean isEntityManagerFactoryCreationRequired(DeploymentContext context) {
         /*
-         * Here are various use cases that needs to be handled. This method handles EMF
-         * creation part, APPLICATION_PREPARED event handle handles java2db and closing
-         * of emf
+         * Here are various use cases that needs to be handled. This method handles
+         * EntityManagerFactory creation part, APPLICATION_PREPARED event handle handles
+         * java2db and closing of EntityManagerFactory
          *
          * To summarize, -Unconditionally create EMFs on DAS for java2db if it is
          * deploy. We will close this EMF in APPLICATION_PREPARED after java2db if
@@ -396,9 +254,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         boolean enabled = deployCommandParameters.enabled;
         boolean isDas = isDas();
 
-        if (logger.isLoggable(FINER)) {
-            logger.finer("isEMFCreationRequired(): deploy: " + deploy + " enabled: " + enabled + " isDas: " + isDas);
-        }
+        logger.log(FINER, () -> "isEMFCreationRequired(): deploy: " + deploy + " enabled: " + enabled + " isDas: " + isDas);
 
         if (isDas) {
             if (deploy) {
@@ -409,9 +265,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                 // We reach here for (!deploy && das) => server restart or enabling a disabled
                 // app on DAS
                 boolean isTargetDas = isTargetDas(deployCommandParameters);
-                if (logger.isLoggable(FINER)) {
-                    logger.finer("isEMFCreationRequired(): isTargetDas: " + isTargetDas);
-                }
+                logger.log(FINER, () -> "isEMFCreationRequired(): isTargetDas: " + isTargetDas);
 
                 if (enabled && isTargetDas) {
                     createEntityManagerFactories = true;
@@ -431,128 +285,290 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     }
 
     /**
-     * Does java2db on DAS and saves emfs created during prepare to ApplicationInfo
-     * maintained by DOL. ApplicationInfo is not available during prepare() so we
-     * can not directly use it there.
+     * Returns unique identifier for this persistence unit within the application.
+     *
+     * @param persistenceUnitDescriptor The given persistence unit
+     * @return Absolute persistence unit root + persistence unit name
+     */
+    private static String getUniquePersistenceUnitIdentifier(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+        return
+            persistenceUnitDescriptor.getAbsolutePuRoot() +
+            persistenceUnitDescriptor.getName();
+    }
+
+    private static boolean isTargetDas(DeployCommandParameters deployCommandParameters) {
+        return "server".equals(deployCommandParameters.target);
+    }
+
+    private boolean isDas() {
+        return serverEnvironment.isDas() || serverEnvironment.isEmbedded();
+    }
+
+    /**
+     * Create Entity Manager Factories and save them in persistence.
+     *
+     * @param deploymentContext
+     */
+    private void createEntityManagerFactories(DeploymentContext deploymentContext) {
+
+        // EntityManager etc can be injected using CDI as well. Since CDI has the ability to programmatically
+        // look up beans, we can't check whether the persistence unit is actually referenced as a previous
+        // optimisation did.
+        Application application = deploymentContext.getModuleMetaData(Application.class);
+        if (hasScopedResource(application)) {
+            // Scoped resources are registered by connector runtime after prepare().
+            // That is too late for Jakarta Persistence.
+            //
+            // This is a hack to initialize connectorRuntime for scoped resources
+            connectorRuntime.registerDataSourceDefinitions(application);
+        }
+
+        // Iterate through all the processPersistenceUnitDescriptors for this bundle and load the corresponding persistence unit
+        for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
+            loadPersistenceUnit(persistenceUnitDescriptor, deploymentContext);
+        }
+    }
+
+    private boolean hasScopedResource(Application application) {
+        for (var bundleDescriptor : application.getBundleDescriptors()) {
+
+            Set<PersistenceUnitDescriptor> allPersistenceUnitDescriptors = new HashSet<>();
+
+            // Add persistenceUnitDescriptors from the current bundle
+            allPersistenceUnitDescriptors.addAll(getPersistenceUnitDescriptors(bundleDescriptor));
+
+            // Find (obscure) persistence units referenced by @PersistenceContext annotations that reside
+            // in places like ear/lib.
+            //
+            // E.g.
+            // @PersistenceContext(
+            //     unitName="lib/ejb-ejb30-persistence-tx_propagation-par1.jar#em",
+            //     type=EXTENDED);
+            // EntityManager extendedEM;
+            //
+            // The above calls to getPersistenceUnitDescriptors() won't find these.
+            //
+            // Alternatively we can use:
+            //
+            // application.getExtensionsDescriptors(PersistenceUnitsDescriptor.class)
+            allPersistenceUnitDescriptors.addAll(bundleDescriptor.findReferencedPUs());
+
+            for (var persistenceUnitDescriptor : allPersistenceUnitDescriptors) {
+                if (hasScopedResource(persistenceUnitDescriptor)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return true if given <code>persistenceUnitDescriptor</code> is using scoped resource
+     */
+    private boolean hasScopedResource(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+        SimpleJndiName jtaDataSource = persistenceUnitDescriptor.getJtaDataSource();
+
+        return jtaDataSource != null && jtaDataSource.hasJavaPrefix();
+    }
+
+    private static List<PersistenceUnitDescriptor> getPersistenceUnitDescriptors(DeploymentContext context) {
+        BundleDescriptor bundle = DOLUtils.getCurrentBundleForContext(context);
+        if (bundle == null) {
+            // It can be null for non-Jakarta EE type of application deployment. e.g., issue 15869
+            return emptyList();
+        }
+
+        return getPersistenceUnitDescriptors(bundle);
+    }
+
+    private static List<PersistenceUnitDescriptor> getPersistenceUnitDescriptors(BundleDescriptor bundle) {
+        List<PersistenceUnitDescriptor> persistenceUnitDescriptors = new ArrayList<>();
+
+        for (PersistenceUnitsDescriptor persistenceUnitsDescriptor : bundle.getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
+            persistenceUnitDescriptors.addAll(persistenceUnitsDescriptor.getPersistenceUnitDescriptors());
+        }
+
+        return persistenceUnitDescriptors;
+    }
+
+    private void loadPersistenceUnit(PersistenceUnitDescriptor persistenceUnitDescriptor, DeploymentContext deploymentContext) {
+        boolean isDas = isDas();
+
+        // While running in embedded mode, it is not possible to guarantee that entity
+        // classes are not loaded by the app classloader before transformers are
+        // installed.
+        //
+        // If that happens, weaving will not take place and EclipseLink will throw up.
+        // Provide users an option to disable weaving by passing the flag.
+        // Note that we enable weaving if not explicitly disabled by user
+        boolean weavingEnabled = Boolean
+                .parseBoolean(startupContext.getArguments().getProperty("org.glassfish.persistence.embedded.weaving.enabled", "true"));
+
+        ProviderContainerContractInfo providerContainerContractInfo = weavingEnabled
+                ? new ServerProviderContainerContractInfo(deploymentContext, connectorRuntime, isDas)
+                : new EmbeddedProviderContainerContractInfo(deploymentContext, connectorRuntime, isDas);
+
+        try {
+            ((ExtendedDeploymentContext) deploymentContext).prepareScratchDirs();
+        } catch (IOException e) {
+            // There is no way to recover if we are not able to create the scratch dirs.
+            // Just rethrow the exception.
+            throw new RuntimeException(e);
+        }
+
+        // Instantiating the PersistenceUnitLoader instance has the side-effect of actually loading the persistence unit
+        PersistenceUnitLoader persistenceUnitLoader = new PersistenceUnitLoader(persistenceUnitDescriptor, providerContainerContractInfo);
+
+        // Store the persistenceUnitLoader in context.
+        //
+        // It is retrieved to execute java2db and to store the loaded entity manager factories in a
+        // JPAApplicationContainer object for cleanup
+        deploymentContext.addTransientAppMetaData(
+            getUniquePersistenceUnitIdentifier(persistenceUnitDescriptor),
+            persistenceUnitLoader);
+    }
+
+    /**
+     * Does java2db (schema generation) on DAS and saves entity manager factories created during prepare to ApplicationInfo
+     * maintained by DOL.
+     *
+     * <p>
+     * ApplicationInfo is not available during prepare() so we can not directly use it there.
      *
      * @param context
      */
     private void iterateInitializedPUsAtApplicationPrepare(final DeploymentContext context) {
 
-        final DeployCommandParameters deployCommandParameters = context.getCommandParameters(DeployCommandParameters.class);
-        String appName = deployCommandParameters.name;
-        final ApplicationInfo appInfo = applicationRegistry.get(appName);
+        // PersistenceUnitsDescriptor corresponds to persistence.xml.
+        // A bundle can only have one persistence.xml except/ when the bundle is an application
+        // which can have multiple persitence.xml under jars in root of ear and lib.
 
-        // iterate through all the PersistenceUnitDescriptor for this bundle.
-        PersistenceUnitDescriptorIterator pudIterator = new PersistenceUnitDescriptorIterator() {
-            @Override
-            void visitPUD(PersistenceUnitDescriptor pud, DeploymentContext context) {
-                // PersistenceUnitsDescriptor corresponds to persistence.xml. A bundle can only
-                // have one persitence.xml except
-                // when the bundle is an application which can have multiple persitence.xml
-                // under jars in root of ear and lib.
-                PersistenceUnitLoader persistenceUnitLoader = context.getTransientAppMetaData(getUniquePuIdentifier(pud), PersistenceUnitLoader.class);
-                if (persistenceUnitLoader != null) { // We have initialized PU
-                    boolean saveEntityManagerFactory = true;
-                    if (isDas()) { // We do validation and execute Java2DB only on DAS
+        for (var descriptor : getPersistenceUnitDescriptors(context)) {
+            doPersistenceSchemaGeneration(descriptor, context);
+        }
+    }
 
-                        // APPLICATION_PREPARED will be called for create-application-ref
-                        // also. We should perform java2db only on first deploy
-                        if (deployCommandParameters.origin.isDeploy()) {
+    private void doPersistenceSchemaGeneration(PersistenceUnitDescriptor persistenceUnitDescriptor, DeploymentContext deploymentContext) {
 
-                            // Create EntityManager to trigger validation on PU
-                            EntityManagerFactory entityManagerFactory = persistenceUnitLoader.getEMF();
-                            EntityManager entityManager = null;
-                            try {
-                                // Create EM to trigger any validations that are lazily performed by the
-                                // provider
-                                // EM creation also triggers DDL generation by provider.
-                                entityManager = entityManagerFactory.createEntityManager();
-                            } catch (PersistenceException e) {
-                                // Exception indicates something went wrong while performing validation. Clean
-                                // up and rethrow to fail deployment
-                                entityManagerFactory.close();
+        // Get back the loader that we stored in loadPersistenceUnit()
+        PersistenceUnitLoader persistenceUnitLoader =
+            deploymentContext.getTransientAppMetaData(
+                                getUniquePersistenceUnitIdentifier(persistenceUnitDescriptor),
+                                PersistenceUnitLoader.class);
 
-                                // Need to wrap exception in DeploymentException else deployment will not
-                                // fail.
-                                throw new DeploymentException(e);
-                            } finally {
-                                if (entityManager != null) {
-                                    entityManager.close();
-                                }
-                            }
+        if (persistenceUnitLoader == null) {
+            return;
+        }
 
-                            persistenceUnitLoader.doJava2DB();
+        // We have initialized persistence unit
 
-                            boolean enabled = deployCommandParameters.enabled;
-                            boolean isTargetDas = isTargetDas(deployCommandParameters);
-                            if (logger.isLoggable(FINER)) {
-                                logger.finer("iterateInitializedPUsAtApplicationPrepare(): enabled: " + enabled + " isTargetDas: "
-                                        + isTargetDas);
-                            }
+        boolean saveEntityManagerFactory = true;
 
-                            if (!isTargetDas || !enabled) {
-                                // We are on DAS but target != das or app is not enabled on das => The EMF was
-                                // just created for Java2Db. Close it.
-                                persistenceUnitLoader.getEMF().close();
-                                saveEntityManagerFactory = false; // Do not save EMF. We have already closed it
-                            }
-                        }
-                    }
+        DeployCommandParameters deployCommandParameters = deploymentContext.getCommandParameters(DeployCommandParameters.class);
 
-                    if (saveEntityManagerFactory) {
-                        // Save EntityManagerFactory in ApplicationInfo so that it can be retrieved and closed for cleanup
+        // We do validation and execute Java2DB only on DAS
+        if (isDas()) {
 
-                        // Suppress warning required as there is no way to pass equivalent of
-                        // List<EMF>.class to the method
-                        @SuppressWarnings("unchecked")
-                        List<EntityManagerFactory> emfsCreatedForThisApp = appInfo.getTransientAppMetaData(EMF_KEY, List.class);
-                        if (emfsCreatedForThisApp == null) {
-                            // First EMF for this app, initialize
-                            emfsCreatedForThisApp = new ArrayList<>();
-                            appInfo.addTransientAppMetaData(EMF_KEY, emfsCreatedForThisApp);
-                        }
-                        emfsCreatedForThisApp.add(persistenceUnitLoader.getEMF());
-                    } // if (saveEMF)
-                } // if(puLoader != null)
+            // APPLICATION_PREPARED will be called for create-application-ref
+            // also. We should perform java2db only on first deploy
+            if (deployCommandParameters.origin.isDeploy()) {
+
+                EntityManagerFactory entityManagerFactory = persistenceUnitLoader.getEntityManagerFactory();
+
+                // Create EntityManager to trigger validation on persistence unit which is lazily performed by the
+                // provider.
+                //
+                // Entity manager creation also triggers DDL generation by provider.
+                try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+
+                } catch (PersistenceException e) {
+                    // Exception indicates something went wrong while performing validation. Clean
+                    // up and rethrow to fail deployment
+                    entityManagerFactory.close();
+
+                    // Need to wrap exception in DeploymentException else deployment will not fail.
+                    throw new DeploymentException(e);
+                }
+
+                persistenceUnitLoader.doJava2DB();
+
+                boolean enabled = deployCommandParameters.enabled;
+                boolean isTargetDas = isTargetDas(deployCommandParameters);
+
+                logger.log(FINER, () ->
+                    "iterateInitializedPUsAtApplicationPrepare(): enabled: " + enabled + " isTargetDas: " + isTargetDas);
+
+                if (!isTargetDas || !enabled) {
+                    // We are on DAS but target != das or app is not enabled on das => The entityManagerFactory was
+                    // only created for Java2Db. Close it.
+                    entityManagerFactory.close();
+                    saveEntityManagerFactory = false; // Do not save EMF. We have already closed it
+                }
             }
-        };
+        }
 
-        pudIterator.iteratePUDs(context);
+        if (saveEntityManagerFactory) {
+            saveEntityManagerFactory(
+                applicationRegistry.get(deployCommandParameters.name),
+                persistenceUnitLoader.getEntityManagerFactory());
+        }
     }
 
     /**
-     * Helper class to centralize the code for loop that iterates through all the
-     * PersistenceUnitDescriptor for a given DeploymentContext (and hence the
-     * corresponding bundle)
+     * Get read-only list of EMFs for persistence units defined in application represented by {@code applicationInfo}
+     * @param applicationInfo Identifies the application
+     * @return Read-only list of EMFs
      */
-    private static abstract class PersistenceUnitDescriptorIterator {
-        /**
-         * Iterate through all the PersistenceUnitDescriptors for the given context (and
-         * hence corresponding bundle) and call visitPUD for each of them
-         *
-         * @param context
-         */
-        void iteratePUDs(DeploymentContext context) {
-            RootDeploymentDescriptor currentBundle = DOLUtils.getCurrentBundleForContext(context);
-            if (currentBundle != null) { // it can be null for non-JavaEE type of application deployment. e.g., issue
-                                         // 15869
-                Collection<PersistenceUnitsDescriptor> pusDescriptorForThisBundle =
-                    currentBundle.getExtensionsDescriptors(PersistenceUnitsDescriptor.class);
+    public List<EntityManagerFactory> getEntityManagerFactories(ApplicationInfo applicationInfo) {
+        @SuppressWarnings("unchecked")
+        List<EntityManagerFactory> emfsCreatedForThisApp = applicationInfo.getTransientAppMetaData(ENTITY_MANAGER_FACTORY_KEY, List.class);
+        return emfsCreatedForThisApp != null
+                ? Collections.unmodifiableList(emfsCreatedForThisApp)
+                : List.of();
+    }
 
-                for (PersistenceUnitsDescriptor persistenceUnitsDescriptor : pusDescriptorForThisBundle) {
-                    for (PersistenceUnitDescriptor pud : persistenceUnitsDescriptor.getPersistenceUnitDescriptors()) {
-                        visitPUD(pud, context);
-                    }
-                }
-            }
+    /**
+     * Save EntityManagerFactory in ApplicationInfo so that it can be retrieved and closed for cleanup.
+     *
+     * @param applicationInfo
+     * @param entityManagerFactory
+     */
+    private void saveEntityManagerFactory(ApplicationInfo applicationInfo, EntityManagerFactory entityManagerFactory) {
+        @SuppressWarnings("unchecked")
+        List<EntityManagerFactory> emfsCreatedForThisApp = applicationInfo.getTransientAppMetaData(ENTITY_MANAGER_FACTORY_KEY, List.class);
 
+        if (emfsCreatedForThisApp == null) {
+            // First EntityManagerFactory for this app, initialize
+            emfsCreatedForThisApp = new ArrayList<>();
+            applicationInfo.addTransientAppMetaData(ENTITY_MANAGER_FACTORY_KEY, emfsCreatedForThisApp);
         }
 
-        /**
-         * Called for each PersistenceUnitDescriptor visited by this iterator.
-         */
-        abstract void visitPUD(PersistenceUnitDescriptor pud, DeploymentContext context);
-
+        emfsCreatedForThisApp.add(entityManagerFactory);
     }
+
+    private void closeEntityManagerFactories(ApplicationInfo appInfo) {
+        @SuppressWarnings("unchecked")
+        List<EntityManagerFactory> entityManagerFactoriesCreatedForThisApp =
+            appInfo.getTransientAppMetaData(ENTITY_MANAGER_FACTORY_KEY, List.class);
+
+        if (entityManagerFactoriesCreatedForThisApp != null) {
+
+            // Events are always dispatched to all registered listeners.
+            // emfsCreatedForThisApp will be null for an app that does not have PUs.
+
+            for (EntityManagerFactory entityManagerFactory : entityManagerFactoriesCreatedForThisApp) {
+                entityManagerFactory.close();
+            }
+
+            // We no longer have the entity manager factories in open state clear the list.
+            //
+            // On app enable(after a disable), for a cluster, the deployment framework calls
+            // prepare() for instances but not for DAS.
+            // So on DAS, at a disable, the entity manager factories will be closed and we will not attempt to
+            // close entity manager factories when appserver goes down even if the app is re-enabled.
+            entityManagerFactoriesCreatedForThisApp.clear();
+        }
+    }
+
 }

@@ -17,10 +17,11 @@ jobs:
         cache: maven
     - name: Build Docs
       run: |
-        mvn -B -e -ntp install -pl :glassfish-qa-config -am
+        mvn -B -e -ntp install -pl :glassfish-qa-config,:glassfish-jul-extension -am
         mvn -B -e -ntp clean install -f docs
     - uses: actions/upload-artifact@v4
       with:
         name: docs-pdfs
         path: docs/**/*.pdf
         retention-days: 7
+

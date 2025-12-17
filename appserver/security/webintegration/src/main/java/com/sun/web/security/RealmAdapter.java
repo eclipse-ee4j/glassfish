@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,13 +31,12 @@ import com.sun.enterprise.security.auth.login.DigestCredentials;
 import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestParameterGenerator;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.HttpAlgorithmParameterImpl;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.NestedDigestAlgoParamImpl;
-import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
-import com.sun.enterprise.security.ee.jmac.callback.ServerContainerCallbackHandler;
+import com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy;
+import com.sun.enterprise.security.ee.authentication.jakarta.ConfigDomainParser;
+import com.sun.enterprise.security.ee.authentication.jakarta.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManager;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
@@ -64,10 +63,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.AccessController;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -102,7 +99,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.epicyro.config.helper.Caller;
 import org.glassfish.epicyro.config.helper.CallerPrincipal;
 import org.glassfish.epicyro.config.helper.HttpServletConstants;
-import org.glassfish.epicyro.config.helper.PriviledgedAccessController;
 import org.glassfish.epicyro.services.BaseAuthenticationService;
 import org.glassfish.epicyro.services.DefaultAuthenticationService;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
@@ -119,8 +115,9 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
 import static com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestParameterGenerator.HTTP_DIGEST;
-import static com.sun.enterprise.security.ee.jmac.AuthMessagePolicy.WEB_BUNDLE;
-import static com.sun.enterprise.security.ee.web.integration.WebSecurityManager.getContextID;
+import static com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy.WEB_BUNDLE;
+import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.getContextID;
+import static com.sun.enterprise.util.Utility.isAllNull;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
@@ -147,6 +144,7 @@ import static org.apache.catalina.ContainerEvent.BEFORE_LOGOUT;
 import static org.apache.catalina.ContainerEvent.BEFORE_POST_AUTHENTICATION;
 import static org.apache.catalina.Globals.WRAPPED_REQUEST;
 import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
+import static org.apache.catalina.realm.Constants.FORM_METHOD;
 import static org.glassfish.epicyro.config.helper.HttpServletConstants.POLICY_CONTEXT;
 import static org.glassfish.epicyro.config.helper.HttpServletConstants.REGISTER_SESSION;
 
@@ -215,6 +213,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
     private String moduleID;
     private boolean isSystemApp;
+
     private BaseAuthenticationService authenticationService;
 
     @Inject
@@ -272,7 +271,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         this.webBundleDescriptor = (WebBundleDescriptor) descriptor;
 
         realmName = findRealmName(initialRealmName);
-        contextId = WebSecurityManager.getContextID(webBundleDescriptor);
+        contextId = getContextID(webBundleDescriptor);
         moduleID = webBundleDescriptor.getModuleID();
 
         collectRunAsPrincipals();
@@ -354,7 +353,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
         int isGranted = 0;
         try {
-            isGranted = securityManager.hasUserDataPermission(httpServletRequest, uri, method);
+            isGranted = securityManager.getAuthorizationService().hasUserDataPermission(httpServletRequest, uri, method);
         } catch (IllegalArgumentException e) {
             // end the request after getting IllegalArgumentException while checking
             // user data permission
@@ -413,7 +412,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                 disableProxyCaching(request, response, disableProxyCaching, securePagesWithPragma);
                 if (ssoEnabled) {
                     HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
-                    if (!getWebSecurityManager(true).permitAll(httpServletRequest)) {
+                    if (!getWebSecurityManager(true).getAuthorizationService().permitAll(httpServletRequest)) {
                         // create a session for protected sso association
                         httpServletRequest.getSession(true);
                     }
@@ -568,7 +567,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                         try {
                             context.fireContainerEvent(BEFORE_POST_AUTHENTICATION, null);
                             AuthStatus authStatus = serverAuthContext.secureResponse(messageInfo, null); // null serviceSubject
-                            result = AuthStatus.SEND_SUCCESS.equals(authStatus);
+                            result = AuthStatus.SUCCESS.equals(authStatus);
                         } finally {
                             context.fireContainerEvent(AFTER_POST_AUTHENTICATION, null);
                         }
@@ -605,7 +604,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         // currentRequest.getContextPath());
         String servletName = getCanonicalName(request);
 
-        boolean isGranted = manager.hasRoleRefPermission(servletName, role, principal);
+        boolean isGranted = manager.getAuthorizationService().hasRoleRefPermission(servletName, role, principal);
 
         LOG.log(FINE, "Checking if servlet {0} with principal {1} has role {2} isGranted: {3}",
             new Object[] {servletName, principal, role, isGranted});
@@ -654,7 +653,8 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         if (secMgr == null) {
             return false;
         }
-        return secMgr.hasRoleRefPermission(servletName, role, principal);
+
+        return secMgr.getAuthorizationService().hasRoleRefPermission(servletName, role, principal);
     }
 
     @Override
@@ -736,14 +736,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         // Sets the security context for Jakarta Authorization
         WebSecurityManager webSecurityManager = getWebSecurityManager(false);
         if (webSecurityManager != null) {
-
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                @Override
-                public Void run() {
-                    webSecurityManager.onLogout();
-                    return null;
-                }
-            });
+            webSecurityManager.onLogout();
         }
     }
 
@@ -781,10 +774,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
             // Sets the security context for Jakarta Authorization
             if (manager != null) {
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    manager.onLogin(request);
-                    return null;
-                });
+                manager.onLogin(request);
             }
 
             return true;
@@ -795,7 +785,6 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         }
     }
 
-    // BEGIN IASRI 4747594
     /**
      * Set the run-as principal into the SecurityContext when needed.
      *
@@ -970,7 +959,55 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
      * @exception IOException if an input/output error occurs
      */
     private boolean invokeWebSecurityManager(HttpRequest request, HttpResponse response, SecurityConstraint[] constraints) throws IOException {
+        if (isRequestFormPage(request)) {
+            return true;
+        }
 
+        setServletPath(request);
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+
+        LOG.log(FINE, () -> "[Web-Security] [ hasResourcePermission ]" +
+            " Principal: " + httpServletRequest.getUserPrincipal() +
+            " ContextPath: " + httpServletRequest.getContextPath());
+
+        WebSecurityManager webSecurityManager = getWebSecurityManager(true);
+        if (webSecurityManager == null) {
+            return false;
+        }
+
+        return webSecurityManager.getAuthorizationService().hasResourcePermission(httpServletRequest);
+    }
+
+    private boolean isRequestFormPage(HttpRequest request) {
+        initFormPages();
+
+        if (isAllNull(loginPage, errorPage)) {
+            return false;
+        }
+
+        String requestURI = request.getRequestPathMB().toString();
+        LOG.log(FINE, "requestURI: {0}, loginPage: {1}, errorPage: {2}",
+            new Object[] {requestURI, loginPage, errorPage});
+
+        if (loginPage != null && loginPage.equals(requestURI)) {
+            LOG.log(FINE, "Allowed access to login page {0}", loginPage);
+            return true;
+        }
+
+        if (errorPage != null && errorPage.equals(requestURI)) {
+            LOG.log(FINE, "Allowed access to error page {0}", errorPage);
+            return true;
+        }
+
+        if (requestURI.endsWith(Constants.FORM_ACTION)) {
+            LOG.log(FINE, "Allowed access to username/password submission ({0})", Constants.FORM_ACTION);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void initFormPages() {
         // allow access to form login related pages and targets
         // and the "j_security_check" action
         boolean evaluated = false;
@@ -989,7 +1026,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                     // and our Container is always a Context
                     Context context = (Context) getContainer();
                     LoginConfig config = context.getLoginConfig();
-                    if ((config != null) && (Constants.FORM_METHOD.equals(config.getAuthMethod()))) {
+                    if (config != null && FORM_METHOD.equals(config.getAuthMethod())) {
                         loginPage = config.getLoginPage();
                         errorPage = config.getErrorPage();
                     }
@@ -999,37 +1036,13 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                 rwLock.writeLock().unlock();
             }
         }
+    }
 
-        if (loginPage != null || errorPage != null) {
-            String requestURI = request.getRequestPathMB().toString();
-            LOG.log(FINE, "requestURI: {0}, loginPage: {1}, errorPage: {2}",
-                new Object[] {requestURI, loginPage, errorPage});
-
-            if (loginPage != null && loginPage.equals(requestURI)) {
-                LOG.log(FINE, "Allowed access to login page {0}", loginPage);
-                return true;
-            }
-            if (errorPage != null && errorPage.equals(requestURI)) {
-                LOG.log(FINE, "Allowed access to error page {0}", errorPage);
-                return true;
-            } else if (requestURI.endsWith(Constants.FORM_ACTION)) {
-                LOG.log(FINE, "Allowed access to username/password submission ({0})", Constants.FORM_ACTION);
-                return true;
-            }
-        }
-
+    private void setServletPath(HttpRequest request) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         if (httpServletRequest.getServletPath() == null) {
             request.setServletPath(getResourceName(httpServletRequest.getRequestURI(), httpServletRequest.getContextPath()));
         }
-
-        LOG.log(FINE, "Checking web security manager for the access of principal {0} to context path {1}.",
-            new Object[] {httpServletRequest.getUserPrincipal(), httpServletRequest.getContextPath()});
-        WebSecurityManager manager = getWebSecurityManager(true);
-        if (manager == null) {
-            return false;
-        }
-        return manager.hasResourcePermission(httpServletRequest);
     }
 
     private List<String> getHostAndPort(HttpRequest request) throws IOException {
@@ -1202,7 +1215,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     private BaseAuthenticationService createAuthenticationService(final ServletContext servletContext) throws IOException {
         Map<String, Object> properties = new HashMap<>();
 
-        String policyContextId = WebSecurityManager.getContextID(webBundleDescriptor);
+        String policyContextId = getContextID(webBundleDescriptor);
         if (policyContextId != null) {
            properties.put(POLICY_CONTEXT, policyContextId);
         }
@@ -1256,11 +1269,10 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         Subject subject = new Subject();
 
         MessageInfo messageInfo = new HttpMessageInfo(httpServletRequest, httpServletResponse);
-
         boolean isRequestValidated = false;
         boolean isMandatory = true;
         try {
-            isMandatory = !getWebSecurityManager(true).permitAll(httpServletRequest);
+            isMandatory = !getWebSecurityManager(true).getAuthorizationService().permitAll(httpServletRequest);
 
             // Issue - 9578 - produce user challenge if call originates from HttpRequest.authenticate
             if (isMandatory || calledFromAuthenticate) {
@@ -1478,69 +1490,61 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         final Principal callerPrincipal = securityContext != null ? securityContext.getCallerPrincipal() : null;
         final Principal defaultPrincipal = SecurityContext.getDefaultCallerPrincipal();
 
-        return AppservAccessController.doPrivileged(new PrivilegedAction<Subject>() {
+        // This method uses 4 (numbered) criteria to determine if the argument WebPrincipal can be reused
 
-            /**
-             * this method uses 4 (numbered) criteria to determine if the argument WebPrincipal can be reused
-             */
-            @Override
-            public Subject run() {
+        /**
+         * 1. WebPrincipal must contain a SecurityContext and SC must have a non-null, non-default callerPrincipal and a Subject
+         */
+        if (callerPrincipal == null || callerPrincipal.equals(defaultPrincipal) || securityContextSubject == null) {
+            return null;
+        }
 
-                /*
-                 * 1. WebPrincipal must contain a SecurityContext and SC must have a non-null, non-default callerPrincipal and a Subject
-                 */
-                if (callerPrincipal == null || callerPrincipal.equals(defaultPrincipal) || securityContextSubject == null) {
-                    return null;
+        boolean hasObject = false;
+        Set<DistinguishedPrincipalCredential> distinguishedCreds = securityContextSubject.getPublicCredentials(DistinguishedPrincipalCredential.class);
+        if (distinguishedCreds.size() == 1) {
+            for (DistinguishedPrincipalCredential cred : distinguishedCreds) {
+                if (cred.getPrincipal().equals(callerPrincipal)) {
+                    hasObject = true;
                 }
 
-                boolean hasObject = false;
-                Set<DistinguishedPrincipalCredential> distinguishedCreds = securityContextSubject.getPublicCredentials(DistinguishedPrincipalCredential.class);
-                if (distinguishedCreds.size() == 1) {
-                    for (DistinguishedPrincipalCredential cred : distinguishedCreds) {
-                        if (cred.getPrincipal().equals(callerPrincipal)) {
-                            hasObject = true;
-                        }
-                    }
-                }
-
-                if (!hasObject) {
-                    Set<DistinguishedPrincipalCredential> distinguishedPrincipals = securityContextSubject.getPrincipals(DistinguishedPrincipalCredential.class);
-                    if (distinguishedPrincipals.size() == 1) {
-                        for (DistinguishedPrincipalCredential cred : distinguishedPrincipals) {
-                            if (cred.getPrincipal().equals(callerPrincipal)) {
-                                hasObject = true;
-                            }
-                        }
-                    }
-                }
-
-
-                /**
-                 * 2. Subject within SecurityContext must contain a single DistinguishedPrincipalCredential that identifies the Caller Principal
-                 */
-                if (!hasObject) {
-                    return null;
-                }
-
-                hasObject = securityContextSubject.getPrincipals().contains(callerPrincipal);
-
-                /**
-                 * 3. Subject within SecurityContext must contain the caller principal
-                 */
-                if (!hasObject) {
-                    return null;
-                }
-
-                /**
-                 * 4. The webPrincipal must have a non null name that equals the name of the callerPrincipal.
-                 */
-                if (webPrincipal.getName() == null || !webPrincipal.getName().equals(callerPrincipal.getName())) {
-                    return null;
-                }
-
-                return securityContextSubject;
             }
-        });
+        }
+
+        if (!hasObject) {
+            Set<DistinguishedPrincipalCredential> distinguishedPrincipals = securityContextSubject.getPrincipals(DistinguishedPrincipalCredential.class);
+            if (distinguishedPrincipals.size() == 1) {
+                for (DistinguishedPrincipalCredential cred : distinguishedPrincipals) {
+                    if (cred.getPrincipal().equals(callerPrincipal)) {
+                        hasObject = true;
+                    }
+                }
+            }
+        }
+
+        /**
+         * 2. Subject within SecurityContext must contain a single DistinguishedPrincipalCredential that identifies the Caller Principal
+         */
+        if (!hasObject) {
+            return null;
+        }
+
+        hasObject = securityContextSubject.getPrincipals().contains(callerPrincipal);
+
+        /**
+         * 3. Subject within SecurityContext must contain the caller principal
+         */
+        if (!hasObject) {
+            return null;
+        }
+
+        /**
+         * 4. The webPrincipal must have a non null name that equals the name of the callerPrincipal.
+         */
+        if (webPrincipal.getName() == null || !webPrincipal.getName().equals(callerPrincipal.getName())) {
+            return null;
+        }
+
+        return securityContextSubject;
     }
 
     private Principal getGlassFishCallerPrincipal(Caller caller) {
@@ -1565,37 +1569,33 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     }
 
     public static void copySubject(Subject target, Subject source) {
-        PriviledgedAccessController.privileged(() -> {
-            target.getPrincipals().addAll(source.getPrincipals());
-            target.getPublicCredentials().addAll(source.getPublicCredentials());
-            target.getPrivateCredentials().addAll(source.getPrivateCredentials());
-        });
+        target.getPrincipals().addAll(source.getPrincipals());
+        target.getPublicCredentials().addAll(source.getPublicCredentials());
+        target.getPrivateCredentials().addAll(source.getPrivateCredentials());
     }
 
     public static void toSubject(Subject subject, Principal principal) {
-        PriviledgedAccessController.privileged(() -> subject.getPrincipals().add(principal));
+        subject.getPrincipals().add(principal);
     }
 
     public static void toSubject(Subject subject, Set<Principal> principals) {
-        PriviledgedAccessController.privileged(() -> subject.getPrincipals().addAll(principals));
+        subject.getPrincipals().addAll(principals);
     }
 
     public static void toSubjectCredential(Subject subject, Object credential) {
-        PriviledgedAccessController.privileged(() -> subject.getPublicCredentials().add(credential));
+        subject.getPublicCredentials().add(credential);
     }
 
 
 
     public static void removeFromCredentials(Subject subject, Class<?> typeToRemove) {
-        PriviledgedAccessController.privileged(() -> {
-            Iterator<Object> credentials = subject.getPublicCredentials().iterator();
+        Iterator<Object> credentials = subject.getPublicCredentials().iterator();
 
-            while (credentials.hasNext()) {
-                if (typeToRemove.isInstance(credentials.next())) {
-                    credentials.remove();
-                }
+        while (credentials.hasNext()) {
+            if (typeToRemove.isInstance(credentials.next())) {
+                credentials.remove();
             }
-        });
+        }
     }
 
     private boolean shouldRegister(Map map) {
@@ -1729,7 +1729,9 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
      */
     protected void configureSecurity(WebBundleDescriptor webBundleDescriptor, boolean isSystem) {
         try {
-            webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext).commitPolicy();
+            webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext)
+                                     .getAuthorizationService()
+                                     .commitPolicy();
 
             String contextId = getContextID(webBundleDescriptor);
             if (isSystem && contextId.equals("__admingui/__admingui")) {
@@ -1744,19 +1746,14 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         if (principal == null) {
             return null;
         }
-        if (principal instanceof WebPrincipal) {
-            return ((WebPrincipal) principal).getSecurityContext();
+        if (principal instanceof WebPrincipal webPrincipal) {
+            return webPrincipal.getSecurityContext();
         }
 
-        return AccessController.doPrivileged(new PrivilegedAction<SecurityContext>() {
-            @Override
-            public SecurityContext run() {
-                Subject s = new Subject();
-                s.getPrincipals().add(principal);
-                return new SecurityContext(principal.getName(), s);
-            }
-        });
+        Subject subject = new Subject();
+        subject.getPrincipals().add(principal);
 
+        return new SecurityContext(principal.getName(), subject);
     }
 
     public void setCurrentSecurityContextWithWebPrincipal(Principal principal) {
@@ -1835,7 +1832,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         }
 
         WebSecurityManager manager = getWebSecurityManager(false);
-        if (manager != null && manager.hasNoConstrainedResources()
+        if (manager != null && manager.getAuthorizationService().hasNoConstrainedResources()
                 && !isSecurityExtensionEnabled(context.getServletContext())) {
             return null;
         }

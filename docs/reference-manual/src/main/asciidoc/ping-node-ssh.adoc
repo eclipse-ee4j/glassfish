@@ -97,7 +97,7 @@ This example validates the SSH-enabled node `adc-node`.
 ----
 asadmin> ping-node-ssh --validate=true adc-node
 Successfully made SSH connection to node adcnode (adc.example.com)
-GlassFish version found at /export/glassfish7:
+GlassFish version found at /export/glassfish8:
 Using locally retrieved version string from version class.
 Version = Eclipse GlassFish 7.0.0 (build 2021-12-10T19:08:14+0100)
 Command version executed successfully.

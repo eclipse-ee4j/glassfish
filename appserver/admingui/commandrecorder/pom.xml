@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admingui</groupId>
         <artifactId>admingui</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -69,7 +69,7 @@
             <id>dev</id>
             <properties>
                 <copy.modules.to.distribution.skip>false</copy.modules.to.distribution.skip>
-                <copy.modules.to.distribution.destFile>${basedir}/../../distributions/glassfish/target/stage/glassfish7/glassfish/lib/install/applications/__admingui/WEB-INF/lib/${project.artifactId}-${project.version}.jar</copy.modules.to.distribution.destFile>
+                <copy.modules.to.distribution.destFile>${basedir}/../../distributions/glassfish/target/stage/glassfish8/glassfish/lib/install/applications/__admingui/WEB-INF/lib/${project.artifactId}-${project.version}.jar</copy.modules.to.distribution.destFile>
             </properties>
         </profile>
     </profiles>

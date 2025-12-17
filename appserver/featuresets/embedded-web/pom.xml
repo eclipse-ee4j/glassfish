@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>featuresets</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>embedded-web</artifactId>
@@ -83,7 +83,6 @@
         <dependency>
             <groupId>org.glassfish.main</groupId>
             <artifactId>hk2-config-generator</artifactId>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -210,7 +209,6 @@
             <groupId>org.glassfish.main.hk2</groupId>
             <artifactId>config-types</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -250,7 +248,6 @@
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-api</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -301,7 +298,6 @@
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>server-mgmt</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -317,7 +313,6 @@
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>kernel</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -411,7 +406,6 @@
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>rest-service</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -429,7 +423,6 @@
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>amx-jakartaee</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.main.common</groupId>
@@ -441,7 +434,6 @@
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>annotation-framework</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.annotations</groupId>
@@ -458,7 +450,6 @@
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>dol</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.annotations</groupId>
@@ -512,7 +503,6 @@
             <groupId>org.glassfish.main.orb</groupId>
             <artifactId>orb-connector</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.corba</groupId>
@@ -563,7 +553,6 @@
             <artifactId>glassfish-embedded-shell-frag</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.metro</groupId>
@@ -580,7 +569,6 @@
             <artifactId>glassfish-embedded-static-shell-frag</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.woodstox</groupId>
@@ -847,7 +835,6 @@
             <groupId>org.glassfish.main.ejb</groupId>
             <artifactId>ejb-container</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.corba</groupId>
@@ -1026,7 +1013,6 @@
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>websecurity</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.annotations</groupId>
@@ -1036,7 +1022,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>jakarta.security.enterprise</artifactId>
+            <artifactId>soteria</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.exousia</groupId>
@@ -1077,7 +1063,6 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-osgi-bundle</artifactId>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.jdeparser</groupId>
@@ -1125,7 +1110,6 @@
             <artifactId>jdbc-ra</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
@@ -1161,10 +1145,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>

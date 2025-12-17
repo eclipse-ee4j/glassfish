@@ -27,9 +27,6 @@ import jakarta.validation.ValidatorFactory;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 import java.util.HashSet;
@@ -80,9 +77,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
 
     @Override
     public ClassLoader getTempClassloader() {
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader("PersistenceTmp",
-            classLoader.getURLs());
-        return AccessController.doPrivileged(action);
+        return new GlassfishUrlClassLoader("PersistenceTmp", classLoader.getURLs());
     }
 
     @Override

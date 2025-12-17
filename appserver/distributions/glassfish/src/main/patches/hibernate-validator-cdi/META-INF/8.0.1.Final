@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 5.1.4
+Build-Jdk-Spec: 17
+Implementation-Title: hibernate-validator-cdi
+Implementation-URL: http://hibernate.org/validator/
+Implementation-Vendor: org.hibernate.validator
+Implementation-Vendor-Id: org.hibernate.validator
+Implementation-Version: 8.0.1.Final
+Specification-Title: Jakarta Bean Validation
+Specification-Version: 2.0
+Bundle-Description: Hibernate Validator CDI Portable Extension
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Hibernate Validator Portable Extension
+Bundle-SymbolicName: org.hibernate.validator.cdi
+Bundle-Version: 8.0.1.Final
+Export-Package: org.hibernate.validator.cdi;version="8.0.1.Final";uses:=
+ "jakarta.enterprise.event,jakarta.enterprise.inject.spi,jakarta.inject,
+ jakarta.validation,jakarta.validation.executable"
+Fragment-Host: org.hibernate.validator
+Import-Package: jakarta.validation;version="[3.0,4.0)",jakarta.validatio
+ n.bootstrap;version="[3.0,4.0)",jakarta.validation.executable;version="
+ [3.0,4.0)",jakarta.validation.metadata;version="[3.0,4.0)",jakarta.vali
+ dation.valueextraction;version="[3.0,4.0)",jakarta.annotation;version="
+ [2.0,4.0)",jakarta.interceptor;version="[2.0,3.0)",jakarta.enterprise.c
+ ontext;version="[3.0,5.0)",jakarta.enterprise.context.spi;version="[3.0
+ ,5.0)",jakarta.enterprise.event;version="[3.0,5.0)",jakarta.enterprise.
+ inject;version="[3.0,5.0)",jakarta.enterprise.inject.literal;version="[
+ 3.0,5.0)",jakarta.enterprise.inject.spi;version="[3.0,5.0)",jakarta.ent
+ erprise.util;version="[3.0,5.0)",jakarta.inject;version="[2.0,3)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-5.1.1.202006162103
+Built-By: jenkins
+Build-Jdk: 17.0.7
+Automatic-Module-Name: org.hibernate.validator.cdi
+Bnd-LastModified: 1687278852238

@@ -20,8 +20,6 @@ package org.apache.catalina.session;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.util.List;
@@ -38,43 +36,39 @@ import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
 import org.apache.catalina.Store;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.LifecycleSupport;
 
+import static java.util.logging.Level.SEVERE;
+
 /**
- * Extends the <b>ManagerBase</b> class to implement most of the
- * functionality required by a Manager which supports any kind of
- * persistence, even if only for restarts.
+ * Extends the <b>ManagerBase</b> class to implement most of the functionality required by a Manager which supports any
+ * kind of persistence, even if only for restarts.
  * <p>
- * <b>IMPLEMENTATION NOTE</b>:  Correct behavior of session storing and
- * reloading depends upon external calls to the <code>start()</code> and
- * <code>stop()</code> methods of this class at the correct times.
+ * <b>IMPLEMENTATION NOTE</b>: Correct behavior of session storing and reloading depends upon external calls to the
+ * <code>start()</code> and <code>stop()</code> methods of this class at the correct times.
  *
  * @author Craig R. McClanahan
  * @author Jean-Francois Arcand
  * @version $Revision: 1.16 $ $Date: 2007/05/05 05:32:19 $
  */
 
-public abstract class PersistentManagerBase
-    extends ManagerBase
-    implements Lifecycle, PropertyChangeListener {
+public abstract class PersistentManagerBase extends ManagerBase implements Lifecycle, PropertyChangeListener {
 
     // ---------------------------------------------------- Security Classes
-    private class PrivilegedStoreClear
-        implements PrivilegedExceptionAction<Void> {
+    private class PrivilegedStoreClear implements PrivilegedExceptionAction<Void> {
 
         PrivilegedStoreClear() {
             // NOOP
         }
 
-        public Void run() throws Exception{
-           store.clear();
-           return null;
+        @Override
+        public Void run() throws Exception {
+            store.clear();
+            return null;
         }
     }
 
-     private class PrivilegedStoreRemove
-        implements PrivilegedExceptionAction<Void> {
+    private class PrivilegedStoreRemove implements PrivilegedExceptionAction<Void> {
 
         private String id;
 
@@ -82,14 +76,14 @@ public abstract class PersistentManagerBase
             this.id = id;
         }
 
-        public Void run() throws Exception{
-           store.remove(id);
-           return null;
+        @Override
+        public Void run() throws Exception {
+            store.remove(id);
+            return null;
         }
     }
 
-    private class PrivilegedStoreLoad
-        implements PrivilegedExceptionAction<Session> {
+    private class PrivilegedStoreLoad implements PrivilegedExceptionAction<Session> {
 
         private String id;
 
@@ -97,13 +91,13 @@ public abstract class PersistentManagerBase
             this.id = id;
         }
 
-        public Session run() throws Exception{
-           return store.load(id);
+        @Override
+        public Session run() throws Exception {
+            return store.load(id);
         }
     }
 
-    private class PrivilegedStoreSave
-        implements PrivilegedExceptionAction<Void> {
+    private class PrivilegedStoreSave implements PrivilegedExceptionAction<Void> {
 
         private Session session;
 
@@ -111,103 +105,87 @@ public abstract class PersistentManagerBase
             this.session = session;
         }
 
-        public Void run() throws Exception{
-           store.save(session);
-           return null;
+        @Override
+        public Void run() throws Exception {
+            store.save(session);
+            return null;
         }
     }
 
-    private class PrivilegedStoreKeys
-        implements PrivilegedExceptionAction<String[]> {
+    private class PrivilegedStoreKeys implements PrivilegedExceptionAction<String[]> {
 
         PrivilegedStoreKeys() {
             // NOOP
         }
 
-        public String[] run() throws Exception{
-           return store.keys();
+        @Override
+        public String[] run() throws Exception {
+            return store.keys();
         }
     }
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * The descriptive information about this implementation.
      */
     private static final String info = "PersistentManagerBase/1.0";
 
-
     /**
      * The lifecycle event support for this component.
      */
     protected LifecycleSupport lifecycle = new LifecycleSupport(this);
-
 
     /**
      * The maximum number of active Sessions allowed, or -1 for no limit.
      */
     private int maxActiveSessions = -1;
 
-
     /**
      * The descriptive name of this Manager implementation (for logging).
      */
     protected static final String name = "PersistentManagerBase";
-
 
     /**
      * Has this component been started yet?
      */
     private boolean started = false;
 
-
     /**
      * Store object which will manage the Session store.
      */
     private Store store = null;
 
-
     /**
-     * Whether to save and reload sessions when the Manager <code>unload</code>
-     * and <code>load</code> methods are called.
+     * Whether to save and reload sessions when the Manager <code>unload</code> and <code>load</code> methods are called.
      */
     private boolean saveOnRestart = true;
 
-
     /**
-     * How long a session must be idle before it should be backed up.
-     * -1 means sessions won't be backed up.
+     * How long a session must be idle before it should be backed up. -1 means sessions won't be backed up.
      */
     private int maxIdleBackup = -1;
 
-
     /**
-     * Minimum time a session must be idle before it is swapped to disk.
-     * This overrides maxActiveSessions, to prevent thrashing if there are lots
-     * of active sessions. Setting to -1 means it's ignored.
+     * Minimum time a session must be idle before it is swapped to disk. This overrides maxActiveSessions, to prevent
+     * thrashing if there are lots of active sessions. Setting to -1 means it's ignored.
      */
     private int minIdleSwap = -1;
 
     /**
-     * The maximum time a session may be idle before it should be swapped
-     * to file just on general principle. Setting this to -1 means sessions
-     * should not be forced out.
+     * The maximum time a session may be idle before it should be swapped to file just on general principle. Setting this to
+     * -1 means sessions should not be forced out.
      */
     private int maxIdleSwap = -1;
 
-
     // START SJSAS 6406580
     /**
-     * The set of invalidated Sessions for this Manager, keyed by
-     * session identifier.
+     * The set of invalidated Sessions for this Manager, keyed by session identifier.
      */
-    protected ConcurrentHashMap<String, Long> invalidatedSessions
-        = new ConcurrentHashMap<String, Long>();
+    protected ConcurrentHashMap<String, Long> invalidatedSessions = new ConcurrentHashMap<String, Long>();
 
     // Specifies for how long we're going to remember invalidated session ids
     private long rememberInvalidatedSessionIdMilliSecs = 60000L;
     // END SJSAS 6406580
-
 
     // ------------------------------------------------------------- Properties
 
@@ -220,16 +198,14 @@ public abstract class PersistentManagerBase
         // START SJSAS 6406580
         this.processInvalidatedSessions();
         // END SJSAS 6406580
-        if ((this.getStore() != null)
-            && (this.getStore() instanceof StoreBase)) {
+        if ((this.getStore() != null) && (this.getStore() instanceof StoreBase)) {
             ((StoreBase) this.getStore()).processExpires();
         }
     }
 
     /**
-     * Indicates how many seconds old a session can get, after its last
-     * use in a request, before it should be backed up to the store. -1
-     * means sessions are not backed up.
+     * Indicates how many seconds old a session can get, after its last use in a request, before it should be backed up to
+     * the store. -1 means sessions are not backed up.
      */
     public int getMaxIdleBackup() {
 
@@ -237,43 +213,31 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Sets the option to back sessions up to the Store after they
-     * are used in a request. Sessions remain available in memory
-     * after being backed up, so they are not passivated as they are
-     * when swapped out. The value set indicates how old a session
-     * may get (since its last use) before it must be backed up: -1
-     * means sessions are not backed up.
+     * Sets the option to back sessions up to the Store after they are used in a request. Sessions remain available in
+     * memory after being backed up, so they are not passivated as they are when swapped out. The value set indicates how
+     * old a session may get (since its last use) before it must be backed up: -1 means sessions are not backed up.
      * <p>
-     * Note that this is not a hard limit: sessions are checked
-     * against this age limit periodically according to <b>checkInterval</b>.
-     * This value should be considered to indicate when a session is
-     * ripe for backing up.
+     * Note that this is not a hard limit: sessions are checked against this age limit periodically according to
+     * <b>checkInterval</b>. This value should be considered to indicate when a session is ripe for backing up.
      * <p>
-     * So it is possible that a session may be idle for maxIdleBackup +
-     * checkInterval seconds, plus the time it takes to handle other
-     * session expiration, swapping, etc. tasks.
+     * So it is possible that a session may be idle for maxIdleBackup + checkInterval seconds, plus the time it takes to
+     * handle other session expiration, swapping, etc. tasks.
      *
-     * @param backup The number of seconds after their last accessed
-     * time when they should be written to the Store.
+     * @param backup The number of seconds after their last accessed time when they should be written to the Store.
      */
-    public void setMaxIdleBackup (int backup) {
+    public void setMaxIdleBackup(int backup) {
 
         if (backup == this.maxIdleBackup)
             return;
         int oldBackup = this.maxIdleBackup;
         this.maxIdleBackup = backup;
-        support.firePropertyChange("maxIdleBackup",
-                                   Integer.valueOf(oldBackup),
-                                   Integer.valueOf(this.maxIdleBackup));
+        support.firePropertyChange("maxIdleBackup", Integer.valueOf(oldBackup), Integer.valueOf(this.maxIdleBackup));
 
     }
 
-
     /**
-     * The time in seconds after which a session should be swapped out of
-     * memory to disk.
+     * The time in seconds after which a session should be swapped out of memory to disk.
      */
     public int getMaxIdleSwap() {
 
@@ -281,10 +245,8 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Sets the time in seconds after which a session should be swapped out of
-     * memory to disk.
+     * Sets the time in seconds after which a session should be swapped out of memory to disk.
      */
     public void setMaxIdleSwap(int max) {
 
@@ -292,17 +254,13 @@ public abstract class PersistentManagerBase
             return;
         int oldMaxIdleSwap = this.maxIdleSwap;
         this.maxIdleSwap = max;
-        support.firePropertyChange("maxIdleSwap",
-                                   Integer.valueOf(oldMaxIdleSwap),
-                                   Integer.valueOf(this.maxIdleSwap));
+        support.firePropertyChange("maxIdleSwap", Integer.valueOf(oldMaxIdleSwap), Integer.valueOf(this.maxIdleSwap));
 
     }
 
-
     /**
-     * The minimum time in seconds that a session must be idle before
-     * it can be swapped out of memory, or -1 if it can be swapped out
-     * at any time.
+     * The minimum time in seconds that a session must be idle before it can be swapped out of memory, or -1 if it can be
+     * swapped out at any time.
      */
     public int getMinIdleSwap() {
 
@@ -310,11 +268,9 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Sets the minimum time in seconds that a session must be idle before
-     * it can be swapped out of memory due to maxActiveSession. Set it to -1
-     * if it can be swapped out at any time.
+     * Sets the minimum time in seconds that a session must be idle before it can be swapped out of memory due to
+     * maxActiveSession. Set it to -1 if it can be swapped out at any time.
      */
     public void setMinIdleSwap(int min) {
 
@@ -322,20 +278,17 @@ public abstract class PersistentManagerBase
             return;
         int oldMinIdleSwap = this.minIdleSwap;
         this.minIdleSwap = min;
-        support.firePropertyChange("minIdleSwap",
-                                   Integer.valueOf(oldMinIdleSwap),
-                                   Integer.valueOf(this.minIdleSwap));
+        support.firePropertyChange("minIdleSwap", Integer.valueOf(oldMinIdleSwap), Integer.valueOf(this.minIdleSwap));
 
     }
 
-
     /**
-     * Set the Container with which this Manager has been associated.  If
-     * it is a Context (the usual case), listen for changes to the session
-     * timeout property.
+     * Set the Container with which this Manager has been associated. If it is a Context (the usual case), listen for
+     * changes to the session timeout property.
      *
      * @param container The associated Container
      */
+    @Override
     public void setContainer(Container container) {
 
         // De-register from the old Container (if any)
@@ -347,8 +300,7 @@ public abstract class PersistentManagerBase
 
         // Register with the new Container (if any)
         if ((this.container != null) && (this.container instanceof Context)) {
-            setMaxInactiveIntervalSeconds
-                ( ((Context) this.container).getSessionTimeout()*60 );
+            setMaxInactiveIntervalSeconds(((Context) this.container).getSessionTimeout() * 60);
             ((Context) this.container).addPropertyChangeListener(this);
         }
 
@@ -359,8 +311,7 @@ public abstract class PersistentManagerBase
             StandardContext ctx = (StandardContext) container;
             int frequency = ctx.getManagerChecksFrequency();
             int reapIntervalSeconds = ctx.getBackgroundProcessorDelay();
-            rememberInvalidatedSessionIdMilliSecs
-                = frequency * reapIntervalSeconds * 1000L * 2;
+            rememberInvalidatedSessionIdMilliSecs = frequency * reapIntervalSeconds * 1000L * 2;
             if (rememberInvalidatedSessionIdMilliSecs <= 0) {
                 rememberInvalidatedSessionIdMilliSecs = 60000L;
             }
@@ -368,44 +319,37 @@ public abstract class PersistentManagerBase
         // END SJSAS 6406580
     }
 
-
     /**
-     * Return descriptive information about this Manager implementation and
-     * the corresponding version number, in the format
+     * Return descriptive information about this Manager implementation and the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
 
         return (this.info);
 
     }
 
-
     /**
-     * Return true, if the session id is loaded in memory
-     * otherwise false is returned
+     * Return true, if the session id is loaded in memory otherwise false is returned
      *
      * @param id The session id for the session to be searched for
      *
-     * @exception IOException if an input/output error occurs while
-     *  processing this request
+     * @exception IOException if an input/output error occurs while processing this request
      */
-    public boolean isLoaded( String id ){
+    public boolean isLoaded(String id) {
         try {
-            if ( super.findSession(id) != null )
+            if (super.findSession(id) != null)
                 return true;
         } catch (IOException e) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.CHECKING_IS_LOADED_EXCEPTION),
-                                              new Object[] {id, e.getMessage()});
-            log.log(Level.SEVERE, msg, e);
+            String msg = MessageFormat.format(rb.getString(LogFacade.CHECKING_IS_LOADED_EXCEPTION), new Object[] { id, e.getMessage() });
+            log.log(SEVERE, msg, e);
         }
         return false;
     }
 
-
     /**
-     * Return the maximum number of active Sessions allowed, or -1 for
-     * no limit.
+     * Return the maximum number of active Sessions allowed, or -1 for no limit.
      */
     public int getMaxActiveSessions() {
 
@@ -413,10 +357,8 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Set the maximum number of active Sessions allowed, or -1 for
-     * no limit.
+     * Set the maximum number of active Sessions allowed, or -1 for no limit.
      *
      * @param max The new maximum number of sessions
      */
@@ -424,19 +366,16 @@ public abstract class PersistentManagerBase
 
         int oldMaxActiveSessions = this.maxActiveSessions;
         this.maxActiveSessions = max;
-        support.firePropertyChange("maxActiveSessions",
-                                   Integer.valueOf(oldMaxActiveSessions),
-                                   Integer.valueOf(this.maxActiveSessions));
+        support.firePropertyChange("maxActiveSessions", Integer.valueOf(oldMaxActiveSessions), Integer.valueOf(this.maxActiveSessions));
     }
-
 
     /**
      * Return the descriptive short name of this Manager implementation.
      */
+    @Override
     public String getName() {
         return (name);
     }
-
 
     /**
      * Get the started status.
@@ -445,7 +384,6 @@ public abstract class PersistentManagerBase
         return started;
     }
 
-
     /**
      * Set the started flag
      */
@@ -453,10 +391,8 @@ public abstract class PersistentManagerBase
         this.started = started;
     }
 
-
     /**
-     * Set the Store object which will manage persistent Session
-     * storage for this Manager.
+     * Set the Store object which will manage persistent Session storage for this Manager.
      *
      * @param store the associated Store
      */
@@ -465,10 +401,8 @@ public abstract class PersistentManagerBase
         store.setManager(this);
     }
 
-
     /**
-     * Return the Store object which manages persistent Session
-     * storage for this Manager.
+     * Return the Store object which manages persistent Session storage for this Manager.
      */
     public Store getStore() {
 
@@ -476,11 +410,9 @@ public abstract class PersistentManagerBase
 
     }
 
-
-
     /**
-     * Indicates whether sessions are saved when the Manager is shut down
-     * properly. This requires the unload() method to be called.
+     * Indicates whether sessions are saved when the Manager is shut down properly. This requires the unload() method to be
+     * called.
      */
     public boolean getSaveOnRestart() {
 
@@ -488,15 +420,11 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Set the option to save sessions to the Store when the Manager is
-     * shut down, then loaded when the Manager starts again. If set to
-     * false, any sessions found in the Store may still be picked up when
-     * the Manager is started again.
+     * Set the option to save sessions to the Store when the Manager is shut down, then loaded when the Manager starts
+     * again. If set to false, any sessions found in the Store may still be picked up when the Manager is started again.
      *
-     * @param saveOnRestart true if sessions should be saved on restart, false if
-     *     they should be ignored.
+     * @param saveOnRestart true if sessions should be saved on restart, false if they should be ignored.
      */
     public void setSaveOnRestart(boolean saveOnRestart) {
 
@@ -505,57 +433,40 @@ public abstract class PersistentManagerBase
 
         boolean oldSaveOnRestart = this.saveOnRestart;
         this.saveOnRestart = saveOnRestart;
-        support.firePropertyChange("saveOnRestart",
-                                   Boolean.valueOf(oldSaveOnRestart),
-                                   Boolean.valueOf(this.saveOnRestart));
+        support.firePropertyChange("saveOnRestart", Boolean.valueOf(oldSaveOnRestart), Boolean.valueOf(this.saveOnRestart));
 
     }
 
-
     // --------------------------------------------------------- Public Methods
-
 
     /*
      * Releases any resources held by this session manager.
      */
+    @Override
     public void release() {
         super.release();
         clearStore();
     }
 
-
     /**
      * Clear all sessions from the Store.
      */
     public void clearStore() {
-
         if (store == null)
             return;
 
         try {
-            if (SecurityUtil.isPackageProtectionEnabled()){
-                try{
-                    AccessController.doPrivileged(new PrivilegedStoreClear());
-                }catch(PrivilegedActionException ex){
-                    Exception exception = ex.getException();
-                    log.log(Level.SEVERE, LogFacade.CLEARING_STORE_EXCEPTION, exception);
-                }
-            } else {
-                store.clear();
-            }
+            store.clear();
         } catch (IOException e) {
-            log.log(Level.SEVERE, LogFacade.CLEARING_STORE_EXCEPTION, e);
+            log.log(SEVERE, LogFacade.CLEARING_STORE_EXCEPTION, e);
         }
 
     }
 
-
     /**
-     * Invalidate all sessions that have expired.
-     * Hercules: modified method
+     * Invalidate all sessions that have expired. Hercules: modified method
      */
     protected void processExpires() {
-
         if (!started)
             return;
 
@@ -563,41 +474,32 @@ public abstract class PersistentManagerBase
 
         for (int i = 0; i < sessions.length; i++) {
             StandardSession session = (StandardSession) sessions[i];
-            /* START CR 6363689
-            if (!session.isValid()) {
-            */
-            // START CR 6363689
-            if(!session.getIsValid() || session.hasExpired()) {
-            // END CR 6363689
-                if(session.lockBackground()) {
+            if (!session.getIsValid() || session.hasExpired()) {
+                if (session.lockBackground()) {
                     try {
                         session.expire();
                     } finally {
                         session.unlockBackground();
                     }
                 }
-        }
+            }
         }
     }
 
-
     /**
-     * Called by the background thread after active sessions have
-     * been checked for expiration, to allow sessions to be
+     * Called by the background thread after active sessions have been checked for expiration, to allow sessions to be
      * swapped out, backed up, etc.
      */
     public void processPersistenceChecks() {
 
-            processMaxIdleSwaps();
-            processMaxActiveSwaps();
-            processMaxIdleBackups();
+        processMaxIdleSwaps();
+        processMaxActiveSwaps();
+        processMaxIdleBackups();
 
     }
 
-
     /**
-     * Purges those session ids from the map of invalidated session ids whose
-     * time has come up
+     * Purges those session ids from the map of invalidated session ids whose time has come up
      */
     protected void processInvalidatedSessions() {
 
@@ -609,85 +511,70 @@ public abstract class PersistentManagerBase
         for (Map.Entry<String, Long> e : invalidatedSessions.entrySet()) {
             String id = e.getKey();
             Long timeAdded = e.getValue();
-            if ((timeAdded == null)
-                    || (timeNow - timeAdded.longValue() >
-                                    rememberInvalidatedSessionIdMilliSecs)) {
+            if ((timeAdded == null) || (timeNow - timeAdded.longValue() > rememberInvalidatedSessionIdMilliSecs)) {
                 removeFromInvalidatedSessions(id);
             }
         }
     }
 
-
     /**
-     * Return a new session object as long as the number of active
-     * sessions does not exceed <b>maxActiveSessions</b>. If there
-     * aren't too many active sessions, or if there is no limit,
-     * a session is created or retrieved from the recycled pool.
+     * Return a new session object as long as the number of active sessions does not exceed <b>maxActiveSessions</b>. If
+     * there aren't too many active sessions, or if there is no limit, a session is created or retrieved from the recycled
+     * pool.
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
      */
+    @Override
     public Session createSession() {
 
-        if ((maxActiveSessions >= 0) &&
-                (sessions.size() >= maxActiveSessions))
-            throw new IllegalStateException
-                (rb.getString(LogFacade.CREATE_SESSION_EXCEPTION));
+        if ((maxActiveSessions >= 0) && (sessions.size() >= maxActiveSessions))
+            throw new IllegalStateException(rb.getString(LogFacade.CREATE_SESSION_EXCEPTION));
 
         return (super.createSession());
 
     }
 
-
     // START S1AS8PE 4817642
     /**
-     * Construct and return a new session object, based on the default
-     * settings specified by this Manager's properties, using the specified
-     * session id.
+     * Construct and return a new session object, based on the default settings specified by this Manager's properties,
+     * using the specified session id.
      *
-     * IMPLEMENTATION NOTE: This method must be kept in sync with the
-     * createSession method that takes no arguments.
+     * IMPLEMENTATION NOTE: This method must be kept in sync with the createSession method that takes no arguments.
      *
      * @param sessionId the session id to assign to the new session
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
      *
-     * @return the new session, or <code>null</code> if a session with the
-     * requested id already exists
+     * @return the new session, or <code>null</code> if a session with the requested id already exists
      */
+    @Override
     public Session createSession(String sessionId) {
 
-        if ((maxActiveSessions >= 0) &&
-                (sessions.size() >= maxActiveSessions))
-            throw new IllegalStateException
-                (rb.getString(LogFacade.CREATE_SESSION_EXCEPTION));
+        if ((maxActiveSessions >= 0) && (sessions.size() >= maxActiveSessions))
+            throw new IllegalStateException(rb.getString(LogFacade.CREATE_SESSION_EXCEPTION));
 
         return (super.createSession(sessionId));
     }
     // END S1AS8PE 4817642
 
-
     /**
-     * Return the active Session, associated with this Manager, with the
-     * specified session id (if any); otherwise return <code>null</code>.
-     * This method checks the persistence store if persistence is enabled,
-     * otherwise just uses the functionality from ManagerBase.
+     * Return the active Session, associated with this Manager, with the specified session id (if any); otherwise return
+     * <code>null</code>. This method checks the persistence store if persistence is enabled, otherwise just uses the
+     * functionality from ManagerBase.
      *
      * @param id The session id for the session to be returned
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
-     * @exception IOException if an input/output error occurs while
-     *  processing this request
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
+     * @exception IOException if an input/output error occurs while processing this request
      */
+    @Override
     public Session findSession(String id) throws IOException {
 
-        //6406580 START
-        if(!this.isSessionIdValid(id)) {
+        // 6406580 START
+        if (!this.isSessionIdValid(id)) {
             return null;
         }
-        //6406580 END
+        // 6406580 END
 
         Session session = super.findSession(id);
         if (session != null)
@@ -700,30 +587,25 @@ public abstract class PersistentManagerBase
     }
 
     /**
-     * Return the active Session, associated with this Manager, with the
-     * specified session id (if any); otherwise return <code>null</code>.
-     * This method first removes the cached copy if removeCachedCopy = true.
-     * Then this method checks the persistence store if persistence is enabled,
-     * otherwise just uses the functionality from ManagerBase.
+     * Return the active Session, associated with this Manager, with the specified session id (if any); otherwise return
+     * <code>null</code>. This method first removes the cached copy if removeCachedCopy = true. Then this method checks the
+     * persistence store if persistence is enabled, otherwise just uses the functionality from ManagerBase.
      *
      * @param id The session id for the session to be returned
      * @param removeCachedCopy
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
-     * @exception IOException if an input/output error occurs while
-     *  processing this request
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
+     * @exception IOException if an input/output error occurs while processing this request
      */
     public Session findSession(String id, boolean removeCachedCopy) throws IOException {
 
         Session theSession = super.findSession(id);
         if (theSession != null) {
-            if(removeCachedCopy) {
-                //remove from manager cache
+            if (removeCachedCopy) {
+                // remove from manager cache
                 removeSuper(theSession);
-                //remove from store cache if it exists
-                if ((this.getStore() != null)
-                    && (this.getStore() instanceof StoreBase)) {
+                // remove from store cache if it exists
+                if ((this.getStore() != null) && (this.getStore() instanceof StoreBase)) {
                     ((StoreBase) this.getStore()).removeFromStoreCache(id);
                 }
                 theSession = null;
@@ -731,42 +613,37 @@ public abstract class PersistentManagerBase
                 return (theSession);
             }
         }
-        //now do full findSession
+        // now do full findSession
         theSession = findSession(id);
         return theSession;
 
     }
 
     /**
-     * used by subclasses of PersistentManagerBase
-     * Hercules: added method
+     * used by subclasses of PersistentManagerBase Hercules: added method
      */
     protected Session superFindSession(String id) throws IOException {
         return super.findSession(id);
     }
 
     /**
-     * Remove this Session from the active Sessions for this Manager,
-     * but not from the Store. (Used by the PersistentValve)
+     * Remove this Session from the active Sessions for this Manager, but not from the Store. (Used by the PersistentValve)
      *
      * @param session Session to be removed
      */
     public void removeSuper(Session session) {
-        super.remove (session);
+        super.remove(session);
     }
 
     /**
-     * Load all sessions found in the persistence mechanism, assuming
-     * they are marked as valid and have not passed their expiration
-     * limit. If persistence is not supported, this method returns
-     * without doing anything.
+     * Load all sessions found in the persistence mechanism, assuming they are marked as valid and have not passed their
+     * expiration limit. If persistence is not supported, this method returns without doing anything.
      * <p>
-     * Note that by default, this method is not called by the MiddleManager
-     * class. In order to use it, a subclass must specifically call it,
-     * for example in the start() and/or processPersistenceChecks() methods.
+     * Note that by default, this method is not called by the MiddleManager class. In order to use it, a subclass must
+     * specifically call it, for example in the start() and/or processPersistenceChecks() methods.
      */
+    @Override
     public void load() {
-
         // Initialize our internal data structures
         sessions.clear();
 
@@ -775,19 +652,9 @@ public abstract class PersistentManagerBase
 
         String[] ids = null;
         try {
-            if (SecurityUtil.isPackageProtectionEnabled()){
-                try{
-                    ids = AccessController.doPrivileged(
-                            new PrivilegedStoreKeys());
-                }catch(PrivilegedActionException ex){
-                    Exception exception = ex.getException();
-                    log.log(Level.SEVERE, LogFacade.STORE_LOADING_EXCEPTION, exception);
-                }
-            } else {
-                ids = store.keys();
-            }
+            ids = store.keys();
         } catch (IOException e) {
-            log.log(Level.SEVERE, LogFacade.CANNOT_LOAD_SESSION_EXCEPTION, e);
+            log.log(SEVERE, LogFacade.CANNOT_LOAD_SESSION_EXCEPTION, e);
             return;
         }
 
@@ -802,73 +669,57 @@ public abstract class PersistentManagerBase
             try {
                 swapIn(ids[i]);
             } catch (IOException e) {
-                log.log(Level.SEVERE, LogFacade.FAILED_LOAD_SESSION_EXCEPTION, e);
+                log.log(SEVERE, LogFacade.FAILED_LOAD_SESSION_EXCEPTION, e);
             }
 
     }
 
     /**
-     * Remove this Session from the active Sessions for this Manager,
-     * and from the Store.
+     * Remove this Session from the active Sessions for this Manager, and from the Store.
      *
      * @param session Session to be removed
      */
+    @Override
     public void remove(Session session) {
         remove(session, true);
     }
 
     /**
-     * Remove this Session from the active Sessions for this Manager,
-     * and from the Store.
+     * Remove this Session from the active Sessions for this Manager, and from the Store.
      *
      * @param session Session to be removed
-     * @param  persistentRemove - do we remove persistent session too
+     * @param persistentRemove - do we remove persistent session too
      */
     public void remove(Session session, boolean persistentRemove) {
 
-        super.remove (session);
+        super.remove(session);
 
-        if (persistentRemove && store != null){
+        if (persistentRemove && store != null) {
             removeSession(session.getIdInternal());
         }
     }
 
     /**
-     * Remove this Session from the active Sessions for this Manager,
-     * and from the Store.
+     * Remove this Session from the active Sessions for this Manager, and from the Store.
      *
      * @param id Session's id to be removed
      */
-    private void removeSession(String id){
+    private void removeSession(String id) {
         try {
-            if (SecurityUtil.isPackageProtectionEnabled()){
-                try{
-                    AccessController.doPrivileged(new PrivilegedStoreRemove(id));
-                }catch(PrivilegedActionException ex){
-                    Exception exception = ex.getException();
-                    log.log(Level.SEVERE, LogFacade.STORE_REMOVE_SESSION_EXCEPTION, exception);
-                }
-            } else {
-                 store.remove(id);
-            }
+            store.remove(id);
         } catch (IOException e) {
-            log.log(Level.SEVERE, LogFacade.REMOVING_SESSION_EXCEPTION, e);
+            log.log(SEVERE, LogFacade.REMOVING_SESSION_EXCEPTION, e);
         }
     }
 
-
-    // START SJSAS 6406580
     /**
-     * Add this Session id to the set of invalidated Session ids for this
-     * Manager.
+     * Add this Session id to the set of invalidated Session ids for this Manager.
      *
      * @param sessionId session id to be added
      */
     public void addToInvalidatedSessions(String sessionId) {
-        invalidatedSessions.put(sessionId,
-                                Long.valueOf(System.currentTimeMillis()));
+        invalidatedSessions.put(sessionId, Long.valueOf(System.currentTimeMillis()));
     }
-
 
     /**
      * Removes the given session id from the map of invalidated session ids.
@@ -879,28 +730,22 @@ public abstract class PersistentManagerBase
         invalidatedSessions.remove(sessionId);
     }
 
-
     /**
-     * @return true if the given session id is not contained in the map of
-     * invalidated session ids, false otherwise
+     * @return true if the given session id is not contained in the map of invalidated session ids, false otherwise
      */
     public boolean isSessionIdValid(String sessionId) {
-        return (!invalidatedSessions.containsKey(sessionId));
+        return !invalidatedSessions.containsKey(sessionId);
     }
-    // END SJSAS 6406580
-
 
     /**
-     * Save all currently active sessions in the appropriate persistence
-     * mechanism, if any.  If persistence is not supported, this method
-     * returns without doing anything.
+     * Save all currently active sessions in the appropriate persistence mechanism, if any. If persistence is not supported,
+     * this method returns without doing anything.
      * <p>
-     * Note that by default, this method is not called by the MiddleManager
-     * class. In order to use it, a subclass must specifically call it,
-     * for example in the stop() and/or processPersistenceChecks() methods.
+     * Note that by default, this method is not called by the MiddleManager class. In order to use it, a subclass must
+     * specifically call it, for example in the stop() and/or processPersistenceChecks() methods.
      */
+    @Override
     public void unload() {
-
         if (store == null)
             return;
 
@@ -921,14 +766,11 @@ public abstract class PersistentManagerBase
 
     }
 
-
     // ------------------------------------------------------ Protected Methods
 
     /**
-     * Look for a session in the Store and, if found, restore
-     * it in the Manager's list of active sessions if appropriate.
-     * The session will be removed from the Store after swapping
-     * in, but will not be added to the active session list if it
+     * Look for a session in the Store and, if found, restore it in the Manager's list of active sessions if appropriate.
+     * The session will be removed from the Store after swapping in, but will not be added to the active session list if it
      * is invalid or past its expiration.
      */
     protected Session swapIn(String id) throws IOException {
@@ -936,10 +778,8 @@ public abstract class PersistentManagerBase
     }
 
     /**
-     * Look for a session in the Store and, if found, restore
-     * it in the Manager's list of active sessions if appropriate.
-     * The session will be removed from the Store after swapping
-     * in, but will not be added to the active session list if it
+     * Look for a session in the Store and, if found, restore it in the Manager's list of active sessions if appropriate.
+     * The session will be removed from the Store after swapping in, but will not be added to the active session list if it
      * is invalid or past its expiration.
      *
      * @param id The session id
@@ -950,8 +790,7 @@ public abstract class PersistentManagerBase
         ClassLoader webappCl = null;
         ClassLoader curCl = null;
 
-        if (getContainer() != null
-                    && getContainer().getLoader() != null) {
+        if (getContainer() != null && getContainer().getLoader() != null) {
             webappCl = getContainer().getLoader().getClassLoader();
             curCl = Thread.currentThread().getContextClassLoader();
         }
@@ -973,43 +812,24 @@ public abstract class PersistentManagerBase
     }
 
     /**
-     * Look for a session in the Store and, if found, restore
-     * it in the Manager's list of active sessions if appropriate.
-     * The session will be removed from the Store after swapping
-     * in, but will not be added to the active session list if it
+     * Look for a session in the Store and, if found, restore it in the Manager's list of active sessions if appropriate.
+     * The session will be removed from the Store after swapping in, but will not be added to the active session list if it
      * is invalid or past its expiration.
      */
     private Session doSwapIn(String id, String version) throws IOException {
-
         if (store == null)
             return null;
 
         Session session = null;
         try {
-            if (SecurityUtil.isPackageProtectionEnabled()){
-                try{
-                    session = AccessController.doPrivileged(
-                            new PrivilegedStoreLoad(id));
-                }catch(PrivilegedActionException ex){
-                    Exception exception = ex.getException();
-                    log.log(Level.SEVERE, LogFacade.STORE_SWAP_IN_EXCEPTION, exception);
-                    if (exception instanceof IOException){
-                        throw (IOException)exception;
-                    } else if (exception instanceof ClassNotFoundException) {
-                        throw (ClassNotFoundException)exception;
-                    }
-                }
+            if (version != null) {
+                session = ((StoreBase) store).load(id, version);
             } else {
-        if (version != null) {
-                     session = ((StoreBase) store).load(id, version);
-                } else {
-                     session = store.load(id);
-                }
+                session = store.load(id);
             }
         } catch (ClassNotFoundException e) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.DESERILIZING_SESSION_EXCEPTION),
-                                              new Object[] {id, e});
-            log.log(Level.SEVERE, msg);
+            String msg = MessageFormat.format(rb.getString(LogFacade.DESERILIZING_SESSION_EXCEPTION), new Object[] { id, e });
+            log.log(SEVERE, msg);
             throw new IllegalStateException(msg);
         }
 
@@ -1017,55 +837,44 @@ public abstract class PersistentManagerBase
             return (null);
 
         if (!session.isValid()) {
-            log.log(Level.SEVERE, LogFacade.INVALID_EXPIRED_SESSION_EXCEPTION);
-            //6406580 START
-            /* - these lines are calling remove on store redundantly
-            session.expire();
-            removeSession(id);
-             */
-            //6406580 END
+            log.log(SEVERE, LogFacade.INVALID_EXPIRED_SESSION_EXCEPTION);
             return (null);
         }
 
         if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, LogFacade.SWAPPING_SESSION_FROM_STORE, id);
         }
+
         session.setManager(this);
         // make sure the listeners know about it.
-        ((StandardSession)session).tellNew();
+        ((StandardSession) session).tellNew();
         add(session);
-        ((StandardSession)session).activate();
+        ((StandardSession) session).activate();
 
         return (session);
 
     }
 
-
     /**
-     * Remove the session from the Manager's list of active
-     * sessions and write it out to the Store. If the session
-     * is past its expiration or invalid, this method does
-     * nothing.
+     * Remove the session from the Manager's list of active sessions and write it out to the Store. If the session is past
+     * its expiration or invalid, this method does nothing.
      *
      * @param session The Session to write out.
      */
     protected void swapOut(Session session) throws IOException {
-
         if (store == null || !session.isValid()) {
             return;
         }
 
-        ((StandardSession)session).passivate();
+        ((StandardSession) session).passivate();
         writeSession(session);
         super.remove(session);
         session.recycle();
 
     }
 
-
     /**
-     * Write the provided session to the Store without modifying
-     * the copy in memory or triggering passivation events. Does
+     * Write the provided session to the Store without modifying the copy in memory or triggering passivation events. Does
      * nothing if the session is invalid or past its expiration.
      */
     protected void writeSession(Session session) throws IOException {
@@ -1073,86 +882,64 @@ public abstract class PersistentManagerBase
             return;
         }
 
-        ((StandardContext)getContainer()).sessionPersistedStartEvent(
-            (StandardSession) session);
+        ((StandardContext) getContainer()).sessionPersistedStartEvent((StandardSession) session);
 
         // If the given session is being persisted after a lock has been
         // acquired out-of-band, its version needs to be incremented
         // here (otherwise, it will have already been incremented at the
         // time the session was acquired via HttpServletRequest.getSession())
-        if (isSessionVersioningSupported()
-                && ((StandardSession) session).hasNonHttpLockOccurred()) {
+        if (isSessionVersioningSupported() && ((StandardSession) session).hasNonHttpLockOccurred()) {
             ((StandardSession) session).incrementVersion();
         }
 
         try {
-            if (SecurityUtil.isPackageProtectionEnabled()){
-                try{
-                    AccessController.doPrivileged(new PrivilegedStoreSave(session));
-                } catch(PrivilegedActionException ex){
-                    Exception exception = ex.getException();
-                    log.log(Level.SEVERE, LogFacade.STORE_WRITE_SESSION_EXCEPTION,
-                            exception);
-                }
-            } else {
-                 store.save(session);
-            }
+            store.save(session);
         } catch (IOException e) {
-            log.log(Level.SEVERE,LogFacade.SERIALIZING_SESSION_EXCEPTION, new Object[] {session.getIdInternal(), e});
+            log.log(SEVERE, LogFacade.SERIALIZING_SESSION_EXCEPTION, new Object[] { session.getIdInternal(), e });
             throw e;
         } finally {
-            ((StandardContext)getContainer()).sessionPersistedEndEvent(
-                (StandardSession) session);
+            ((StandardContext) getContainer()).sessionPersistedEndEvent((StandardSession) session);
         }
     }
 
-
     // -------------------------------------------------- Lifecycle Methods
-
 
     /**
      * Add a lifecycle event listener to this component.
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
-
         lifecycle.addLifecycleListener(listener);
-
     }
 
-
     /**
-     * Gets the (possibly empty) list of lifecycle listeners associated
-     * with this session manager.
+     * Gets the (possibly empty) list of lifecycle listeners associated with this session manager.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
-
 
     /**
      * Remove a lifecycle event listener from this component.
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
-
         lifecycle.removeLifecycleListener(listener);
-
     }
 
-
     /**
-     * Prepare for the beginning of active use of the public methods of this
-     * component.  This method should be called after <code>configure()</code>,
-     * and before any of the public methods of the component are utilized.
+     * Prepare for the beginning of active use of the public methods of this component. This method should be called after
+     * <code>configure()</code>, and before any of the public methods of the component are utilized.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents this component from being used
+     * @exception LifecycleException if this component detects a fatal error that prevents this component from being used
      */
+    @Override
     public void start() throws LifecycleException {
-
         // Validate and update our current component state
         if (started) {
             if (log.isLoggable(Level.INFO)) {
@@ -1160,7 +947,7 @@ public abstract class PersistentManagerBase
             }
             return;
         }
-        if( ! initialized )
+        if (!initialized)
             init();
 
         lifecycle.fireLifecycleEvent(START_EVENT, null);
@@ -1174,30 +961,27 @@ public abstract class PersistentManagerBase
             log.log(Level.FINEST, "Force random number initialization completed");
 
         if (store == null)
-            log.log(Level.SEVERE, LogFacade.NO_STORE_CONFIG_EXCEPTION);
+            log.log(SEVERE, LogFacade.NO_STORE_CONFIG_EXCEPTION);
         else if (store instanceof Lifecycle)
-            ((Lifecycle)store).start();
+            ((Lifecycle) store).start();
 
     }
 
-
     /**
-     * Gracefully terminate the active use of the public methods of this
-     * component.  This method should be the last one called on a given
-     * instance of this component.
+     * Gracefully terminate the active use of the public methods of this component. This method should be the last one
+     * called on a given instance of this component.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error that needs to be reported
      */
-   public void stop() throws LifecycleException {
-
+    @Override
+    public void stop() throws LifecycleException {
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "Stopping");
 
         // Validate and update our current component state
         if (!isStarted()) {
             if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO,LogFacade. MANAGER_NOT_STARTED_INFO);
+                log.log(Level.INFO, LogFacade.MANAGER_NOT_STARTED_INFO);
             }
             return;
         }
@@ -1219,25 +1003,24 @@ public abstract class PersistentManagerBase
         }
 
         if (getStore() != null && getStore() instanceof Lifecycle)
-            ((Lifecycle)getStore()).stop();
+            ((Lifecycle) getStore()).stop();
 
         // Require a new random number generator if we are restarted
         resetRandom();
 
-        if( initialized )
+        if (initialized)
             destroy();
 
     }
 
-
     // ----------------------------------------- PropertyChangeListener Methods
-
 
     /**
      * Process property change events from our associated Context.
      *
      * @param event The property change event that has occurred
      */
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
 
         // Validate the source of this event
@@ -1247,18 +1030,15 @@ public abstract class PersistentManagerBase
         // Process a relevant property change
         if (event.getPropertyName().equals("sessionTimeout")) {
             try {
-                setMaxInactiveIntervalSeconds
-                    ( ((Integer) event.getNewValue()).intValue()*60 );
+                setMaxInactiveIntervalSeconds(((Integer) event.getNewValue()).intValue() * 60);
             } catch (NumberFormatException e) {
-                log.log(Level.SEVERE, LogFacade.INVALID_SESSION_TIMEOUT_SETTING_EXCEPTION, event.getNewValue().toString());
+                log.log(SEVERE, LogFacade.INVALID_SESSION_TIMEOUT_SETTING_EXCEPTION, event.getNewValue().toString());
             }
         }
 
     }
 
-
     // -------------------------------------------------------- Private Methods
-
 
     /**
      * Swap idle sessions out to Store if they are idle too long.
@@ -1280,11 +1060,11 @@ public abstract class PersistentManagerBase
                 if (!session.isValid())
                     continue;
                 int timeIdle = // Truncate, do not round up
-                    (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
+                        (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
                 if (timeIdle > maxIdleSwap && timeIdle > minIdleSwap) {
                     if (log.isLoggable(Level.FINE)) {
-                        log.log(Level.FINE, LogFacade.SWAPPING_SESSION_TO_STORE, new Object[] {session.getIdInternal(),
-                                Integer.valueOf(timeIdle)});
+                        log.log(Level.FINE, LogFacade.SWAPPING_SESSION_TO_STORE,
+                                new Object[] { session.getIdInternal(), Integer.valueOf(timeIdle) });
                     }
                     try {
                         swapOut(session);
@@ -1297,10 +1077,8 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Swap idle sessions out to Store if too many are active
-     * Hercules: modified method
+     * Swap idle sessions out to Store if too many are active Hercules: modified method
      */
     protected void processMaxActiveSwaps() {
 
@@ -1313,7 +1091,7 @@ public abstract class PersistentManagerBase
         if (getMaxActiveSessions() >= sessions.length)
             return;
 
-        if(log.isLoggable(Level.FINE)) {
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, LogFacade.TOO_MANY_ACTIVE_SESSION, Integer.valueOf(sessions.length));
         }
         int toswap = sessions.length - getMaxActiveSessions();
@@ -1321,14 +1099,14 @@ public abstract class PersistentManagerBase
 
         for (int i = 0; i < sessions.length && toswap > 0; i++) {
             int timeIdle = // Truncate, do not round up
-                (int) ((timeNow - sessions[i].getLastAccessedTime()) / 1000L);
+                    (int) ((timeNow - sessions[i].getLastAccessedTime()) / 1000L);
             if (timeIdle > minIdleSwap) {
                 StandardSession session = (StandardSession) sessions[i];
-                //skip the session if it cannot be locked
-                if(session.lockBackground()) {
-                    if(log.isLoggable(Level.FINE)) {
-                        log.log(Level.FINE, LogFacade.SWAP_OUT_SESSION, new Object[] {session.getIdInternal(),
-                                Integer.valueOf(timeIdle)});
+                // skip the session if it cannot be locked
+                if (session.lockBackground()) {
+                    if (log.isLoggable(Level.FINE)) {
+                        log.log(Level.FINE, LogFacade.SWAP_OUT_SESSION,
+                                new Object[] { session.getIdInternal(), Integer.valueOf(timeIdle) });
                     }
                     try {
                         swapOut(session);
@@ -1348,10 +1126,8 @@ public abstract class PersistentManagerBase
 
     }
 
-
     /**
-     * Back up idle sessions.
-     * Hercules: modified method
+     * Back up idle sessions. Hercules: modified method
      */
     protected void processMaxIdleBackups() {
 
@@ -1368,13 +1144,13 @@ public abstract class PersistentManagerBase
                 if (!session.isValid())
                     continue;
                 int timeIdle = // Truncate, do not round up
-                    (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
+                        (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
                 if (timeIdle > maxIdleBackup) {
-                    //if session cannot be background locked then skip it
+                    // if session cannot be background locked then skip it
                     if (session.lockBackground()) {
                         if (log.isLoggable(Level.FINE)) {
-                            log.log(Level.FINE, LogFacade.BACKUP_SESSION_TO_STORE, new Object[] {session.getIdInternal(),
-                                    Integer.valueOf(timeIdle)});
+                            log.log(Level.FINE, LogFacade.BACKUP_SESSION_TO_STORE,
+                                    new Object[] { session.getIdInternal(), Integer.valueOf(timeIdle) });
                         }
                         try {
                             writeSession(session);
@@ -1395,9 +1171,8 @@ public abstract class PersistentManagerBase
     }
 
     public String getMonitorAttributeValues() {
-        //FIXME if desired for monitoring 'file'
+        // FIXME if desired for monitoring 'file'
         return "";
     }
-
 
 }

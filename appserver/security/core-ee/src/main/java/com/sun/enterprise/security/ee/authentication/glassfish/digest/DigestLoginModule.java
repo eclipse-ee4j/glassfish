@@ -20,7 +20,6 @@ package com.sun.enterprise.security.ee.authentication.glassfish.digest;
 import com.sun.enterprise.security.PrincipalGroupFactory;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.logging.LogDomains;
@@ -170,7 +169,7 @@ public class DigestLoginModule implements LoginModule {
     protected Enumeration<String> getGroups(String username) {
         try {
             return getRealm().getGroupNames(username);
-        } catch (InvalidOperationException | NoSuchUserException ex) {
+        } catch (NoSuchUserException ex) {
             _logger.log(SEVERE, null, ex);
         }
 

@@ -21,10 +21,7 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.internal.api.ClassLoaderHierarchy;
@@ -32,13 +29,12 @@ import org.glassfish.internal.api.ConnectorClassLoaderService;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.util.logging.Level.FINEST;
+
 /**
- * We support two policies:
- * 1. All standalone RARs are available to all other applications. This is the
- * Java EE 5 specific behavior.
- * 2. An application has visbility to only those standalone RARs that it
- * depends on. This is the new behavior defined in Java EE 6 as well as
- * JCA 1.6 spec.
+ * We support two policies: 1. All standalone RARs are available to all other applications. This is the Java EE 5
+ * specific behavior. 2. An application has visbility to only those standalone RARs that it depends on. This is the new
+ * behavior defined in Java EE 6 as well as JCA 1.6 spec.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
@@ -46,9 +42,8 @@ import org.jvnet.hk2.annotations.Service;
 public class ConnectorClassLoaderServiceImpl implements ConnectorClassLoaderService {
 
     /**
-     * This class loader is used when we have just a single connector
-     * class loader for all applications. In other words, we make every
-     * standalone RARs available to all applications.
+     * This class loader is used when we have just a single connector class loader for all applications. In other words, we
+     * make every standalone RARs available to all applications.
      */
     private volatile DelegatingClassLoader globalConnectorCL;
 
@@ -60,111 +55,104 @@ public class ConnectorClassLoaderServiceImpl implements ConnectorClassLoaderServ
 
     private Logger logger = LogDomains.getLogger(ConnectorClassLoaderServiceImpl.class, LogDomains.RSR_LOGGER);
 
-
     /**
-     * provides connector-class-loader for the specified application
-     * If application is null, global connector class loader will be provided
+     * provides connector-class-loader for the specified application If application is null, global connector class loader
+     * will be provided
+     *
      * @param appName application-name
      * @return class-loader
      */
+    @Override
     public DelegatingClassLoader getConnectorClassLoader(String appName) {
         DelegatingClassLoader loader = null;
 
-       // We do not have dependency on common-class-loader explicitly
-       // and also cannot initialize globalConnectorCL during postConstruct via ClassLoaderHierarchy
-       // which will result in circular dependency injection between kernel and connector module
-       // Hence initializing globalConnectorCL lazily
+        // We do not have dependency on common-class-loader explicitly
+        // and also cannot initialize globalConnectorCL during postConstruct via ClassLoaderHierarchy
+        // which will result in circular dependency injection between kernel and connector module
+        // Hence initializing globalConnectorCL lazily
         if (globalConnectorCL == null) {
             synchronized (ConnectorClassLoaderServiceImpl.class) {
                 if (globalConnectorCL == null) {
-                    //[parent is assumed to be common-class-loader in ConnectorClassLoaderUtil.createRARClassLoader() also]
+                    // [parent is assumed to be common-class-loader in ConnectorClassLoaderUtil.createRARClassLoader() also]
                     final ClassLoader parent = getCommonClassLoader();
-                    DelegatingClassLoader gcc = AccessController.doPrivileged(new PrivilegedAction<DelegatingClassLoader>() {
-                        public DelegatingClassLoader run() {
-                            DelegatingClassLoader dcl = new DelegatingClassLoader(parent);
-                            for (DelegatingClassLoader.ClassFinder cf : appsSpecificCCLUtil.getSystemRARClassLoaders()) {
-                                dcl.addDelegate(cf);
-                            }
-                            return dcl;
-                        }
-                    });
 
-                    for (DelegatingClassLoader.ClassFinder cf : appsSpecificCCLUtil.getSystemRARClassLoaders()) {
-                        gcc.addDelegate(cf);
+                    DelegatingClassLoader newGlobalConnectorCL = new DelegatingClassLoader(parent);
+
+                    for (DelegatingClassLoader.ClassFinder classFinder : appsSpecificCCLUtil.getSystemRARClassLoaders()) {
+                        newGlobalConnectorCL.addDelegate(classFinder);
                     }
-                    globalConnectorCL = gcc;
+
+                    for (DelegatingClassLoader.ClassFinder classFinder : appsSpecificCCLUtil.getSystemRARClassLoaders()) {
+                        newGlobalConnectorCL.addDelegate(classFinder);
+                    }
+
+                    globalConnectorCL = newGlobalConnectorCL;
                 }
             }
         }
         if (hasGlobalAccessForRARs(appName)) {
-            assert (globalConnectorCL != null);
             loader = globalConnectorCL;
         } else {
             appsSpecificCCLUtil.detectReferredRARs(appName);
             loader = createConnectorClassLoaderForApplication(appName);
         }
+
         return loader;
     }
 
     private boolean hasGlobalAccessForRARs(String appName) {
-        return appName == null || appsSpecificCCLUtil.useGlobalConnectorClassLoader() ||
-                appsSpecificCCLUtil.getRequiredResourceAdapters(appName).contains
-                        (ConnectorConstants.RAR_VISIBILITY_GLOBAL_ACCESS);
+        return
+            appName == null ||
+            appsSpecificCCLUtil.useGlobalConnectorClassLoader() ||
+            appsSpecificCCLUtil.getRequiredResourceAdapters(appName).contains(ConnectorConstants.RAR_VISIBILITY_GLOBAL_ACCESS);
     }
 
-    private ClassLoader getCommonClassLoader(){
+    private ClassLoader getCommonClassLoader() {
         return classLoaderHierarchyProvider.get().getCommonClassLoader();
     }
 
-    private DelegatingClassLoader createConnectorClassLoaderForApplication(String appName){
+    private DelegatingClassLoader createConnectorClassLoaderForApplication(String appName) {
 
-        DelegatingClassLoader appSpecificConnectorClassLoader =
-                new DelegatingClassLoader(getCommonClassLoader());
+        DelegatingClassLoader appSpecificConnectorClassLoader = new DelegatingClassLoader(getCommonClassLoader());
 
-        //add system ra classloaders
-        for(DelegatingClassLoader.ClassFinder cf : appsSpecificCCLUtil.getSystemRARClassLoaders()){
-            appSpecificConnectorClassLoader.addDelegate(cf);
+        // add system ra classloaders
+        for (DelegatingClassLoader.ClassFinder classFinder : appsSpecificCCLUtil.getSystemRARClassLoaders()) {
+            appSpecificConnectorClassLoader.addDelegate(classFinder);
         }
 
-        for(String raName : appsSpecificCCLUtil.getRARsReferredByApplication(appName)){
+        for (String raName : appsSpecificCCLUtil.getRARsReferredByApplication(appName)) {
             addRarClassLoader(appName, appSpecificConnectorClassLoader, raName);
         }
 
-        for(String raName : appsSpecificCCLUtil.getRequiredResourceAdapters(appName)){
+        for (String raName : appsSpecificCCLUtil.getRequiredResourceAdapters(appName)) {
             addRarClassLoader(appName, appSpecificConnectorClassLoader, raName);
         }
+
         return appSpecificConnectorClassLoader;
     }
 
-    private void addRarClassLoader(String appName, DelegatingClassLoader appSpecificConnectorClassLoader,
-                                   String raName) {
-        if(logger.isLoggable(Level.FINEST)){
-                logger.finest("raName for app [ "+appName+" ] : " + raName);
+    private void addRarClassLoader(String appName, DelegatingClassLoader appSpecificConnectorClassLoader, String raName) {
+        if (logger.isLoggable(FINEST)) {
+            logger.finest("raName for app [ " + appName + " ] : " + raName);
         }
-        DelegatingClassLoader.ClassFinder cf = getClassFinder(raName);
 
-        if(cf != null){
-            appSpecificConnectorClassLoader.addDelegate(cf);
-        }else{
-            //not possible
-/*          TODO V3
-            if(!ConnectorsUtil.isEmbedded(appName, raName)){
-                throw new IllegalStateException("RAR Classloader of RAR [ "+raName+" ] not found for " +
-                    "application [ "+appName+" ]");
-            }
-*/
+        DelegatingClassLoader.ClassFinder classFinder = getClassFinder(raName);
+
+        if (classFinder != null) {
+            appSpecificConnectorClassLoader.addDelegate(classFinder);
         }
     }
 
     private DelegatingClassLoader.ClassFinder getClassFinder(String raName) {
         List<DelegatingClassLoader.ClassFinder> delegates = globalConnectorCL.getDelegates();
         DelegatingClassLoader.ClassFinder classFinder = null;
-        for(DelegatingClassLoader.ClassFinder cf : delegates){
-            if(raName.equals(((ConnectorClassFinder)cf).getResourceAdapterName())){
+        for (DelegatingClassLoader.ClassFinder cf : delegates) {
+            if (raName.equals(((ConnectorClassFinder) cf).getResourceAdapterName())) {
                 classFinder = cf;
                 break;
             }
         }
+
         return classFinder;
     }
 

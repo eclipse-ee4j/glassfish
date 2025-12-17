@@ -113,7 +113,7 @@ asadmin-options::
 `--installdir`::
   The absolute path to the parent of the base installation directory
   where the {productName} software is to be installed on each host,
-  for example, `/export/glassfish7/`. If the directory does not exist,
+  for example, `/export/glassfish8/`. If the directory does not exist,
   the subcommand creates the directory. +
   The user that is running this subcommand must have write access to the
   specified directory. Otherwise, an error occurs. +
@@ -178,17 +178,17 @@ Created installation zip /home/gfuser/glassfish2339538623689073993.zip
 Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj03.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish7
-Removing sj03.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj03.example.com:/export/glassfish7/bin
+sj03.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish8
+Removing sj03.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj03.example.com:/export/glassfish8/bin
 Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj04.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish7
-Removing sj04.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj04.example.com:/export/glassfish7/bin
+sj04.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish8
+Removing sj04.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj04.example.com:/export/glassfish8/bin
 Command install-node-ssh executed successfully
 ----
 

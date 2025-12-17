@@ -17,12 +17,16 @@
 package org.glassfish.microprofile.rest.client.tck.client;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 
 import static java.lang.System.Logger.Level.INFO;
 
@@ -30,7 +34,11 @@ public class WireMockLibraryIncluder implements ApplicationArchiveProcessor {
 
     private static final System.Logger LOG = System.getLogger(WireMockLibraryIncluder.class.getName());
 
-    private static final String WIREMOCK_COORDINATES = "org.wiremock:wiremock";
+    private static final String[] DIRECT_DEPENDENCIES = {
+        "org.wiremock:wiremock",
+        "org.slf4j:slf4j-jdk14",
+    };
+    private static final File[] DEPENDENCIES = initDependenciesForWar();
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {
@@ -40,15 +48,16 @@ public class WireMockLibraryIncluder implements ApplicationArchiveProcessor {
             return;
         }
         final var webArchive = (WebArchive) archive;
-        webArchive.addAsLibraries(resolveDependency(WIREMOCK_COORDINATES));
+        webArchive.addAsLibraries(DEPENDENCIES);
         LOG.log(INFO, () -> "webArchive:\n" + webArchive.toString(true));
     }
 
-    private static File[] resolveDependency(String coordinates) {
-        return Maven.resolver()
-            .loadPomFromFile("pom.xml")
-            .resolve(coordinates)
-            .withTransitivity()
-            .asFile();
+    private static File[] initDependenciesForWar() {
+        PomEquippedResolveStage stageOne = Maven.resolver().loadPomFromFile("pom.xml");
+        Set<File> dependencies = new HashSet<>();
+        for (String coordinate : DIRECT_DEPENDENCIES) {
+            dependencies.addAll(List.of(stageOne.resolve(coordinate).withTransitivity().asFile()));
+        }
+        return dependencies.toArray(File[]::new);
     }
 }

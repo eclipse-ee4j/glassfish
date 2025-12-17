@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -41,7 +41,6 @@
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>antlr</artifactId>
-            <version>${antlr.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -247,8 +246,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.enterprise.concurrent</artifactId>
+            <groupId>org.glassfish.concurro</groupId>
+            <artifactId>concurro</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-corba -->
@@ -553,6 +552,11 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.lang-model</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1101,7 +1105,7 @@
         <!-- Jakarta Security -->
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>jakarta.security.enterprise</artifactId>
+            <artifactId>soteria</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1112,6 +1116,11 @@
         <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -1140,11 +1149,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->

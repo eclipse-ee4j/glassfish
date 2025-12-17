@@ -17,7 +17,7 @@
 
 package com.sun.enterprise.security.webservices.server;
 
-import com.sun.enterprise.security.ee.jmac.callback.ServerContainerCallbackHandler;
+import com.sun.enterprise.security.ee.authentication.jakarta.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.webservices.LogUtils;
 import com.sun.enterprise.security.webservices.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -34,8 +34,6 @@ import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.xml.ws.WebServiceException;
 
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -174,29 +172,12 @@ public class ServerSecurityPipe extends AbstractFilterPipeImpl {
             }
 
             if (authorized) {
-                // only do doAdPriv if SecurityManager is in effect
-                if (System.getSecurityManager() == null) {
-                    try {
-                        // proceed to invoke the endpoint
-                        response = next.process(validatedRequest);
-                    } catch (Exception e) {
-                        _logger.log(SEVERE, LogUtils.NEXT_PIPE, e);
-                        response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), e);
-                    }
-                } else {
-                    try {
-                        response = Subject.doAsPrivileged(clientSubject, new PrivilegedExceptionAction<Packet>() {
-                            @Override
-                            public Packet run() throws Exception {
-                                // proceed to invoke the endpoint
-                                return next.process(validatedRequest);
-                            }
-                        }, null);
-                    } catch (PrivilegedActionException pae) {
-                        Throwable cause = pae.getCause();
-                        _logger.log(SEVERE, LogUtils.NEXT_PIPE, cause);
-                        response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), cause);
-                    }
+                try {
+                    // proceed to invoke the endpoint
+                    response = next.process(validatedRequest);
+                } catch (Exception e) {
+                    _logger.log(SEVERE, LogUtils.NEXT_PIPE, e);
+                    response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), e);
                 }
             }
 

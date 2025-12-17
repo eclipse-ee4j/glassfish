@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,7 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 
 import org.glassfish.appclient.client.acc.AppClientContainer;
-import org.glassfish.appclient.client.acc.JWSACCClassLoader;
+import org.glassfish.main.jdke.cl.GlassfishUrlClassLoader;
 
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
@@ -388,8 +388,7 @@ public class JWSACCMain implements Runnable {
      *@return the class loader
      */
     private static ClassLoader prepareClassLoader(File downloadedAppclientJarFile) throws IOException, URISyntaxException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        ClassLoader ldr = new JWSACCClassLoader(downloadedJarURLs, classPathManager.getParentClassLoader());
-        return ldr;
+        return new GlassfishUrlClassLoader("JWS-ACC", downloadedJarURLs, classPathManager.getParentClassLoader());
     }
 
     /*

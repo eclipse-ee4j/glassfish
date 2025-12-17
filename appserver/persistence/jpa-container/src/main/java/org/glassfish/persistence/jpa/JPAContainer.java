@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,7 @@ import org.jvnet.hk2.annotations.Service;
 public class JPAContainer implements Container {
 
     @Override
-    public Class<? extends Deployer> getDeployer() {
+    public Class<? extends Deployer<?,?>> getDeployer() {
         return JPADeployer.class;
     }
 

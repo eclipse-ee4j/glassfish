@@ -27,7 +27,6 @@ import jakarta.inject.Named;
 import java.io.File;
 
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.security.services.common.Secure;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
@@ -44,7 +43,6 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 @Service
 @Named("JCEKS")
 @PerLookup
-@Secure(accessPermissionName = "security/service/credential/provider/jceks")
 @Deprecated
 public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore implements DomainScopedPasswordAliasStore  {
 

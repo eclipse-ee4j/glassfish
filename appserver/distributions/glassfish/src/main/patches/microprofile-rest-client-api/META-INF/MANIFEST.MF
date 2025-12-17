@@ -1,22 +1,24 @@
 Manifest-Version: 1.0
+Created-By: 17.0.10 (Eclipse Adoptium)
+Build-Jdk-Spec: 17
+Bnd-LastModified: 1722519108645
 Bundle-Description: Typesafe Rest Client APIs for MicroProfile :: API
 Bundle-License: Apache License, Version 2.0
 Bundle-SymbolicName: org.eclipse.microprofile.rest.client
-Bnd-LastModified: 1722519108645
 Bundle-ManifestVersion: 2
 Bundle-DocURL: http://microprofile.io/microprofile-rest-client-api
 Bundle-Vendor: Eclipse Foundation
 Import-Package: jakarta.enterprise.context;version="[3,5)";resolution:
  =optional,jakarta.enterprise.inject;version="[3,5)";resolution:=optio
  nal,jakarta.enterprise.util;version="[3,5)";resolution:=optional,jaka
- rta.inject;resolution:=optional;version="[2.0,3)",org.eclipse.micropr
+ rta.inject;resolution:=optional;version="[2.0,4)",org.eclipse.micropr
  ofile.config;version="[3,4)";resolution:=optional,jakarta.annotation;
- version="[2.1,3)",jakarta.ws.rs.core;version="[3.1,4)",java.lang,java
+ version="[2.1,4)",jakarta.ws.rs.core;version="[3.1,5)",java.lang,java
  .lang.annotation,java.lang.invoke,java.net,java.security,java.util,ja
  va.util.concurrent,java.util.function,java.util.logging,java.util.str
  eam,javax.net.ssl,org.eclipse.microprofile.rest.client;version="[2.1,
- 2.2)",org.eclipse.microprofile.rest.client.ext;version="[2.0,2.1)",or
- g.eclipse.microprofile.rest.client.spi;version="[1.1,2)"
+ 5)",org.eclipse.microprofile.rest.client.ext;version="[2.0,5)",org.ec
+ lipse.microprofile.rest.client.spi;version="[1.1,5)"
 Require-Capability: osgi.extender;filter:="(osgi.extender=osgi.service
  loader.processor)";resolution:=optional,osgi.serviceloader;filter:="(
  osgi.serviceloader=org.eclipse.microprofile.rest.client.spi.RestClien
@@ -39,6 +41,3 @@ Bundle-SCM: url="https://github.com/eclipse/microprofile-rest-client/m
  clipse/microprofile-rest-client.git/microprofile-rest-client-api",dev
  eloper-connection="scm:git:git@github.com:eclipse/microprofile-rest-c
  lient.git/microprofile-rest-client-api",tag="4.0"
-Build-Jdk-Spec: 17
-Created-By: 17.0.10 (Eclipse Adoptium)
-

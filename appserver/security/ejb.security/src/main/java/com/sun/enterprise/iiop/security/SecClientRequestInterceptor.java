@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,8 +35,6 @@ import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.logging.LogDomains;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
@@ -48,6 +46,7 @@ import javax.security.auth.x500.X500Principal;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.omg.CORBA.Any;
+import org.omg.CORBA.LocalObject;
 import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
 import org.omg.IOP.ServiceContext;
@@ -67,7 +66,7 @@ import static java.util.Arrays.asList;
  * This class implements a client side security request interceptor for CSIV2. It is used to send and receive the
  * service context in a service context element in the service context list in an IIOP header.
  */
-public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject implements ClientRequestInterceptor {
+public class SecClientRequestInterceptor extends LocalObject implements ClientRequestInterceptor {
 
     private static final Logger LOG = LogDomains.getLogger(SecClientRequestInterceptor.class, SECURITY_LOGGER, false);
 
@@ -217,6 +216,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         // XXX: Workaround for non-null connection object ri for local invocation.
         ConnectionExecutionContext.removeClientThreadID();
+
         /**
          * CSIV2 level 0 implementation does not require any authorization tokens to be sent over the wire. So set cAuthzElem to
          * empty.
@@ -232,54 +232,49 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
         /* CDR encoded Security Attribute Service element */
         byte[] cdr_encoded_saselm = null;
 
-        java.lang.Object cred = null; // A single JAAS credential
+        Object cred = null; // A single JAAS credential
 
         LOG.log(Level.FINE, "++++ Entered {0} send_request()", prname);
-        SecurityContext secctxt = null; // SecurityContext to be sent
+        SecurityContext securityContext = null; // SecurityContext to be sent
         ORB orb = orbHelper.getORB();
         org.omg.CORBA.Object effective_target = ri.effective_target();
+
         try {
-            secctxt = secContextUtil.getSecurityContext(effective_target);
-        } catch (InvalidMechanismException ime) {
+            securityContext = secContextUtil.getSecurityContext(effective_target);
+        } catch (InvalidMechanismException | InvalidIdentityTokenException ime ) {
             throw new RuntimeException(ime);
-        } catch (InvalidIdentityTokenException iite) {
-            throw new RuntimeException(iite);
         }
 
         /**
          * In an unprotected invocation, there is nothing to be sent to the service context field. Check for this case.
          */
-        if (secctxt == null) {
+        if (securityContext == null) {
             LOG.log(Level.FINE, "Security context is null (nothing to add to service context)");
             return;
         }
 
-        final SecurityContext sCtx = secctxt;
         /* Construct an authentication token */
-        if (secctxt.authcls != null) {
-            PrivilegedAction<Object> action = () -> {
-                Set<Object> credentials = sCtx.subject.getPrivateCredentials(sCtx.authcls);
-                return getCred(credentials, sCtx.authcls);
-            };
-            cred = AccessController.doPrivileged(action);
+        if (securityContext.authcls != null) {
+            Set<?> credentials = securityContext.subject.getPrivateCredentials(securityContext.authcls);
+            cred = getCred(credentials, securityContext.authcls);
 
             try {
+                CompoundSecMech mechanism =
+                    Lookups.getSecurityMechanismSelector()
+                           .getClientConnectionContext()
+                           .getMechanism();
 
-                SecurityMechanismSelector sms = Lookups.getSecurityMechanismSelector();
-                ConnectionContext cc = sms.getClientConnectionContext();
-                CompoundSecMech mech = cc.getMechanism();
-
-                cAuthenticationToken = createAuthToken(cred, secctxt.authcls, orb, mech);
+                cAuthenticationToken = createAuthToken(cred, securityContext.authcls, orb, mechanism);
             } catch (Exception e) {
                 throw new SecurityException("Error while constructing an authentication token.");
             }
         }
 
         /* Construct an identity token */
-        if (secctxt.identcls != null) {
-            cred = getCred(secctxt.subject.getPublicCredentials(secctxt.identcls), secctxt.identcls);
+        if (securityContext.identcls != null) {
+            cred = getCred(securityContext.subject.getPublicCredentials(securityContext.identcls), securityContext.identcls);
             try {
-                cIdentityToken = createIdToken(cred, secctxt.identcls, orb);
+                cIdentityToken = createIdToken(cred, securityContext.identcls, orb);
             } catch (Exception e) {
                 throw new SecurityException("Error while constructing an identity token.");
             }

@@ -18,6 +18,7 @@
 package org.glassfish.jdbc.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -26,7 +27,10 @@ import jakarta.inject.Inject;
 
 import java.util.Properties;
 
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -35,18 +39,24 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.glassfish.resources.api.ResourceAttributes;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
+import static org.glassfish.api.admin.RuntimeType.ALL;
+import static org.glassfish.resourcebase.resources.api.ResourceStatus.FAILURE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
+
 /**
  * Create JDBC Connection Pool Command
  */
-@ExecuteOn(RuntimeType.ALL)
-@Service(name="create-jdbc-connection-pool")
+@ExecuteOn(ALL)
+@Service(name = "create-jdbc-connection-pool")
 @PerLookup
 @I18n("create.jdbc.connection.pool")
 public class CreateJdbcConnectionPool implements AdminCommand {
@@ -170,6 +180,12 @@ public class CreateJdbcConnectionPool implements AdminCommand {
     @Param(optional=true, obsolete = true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
+    @Param(optional = true, separator = ':')
+    private String[] resourceNames;
+
+    @Param(optional = true)
+    private String sqlFileName;
+
     @Param(name="jdbc_connection_pool_id", alias = "name" /*Mapped to ResourceConstants.CONNECTION_POOL_NAME below */,  primary=true)
     private String jdbc_connection_pool_id;
 
@@ -179,52 +195,60 @@ public class CreateJdbcConnectionPool implements AdminCommand {
     @Inject
     private CommandRunner<Job> commandRunner;
 
+    @Inject
+    private JDBCResourceManager jdbcResourceManager;
+
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the
+     * values the parameter values
      *
      * @param context information
      */
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        final ResourceStatus resourceStatus = createResource(report);
-        if (resourceStatus.getMessage() != null) {
-            report.setMessage(resourceStatus.getMessage());
+        createPool(report);
+        if (report.hasFailures()) {
+            return;
         }
-        ActionReport.ExitCode ec = ActionReport.ExitCode.SUCCESS;
-        if (resourceStatus.getStatus() == ResourceStatus.FAILURE) {
-            ec = ActionReport.ExitCode.FAILURE;
-            if (resourceStatus.getMessage() == null) {
-                 report.setMessage(I18N.getLocalString("create.jdbc.connection.pool.fail",
-                    "JDBC connection pool {0} creation failed", jdbc_connection_pool_id, ""));
+        if (resourceNames != null && resourceNames.length > 0) {
+            createResources(report);
+            if (report.hasFailures()) {
+                return;
             }
-            if (resourceStatus.getException() != null) {
-                report.setFailureCause(resourceStatus.getException());
-            }
-        } else {
-            //TODO only for DAS
-            if (ping == Boolean.TRUE) {
-                ActionReport subReport = report.addSubActionsReport();
-                ParameterMap parameters = new ParameterMap();
-                parameters.set("pool_name", jdbc_connection_pool_id);
-                commandRunner.getCommandInvocation("ping-connection-pool", subReport, context.getSubject()).parameters(parameters).execute();
-                if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())) {
-                    subReport.setMessage(I18N.getLocalString("ping.create.jdbc.connection.pool.fail",
-                            "\nAttempting to ping during JDBC Connection Pool " +
-                            "Creation : {0} - Failed.", jdbc_connection_pool_id));
-                    subReport.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                } else {
-                    subReport.setMessage(I18N.getLocalString("ping.create.jdbc.connection.pool.success",
-                            "\nAttempting to ping during JDBC Connection Pool " +
-                            "Creation : {0} - Succeeded.", jdbc_connection_pool_id));
-                }
+            if (sqlFileName != null) {
+                execSqlFile(resourceNames[0], report);
             }
         }
-        report.setActionExitCode(ec);
+        if (report.hasFailures()) {
+            return;
+        }
+        if (ping == Boolean.TRUE) {
+            pingPool(context.getSubject(), report);
+        }
     }
 
-    private ResourceStatus createResource(ActionReport report) {
+    private void pingPool(Subject subject, ActionReport report) {
+        ActionReport subReport = report.addSubActionsReport();
+        ParameterMap parameters = new ParameterMap();
+        parameters.set("pool_name", jdbc_connection_pool_id);
+        commandRunner.getCommandInvocation("ping-connection-pool", subReport, subject)
+                     .parameters(parameters)
+                     .execute();
+
+        if (ExitCode.FAILURE.equals(subReport.getActionExitCode())) {
+            subReport.setMessage(I18N.getLocalString("ping.create.jdbc.connection.pool.fail",
+                    "\nAttempting to ping during JDBC Connection Pool " +
+                    "Creation : {0} - Failed.", jdbc_connection_pool_id));
+            subReport.setActionExitCode(ExitCode.FAILURE);
+        } else {
+            subReport.setMessage(I18N.getLocalString("ping.create.jdbc.connection.pool.success",
+                    "\nAttempting to ping during JDBC Connection Pool " +
+                    "Creation : {0} - Succeeded.", jdbc_connection_pool_id));
+        }
+    }
+
+    private void createPool(ActionReport report) {
         ResourceAttributes attrList = new ResourceAttributes();
         attrList.set(ResourceConstants.CONNECTION_POOL_NAME, jdbc_connection_pool_id);
         attrList.set(ResourceConstants.DATASOURCE_CLASS, datasourceclassname);
@@ -266,15 +290,65 @@ public class CreateJdbcConnectionPool implements AdminCommand {
         attrList.set(ResourceConstants.WRAP_JDBC_OBJECTS, wrapjdbcobjects.toString());
         try {
             JDBCConnectionPoolManager connPoolMgr = new JDBCConnectionPoolManager();
-            return connPoolMgr.create(domain.getResources(), attrList, properties, target);
+            ResourceStatus result = connPoolMgr.create(domain.getResources(), attrList, properties, target);
+            if (result.getStatus() == ResourceStatus.FAILURE) {
+                report.setMessage(I18N.getLocalString("create.jdbc.connection.pool.fail",
+                    "JDBC connection pool {0} creation failed", jdbc_connection_pool_id, result.getMessage()));
+                report.setFailureCause(result.getException());
+                report.setActionExitCode(ExitCode.FAILURE);
+            } else {
+                report.setMessage(result.getMessage());
+            }
         } catch(Exception e) {
-            String actual = e.getMessage();
-            String def = "JDBC connection pool: {0} could not be created, reason: {1}";
             report.setMessage(I18N.getLocalString("create.jdbc.connection.pool.fail",
-                    def, jdbc_connection_pool_id, actual));
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                "JDBC connection pool: {0} could not be created, reason: {1}",
+                jdbc_connection_pool_id, e.getMessage()));
+            report.setActionExitCode(ExitCode.FAILURE);
             report.setFailureCause(e);
-            return null;
+        }
+    }
+
+
+    private void createResources(ActionReport report) {
+        for (String resourceName : resourceNames) {
+            ResourceAttributes attributes = new ResourceAttributes();
+            attributes.set(JNDI_NAME, resourceName);
+            attributes.set(POOL_NAME, jdbc_connection_pool_id);
+            attributes.set(DESCRIPTION, description);
+            attributes.set(ENABLED, "true");
+            final Resources resources = domain.getResources();
+            try {
+                ResourceStatus result = jdbcResourceManager.create(resources, attributes, new Properties(), target);
+                toSubReport(result, report);
+            } catch (Exception e) {
+                report.appendMessage(e.getMessage());
+                report.setActionExitCode(ExitCode.FAILURE);
+                report.setFailureCause(e);
+            }
+        }
+    }
+
+    private void execSqlFile(final String resourceName, final ActionReport report) {
+        try {
+            ResourceStatus execStatus = jdbcResourceManager.executeSql(resourceName, sqlFileName);
+            toSubReport(execStatus, report);
+        } catch (Exception e) {
+            report.appendMessage("SQL execution of file " + sqlFileName + " failed for jdbc resource "
+                + resourceName + " using pool " + jdbc_connection_pool_id + ", due to " + e.getMessage());
+            report.setActionExitCode(ExitCode.FAILURE);
+            report.setFailureCause(e);
+        }
+    }
+
+    private void toSubReport(ResourceStatus result, ActionReport report) {
+        ActionReport subReport = report.addSubActionsReport();
+        subReport.setMessage(result.getMessage());
+        if (result.getStatus() == FAILURE) {
+            subReport.setActionExitCode(ExitCode.FAILURE);
+            subReport.setFailureCause(result.getException());
+            report.setActionExitCode(ExitCode.FAILURE);
+        } else {
+            subReport.setActionExitCode(ExitCode.SUCCESS);
         }
     }
 }

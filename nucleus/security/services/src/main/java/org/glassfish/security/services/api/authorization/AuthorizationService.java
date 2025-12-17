@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package org.glassfish.security.services.api.authorization;
 
 
 import java.net.URI;
-import java.security.Permission;
 import java.util.List;
 
 import javax.security.auth.Subject;
@@ -33,26 +33,6 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface AuthorizationService extends SecurityService {
-
-    /**
-     * Determines whether the given Subject has been granted the specified Permission
-     * by delegating to the configured java.security.Policy object.  This method is
-     * a high-level convenience method that tests for a Subject-based permission
-     * grant without reference to the AccessControlContext of the caller.
-     *
-     * In addition, this method isolates the query from the underlying Policy configuration
-     * model.  It could, for example, multiplex queries across multiple instances of Policy
-     * configured in an implementation-specific way such that different threads, or different
-     * applications, query different Policy objects.  The initial implementation simply
-     * delegates to the configured Policy as defined by Java SE.
-     *
-     * @param subject The Subject for which permission is being tested.
-     * @param permission The Permission being queried.
-     * @return True or false, depending on whether the specified Permission
-     * is granted to the Subject by the configured Policy.
-     * @throws IllegalArgumentException Given null or illegal subject or permission
-     */
-    boolean isPermissionGranted(Subject subject, Permission permission);
 
     /**
      * Determines whether the given Subject is authorized to access the given resource,

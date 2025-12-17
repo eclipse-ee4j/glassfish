@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,16 +21,31 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-cdi-parent</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <artifactId>tck-cdi</artifactId>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-cdi</artifactId>
+    <artifactId>tck-cdi-full</artifactId>
 
-    <name>CDI TCK Full runner 4.0 for Weld (GlassFish)</name>
+    <name>CDI TCK Full runner for Weld (GlassFish)</name>
     <description>Aggregates dependencies and runs the CDI TCK on GlassFish</description>
 
+    <properties>
+        <failsafe.argLine>
+            ${maven.test.jvmoptions}
+            -Dglassfish.maxHeapSize=4g
+        </failsafe.argLine>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
+        </dependency>
 
         <!-- Jakarta EE APIs -->
         <dependency>
@@ -39,45 +54,61 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>jakarta.faces</groupId>
             <artifactId>jakarta.faces-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.jms</groupId>
             <artifactId>jakarta.jms-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.resource</groupId>
             <artifactId>jakarta.resource-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <scope>test</scope>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Weld (CDI implementation) -->
@@ -134,7 +165,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-api</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
+            <version>${tck.cdi.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -151,7 +182,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
+            <version>${tck.cdi.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -161,14 +192,12 @@
             </exclusions>
         </dependency>
 
-        <!--
-            The TCK Web implementation contains test helper code such as the WebArchiveBuilder,
-            as well as a large amount of additional tests.
-        -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-web-impl</artifactId>
-            <version>${cdi.tck-4-0.version}</version>
+            <artifactId>cdi-tck-core-impl</artifactId>
+            <version>${tck.cdi.version}</version>
+            <type>xml</type>
+            <classifier>suite</classifier>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -178,37 +207,29 @@
             </exclusions>
         </dependency>
 
-
         <dependency>
-            <groupId>org.glassfish.expressly</groupId>
-            <artifactId>expressly</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>${htmlunit.version}</version>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-lite-extension-translator</artifactId>
+            <version>${weld.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <!-- EmailableReporter moved in different package, do not update -->
-            <version>7.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Arquillian and TestNG dependency, required on both sides -->
+        <dependency>
+            <groupId>org.jcommander</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.83</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
@@ -221,24 +242,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ee.omnifish.arquillian</groupId>
-            <artifactId>arquillian-glassfish-server-managed</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main</groupId>
-            <artifactId>glassfish-jul-extension</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <!-- Disable annotation processor for test sources -->
-                    <testCompilerArgument>-proc:none</testCompilerArgument>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -260,37 +271,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Copy the TestNG suite file -->
-                    <execution>
-                        <id>copy-test-suites</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <!--
-                                    Contains what becomes the tck-web-suite.xml; the TestNG suite file that dictates
-                                    which tests from the TCK Web implementation are executed and which are excluded.
-                                    Note that this file is essentially a superset of the suite file from the TCK Core,
-                                    so we don't need that one separately here.
-                                -->
-                                <artifactItem>
-                                    <groupId>jakarta.enterprise</groupId>
-                                    <artifactId>cdi-tck-web-impl</artifactId>
-                                    <version>${cdi.tck-4-0.version}</version>
-                                    <type>xml</type>
-                                    <classifier>suite</classifier>
-                                    <overWrite>false</overWrite>
-                                    <destFileName>tck-web-suite.xml</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>target/suites</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-
                     <execution>
                         <id>unpack-glassfish</id>
                         <phase>pre-integration-test</phase>
@@ -312,7 +292,7 @@
                         </configuration>
                      </execution>
 
-                     <!-- Install a jar with a few amount of test classes, for which some of the tests are looking -->
+                    <!-- Install a jar with a few amount of test classes, for which some of the tests are looking -->
                     <execution>
                         <id>install-cdi-tck-ext-lib</id>
                         <phase>pre-integration-test</phase>
@@ -324,10 +304,10 @@
                                 <artifactItem>
                                     <groupId>jakarta.enterprise</groupId>
                                     <artifactId>cdi-tck-ext-lib</artifactId>
-                                    <version>${cdi.tck-4-0.version}</version>
+                                    <version>${tck.cdi.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}/glassfish7/glassfish/domains/domain1/lib/applibs</outputDirectory>
+                                    <outputDirectory>${glassfish.root}/glassfish8/glassfish/domains/domain1/lib/applibs</outputDirectory>
                                     <destFileName>cdi-tck-ext-lib.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -339,16 +319,14 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>-Xmx768m</argLine>
                     <!-- Surefire / TestNG Properties -->
                     <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>target/suites/tck-web-suite.xml</suiteXmlFile>
+                        <suiteXmlFile>${project.build.testOutputDirectory}/tck-core-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <excludedGroups>${excluded.groups}</excludedGroups>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
-                        <dependency>jakarta.enterprise:cdi-tck-web-impl</dependency>
                     </dependenciesToScan>
                     <properties>
                         <property>
@@ -356,13 +334,9 @@
                             <value>1</value>
                         </property>
                     </properties>
-                    <forkCount>1</forkCount>
-                    <reuseForks>true</reuseForks>
-                    <!-- System Properties -->
                     <systemPropertyVariables>
-                        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
-                        <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                         <glassfish.enableAssertions>:org.jboss.cdi.tck...</glassfish.enableAssertions>
                         <glassfish.systemProperties>
                             cdiTckExcludeDummy=true
@@ -382,46 +356,49 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-test-report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report-only</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <reportsDirectories>${project.build.directory}/failsafe-reports/junitreports</reportsDirectories>
-                    <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
-                    <outputName>test-report</outputName>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 
     <profiles>
         <profile>
-            <id>full</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
-                <excluded.groups>se</excluded.groups>
-            </properties>
-        </profile>
-        <profile>
-            <id>web</id>
-            <properties>
-                <glassfish-artifact-id>web</glassfish-artifact-id>
-                <excluded.groups>javaee-full,se</excluded.groups>
-            </properties>
+            <!--
+                We had to customize it to be compatible with TestNG7,
+                which replaced EmailableReporter with EmailableReporter2.
+                We enabled also verbose.
+            -->
+            <id>overwrite-tck-core-suite.xml</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-test-suites</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>jakarta.enterprise</groupId>
+                                            <artifactId>cdi-tck-core-impl</artifactId>
+                                            <version>${tck.cdi.version}</version>
+                                            <type>xml</type>
+                                            <classifier>suite</classifier>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>src/test/resources</outputDirectory>
+                                            <destFileName>tck-core-suite.xml</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <overWriteReleases>true</overWriteReleases>
+                                    <overWriteSnapshots>true</overWriteSnapshots>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
-
 </project>

@@ -20,7 +20,5 @@ import jakarta.ejb.Remote;
 
 @Remote
 public interface HelloRemote {
-
-    public String hello();
-
+    String hello();
 }

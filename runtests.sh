@@ -66,7 +66,7 @@ if [ -z "${test}" ]; then
 fi
 
 if [ -z "${JAVA_HOME}" ]; then
-  export JAVA_HOME=/usr/lib/jvm/jdk17
+  export JAVA_HOME=/usr/lib/jvm/jdk21
 fi
 export PATH="${JAVA_HOME}/bin:${PATH}"
 
@@ -89,11 +89,14 @@ else
    unset GLASSFISH_SUSPEND
 fi
 
+echo GF_VERSION=$GF_VERSION
+echo GLASSFISH_SUSPEND=$GLASSFISH_SUSPEND
+
 export JACOCO_ENABLED="true"
 export WORKSPACE="${WORKSPACE:-$(pwd)/target}"
 export BUNDLES_DIR="${BUNDLES_DIR:-${WORKSPACE}/bundles}"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
-export GLASSFISH_HOME="${WORKSPACE}/glassfish7"
+export GLASSFISH_HOME="${WORKSPACE}/glassfish8"
 export CLASSPATH="${GLASSFISH_HOME}/javadb"
 export S1AS_HOME="${GLASSFISH_HOME}/glassfish"
 export ANT_OPTS="${ANT_OPTS} -Djdk.xml.totalEntitySizeLimit=50000000"

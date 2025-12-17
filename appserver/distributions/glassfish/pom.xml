@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -34,8 +34,8 @@
     <name>Glassfish Full Profile Distribution</name>
 
     <properties>
-        <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
-        <glassfish.appclient>${project.build.directory}/stage/glassfish7/glassfish/lib/appclient</glassfish.appclient>
+        <glassfish.modules>${project.build.directory}/stage/glassfish8/glassfish/modules</glassfish.modules>
+        <glassfish.appclient>${project.build.directory}/stage/glassfish8/glassfish/lib/appclient</glassfish.appclient>
     </properties>
 
     <dependencies>
@@ -83,7 +83,25 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>apply patches</id>
+                        <id>copy-krazo-annotatedtypeprocessor</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir
+                                    dir="${project.basedir}/src/main/patches/krazo-core/org/eclipse/krazo/cdi/types" />
+
+                                <copy
+                                    file="${project.build.directory}/dependency/org/eclipse/krazo/cdi/types/AnnotatedTypeProcessor.class"
+                                    tofile="${project.basedir}/src/main/patches/krazo-core/org/eclipse/krazo/cdi/types/AnnotatedTypeProcessor.class"
+                                    overwrite="true" />
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>apply-patches</id>
                     </execution>
                 </executions>
             </plugin>

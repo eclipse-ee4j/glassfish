@@ -36,8 +36,12 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
-import static org.objectweb.asm.Opcodes.V17;
+import static org.objectweb.asm.Opcodes.V21;
 
+/**
+ * @author Mahesh Kannan
+ *         Date: Jul 20, 2008
+ */
 public class ProviderImplGenerator {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
@@ -72,7 +76,7 @@ public class ProviderImplGenerator {
 
         int access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL;
         String[] interfaces = new String[]{providerClazz.getName().replace('.', '/')};
-        cw.visit(V17, access, generatedClassName, null, "java/lang/Object", interfaces);
+        cw.visit(V21, access, generatedClassName, null, "java/lang/Object", interfaces);
 
 
         for (FlashlightProbe probe : provider.getProbes()) {

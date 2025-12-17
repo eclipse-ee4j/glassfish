@@ -16,8 +16,6 @@
 
 package org.glassfish.main.jul;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -70,17 +68,12 @@ public class GlassFishLogger extends Logger {
      * @param logger
      */
     GlassFishLogger(final Logger logger) {
-        // resource bundle name is taken from the set resource bundle
+        // Resource bundle name is taken from the set resource bundle
         super(requireNonNull(logger, "logger is null!").getName(), null);
-        if (System.getSecurityManager() == null) {
-            initMe(logger);
-            return;
-        }
-        PrivilegedAction<Void> action = () -> {
-            initMe(logger);
-            return null;
-        };
-        AccessController.doPrivileged(action);
+
+        initMe(logger);
+
+        return;
     }
 
 

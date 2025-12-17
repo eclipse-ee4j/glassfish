@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta-security-tck</artifactId>
@@ -32,8 +32,8 @@
     <name>TCK: Install Jakarta Security TCK</name>
 
     <properties>
-        <tck.artifactFileName>jakarta-security-tck-3.0.3.zip</tck.artifactFileName>
-        <tck.artifactUrl>https://download.eclipse.org/security/jakartaee10/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
+        <tck.artifactFileName>jakarta-security-tck-4.0.1.zip</tck.artifactFileName>
+        <tck.artifactUrl>https://download.eclipse.org/security/jakartaee11/staged/eftl/${tck.artifactFileName}</tck.artifactUrl>
     </properties>
 
     <build>

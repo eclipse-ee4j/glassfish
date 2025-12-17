@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +50,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -142,7 +143,6 @@ import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
 import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
 import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
 import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
-import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
 
 /**
  * Application Loader is providing useful methods to load applications
@@ -196,6 +196,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     private ExecutorService executorService;
     private Collection<ApplicationLifecycleInterceptor> alcInterceptors = emptyList();
 
+    private ThreadLocal<Deque<ExtendedDeploymentContext>> currentDeploymentContext;
+
     protected Deployer<?, ?> getDeployer(EngineInfo engineInfo) {
         return engineInfo.getDeployer();
     }
@@ -205,7 +207,34 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         executorService = createExecutorService();
         deploymentLifecycleProbeProvider = new DeploymentLifecycleProbeProvider();
         alcInterceptors = serviceLocator.getAllServices(ApplicationLifecycleInterceptor.class);
+        currentDeploymentContext = new ThreadLocal<>();
     }
+
+    @Override
+    public DeploymentContext getCurrentDeploymentContext() {
+        Deque<ExtendedDeploymentContext> current = currentDeploymentContext.get();
+        return current == null ? null : current.peek();
+    }
+
+    private void pushCurrentDeploymentContext(ExtendedDeploymentContext context) {
+        Deque<ExtendedDeploymentContext> current = currentDeploymentContext.get();
+        if (current == null) {
+            current = new LinkedList<>();
+            currentDeploymentContext.set(current);
+        }
+        current.push(context);
+    }
+
+    private ExtendedDeploymentContext popCurrentDeploymentContext() {
+        Deque<ExtendedDeploymentContext> current = currentDeploymentContext.get();
+        final ExtendedDeploymentContext context = current.pop();
+        if (current.isEmpty()) {
+            currentDeploymentContext.remove();
+        }
+        return context;
+    }
+
+
 
     /**
      * Returns the ArchiveHandler for the passed archive abstraction or null if there are none.
@@ -352,6 +381,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         context.setPhase(DeploymentContextImpl.Phase.PREPARE);
         ApplicationInfo appInfo = null;
 
+        pushCurrentDeploymentContext(context);
         try {
             ArchiveHandler handler = context.getArchiveHandler();
             if (handler == null) {
@@ -486,6 +516,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 appInfo = context.getModuleMetaData(ApplicationInfo.class);
                 if (appInfo == null) {
                     appInfo = new ApplicationInfo(events, context.getSource(), appName);
+                    context.addModuleMetaData(appInfo);
                     appInfo.addModule(moduleInfo);
 
                     for (Object m : context.getModuleMetadata()) {
@@ -554,6 +585,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             tracker.actOn(LOG);
             return null;
         } finally {
+            popCurrentDeploymentContext();
             if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
                 events.send(new Event<>(Deployment.DEPLOYMENT_SUCCESS, appInfo));
                 long operationTime = Calendar.getInstance().getTimeInMillis() - operationStartTime;
@@ -842,27 +874,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             }
         }
 
-        for (Deployer<?, ?> deployer : containerInfosByDeployers.keySet()) {
-            if (deployer.getMetaData() != null) {
-                for (Class<?> dependency : deployer.getMetaData().requires()) {
-                    if (!typeByDeployer.containsKey(dependency) && !typeByProvider.containsKey(dependency)) {
-
-                        Service s = deployer.getClass().getAnnotation(Service.class);
-                        String serviceName;
-                        if (s != null && s.name() != null && s.name().length() > 0) {
-                            serviceName = s.name();
-                        } else {
-                            serviceName = deployer.getClass().getSimpleName();
-                        }
-
-                        report.failure(LOG, serviceName + " deployer requires " + dependency + " but no other deployer provides it",
-                                null);
-
-                        return null;
-                    }
-                }
-            }
-        }
+        logMessageIfRequiredDependenciesNotAvailable(containerInfosByDeployers, typeByDeployer, typeByProvider);
 
         // ok everything is satisfied, just a matter of running things in order
         List<Deployer<?, ?>> orderedDeployers = new ArrayList<>();
@@ -881,7 +893,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     deployer.loadMetaData(null, context);
                 } else {
                     Class<?>[] provides = metadata.provides();
-                    if (provides == null || provides.length == 0) {
+                    if (isEmpty(provides)) {
                         deployer.loadMetaData(null, context);
                     } else {
                         for (Class<?> provide : provides) {
@@ -905,12 +917,36 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         return sortedEngineInfos;
     }
 
+    private void logMessageIfRequiredDependenciesNotAvailable(Map<Deployer, EngineInfo> containerInfosByDeployers, Map<Class<?>, Deployer<?, ?>> typeByDeployer, Map<Class<?>, ApplicationMetaDataProvider<?>> typeByProvider) {
+        if (LOG.isLoggable(FINE)) {
+            for (Deployer<?, ?> deployer : containerInfosByDeployers.keySet()) {
+                if (deployer.getMetaData() != null) {
+                    for (Class<?> dependency : deployer.getMetaData().requires()) {
+                        if (!typeByDeployer.containsKey(dependency) && !typeByProvider.containsKey(dependency)) {
+
+                            Service s = deployer.getClass().getAnnotation(Service.class);
+                            String serviceName;
+                            if (s != null && s.name() != null && s.name().length() > 0) {
+                                serviceName = s.name();
+                            } else {
+                                serviceName = deployer.getClass().getSimpleName();
+                            }
+
+                            LOG.fine(() -> serviceName + " deployer requires " + dependency + " but no other deployer provides it");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private boolean areSomeContainersNotStarted(final String[] containerNames) {
         for (String containerName : containerNames) {
-            if (null == containerRegistry.getContainer(containerName)) {
+            if (containerRegistry.getContainer(containerName) == null) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -920,7 +956,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         if (results.contains(deployer)) {
             return;
         }
-        results.add(deployer);
+
         if (deployer.getMetaData() != null) {
             for (Class<?> required : deployer.getMetaData().requires()) {
                 if (dc.getModuleMetaData(required) != null) {
@@ -931,7 +967,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 } else {
                     ApplicationMetaDataProvider<?> provider = typeByProvider.get(required);
                     if (provider == null) {
-                        LOG.log(SEVERE, inconsistentLifecycleState, required);
+                        LOG.log(FINE, () -> "Nothing is providing " + required + ", this should be treated as an optional dependancy");
                     } else {
                         LinkedList<ApplicationMetaDataProvider<?>> providers = new LinkedList<>();
 
@@ -943,17 +979,17 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 }
             }
         }
+        results.add(deployer);
     }
 
     private void addRecursively(LinkedList<ApplicationMetaDataProvider<?>> results,
             Map<Class<?>, ApplicationMetaDataProvider<?>> providers, ApplicationMetaDataProvider<?> provider) {
-        results.addFirst(provider);
-
         for (Class<?> type : provider.getMetaData().requires()) {
             if (providers.containsKey(type)) {
                 addRecursively(results, providers, providers.get(type));
             }
         }
+        results.addFirst(provider);
     }
 
     @Override

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta-rest-tck</artifactId>
@@ -32,10 +32,11 @@
     <name>TCK: Install Jakarta REST TCK</name>
 
     <properties>
-        <tck.artifactVersion>3.1.5</tck.artifactVersion>
+        <tck.artifactVersion>4.0.1</tck.artifactVersion>
         <tck.artifactFileNameBase>jakarta-restful-ws-tck-${tck.artifactVersion}</tck.artifactFileNameBase>
         <tck.artifactFileName>${tck.artifactFileNameBase}.zip</tck.artifactFileName>
-        <tck.artifactUrl>https://download.eclipse.org/jakartaee/restful-ws/3.1/${tck.artifactFileName}</tck.artifactUrl>
+        <tck.artifactUrl>https://download.eclipse.org/jakartaee/restful-ws/4.0/${tck.artifactFileName}</tck.artifactUrl>
+        <tck.artifactDirectory>${project.build.directory}/restful-ws-tck/artifacts</tck.artifactDirectory>
     </properties>
 
     <build>
@@ -64,11 +65,11 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>${project.build.directory}/${tck.artifactFileNameBase}.jar</file>
+                                    <file>${tck.artifactDirectory}/${tck.artifactFileNameBase}.jar</file>
                                     <type>jar</type>
                                 </artifact>
                                 <artifact>
-                                    <file>${project.build.directory}/${tck.artifactFileNameBase}-sources.jar</file>
+                                    <file>${tck.artifactDirectory}/${tck.artifactFileNameBase}-sources.jar</file>
                                     <type>jar</type>
                                     <classifier>sources</classifier>
                                 </artifact>

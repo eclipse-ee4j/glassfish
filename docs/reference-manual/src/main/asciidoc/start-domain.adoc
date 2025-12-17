@@ -210,8 +210,8 @@ This example starts `mydomain4` in the default domains directory.
 asadmin> start-domain mydomain4
 Waiting for DAS to start. ...........
 Started domain: mydomain4
-Domain location: /myhome/glassfish7/glassfish/domains/mydomain4
-Log file: /myhome/glassfish7/glassfish/domains/mydomain4/logs/server.log
+Domain location: /myhome/glassfish8/glassfish/domains/mydomain4
+Log file: /myhome/glassfish8/glassfish/domains/mydomain4/logs/server.log
 Admin port for the domain: 4848
 Command start-domain executed successfully.
 ----

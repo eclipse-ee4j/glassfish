@@ -15,25 +15,9 @@
  */
 package org.glassfish.appclient.common;
 
-import com.sun.enterprise.security.ee.perms.XMLPermissionsHandler;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.NoSuchAlgorithmException;
 import java.security.PermissionCollection;
-import java.security.Policy;
-import java.security.URIParameter;
-import java.security.cert.Certificate;
-
-import javax.xml.stream.XMLStreamException;
-
-import static com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil.CLIENT_TYPE_CODESOURCE;
-import static com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil.CommponentType.car;
 
 public class PermissionsUtil {
 
@@ -49,18 +33,7 @@ public class PermissionsUtil {
     // or in the client's module jar if standalone
     // result could be null
     public static PermissionCollection getClientDeclaredPermissions(ClassLoader classLoader) throws IOException {
-        URL permUrl = classLoader.getResource(PERMISSIONS_XML);
-        if (permUrl == null) {
-            return null;
-        }
-
-        try {
-            return new
-                XMLPermissionsHandler(null, permUrl.openStream(), car)
-                    .getAppDeclaredPermissions();
-        } catch (XMLStreamException | FileNotFoundException e) {
-            throw new IOException(e);
-        }
+        return null;
     }
 
     // get the permissions configured inside the javaee.client.policy,
@@ -80,38 +53,8 @@ public class PermissionsUtil {
     }
 
     private static PermissionCollection getClientPolicy(ClassLoader classLoader, String pkgedFile, String policyFileName) throws IOException {
-
-        // 1st try to find from the packaged client jar
-        URL eeClientUrl = classLoader.getResource(pkgedFile);
-        if (eeClientUrl != null)
-            return getEEPolicyPermissions(eeClientUrl);
-
-        // 2nd try to find from client's installation at lib/appclient folder
-        String clientPolicyClocation = getClientInstalledPath();
-        if (clientPolicyClocation != null) {
-            return getPolicyPermissions(clientPolicyClocation + policyFileName);
-        }
-
         return null;
 
-    }
-
-    private static PermissionCollection getPolicyPermissions(String policyFilename) throws IOException {
-        if (!new File(policyFilename).exists()) {
-            return null;
-        }
-
-        return getEEPolicyPermissions(new URL("file:" + policyFilename));
-    }
-
-    private static PermissionCollection getEEPolicyPermissions(URL fileUrl) throws IOException {
-        try {
-            return
-                Policy.getInstance("JavaPolicy", new URIParameter(fileUrl.toURI()))
-                      .getPermissions(new CodeSource(new URL(CLIENT_TYPE_CODESOURCE), (Certificate[]) null));
-        } catch (NoSuchAlgorithmException | MalformedURLException | URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     private static String getClientInstalledPath() {

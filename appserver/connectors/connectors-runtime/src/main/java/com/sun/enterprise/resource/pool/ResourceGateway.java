@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,10 +20,10 @@ package com.sun.enterprise.resource.pool;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.logging.LogDomains;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Resource gateway used to restrict the resource access. eg: based on priority.
@@ -51,47 +51,38 @@ public class ResourceGateway {
     }
 
     public static ResourceGateway getInstance(String className) throws PoolingException {
-        ResourceGateway gateway = null;
-        if (className != null) {
-            gateway = initializeCustomResourceGatewayInPrivilegedMode(className);
-        } else {
-            gateway = new ResourceGateway();
+        if (className == null) {
+            return new ResourceGateway();
         }
-        return gateway;
+
+        return initializeCustomResourceGatewayInPrivilegedMode(className);
     }
 
     private static ResourceGateway initializeCustomResourceGatewayInPrivilegedMode(final String className) throws PoolingException {
-        Object result = AccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public Object run() {
+        ResourceGateway gateway = null;
 
-                Object result = null;
-                try {
-                    result = initializeCustomResourceGateway(className);
-                } catch (Exception e) {
-                    _logger.log(Level.WARNING, "pool.resource.gateway.init.failure", className);
-                    _logger.log(Level.WARNING, "pool.resource.gateway.init.failure", e);
-                }
-                return result;
-            }
-        });
-        if (result != null) {
-            return (ResourceGateway) result;
-        } else {
+        try {
+            gateway = initializeCustomResourceGateway(className);
+        } catch (Exception e) {
+            _logger.log(WARNING, "pool.resource.gateway.init.failure", className);
+            _logger.log(WARNING, "pool.resource.gateway.init.failure", e);
+        }
+
+        if (gateway == null) {
             throw new PoolingException("Unable to initalize custom ResourceGateway : " + className);
         }
-    }
 
-    private static ResourceGateway initializeCustomResourceGateway(String className) throws Exception {
-        ResourceGateway gateway;
-        Class class1 = Class.forName(className);
-        gateway = (ResourceGateway) class1.newInstance();
         return gateway;
     }
 
+    private static ResourceGateway initializeCustomResourceGateway(String className) throws Exception {
+        return (ResourceGateway)
+            Class.forName(className)
+                 .getDeclaredConstructor()
+                 .newInstance();
+    }
+
     protected static void debug(String debugStatement) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, debugStatement);
-        }
+        _logger.log(FINE, debugStatement);
     }
 }

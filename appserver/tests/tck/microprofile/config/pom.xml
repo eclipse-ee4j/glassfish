@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>glassfish-external-tck-microprofile</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-microprofile-config</artifactId>
     <name>TCK: MicroProfile Config</name>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
@@ -36,6 +36,7 @@
             <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
@@ -52,9 +53,17 @@
             <groupId>org.glassfish.main</groupId>
             <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
+
+        <!-- Required dependencies for Arquillian deployments -->
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core-impl</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -75,6 +84,13 @@
     </dependencies>
 
     <build>
+        <testResources>
+            <testResource>
+               <directory>${basedir}/src/test/resources</directory>
+               <filtering>true</filtering>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -90,6 +106,9 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <dependenciesToScan>
+                        <dependency>org.eclipse.microprofile.config:microprofile-config-tck</dependency>
+                    </dependenciesToScan>
 
                     <!-- Required for org.eclipse.microprofile.config.tck.CDIPropertyNameMatchingTest -->
                     <environmentVariables>

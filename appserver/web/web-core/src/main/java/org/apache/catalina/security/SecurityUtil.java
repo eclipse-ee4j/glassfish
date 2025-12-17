@@ -28,12 +28,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.security.Security;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -386,29 +383,4 @@ public final class SecurityUtil{
         objectCache.remove(cachedObject);
     }
 
-
-    /**
-     * Return the <code>SecurityManager</code> only if Security is enabled AND
-     * package protection mechanism is enabled.
-     */
-    public static boolean isPackageProtectionEnabled(){
-        if (!Globals.IS_SECURITY_ENABLED) {
-            return false;
-        }
-        PrivilegedAction<String> action = () -> Security.getProperty("package.definition");
-        String value = AccessController.doPrivileged(action);
-        return value != null && !value.isEmpty();
-    }
-
-
-    /**
-     * Return true if a <code>SecurityManager</code> is used and is
-     * <code>isDoAsRequired</code> is required.
-     */
-    public static boolean executeUnderSubjectDoAs(){
-        if (executeUnderSubjectDoAs && Globals.IS_SECURITY_ENABLED) {
-            return true;
-        }
-        return false;
-    }
 }

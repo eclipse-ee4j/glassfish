@@ -26,10 +26,13 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Executes setter methods on java beans.
@@ -69,23 +72,21 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
             final Method method = getSetter(propName, type);
             if (method == null) {
                 // log WARNING, deployment can continue.
-                LOG.log(Level.WARNING, "rardeployment.no_setter_method",
-                    new Object[] {prop.getName(), type, bean.getClass()});
+                LOG.log(WARNING, "rardeployment.no_setter_method", new Object[] { prop.getName(), type, bean.getClass() });
                 continue;
             }
 
             Object resolvedValueObject = prop.getResolvedValueObject(type);
             try {
-                if (LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, "Invoking " + method + " on " + bean.getClass().getName() + " with value ["
-                        + resolvedValueObject.getClass() + ", " + getFilteredPropValue(prop) + "]");
+                if (LOG.isLoggable(FINER)) {
+                    LOG.log(FINER, "Invoking " + method + " on " + bean.getClass().getName() + " with value ["
+                            + resolvedValueObject.getClass() + ", " + getFilteredPropValue(prop) + "]");
                 }
                 method.invoke(bean, resolvedValueObject);
             } catch (final IllegalArgumentException ia) {
-                LOG.log(Level.WARNING,
-                    "IllegalArgumentException while trying to set " + prop.getName() + " and value "
-                        + getFilteredPropValue(prop),
-                    ia + " on an instance of " + bean.getClass() + " -- trying again with the type from bean");
+                LOG.log(WARNING,
+                        "IllegalArgumentException while trying to set " + prop.getName() + " and value " + getFilteredPropValue(prop),
+                        ia + " on an instance of " + bean.getClass() + " -- trying again with the type from bean");
                 final boolean origBoundsChecking = Descriptor.isBoundsChecking();
                 if (!origBoundsChecking) {
                     throw ia;
@@ -93,11 +94,9 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
                 try {
                     Descriptor.setBoundsChecking(false);
                     prop.setType(type.getName());
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.log(Level.FINE,
-                            "2nd try without bounds checking: Invoking " + method + " on " + bean.getClass().getName()
-                                + " with value [" + resolvedValueObject.getClass() + ", " + getFilteredPropValue(prop)
-                                + "]");
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.log(FINE, "2nd try without bounds checking: Invoking " + method + " on " + bean.getClass().getName()
+                                + " with value [" + resolvedValueObject.getClass() + ", " + getFilteredPropValue(prop) + "]");
                     }
                     method.invoke(bean, resolvedValueObject);
                 } catch (final Exception e) {
@@ -113,14 +112,12 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         return null;
     }
 
-
     private ConnectorRuntimeException createException(Exception ex, EnvironmentProperty prop) {
         final String filteredPropValue = getFilteredPropValue(prop);
-        LOG.log(Level.WARNING, "RAR7096: Exception while trying to set the value {0} on property {1} of {2}: {3}",
-            new Object[] {filteredPropValue, prop.getName(), bean.getClass(), ex});
+        LOG.log(WARNING, "RAR7096: Exception while trying to set the value {0} on property {1} of {2}: {3}",
+                new Object[] { filteredPropValue, prop.getName(), bean.getClass(), ex });
         return new ConnectorRuntimeException(ex.getMessage(), ex);
     }
-
 
     private static String getFilteredPropValue(EnvironmentProperty prop) {
         if (prop == null) {
@@ -135,7 +132,6 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         return prop.getResolvedValue();
     }
 
-
     /**
      * Retrieves the appropriate setter method in the resurce adapter java bean class
      */
@@ -147,6 +143,7 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
             // Only one setter method for this property
             return setterMethods[0];
         }
+
         // When more than one setter for the property, do type
         // checking to determine property
         // This check is very important, because the resource
@@ -156,21 +153,19 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
             Class<?>[] paramTypes = setterMethod.getParameterTypes();
             if (paramTypes.length > 0) {
                 if (paramTypes[0].equals(parameterType) && paramTypes.length == 1) {
-                    LOG.log(Level.FINER, "Method [{0}] matches with the right arg type", setterMethod);
+                    LOG.log(FINER, "Method [{0}] matches with the right arg type", setterMethod);
                     return setterMethod;
                 }
             }
         }
+
         return null;
     }
 
-
     /**
-     * Use a property's accessor method in the resource adapter
-     * javabean to get the Type of the property
+     * Use a property's accessor method in the resource adapter javabean to get the Type of the property
      * <p/>
-     * This helps in ensuring that the type as coded in the java-bean
-     * is used while setting values on a java-bean instance,
+     * This helps in ensuring that the type as coded in the java-bean is used while setting values on a java-bean instance,
      * rather than on the values specified in ra.xml
      *
      * @throws ClassNotFoundException
@@ -181,12 +176,13 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         if (accessorMeth != null) {
             return accessorMeth.getReturnType();
         }
+
         // not having a getter is not a WARNING.
-        LOG.log(Level.FINE, "method.name.nogetterforproperty", new Object[] {prop.getName(), bean.getClass()});
+        LOG.log(FINE, "method.name.nogetterforproperty", new Object[] { prop.getName(), bean.getClass() });
+
         // If there were no getter, use the EnvironmentProperty's property type
         return Class.forName(prop.getType());
     }
-
 
     /**
      * Gets the accessor method for a property
@@ -197,36 +193,35 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         if (getterMethods.length > 0) {
             return getterMethods[0];
         }
+
         getterName = "is" + getCamelCasedPropertyName(propertyName);
         Method[] getterMethodsWithIsPrefix = findMethod(getterName);
 
-        if (getterMethodsWithIsPrefix.length > 0
-            && (getterMethodsWithIsPrefix[0].getReturnType().equals(java.lang.Boolean.class)
-                || getterMethodsWithIsPrefix[0].getReturnType().equals(boolean.class))) {
+        if (getterMethodsWithIsPrefix.length > 0 &&
+            (getterMethodsWithIsPrefix[0].getReturnType().equals(java.lang.Boolean.class) ||
+            getterMethodsWithIsPrefix[0].getReturnType().equals(boolean.class))) {
 
             return getterMethodsWithIsPrefix[0];
         }
         return null;
     }
 
-
     /**
-     * Finds methods in the resource adapter java bean class with the same name
-     * RA developers could inadvertently not camelCase getters and/or setters
-     * and this implementation of findMethod returns both camelCased and non-Camel
-     * cased methods.
+     * Finds methods in the resource adapter java bean class with the same name RA developers could inadvertently not
+     * camelCase getters and/or setters and this implementation of findMethod returns both camelCased and non-Camel cased
+     * methods.
      */
     private Method[] findMethod(String methodName) {
         List<Method> matchedMethods = new ArrayList<>();
 
-        //check for CamelCased Method(s)
+        // check for CamelCased Method(s)
         for (Method method : this.methods) {
             if (method.getName().equals(methodName)) {
                 matchedMethods.add(method);
             }
         }
 
-        //check for nonCamelCased Method(s)
+        // check for nonCamelCased Method(s)
         for (Method method : this.methods) {
             if (method.getName().equalsIgnoreCase(methodName)) {
                 matchedMethods.add(method);
@@ -237,8 +232,8 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
     }
 
     /**
-     * Returns camel-cased version of a propertyName. Used to construct
-     * correct accessor and mutator method names for a give property.
+     * Returns camel-cased version of a propertyName. Used to construct correct accessor and mutator method names for a give
+     * property.
      */
     private String getCamelCasedPropertyName(String propertyName) {
         return propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);

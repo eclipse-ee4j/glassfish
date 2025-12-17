@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2025 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -27,7 +29,10 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     private String name;
     private String context;
     private int priority = Thread.NORM_PRIORITY;
-    private Properties properties = new Properties();
+    private boolean useVirtualThreads;
+    private final List<String> qualifiers = new ArrayList<>();
+    private final Properties properties = new Properties();
+
 
     @Override
     public String getName() {
@@ -53,6 +58,36 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     }
 
 
+    @Override
+    public List<String> getQualifiers() {
+        return qualifiers;
+    }
+
+
+    public void setQualifiers(List<String> qualifiers) {
+        this.qualifiers.clear();
+        this.qualifiers.addAll(qualifiers);
+    }
+
+
+    @Override
+    public void addQualifier(String qualifier) {
+        this.qualifiers.add(qualifier);
+    }
+
+
+    @Override
+    public boolean getUseVirtualThreads() {
+        return useVirtualThreads;
+    }
+
+
+    @Override
+    public void setUseVirtualThreads(boolean useVirtualThreads) {
+        this.useVirtualThreads = useVirtualThreads;
+    }
+
+
     public int getPriority() {
         return priority;
     }
@@ -68,11 +103,6 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
     }
 
 
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
-
-
     public void addManagedThreadFactoryPropertyDescriptor(String name, String value) {
         properties.put(name, value);
     }
@@ -80,6 +110,7 @@ public class ManagedThreadFactoryDefinitionData implements ContextualResourceDef
 
     @Override
     public String toString() {
-        return super.toString() + "[" + getName() + "]";
+        return super.toString() + "[name=" + getName() + ", context=" + context + ", priority=" + priority
+                + ", useVirtualThreads=" + useVirtualThreads + ", qualifiers=" + qualifiers + ", properties=" + properties + "]";
     }
 }

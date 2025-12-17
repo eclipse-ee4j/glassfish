@@ -54,16 +54,24 @@ mvn clean install -Dgroups=security
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.1.1-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-rest</artifactId>
 
-    <name>Jakarta REST TCK run on glassfish</name>
-    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta REST standalone TCK</description>
+   <name>Jakarta REST TCK run on glassfish</name>
+   <description>This verifies the compliance of Eclipse Glassfish using the Jakarta REST standalone TCK</description>
 
-    <properties>
-        <tck.version>3.1.5</tck.version>
+   <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <tck.version>4.0.0</tck.version>
+
+        <glassfish.version>${project.version}</glassfish.version>
+        <glassfish.root>${project.build.directory}</glassfish.root>
+        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
     </properties>
 
     <dependencies>
@@ -75,7 +83,7 @@ mvn clean install -Dgroups=security
         </dependency>
         <dependency>
             <groupId>ee.omnifish.arquillian</groupId>
-            <artifactId>glassfish-client-ee10</artifactId>
+            <artifactId>glassfish-client-ee11</artifactId>
         </dependency>
         <dependency>
             <groupId>ee.omnifish.arquillian</groupId>
@@ -105,10 +113,12 @@ mvn clean install -Dgroups=security
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -155,7 +165,7 @@ mvn clean install -Dgroups=security
                             <test>${run.test}</test>
                             <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
                             <systemPropertyVariables>
-                                <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+                                <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                                 <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
 
                                 <glassfish.postBootCommands>

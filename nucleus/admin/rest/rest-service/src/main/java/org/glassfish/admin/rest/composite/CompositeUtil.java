@@ -41,8 +41,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -664,9 +662,9 @@ public class CompositeUtil {
     /**
      * Add the field to the class, adding the @XmlAttribute annotation for marshalling purposes.
      */
-    private void createField(ClassWriter cw, String name, Class<?> type) {
+    private void createField(ClassWriter classWriter, String name, Class<?> type) {
         String internalType = getInternalTypeString(type);
-        FieldVisitor field = cw.visitField(ACC_PRIVATE, getPropertyName(name), internalType, null, null);
+        FieldVisitor field = classWriter.visitField(ACC_PRIVATE, getPropertyName(name), internalType, null, null);
         field.visitAnnotation("Ljakarta/xml/bind/annotation/XmlAttribute;", true).visitEnd();
         field.visitEnd();
     }
@@ -674,19 +672,20 @@ public class CompositeUtil {
     /**
      * Create getters and setters for the given field
      */
-    private void createGettersAndSetters(ClassWriter cw, Class c, String className, String name, Map<String, Object> props) {
+    private void createGettersAndSetters(ClassWriter classWriter, Class<?> clazz, String className, String name, Map<String, Object> props) {
         Class<?> type = (Class<?>) props.get("type");
         String internalType = getInternalTypeString(type);
         className = getInternalName(className);
 
         // Create the getter
-        MethodVisitor getter = cw.visitMethod(ACC_PUBLIC, "get" + name, "()" + internalType, null, null);
+        MethodVisitor getter = classWriter.visitMethod(ACC_PUBLIC, "get" + name, "()" + internalType, null, null);
         getter.visitCode();
         getter.visitVarInsn(ALOAD, 0);
         getter.visitFieldInsn(GETFIELD, className, getPropertyName(name), internalType);
         getter.visitInsn(type.isPrimitive() ? Primitive.getPrimitive(internalType).getReturnOpcode() : ARETURN);
         getter.visitMaxs(0, 0);
         getter.visitEnd();
+
         Map<String, Map<String, Object>> annotations = (Map<String, Map<String, Object>>) props.get("annotations");
         if (annotations != null) {
             for (Map.Entry<String, Map<String, Object>> entry : annotations.entrySet()) {
@@ -709,7 +708,7 @@ public class CompositeUtil {
         }
 
         // Create the setter
-        MethodVisitor setter = cw.visitMethod(ACC_PUBLIC, "set" + name, "(" + internalType + ")V", null, null);
+        MethodVisitor setter = classWriter.visitMethod(ACC_PUBLIC, "set" + name, "(" + internalType + ")V", null, null);
         setter.visitCode();
         setter.visitVarInsn(ALOAD, 0);
         setter.visitVarInsn(type.isPrimitive() ? Primitive.getPrimitive(internalType).getSetOpCode() : ALOAD, 1);
@@ -731,6 +730,7 @@ public class CompositeUtil {
 
     private Class<?> defineClass(Class<?> similarClass, String className, byte[] classBytes) throws Exception {
         RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", className);
+
         return MethodHandles.privateLookupIn(similarClass, MethodHandles.lookup()).defineClass(classBytes);
     }
 
@@ -738,13 +738,8 @@ public class CompositeUtil {
         if (beanValidator != null) {
             return;
         }
-        ClassLoader cl = System.getSecurityManager() == null ? Thread.currentThread().getContextClassLoader()
-                : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                    @Override
-                    public ClassLoader run() {
-                        return Thread.currentThread().getContextClassLoader();
-                    }
-                });
+
+        ClassLoader existingClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(Validation.class.getClassLoader());
             ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -752,7 +747,7 @@ public class CompositeUtil {
             validatorContext.messageInterpolator(new MessageInterpolatorImpl());
             beanValidator = validatorContext.getValidator();
         } finally {
-            Thread.currentThread().setContextClassLoader(cl);
+            Thread.currentThread().setContextClassLoader(existingClassLoader);
         }
     }
 }

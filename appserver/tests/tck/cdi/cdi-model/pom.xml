@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-cdi</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>tck-cdi-model</artifactId>
@@ -124,7 +124,7 @@
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
                     <systemPropertyVariables>
-                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
                         <glassfish.enableAssertions>:org.jboss.cdi...</glassfish.enableAssertions>
                     </systemPropertyVariables>
                     <includes>

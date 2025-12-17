@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-servlet</artifactId>
@@ -169,7 +169,7 @@
                         <configuration>
                             <file>${project.build.testOutputDirectory}/certificates/cts_cert</file>
                             <alias>cts</alias>
-                            <keystore>${glassfish.root}/glassfish8/glassfish/domains/domain1/config/cacerts.jks</keystore>
+                            <keystore>${glassfish.root}/glassfish9/glassfish/domains/domain1/config/cacerts.jks</keystore>
                             <storepass>changeit</storepass>
                             <keypass>changeit</keypass>
                             <noprompt>true</noprompt>
@@ -195,13 +195,13 @@
                     </dependenciesToScan>
 
                     <systemProperties>
-                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
 
                         <arquillian.xml>${project.basedir}/arquillian.xml</arquillian.xml>
 
                         <javax.net.ssl.keyStore>${project.build.testOutputDirectory}/certificates/clientcert.jks</javax.net.ssl.keyStore>
                         <javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
-                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish8/glassfish/domains/domain1/config/cacerts.jks</javax.net.ssl.trustStore>
+                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish9/glassfish/domains/domain1/config/cacerts.jks</javax.net.ssl.trustStore>
 
                         <!-- Uncomment to debug client-side SSL
                         <javax.net.debug>ssl:handshake</javax.net.debug>

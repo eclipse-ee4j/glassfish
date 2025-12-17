@@ -54,7 +54,7 @@ mvn clean install -Dgroups=security
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-rest</artifactId>
@@ -71,7 +71,7 @@ mvn clean install -Dgroups=security
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
     </properties>
 
     <dependencies>
@@ -165,7 +165,7 @@ mvn clean install -Dgroups=security
                             <test>${run.test}</test>
                             <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
                             <systemPropertyVariables>
-                                <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+                                <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
                                 <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
 
                                 <glassfish.postBootCommands>

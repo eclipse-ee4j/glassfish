@@ -1,18 +1,18 @@
 type=page
 status=published
-title={productName} High Availability Administration Guide, Release 8
+title={productName} High Availability Administration Guide, Release 9
 next=preface.html
 prev=loe.html
 ~~~~~~
 
-= {productName} High Availability Administration Guide, Release 8
+= {productName} High Availability Administration Guide, Release 9
 
 [[eclipse-glassfish-server]]
 == {productName}
 
 High Availability Administration Guide
 
-Release 8
+Release 9
 
 Contributed 2018 - 2024
 
@@ -25,7 +25,7 @@ session persistence and failover.
 '''''
 
 {productName} High Availability Administration
-Guide, Release 8
+Guide, Release 9
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

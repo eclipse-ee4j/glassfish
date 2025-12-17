@@ -39,7 +39,7 @@ The Zip distributions can be found on following paths:
 * `mvn clean install -Pfastest -T4C` - Building all distribution artifacts as fast as possible. Excludes everything not serving this purpose. Typical time: 1.5 minutes.
 
 After the build, you can run GlassFish in the following ways:
-* Run GlassFish server directly: Navigate to `appserver/distributions/glassfish/target/stage/glassfish8` - it is an unpacked version of GlassFish Full. Then you can run it as usual, e.g. with `bin/startserv`
+* Run GlassFish server directly: Navigate to `appserver/distributions/glassfish/target/stage/glassfish9` - it is an unpacked version of GlassFish Full. Then you can run it as usual, e.g. with `bin/startserv`
 * Run GlassFish server from a ZIP: A zip file is generated either at `appserver/distributions/glassfish/target/glassfish.zip` or in your local maven repository, e.g. at `<HOME>/.m2/repository/org/glassfish/main/distributions/glassfish/<VERSION>/glassfish-<VERSION>.zip`. Unpack it and run as usual
 * Run Embedded GlassFish: Find the JAR file at `appserver/extras/embedded/all/target/glassfish-embedded-all.jar` or in your local maven repository, e.g. at `<HOME>/.m2/repository/org/glassfish/main/extras/glassfish-embedded-all/<VERSION>/glassfish-embedded-all-<VERSION>.jar. Then run it with `java -jar glassfish-embedded-all.jar`
 
@@ -71,7 +71,7 @@ They are quite old and have high technical debt, but at this moment they still p
 
 ### QuickLook
 
-`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish8/glassfish`
+`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish9/glassfish`
 
 * Usual time: 3 minutes
 * see [QuickLook_Test_Instructions](https://github.com/eclipse-ee4j/glassfish/blob/master/appserver/tests/quicklook/QuickLook_Test_Instructions.html)
@@ -114,9 +114,9 @@ Build server results of pull requests can be found at [CI Glassfish](https://ci.
 
 ## Basic Usage
 
-* Starting Eclipse GlassFish: `glassfish8/bin/asadmin start-domain`
+* Starting Eclipse GlassFish: `glassfish9/bin/asadmin start-domain`
 * Visit [http://localhost:4848](http://localhost:4848)
-* Stopping Eclipse GlassFish: `glassfish8/bin/asadmin stop-domain`
+* Stopping Eclipse GlassFish: `glassfish9/bin/asadmin stop-domain`
 
 ## Professional Services and Enterprise Support
 

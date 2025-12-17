@@ -160,25 +160,25 @@ The Windows Service was created successfully.  It is ready to be started.  Here 
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 Eclipse GlassFish
-Server Directory: C:\glassfish8\glassfish\domains\domain1
-Configuration file for Windows Services Wrapper: C:\glassfish8\glassfish\domains\
+Server Directory: C:\glassfish9\glassfish\domains\domain1
+Configuration file for Windows Services Wrapper: C:\glassfish9\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
-Start Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  start
-Stop Command:   C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  stop
-Restart Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
+Start Command:  C:\glassfish9\glassfish\domains\domain1\bin\domain1Service.exe  start
+Stop Command:   C:\glassfish9\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Restart Command:  C:\glassfish9\glassfish\domains\domain1\bin\domain1Service.exe
 restart
-Uninstall Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
+Uninstall Command:  C:\glassfish9\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
-Install Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
+Install Command:  C:\glassfish9\glassfish\domains\domain1\bin\domain1Service.exe
 install
-Status Command: C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe status
+Status Command: C:\glassfish9\glassfish\domains\domain1\bin\domain1Service.exe status
 You can also verify that the service is installed (or not) with sc query state= all
 windows.services.uninstall.good=Found the Windows Service and successfully uninstall
 it.
 For your convenience this message has also been saved to this file:
-C:\glassfish8\glassfish\domains\domain1\PlatformServices.log
+C:\glassfish9\glassfish\domains\domain1\PlatformServices.log
 Command create-service executed successfully.
 ----
 
@@ -206,7 +206,7 @@ Here are the most typical Linux commands of interest:
 * /etc/init.d/GlassFish_domain1 restart
 
 For your convenience this message has also been saved to this file:
-/export/glassfish8/glassfish/domains/domain1/PlatformServices.log
+/export/glassfish9/glassfish/domains/domain1/PlatformServices.log
 Command create-service executed successfully.
 ----
 

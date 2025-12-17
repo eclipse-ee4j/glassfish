@@ -59,7 +59,7 @@ public class SshClusterITest {
 
     private static final String DOMAIN_NAME = "domain1";
 
-    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish8");
+    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish9");
     private static final Path PATH_DOCKER_GF_DOMAINS = PATH_DOCKER_GF_ROOT.resolve(Path.of("glassfish", "domains"));
     private static final Path PATH_DOCKER_GF_NODES = PATH_DOCKER_GF_ROOT.resolve(Path.of("glassfish", "nodes"));
     private static final Path PATH_DOCKER_GF_DOMAIN1_SERVER_LOG = PATH_DOCKER_GF_DOMAINS

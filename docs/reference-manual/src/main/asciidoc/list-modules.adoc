@@ -53,7 +53,7 @@ List Of Modules
 
 Module : org.glassfish.transaction.jts:3.0.0.b66
     Module Characteristics : List of Jars implementing the module
-        Jar : file:/home/gfuser/GlassFish/glassfish8/glassfish/modules/jts.jar
+        Jar : file:/home/gfuser/GlassFish/glassfish9/glassfish/modules/jts.jar
     Module Characteristics : Provides to following services
     Module Characteristics : List of imported modules
         Imports : org.glassfish.transaction.jts:3.0.0.b66
@@ -64,10 +64,10 @@ Module : org.glassfish.core.kernel:3.0.0.b66
     Module Characteristics : List of imported modules
         Imports : org.glassfish.core.kernel:3.0.0.b66
     Module Characteristics : List of Jars implementing the module
-        Jar : file:/home/gfuser/GlassFish/glassfish8/glassfish/modules/kernel.jar
+        Jar : file:/home/gfuser/GlassFish/glassfish9/glassfish/modules/kernel.jar
 Module : org.glassfish.common.util:3.0.0.b66
     Module Characteristics : List of Jars implementing the module
-        Jar : file:/home/gfuser/GlassFish/glassfish8/glassfish/modules/common-util.jar
+        Jar : file:/home/gfuser/GlassFish/glassfish9/glassfish/modules/common-util.jar
     Module Characteristics : Provides to following services
     Module Characteristics : List of imported modules
         Imports : org.glassfish.common.util:3.0.0.b66

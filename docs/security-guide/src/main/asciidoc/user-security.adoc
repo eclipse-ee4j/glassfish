@@ -400,13 +400,13 @@ cert-name::
   Path to the certificate that you exported with Oracle Wallet Manager.
 --
 +
-For example, to import a certificate named `oi.cer` for a {productName} domain in `/glassfish8/glassfish/domains/domain1`, using an
+For example, to import a certificate named `oi.cer` for a {productName} domain in `/glassfish9/glassfish/domains/domain1`, using an
 alias called "OID self-signed certificate," you would use the following command:
 +
 [source]
 ----
 keytool -importcert -alias "OID self signed certificate" -keystore \
-/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer
+/glassfish9/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer
 ----
 6. Restart the {productName} domain. +
 See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
@@ -492,13 +492,13 @@ cert-name::
   Path to the certificate that you exported from the keystore.
 --
 +
-For example, to import a certificate named `ovd.cer` for a {productName} domain in `/glassfish8/glassfish/domains/domain1`, using an
+For example, to import a certificate named `ovd.cer` for a {productName} domain in `/glassfish9/glassfish/domains/domain1`, using an
 alias called "OVD self-signed certificate," you would use the following command:
 +
 [source]
 ----
 keytool -importcert -alias "OVD self signed certificate" -keystore \
-/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer
+/glassfish9/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer
 ----
 5. Restart the {productName} domain. +
 See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"

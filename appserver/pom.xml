@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -206,7 +206,7 @@
 
         <admin.command.name>asadmin</admin.command.name>
         <domain.template.defaultJarFileName>appserver-domain.jar</domain.template.defaultJarFileName>
-        <install.dir.name>glassfish8</install.dir.name>
+        <install.dir.name>glassfish9</install.dir.name>
 
         <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
     </properties>

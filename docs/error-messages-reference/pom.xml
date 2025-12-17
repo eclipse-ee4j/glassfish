@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.glassfish.main.docs</groupId>
         <artifactId>documentation-generators-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
 
     <artifactId>error-messages-reference</artifactId>
     <packaging>jar</packaging>
 
-    <name>Eclipse GlassFish Error Message Reference, Release 8</name>
+    <name>Eclipse GlassFish Error Message Reference, Release 9</name>
 </project>

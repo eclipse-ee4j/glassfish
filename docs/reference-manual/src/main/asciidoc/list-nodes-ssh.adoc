@@ -116,8 +116,8 @@ communication over SSH in a domain in long format.
 ----
 asadmin> list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
-sj02        SSH    sj02.example.com   /export/glassfish8   pmd-i-sj02, yml-i-sj02
-sj01        SSH    sj01.example.com   /export/glassfish8   pmd-i-sj01, yml-i-sj01
+sj02        SSH    sj02.example.com   /export/glassfish9   pmd-i-sj02, yml-i-sj02
+sj01        SSH    sj01.example.com   /export/glassfish9   pmd-i-sj01, yml-i-sj01
 Command list-nodes-ssh executed successfully.
 ----
 

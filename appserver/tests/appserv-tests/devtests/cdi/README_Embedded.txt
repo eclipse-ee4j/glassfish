@@ -1,6 +1,6 @@
 export APS_HOME=<Your-Workspace>/v2/appserv-tests
 
-export S1AS_HOME=<installed-glassfish> (eg.,, /tmp/glassfish8/glassfish)
+export S1AS_HOME=<installed-glassfish> (eg.,, /tmp/glassfish9/glassfish)
 
 export ANT_OPTS="-Xss128k -Xmx2048m -XX:MaxPermSize=256m"
 

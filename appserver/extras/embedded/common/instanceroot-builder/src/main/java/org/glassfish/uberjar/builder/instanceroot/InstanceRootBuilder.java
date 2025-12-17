@@ -33,7 +33,7 @@ import org.osgi.framework.BundleContext;
 public class InstanceRootBuilder implements BundleActivator {
 
     private static final Logger logger = Logger.getLogger("embedded-glassfish");
-    private static String resourceroot = "glassfish8/glassfish/domains/domain1/";
+    private static String resourceroot = "glassfish9/glassfish/domains/domain1/";
 
     @Override
     public void start(BundleContext context) throws Exception {

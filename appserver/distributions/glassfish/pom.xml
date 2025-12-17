@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -34,8 +34,8 @@
     <name>Glassfish Full Profile Distribution</name>
 
     <properties>
-        <glassfish.modules>${project.build.directory}/stage/glassfish8/glassfish/modules</glassfish.modules>
-        <glassfish.appclient>${project.build.directory}/stage/glassfish8/glassfish/lib/appclient</glassfish.appclient>
+        <glassfish.modules>${project.build.directory}/stage/glassfish9/glassfish/modules</glassfish.modules>
+        <glassfish.appclient>${project.build.directory}/stage/glassfish9/glassfish/lib/appclient</glassfish.appclient>
     </properties>
 
     <dependencies>

@@ -56,7 +56,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.K_DAS_PROTOCOL;
  * import-sync-bundle applies the content under ${com.sun.aas.instanceRoot}/
  * directory. Synchronization cookie with DAS's timestamp should be created.
  * It also creates das.properties (if not present) under agent dir (ex.
- * installRoot/glassfish8/glassfish/nodes/<host-name>/agent/config/das.properties).
+ * installRoot/glassfish9/glassfish/nodes/<host-name>/agent/config/das.properties).
  *
  * Before running this command the instance should already have been registered in
  * DAS (server element created in DAS domain.xml) by running create-instance.
@@ -82,10 +82,10 @@ import static com.sun.enterprise.admin.cli.CLIConstants.K_DAS_PROTOCOL;
  *
  * --node         name of the node; this is optional. The command fails if there
  * is more than one node under the default location
- * (installRoot/glassfish8/glassfish/nodes/<host-name>/)
+ * (installRoot/glassfish9/glassfish/nodes/<host-name>/)
  *
  * --nodedir      parent dir where node is created; this is optional. Default
- * location is installRoot/glassfish8/glassfish/nodes/
+ * location is installRoot/glassfish9/glassfish/nodes/
  *
  * --file         sync bundle created by export-sync-bundle
  *

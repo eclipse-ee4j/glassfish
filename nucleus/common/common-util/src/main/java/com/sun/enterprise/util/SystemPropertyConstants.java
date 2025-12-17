@@ -135,7 +135,7 @@ public class SystemPropertyConstants {
     /**
 <<<<<<< HEAD
      * Returns the component identifier associated with the INSTALL_ROOT. For example if INSTALL_ROOT is
-     * /home/glassfish8/glassfish the component name will "glassfish".
+     * /home/glassfish9/glassfish the component name will "glassfish".
      *
      * @return String representing the component identifier.
      */

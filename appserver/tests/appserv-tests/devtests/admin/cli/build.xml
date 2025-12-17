@@ -457,11 +457,11 @@
         <echo message="gfurl == ${gfurl}"/>
         <setproxy proxyhost=""/>
         <get verbose="${verbose}" src="${gfurl}" dest="${asinstall_dir}/glassfish.zip"/>
-        <delete dir="${asinstall_dir}/glassfish8" includeemptydirs="true"/>
+        <delete dir="${asinstall_dir}/glassfish9" includeemptydirs="true"/>
         <unzip src="${asinstall_dir}/glassfish.zip" dest="${asinstall_dir}"/>
-        <chmod perm="a+x" file="${asinstall_dir}/glassfish8/bin/asadmin"/>
-        <chmod perm="a+x" file="${asinstall_dir}/glassfish8/glassfish/bin/asadmin"/>
-        <chmod perm="a+x" file="${asinstall_dir}/glassfish8/glassfish/lib/nadmin"/>
+        <chmod perm="a+x" file="${asinstall_dir}/glassfish9/bin/asadmin"/>
+        <chmod perm="a+x" file="${asinstall_dir}/glassfish9/glassfish/bin/asadmin"/>
+        <chmod perm="a+x" file="${asinstall_dir}/glassfish9/glassfish/lib/nadmin"/>
     </target>
 
     <!--

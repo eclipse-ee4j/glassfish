@@ -68,12 +68,12 @@ The default {productName} {product-majorVersion} installation directories are as
 Solaris, Linux, and Mac OS X systems::
 [source]
 ----
-user-home-directory/glassfish8
+user-home-directory/glassfish9
 ----
 Windows systems::
 [source]
 ----
-SystemDrive\glassfish8
+SystemDrive\glassfish9
 ----
 
 [[changes-to-group-management-service-settings]]

@@ -350,9 +350,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
 
     // NOTE: The repoid is only needed for logging.
     private org.omg.CORBA.Object _createRef(ReferenceFactory rf, byte[] instanceKey, String repoid) throws Exception {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "\t\tIn POARemoteReferenceFactory._createRef, repositoryId = {0}", repoid);
-        }
+        logger.log(Level.FINE, "\t\tIn POARemoteReferenceFactory._createRef, repositoryId = {0}", repoid);
 
         // Create the ejbKey using EJB's unique id + instanceKey
         byte[] ejbKey = createEJBKey(ejbDescriptor.getUniqueId(), instanceKey);

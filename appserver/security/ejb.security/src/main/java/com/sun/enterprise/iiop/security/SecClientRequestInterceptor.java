@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 
 import javax.security.auth.x500.X500Principal;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.internal.api.ORBLocator;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
@@ -69,7 +69,15 @@ import static java.util.Arrays.asList;
  */
 public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject implements ClientRequestInterceptor {
 
+    private static final long serialVersionUID = -1324916857150102312L;
+
     private static final Logger LOG = LogDomains.getLogger(SecClientRequestInterceptor.class, SECURITY_LOGGER, false);
+
+    /**
+     * Hard code the value of 15 for SecurityAttributeService until it is defined in IOP.idl. sc.context_id =
+     * SecurityAttributeService.value;
+     */
+    protected static final int SECURITY_ATTRIBUTE_SERVICE_ID = 15;
 
     /** name of interceptor */
     private final String name;
@@ -81,21 +89,15 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
     private final String prname;
     /** used for marshalling */
     private final Codec codec;
-    private final GlassFishORBHelper orbHelper;
     private final SecurityContextUtil secContextUtil;
+    private final ORBLocator orbLocator;
 
-    /**
-     * Hard code the value of 15 for SecurityAttributeService until it is defined in IOP.idl. sc.context_id =
-     * SecurityAttributeService.value;
-     */
-    protected static final int SECURITY_ATTRIBUTE_SERVICE_ID = 15;
-
-    public SecClientRequestInterceptor(String name, Codec codec) {
+    public SecClientRequestInterceptor(String name, Codec codec, ORBLocator orbLocator) {
         this.name = name;
         this.codec = codec;
         this.prname = name + "::";
-        orbHelper = Lookups.getGlassFishORBHelper();
-        secContextUtil = Lookups.getSecurityContextUtil();
+        this.orbLocator = orbLocator;
+        this.secContextUtil = Lookups.getSecurityContextUtil();
     }
 
     @Override
@@ -236,7 +238,6 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         LOG.log(Level.FINE, "++++ Entered {0} send_request()", prname);
         SecurityContext secctxt = null; // SecurityContext to be sent
-        ORB orb = orbHelper.getORB();
         org.omg.CORBA.Object effective_target = ri.effective_target();
         try {
             secctxt = secContextUtil.getSecurityContext(effective_target);
@@ -254,6 +255,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
             return;
         }
 
+        final ORB orb = orbLocator.getORB();
         final SecurityContext sCtx = secctxt;
         /* Construct an authentication token */
         if (secctxt.authcls != null) {
@@ -436,9 +438,5 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
     @Override
     public void destroy() {
-    }
-
-    protected GlassFishORBHelper getORBHelper() {
-        return this.orbHelper;
     }
 }

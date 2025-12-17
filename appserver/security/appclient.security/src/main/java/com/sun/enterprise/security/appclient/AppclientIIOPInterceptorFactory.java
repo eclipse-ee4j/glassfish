@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import java.lang.System.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
+import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
@@ -50,6 +51,8 @@ public class AppclientIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
     @Inject
     private ProcessEnvironment processEnvironment;
+
+    @Inject ORBLocator orbLocator;
 
     private AlternateSecurityInterceptorFactory altSecFactory;
 
@@ -90,10 +93,8 @@ public class AppclientIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
     private synchronized ClientRequestInterceptor getClientInterceptorInstance(Codec codec) {
         if (clientRequestInterceptor == null) {
-            clientRequestInterceptor = new SecClientRequestInterceptor("SecClientRequestInterceptor", codec);
+            clientRequestInterceptor = new SecClientRequestInterceptor("SecClientRequestInterceptor", codec, orbLocator);
         }
-
         return clientRequestInterceptor;
     }
-
 }

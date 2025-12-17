@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.security</groupId>
         <artifactId>security</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>security-policy-retranslate</artifactId>
@@ -157,7 +157,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <finalName>${project.build.finalName}</finalName>
-                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
 
                         <!-- Create the users for the various security (authentication tests) -->
                         <glassfish.postBootCommands>

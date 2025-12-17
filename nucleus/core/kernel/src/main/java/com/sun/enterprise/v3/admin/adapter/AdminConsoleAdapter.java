@@ -472,7 +472,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
             writeAdminServiceProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION,
                 INSTALL_ROOT.toExpression() + "/lib/install/applications/admingui.war");
         } else {
-            // For any non-absolute path, we start from the installation, ie glassfish8
+            // For any non-absolute path, we start from the installation, ie glassfish9
             // eg, v3 prelude upgrade, where the location property was "glassfish/lib..."
             String locationValue = locationProperty.getValue();
             warFile = Path.of(locationValue);

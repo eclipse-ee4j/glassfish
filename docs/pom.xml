@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
         <relativePath>../appserver</relativePath>
     </parent>
 
@@ -63,10 +63,12 @@
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
         <glassfish.version.7x>7.0.25</glassfish.version.7x>
         <glassfish.version.8x>8.0.0</glassfish.version.8x>
+        <glassfish.version.9x>9.0.0</glassfish.version.9x>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
-        <glassfish.version.8x.artifact>${glassfish.version.7x}</glassfish.version.8x.artifact>
+        <glassfish.version.8x.artifact>${glassfish.version.8x}</glassfish.version.8x.artifact>
+        <glassfish.version.9x.artifact>${glassfish.version.9x}</glassfish.version.9x.artifact>
 
-        <glassfish.version.latest>${glassfish.version.8x}</glassfish.version.latest>
+        <glassfish.version.latest>${glassfish.version.9x}</glassfish.version.latest>
 
         <microprofile.version.latest>6.1</microprofile.version.latest>
         <microprofile.release-notes.latest>https://microprofile.io/compatible/6-1/</microprofile.release-notes.latest>

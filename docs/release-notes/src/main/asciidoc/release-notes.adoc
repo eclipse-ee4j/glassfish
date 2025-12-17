@@ -102,8 +102,8 @@ The following topics are addressed here:
 
 ==== Required JDK Versions
 
-{productName} Release 8.1 requires Java 17 minimum and runs on JDK 17 to JDK 21, experimentally on higher versions.
-{productName} Release 8.0 requires Java 11 minimum and runs on JDK 11 to JDK 21, experimentally on higher versions.
+{productName} Release 9.1 requires Java 17 minimum and runs on JDK 17 to JDK 21, experimentally on higher versions.
+{productName} Release 9.0 requires Java 11 minimum and runs on JDK 11 to JDK 21, experimentally on higher versions.
 
 Also be sure to see xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the
 JDK Software] for important JDK configuration instructions.

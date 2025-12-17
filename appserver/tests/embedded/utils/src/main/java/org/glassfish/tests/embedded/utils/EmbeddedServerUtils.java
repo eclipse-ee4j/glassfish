@@ -30,7 +30,7 @@ public class EmbeddedServerUtils {
         File f = new File(System.getProperty("basedir"));
         f = new File(f, "target");
         f = new File(f, "dependency");
-        f = new File(f, "glassfish8");
+        f = new File(f, "glassfish9");
         f = new File(f, "glassfish");
         if (f.exists()) {
             System.out.println("Using gf at " + f.getAbsolutePath());

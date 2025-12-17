@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.glassfish.main.docs</groupId>
         <artifactId>documentation-generators-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
 
     <artifactId>application-development-guide</artifactId>
     <packaging>jar</packaging>
 
-    <name>Eclipse GlassFish Application Development Guide, Release 8</name>
+    <name>Eclipse GlassFish Application Development Guide, Release 9</name>
 
     <build>
         <plugins>

@@ -20,13 +20,13 @@
     <parent>
         <groupId>org.glassfish.main.docs</groupId>
         <artifactId>docs</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>sample-app</artifactId>
     <packaging>war</packaging>
 
-    <name>Eclipse GlassFish Hello Sample, Release 8</name>
+    <name>Eclipse GlassFish Hello Sample, Release 9</name>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>

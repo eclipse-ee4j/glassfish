@@ -30,14 +30,14 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <glasfish.home>../../../distributions/web/target/stage/glassfish8/glassfish</glasfish.home>
+        <glasfish.home>../../../distributions/web/target/stage/glassfish9/glassfish</glasfish.home>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>web-sse</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>9.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

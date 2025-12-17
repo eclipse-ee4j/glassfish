@@ -127,8 +127,8 @@ This example starts the {productName} instance `pmdsa1`.
 asadmin> start-instance pmdsa1
 Waiting for the server to start ..............................
 Successfully started the instance: pmdsa1
-instance Location: /export/glassfish8/glassfish/nodes/localhost/pmdsa1
-Log File: /export/glassfish8/glassfish/nodes/localhost/pmdsa1/logs/server.log
+instance Location: /export/glassfish9/glassfish/nodes/localhost/pmdsa1
+Log File: /export/glassfish9/glassfish/nodes/localhost/pmdsa1/logs/server.log
 Admin Port: 24848
 Command start-local-instance executed successfully.
 The instance, pmdsa1, was started on host localhost
@@ -149,8 +149,8 @@ debugging enabled.
 asadmin> start-instance --debug=true ymlsa1
 Waiting for the server to start ...............................
 Successfully started the instance: ymlsa1
-instance Location: /export/glassfish8/glassfish/nodes/localhost/ymlsa1
-Log File: /export/glassfish8/glassfish/nodes/localhost/ymlsa1/logs/server.log
+instance Location: /export/glassfish9/glassfish/nodes/localhost/ymlsa1
+Log File: /export/glassfish9/glassfish/nodes/localhost/ymlsa1/logs/server.log
 Admin Port: 24849
 Debugging is enabled. The debugging port is: 29010
 Command start-local-instance executed successfully.

@@ -212,5 +212,5 @@ when `type=das-and-server`.
 [[terminology]]
 === Terminology
 Source Domain Directory:: Directory of the domain being upgraded (e.g., `c:\glassfish\domains\domain1`).
-Target Root Domain's Directory:: Directory where domains are created in the new installation (e.g., `c:\glassfish8\glassfish\domains`).
+Target Root Domain's Directory:: Directory where domains are created in the new installation (e.g., `c:\glassfish9\glassfish\domains`).
 Master Password:: SSL certificate database password (default: `changeit`).

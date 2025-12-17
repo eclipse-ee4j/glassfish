@@ -31,7 +31,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>8.0.0-SNAPSHOT</version>
+    <version>9.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -221,7 +221,7 @@
         <test.logManager>java.util.logging.LogManager</test.logManager>
         <test.logLevel>INFO</test.logLevel>
         <test.enableDefaultLogCfg>true</test.enableDefaultLogCfg>
-        <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish8/glassfish</glassfish.distribution.dir>
+        <glassfish.distribution.dir>appserver/distributions/glassfish/target/stage/glassfish9/glassfish</glassfish.distribution.dir>
 
         <!-- Do not autopublish by default -->
         <release.autopublish>false</release.autopublish>

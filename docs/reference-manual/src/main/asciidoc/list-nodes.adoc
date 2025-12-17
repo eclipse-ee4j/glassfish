@@ -120,10 +120,10 @@ in long format.
 ----
 asadmin> list-nodes --long=true
 NODE NAME           TYPE     NODE HOST          INSTALL DIRECTORY     REFERENCED BY
-localhost-domain1   CONFIG   localhost          /export/glassfish8
-sj02                SSH      sj02.example.com   /export/glassfish8    pmd-i2, yml-i2
-sj01                SSH      sj01.example.com   /export/glassfish8    pmd-i1, yml-i1
-devnode             CONFIG   localhost          /export/glassfish8    pmdsa1
+localhost-domain1   CONFIG   localhost          /export/glassfish9
+sj02                SSH      sj02.example.com   /export/glassfish9    pmd-i2, yml-i2
+sj01                SSH      sj01.example.com   /export/glassfish9    pmd-i1, yml-i1
+devnode             CONFIG   localhost          /export/glassfish9    pmdsa1
 Command list-nodes executed successfully.
 ----
 

@@ -33,7 +33,7 @@ mvn clean install -Ptck -pl :jakarta-pages-tck,:javatest,:glassfish-external-tck
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-pages</artifactId>
@@ -43,7 +43,7 @@ mvn clean install -Ptck -pl :jakarta-pages-tck,:javatest,:glassfish-external-tck
     <description>Aggregates dependencies and runs the pages TCK on GlassFish</description>
 
     <properties>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.version>${project.version}</glassfish.version>
 
@@ -151,7 +151,7 @@ mvn clean install -Ptck -pl :jakarta-pages-tck,:javatest,:glassfish-external-tck
                     </dependenciesToScan>
 
                     <systemProperties>
-                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish9</glassfish.home>
 
                         <!-- Print the content of the deployed archives -->
                         <pages.tck.archive.print>true</pages.tck.archive.print>
@@ -166,7 +166,7 @@ mvn clean install -Ptck -pl :jakarta-pages-tck,:javatest,:glassfish-external-tck
 
                         <!-- Set the properties for the API signature test -->
                         <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
-                        <sigTestClasspath>${glassfish.root}/glassfish8/glassfish/modules/jakarta.servlet.jsp-api.jar:${glassfish.root}/glassfish8/glassfish/modules/jakarta.servlet-api.jar:${glassfish.root}/glassfish8/glassfish/modules/jakarta.el-api.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</sigTestClasspath>
+                        <sigTestClasspath>${glassfish.root}/glassfish9/glassfish/modules/jakarta.servlet.jsp-api.jar:${glassfish.root}/glassfish9/glassfish/modules/jakarta.servlet-api.jar:${glassfish.root}/glassfish9/glassfish/modules/jakarta.el-api.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</sigTestClasspath>
                     </systemProperties>
                 </configuration>
                 <executions>

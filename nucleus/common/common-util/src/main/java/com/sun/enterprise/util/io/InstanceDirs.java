@@ -34,11 +34,11 @@ import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
  * when working with invalid directories...
  *
  * Example:
- * new InstanceDirs(new File("/glassfish8/glassfish/nodes/mymachine/instance1"));
+ * new InstanceDirs(new File("/glassfish9/glassfish/nodes/mymachine/instance1"));
  *
- * getInstanceDir()   == /glassfish8/glassfish/nodes/mymachine/instance1
- * getNodeAgentDir()  == /glassfish8/glassfish/nodes/mymachine
- * getNodeAgentsDir() == /glassfish8/glassfish/nodes
+ * getInstanceDir()   == /glassfish9/glassfish/nodes/mymachine/instance1
+ * getNodeAgentDir()  == /glassfish9/glassfish/nodes/mymachine
+ * getNodeAgentsDir() == /glassfish9/glassfish/nodes
  * getInstanceName()  == instance1
  *
  *

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.tests.application-tests</groupId>
@@ -39,7 +39,7 @@
 
     <properties>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.directoryName>glassfish8</glassfish.directoryName>
+        <glassfish.directoryName>glassfish9</glassfish.directoryName>
         <glassfish.home>${glassfish.root}/${glassfish.directoryName}</glassfish.home>
 
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>

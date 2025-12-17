@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.glassfish.main.docs</groupId>
         <artifactId>documentation-generators-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
 
     <artifactId>reference-manual</artifactId>
     <packaging>jar</packaging>
 
-    <name>Eclipse GlassFish Reference Manual, Release 8</name>
+    <name>Eclipse GlassFish Reference Manual, Release 9</name>
 
     <properties>
       <pdf.toclevels>1</pdf.toclevels>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Security Guide, Release 7</title>
+<title>Eclipse GlassFish Security Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Security Guide, Release 7</h1>
+<h1>Eclipse GlassFish Security Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -178,7 +178,7 @@
 <li><a href="#determining-your-security-needs">Determining Your Security Needs</a>
 <ul class="sectlevel3">
 <li><a href="#understand-your-environment">Understand Your Environment</a></li>
-<li><a href="#read-security-publications-2">Read Security Publications</a></li>
+<li><a href="#read-security-publications">Read Security Publications</a></li>
 </ul>
 </li>
 <li><a href="#installing-glassfish-server-in-a-secure-environment">Installing Eclipse GlassFish in a Secure Environment</a>
@@ -203,7 +203,7 @@
 <p>Security Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
 <p>Contributed 2018 - 2024</p>
@@ -214,7 +214,7 @@ Eclipse GlassFish security.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Security Guide, Release 7</p>
+<p>Eclipse GlassFish Security Guide, Release 8</p>
 </div>
 <div class="paragraph">
 <p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
@@ -279,7 +279,7 @@ instructions for configuring and administering Eclipse GlassFish security.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -480,7 +480,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -646,13 +646,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -667,13 +667,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -1781,7 +1781,7 @@ environment.</p>
 <div class="sect4">
 <h5 id="custom-authentication-of-client-certificate-in-ssl-mutual-authentication"><a class="anchor" href="#custom-authentication-of-client-certificate-in-ssl-mutual-authentication"></a>Custom Authentication of Client Certificate in SSL Mutual Authentication</h5>
 <div class="paragraph">
-<p>Release 7 of Eclipse GlassFish extends the Certificate realm to allow
+<p>Release 8 of Eclipse GlassFish extends the Certificate realm to allow
 custom authentication and group assignment based on the client
 certificate received as part of SSL mutual (two-way) authentication.</p>
 </div>
@@ -2355,7 +2355,7 @@ passwords are not echoed to the display.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>For the zip bundle of Eclipse GlassFish 7, the default administrator
+<p>For the zip bundle of Eclipse GlassFish 8, the default administrator
 login is <code>admin</code>, with no password, which means that no login is
 required. For Eclipse GlassFish, you are prompted to provide a
 password for the <code>admin</code> user when you start the domain for the first
@@ -2931,7 +2931,7 @@ Command delete-audit-module executed successfully.</code></pre>
 <div class="sect2">
 <h3 id="administering-jsse-certificates"><a class="anchor" href="#administering-jsse-certificates"></a>Administering JSSE Certificates</h3>
 <div class="paragraph">
-<p>In the developer profile, the Eclipse GlassFish 7 uses the JSSE format
+<p>In the developer profile, the Eclipse GlassFish 8 uses the JSSE format
 on the server side to manage certificates and key stores. In all
 profiles, the client side (appclient or stand-alone) uses the JSSE
 format.</p>
@@ -4071,13 +4071,13 @@ Use the following syntax:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For example, to import a certificate named <code>oi.cer</code> for a Eclipse GlassFish domain in <code>/glassfish7/glassfish/domains/domain1</code>, using an
+<p>For example, to import a certificate named <code>oi.cer</code> for a Eclipse GlassFish domain in <code>/glassfish8/glassfish/domains/domain1</code>, using an
 alias called "OID self-signed certificate," you would use the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;OID self signed certificate&quot; -keystore \
-/glassfish7/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer</code></pre>
+/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer</code></pre>
 </div>
 </div>
 </li>
@@ -4195,13 +4195,13 @@ Use the following syntax:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For example, to import a certificate named <code>ovd.cer</code> for a Eclipse GlassFish domain in <code>/glassfish7/glassfish/domains/domain1</code>, using an
+<p>For example, to import a certificate named <code>ovd.cer</code> for a Eclipse GlassFish domain in <code>/glassfish8/glassfish/domains/domain1</code>, using an
 alias called "OVD self-signed certificate," you would use the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;OVD self signed certificate&quot; -keystore \
-/glassfish7/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer</code></pre>
+/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer</code></pre>
 </div>
 </div>
 </li>
@@ -4595,8 +4595,8 @@ message layer security for web services in the Eclipse GlassFish environment.</p
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Message security (JSR 196) is supported only in the Full Platform
-Profile of Eclipse GlassFish, not in the Web Profile.</p>
+<p>Message security (Jakarta Authentication) is supported only in both the Full Platform
+Profile of Eclipse GlassFish, as in the Web Profile.</p>
 </div>
 </td>
 </tr>
@@ -6472,8 +6472,8 @@ Please look at the server log for more details...
 Waiting for domain1 to start .
 Waiting finished after 1 830 ms.
 Successfully started the domain : domain1
-domain  Location: glassfish7/glassfish/domains/domain1
-Log File: glassfish7/glassfish/domains/domain1/logs/server.log
+domain  Location: glassfish8/glassfish/domains/domain1
+Log File: glassfish8/glassfish/domains/domain1/logs/server.log
 Admin Port: 4 848
 Command start-domain executed successfully.
 
@@ -7424,11 +7424,12 @@ help you protect it properly.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>See Also: <a href="https://www.oracle.com/us/products/ondemand/index.html" class="bare">https://www.oracle.com/us/products/ondemand/index.html</a> <a id="gksce"></a> <a id="read-security-publications"></a></p>
+<p><a id="gksce"></a><a id="read-security-publications"></a>
+See Also: <code><a href="https://www.oracle.com/us/products/ondemand/index.html" class="bare">https://www.oracle.com/us/products/ondemand/index.html</a></code></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="read-security-publications-2"><a class="anchor" href="#read-security-publications-2"></a>Read Security Publications</h4>
+<h4 id="read-security-publications"><a class="anchor" href="#read-security-publications"></a>Read Security Publications</h4>
 <div class="paragraph">
 <p>Read about security issues:</p>
 </div>
@@ -8095,7 +8096,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-17 11:56:39 UTC
+Last updated 2025-12-17 15:42:19 UTC
 </div>
 </div>
 </body>

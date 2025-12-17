@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Reference Manual, Release 7</title>
+<title>Eclipse GlassFish Reference Manual, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Reference Manual, Release 7</h1>
+<h1>Eclipse GlassFish Reference Manual, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -23,7 +23,7 @@
 <li><a href="#overview">Overview</a></li>
 </ul>
 </li>
-<li><a href="#glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands">1 Eclipse GlassFish 7 asadmin Utility Subcommands</a></li>
+<li><a href="#glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands">1 Eclipse GlassFish 8 asadmin Utility Subcommands</a></li>
 <li><a href="#add-library">add-library</a>
 <ul class="sectlevel2">
 <li><a href="#synopsis">Synopsis</a></li>
@@ -4223,7 +4223,7 @@
 <li><a href="#see-also-277">See Also</a></li>
 </ul>
 </li>
-<li><a href="#glassfish-server-open-source-edition-5.0-utility-commands">2 Eclipse GlassFish 7 Utility Commands</a></li>
+<li><a href="#glassfish-server-open-source-edition-5.0-utility-commands">2 Eclipse GlassFish 8 Utility Commands</a></li>
 <li><a href="#appclient">appclient</a>
 <ul class="sectlevel2">
 <li><a href="#synopsis-278">Synopsis</a></li>
@@ -4296,7 +4296,7 @@
 <li><a href="#see-also-281">See Also</a></li>
 </ul>
 </li>
-<li><a href="#glassfish-server-open-source-edition-5.0-glassfish-server-concepts">3 Eclipse GlassFish 7 Eclipse GlassFish Concepts</a></li>
+<li><a href="#glassfish-server-open-source-edition-5.0-glassfish-server-concepts">3 Eclipse GlassFish 8 Eclipse GlassFish Concepts</a></li>
 <li><a href="#application">application</a>
 <ul class="sectlevel2">
 <li><a href="#description-284">Description</a></li>
@@ -4373,14 +4373,14 @@
 <p>Reference Manual</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
 <p>Contributed 2018 - 2024</p>
 </div>
 <div class="paragraph">
 <p>This reference manual describes administration commands and utility
-commands that are available with Eclipse GlassFish 7.
+commands that are available with Eclipse GlassFish 8.
 This reference manual also describes concepts that are related to
 Eclipse GlassFish administration.</p>
 </div>
@@ -4395,7 +4395,7 @@ other manual pages and reference material with relevant information.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Reference Manual, Release 7</p>
+<p>Eclipse GlassFish Reference Manual, Release 8</p>
 </div>
 <div class="paragraph">
 <p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
@@ -4565,7 +4565,7 @@ covered here.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands"><a class="anchor" href="#glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands"></a>1 Eclipse GlassFish 7 asadmin Utility Subcommands</h2>
+<h2 id="glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands"><a class="anchor" href="#glassfish-server-open-source-edition-5.0-asadmin-utility-subcommands"></a>1 Eclipse GlassFish 8 asadmin Utility Subcommands</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes, in alphabetical order, the subcommands of the
@@ -5938,7 +5938,7 @@ server.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; collect-log-files
-Created Zip file under /space/gf/glassfish7/glassfish/domains/domain1/\
+Created Zip file under /space/gf/glassfish8/glassfish/domains/domain1/\
 collected-logs/log_2021-12-15_15-46-23.zip.
 Command collect-log-files executed successfully.</code></pre>
 </div>
@@ -5955,7 +5955,7 @@ named <code>cluster1</code> and the two server instances running in the cluster.
 <pre class="CodeRay highlight"><code>asadmin&gt; collect-log-files --target cluster1
 Log files are downloaded for instance1.
 Log files are downloaded for instance2.
-Created Zip file under /space/gfv/glassfish7/glassfish/domains/domain1/\
+Created Zip file under /space/gfv/glassfish8/glassfish/domains/domain1/\
 collected-logs/log_2021-12-15_15-54-06.zip.
 Command collect-log-files executed successfully.</code></pre>
 </div>
@@ -15681,6 +15681,7 @@ Command create-mail-resource executed successfully.</code></pre>
 [--contextinfoenabled={false|true}]
 [--contextinfo={Classloader|JNDI|Security|WorkArea}]
 [--threadpriority threadpriority]
+[--use-virtual-threads={false|true}]
 [--longrunningtasks={false|true}]
 [--hungafterseconds hungafterseconds]
 [--hungloggerprintonce={false|true}]
@@ -15921,6 +15922,7 @@ Command create-managed-executor-service executed successfully.</code></pre>
 [--contextinfoenabled={false|true}]
 [--contextinfo={Classloader|JNDI|Security|WorkArea}]
 [--threadpriority threadpriority]
+[--use-virtual-threads={false|true}]
 [--longrunningtasks={false|true}]
 [--hungafterseconds hungafterseconds]
 [--hungloggerprintonce={false|true}]
@@ -15983,6 +15985,13 @@ contexts are propagated by default.</p>
 <dd>
 <p>Specifies the priority to assign to created threads. The default value
 is 5.</p>
+</dd>
+<dt class="hdlist1"><code>--use-virtual-threads</code></dt>
+<dd>
+<p>Determines whether virtual threads should be created instead of usual
+platform threads. Virtual threads are available only in Java 21 or
+newer. In case of earlier version it will fallback to platform threads.
+The default value is <code>true</code>.</p>
 </dd>
 <dt class="hdlist1"><code>--longrunningtasks</code></dt>
 <dd>
@@ -16142,6 +16151,7 @@ Command create-managed-scheduled-executor-service executed successfully.</code><
 [--contextinfoenabled={false|true}]
 [--contextinfo={Classloader|JNDI|Security|WorkArea}]
 [--threadpriority threadpriority]
+[--use-virtual-threads={false|true}]
 [--description description]
 [--property property]
 [--target target]
@@ -16196,6 +16206,13 @@ contexts are propagated by default.</p>
 <dd>
 <p>Specifies the priority to assign to created threads. The default value
 is 5.</p>
+</dd>
+<dt class="hdlist1"><code>--use-virtual-threads</code></dt>
+<dd>
+<p>Determines whether virtual threads should be created instead of usual
+platform threads. Virtual threads are available only in Java 21 or
+newer. In case of earlier version it will fallback to platform threads.
+The default value is <code>true</code>.</p>
 </dd>
 <dt class="hdlist1"><code>--description</code></dt>
 <dd>
@@ -16976,7 +16993,7 @@ omitted, no host is specified for the node.</p>
 <dd>
 <p>The full path to the parent of the base installation directory of the
 Eclipse GlassFish software on the host, for example,
-<code>/export/glassfish7/</code>. If this option is omitted, no parent of the
+<code>/export/glassfish8/</code>. If this option is omitted, no parent of the
 base installation directory of the Eclipse GlassFish software is
 specified for the node.</p>
 </dd>
@@ -17175,7 +17192,7 @@ must be specified. Otherwise, an error occurs.</p>
 <dd>
 <p>The full path to the parent of the base installation directory of the
 Eclipse GlassFish software on the host, for example,
-<code>/export/glassfish7/</code>. The default is the parent of the default base
+<code>/export/glassfish8/</code>. The default is the parent of the default base
 installation directory of the Eclipse GlassFish software for the DAS.
 This default is useful only if Eclipse GlassFish is installed in the
 same location on all hosts.</p>
@@ -17364,13 +17381,13 @@ is reserved by Eclipse GlassFish.</p>
 <div class="paragraph">
 <p>This example creates the node <code>adc</code> for the host <code>adc.example.com</code>. By
 default, the parent of the base installation directory of the
-Eclipse GlassFish software is <code>/export/glassfish7</code>.</p>
+Eclipse GlassFish software is <code>/export/glassfish8</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; create-node-ssh
 --nodehost adc.example.com
---installdir /export/glassfish7 adc
+--installdir /export/glassfish8 adc
 
 Command create-node-ssh executed successfully.</code></pre>
 </div>
@@ -18606,25 +18623,25 @@ The Windows Service was created successfully.  It is ready to be started.  Here 
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 Eclipse GlassFish
-Server Directory: C:\glassfish7\glassfish\domains\domain1
-Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
+Server Directory: C:\glassfish8\glassfish\domains\domain1
+Configuration file for Windows Services Wrapper: C:\glassfish8\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
-Start Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  start
-Stop Command:   C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  stop
-Restart Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Start Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  start
+Stop Command:   C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Restart Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 restart
-Uninstall Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Uninstall Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
-Install Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Install Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 install
-Status Command: C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe status
+Status Command: C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe status
 You can also verify that the service is installed (or not) with sc query state= all
 windows.services.uninstall.good=Found the Windows Service and successfully uninstall
 it.
 For your convenience this message has also been saved to this file:
-C:\glassfish7\glassfish\domains\domain1\PlatformServices.log
+C:\glassfish8\glassfish\domains\domain1\PlatformServices.log
 Command create-service executed successfully.</code></pre>
 </div>
 </div>
@@ -18652,7 +18669,7 @@ Here are the most typical Linux commands of interest:
 * /etc/init.d/GlassFish_domain1 restart
 
 For your convenience this message has also been saved to this file:
-/export/glassfish7/glassfish/domains/domain1/PlatformServices.log
+/export/glassfish8/glassfish/domains/domain1/PlatformServices.log
 Command create-service executed successfully.</code></pre>
 </div>
 </div>
@@ -30741,7 +30758,7 @@ working directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; export-sync-bundle --target=pmdcluster
-Sync bundle: /export/glassfish7/glassfish/domains/domain1/sync/
+Sync bundle: /export/glassfish8/glassfish/domains/domain1/sync/
 pmdcluster-sync-bundle.zip
 
 Command export-sync-bundle executed successfully.</code></pre>
@@ -31329,7 +31346,7 @@ sun.java.launcher = SUN_STANDARD
 sun.jnu.encoding = ISO646-US
 sun.management.compiler = HotSpot Client Compiler
 sun.os.patch.level = unknown
-user.dir = /home/thisuser/GlassFish/glassfish7/glassfish/domains/mydomain4/config
+user.dir = /home/thisuser/GlassFish/glassfish8/glassfish/domains/mydomain4/config
 user.home = /home/thisuser
 user.language = en
 user.name = thisuser
@@ -32133,7 +32150,7 @@ file to import. This operand is required.</p>
 <div class="paragraph">
 <p>This example imports the configuration for the clustered instance
 <code>ymli2</code> on the node <code>sj02</code> from the archive file
-<code>/export/glassfish7/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip</code>.</p>
+<code>/export/glassfish8/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip</code>.</p>
 </div>
 <div class="paragraph">
 <p>The command is run on the host <code>sj02</code>, which is the host that the node
@@ -32143,7 +32160,7 @@ default HTTP port for administration.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>sj02# asadmin --host sr04 import-sync-bundle --node sj02 --instance ymli2
-/export/glassfish7/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip
+/export/glassfish8/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip
 Command import-sync-bundle executed successfully.</code></pre>
 </div>
 </div>
@@ -32338,7 +32355,7 @@ installing the software (default).</p>
 <dd>
 <p>The absolute path to the parent of the base installation directory
 where the Eclipse GlassFish software is to be installed on each host,
-for example, <code>/export/glassfish7/</code>. If the directory does not exist,
+for example, <code>/export/glassfish8/</code>. If the directory does not exist,
 the subcommand creates the directory.<br>
 The user that is running this subcommand must have write access to the
 specified directory. Otherwise, an error occurs.<br>
@@ -32436,17 +32453,17 @@ Created installation zip /home/gfuser/glassfish2339538623689073993.zip
 Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj03.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish7
-Removing sj03.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj03.example.com:/export/glassfish7/bin
+sj03.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish8
+Removing sj03.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj03.example.com:/export/glassfish8/bin
 Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj04.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish7
-Removing sj04.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj04.example.com:/export/glassfish7/bin
+sj04.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish8
+Removing sj04.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj04.example.com:/export/glassfish8/bin
 Command install-node executed successfully</code></pre>
 </div>
 </div>
@@ -32648,7 +32665,7 @@ installing the software (default).</p>
 <dd>
 <p>The absolute path to the parent of the base installation directory
 where the Eclipse GlassFish software is to be installed on each host,
-for example, <code>/export/glassfish7/</code>. If the directory does not exist,
+for example, <code>/export/glassfish8/</code>. If the directory does not exist,
 the subcommand creates the directory.<br>
 The user that is running this subcommand must have write access to the
 specified directory. Otherwise, an error occurs.<br>
@@ -32746,17 +32763,17 @@ Created installation zip /home/gfuser/glassfish2339538623689073993.zip
 Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj03.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish7
-Removing sj03.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj03.example.com:/export/glassfish7/bin
+sj03.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish8
+Removing sj03.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj03.example.com:/export/glassfish8/bin
 Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj04.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish7
-Removing sj04.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj04.example.com:/export/glassfish7/bin
+sj04.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish8
+Removing sj04.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj04.example.com:/export/glassfish8/bin
 Command install-node-ssh executed successfully</code></pre>
 </div>
 </div>
@@ -33945,8 +33962,8 @@ Backup Date               : Mon Dec 20 19:24:17 CET 2021
 Domain Name               : domain1
 Backup Type               : full
 Backup Config Name        :
-Backup Filename (origin)  : /glassfish7/glassfish/domains/domain1/backups/domain1_2021_12_20_v00001.zip
-Domain Directory          : /glassfish7/glassfish/domains/domain1
+Backup Filename (origin)  : /glassfish8/glassfish/domains/domain1/backups/domain1_2021_12_20_v00001.zip
+Domain Directory          : /glassfish8/glassfish/domains/domain1
 
 Description               : domain1 backup created on 2021_12_20 by user dmatej
 GlassFish Version         : Eclipse GlassFish  7.0.0  (build 2021-12-10T19:08:14+0100)
@@ -33955,8 +33972,8 @@ Backup Date               : Mon Dec 20 19:24:20 CET 2021
 Domain Name               : domain1
 Backup Type               : full
 Backup Config Name        :
-Backup Filename (origin)  : /glassfish7/glassfish/domains/domain1/backups/domain1_2021_12_20_v00002.zip
-Domain Directory          : /glassfish7/glassfish/domains/domain1
+Backup Filename (origin)  : /glassfish8/glassfish/domains/domain1/backups/domain1_2021_12_20_v00002.zip
+Domain Directory          : /glassfish8/glassfish/domains/domain1
 
 
 Command list-backups executed successfully.</code></pre>
@@ -39993,7 +40010,7 @@ List Of Modules
 
 Module : org.glassfish.transaction.jts:3.0.0.b66
     Module Characteristics : List of Jars implementing the module
-        Jar : file:/home/gfuser/GlassFish/glassfish7/glassfish/modules/jts.jar
+        Jar : file:/home/gfuser/GlassFish/glassfish8/glassfish/modules/jts.jar
     Module Characteristics : Provides to following services
     Module Characteristics : List of imported modules
         Imports : org.glassfish.transaction.jts:3.0.0.b66
@@ -40004,10 +40021,10 @@ Module : org.glassfish.core.kernel:3.0.0.b66
     Module Characteristics : List of imported modules
         Imports : org.glassfish.core.kernel:3.0.0.b66
     Module Characteristics : List of Jars implementing the module
-        Jar : file:/home/gfuser/GlassFish/glassfish7/glassfish/modules/kernel.jar
+        Jar : file:/home/gfuser/GlassFish/glassfish8/glassfish/modules/kernel.jar
 Module : org.glassfish.common.util:3.0.0.b66
     Module Characteristics : List of Jars implementing the module
-        Jar : file:/home/gfuser/GlassFish/glassfish7/glassfish/modules/common-util.jar
+        Jar : file:/home/gfuser/GlassFish/glassfish8/glassfish/modules/common-util.jar
     Module Characteristics : Provides to following services
     Module Characteristics : List of imported modules
         Imports : org.glassfish.common.util:3.0.0.b66
@@ -40320,10 +40337,10 @@ in long format.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes --long=true
 NODE NAME           TYPE     NODE HOST          INSTALL DIRECTORY     REFERENCED BY
-localhost-domain1   CONFIG   localhost          /export/glassfish7
-sj02                SSH      sj02.example.com   /export/glassfish7    pmd-i2, yml-i2
-sj01                SSH      sj01.example.com   /export/glassfish7    pmd-i1, yml-i1
-devnode             CONFIG   localhost          /export/glassfish7    pmdsa1
+localhost-domain1   CONFIG   localhost          /export/glassfish8
+sj02                SSH      sj02.example.com   /export/glassfish8    pmd-i2, yml-i2
+sj01                SSH      sj01.example.com   /export/glassfish8    pmd-i1, yml-i1
+devnode             CONFIG   localhost          /export/glassfish8    pmdsa1
 Command list-nodes executed successfully.</code></pre>
 </div>
 </div>
@@ -40518,8 +40535,8 @@ remote communication in the domain <code>domain1</code> in long format.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST   INSTALL DIRECTORY    REFERENCED BY
-localhost-domain1   CONFIG   localhost   /export/glassfish7
-devnode             CONFIG   localhost   /export/glassfish7   pmdsa1
+localhost-domain1   CONFIG   localhost   /export/glassfish8
+devnode             CONFIG   localhost   /export/glassfish8   pmdsa1
 Command list-nodes-config executed successfully.</code></pre>
 </div>
 </div>
@@ -40713,8 +40730,8 @@ communication over SSH in a domain in long format.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
-sj02        SSH    sj02.example.com   /export/glassfish7   pmd-i-sj02, yml-i-sj02
-sj01        SSH    sj01.example.com   /export/glassfish7   pmd-i-sj01, yml-i-sj01
+sj02        SSH    sj02.example.com   /export/glassfish8   pmd-i-sj02, yml-i-sj02
+sj01        SSH    sj01.example.com   /export/glassfish8   pmd-i-sj01, yml-i-sj01
 Command list-nodes-ssh executed successfully.</code></pre>
 </div>
 </div>
@@ -44445,7 +44462,7 @@ Command ping-node-ssh executed successfully.</code></pre>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; ping-node-ssh --validate=true adc-node
 Successfully made SSH connection to node adcnode (adc.example.com)
-GlassFish version found at /export/glassfish7:
+GlassFish version found at /export/glassfish8:
 Using locally retrieved version string from version class.
 Version = Eclipse GlassFish 7.0.0 (build 2021-12-10T19:08:14+0100)
 Command version executed successfully.
@@ -48593,7 +48610,7 @@ heap memory size to 128 megabytes and the maximum heap memory size to
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; start-database --jvmoptions=&quot;-Xms128m -Xmx512m&quot; --terse=true
 Starting database in the background.
-Log redirected to /export/glassfish7/glassfish/databases/derby.log.</code></pre>
+Log redirected to /export/glassfish8/glassfish/databases/derby.log.</code></pre>
 </div>
 </div>
 </div>
@@ -48948,8 +48965,8 @@ This operand is optional if only one domain exists in the Eclipse GlassFish inst
 <pre class="CodeRay highlight"><code>asadmin&gt; start-domain mydomain4
 Waiting for DAS to start. ...........
 Started domain: mydomain4
-Domain location: /myhome/glassfish7/glassfish/domains/mydomain4
-Log file: /myhome/glassfish7/glassfish/domains/mydomain4/logs/server.log
+Domain location: /myhome/glassfish8/glassfish/domains/mydomain4
+Log file: /myhome/glassfish8/glassfish/domains/mydomain4/logs/server.log
 Admin port for the domain: 4848
 Command start-domain executed successfully.</code></pre>
 </div>
@@ -49168,8 +49185,8 @@ in such case.</p>
 <pre class="CodeRay highlight"><code>asadmin&gt; start-instance pmdsa1
 Waiting for the server to start ..............................
 Successfully started the instance: pmdsa1
-instance Location: /export/glassfish7/glassfish/nodes/localhost/pmdsa1
-Log File: /export/glassfish7/glassfish/nodes/localhost/pmdsa1/logs/server.log
+instance Location: /export/glassfish8/glassfish/nodes/localhost/pmdsa1
+Log File: /export/glassfish8/glassfish/nodes/localhost/pmdsa1/logs/server.log
 Admin Port: 24848
 Command start-local-instance executed successfully.
 The instance, pmdsa1, was started on host localhost
@@ -49192,8 +49209,8 @@ debugging enabled.</p>
 <pre class="CodeRay highlight"><code>asadmin&gt; start-instance --debug=true ymlsa1
 Waiting for the server to start ...............................
 Successfully started the instance: ymlsa1
-instance Location: /export/glassfish7/glassfish/nodes/localhost/ymlsa1
-Log File: /export/glassfish7/glassfish/nodes/localhost/ymlsa1/logs/server.log
+instance Location: /export/glassfish8/glassfish/nodes/localhost/ymlsa1
+Log File: /export/glassfish8/glassfish/nodes/localhost/ymlsa1/logs/server.log
 Admin Port: 24849
 Debugging is enabled. The debugging port is: 29010
 Command start-local-instance executed successfully.
@@ -49544,8 +49561,8 @@ subcommand is run.</p>
 <pre class="CodeRay highlight"><code>asadmin&gt; start-local-instance --node sj01 yml-i-sj01
 Waiting for the server to start .................................
 Successfully started the instance: yml-i-sj01
-instance Location: /export/glassfish7/glassfish/nodes/sj01/yml-i-sj01
-Log File: /export/glassfish7/glassfish/nodes/sj01/yml-i-sj01/logs/server.log
+instance Location: /export/glassfish8/glassfish/nodes/sj01/yml-i-sj01
+Log File: /export/glassfish8/glassfish/nodes/sj01/yml-i-sj01/logs/server.log
 Admin Port: 24849
 Command start-local-instance executed successfully.</code></pre>
 </div>
@@ -50771,7 +50788,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dd>
 <p>The absolute path to the parent of the base installation directory
 where the Eclipse GlassFish software is installed on each host, for
-example, <code>/export/glassfish7/</code>.<br>
+example, <code>/export/glassfish8/</code>.<br>
 The user that is running this subcommand must have write access to the
 specified directory. Otherwise, an error occurs.<br>
 The specified directory must contain the installation of the
@@ -50885,7 +50902,7 @@ Command uninstall-node executed successfully.</code></pre>
 </div>
 <div class="paragraph">
 <p>The software is uninstalled even if a user-defined node resides on the
-host. The entire content of the <code>/export/glassfish7</code> directory is
+host. The entire content of the <code>/export/glassfish8</code> directory is
 removed.</p>
 </div>
 <div class="paragraph">
@@ -50893,15 +50910,15 @@ removed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; uninstall-node --force --installdir /export/glassfish7 sj02.example.com
+<pre class="CodeRay highlight"><code>asadmin&gt; uninstall-node --force --installdir /export/glassfish8 sj02.example.com
 Successfully connected to gfuser@sj02.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
-Force removing file /export/glassfish7/mq/lib/help/en/add_overrides.htm
-Force removing file /export/glassfish7/mq/lib/help/en/add_connfact.htm
+Force removing file /export/glassfish8/mq/lib/help/en/add_overrides.htm
+Force removing file /export/glassfish8/mq/lib/help/en/add_connfact.htm
 ...
-Force removing directory /export/glassfish7/glassfish/lib/appclient
-Force removing directory /export/glassfish7/glassfish/lib
-Force removing directory /export/glassfish7/glassfish
+Force removing directory /export/glassfish8/glassfish/lib/appclient
+Force removing directory /export/glassfish8/glassfish/lib
+Force removing directory /export/glassfish8/glassfish
 Command uninstall-node executed successfully.</code></pre>
 </div>
 </div>
@@ -51038,7 +51055,7 @@ options, see the <a href="#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 <dd>
 <p>The absolute path to the parent of the base installation directory
 where the Eclipse GlassFish software is installed on each host, for
-example, <code>/export/glassfish7/</code>.<br>
+example, <code>/export/glassfish8/</code>.<br>
 The user that is running this subcommand must have write access to the
 specified directory. Otherwise, an error occurs.<br>
 The specified directory must contain the installation of the
@@ -51152,7 +51169,7 @@ Command uninstall-node-ssh executed successfully.</code></pre>
 </div>
 <div class="paragraph">
 <p>The software is uninstalled even if a user-defined node resides on the
-host. The entire content of the <code>/export/glassfish7</code> directory is
+host. The entire content of the <code>/export/glassfish8</code> directory is
 removed.</p>
 </div>
 <div class="paragraph">
@@ -51160,15 +51177,15 @@ removed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; uninstall-node-ssh --force --installdir /export/glassfish7 sj02.example.com
+<pre class="CodeRay highlight"><code>asadmin&gt; uninstall-node-ssh --force --installdir /export/glassfish8 sj02.example.com
 Successfully connected to gfuser@sj02.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
-Force removing file /export/glassfish7/mq/lib/help/en/add_overrides.htm
-Force removing file /export/glassfish7/mq/lib/help/en/add_connfact.htm
+Force removing file /export/glassfish8/mq/lib/help/en/add_overrides.htm
+Force removing file /export/glassfish8/mq/lib/help/en/add_connfact.htm
 ...
-Force removing directory /export/glassfish7/glassfish/lib/appclient
-Force removing directory /export/glassfish7/glassfish/lib
-Force removing directory /export/glassfish7/glassfish
+Force removing directory /export/glassfish8/glassfish/lib/appclient
+Force removing directory /export/glassfish8/glassfish/lib
+Force removing directory /export/glassfish8/glassfish
 Command uninstall-node-ssh executed successfully.</code></pre>
 </div>
 </div>
@@ -52140,7 +52157,7 @@ updated.</p>
 <dd>
 <p>The full path to the parent of the base installation directory of the
 Eclipse GlassFish software on the host, for example,
-<code>/export/glassfish7</code>.</p>
+<code>/export/glassfish8</code>.</p>
 </dd>
 <dt class="hdlist1"><code>--nodedir</code></dt>
 <dd>
@@ -52304,7 +52321,7 @@ updated.</p>
 <dd>
 <p>The full path to the parent of the base installation directory of the
 Eclipse GlassFish software on the host, for example,
-<code>/export/glassfish7</code>.</p>
+<code>/export/glassfish8</code>.</p>
 </dd>
 <dt class="hdlist1"><code>--nodedir</code></dt>
 <dd>
@@ -53127,7 +53144,7 @@ Command version executed successfully.</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="glassfish-server-open-source-edition-5.0-utility-commands"><a class="anchor" href="#glassfish-server-open-source-edition-5.0-utility-commands"></a>2 Eclipse GlassFish 7 Utility Commands</h2>
+<h2 id="glassfish-server-open-source-edition-5.0-utility-commands"><a class="anchor" href="#glassfish-server-open-source-edition-5.0-utility-commands"></a>2 Eclipse GlassFish 8 Utility Commands</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes Eclipse GlassFish utility commands.</p>
@@ -54763,7 +54780,7 @@ for descriptions of the following attributes:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="glassfish-server-open-source-edition-5.0-glassfish-server-concepts"><a class="anchor" href="#glassfish-server-open-source-edition-5.0-glassfish-server-concepts"></a>3 Eclipse GlassFish 7 Eclipse GlassFish Concepts</h2>
+<h2 id="glassfish-server-open-source-edition-5.0-glassfish-server-concepts"><a class="anchor" href="#glassfish-server-open-source-edition-5.0-glassfish-server-concepts"></a>3 Eclipse GlassFish 8 Eclipse GlassFish Concepts</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes concepts that are related to Eclipse GlassFish
@@ -55438,7 +55455,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-17 11:54:32 UTC
+Last updated 2025-12-17 15:40:55 UTC
 </div>
 </div>
 </body>

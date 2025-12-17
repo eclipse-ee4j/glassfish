@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish High Availability Administration Guide, Release 7</title>
+<title>Eclipse GlassFish High Availability Administration Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish High Availability Administration Guide, Release 7</h1>
+<h1>Eclipse GlassFish High Availability Administration Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -338,7 +338,7 @@
 <p>High Availability Administration Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
 <p>Contributed 2018 - 2024</p>
@@ -351,7 +351,7 @@ session persistence and failover.</p>
 <hr>
 <div class="paragraph">
 <p>Eclipse GlassFish High Availability Administration
-Guide, Release 7</p>
+Guide, Release 8</p>
 </div>
 <div class="paragraph">
 <p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
@@ -418,7 +418,7 @@ Eclipse GlassFish (Eclipse GlassFish) documentation
 set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <code><a href="http://glassfish.java.net/" class="bare">http://glassfish.java.net/</a></code>. The GlassFish
 project provides a structured process for developing the Eclipse GlassFish platform that makes the new features of the Jakarta EE platform
 available faster, while maintaining the most important feature of Java
@@ -744,13 +744,13 @@ used in this book.</p>
 system, and Mac OS operating system:</p>
 </div>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 <div class="paragraph">
 <p>Installations on the Windows operating system:</p>
 </div>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -761,13 +761,13 @@ system, and Mac OS operating system:</p>
 system, and Mac operating system:</p>
 </div>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 <div class="paragraph">
 <p>Installations on the Windows operating system:</p>
 </div>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -802,7 +802,7 @@ system, and Mac operating system:</p>
 <h2 id="high-availability-in-glassfish-server"><a class="anchor" href="#high-availability-in-glassfish-server"></a>1 High Availability in Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter describes the high availability features in Eclipse GlassFish 7.</p>
+<p>This chapter describes the high availability features in Eclipse GlassFish 8.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -858,7 +858,7 @@ minimum application downtime and enhanced transactional security.</p>
 <div class="sect3">
 <h4 id="load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module"><a class="anchor" href="#load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module"></a>Load Balancing With the Apache <code>mod_jk</code> or <code>mod_proxy_ajp</code> Module</h4>
 <div class="paragraph">
-<p>A common load balancing configuration for Eclipse GlassFish 7 is to use
+<p>A common load balancing configuration for Eclipse GlassFish 8 is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 <code>mod_jk</code> or <code>mod_proxy_ajp</code> module as the connector between the web
 server and Eclipse GlassFish. See
@@ -1005,7 +1005,7 @@ other servers in the cluster for maintaining HTTP session and stateful
 session bean data.</p>
 </div>
 <div class="paragraph">
-<p>In-memory session replication is implemented in Eclipse GlassFish 7 as
+<p>In-memory session replication is implemented in Eclipse GlassFish 8 as
 an OSGi module. Internally, the replication module uses a consistent
 hash algorithm to pick a replica server instance within a cluster of
 instances. This allows the replication module to easily locate the
@@ -3478,17 +3478,17 @@ Created installation zip /home/gfuser/glassfish2339538623689073993.zip
 Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj03.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish7
-Removing sj03.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj03.example.com:/export/glassfish7/bin
+sj03.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish8
+Removing sj03.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj03.example.com:/export/glassfish8/bin
 Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj04.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish7
-Removing sj04.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj04.example.com:/export/glassfish7/bin
+sj04.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish8
+Removing sj04.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj04.example.com:/export/glassfish8/bin
 Command install-node-ssh executed successfully</code></pre>
 </div>
 </div>
@@ -3799,7 +3799,7 @@ must be specified. Otherwise, an error occurs.</p>
 <dd>
 <p>The full path to the parent of the base installation directory of the
 Eclipse GlassFish software on the host, for example,
-<code>/export/glassfish7/</code>. If the Eclipse GlassFish software is installed
+<code>/export/glassfish8/</code>. If the Eclipse GlassFish software is installed
 in the same directory on the node&#8217;s host and the DAS host, you can
 omit this option.</p>
 </dd>
@@ -3933,8 +3933,8 @@ current domain.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
-sj01        SSH    sj01.example.com   /export/glassfish7   pmd-i1
-sj02        SSH    sj02.example.com   /export/glassfish7   pmd-i2
+sj01        SSH    sj01.example.com   /export/glassfish8   pmd-i1
+sj02        SSH    sj02.example.com   /export/glassfish8   pmd-i2
 Command list-nodes-ssh executed successfully.</code></pre>
 </div>
 </div>
@@ -4113,8 +4113,8 @@ and deletes the node <code>sj01</code>.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
-sj01        SSH    sj01.example.com   /export/glassfish7
-sj02        SSH    sj02.example.com   /export/glassfish7   pmd-i2
+sj01        SSH    sj01.example.com   /export/glassfish8
+sj02        SSH    sj02.example.com   /export/glassfish8   pmd-i2
 Command list-nodes-ssh executed successfully.
 asadmin&gt; delete-node-ssh sj01
 Command delete-node-ssh executed successfully.</code></pre>
@@ -4248,7 +4248,7 @@ reside on the node are created.</p>
 <dd>
 <p>The full path to the parent of the base installation directory of the
 Eclipse GlassFish software on the host, for example,
-<code>/export/glassfish7/</code>. You may omit this option. The installation
+<code>/export/glassfish8/</code>. You may omit this option. The installation
 directory can be determined when instances that reside on the node are
 created.</p>
 </dd>
@@ -4362,9 +4362,9 @@ current domain.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST            INSTALL DIRECTORY    REFERENCED BY
-localhost-domain1   CONFIG   localhost            /export/glassfish7
-cfg01               CONFIG   cfg01.example.com    /export/glassfish7   yml-i1
-cfg02               CONFIG   cfg02.example.com    /export/glassfish7   yml-i2
+localhost-domain1   CONFIG   localhost            /export/glassfish8
+cfg01               CONFIG   cfg01.example.com    /export/glassfish8   yml-i1
+cfg02               CONFIG   cfg02.example.com    /export/glassfish8   yml-i2
 Command list-nodes-config executed successfully.</code></pre>
 </div>
 </div>
@@ -4458,9 +4458,9 @@ Instance Locally</a>.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST           INSTALL DIRECTORY    REFERENCED BY
-localhost-domain1   CONFIG   localhost           /export/glassfish7
-cfg01               CONFIG   cfg01.example.com   /export/glassfish7
-cfg02               CONFIG   cfg02.example.com   /export/glassfish7   yml-i2
+localhost-domain1   CONFIG   localhost           /export/glassfish8
+cfg01               CONFIG   cfg01.example.com   /export/glassfish8
+cfg02               CONFIG   cfg02.example.com   /export/glassfish8   yml-i2
 Command list-nodes-config executed successfully.
 asadmin&gt; delete-node-config cfg01
 Command delete-node-config executed successfully.</code></pre>
@@ -7591,8 +7591,8 @@ configuration of the instance in the DAS when the instance was started.</p>
 CLI801 Instance is already synchronized
 Waiting for pmd-i2 to start ............
 Successfully started the instance: pmd-i2
-instance Location: /export/glassfish7/glassfish/nodes/sj02/pmd-i2
-Log File: /export/glassfish7/glassfish/nodes/sj02/pmd-i2/logs/server.log
+instance Location: /export/glassfish8/glassfish/nodes/sj02/pmd-i2
+Log File: /export/glassfish8/glassfish/nodes/sj02/pmd-i2/logs/server.log
 Admin Port: 24851
 Command start-local-instance executed successfully.
 The instance, pmd-i2, was started on host sj02.example.com
@@ -8070,7 +8070,7 @@ These commands are not required to create the instance.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>$ asadmin --host dashost.example.com list-nodes --long
 NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
-localhost-domain1  CONFIG  localhost         /export/glassfish7
+localhost-domain1  CONFIG  localhost         /export/glassfish8
 Command list-nodes executed successfully.
 $ asadmin --host dashost.example.com
 create-local-instance --cluster kuicluster kui-i1
@@ -8089,8 +8089,8 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-local-instance executed successfully.
 $ asadmin --host dashost.example.com list-nodes --long
 NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
-localhost-domain1  CONFIG  localhost         /export/glassfish7
-xk01               CONFIG  xk01.example.com  /export/glassfish7  kui-i1
+localhost-domain1  CONFIG  localhost         /export/glassfish8
+xk01               CONFIG  xk01.example.com  /export/glassfish8  kui-i1
 Command list-nodes executed successfully.</code></pre>
 </div>
 </div>
@@ -8401,8 +8401,8 @@ on the node <code>sj01</code>.</p>
 <pre class="CodeRay highlight"><code>$ asadmin start-local-instance --node sj01 yml-i1
 Waiting for yml-i1 to start ...............
 Successfully started the instance: yml-i1
-instance Location: /export/glassfish7/glassfish/nodes/sj01/yml-i1
-Log File: /export/glassfish7/glassfish/nodes/sj01/yml-i1/logs/server.log
+instance Location: /export/glassfish8/glassfish/nodes/sj01/yml-i1
+Log File: /export/glassfish8/glassfish/nodes/sj01/yml-i1/logs/server.log
 Admin Port: 24849
 Command start-local-instance executed successfully.</code></pre>
 </div>
@@ -8989,8 +8989,8 @@ the host where the instance resides:</p>
 Removing all cached state for instance yml-i1.
 Waiting for yml-i1 to start ...............
 Successfully started the instance: yml-i1
-instance Location: /export/glassfish7/glassfish/nodes/sj01/yml-i1
-Log File: /export/glassfish7/glassfish/nodes/sj01/yml-i1/logs/server.log
+instance Location: /export/glassfish8/glassfish/nodes/sj01/yml-i1
+Log File: /export/glassfish8/glassfish/nodes/sj01/yml-i1/logs/server.log
 Admin Port: 24849
 Command start-local-instance executed successfully.</code></pre>
 </div>
@@ -9411,7 +9411,7 @@ resynchronizes an instance with the DAS.</p>
 <div class="paragraph">
 <p>Put the files in a subdirectory under the domain directory that is not
 defined by Eclipse GlassFish, for example,
-<code>/export/glassfish7/glassfish/domains/domain1/myapp/myfile</code>.</p>
+<code>/export/glassfish8/glassfish/domains/domain1/myapp/myfile</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -10855,7 +10855,7 @@ typing the following commands at the command line:</p>
 <h2 id="configuring-http-load-balancing"><a class="anchor" href="#configuring-http-load-balancing"></a>7 Configuring HTTP Load Balancing</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter describes how to configure HTTP load balancing on Eclipse GlassFish 7.</p>
+<p>This chapter describes how to configure HTTP load balancing on Eclipse GlassFish 8.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -10926,7 +10926,7 @@ HTTP Server and <code>mod_proxy_ajp</code></a>.</p>
 <div class="sect3">
 <h4 id="configuring-glassfish-server-with-apache-http-server-and-mod_jk"><a class="anchor" href="#configuring-glassfish-server-with-apache-http-server-and-mod_jk"></a>Configuring Eclipse GlassFish with Apache HTTP Server and <code>mod_jk</code></h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 can be configured for load balancing with Apache
+<p>Eclipse GlassFish 8 can be configured for load balancing with Apache
 HTTP Server as a front end by enabling the Apache <code>mod_jk</code> connector
 module. To enable the <code>mod_jk</code> module in Eclipse GlassFish, set the
 Eclipse GlassFish <code>jk-enabled</code> <code>network-listener</code> attribute. You can also
@@ -11081,7 +11081,7 @@ worker.loadbalancer.balance_workers=worker1,worker2</code></pre>
 <div class="sect3">
 <h4 id="configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp"><a class="anchor" href="#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp"></a>Configuring Eclipse GlassFish with Apache HTTP Server and <code>mod_proxy_ajp</code></h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 can be configured for load balancing with Apache
+<p>Eclipse GlassFish 8 can be configured for load balancing with Apache
 HTTP Server as a front end by enabling the Apache <code>mod_proxy_ajp</code>
 connector module. To enable the <code>mod_proxy_ajp</code> module in Eclipse GlassFish, set the Eclipse GlassFish <code>jk-enabled</code> <code>network-listener</code>
 attribute. You can also create <code>jk-connectors</code> under different
@@ -11748,7 +11748,7 @@ possible.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support High Availability Database (HADB)
+<p>Eclipse GlassFish 8 does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
 <a href="#high-availability-session-persistence">High Availability Session Persistence</a>.</p>
 </div>
@@ -11804,13 +11804,13 @@ For information about how to disable these features, see the
 Eclipse GlassFish Application Deployment Guide</a>.</p>
 </li>
 <li>
-<p>Eclipse GlassFish 7 does not support High Availability Database
+<p>Eclipse GlassFish 8 does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
 in <a href="#high-availability-session-persistence">High Availability Session Persistence</a>.</p>
 </li>
 <li>
 <p>You can only bind certain objects to distributed sessions that support
-failover. Contrary to the Servlet 2.4 specification, Eclipse GlassFish 7 does not throw an <code>IllegalArgumentException</code> if an object type not
+failover. Contrary to the Servlet 2.4 specification, Eclipse GlassFish 8 does not throw an <code>IllegalArgumentException</code> if an object type not
 supported for failover is bound into a distributed session.</p>
 <div class="paragraph">
 <p>You can bind the following objects into a distributed session that
@@ -12155,7 +12155,7 @@ the type of session persistence an application uses. It must be set to
 <p>If you are using Memory Replication and your web application involves
 multiple client threads concurrently accessing the same session ID, then
 you may experience session loss even without any instance failure. The
-problem is that the Eclipse GlassFish 7 memory replication framework
+problem is that the Eclipse GlassFish 8 memory replication framework
 makes use of session versioning. This feature was designed with the more
 traditional HTTP request/response communication model in mind.</p>
 </div>
@@ -12295,7 +12295,7 @@ accessing the application.</p>
 <div class="paragraph">
 <p>Built on top of Oracle Coherence, Coherence*Web is an HTTP session
 management module dedicated to managing session state in clustered
-environments. Starting with Coherence 3.7 and Eclipse GlassFish 7,
+environments. Starting with Coherence 3.7 and Eclipse GlassFish 8,
 there is a new feature of Coherence*Web called ActiveCache for
 GlassFish. ActiveCache for GlassFish provides Coherence*Web
 functionality in web applications deployed on Eclipse GlassFishs. Within
@@ -13929,7 +13929,7 @@ container running in a cluster.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-17 11:52:15 UTC
+Last updated 2025-12-17 15:39:28 UTC
 </div>
 </div>
 </body>

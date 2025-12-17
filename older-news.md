@@ -131,7 +131,7 @@ Eclipse GlassFish 7.0.0 compiles and runs with JDK 11 to JDK 19 releases. MicroP
 
 ### September 19, 2022 - Eclipse GlassFish 7.0.0-M8 certified as Jakarta EE 10 compatible
 
-We are pleased to announce that with the milestone release 7.0.0-M8, Eclipse GlassFish is officially certified as a Jakarta EE 10 compatible implementation.
+We are pleased to announce that with the milestone Release 8.0.0-M8, Eclipse GlassFish is officially certified as a Jakarta EE 10 compatible implementation.
 
 * GlassFish 7.0.0-M8 is a [Jakarta EE 10 Full Profile](https://github.com/eclipse-ee4j/jakartaee-platform/issues/514) compatible implementation
 * GlassFish Web 7.0.0-M8 is a [Jakarta EE 10 Web Profile](https://github.com/eclipse-ee4j/jakartaee-platform/issues/534) compatible implementation

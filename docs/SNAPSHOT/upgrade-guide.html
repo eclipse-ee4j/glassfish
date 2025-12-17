@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Upgrade Guide, Release 7</title>
+<title>Eclipse GlassFish Upgrade Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Upgrade Guide, Release 7</h1>
+<h1>Eclipse GlassFish Upgrade Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -46,7 +46,7 @@
 </li>
 <li><a href="#glassfish-server-upgrade-compatibility-issues">2 Eclipse GlassFish Upgrade Compatibility Issues</a>
 <ul class="sectlevel2">
-<li><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 7</a></li>
+<li><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 8</a></li>
 <li><a href="#new-default-installation-directory">New Default Installation Directory</a></li>
 <li><a href="#changes-to-group-management-service-settings">Changes to Group Management Service Settings</a></li>
 <li><a href="#application-client-interoperability">Application Client Interoperability</a></li>
@@ -92,21 +92,21 @@
 <p>Upgrade Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>This guide explains how to upgrade to Eclipse GlassFish 7
+<p>This guide explains how to upgrade to Eclipse GlassFish 8
 from previous Eclipse GlassFish and Sun GlassFish Enterprise
 Server product releases. Also included in this guide are instructions
 for upgrading configuration data and Jakarta EE applications from
 binary-compatible earlier versions of this software to work with
-Eclipse GlassFish 7. Finally, this guide describes
+Eclipse GlassFish 8. Finally, this guide describes
 compatibility issues that affect data and applications that are to be
 migrated.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Upgrade Guide, Release 7</p>
+<p>Eclipse GlassFish Upgrade Guide, Release 8</p>
 </div>
 <div class="paragraph">
 <p>Copyright © 2025 Contributors to the Eclipse Foundation. All rights reserved.<br>
@@ -152,7 +152,7 @@ and applications that are to be migrated.</p>
 <h2 id="upgrading-an-installation-of-application-server-or-glassfish-server"><a class="anchor" href="#upgrading-an-installation-of-application-server-or-glassfish-server"></a>1 Upgrading an Installation of Application Server or Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section explains how to upgrade to Eclipse GlassFish 7 from a previous version. The process involves replicating your existing configuration and applications in the new installation.</p>
+<p>This section explains how to upgrade to Eclipse GlassFish 8 from a previous version. The process involves replicating your existing configuration and applications in the new installation.</p>
 </div>
 <div class="paragraph">
 <p><strong>Key Topics</strong></p>
@@ -187,7 +187,7 @@ and applications that are to be migrated.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Install Eclipse GlassFish 7 in a new directory.</p>
+<p>Install Eclipse GlassFish 8 in a new directory.</p>
 </li>
 <li>
 <p>Manually copy the configuration from the old installation.</p>
@@ -211,7 +211,7 @@ and applications that are to be migrated.</p>
 <p>Move the current installation to a backup directory.</p>
 </li>
 <li>
-<p>Install Eclipse GlassFish 7 in the original location.</p>
+<p>Install Eclipse GlassFish 8 in the original location.</p>
 </li>
 <li>
 <p>Manually copy the configuration from the backup.</p>
@@ -238,7 +238,7 @@ and applications that are to be migrated.</p>
 <p>Stop all domains on the source server.</p>
 </li>
 <li>
-<p>Install Eclipse GlassFish 7 (see Eclipse GlassFish Installation Guide).</p>
+<p>Install Eclipse GlassFish 8 (see Eclipse GlassFish Installation Guide).</p>
 </li>
 <li>
 <p>Copy custom/third-party libraries from the old installation to the new one.</p>
@@ -251,7 +251,7 @@ and applications that are to be migrated.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Install Eclipse GlassFish 7</strong> in a new directory.</p>
+<p><strong>Install Eclipse GlassFish 8</strong> in a new directory.</p>
 </li>
 <li>
 <p><strong>Copy configurations</strong> from the old installation:</p>
@@ -285,7 +285,7 @@ and applications that are to be migrated.</p>
 <h4 id="upgrade-of-clusters"><a class="anchor" href="#upgrade-of-clusters"></a>Upgrade of Clusters</h4>
 <div class="paragraph">
 <p>When upgrading from a clustered configuration, the older cluster
-information is retained in a new <code>domain.xml</code> file in the Eclipse GlassFish 7 installation directories. However, it is still necessary to
+information is retained in a new <code>domain.xml</code> file in the Eclipse GlassFish 8 installation directories. However, it is still necessary to
 manually re-create the server instances that are contained in the
 clusters.</p>
 </div>
@@ -295,8 +295,8 @@ clusters.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Perform new (not upgrade) Eclipse GlassFish 7 installations on each
-node host. Eclipse GlassFish 7 installation instructions are provided
+<p>Perform new (not upgrade) Eclipse GlassFish 8 installations on each
+node host. Eclipse GlassFish 8 installation instructions are provided
 in the <a href="installation-guide.html#GSING">
 Eclipse GlassFish Installation Guide</a>.</p>
 </li>
@@ -377,7 +377,7 @@ match the values in the DAS configuration, follow the instructions in
 <li>
 <p>After creating the instances, manually copy the instance-dir<code>/imq</code>
 directory for each instance from the older source installation to the
-target Eclipse GlassFish 7 installation.</p>
+target Eclipse GlassFish 8 installation.</p>
 </li>
 <li>
 <p>If necessary, start the cluster.<br>
@@ -431,12 +431,12 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 <div class="sect3">
 <h4 id="correcting-cluster-config"><a class="anchor" href="#correcting-cluster-config"></a>Correcting Cluster configuration</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support node agents. If you&#8217;re upgrading from a version that supports them or you have issues in cluster configuration after an upgrade, after upgrading the DAS:</p>
+<p>Eclipse GlassFish 8 does not support node agents. If you&#8217;re upgrading from a version that supports them or you have issues in cluster configuration after an upgrade, after upgrading the DAS:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Install Eclipse GlassFish 7 on each node host</strong>.</p>
+<p><strong>Install Eclipse GlassFish 8 on each node host</strong>.</p>
 </li>
 <li>
 <p><strong>Correct node configurations</strong> using <code>update-node-config</code> or <code>update-node-ssh</code>.</p>
@@ -460,7 +460,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 <div class="sect3">
 <h4 id="upgrading-installations-that-use-nss-cryptographic-tokens"><a class="anchor" href="#upgrading-installations-that-use-nss-cryptographic-tokens"></a>Upgrading Installations Using NSS Cryptographic Tokens</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support NSS. If you&#8217;re upgrading from a version that supports them, follow these steps:</p>
+<p>Eclipse GlassFish 8 does not support NSS. If you&#8217;re upgrading from a version that supports them, follow these steps:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -469,7 +469,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 <div class="ulist">
 <ul>
 <li>
-<p>Install Eclipse GlassFish 7 in a new directory.</p>
+<p>Install Eclipse GlassFish 8 in a new directory.</p>
 </li>
 <li>
 <p>Copy the source domain to the new installation.</p>
@@ -550,7 +550,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 </dd>
 <dt class="hdlist1">Target Root Domain&#8217;s Directory</dt>
 <dd>
-<p>Directory where domains are created in the new installation (e.g., <code>c:\glassfish7\glassfish\domains</code>).</p>
+<p>Directory where domains are created in the new installation (e.g., <code>c:\glassfish8\glassfish\domains</code>).</p>
 </dd>
 <dt class="hdlist1">Master Password</dt>
 <dd>
@@ -565,10 +565,10 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 <h2 id="glassfish-server-upgrade-compatibility-issues"><a class="anchor" href="#glassfish-server-upgrade-compatibility-issues"></a>2 Eclipse GlassFish Upgrade Compatibility Issues</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes some compatibility issues between Eclipse GlassFish 7 and earlier product releases. This section also describes
+<p>This section describes some compatibility issues between Eclipse GlassFish 8 and earlier product releases. This section also describes
 some compatibility issues that affect Java applications that run on
-earlier product releases with which Eclipse GlassFish 7 is
-binary-compatible. When you upgrade to Eclipse GlassFish 7, you must
+earlier product releases with which Eclipse GlassFish 8 is
+binary-compatible. When you upgrade to Eclipse GlassFish 8, you must
 address these issues.</p>
 </div>
 <div class="paragraph">
@@ -577,7 +577,7 @@ address these issues.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 7</a></p>
+<p><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 8</a></p>
 </li>
 <li>
 <p><a href="#new-default-installation-directory">New Default Installation Directory</a></p>
@@ -612,9 +612,9 @@ address these issues.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="binary-compatible-releases-for-glassfish-server"><a class="anchor" href="#binary-compatible-releases-for-glassfish-server"></a>Binary-Compatible Releases For Eclipse GlassFish 7</h3>
+<h3 id="binary-compatible-releases-for-glassfish-server"><a class="anchor" href="#binary-compatible-releases-for-glassfish-server"></a>Binary-Compatible Releases For Eclipse GlassFish 8</h3>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is NOT binary-compatible with the earlier releases of the software:</p>
+<p>Eclipse GlassFish 8 is NOT binary-compatible with the earlier releases of the software:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -645,7 +645,7 @@ address these issues.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Java applications that run on these releases also work on Eclipse GlassFish 7 except for the compatibility issues that
+<p>Java applications that run on these releases also work on Eclipse GlassFish 8 except for the compatibility issues that
 are listed in the remainder of this chapter.</p>
 </div>
 <div class="admonitionblock note">
@@ -659,7 +659,7 @@ are listed in the remainder of this chapter.</p>
 <p>The compatibility issues that are listed in the remainder of this
 chapter do not affect Java applications that run on Sun GlassFish
 Enterprise Server v3 and Eclipse GlassFish 3.0.1. The differences between
-Eclipse GlassFish 7 and the Enterprise Server v3 releases do not affect
+Eclipse GlassFish 8 and the Enterprise Server v3 releases do not affect
 applications and data.</p>
 </div>
 </td>
@@ -670,7 +670,7 @@ applications and data.</p>
 <div class="sect2">
 <h3 id="new-default-installation-directory"><a class="anchor" href="#new-default-installation-directory"></a>New Default Installation Directory</h3>
 <div class="paragraph">
-<p>The default Eclipse GlassFish 7 installation directories are as follows:</p>
+<p>The default Eclipse GlassFish 8 installation directories are as follows:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -679,7 +679,7 @@ applications and data.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>user-home-directory/glassfish7</code></pre>
+<pre class="CodeRay highlight"><code>user-home-directory/glassfish8</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -689,7 +689,7 @@ applications and data.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>SystemDrive\glassfish7</code></pre>
+<pre class="CodeRay highlight"><code>SystemDrive\glassfish8</code></pre>
 </div>
 </div>
 </div>
@@ -747,21 +747,21 @@ are not supported and have been removed.</p>
 <div class="sect2">
 <h3 id="application-client-interoperability"><a class="anchor" href="#application-client-interoperability"></a>Application Client Interoperability</h3>
 <div class="paragraph">
-<p>The Jakarta EE 10 platform specification imposes stricter requirements than
+<p>The Jakarta EE 11 platform specification imposes stricter requirements than
 Java EE 5 and older did on which JAR files can be visible to various modules
 within an EAR file. In particular, application clients must not have
 access to EJB JAR files or other JAR files in the EAR file unless they
 use a <code>Class-Path</code> header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
 Jakarta EE <code>library-directory</code> mechanism. Deployed Java EE 5 applications
-that are upgraded to Eclipse GlassFish 7 will have the <code>compatibility</code>
-property set to <code>v2</code> and will run without change on Eclipse GlassFish 7.
+that are upgraded to Eclipse GlassFish 8 will have the <code>compatibility</code>
+property set to <code>v2</code> and will run without change on Eclipse GlassFish 8.
 You may, however, want to consider modifying the applications to
-conform to Jakarta EE 10 requirements.</p>
+conform to Jakarta EE 11 requirements.</p>
 </div>
 <div class="paragraph">
 <p>If your upgrade includes a deployed application with an application
-client, you will need to retrieve the client stubs using Eclipse GlassFish 7 in order to run the client. Use the
+client, you will need to retrieve the client stubs using Eclipse GlassFish 8 in order to run the client. Use the
 <code>asadmin get-client-stubs</code> command.</p>
 </div>
 <div class="paragraph">
@@ -776,14 +776,14 @@ stubs, you will see the following error message:</p>
 <div class="paragraph">
 <p>If you commonly distribute application clients to remote systems from
 which users will run them, you must not only retrieve the client stubs,
-but you must also run the <code>package-appclient</code> utility for Eclipse GlassFish 7 to upgrade the Eclipse GlassFish system files. This utility
+but you must also run the <code>package-appclient</code> utility for Eclipse GlassFish 8 to upgrade the Eclipse GlassFish system files. This utility
 creates a JAR file, which you can then expand on the remote systems.</p>
 </div>
 <div class="paragraph">
 <p>Application clients use EJBs, web services, or other enterprise
 components that are in the application server (on the server side). The
 application client and the application server must use the same version
-and implementation of the RMI-IIOP protocol. Eclipse GlassFish 7 does
+and implementation of the RMI-IIOP protocol. Eclipse GlassFish 8 does
 not support communication between different versions of the protocol
 implementation. You cannot run application clients with one version of
 the application server runtime with a server that has a different
@@ -802,7 +802,7 @@ clients and servers synchronized and using the same runtime.</p>
 <div class="sect2">
 <h3 id="node-agent-support"><a class="anchor" href="#node-agent-support"></a>Node Agent Support</h3>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support node agents. When updating from
+<p>Eclipse GlassFish 8 does not support node agents. When updating from
 installations of earlier product versions in which node agents were
 configured, the cluster definitions will be migrated, but the clustered
 instances themselves must be manually re-created. See
@@ -812,10 +812,10 @@ instances themselves must be manually re-created. See
 <div class="sect2">
 <h3 id="hadb-and-hadbm-command-support"><a class="anchor" href="#hadb-and-hadbm-command-support"></a>HADB and <code>hadbm</code> Command Support</h3>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support HADB or the <code>hadbm</code> management command.</p>
+<p>Eclipse GlassFish 8 does not support HADB or the <code>hadbm</code> management command.</p>
 </div>
 <div class="paragraph">
-<p>Instead of HADB, Eclipse GlassFish 7 supports high availability
+<p>Instead of HADB, Eclipse GlassFish 8 supports high availability
 clustering by means of in-memory session state replication and
 ActiveCache for GlassFish.
 See "<a href="ha-administration-guide.html#high-availability-in-glassfish-server">
@@ -846,7 +846,7 @@ for more information.</p>
 <div class="sect3">
 <h4 id="deprecated-asadmin-subcommands"><a class="anchor" href="#deprecated-asadmin-subcommands"></a>Deprecated <code>asadmin</code> Subcommands</h4>
 <div class="paragraph">
-<p>In Eclipse GlassFish 7, it is recommended that utility options of the
+<p>In Eclipse GlassFish 8, it is recommended that utility options of the
 <code>asadmin</code> command precede the subcommand. Utility options are options
 that control the behavior of the <code>asadmin</code> utility, as distinguished
 from subcommand options. Use of the following options after the
@@ -1053,10 +1053,10 @@ This option is still valid in other subcommands such as <code>create-domain</cod
 <div class="sect2">
 <h3 id="applications-that-use-java-db"><a class="anchor" href="#applications-that-use-java-db"></a>Applications That Use Java DB</h3>
 <div class="paragraph">
-<p>The directory location of Java DB in Eclipse GlassFish 7 has changed
+<p>The directory location of Java DB in Eclipse GlassFish 8 has changed
 from its location in previous installations. Suppose that you have
 deployed applications that use Java DB databases in your previous server
-installation, and you upgrade your existing installation to Eclipse GlassFish 7. If you run the <code>asadmin start-database</code> command and
+installation, and you upgrade your existing installation to Eclipse GlassFish 8. If you run the <code>asadmin start-database</code> command and
 successfully start Java DB, you could run into problems while trying to
 run applications that were deployed on your previous server
 installation.</p>
@@ -1082,7 +1082,7 @@ For example:</p>
 </div>
 </li>
 <li>
-<p>After upgrade, start Eclipse GlassFish 7.</p>
+<p>After upgrade, start Eclipse GlassFish 8.</p>
 </li>
 </ol>
 </div>
@@ -1090,14 +1090,14 @@ For example:</p>
 <div class="sect2">
 <h3 id="applications-that-use-persistence"><a class="anchor" href="#applications-that-use-persistence"></a>Applications That Use Persistence</h3>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 and 3.0.1, and Sun GlassFish Enterprise Server v3
+<p>Eclipse GlassFish 8 and 3.0.1, and Sun GlassFish Enterprise Server v3
 use the persistence provider EclipseLink, while earlier versions used
 TopLink Essentials.</p>
 </div>
 <div class="paragraph">
 <p>An application that uses the container to create an <code>EntityManager</code> or
 <code>EntityManagerFactory</code> and that used Toplink Essentials as its provider
-will work in Eclipse GlassFish 7. The container creates an
+will work in Eclipse GlassFish 8. The container creates an
 <code>EntityManager</code> if the application uses the <code>@PersistenceContext</code>
 annotation to inject an <code>EntityManager</code>, as in the following example:</p>
 </div>
@@ -1121,7 +1121,7 @@ EntityManager em = emf.createEntityManager();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When the application is loaded, Eclipse GlassFish 7 will translate the
+<p>When the application is loaded, Eclipse GlassFish 8 will translate the
 provider to EclipseLink and will also translate <code>toplink.*</code> properties
 in the <code>persistence.xml</code> to corresponding EclipseLink properties. (The
 actual <code>persistence.xml</code> file remains unchanged.)</p>
@@ -1162,7 +1162,7 @@ the code to cast to <code>org.eclipse.persistence.*</code>. You can use the pack
 renamer tool described on the
 <a href="http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages">
 Eclipse wiki</a>
-to do this. This tool is not provided with Eclipse GlassFish 7,
+to do this. This tool is not provided with Eclipse GlassFish 8,
 however, so you must obtain it from the EclipseLink project download site.</p>
 </li>
 </ul>
@@ -1171,7 +1171,7 @@ however, so you must obtain it from the EclipseLink project download site.</p>
 <div class="sect2">
 <h3 id="http-service-to-network-service-changes"><a class="anchor" href="#http-service-to-network-service-changes"></a>HTTP Service to Network Service Changes</h3>
 <div class="paragraph">
-<p>In Eclipse GlassFish 7, most HTTP Service settings are defined in the
+<p>In Eclipse GlassFish 8, most HTTP Service settings are defined in the
 Network Service configuration that was introduced in Sun GlassFish
 Enterprise Server v3.</p>
 </div>
@@ -1198,7 +1198,7 @@ Enterprise Server v3.</p>
 <h4 id="changes-to-dotted-names"><a class="anchor" href="#changes-to-dotted-names"></a>Changes to Dotted Names</h4>
 <div class="paragraph">
 <p>The dotted name hierarchy for the HTTP Service configuration in
-Eclipse GlassFish 7 is shown below. Elements that are no longer
+Eclipse GlassFish 8 is shown below. Elements that are no longer
 supported are <code>request-processing</code>, <code>keep-alive</code>, <code>connection-pool</code>,
 <code>http-protocol</code>, <code>http-file-cache</code>, and <code>http-listener</code>. During the
 upgrade process, these discontinued elements are remapped to the new
@@ -1226,7 +1226,7 @@ configuration automatically and then deleted.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The dotted name hierarchy for the Eclipse GlassFish 7 Network Service
+<p>The dotted name hierarchy for the Eclipse GlassFish 8 Network Service
 and HTTP Service configurations is shown below. The <code>network-config</code>
 element and all its children are new except for <code>ssl</code>.</p>
 </div>
@@ -1261,7 +1261,7 @@ element and all its children are new except for <code>ssl</code>.</p>
 </div>
 <div class="paragraph">
 <p>The following example compares the commands for setting a listener port
-for Sun GlassFish Enterprise Server v3 and Eclipse GlassFish 7. Note
+for Sun GlassFish Enterprise Server v3 and Eclipse GlassFish 8. Note
 that the configuration for Enterprise Server v3 also applies to all
 earlier Enterprise Server 2.x releases.</p>
 </div>
@@ -1276,7 +1276,7 @@ earlier Enterprise Server 2.x releases.</p>
 </div>
 </li>
 <li>
-<p>Command for Eclipse GlassFish 7:</p>
+<p>Command for Eclipse GlassFish 8:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin set server-config.network-config.network-listeners.network-\
@@ -1316,7 +1316,7 @@ options of this commands are unchanged.</p>
 <h4 id="remapping-of-http-service-attributes-and-properties"><a class="anchor" href="#remapping-of-http-service-attributes-and-properties"></a>Remapping of HTTP Service Attributes and Properties</h4>
 <div class="paragraph">
 <p>The following tables describe how attributes and properties in the HTTP
-Service configuration for Eclipse GlassFish 7 are remapped to
+Service configuration for Eclipse GlassFish 8 are remapped to
 attributes in the Network Service configuration for older product
 releases. If you use a configuration from a Sun GlassFish Enterprise
 Server v2 or v3 release, this remapping happens automatically and then
@@ -2507,8 +2507,8 @@ timeout.</p></td>
 <div class="sect2">
 <h3 id="nss-cryptographic-token-support"><a class="anchor" href="#nss-cryptographic-token-support"></a>NSS Cryptographic Token Support</h3>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support Network Security Services (NSS)
-cryptographic tokens. When upgrading to Eclipse GlassFish 7 from
+<p>Eclipse GlassFish 8 does not support Network Security Services (NSS)
+cryptographic tokens. When upgrading to Eclipse GlassFish 8 from
 Enterprise Server v2.x, additional manual configuration steps must be
 performed. These steps are explained later in this guide, in
 <a href="#upgrading-installations-that-use-nss-cryptographic-tokens">Upgrading Installations
@@ -2525,7 +2525,7 @@ That Use NSS Cryptographic Tokens</a>.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -2726,7 +2726,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and non-platform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/documentation.html" class="bare">https://glassfish.org/documentation.html</a>.</p>
@@ -2894,13 +2894,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -2915,13 +2915,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -3063,7 +3063,7 @@ Attributes</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-17 11:57:36 UTC
+Last updated 2025-12-17 15:43:07 UTC
 </div>
 </div>
 </body>

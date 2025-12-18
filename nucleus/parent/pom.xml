@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.9</version>
+        <version>2.0.0-M1</version>
         <relativePath />
     </parent>
 
@@ -69,31 +69,7 @@
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
-    <!-- TODO: Can be removed after it would be removed from parent too -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Disabled Sonatype Nexus</name>
-            <url>http://localhost</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <name>Disabled Sonatype Nexus</name>
-            <url>http://localhost</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </distributionManagement>
+
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>6.0.1</jakarta.el-api.version>

@@ -113,7 +113,7 @@ public final class ResourceAttributes {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Resource) ) {
+        if (!(obj instanceof ResourceAttributes) ) {
             return false;
         }
         ResourceAttributes other = (ResourceAttributes) obj;

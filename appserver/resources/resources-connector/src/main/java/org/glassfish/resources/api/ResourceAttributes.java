@@ -103,7 +103,7 @@ public final class ResourceAttributes {
      */
     public void set(String name, Properties value) {
         requireNonNull(name, "name");
-        requireNonNull(name, "value");
+        requireNonNull(value, "value");
         properties.put(name, value);
     }
 

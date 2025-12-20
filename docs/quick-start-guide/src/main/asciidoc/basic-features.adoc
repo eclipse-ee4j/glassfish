@@ -11,7 +11,7 @@ prev=preface.html
 
 {productName} provides a server for the
 development and deployment of Java Platform, Enterprise Edition (Jakarta EE
-platform) applications and web technologies based on Java technology.
+{jakartaee}) applications and web technologies based on Java technology.
 {productName} {product-majorVersion} provides the following:
 
 * A lightweight and extensible core based on OSGi Alliance standards

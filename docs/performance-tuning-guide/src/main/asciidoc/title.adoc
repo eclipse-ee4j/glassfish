@@ -24,6 +24,8 @@ This book describes how to get the best performance with {productName} 7.
 
 {productName} Performance Tuning Guide, Release 8
 
+Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
+
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 
 This program and the accompanying materials are made available under the

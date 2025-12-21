@@ -854,7 +854,7 @@ Table 1-5 MicroProfile Standards Implementations in {productName} {product-curre
 
 [width="100%",cols="<48%,<10%,<10%,<10%,<10%,<10%",options="header",]
 |===
-|MicroProfile Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile | Embedded {productName} {product-currentVersion} All | Embedded {productName} {product-currentVersion} Web 
+|MicroProfile Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile | Embedded {productName} {product-currentVersion} All | Embedded {productName} {product-currentVersion} Web
 
 |https://microprofile.io/specifications/config/[MicroProfile Config]
 |{microprofile-config-api-version}

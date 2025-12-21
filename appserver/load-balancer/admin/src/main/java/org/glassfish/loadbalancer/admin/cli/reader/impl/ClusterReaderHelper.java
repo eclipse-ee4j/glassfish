@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,7 +51,6 @@ public class ClusterReaderHelper {
     /**
      * Returns the web module readers for a set of application refs.
      *
-     * @param   _configCtx      Current Config context
      * @param   refs            Application ref(s) from cluster or stand alone
      *                          instance
      * @param   target          Name of the cluster or stand alone instance

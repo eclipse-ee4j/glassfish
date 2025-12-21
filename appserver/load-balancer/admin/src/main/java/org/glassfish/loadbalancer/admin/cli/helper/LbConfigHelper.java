@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,9 +48,7 @@ public class LbConfigHelper {
 
     /**
      * exports the loadbalancer.xml from the config to the outputstream provided
-     * @param ctx ConfigContext
      * @param lbConfigName name of lb-config
-     * @param out OutputStream into which the loadbalancer.xml is written
      */
     public static LoadbalancerReader getLbReader(Domain domain, ApplicationRegistry appRegistry,
             String lbConfigName) throws Exception {
@@ -79,8 +78,6 @@ public class LbConfigHelper {
 
     /**
      * exports the loadbalancer.xml from the config to the outputstream provided
-     * @param ctx ConfigContext
-     * @param lbConfigName name of lb-config
      * @param out OutputStream into which the loadbalancer.xml is written
      */
     public static void exportXml(LoadbalancerReader lbRdr, OutputStream out)
@@ -109,8 +106,6 @@ public class LbConfigHelper {
 
     /**
      * exports the workser.properties from the config to the outputstream provided
-     * @param ctx ConfigContext
-     * @param lbConfigName name of lb-config
      * @param out OutputStream into which the loadbalancer.xml is written
      */
     public static void exportWorkerProperties(LoadbalancerReader lbRdr, OutputStream out)
@@ -210,8 +205,6 @@ public class LbConfigHelper {
 
    /**
      * exports the otd.properties from the config to the outputstream provided
-     * @param ctx ConfigContext
-     * @param lbConfigName name of lb-config
      */
     public static void exportOtdProperties(LoadbalancerReader lbRdr, OutputStream out)
             throws Exception {

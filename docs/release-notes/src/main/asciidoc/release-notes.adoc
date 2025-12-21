@@ -852,7 +852,7 @@ xref:#microprofile-table[Table 1-5] lists the MicroProfile standards implemented
 
 Table 1-5 MicroProfile Standards Implementations in {productName} {product-currentVersion}
 
-[width="100%",cols="<48%,<10%,<10%,<10%",options="header",]
+[width="100%",cols="<48%,<10%,<10%,<10%,<10%,<10%",options="header",]
 |===
 |MicroProfile Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile | Embedded {productName} {product-currentVersion} All | Embedded {productName} {product-currentVersion} Web 
 
@@ -899,6 +899,7 @@ Table 1-6 Components and extensions provided by {productName} {product-currentVe
 |Eclipse Epicyro |{epicyro-version} |Jakarta Authentication {jakarta-authentication-api-version} |Low-level SPI for authentication mechanisms.
 |Eclipse Exousia |{exousia-version} |Jakarta Authorization {jakarta-authorization-api-version} |Low-level SPI for authorization modules.
 |Eclipse Jersey |{jersey-version} |Jakarta RESTful Web Services {jakarta-rest-api-version}, MicroProfile REST Client {microprofile-rest-client-version} |Framework for RESTful web services and clients.
+|Eclipse JNoSQL |{jnosql-version} | Jakarta Data {jakarta-data-api-version}, Jakarta NoSQL {jakarta-nosql-api-version} | Support for NoSQL databases and Jakarta Data APIs.
 |Eclipse Krazo |{krazo-version} |Jakarta MVC {jakarta-mvc-api-version} |MVC framework for web applications.
 |Eclipse Metro |{webservices-version} |JAXB, Jakarta XML Web Services {jakarta-xml-ws-api-version} |Web services stack.
 |Eclipse Mojarra |{mojarra-version} |Jakarta Faces {jakarta-faces-api-version} |Faces implementation with Mojarra extensions.

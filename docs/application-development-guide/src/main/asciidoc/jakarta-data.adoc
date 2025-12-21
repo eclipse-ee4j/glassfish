@@ -16,6 +16,7 @@ The following topics are addressed here:
 
 * xref:#overview-of-jakarta-data[Overview of Jakarta Data]
 * xref:#defining-repository-interfaces[Defining Repository Interfaces]
+* xref:#nosql-entities-and-databases[NoSQL Entities and Databases]
 * xref:#query-methods[Query Methods]
 * xref:#custom-queries[Custom Queries]
 * xref:#pagination-and-sorting[Pagination and Sorting]
@@ -38,10 +39,20 @@ Key features of Jakarta Data include:
 * Query derivation from method names
 * Support for custom queries using JDQL or JPQL
 * Built-in pagination and sorting capabilities
-* Integration with Jakarta Persistence (JPA)
+* Integration with Jakarta Persistence (JPA) for relational databases
+* Integration with Jakarta NoSQL for NoSQL databases
 * Type-safe query building
+* Support for both SQL and NoSQL databases in the same application
 
 Jakarta Data repositories work by defining interfaces that may extend base repository types. The Jakarta Data provider automatically generates implementations of these interfaces at build time or runtime.
+
+In {productName}, Jakarta Data is implemented using Eclipse JNoSQL, which provides:
+
+* **Unified API** - The same repository interfaces for both SQL and NoSQL databases
+* **Multi-database support** - Support for SQL, Document, Key-Value, Wide-Column, and Graph databases
+* **JPA integration** - Seamless integration with existing JPA entities (for SQL databases)
+* **NoSQL entities** - Support for Jakarta NoSQL entities (for NoSQL databases)
+* **Automatic routing** - Automatic database detection and query creation based on entity type
 
 [[defining-repository-interfaces]]
 
@@ -54,7 +65,8 @@ Jakarta Data repositories are defined as interfaces annotated with `@Repository`
 * `PageableRepository<T, K>` - Adds pagination support
 
 
-==== Basic Repository Example
+[[basic-repository-example]]
+=== Basic Repository Example
 
 This example shows a simple repository interface that extends `CrudRepository` for a `Product` entity. It contains methods defined in `CrudRepository` as well as custom query methods using annotations and parameters.
 
@@ -85,7 +97,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 }
 ----
 
-==== Alternative: Method Name-Based Queries (Deprecated)
+[[alternative-method-name-based-queries]]
+=== Alternative: Method Name-Based Queries (Deprecated)
 
 {productName} also supports method name-based query derivation, but this approach is deprecated and might be removed in future versions. Use the annotated approach shown above instead.
 
@@ -105,6 +118,14 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 }
 ----
 
+[[mixed-jpa-and-nosql-entity-usage]]
+=== Mixed JPA and NoSQL Entity Usage
+
+You can use both JPA entities and NoSQL entities in the same {productName} application. Define separate repository interfaces for each entity type, and configure the appropriate database connections as described above.
+
+You cannot mix JPA entities and NoSQL entities in the same repository interface; each repository must be dedicated to a single entity type, and, in case of JPA, also to a single persistence unit.
+
+[[entity-definition]]
 ==== Entity Definition
 
 Your entity classes should be standard JPA entities:
@@ -138,6 +159,7 @@ public class Product {
 
 Jakarta Data supports automatic query generation using annotated methods with the `@Find`, `@Count`, `@Exists`, and `@Delete` annotations combined with parameter annotations like `@By`.
 
+[[supported-query-annotations]]
 ==== Supported Query Annotations
 
 * `@Find` - Find operations
@@ -148,10 +170,12 @@ Jakarta Data supports automatic query generation using annotated methods with th
 * `@Update` - Update operations
 * `@Save` - Save operations (insert or update)
 
+[[parameter-annotations]]
 ==== Parameter Annotations
 
 * `@By("propertyName")` - Query by property. Specifies the entity property to query by, which can be nested to specify properties of referenced entities (e.g., `@By("customer.address.city")`). If the application is compiled with preserving parameter names in the bytecode (e.g., with `javac -parameters`), `@By` is optional and if not present, the property name will be derived from the parameter name.
 
+[[examples]]
 ==== Examples
 
 [source,java]
@@ -228,6 +252,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 }
 ----
 
+[[alternative-method-name-based-queries-deprecated]]
 ==== Alternative: Method Name-Based Queries (Deprecated)
 
 {productName} also supports method name-based query derivation using a standardized naming convention, but this approach may be removed in future versions. Use the annotated approach shown above instead.
@@ -376,6 +401,9 @@ public void demonstratePagination() {
 
 Jakarta Data repositories integrate with Jakarta EE transaction management. Repository methods automatically participate in existing transactions or create new ones as needed.
 
+NOTE: Transaction management is not supported for NoSQL Data repositories yet. See xref:#limitations-of-nosql-data-repositories[limitations].
+
+[[declarative-transactions]]
 ==== Declarative Transactions
 
 [source,java]
@@ -408,6 +436,7 @@ public class OrderService {
 }
 ----
 
+[[custom-transaction-behavior]]
 ==== Custom Transaction Behavior
 
 [source,java]
@@ -430,6 +459,9 @@ The @Transactional annotation can be applied to the repository interface or indi
 
 Jakarta Data repositories integrate with Jakarta Validation to validate method parameters and return values. To trigger validation, repository method parameters need to be annotated with validation annotations.
 
+NOTE: Validation is not supported for NoSQL Data repositories yet. See xref:#limitations-of-nosql-data-repositories[limitations].
+
+[[parameter-validation]]
 ==== Parameter Validation
 
 For simple field validation, use annotations like `@Max`, `@Min`, `@NotNull` directly on parameters:
@@ -468,6 +500,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 }
 ----
 
+[[entity-validation-annotations]]
 ==== Entity Validation Annotations
 
 Define validation rules on your entity fields:
@@ -501,6 +534,7 @@ public class Product {
 }
 ----
 
+[[method-return-value-validation]]
 ==== Method Return Value Validation
 
 Validation annotations can also be applied to methods to validate return values:
@@ -520,6 +554,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 }
 ----
 
+[[handling-validation-errors]]
 ==== Handling Validation Errors
 
 Validation errors are thrown as `ConstraintViolationException`:
@@ -548,18 +583,18 @@ public class ProductService {
 }
 ----
 
-[[configuring-jakarta-data-repositories]]
+[[configuring-jpa-data-repositories]]
 
-=== Configuring Jakarta Data Repositories
+=== Configuring Data Repositories for JPA entities
 
-To use Jakarta Data repositories in your {productName} application, you need to:
+To use Jakarta Data repositories for JPA entities in your {productName} application, you need to:
 
-1. Add the Jakarta Data API or Jakarta EE API dependency to your project
-2. Configure a Jakarta Persistence persistence unit
-3. Optionally configure a data source and install a JDBC driver
+1. **Add API to compiler's classpath:** Addthe Jakarta Data API or Jakarta EE API dependency to your project
+2. **Link to a database connection:** Configure a Jakarta Persistence persistence unit
+3. **Install database driver:** Either use the default datasource or configure a custom data source and install a JDBC driver for your database.
 
-{productName} implements Jakarta Data repositories using the JNoSQL provider, which delegates to Jakarta Persistence (JPA) for database interactions. Therefpre, to use Jakarta Data repositories, you need to configure a Jakarta Persistence persistence unit. Jakarta Data {jakarta-data-spec-version} doesn't specify how repositories integrate with JPA. The documentation about integrating Jakarta Data with JPA is specific to {productName}.
 
+[[adding-dependencies]]
 ==== Adding Dependencies
 
 Add the Jakarta Data API dependency to your `pom.xml`:
@@ -585,13 +620,16 @@ Alternatively, if you're using the full Jakarta EE platform, you can use:
 </dependency>
 ----
 
-==== Configuring Jakarta Persistence
+[[connect-to-jakarta-persistence-persistence-unit-for-jpa-entities]]
+==== Connect to Jakarta Persistence persistence unit (for JPA Entities)
 
-Configure Jakarta Data in your `persistence.xml`:
+By default, Data repositories for JPA entities use the default JPA persistence unit source configured in {productName}.
+
+Configure the default Jakarta Persistence persistence unit in your `persistence.xml`:
 
 [source,xml]
 ----
-<persistence-unit name="myPU" transaction-type="JTA">
+<persistence-unit transaction-type="JTA">
     <class>com.example.model.Product</class>
     <properties>
         <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
@@ -599,11 +637,12 @@ Configure Jakarta Data in your `persistence.xml`:
 </persistence-unit>
 ----
 
-This will use the default data source configured in {productName}, which points to an external Derby DB. Make sure that DerbyDB is running if you use the default datasource. If you want to specify a custom data source, see the next section.
+This will use the default data source configured in {productName}, which points to a Derby database. Make sure that DerbyDB is running if you use the default datasource. You can start the Derby database using the xref:reference-manual.adoc#start-database[`start-database`] command. If you want to specify a custom data source, see the next section.
 
-==== Data Source Configuration (Optional)
+[[data-source-configuration-for-jpa-optional-but-recommended]]
+==== Data Source Configuration for JPA (Optional but recommended)
 
-If you need to configure a custom data source, use the {productName} administration console or the `asadmin` CLI command, with create-jdbc-connection-pool and create-jdbc-resource commands, and appropriate JDBC driver installed in {productName}:
+If you need to configure a custom data source for JPA entities, use the {productName} administration console or the `asadmin` CLI command, with xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`] and xref:reference-manual.adoc#create-jdbc-resource[`create-jdbc-resource`] commands, and appropriate JDBC driver installed in {productName}:
 
 [source,bash]
 ----
@@ -615,7 +654,7 @@ asadmin create-jdbc-connection-pool --datasourceclassname org.postgresql.ds.PGSi
 asadmin create-jdbc-resource --connectionpoolid MyPool jdbc/MyDataSource
 ----
 
-The above example uses PostgreSQL database. Adjust the `datasourceclassname` and properties according to your database and JDBC driver.
+The above example uses PostgreSQL database. Adjust the `datasourceclassname` and properties according to your database and JDBC driver. For information on how to install JDBC drivers in {productName}, see xref:administration-guide.adoc#jdbc[Administering Database Connectivity].
 
 Then adjust your `persistence.xml` to reference the custom data source by its JNDI name defined by the create-jdbc-resource command earlier:
 
@@ -630,12 +669,7 @@ Then adjust your `persistence.xml` to reference the custom data source by its JN
 </persistence-unit>
 ----
 
-[[integration-with-jpa]]
-
-=== Integration with Jakarta Persistence (JPA)
-
-In {productName}, Jakarta Data repositories can work alongside traditional JPA EntityManager operations in the same application. Internally, Jakarta Data repositories use JPA for database interactions, so they share the same persistence context. Calling repository methods is equivalent to using EntityManager alone and you can mix them in the same application, even in the same transaction.
-
+[[retrieve-entitymanager-in-default-methods]]
 ==== Retrieve EntityManager in default methods
 
 You can access the EntityManager used by the repository using a method in the repository interface that returns EntityManager. This allows you to implement custom default repository methods that use the EntityManager directly.
@@ -662,6 +696,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 }
 ----
 
+[[entitymanager-configuration]]
 ==== EntityManager Configuration
 
 By default, Jakarta Data repositories use the default EntityManager as if it's injected via `@Inject EntityManager`.
@@ -712,13 +747,14 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 }
 ----
 
-==== Mixing repositories and JPA EntityManager
+[[mixing-repositories-and-jpa-entitymanager]]
+==== Mixing JPA repositories and JPA EntityManager
 
 The following cases will use the same persistence context:
 
-* Calling repository methods that reuse the existing transaction
+* Calling repository methods
 * Using EntityManager retrieved from the repository
-* Using an injected EntityManager for the same persistence unit
+* Using an injected EntityManager for the same persistence unit defined for the repository
 
 You can freely mix Jakarta Data repository methods and direct EntityManager operations in the same application, even in the same transaction. As long as the EntityMangers are for the same persistence unit, they will share the same persistence context. If they are for different persistence units, they will operate independently and will require XA datasources if used in the same transaction.
 
@@ -760,3 +796,495 @@ public class CustomerService {
     }
 }
 ----
+
+[[configuring-nosql-data-repositories]]
+=== Configuring Data Repositories for NoSQL Entities
+
+To use Jakarta Data repositories for NoSQL entities in your {productName} application, you need to:
+
+1. **Add API to compiler's classpath:** Addthe Jakarta Data API or Jakarta EE API dependency to your project
+2. **Link to a database connection:** Configure properties of the NoSQL database connection
+3. **Install database driver:** Install JNoSQL driver for your database and configure database type
+
+[[nosql-database-categories]]
+==== NoSQL Database Categories
+
+Eclipse JNoSQL supports four main categories of NoSQL databases:
+
+**Document Databases**
+
+Document databases store data in document format, typically JSON or BSON. Each document can have its own structure, providing flexibility in data modeling.
+
+* **Examples:** MongoDB, CouchDB, CouchBase, ArangoDB
+* **Use cases:** Content management, catalogs, user profiles
+* **Data structure:** Nested documents with complex hierarchies
+
+**Key-Value Databases**
+
+Key-Value databases are the simplest NoSQL databases, storing data as key-value pairs.
+
+* **Examples:** Redis, Hazelcast, Memcached, Riak
+* **Use cases:** Caching, session storage, shopping carts
+* **Data structure:** Simple key-value pairs
+
+**Wide-Column Databases**
+
+Wide-Column databases store data in column families, allowing for flexible schemas and high scalability.
+
+* **Examples:** Cassandra, HBase, DynamoDB
+* **Use cases:** Time-series data, IoT applications, analytics
+* **Data structure:** Column families with dynamic columns
+
+**Graph Databases**
+
+Graph databases store data as nodes and relationships, optimized for traversing connections.
+
+* **Examples:** Neo4j, ArangoDB, OrientDB
+* **Use cases:** Social networks, recommendation engines, fraud detection
+* **Data structure:** Nodes connected by relationships
+
+[[nosql-entity-annotations]]
+==== NoSQL Entity Annotations
+
+NoSQL entities use Jakarta NoSQL annotations, which are similar to JPA annotations:
+
+[cols="30%,70%"]
+|===
+|Annotation |Description
+
+|`@jakarta.nosql.Entity`
+|Specifies that the class is a NoSQL entity
+
+|`@jakarta.nosql.Id`
+|Specifies the primary key of the entity
+
+|`@jakarta.nosql.Column`
+|Maps a field to a database column/attribute
+
+|`@jakarta.nosql.Convert`
+|Specifies a converter for the field
+
+|`@jakarta.nosql.Embeddable`
+|Specifies that the class is embeddable
+
+|`@jakarta.nosql.Inheritance`
+|Specifies inheritance mapping strategy for entities
+
+|`@jakarta.nosql.DiscriminatorColumn`
+|Specifies the discriminator column for the inheritance mapping strategy
+
+|`@jakarta.nosql.DiscriminatorValue`
+|Specifies the discriminator value for the inheritance mapping strategy
+
+|`@jakarta.nosql.MappedSuperclass`
+|Specifies a class whose mapping information is applied to entities that inherit from it.
+
+|===
+
+Notable differences between JPA and NoSQL annotations:
+
+* NoSQL entities do not use `@Table` annotation; the collection/table name is specified by the entity name in the `@Entity` annotation.
+* NoSQL entities do not support relationships (`@OneToMany`, `@ManyToOne`, etc.); related data should be embedded or referenced manually.
+* There's no `@GeneratedValue` annotation; primary keys must be assigned manually or generated using application logic.
+* There's no `@Version` annotation for optimistic locking; NoSQL databases typically handle concurrency differently.
+* There's no `@Transient` annotation; all non-annotated fields are ignored by default.
+* There's no `@Embedded` annotation; all embedded objects marked with `@Embeddable` are embedded automatically.
+* Java `record` types are supported as NoSQL entities for read-only operations. Constructor arguments can be annotated as fiels with `@Id` and `@Column`. 
+
+[[nosql-entity-examples]]
+==== NoSQL Entity Examples
+
+Entity mapped as a Java class, with the `address` field mapped as an embeddable class. 
+
+[source,java]
+----
+import jakarta.nosql.Entity;
+import jakarta.nosql.Id;
+import jakarta.nosql.Column;
+
+@Entity("customers")
+public class Customer {
+
+    @Id
+    private String id;
+
+    @Column
+    private String name;
+
+    @Column
+    private String email;
+
+    @Column
+    private Address address; // Embedded object
+
+    @Column
+    private List<String> tags;
+
+    @Column
+    private Map<String, Object> metadata;
+
+    // Constructors, getters, and setters
+}
+
+@Embeddable
+public class Address {
+    @Column
+    private String street;
+    
+    @Column
+    private String city;
+    
+    @Column
+    private String country;
+    
+    // Constructors, getters, and setters
+}
+----
+
+Entity mapped as a Java record, can only be used in read-only operations.
+
+[source,java]
+----
+@Entity("sensor_data")
+public record SensorReading(
+    @Id String id,
+    @Column String sensorId,
+    @Column LocalDateTime timestamp,
+    @Column Double temperature,
+    @Column Double humidity,
+    @Column Map<String, Double> additionalMetrics
+) {}
+----
+
+
+[[repository-usage-with-nosql-entities]]
+==== Repository Usage with NoSQL Entities
+
+NoSQL entities work with the same repository interfaces as JPA entities:
+
+[source,java]
+----
+@Repository
+public interface CustomerRepository extends CrudRepository<Customer, String> {
+
+    @Find
+    List<Customer> findCustomers(@By("name") String name);
+
+    @Find
+    List<Customer> findCustomers(@By("address.city") String city);
+
+    @Query("WHERE tags IN :tags")
+    List<Customer> findCustomersByTags(List<String> tags);
+
+    @Count
+    long countCustomers(@By("address.country") String country);
+}
+
+@Repository
+public interface SensorReadingRepository extends CrudRepository<SensorReading, String> {
+
+    @Find
+    List<SensorReading> findBySensorId(@By("sensorId") String sensorId);
+
+    @Query("WHERE timestamp BETWEEN :start AND :end")
+    List<SensorReading> findByTimestampRange(LocalDateTime start, LocalDateTime end);
+
+    @Count
+    long countBySensorId(@By("sensorId") String sensorId);
+}
+----
+
+
+
+
+[[configuring-nosql-databases]]
+==== Configuring NoSQL Databases
+
+{productName} supports NoSQL databases through Eclipse JNoSQL. Eclipse JNoSQL provides support for four main NoSQL database categories:
+
+* **Document databases** - Store data in document format (JSON/BSON)
+* **Key-Value databases** - Simple key-value storage
+* **Wide-Column databases** - Column-family storage
+* **Graph databases** - Graph-based data storage
+
+===== Supported NoSQL Databases
+
+Eclipse JNoSQL supports the following NoSQL databases:
+
+**Document Databases:**
+* MongoDB
+* CouchDB
+* CouchBase
+* OrientDB
+* ArangoDB
+* RavenDB
+* Elasticsearch
+* Solr
+
+**Key-Value Databases:**
+* Redis
+* Hazelcast
+* Infinispan
+* Memcached
+* Riak
+* Oracle NoSQL
+* ArangoDB
+
+**Wide-Column Databases:**
+* Cassandra
+* HBase
+* DynamoDB
+
+**Graph Databases:**
+* Neo4j
+* OrientDB
+* ArangoDB
+* TinkerPop-compatible databases
+
+For an up-to-date list of supported NoSQL databases and instructions on how to install drivers for specific databases, see the https://github.com/eclipse-jnosql/jnosql-databases/[Eclipse JNoSQL Databases] repository.
+
+NOTE: **{productName} does not bundle NoSQL database drivers.** You need to add the appropriate Eclipse JNoSQL database dependency to your project or add it to the {productName} installation to use a specific NoSQL database. Some drivers also require parts of JNoSQL that are not included in {productName} by default, so make sure to add those dependencies as well. It's recommended to add NoSQL database driver artifact to your project as a runtime dependency so that the build tool (Maven, Gradle, etc.) bundles all transitive dependencies into your application. If you decide to add the driver to {productName} installation instead, make sure to also install all required transitive dependencies.
+
+
+===== NoSQL Entity Definition
+
+NoSQL entities use Jakarta NoSQL annotations, which are similar to JPA annotations:
+
+[source,java]
+----
+import jakarta.nosql.Entity;
+import jakarta.nosql.Id;
+import jakarta.nosql.Column;
+
+@Entity("products")
+public class Product {
+
+    @Id
+    private String id;
+
+    @Column
+    private String name;
+
+    @Column
+    private String category;
+
+    @Column
+    private BigDecimal price;
+
+    @Column
+    private List<String> tags;
+
+    // Constructors, getters, and setters
+}
+----
+
+===== NoSQL Database Configuration
+
+NoSQL database connections are configured using MicroProfile Config properties. The configuration varies by database type and specific database. 
+
+NOTE: For more information about MicroProfile Config, see the https://microprofile.io/specifications/microprofile-config/[MicroProfile Config specification].
+
+**MongoDB Configuration Example:**
+
+To configure MongoDB connection, add the following properties to your `microprofile-config.properties` file (or equivalent configuration source):
+
+[source,properties]
+----
+# Document database configuration
+jnosql.document.database=mystore
+jnosql.mongodb.host=localhost:27017
+jnosql.mongodb.user=myuser
+jnosql.mongodb.password=mypassword
+----
+
+MongoDB is a document database, so the `jnosql.document.database` property is used to specify the database name.
+
+All other properties are specific to MongoDB connection. The following MongoDB-specific properties are supported:
+
+jnosql.mongodb.host::
+    The MongoDB server hostname or IP address, and port.
+    Default: localhost:27017
+
+jnosql.mongodb.user::
+    The username for MongoDB authentication.
+
+jnosql.mongodb.password::
+    The password for MongoDB authentication.
+
+jnosql.mongodb.authentication.source::
+    The source where the user is defined.
+
+jnosql.mongodb.authentication.mechanism::
+    Authentication mechanism to use, one of the values of the `com.mongodb.AuthenticationMechanism` enum. See the MongoDB JavaDoc Documentation for the list of values.
+
+NOTE: You can also provide the configuration values programmatically, by creating a custom MongoDBDocumentManagerSupplier. See the xref:#programmatic-configuration[Programmatic Configuration] section for an example.
+
+
+===== Common Configuration Properties
+
+Most NoSQL databases support these common configuration properties:
+
+[cols="30%,70%"]
+|===
+|Property |Description
+
+|`jnosql.<type>.provider`
+|The fully qualified class name of the database configuration provider
+
+|`jnosql.<type>.database`
+|The database name or identifier
+
+|`jnosql.<database>.host`
+|The database host and port (format: host:port)
+
+|`jnosql.<database>.user`
+|The username for authentication
+
+|`jnosql.<database>.password`
+|The password for authentication
+
+|`jnosql.<database>.timeout`
+|Connection timeout in milliseconds
+|===
+
+Where `<type>` is one of: `document`, `keyvalue`, `column`, `graph` and `<database>` is the specific database name (e.g., `mongodb`, `redis`, `cassandra`).
+
+===== Adding NoSQL Database Dependencies
+
+To use a specific NoSQL database, add the corresponding Eclipse JNoSQL database dependency:
+
+**MongoDB:**
+[source,xml]
+----
+<dependency>
+    <groupId>org.eclipse.jnosql.databases</groupId>
+    <artifactId>jnosql-mongodb</artifactId>
+    <version>{jnosql-version}</version>
+</dependency>
+----
+
+**Redis:**
+[source,xml]
+----
+<dependency>
+    <groupId>org.eclipse.jnosql.databases</groupId>
+    <artifactId>jnosql-redis</artifactId>
+    <version>{jnosql-version}</version>
+</dependency>
+----
+
+**Cassandra:**
+[source,xml]
+----
+<dependency>
+    <groupId>org.eclipse.jnosql.databases</groupId>
+    <artifactId>jnosql-cassandra</artifactId>
+    <version>{jnosql-version}</version>
+</dependency>
+----
+
+**Neo4j:**
+[source,xml]
+----
+<dependency>
+    <groupId>org.eclipse.jnosql.databases</groupId>
+    <artifactId>jnosql-neo4j</artifactId>
+    <version>{jnosql-version}</version>
+</dependency>
+----
+
+===== Programmatic Configuration
+
+You can also configure NoSQL databases programmatically by creating a configuration supplier. For example, to configure MongoDB programmatically, create a class that implements `Supplier<DocumentManager>` and annotate it with `@Alternative` and `@Priority` to override the default configuration:
+
+[source,java]
+----
+@ApplicationScoped
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION)
+public class MongoDBManagerSupplier implements Supplier<DocumentManager> {
+
+    @Produces
+    public DocumentManager get() {
+        Settings settings = Settings.builder()
+            .put("jnosql.mongodb.host", "localhost:27017")
+            .put("jnosql.document.database", "mystore")
+            .build();
+        
+        MongoDBDocumentConfiguration configuration = new MongoDBDocumentConfiguration();
+        DocumentManagerFactory factory = configuration.apply(settings);
+        return factory.apply("mystore");
+    }
+}
+----
+
+[[limitations-of-nosql-data-repositories]]
+==== Limitations of NoSQL Data Repositories
+
+When using NoSQL entities and repositories in {productName}, there are some limitations to be aware of:
+
+===== Single NoSQL Database per Application
+
+{productName} supports only one NoSQL database in a single application. You cannot use multiple different NoSQL databases (e.g., MongoDB and Redis) simultaneously in the same application instance.
+
+===== Jakarta Validation Not Supported in NoSQL Repositories
+
+Jakarta Validation is not yet supported in NoSQL Data repositories. Validation annotations on NoSQL entities and repository method parameters will be ignored.
+
+For NoSQL entities, you must implement validation logic manually in your application code or service layer.
+
+**Example:**
+
+[source,java]
+----
+@Entity("products")
+public class NoSQLProduct {
+
+    @Id
+    private String id;
+
+    @Column
+    private String name; // Validation annotations are ignored
+
+    @Column
+    private BigDecimal price; // Validation annotations are ignored
+}
+
+@Repository
+public interface NoSQLProductRepository extends CrudRepository<NoSQLProduct, String> {
+
+    @Find
+    // Validation annotations on parameters are ignored
+    NoSQLProduct findByName(@By("name") @NotBlank String name);
+}
+
+// Manual validation in service layer
+@ApplicationScoped
+public class NoSQLProductService {
+
+    @Inject
+    private NoSQLProductRepository repository;
+
+    public NoSQLProduct createProduct(NoSQLProduct product) {
+        // Implement validation manually
+        if (product.getName() == null || product.getName().isBlank()) {
+            throw new IllegalArgumentException("Product name is required");
+        }
+        if (product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Product price must be greater than zero");
+        }
+
+        return repository.save(product);
+    }
+}
+----
+
+JPA repositories for relational databases support Jakarta Validation as described in the xref:#jakarta-validation-support[Jakarta Validation Support] section.
+
+===== JTA Transaction Support Not Yet Available for NoSQL Repositories
+
+Jakarta Transactions (JTA) integration is not yet supported for NoSQL Data repositories. Calling repository methods within a JTA transaction or annotating the repository interface with `@Transactional` will not execute NoSQL queries within a transaction context.
+
+You must manage transactions manually in your application code if needed, depending on the capabilities of the specific NoSQL database.
+
+JPA repositories for relational databases support JTA transactions as described in the xref:#transaction-management[Transaction Management] section.

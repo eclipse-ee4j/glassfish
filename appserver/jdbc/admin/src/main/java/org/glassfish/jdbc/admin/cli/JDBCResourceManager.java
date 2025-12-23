@@ -232,6 +232,7 @@ public class JDBCResourceManager implements ResourceManager {
             String msg = I18N.getLocalString("delete.jdbc.resource.system-all-req.object-type",
                     "The jdbc resource [ {0} ] cannot be deleted as it is required to be configured in the system.",
                     jndiName);
+            return new ResourceStatus(FAILURE, msg);
         }
 
         if (environment.isDas()) {
@@ -241,8 +242,16 @@ public class JDBCResourceManager implements ResourceManager {
                             "jdbc-resource [ {0} ] is referenced in an " +
                                     "instance/cluster target, Use delete-resource-ref on appropriate target",
                             jndiName);
+                    return new ResourceStatus(FAILURE, msg);
                 }
             } else {
+                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                    String msg = I18N.getLocalString("delete.jdbc.resource.no.resource-ref",
+                            "jdbc-resource [ {0} ] is not referenced in target [ {1} ]",
+                            jndiName, target);
+                    return new ResourceStatus(FAILURE, msg);
+                }
+
                 if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
                     String msg = I18N.getLocalString("delete.jdbc.resource.multiple.resource-refs",
                             "jdbc resource [ {0} ] is referenced in multiple " +
@@ -256,7 +265,7 @@ public class JDBCResourceManager implements ResourceManager {
         try {
 
             // delete resource-ref
-            if (!TARGET_DOMAIN.equals(target) && resourceUtil.isResourceRefInTarget(jndiName, target)) {
+            if (!TARGET_DOMAIN.equals(target)) {
                 resourceUtil.deleteResourceRef(jndiName, target);
             }
 

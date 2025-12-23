@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2024 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+    Console plugin configuration file that defines integration points.
+    This file tells the Admin Console how to integrate this plugin:
+    1. console-config id="helloworld" - unique identifier for this plugin
+    2. integration-point - defines where and how to integrate with the console
+    Integration point types include:
+    - org.glassfish.admingui:navNode - adds items to navigation tree
+    - org.glassfish.admingui:mastheadStatusArea - adds content to masthead
+    - org.glassfish.admingui:loginform - customizes login form
+    - org.glassfish.admingui:loginimage - customizes login page image
+    The content attribute points to a JSF-Templating file (.jsf) that defines
+    the actual UI component to be integrated. These .jsf files use the legacy
+    JSF-Templating syntax but can reference modern JSF pages (.xhtml).
+-->
+<console-config id="helloworld">
+
+    <!--
+        Navigation node integration point that adds "Hello World" to the sidebar.
+        Attributes explained:
+        - id: unique identifier for this integration point
+        - type: org.glassfish.admingui:navNode means add to navigation tree
+        - priority: controls ordering (lower numbers appear first)
+        - parentId: "tree" means add to root level of navigation tree
+        - content: path to JSF-Templating file that defines the tree node
+        The content file (navigation/helloWorldNavNode.jsf) uses JSF-Templating
+        syntax to create a <sun:treeNode> component that appears in the sidebar.
+    -->
+    <integration-point
+        id="helloworld_nav_node"
+        type="org.glassfish.admingui:navNode"
+        priority="100"
+        parentId="tree"
+        content="navigation/helloWorldNavNode.jsf"
+    />
+
+</console-config>

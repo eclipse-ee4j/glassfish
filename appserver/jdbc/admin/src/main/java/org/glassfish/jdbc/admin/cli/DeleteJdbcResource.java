@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,8 +39,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.DAS_SERVER_NAME;
-
 /**
  * Delete JDBC Resource command
  */
@@ -64,8 +62,6 @@ public class DeleteJdbcResource implements AdminCommand {
     @Param(name = "jdbc_resource_name", primary = true)
     private String jndiName;
 
-    // FIXME: unused, when removing, do the same in Create* and all asadmin commands used in tests
-    @Deprecated
     @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
@@ -86,7 +82,7 @@ public class DeleteJdbcResource implements AdminCommand {
 
         final ActionReport report = context.getActionReport();
         try {
-            ResourceStatus rs = jdbcResMgr.delete(domain.getResources(), SimpleJndiName.of(jndiName), DAS_SERVER_NAME);
+            ResourceStatus rs = jdbcResMgr.delete(domain.getResources(), SimpleJndiName.of(jndiName), target);
             if(rs.getMessage() != null){
                 report.setMessage(rs.getMessage());
             }

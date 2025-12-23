@@ -31,6 +31,8 @@ applications using Oracle servers and software.
 {productName} Application Development Guide,
 Release 8
 
+Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
+
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 
 This program and the accompanying materials are made available under the

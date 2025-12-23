@@ -14,8 +14,8 @@ development of Jakarta EE {jakartaee} applications. It is the first Compatible
 Implementation for Jakarta EE. It delivers a highly productive
 platform for developing with the latest Jakarta EE technologies.
 
-For any issue or information on {productName},
-see the https://glassfish.org/.
+For any issues or information about {productName},
+see https://glassfish.org/.
 
 These Release Notes provide late-breaking information about {productName} {product-majorVersion}
 software and documentation. These Release Notes include
@@ -45,9 +45,17 @@ view the most up-to-date product information.
 
 === What's New in the {productName} {product-majorVersion} Release?
 
-{productName} {product-majorVersion} is the first Compatible Implementation of the Jakarta EE {jakartaee] Platform.
+{productName} {product-majorVersion} is a Compatible Implementation of the Jakarta EE {jakartaee} Platform.
 
-{productName} {product-majorVersion} also supports the following new features:
+Key new features in {productName} {product-majorVersion} include:
+
+* Support for both https://jakarta.ee/specifications/persistence/[Jakarta Persistence] entities and https://jakarta.ee/specifications/nosql/[Jakarta NoSQL] entities in xref:application-development-guide.adoc#using-jakarta-data-repositories[Jakarta Data repositories]
+* Java 21+ minimum requirement with support up to JDK 25 (see xref:#required-jdk-versions[Required JDK Versions])
+* MicroProfile APIs expanded to Web Profile and Embedded GlassFish (since {productName} 7.1.0) (see xref:#microprofile-support[MicroProfile Standards Support])
+* Monitoring via JMX supported in Embedded {productName}
+* Enhanced performance and stability improvements
+
+{productName} {product-majorVersion} also supports the following features:
 
 * https://microprofile.io/specifications/config/[MicroProfile Config]  API
 * https://microprofile.io/specifications/jwt/[MicroProfile JWT] API
@@ -102,8 +110,7 @@ The following topics are addressed here:
 
 ==== Required JDK Versions
 
-{productName} Release 8.1 requires Java 17 minimum and runs on JDK 17 to JDK 21, experimentally on higher versions.
-{productName} Release 8.0 requires Java 11 minimum and runs on JDK 11 to JDK 21, experimentally on higher versions.
+{productName} Release {product-majorVersion} requires Java 21 minimum and runs on JDK 21 to JDK 25, with experimental support for higher versions.
 
 Also be sure to see xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the
 JDK Software] for important JDK configuration instructions.
@@ -238,9 +245,8 @@ configuration, as this has not been tested.
 
 ==== Message Queue Broker Requirements
 
-{productName} {product-majorVersion} is now bundled with Message Queue (MQ) Broker
-5.1.1. Refer to the
-https://github.com/eclipse-ee4j/glassfishdoc/5.1/mq-release-notes.pdf[`Open Message Queue Release Notes`]
+{productName} {product-majorVersion} is bundled with Eclipse OpenMQ {openmq-version}.
+Refer to the {mq.docs.url}[Eclipse OpenMQ documentation]
 for complete information about MQ Broker requirements.
 
 [[paths-and-environment-settings-for-the-jdk-software]]
@@ -846,34 +852,38 @@ xref:#microprofile-table[Table 1-5] lists the MicroProfile standards implemented
 
 Table 1-5 MicroProfile Standards Implementations in {productName} {product-currentVersion}
 
-[width="100%",cols="<48%,<10%,<10%,<10%",options="header",]
+[width="100%",cols="<48%,<10%,<10%,<10%,<10%,<10%",options="header",]
 |===
-|MicroProfile Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile
+|MicroProfile Standard |Version |{productName} {product-currentVersion} Full Platform |{productName} {product-currentVersion} Web Profile | Embedded {productName} {product-currentVersion} All | Embedded {productName} {product-currentVersion} Web
 
 |https://microprofile.io/specifications/config/[MicroProfile Config]
 |{microprofile-config-api-version}
 |X
-|-
+|X
+|X
+|X
 
 |https://microprofile.io/specifications/jwt/[MicroProfile JWT Authentication]
 |{microprofile-jwt-auth-api-version}
 |X
-|-
+|X
+|X
+|X
 
 |https://microprofile.io/specifications/rest-client/[MicroProfile REST Client]
 |{microprofile-rest-client-version}
-|X^*^
-|-
+|X
+|X
+|X
+|X
 
 |https://microprofile.io/specifications/health/[MicroProfile Health]
 |{microprofile-health-api-version}
-|X^**^
-|-
+|X
+|X
+|X
+|X
 |===
-
-^*^ MicroProfile REST Client is supported since {productName} 7.0.6
-
-^**^ MicroProfile Health is supported since {productName} 7.1.0
 
 [[extensions-support]]
 === Extensions to the Standard APIs
@@ -889,6 +899,7 @@ Table 1-6 Components and extensions provided by {productName} {product-currentVe
 |Eclipse Epicyro |{epicyro-version} |Jakarta Authentication {jakarta-authentication-api-version} |Low-level SPI for authentication mechanisms.
 |Eclipse Exousia |{exousia-version} |Jakarta Authorization {jakarta-authorization-api-version} |Low-level SPI for authorization modules.
 |Eclipse Jersey |{jersey-version} |Jakarta RESTful Web Services {jakarta-rest-api-version}, MicroProfile REST Client {microprofile-rest-client-version} |Framework for RESTful web services and clients.
+|Eclipse JNoSQL |{jnosql-version} | Jakarta Data {jakarta-data-api-version}, Jakarta NoSQL {jakarta-nosql-api-version} | Support for NoSQL databases and Jakarta Data APIs.
 |Eclipse Krazo |{krazo-version} |Jakarta MVC {jakarta-mvc-api-version} |MVC framework for web applications.
 |Eclipse Metro |{webservices-version} |JAXB, Jakarta XML Web Services {jakarta-xml-ws-api-version} |Web services stack.
 |Eclipse Mojarra |{mojarra-version} |Jakarta Faces {jakarta-faces-api-version} |Faces implementation with Mojarra extensions.

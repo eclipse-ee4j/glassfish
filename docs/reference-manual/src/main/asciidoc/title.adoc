@@ -34,6 +34,8 @@ This reference manual is for all users of {productName}.
 
 {productName} Reference Manual, Release {product-majorVersion}
 
+Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
+
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 
 This program and the accompanying materials are made available under the

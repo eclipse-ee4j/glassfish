@@ -10,7 +10,7 @@ prev=preface.html
 [[ggssq]]
 
 
-[[installing-glassfish-server-5.0]]
+[[installing-glassfish-server-8.0]]
 == 1 Installing {productName} {product-majorVersion}
 
 This chapter provides instructions for installing {productName} {product-majorVersion}
@@ -38,6 +38,11 @@ issues related to installation.
 
 * On Linux, macOS and Windows systems, JDK software is available from the
 https://adoptium.net/temurin/releases[Eclipse Temurin JDK downloads page].
+
+[NOTE]
+====
+{productName} {product-majorVersion} requires Java 21 or higher. Ensure you download JDK 21 or later.
+====
 
 [[javassist-library-license-notice]]
 

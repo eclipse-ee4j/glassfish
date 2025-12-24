@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -386,7 +386,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             serverVersion = serverInfo == null ? Version.getProductId() : (serverInfo.isEmpty() ? null : serverInfo);
 
             if (isXPoweredByEnabled && serverVersion != null) {
-                xPoweredBy = "Servlet/6.0 JSP/3.1"
+                xPoweredBy = "Servlet/6.1 JSP/4.0"
                         + "(" + serverVersion
                         + " Java/"
                         + System.getProperty("java.vm.vendor") + "/"

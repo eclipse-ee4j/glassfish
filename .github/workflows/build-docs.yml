@@ -2,7 +2,7 @@
 name: Build of AsciiDoc Documentation
 on:
   pull_request:
-    branches: [ "master", "7.0", "8.0" ]
+    branches: [ "master", "7.x", "8.0" ]
 jobs:
   build:
     runs-on: ubuntu-24.04

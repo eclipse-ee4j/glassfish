@@ -165,7 +165,7 @@
         <jsch.version>2.27.7</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>
-        <ant.external.version>1.10.2</ant.external.version>
+        <ant.external.version>1.10.15</ant.external.version>
         <jackson.version>2.20.1</jackson.version>
         <jackson.version2>2.20</jackson.version2>
         <fasterxml.classmate.version>1.7.2</fasterxml.classmate.version>

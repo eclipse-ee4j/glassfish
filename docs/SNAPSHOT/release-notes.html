@@ -90,6 +90,9 @@ workarounds for known issues and limitations.</p>
 <p>Eclipse GlassFish Release Notes, Release 8</p>
 </div>
 <div class="paragraph">
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
 <p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
@@ -557,8 +560,8 @@ Implementation for Jakarta EE. It delivers a highly productive
 platform for developing with the latest Jakarta EE technologies.</p>
 </div>
 <div class="paragraph">
-<p>For any issue or information on Eclipse GlassFish,
-see the <a href="https://glassfish.org/" class="bare">https://glassfish.org/</a>.</p>
+<p>For any issues or information about Eclipse GlassFish,
+see <a href="https://glassfish.org/" class="bare">https://glassfish.org/</a>.</p>
 </div>
 <div class="paragraph">
 <p>These Release Notes provide late-breaking information about Eclipse GlassFish 8
@@ -610,10 +613,32 @@ view the most up-to-date product information.</p>
 <div class="sect2">
 <h3 id="whats-new-in-the-glassfish-server-release"><a class="anchor" href="#whats-new-in-the-glassfish-server-release"></a>What&#8217;s New in the Eclipse GlassFish 8 Release?</h3>
 <div class="paragraph">
-<p>Eclipse GlassFish 8 is the first Compatible Implementation of the Jakarta EE {jakartaee] Platform.</p>
+<p>Eclipse GlassFish 8 is a Compatible Implementation of the Jakarta EE 11 Platform.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 8 also supports the following new features:</p>
+<p>Key new features in Eclipse GlassFish 8 include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Support for both <a href="https://jakarta.ee/specifications/persistence/">Jakarta Persistence</a> entities and <a href="https://jakarta.ee/specifications/nosql/">Jakarta NoSQL</a> entities in <a href="application-development-guide.html#using-jakarta-data-repositories">Jakarta Data repositories</a></p>
+</li>
+<li>
+<p>Java 21+ minimum requirement with support up to JDK 25 (see <a href="#required-jdk-versions">Required JDK Versions</a>)</p>
+</li>
+<li>
+<p>MicroProfile APIs expanded to Web Profile and Embedded GlassFish (since Eclipse GlassFish 7.1.0) (see <a href="#microprofile-support">MicroProfile Standards Support</a>)</p>
+</li>
+<li>
+<p>Monitoring via JMX supported in Embedded Eclipse GlassFish</p>
+</li>
+<li>
+<p>Enhanced performance and stability improvements</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 8 also supports the following features:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -727,8 +752,7 @@ Eclipse GlassFish Release 8 software.</p>
 <div class="sect3">
 <h4 id="required-jdk-versions"><a class="anchor" href="#required-jdk-versions"></a>Required JDK Versions</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish Release 8.1 requires Java 17 minimum and runs on JDK 17 to JDK 21, experimentally on higher versions.
-Eclipse GlassFish Release 8.0 requires Java 11 minimum and runs on JDK 11 to JDK 21, experimentally on higher versions.</p>
+<p>Eclipse GlassFish Release 8 requires Java 21 minimum and runs on JDK 21 to JDK 25, with experimental support for higher versions.</p>
 </div>
 <div class="paragraph">
 <p>Also be sure to see <a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the
@@ -940,9 +964,8 @@ configuration, as this has not been tested.</p>
 <div class="sect3">
 <h4 id="message-queue-broker-requirements"><a class="anchor" href="#message-queue-broker-requirements"></a>Message Queue Broker Requirements</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 8 is now bundled with Message Queue (MQ) Broker
-5.1.1. Refer to the
-<a href="https://github.com/eclipse-ee4j/glassfishdoc/5.1/mq-release-notes.pdf"><code>Open Message Queue Release Notes</code></a>
+<p>Eclipse GlassFish 8 is bundled with Eclipse OpenMQ 6.7.0.
+Refer to the {mq.docs.url}[Eclipse OpenMQ documentation]
 for complete information about MQ Broker requirements.</p>
 </div>
 </div>
@@ -1829,10 +1852,12 @@ distribution.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 61.5384%;">
-<col style="width: 12.8205%;">
-<col style="width: 12.8205%;">
-<col style="width: 12.8206%;">
+<col style="width: 48.9795%;">
+<col style="width: 10.204%;">
+<col style="width: 10.204%;">
+<col style="width: 10.204%;">
+<col style="width: 10.204%;">
+<col style="width: 10.2045%;">
 </colgroup>
 <thead>
 <tr>
@@ -1840,6 +1865,8 @@ distribution.</p>
 <th class="tableblock halign-left valign-top">Version</th>
 <th class="tableblock halign-left valign-top">Eclipse GlassFish 8.0.0-SNAPSHOT Full Platform</th>
 <th class="tableblock halign-left valign-top">Eclipse GlassFish 8.0.0-SNAPSHOT Web Profile</th>
+<th class="tableblock halign-left valign-top">Embedded Eclipse GlassFish 8.0.0-SNAPSHOT All</th>
+<th class="tableblock halign-left valign-top">Embedded Eclipse GlassFish 8.0.0-SNAPSHOT Web</th>
 </tr>
 </thead>
 <tbody>
@@ -1847,34 +1874,36 @@ distribution.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/config/">MicroProfile Config</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/jwt/">MicroProfile JWT Authentication</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/rest-client/">MicroProfile REST Client</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup>*</sup></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/health/">MicroProfile Health</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup>**</sup></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><sup>*</sup> MicroProfile REST Client is supported since Eclipse GlassFish 7.0.6</p>
-</div>
-<div class="paragraph">
-<p><sup>**</sup> MicroProfile Health is supported since Eclipse GlassFish 7.1.0</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="extensions-support"><a class="anchor" href="#extensions-support"></a>Extensions to the Standard APIs</h3>
@@ -1923,6 +1952,12 @@ distribution.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta RESTful Web Services 4.0.0, MicroProfile REST Client 4.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Framework for RESTful web services and clients.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse JNoSQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1.11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Data 1.0.1, Jakarta NoSQL 1.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Support for NoSQL databases and Jakarta Data APIs.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Krazo</p></td>
@@ -2109,7 +2144,7 @@ project dashboards and issue tracking database</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-01-03 22:08:34 UTC
+Last updated 2026-01-04 12:08:28 UTC
 </div>
 </div>
 </body>

@@ -81,6 +81,17 @@ GlassFish delivers comprehensive support for all required and optional **Jakarta
 
 ## Latest News
 
+## Dec 6, 2025 -- Eclipse GlassFish 7.1.0 Available
+
+This is the first release after several months of intensive work on fixes and feature upgrades.
+
+The release marks the transition to the latest version of the Java Platform, so we dropped support for Java 11, and are now supporting Java 25 instead.
+GlassFish 7.1.0 introduces support for Microprofile Health, switches keystores from JKS to PKCS12, the current industry standard, and adapted server bootstrap to JPMS.
+
+The GlassFish team is now heavily working on GlassFish 8.0 version, which will come very soon, with all the enhancements from GlassFish 7.1.0, full support for Jakarta EE 11, and much more. Stay tuned!
+
+More info about GlassFish 7.1.0 and download links are available in the [GlassFish Download page](download.md).
+
 ## May 27, 2025 -- Eclipse GlassFish 7.0.25 Available
 
 This update emphasizes major cleanups, system optimizations, and prepares the codebase for easier future maintenance, notably in anticipation of the upcoming 7.1.0 release.

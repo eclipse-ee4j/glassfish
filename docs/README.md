@@ -1,7 +1,7 @@
 
-# Eclipse GlassFish Documentation and User Guides
+# Eclipse GlassFish User Guides
 
-## <a name="current">Current Release - 8.0.0</a>
+## <a name="current">Current Release - 7.1.0</a>
 
 * [Add On Component Development Guide](latest/add-on-component-development-guide.html)
   ([pdf](latest/add-on-component-development-guide.pdf))
@@ -70,6 +70,76 @@
   ([pdf](SNAPSHOT/troubleshooting-guide.pdf))
 * [Upgrade Guide](SNAPSHOT/upgrade-guide.html)
   ([pdf](SNAPSHOT/upgrade-guide.pdf))
+
+## <a name="7.1.0">7.1.0 Release</a>
+
+* [Add On Component Development Guide](7.1.0/add-on-component-development-guide.html)
+  ([pdf](7.1.0/add-on-component-development-guide.pdf))
+* [Administration Guide](7.1.0/administration-guide.html)
+  ([pdf](7.1.0/administration-guide.pdf))
+* [Application Deployment Guide](7.1.0/application-deployment-guide.html)
+  ([pdf](7.1.0/application-deployment-guide.pdf))
+* [Application Development Guide](7.1.0/application-development-guide.html)
+  ([pdf](7.1.0/application-development-guide.pdf))
+* [Deployment Planning Guide](7.1.0/deployment-planning-guide.html)
+  ([pdf](7.1.0/deployment-planning-guide.pdf))
+* [Embedded Server Guide](7.1.0/embedded-server-guide.html)
+  ([pdf](7.1.0/embedded-server-guide.pdf))
+* [Error Messages Reference](7.1.0/error-messages-reference.html)
+  ([pdf](7.1.0/error-messages-reference.pdf))
+* [High Availability Administration Guide](7.1.0/ha-administration-guide.html)
+  ([pdf](7.1.0/ha-administration-guide.pdf))
+* [Installation Guide](7.1.0/installation-guide.html)
+  ([pdf](7.1.0/installation-guide.pdf))
+* [Performance Tuning Guide](7.1.0/performance-tuning-guide.html)
+  ([pdf](7.1.0/performance-tuning-guide.pdf))
+* [Quick Start Guide](7.1.0/quick-start-guide.html)
+  ([pdf](7.1.0/quick-start-guide.pdf))
+* [Reference Manual](7.1.0/reference-manual.html)
+  ([pdf](7.1.0/reference-manual.pdf))
+* [Release Notes](7.1.0/release-notes.html)
+  ([pdf](7.1.0/release-notes.pdf))
+* [Security Guide](7.1.0/security-guide.html)
+  ([pdf](7.1.0/security-guide.pdf))
+* [Troubleshooting Guide](7.1.0/troubleshooting-guide.html)
+  ([pdf](7.1.0/troubleshooting-guide.pdf))
+* [Upgrade Guide](7.1.0/upgrade-guide.html)
+  ([pdf](7.1.0/upgrade-guide.pdf))
+
+## <a name="7.0.25">7.0.25 Release</a>
+
+* [Add On Component Development Guide](7.0.25/add-on-component-development-guide.html)
+  ([pdf](7.0.25/add-on-component-development-guide.pdf))
+* [Administration Guide](7.0.25/administration-guide.html)
+  ([pdf](7.0.25/administration-guide.pdf))
+* [Application Deployment Guide](7.0.25/application-deployment-guide.html)
+  ([pdf](7.0.25/application-deployment-guide.pdf))
+* [Application Development Guide](7.0.25/application-development-guide.html)
+  ([pdf](7.0.25/application-development-guide.pdf))
+* [Deployment Planning Guide](7.0.25/deployment-planning-guide.html)
+  ([pdf](7.0.25/deployment-planning-guide.pdf))
+* [Embedded Server Guide](7.0.25/embedded-server-guide.html)
+  ([pdf](7.0.25/embedded-server-guide.pdf))
+* [Error Messages Reference](7.0.25/error-messages-reference.html)
+  ([pdf](7.0.25/error-messages-reference.pdf))
+* [High Availability Administration Guide](7.0.25/ha-administration-guide.html)
+  ([pdf](7.0.25/ha-administration-guide.pdf))
+* [Installation Guide](7.0.25/installation-guide.html)
+  ([pdf](7.0.25/installation-guide.pdf))
+* [Performance Tuning Guide](7.0.25/performance-tuning-guide.html)
+  ([pdf](7.0.25/performance-tuning-guide.pdf))
+* [Quick Start Guide](7.0.25/quick-start-guide.html)
+  ([pdf](7.0.25/quick-start-guide.pdf))
+* [Reference Manual](7.0.25/reference-manual.html)
+  ([pdf](7.0.25/reference-manual.pdf))
+* [Release Notes](7.0.25/release-notes.html)
+  ([pdf](7.0.25/release-notes.pdf))
+* [Security Guide](7.0.25/security-guide.html)
+  ([pdf](7.0.25/security-guide.pdf))
+* [Troubleshooting Guide](7.0.25/troubleshooting-guide.html)
+  ([pdf](7.0.25/troubleshooting-guide.pdf))
+* [Upgrade Guide](7.0.25/upgrade-guide.html)
+  ([pdf](7.0.25/upgrade-guide.pdf))
 
 ## <a name="5.1.0">5.1.0 Release</a>
 

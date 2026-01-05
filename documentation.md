@@ -2,7 +2,7 @@
 layout: documentation
 ---
 
-# Eclipse GlassFish Documentation
+# Eclipse GlassFish Guides
 
 ## Current Release - 7.1.0 {#current}
 
@@ -39,10 +39,12 @@ layout: documentation
 * [Upgrade Guide](docs/latest/upgrade-guide.html)
   ([pdf](docs/latest/upgrade-guide.pdf))
 
-### Documentation for other GlassFish versions {#older}
+### Guides for other GlassFish versions {#older}
 
 * [Development version (8.0.0-SNAPSHOT)](docs#development)
-* [5.1.0 release](docs#5.1.0)
+* [7.1.0 release](docs#7.1.0)
+* [7.0.25 release](docs#7.0.25)
+* [All other versions](docs)
 
 ## Documentation for GlassFish Docker images {#docker}
 

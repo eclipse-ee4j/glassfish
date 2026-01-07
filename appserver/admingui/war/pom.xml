@@ -78,7 +78,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <groupId>org.glassfish.woodstock.external</groupId>
             <artifactId>prototype</artifactId>
             <scope>provided</scope>
         </dependency>

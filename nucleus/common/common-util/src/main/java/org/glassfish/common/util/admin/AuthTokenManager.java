@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +23,9 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.inject.Singleton;
 
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -83,7 +84,7 @@ public class AuthTokenManager {
 
     private final SecureRandom rng = new SecureRandom();
 
-    private final Map<String,TokenInfo> liveTokens = new HashMap<String,TokenInfo>();
+    private final Map<String,TokenInfo> liveTokens = new ConcurrentHashMap<>();
 
     private final static Logger logger = CULoggerInfo.getLogger();
 
@@ -139,7 +140,7 @@ public class AuthTokenManager {
             return true;
         }
 
-        private boolean isUsedUp(final long now) {
+        private synchronized boolean isUsedUp(final long now) {
             return usesRemaining <= 0 || expiration <= now;
         }
     }

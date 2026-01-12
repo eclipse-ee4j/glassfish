@@ -91,7 +91,11 @@
 <li><a href="#developing-applications-and-application-components">7. Developing Applications and Application Components</a></li>
 <li><a href="#api-for-dev">8. API for development</a>
 <ul class="sectlevel2">
-<li><a href="#glassfish-api">GlassFish API</a></li>
+<li><a href="#glassfish-api">GlassFish API</a>
+<ul class="sectlevel3">
+<li><a href="#microprofile-jwt-integration">MicroProfile JWT Integration</a></li>
+</ul>
+</li>
 <li><a href="#glassfish-ee-api">GlassFish EE API</a></li>
 <li><a href="#simple-glassfish-api">Simple GlassFish API</a></li>
 </ul>
@@ -2657,6 +2661,80 @@ After you have created the JPL file, use this an input to <code>JPROBE_ARGS_0</c
 </div>
 <div class="paragraph">
 <p>This will already add <code>scattered-archive-api.jar</code> as a transitive dependency.</p>
+</div>
+<div class="sect3">
+<h4 id="microprofile-jwt-integration"><a class="anchor" href="#microprofile-jwt-integration"></a>MicroProfile JWT Integration</h4>
+<div class="paragraph">
+<p>The GlassFish API includes CDI qualifiers for integrating with built-in security mechanisms.</p>
+</div>
+<div class="sect4">
+<h5 id="microprofile-jwt-qualifier"><a class="anchor" href="#microprofile-jwt-qualifier"></a>@MicroProfileJwtAuthenticationMechanism Qualifier</h5>
+<div class="paragraph">
+<p>The <code>@MicroProfileJwtAuthenticationMechanism</code> qualifier allows direct injection of the GlassFish built-in MicroProfile JWT authentication mechanism:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="keyword">import</span> <span class="include">jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism</span>;
+<span class="keyword">import</span> <span class="include">org.glassfish.api.security.jwt.MicroProfileJwtAuthenticationMechanism</span>;
+
+<span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SecurityService</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="annotation">@MicroProfileJwtAuthenticationMechanism</span>
+    <span class="directive">private</span> HttpAuthenticationMechanism jwtAuthMechanism;
+
+    <span class="comment">// Use the JWT authentication mechanism directly</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This qualifier provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Direct Access</strong>: Direct access to the GlassFish JWT authentication mechanism</p>
+</li>
+<li>
+<p><strong>CDI Integration</strong>: Seamless integration with CDI dependency injection</p>
+</li>
+<li>
+<p><strong>Type Safety</strong>: Uses the standard <code>HttpAuthenticationMechanism</code> interface</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>@MicroProfileJwtAuthenticationMechanism</code> qualifier is complementary to the qualifiers for the standard Jakarta Security mechanisms like the Basic authentication mechanism. It can be combined with the other standard mechanisms in the same <code>HttpAuthenticationMechanismHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>@ApplicationScoped
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION)
+public class CustomAuthenticationHandler implements HttpAuthenticationMechanismHandler {
+
+    @Inject
+    @MicroProfileJwtAuthenticationMechanism
+    HttpAuthenticationMechanism jwtAuthentication;
+
+    @Inject
+    @BasicAuthenticationMechanismDefinition.BasicAuthenticationMechanism
+    HttpAuthenticationMechanism basicAuthentication;
+
+    @Override
+    public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext messageContext) throws AuthenticationException {
+        // delegate to one of the two mechanisms
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -22706,7 +22784,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-01-11 13:30:59 UTC
+Last updated 2026-01-12 21:20:21 UTC
 </div>
 </div>
 </body>

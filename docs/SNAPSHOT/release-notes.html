@@ -625,6 +625,12 @@ view the most up-to-date product information.</p>
 <p>Support for both <a href="https://jakarta.ee/specifications/persistence/">Jakarta Persistence</a> entities and <a href="https://jakarta.ee/specifications/nosql/">Jakarta NoSQL</a> entities in <a href="application-development-guide.html#using-jakarta-data-repositories">Jakarta Data repositories</a></p>
 </li>
 <li>
+<p><a href="application-development-guide.html#microprofile-jwt-qualifier">@MicroProfileJwtAuthenticationMechanism CDI qualifier</a> for direct injection of the built-in MicroProfile JWT authentication mechanism (see <a href="application-development-guide.html#microprofile-jwt-integration">MicroProfile JWT Integration</a>)</p>
+</li>
+<li>
+<p>Enhanced virtual threads support with Java 21+ for improved concurrency performance</p>
+</li>
+<li>
 <p>Java 21+ minimum requirement with support up to JDK 25 (see <a href="#required-jdk-versions">Required JDK Versions</a>)</p>
 </li>
 <li>
@@ -1589,6 +1595,18 @@ distribution.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/data/">Jakarta Data</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/nosql/">Jakarta NoSQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/activation/">Activation</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
@@ -2145,7 +2163,7 @@ project dashboards and issue tracking database</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-01-11 13:36:37 UTC
+Last updated 2026-01-12 21:26:01 UTC
 </div>
 </div>
 </body>

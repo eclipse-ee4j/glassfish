@@ -83,9 +83,7 @@ asadmin-options::
 `--suspend`::
 `-s`::
   Specifies whether the domain is started with
-  http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
-  Platform Debugger Architecture (JPDA)]
-  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
+  https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html[Java Platform Debugger Architecture (JPDA)]
   debugging enabled and suspend the newly started VM before the main class loads.
   When a debugger connects, it can send a JDWP command to resume the suspended VM.
   With debugging enabled extra exceptions can be printed.

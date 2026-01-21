@@ -4,8 +4,8 @@
 << /Title (Eclipse GlassFish Performance Tuning Guide, Release 8)
 /Creator <feff>
 /Producer (Asciidoctor PDF 2.3.23, based on Prawn 2.4.0)
-/ModDate (D:20260115220745+00'00')
-/CreationDate (D:20260115220756+00'00')
+/ModDate (D:20260121231452+00'00')
+/CreationDate (D:20260121231503+00'00')
 >>
 endobj
 2 0 obj
@@ -69503,7 +69503,7 @@ ET
 BT
 48.24 593.586 Td
 /F1.0 10.5 Tf
-[<68747470733a2f2f646f63732e6f72> 20.01953 <61636c652e636f6d2f656e2f6a6176612f6a61766173652f31372f676374756e696e672f696e74726f64756374696f6e2d676172626167652d636f6c6c656374696f6e2d74756e696e672e68746d6c60>] TJ
+[<68747470733a2f2f646f63732e6f72> 20.01953 <61636c652e636f6d2f656e2f6a6176612f6a61766173652f32312f676374756e696e672f696e74726f64756374696f6e2d676172626167652d636f6c6c656374696f6e2d74756e696e672e68746d6c60>] TJ
 ET
 
 0.0 0.0 0.0 SCN
@@ -70031,7 +70031,7 @@ endobj
 << /Border [0 0 0]
 /A << /Type /Action
 /S /URI
-/URI (https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html)
+/URI (https://docs.oracle.com/en/java/javase/21/gctuning/introduction-garbage-collection-tuning.html)
 >>
 /Subtype /Link
 /Rect [370.38299 606.3 532.81912 620.58]
@@ -70042,7 +70042,7 @@ endobj
 << /Border [0 0 0]
 /A << /Type /Action
 /S /URI
-/URI (https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html`)
+/URI (https://docs.oracle.com/en/java/javase/21/gctuning/introduction-garbage-collection-tuning.html`)
 >>
 /Subtype /Link
 /Rect [48.24 590.52 526.72479 604.8]
@@ -74845,7 +74845,7 @@ ET
 BT
 169.329 334.486 Td
 /F4.0 10.5 Tf
-<68747470733a2f2f646f63732e6f7261636c652e636f6d2f656e2f6a6176612f6a61766173652f31372f646f63732f73706563732f6d616e2f6a737461742e68746d6c> Tj
+<68747470733a2f2f646f63732e6f7261636c652e636f6d2f656e2f6a6176612f6a61766173652f32312f646f63732f73706563732f6d616e2f6a737461742e68746d6c> Tj
 ET
 
 0.0 0.0 0.0 SCN
@@ -74959,7 +74959,7 @@ endobj
 << /Border [0 0 0]
 /A << /Type /Action
 /S /URI
-/URI (https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html)
+/URI (https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstat.html)
 >>
 /Subtype /Link
 /Rect [66.24 331.42 162.9765 345.7]
@@ -74970,7 +74970,7 @@ endobj
 << /Border [0 0 0]
 /A << /Type /Action
 /S /URI
-/URI (https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html)
+/URI (https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstat.html)
 >>
 /Subtype /Link
 /Rect [169.329 333.016 521.079 343.516]

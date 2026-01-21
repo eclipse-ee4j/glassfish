@@ -58,9 +58,7 @@ asadmin-options::
 `--debug`::
 `-d`::
   Specifies whether the domain is started with
-  http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
-  Platform Debugger Architecture (JPDA)]
-  (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)
+  https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html[Java Platform Debugger Architecture (JPDA)]
   debugging enabled. With debugging enabled extra exceptions can be printed.
   Possible values are as follows:
 

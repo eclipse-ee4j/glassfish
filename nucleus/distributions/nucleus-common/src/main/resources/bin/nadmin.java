@@ -42,7 +42,7 @@ public class nadmin {
         if (sourceFile == null) {
             System.out.println("The '" + systemProperty
                 + "' property is not set, you probably did not execute this program running java "
-                + asadmin.class.getSimpleName() + ".java");
+                + nadmin.class.getSimpleName() + ".java");
             System.exit(1);
         }
         return Path.of(sourceFile).toAbsolutePath();

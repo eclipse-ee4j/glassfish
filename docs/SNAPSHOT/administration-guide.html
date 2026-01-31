@@ -196,6 +196,12 @@
 <li><a href="#to-delete-a-thread-pool">To Delete a Thread Pool</a></li>
 </ul>
 </li>
+<li><a href="#using-virtual-threads">Using Virtual Threads</a>
+<ul class="sectlevel3">
+<li><a href="#configuring-virtual-threads">Configuring Virtual Threads</a></li>
+<li><a href="#virtual-thread-behavior">Virtual Thread Behavior</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#administering-web-applications">6 Administering Web Applications</a>
@@ -9860,6 +9866,9 @@ Eclipse GlassFish 8 environment by using the
 <li>
 <p><a href="#configuring-thread-pools">Configuring Thread Pools</a></p>
 </li>
+<li>
+<p><a href="#using-virtual-threads">Using Virtual Threads</a></p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -10146,6 +10155,65 @@ Command delete-threadpool executed successfully</code></pre>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommand by
 typing <code>asadmin help delete-threadpool</code> at the command line.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-virtual-threads"><a class="anchor" href="#using-virtual-threads"></a>Using Virtual Threads</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish supports virtual threads for HTTP request processing, providing improved scalability for high-concurrency applications.</p>
+</div>
+<div class="sect3">
+<h4 id="configuring-virtual-threads"><a class="anchor" href="#configuring-virtual-threads"></a>Configuring Virtual Threads</h4>
+<div class="paragraph">
+<p>To enable virtual threads for an HTTP thread pool, set the thread pool&#8217;s class name to the virtual thread executor service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.VirtualThreadExecutorService
+Command set executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To revert to platform threads, set the class name back to the default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.GrizzlyExecutorService
+Command set executed successfully</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="virtual-thread-behavior"><a class="anchor" href="#virtual-thread-behavior"></a>Virtual Thread Behavior</h4>
+<div class="paragraph">
+<p>When virtual threads are enabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A new virtual thread is created for each HTTP request and destroyed when the request completes</p>
+</li>
+<li>
+<p>Maximum parallel requests equals the sum of <code>max-thread-pool-size</code> and <code>max-queue-size</code></p>
+</li>
+<li>
+<p>The <code>min-thread-pool-size</code> and <code>idle-timeout</code> parameters are ignored</p>
+</li>
+<li>
+<p>Configuration changes apply immediately without requiring a server restart</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For optimal performance with virtual threads, set high limits:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=10000
+asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.max-queue-size=10000
+Command set executed successfully</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -22372,6 +22440,14 @@ subcommand. To use the built-in <code>tcp</code> transport, skip this step.</p>
 To avoid using a thread pool, or to use the built-in <code>http-thread-pool</code>
 thread pool, skip this step.
 For additional thread pool information, see <a href="#administering-thread-pools">Administering Thread Pools</a>.</p>
+<div class="paragraph">
+<p>To enable virtual threads, set the thread pool class name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.thread-pool-name.classname=org.glassfish.grizzly.threadpool.VirtualThreadExecutorService</code></pre>
+</div>
+</div>
 </li>
 <li>
 <p>Create an HTTP listener by using the
@@ -32769,7 +32845,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-01-27 09:13:12 UTC
+Last updated 2026-01-31 15:18:29 UTC
 </div>
 </div>
 </body>

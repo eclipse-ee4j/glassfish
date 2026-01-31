@@ -1016,7 +1016,9 @@
 <li><a href="#operands-63">Operands</a></li>
 <li><a href="#examples-62">Examples</a>
 <ul class="sectlevel3">
-<li><a href="#sthref558">Example 1   Creating a Thread Pool</a></li>
+<li><a href="#sthref558">Example 1   Creating a Thread Pool</a></li>
+<li><a href="#sthref559">Example 2   Creating a Thread Pool with Virtual Threads Enabled</a></li>
+<li><a href="#sthref560">Example 3   Creating a Thread Pool with Custom Implementation</a></li>
 </ul>
 </li>
 <li><a href="#exit-status-66">Exit Status</a></li>
@@ -19142,7 +19144,8 @@ Command create-system-properties executed successfully.</code></pre>
 [--maxthreadpoolsize maxthreadpoolsize]
 [--minthreadpoolsize minthreadpoolsize]
 [--idletimeout idletimeout] [--maxqueuesize maxqueuesize]
-[--workqueues workqueues] threadpool-id</code></pre>
+[--workqueues workqueues] [--classname classname]
+[--virtual virtual] threadpool-id</code></pre>
 </div>
 </div>
 </div>
@@ -19227,6 +19230,20 @@ with earlier releases. If you specify this option, a syntax error does
 not occur. Instead, the subcommand runs successfully and displays a
 warning message that the option is ignored.</p>
 </dd>
+<dt class="hdlist1"><code>--classname</code></dt>
+<dd>
+<p>Specifies the fully qualified class name of a custom thread pool implementation.
+If not specified, the default thread pool implementation will be used.</p>
+</dd>
+<dt class="hdlist1"><code>--virtual</code></dt>
+<dd>
+<p>Specifies whether to use virtual threads for the thread pool. When set to
+<code>true</code>, the thread pool will use virtual threads. When set to <code>false</code> (default),
+the thread pool will use platform threads. This setting applies when using the
+default thread pool implementation (when classname is not specified or is set to
+the default value). When a custom classname is specified, this setting is ignored.
+Default is <code>false</code>.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -19244,14 +19261,40 @@ warning message that the option is ignored.</p>
 <div class="sect2">
 <h3 id="examples-62"><a class="anchor" href="#examples-62"></a>Examples</h3>
 <div class="sect3">
-<h4 id="sthref558"><a class="anchor" href="#sthref558"></a>Example 1   Creating a Thread Pool</h4>
+<h4 id="sthref558"><a class="anchor" href="#sthref558"></a>Example 1   Creating a Thread Pool</h4>
 <div class="paragraph">
-<p>This command creates a new thread pool called <code>threadpool-l</code>.</p>
+<p>This command creates a new thread pool called <code>threadpool-l</code> that uses platform threads (the default).</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; create-threadpool --maxthreadpoolsize 100
 --minthreadpoolsize 20 --idletimeout 2 threadpool-1
+Command create-threadpool executed successfully</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sthref559"><a class="anchor" href="#sthref559"></a>Example 2   Creating a Thread Pool with Virtual Threads Enabled</h4>
+<div class="paragraph">
+<p>This command creates a new thread pool called <code>threadpool-2</code> that uses virtual threads.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; create-threadpool --maxthreadpoolsize 50
+--minthreadpoolsize 10 --virtual true threadpool-2
+Command create-threadpool executed successfully</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sthref560"><a class="anchor" href="#sthref560"></a>Example 3   Creating a Thread Pool with Custom Implementation</h4>
+<div class="paragraph">
+<p>This command creates a new thread pool called <code>threadpool-3</code> with a custom thread pool implementation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; create-threadpool --maxthreadpoolsize 75
+--classname com.example.CustomThreadPool threadpool-3
 Command create-threadpool executed successfully</code></pre>
 </div>
 </div>
@@ -55445,7 +55488,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-01-27 09:20:29 UTC
+Last updated 2026-01-31 15:24:38 UTC
 </div>
 </div>
 </body>

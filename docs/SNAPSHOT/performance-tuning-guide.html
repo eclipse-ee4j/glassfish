@@ -4826,6 +4826,11 @@ the maximum amount. Increasing this value will reduce HTTP response
 latency times.</p>
 </div>
 <div class="paragraph">
+<p>When using virtual threads, consider much higher
+values (10,000 or more) as virtual threads have significantly lower
+overhead than platform threads.</p>
+</div>
+<div class="paragraph">
 <p>In practice, clients frequently connect to the server and then do not
 complete their requests. In these cases, the server waits a length of
 time specified by the Timeout parameter.</p>
@@ -7797,7 +7802,7 @@ $ifconfig ipge1 group webserver</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-01-27 09:19:29 UTC
+Last updated 2026-01-31 15:23:51 UTC
 </div>
 </div>
 </body>

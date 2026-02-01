@@ -154,7 +154,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         "sun",                                       // Sun classes (JRE internals)
         "org.xml.sax",                               // SAX 1 & 2 (JRE, jrt-fs.jar)
         "org.w3c.dom",                               // DOM 1 & 2 (JRE, jrt-fs.jar)
-<<<<<<< HEAD
         "org.glassfish.wasp.taglibs.standard",       // wasp.jar
         "com.sun.faces",                             // jakarta.faces.jar
         "org.eclipse.microprofile"                   // MicroProfile classes

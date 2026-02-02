@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -1155,6 +1155,16 @@
                             <AS_JAVA>${java.home}</AS_JAVA>
                             <JAVA_HOME>${java.home}</JAVA_HOME>
                         </environmentVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                    <configuration>
+                        <flattenMode>fatjar</flattenMode>
+                        <updatePomFile>true</updatePomFile>
+                        <flattenedPomFilename>target/.flattened-pom.xml</flattenedPomFilename>
                     </configuration>
                 </plugin>
                 <plugin>

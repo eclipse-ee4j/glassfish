@@ -109,6 +109,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <flattenMode>fatjar</flattenMode>
+                </configuration>
                 <executions>
                     <execution>
                         <id>flatten</id>

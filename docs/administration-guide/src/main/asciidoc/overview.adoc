@@ -707,6 +707,28 @@ asadmin> set server.admin-service.property.adminConsoleStartup=always
 For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 
+[[administration-console-security-considerations]]
+
+===== Administration Console Security Considerations
+
+The Administration Console provides a web-based interface for managing {productName} domains and instances. While convenient for development and testing, the Administration Console presents security considerations for production environments:
+
+* **Attack Surface**: The console exposes administrative functionality through HTTP/HTTPS endpoints that could be targeted by attackers.
+* **Authentication**: Even with proper authentication, web-based interfaces are subject to various web application attacks.
+* **Network Exposure**: The console typically listens on network interfaces that may be accessible from untrusted networks.
+* **Cross-Site Request Forgery (CSRF)**: Administrators logged into the console are vulnerable to phishing attacks where malicious links can execute arbitrary administrative commands if clicked while authenticated.
+
+**Production Recommendation**: For production deployments, it is recommended to disable the Administration Console and use command-line tools (`asadmin`) for administrative tasks. This reduces the attack surface and eliminates web-based attack vectors.
+
+If the Administration Console must remain enabled in production:
+
+* Enable secure administration using `enable-secure-admin`
+* Use strong authentication credentials
+* Restrict network access using firewalls
+* Monitor access logs for suspicious activity
+* Keep {productName} updated with security patches
+* **Avoid clicking unverified links while logged in**: Log out of the Administration Console before browsing to external sites to prevent CSRF attacks that could execute administrative commands
+
 [[to-disable-the-administration-console-loading]]
 
 ===== To Disable the Administration Console Loading

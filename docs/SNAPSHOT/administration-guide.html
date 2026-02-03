@@ -2325,6 +2325,56 @@ For instructions, see <a href="#to-restart-a-domain">To Restart a Domain</a>.</p
 </div>
 </div>
 <div class="sect4">
+<h5 id="administration-console-security-considerations"><a class="anchor" href="#administration-console-security-considerations"></a>Administration Console Security Considerations</h5>
+<div class="paragraph">
+<p>The Administration Console provides a web-based interface for managing Eclipse GlassFish domains and instances. While convenient for development and testing, the Administration Console presents security considerations for production environments:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Attack Surface</strong>: The console exposes administrative functionality through HTTP/HTTPS endpoints that could be targeted by attackers.</p>
+</li>
+<li>
+<p><strong>Authentication</strong>: Even with proper authentication, web-based interfaces are subject to various web application attacks.</p>
+</li>
+<li>
+<p><strong>Network Exposure</strong>: The console typically listens on network interfaces that may be accessible from untrusted networks.</p>
+</li>
+<li>
+<p><strong>Cross-Site Request Forgery (CSRF)</strong>: Administrators logged into the console are vulnerable to phishing attacks where malicious links can execute arbitrary administrative commands if clicked while authenticated.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Production Recommendation</strong>: For production deployments, it is recommended to disable the Administration Console and use command-line tools (<code>asadmin</code>) for administrative tasks. This reduces the attack surface and eliminates web-based attack vectors.</p>
+</div>
+<div class="paragraph">
+<p>If the Administration Console must remain enabled in production:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enable secure administration using <code>enable-secure-admin</code></p>
+</li>
+<li>
+<p>Use strong authentication credentials</p>
+</li>
+<li>
+<p>Restrict network access using firewalls</p>
+</li>
+<li>
+<p>Monitor access logs for suspicious activity</p>
+</li>
+<li>
+<p>Keep Eclipse GlassFish updated with security patches</p>
+</li>
+<li>
+<p><strong>Avoid clicking unverified links while logged in</strong>: Log out of the Administration Console before browsing to external sites to prevent CSRF attacks that could execute administrative commands</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
 <h5 id="to-disable-the-administration-console-loading"><a class="anchor" href="#to-disable-the-administration-console-loading"></a>To Disable the Administration Console Loading</h5>
 <div class="paragraph">
 <p>Disabling the Administration Console loading involves changing the value of the property
@@ -32845,7 +32895,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-02-02 20:24:41 UTC
+Last updated 2026-02-03 10:00:07 UTC
 </div>
 </div>
 </body>

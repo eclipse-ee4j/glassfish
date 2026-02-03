@@ -5823,7 +5823,7 @@ respective copies of the domain&#8217;s configuration.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Oracle recommends that you enable secure admin as described in
+<p>It is recommended that you enable secure admin as described in
 <a href="#managing-administrative-security">Managing Administrative Security</a>
 so that Eclipse GlassFish securely transfers these files on the network.</p>
 </div>
@@ -7749,7 +7749,7 @@ intruders have should they get partial access to a production machine.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable security auditing.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If the operating system on which Eclipse GlassFish runs supports security auditing of file and directory access,
-Oracle recommends using audit logging to track any denied directory or
+it is recommended to use audit logging to track any denied directory or
 file access violations. Administrators should ensure that sufficient
 disk space is available for the audit log.</p></td>
 </tr>
@@ -7782,7 +7782,7 @@ and critical patch updates.</p></td>
 <p>Eclipse GlassFish provides a powerful and flexible set of software tools
 for securing the subsystems and applications that run on a server
 instance. The following table provides a checklist of essential features
-that Oracle recommends you use to secure your production environment.</p>
+that are recommended for use to secure your production environment.</p>
 </div>
 <div id="gkscz" class="paragraph">
 <p>Table 6-2 Securing Eclipse GlassFish</p>
@@ -7959,7 +7959,7 @@ group need to be members of that group.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Create no fewer than two user accounts in the asadmin group.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The user
 admin is created when you install Eclipse GlassFish. For production
-environments, create at least one other account in the asadmin group in
+environments, it is recommended to create at least one other account in the asadmin group in
 case one account password is compromised. When creating asadmin users
 give them unique names that cannot be easily guessed.</p></td>
 </tr>
@@ -7981,6 +7981,44 @@ way.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">By default, Eclipse GlassFish opens several listener ports upon
 startup, but you can restrict this by disabling unused listeners. This
 step helps prevent access from malicious attackers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable the Administration Console in production environments.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For production deployments, consider disabling the Administration Console to reduce the attack surface and prevent unauthorized access to administrative functions.</p>
+</div>
+<div class="paragraph">
+<p>The Administration Console provides powerful management capabilities that should not be exposed in production environments where remote administration is not required. Web-based administrative interfaces are vulnerable to Cross-Site Request Forgery (CSRF) attacks where malicious links can execute administrative commands if clicked while an administrator is logged in.</p>
+</div>
+<div class="paragraph">
+<p>To disable the Administration Console:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the configuration property:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin set server.admin-service.property.adminConsoleStartup=never</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart the domain:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin restart-domain</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use command-line administration tools (<code>asadmin</code>) for production management tasks instead.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="administration-guide.html#to-disable-the-administration-console-loading">To Disable the Administration Console Loading</a> for detailed instructions.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -8100,7 +8138,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-02-02 20:33:59 UTC
+Last updated 2026-02-03 10:10:03 UTC
 </div>
 </div>
 </body>

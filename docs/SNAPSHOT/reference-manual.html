@@ -23930,37 +23930,27 @@ of the domain administration server (DAS) and do not require a restart.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>Restart is required for the following options:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Java system properties. See <a href="https://docs.oracle.com/en/java/javase/21/docs/api/system-properties.html" class="bare">https://docs.oracle.com/en/java/javase/21/docs/api/system-properties.html</a> for details.</p>
+</li>
+<li>
+<p>Startup parameters for the Java application launcher. For example:</p>
+<div class="paragraph">
+<p><code>-Xmx1024m</code></p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Restart is not required for Java system properties whose names do not
 start with <code>-Djava.</code> or <code>-Djavax.</code> (including the trailing period). For
 example, restart is not required for the following Java system property:</p>
 <div class="paragraph">
 <p><code>-Denvironment=Production</code></p>
-</div>
-</li>
-<li>
-<p>Restart is required for the following options:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Java system properties whose names start with <code>-Djava.</code> or <code>-Djavax.</code>
-(including the trailing period). For example:</p>
-<div class="paragraph">
-<p><code>-Djava.security.manager</code></p>
-</div>
-</li>
-<li>
-<p>Startup parameters for the Java application launcher. For example:</p>
-<div class="paragraph">
-<p><code>-client</code></p>
-</div>
-<div class="paragraph">
-<p><code>-Xmx1024m</code></p>
-</div>
-<div class="paragraph">
-<p><code>-d64</code></p>
-</div>
-</li>
-</ul>
 </div>
 </li>
 </ul>
@@ -38659,7 +38649,6 @@ com.sun.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory
 -Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12
 -XX:NewRatio=2
 -DANTLR_USE_DIRECT_CLASS_LOADING=true
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
 -Djdbc.drivers=org.apache.derby.jdbc.ClientDriver
 -Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12
 
@@ -55488,7 +55477,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-02-03 15:32:24 UTC
+Last updated 2026-02-03 17:26:32 UTC
 </div>
 </div>
 </body>

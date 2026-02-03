@@ -9208,20 +9208,19 @@ created.</p>
 </ol>
 </div>
 <div id="gksfr" class="paragraph">
-<p>Example 5-17 Updating the Option for Locating a Configuration File</p>
+<p>Example 5-17 Updating the Memory Configuration</p>
 </div>
 <div class="paragraph">
-<p>This example updates the option for locating the <code>server.policy</code> file to
-specify a custom file for the instance <code>pmd</code>.</p>
+<p>This example updates changes the maximal heap size for the instance <code>pmd</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; delete-jvm-options --target pmd
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
+-Xmx512m
 Deleted 1 option(s)
 Command delete-jvm-options executed successfully.
 asadmin&gt; create-jvm-options --target pmd
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/pmd-config/server.policy
+-Xmx4g
 Created 1 option(s)
 Command create-jvm-options executed successfully.</code></pre>
 </div>
@@ -13933,7 +13932,7 @@ container running in a cluster.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-02-03 15:30:56 UTC
+Last updated 2026-02-03 17:24:44 UTC
 </div>
 </div>
 </body>

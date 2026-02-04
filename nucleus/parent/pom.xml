@@ -1162,7 +1162,7 @@
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>1.6.0</version>
                     <configuration>
-                        <flattenMode>ossrh</flattenMode>
+                        <flattenMode>oss</flattenMode>
                         <updatePomFile>true</updatePomFile>
                         <flattenedPomFilename>target/.flattened-pom.xml</flattenedPomFilename>
                         <pomElements>

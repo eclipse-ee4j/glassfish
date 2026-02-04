@@ -33,7 +33,6 @@
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Parent Project</name>
-    <description>Eclipse GlassFish Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <modules>

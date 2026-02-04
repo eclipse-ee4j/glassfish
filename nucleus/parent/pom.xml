@@ -1165,6 +1165,13 @@
                         <flattenMode>ossrh</flattenMode>
                         <updatePomFile>true</updatePomFile>
                         <flattenedPomFilename>target/.flattened-pom.xml</flattenedPomFilename>
+                        <pomElements>
+                            <name/>
+                            <description/>
+                            <url/>
+                            <scm/>
+                            <developers/>
+                        </pomElements>
                     </configuration>
                 </plugin>
                 <plugin>

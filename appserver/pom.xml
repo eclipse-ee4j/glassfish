@@ -19,7 +19,7 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" child.project.url.inherit.append.path="false">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -33,7 +33,6 @@
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Parent Project</name>
-    <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <modules>
         <module>common</module>
@@ -70,14 +69,6 @@
         <module>itest-tools</module>
         <module>ant-tasks</module>
     </modules>
-
-    <scm child.scm.connection.inherit.append.path="false"
-     child.scm.developerConnection.inherit.append.path="false"
-     child.scm.url.inherit.append.path="false">
-        <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
-        <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
-        <url>https://github.com/eclipse-ee4j/glassfish</url>
-    </scm>
 
     <properties>
         <glassfish.version>${project.version}</glassfish.version>

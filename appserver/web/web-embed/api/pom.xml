@@ -63,18 +63,8 @@
                 <artifactId>flatten-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>flatten</id>
+                        <id>flat-jar</id>
                         <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

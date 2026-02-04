@@ -19,7 +19,9 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+    child.project.url.inherit.append.path="false"
+    >
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -60,11 +62,14 @@
         </mailingList>
     </mailingLists>
 
-    <scm>
+    <scm child.scm.connection.inherit.append.path="false"
+     child.scm.developerConnection.inherit.append.path="false"
+     child.scm.url.inherit.append.path="false">
         <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
         <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/glassfish</url>
     </scm>
+
     <issueManagement>
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
@@ -1162,17 +1167,46 @@
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>1.6.0</version>
                     <configuration>
-                        <flattenMode>oss</flattenMode>
                         <updatePomFile>true</updatePomFile>
-                        <flattenedPomFilename>target/.flattened-pom.xml</flattenedPomFilename>
-                        <pomElements>
-                            <name/>
-                            <description/>
-                            <url/>
-                            <scm/>
-                            <developers/>
-                        </pomElements>
+                        <flattenedPomFilename>${project.build.directory}/flattened-pom.xml</flattenedPomFilename>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>flat-jar</id>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <flattenMode>oss</flattenMode>
+                                <pomElements>
+                                    <url />
+                                    <scm />
+                                    <repositories>flatten</repositories>
+                                    <distributionManagement>flatten</distributionManagement>
+                                </pomElements>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>archive-with-dependencies</id>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <flattenMode>fatjar</flattenMode>
+                                <pomElements>
+                                    <name />
+                                    <description />
+                                    <organization />
+                                    <url />
+                                    <scm />
+                                    <developers />
+                                    <inceptionYear />
+                                    <mailingLists />
+                                    <issueManagement />
+                                </pomElements>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>

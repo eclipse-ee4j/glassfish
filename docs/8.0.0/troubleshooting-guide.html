@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Troubleshooting Guide, Release 7</title>
+<title>Eclipse GlassFish Troubleshooting Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Troubleshooting Guide, Release 7</h1>
+<h1>Eclipse GlassFish Troubleshooting Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -120,7 +120,6 @@
 </li>
 <li><a href="#issues-related-to-installation">Issues Related to Installation</a>
 <ul class="sectlevel3">
-<li><a href="#installation-hangs-during-update-tool-configuration">Installation Hangs During Update Tool Configuration</a></li>
 <li><a href="#glassfish-server-components-not-removed-during-uninstallation">Eclipse GlassFish Components Not Removed During Uninstallation</a></li>
 </ul>
 </li>
@@ -163,12 +162,6 @@
 <li><a href="#what-are-the-restrictions-and-optimizations-for-the-java-persistence-api">What Are the Restrictions and Optimizations for the Java Persistence API?</a></li>
 </ul>
 </li>
-<li><a href="#update-tool-faqs">Update Tool FAQs</a>
-<ul class="sectlevel3">
-<li><a href="#how-do-i-use-update-tool-to-extend-my-glassfish-server-installation">How Do I Use Update Tool to Extend My Eclipse GlassFish Installation?</a></li>
-<li><a href="#how-do-i-turn-off-the-notifier">How Do I Turn Off the Notifier?</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -182,10 +175,10 @@
 <p>Troubleshooting Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>Contributed 2018 - 2024</p>
+<p>Contributed 2018 - 2026</p>
 </div>
 <div class="paragraph">
 <p>This guide describes common problems that you might encounter when using
@@ -193,10 +186,14 @@ Eclipse GlassFish and how to solve them.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Troubleshooting Guide, Release 7</p>
+<p>Eclipse GlassFish Troubleshooting Guide, Release 8</p>
 </div>
 <div class="paragraph">
-<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2019,2026 Contributors to the Eclipse Foundation.
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
 <p>This program and the accompanying materials are made available under the
@@ -258,7 +255,7 @@ Eclipse GlassFish and how to solve them.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -442,7 +439,7 @@ based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.</p>
 </li>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/">The Jakarta EE Tutorial</a>.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.</p>
 </li>
@@ -459,7 +456,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -625,13 +622,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -646,13 +643,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -747,7 +744,7 @@ Also see "<a href="release-notes.html#GSRLN00253">Known Issues</a>"
 in Eclipse GlassFish Release Notes for known issues related to installation.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish requires JDK release 11 or newer.
+<p>Eclipse GlassFish requires JDK release 17 or newer.
 If necessary, download and install the required JDK software.</p>
 </div>
 <div class="paragraph">
@@ -824,7 +821,7 @@ be to figure out why something isn&#8217;t working.</p>
 <p>GlassFish mailing lists: <code><a href="https://accounts.eclipse.org/mailing-list/glassfish-dev" class="bare">https://accounts.eclipse.org/mailing-list/glassfish-dev</a></code></p>
 </li>
 <li>
-<p>GlassFish user forum: <code><a href="https://www.eclipse.org/forums/index.php/f/419/" class="bare">https://www.eclipse.org/forums/index.php/f/419/</a></code></p>
+<p>GlassFish user forum: <code><a href="https://github.com/eclipse-ee4j/glassfish/discussions" class="bare">https://github.com/eclipse-ee4j/glassfish/discussions</a></code></p>
 </li>
 </ul>
 </div>
@@ -1210,7 +1207,7 @@ Lists and Forums</a> for details about accessing lists and forums.</p>
 <h2 id="specific-issues"><a class="anchor" href="#specific-issues"></a>2 Specific Issues</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter lists problems that you might encounter when using Eclipse GlassFish 7. The following topics are addressed:</p>
+<p>This chapter lists problems that you might encounter when using Eclipse GlassFish 8. The following topics are addressed:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1660,7 +1657,7 @@ domain to the other domain.</p>
 <div class="sect3">
 <h4 id="solution-6"><a class="anchor" href="#solution-6"></a>Solution</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 requires JDK 11, so check your system for that dependency.</p>
+<p>Eclipse GlassFish 7.1 requires JDK 17, so check your system for that dependency.</p>
 </div>
 <div class="paragraph">
 <p>Ensure that the required JDK software is installed and that the
@@ -1938,7 +1935,7 @@ classloader.</p>
 </div>
 <div class="paragraph">
 <p>One diagnostic approach involves undeploying the application and
-triggering a memory dump using the JDK 11 <code>jcmd</code> tool.
+triggering a memory dump using the JDK 17 <code>jcmd</code> tool.
 The simplest analysis is to list all instances of <code>java.lang.Class</code>
 and look for class objects that have many instances.
 This is a sign that the class has been loaded
@@ -2015,45 +2012,6 @@ inability to stop the domain.</p>
 </div>
 <div class="sect2">
 <h3 id="issues-related-to-installation"><a class="anchor" href="#issues-related-to-installation"></a>Issues Related to Installation</h3>
-<div class="sect3">
-<h4 id="installation-hangs-during-update-tool-configuration"><a class="anchor" href="#installation-hangs-during-update-tool-configuration"></a>Installation Hangs During Update Tool Configuration</h4>
-<div class="sect4">
-<h5 id="description-16"><a class="anchor" href="#description-16"></a>Description</h5>
-<div class="paragraph">
-<p>Installation hangs more than five minutes during Update Tool configuration.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="solution-13"><a class="anchor" href="#solution-13"></a>Solution</h5>
-<div class="paragraph">
-<p>Cancel the installation and run the installation program again, but this
-time deselect the Install Update Tool check box. Update Tool can be
-installed later from as-install<code>/bin/</code>. For more information about
-Update Tool, see "<a href="administration-guide.html#GSADG00701">Update Tool</a>"
-in Eclipse GlassFish Administration Guide. For general information about
-Eclipse GlassFishinstallation, see the <a href="installation-guide.html#GSING">
-Eclipse GlassFish Installation Guide</a>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Update Tool differs from Upgrade Tool, which is used to migrate the
-configuration and deployed applications from an earlier version of
-Eclipse GlassFish to the current version.
-For more information about Upgrade Tool and upgrading, see the
-<a href="upgrade-guide.html#GSUPG">Eclipse GlassFish Upgrade Guide</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
 <div class="sect3">
 <h4 id="glassfish-server-components-not-removed-during-uninstallation"><a class="anchor" href="#glassfish-server-components-not-removed-during-uninstallation"></a>Eclipse GlassFish Components Not Removed During Uninstallation</h4>
 <div class="sect4">
@@ -2154,8 +2112,8 @@ the following value:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks
--Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks</code></pre>
+<pre class="CodeRay highlight"><code>-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.p12
+-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.p12</code></pre>
 </div>
 </div>
 </div>
@@ -2191,9 +2149,6 @@ GlassFish wiki at
 </li>
 <li>
 <p><a href="#java-persistence-faqs">Java Persistence FAQs</a></p>
-</li>
-<li>
-<p><a href="#update-tool-faqs">Update Tool FAQs</a></p>
 </li>
 </ul>
 </div>
@@ -2286,102 +2241,12 @@ Eclipse GlassFish Add-On Component Development Guide.</p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="update-tool-faqs"><a class="anchor" href="#update-tool-faqs"></a>Update Tool FAQs</h3>
-<div class="sect3">
-<h4 id="how-do-i-use-update-tool-to-extend-my-glassfish-server-installation"><a class="anchor" href="#how-do-i-use-update-tool-to-extend-my-glassfish-server-installation"></a>How Do I Use Update Tool to Extend My Eclipse GlassFish Installation?</h4>
-<div class="paragraph">
-<p>Enterprise Server provides an administrative tool called Update Tool
-that enables you to install updates and add-on components to your
-existing Enterprise Server installation.</p>
-</div>
-<div class="paragraph">
-<p>Update Tool can be accessed as a standalone graphical tool from the
-command line (using the <code>updatetool</code> command from
-as-install-parent<code>/bin</code>), or as a browser-based graphical tool from the
-Administration Console (using the Update Tool node). For more
-information about Update Tool, see "<a href="administration-guide.html#GSADG00701">Update Tool</a>" in
-Eclipse GlassFish Administration Guide.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To update or remove installed components, you must use the standalone
-graphical Update Tool, not the Administration Console Update Tool.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>A command-line interface is also available for Update Tool. This
-interface uses the <code>pkg</code> command and enables you to perform most of the
-tasks provided by the standalone graphical version. For more information
-about the <code>pkg</code> command, see "<a href="administration-guide.html#GSADG00014">Extending and Updating
-Eclipse GlassFish</a>" in Eclipse GlassFish
-Administration Guide.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Update Tool differs from Upgrade Tool, which is used to migrate the
-configuration and deployed applications from an earlier version of
-Eclipse GlassFish to the current version. For more information about
-Upgrade Tool and upgrading, see the <a href="upgrade-guide.html#GSUPG">Eclipse GlassFish Upgrade Guide</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="how-do-i-turn-off-the-notifier"><a class="anchor" href="#how-do-i-turn-off-the-notifier"></a>How Do I Turn Off the Notifier?</h4>
-<div class="paragraph">
-<p>Update Tool provides automatic notifications of available updates after
-installation. These notifications can be turned off if desired.</p>
-</div>
-<div class="sect4">
-<h5 id="to-turn-off-the-notifier"><a class="anchor" href="#to-turn-off-the-notifier"></a>To Turn Off the Notifier</h5>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Launch the standalone graphical tool using the <code>updatetool</code> command:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>as-install-parent/bin/updatetool</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Click Preferences.</p>
-</li>
-<li>
-<p>Click the Updates tab.</p>
-</li>
-<li>
-<p>Deselect Automatically Check for Updates and click OK.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-27 15:25:01 UTC
+Last updated 2026-02-04 18:21:23 UTC
 </div>
 </div>
 </body>

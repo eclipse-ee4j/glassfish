@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Security Guide, Release 7</title>
+<title>Eclipse GlassFish Security Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Security Guide, Release 7</h1>
+<h1>Eclipse GlassFish Security Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -178,7 +178,7 @@
 <li><a href="#determining-your-security-needs">Determining Your Security Needs</a>
 <ul class="sectlevel3">
 <li><a href="#understand-your-environment">Understand Your Environment</a></li>
-<li><a href="#read-security-publications-2">Read Security Publications</a></li>
+<li><a href="#read-security-publications">Read Security Publications</a></li>
 </ul>
 </li>
 <li><a href="#installing-glassfish-server-in-a-secure-environment">Installing Eclipse GlassFish in a Secure Environment</a>
@@ -203,10 +203,10 @@
 <p>Security Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>Contributed 2018 - 2024</p>
+<p>Contributed 2018 - 2026</p>
 </div>
 <div class="paragraph">
 <p>This book provides instructions for configuring and administering
@@ -214,10 +214,14 @@ Eclipse GlassFish security.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Security Guide, Release 7</p>
+<p>Eclipse GlassFish Security Guide, Release 8</p>
 </div>
 <div class="paragraph">
-<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2019,2026 Contributors to the Eclipse Foundation.
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
 <p>This program and the accompanying materials are made available under the
@@ -279,7 +283,7 @@ instructions for configuring and administering Eclipse GlassFish security.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -463,7 +467,7 @@ based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.</p>
 </li>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/">The Jakarta EE Tutorial</a>.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.</p>
 </li>
@@ -480,7 +484,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -646,13 +650,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -667,13 +671,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -1650,19 +1654,24 @@ domain-dir<code>/config</code> directory:</p>
 <dl>
 <dt class="hdlist1">Keystore file</dt>
 <dd>
-<p>The <code>keystore.jks</code> file contains Eclipse GlassFish certificate,
+<p>The <code>keystore.p12</code> file contains Eclipse GlassFish certificate,
 including its private key. The keystore file is protected with a
 password.<br>
 Each keystore entry has a unique alias. After installation, the
-Eclipse GlassFish keystore has a single entry with an alias of <code>s1as</code>.</p>
+Eclipse GlassFish keystore has a single entry with an alias of <code>s1as</code>.<br>
+NOTE: For legacy compatibility, JKS format keystores (<code>keystore.jks</code>)
+are still supported, but PKCS12 format is recommended as it is the
+industry standard and default format since Java 9.</p>
 </dd>
 <dt class="hdlist1">Truststore file</dt>
 <dd>
-<p>The <code>cacerts.jks</code> file contains the Eclipse GlassFish trusted
+<p>The <code>cacerts.p12</code> file contains the Eclipse GlassFish trusted
 certificates, including public keys for other entities. For a trusted
 certificate, the server has confirmed that the public key in the
 certificate belongs to the certificate&#8217;s owner. Trusted certificates
-generally include those of CAs.</p>
+generally include those of CAs.<br>
+NOTE: For legacy compatibility, JKS format truststores (<code>cacerts.jks</code>)
+are still supported, but PKCS12 format is recommended.</p>
 </dd>
 </dl>
 </div>
@@ -1776,7 +1785,7 @@ environment.</p>
 <div class="sect4">
 <h5 id="custom-authentication-of-client-certificate-in-ssl-mutual-authentication"><a class="anchor" href="#custom-authentication-of-client-certificate-in-ssl-mutual-authentication"></a>Custom Authentication of Client Certificate in SSL Mutual Authentication</h5>
 <div class="paragraph">
-<p>Release 7 of Eclipse GlassFish extends the Certificate realm to allow
+<p>Release 8 of Eclipse GlassFish extends the Certificate realm to allow
 custom authentication and group assignment based on the client
 certificate received as part of SSL mutual (two-way) authentication.</p>
 </div>
@@ -2350,7 +2359,7 @@ passwords are not echoed to the display.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>For the zip bundle of Eclipse GlassFish 7, the default administrator
+<p>For the zip bundle of Eclipse GlassFish 8, the default administrator
 login is <code>admin</code>, with no password, which means that no login is
 required. For Eclipse GlassFish, you are prompted to provide a
 password for the <code>admin</code> user when you start the domain for the first
@@ -2926,7 +2935,7 @@ Command delete-audit-module executed successfully.</code></pre>
 <div class="sect2">
 <h3 id="administering-jsse-certificates"><a class="anchor" href="#administering-jsse-certificates"></a>Administering JSSE Certificates</h3>
 <div class="paragraph">
-<p>In the developer profile, the Eclipse GlassFish 7 uses the JSSE format
+<p>In the developer profile, the Eclipse GlassFish 8 uses the JSSE format
 on the server side to manage certificates and key stores. In all
 profiles, the client side (appclient or stand-alone) uses the JSSE
 format.</p>
@@ -2976,14 +2985,12 @@ Always generate the certificate in the directory containing the keystore
 and truststore files. The default is domain-dir<code>/config</code>.</p>
 </li>
 <li>
-<p>Generate the certificate in the keystore file, <code>keystore.jks</code>, using
+<p>Generate the certificate in the keystore file, <code>keystore.p12</code>, using
 the following command format:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -genkey -alias keyAlias-keyalg RSA
- -keypass changeit
- -storepass changeit
-keystore keystore.jks</code></pre>
+<pre class="CodeRay highlight"><code>keytool -genkey -alias keyAlias -keyalg RSA -keypass changeit
+ -storepass changeit -keysize 4096 -keystore keystore.p12</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3000,9 +3007,8 @@ new password for <code>changeit</code>. The default key password alias is <code>
 <code>client.cer</code> if you prefer), using the following command format:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -export -alias keyAlias-storepass changeit
- -file server.cer
- -keystore keystore.jks</code></pre>
+<pre class="CodeRay highlight"><code>keytool -export -alias keyAlias -storepass changeit
+ -file server.cer -keystore keystore.p12</code></pre>
 </div>
 </div>
 </li>
@@ -3011,14 +3017,12 @@ new password for <code>changeit</code>. The default key password alias is <code>
 <a href="#to-sign-a-certificate-by-using-keytool">To Sign a Certificate by Using <code>keytool</code></a>.</p>
 </li>
 <li>
-<p>Create the <code>cacerts.jks</code> truststore file and add the certificate to
+<p>Create the <code>cacerts.p12</code> truststore file and add the certificate to
 the truststore, using the following command format:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts
--alias keyAlias
- -file server.cer
--keystore cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts -alias keyAlias
+ -file server.cer -keystore cacerts.p12
  -keypass changeit</code></pre>
 </div>
 </div>
@@ -3039,7 +3043,7 @@ asking if you want to trust the certificate.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>Certificate was added to keystore
-[Saving cacerts.jks]</code></pre>
+[Saving cacerts.p12]</code></pre>
 </div>
 </div>
 </li>
@@ -3053,6 +3057,19 @@ asking if you want to trust the certificate.</p>
 <p>Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
 Using an RSA Key Algorithm</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example shows the legacy JKS format. For new deployments,
+consider using PKCS12 format as shown in Example 1-11a.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>RSA is public-key encryption technology developed by RSA Data Security,
 Inc.</p>
@@ -3062,6 +3079,22 @@ Inc.</p>
 <pre class="CodeRay highlight"><code>keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
 -dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file}
 -storepass ${keystore.pass}</code></pre>
+</div>
+</div>
+<div id="ghlii-pkcs12" class="paragraph">
+<p>Example 1-11a Creating a Self-Signed Certificate in a PKCS12 Keystore by
+Using an RSA Key Algorithm</p>
+</div>
+<div class="paragraph">
+<p>PKCS12 is the recommended keystore format and has been the default
+since Java 9. RSA is public-key encryption technology developed by
+RSA Data Security, Inc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
+-dname ${dn.name} -keypass ${key.pass}
+-keystore ${keystore.file} -storepass ${keystore.pass}</code></pre>
 </div>
 </div>
 <div id="ghlew" class="paragraph">
@@ -3127,7 +3160,7 @@ certificate.</p>
 <p>Delete the default self-signed certificate:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -delete -alias s1as -keystore keystore.jks -storepass &lt;store_passwd&gt;</code></pre>
+<pre class="CodeRay highlight"><code>keytool -delete -alias s1as -keystore keystore.p12 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3140,7 +3173,7 @@ keystore.</p>
 <p>Generate a new key pair for the application server:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -genkeypair -keyalg &lt;key_alg&gt; -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -genkeypair -keyalg &lt;key_alg&gt; -keystore keystore.p12
 -validity &lt;val_days&gt; -alias s1as</code></pre>
 </div>
 </div>
@@ -3166,7 +3199,7 @@ of the certificate does not match the name of the site.</p>
 <p>Generate a Certificate Signing Request (CSR):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -certreq -alias s1as -file &lt;certreq_file&gt; -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -certreq -alias s1as -file &lt;certreq_file&gt; -keystore keystore.p12
 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
@@ -3193,11 +3226,11 @@ intermediate CA certificates and store them in local files.</p>
 <li>
 <p>Import the CA certificate (if not already present) and any
 intermediate CA certificates (if not already present) indicated by the
-CA into the truststore <code>cacerts.jks</code>:</p>
+CA into the truststore <code>cacerts.p12</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts -alias &lt;CA-Name&gt; -file ca.cert
- -keystore cacerts.jks -storepass &lt;store_passwd&gt;</code></pre>
+ -keystore cacerts.p12 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -3207,7 +3240,7 @@ you obtained from the CA, as stored in a file such as <code>s1as.cert</code>:</p
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -import -v -trustcacerts -alias s1as -file s1as.cert
-   -keystore keystore.jks -storepass &lt;store_passwd&gt;</code></pre>
+   -keystore keystore.p12 -storepass &lt;store_passwd&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3505,7 +3538,7 @@ for writing providers that can authenticate users against Identity
 Stores. It also provides two built-in providers. This mechanism is
 conceptually similar to Authentication Realms, but can be configured and
 managed by applications. See
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#working-with-identity-stores">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html">
 Working with Identity Stores</a>
 in The Jakarta EE Tutorial for more information about Identity Stores.</p>
 </div>
@@ -4011,7 +4044,10 @@ The <code>keytool</code> command is available in the <code>$JAVA_HOME/bin</code>
 Use the following syntax:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.p12
++
++NOTE: The above examples show PKCS12 format (.p12) which is the recommended
++format since Java 9. For legacy JKS format compatibility, use `.jks` file extension.
 -file cert-name</code></pre>
 </div>
 </div>
@@ -4039,13 +4075,13 @@ Use the following syntax:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For example, to import a certificate named <code>oi.cer</code> for a Eclipse GlassFish domain in <code>/glassfish7/glassfish/domains/domain1</code>, using an
+<p>For example, to import a certificate named <code>oi.cer</code> for a Eclipse GlassFish domain in <code>/glassfish8/glassfish/domains/domain1</code>, using an
 alias called "OID self-signed certificate," you would use the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;OID self signed certificate&quot; -keystore \
-/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer</code></pre>
+/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file oid.cer</code></pre>
 </div>
 </div>
 </li>
@@ -4132,7 +4168,10 @@ The <code>keytool</code> command is available in the <code>$JAVA_HOME/bin</code>
 Use the following syntax:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;alias-name&quot; -keystore domain-dir/config/cacerts.p12
++
++NOTE: The above examples show PKCS12 format (.p12) which is the recommended
++format since Java 9. For legacy JKS format compatibility, use `.jks` file extensions.
 -file cert-name</code></pre>
 </div>
 </div>
@@ -4160,13 +4199,13 @@ Use the following syntax:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For example, to import a certificate named <code>ovd.cer</code> for a Eclipse GlassFish domain in <code>/glassfish7/glassfish/domains/domain1</code>, using an
+<p>For example, to import a certificate named <code>ovd.cer</code> for a Eclipse GlassFish domain in <code>/glassfish8/glassfish/domains/domain1</code>, using an
 alias called "OVD self-signed certificate," you would use the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>keytool -importcert -alias &quot;OVD self signed certificate&quot; -keystore \
-/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer</code></pre>
+/glassfish8/glassfish/domains/domain1/config/cacerts.p12 -file ovd.cer</code></pre>
 </div>
 </div>
 </li>
@@ -4560,8 +4599,8 @@ message layer security for web services in the Eclipse GlassFish environment.</p
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Message security (JSR 196) is supported only in the Full Platform
-Profile of Eclipse GlassFish, not in the Web Profile.</p>
+<p>Message security (Jakarta Authentication) is supported only in both the Full Platform
+Profile of Eclipse GlassFish, as in the Web Profile.</p>
 </div>
 </td>
 </tr>
@@ -5702,7 +5741,7 @@ Protection Policies</a>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2">
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html">
 Introduction to Security in the Jakarta EE Platform</a> in The Jakarta EE Tutorial</p>
 </li>
 <li>
@@ -5784,7 +5823,7 @@ respective copies of the domain&#8217;s configuration.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Oracle recommends that you enable secure admin as described in
+<p>It is recommended that you enable secure admin as described in
 <a href="#managing-administrative-security">Managing Administrative Security</a>
 so that Eclipse GlassFish securely transfers these files on the network.</p>
 </div>
@@ -6022,6 +6061,14 @@ administration traffic or impersonate legitimate Eclipse GlassFish components.</
 is disabled by default. When secure admin is disabled, Eclipse GlassFish
 does not encrypt administrative communication among the system
 components and does not accept administrative connections from remote hosts.</p>
+</div>
+<div class="paragraph">
+<p>To keep your environment secure, you should always create new domain
+with a new private key and certificates. You should never use supplied
+domain1 with provided keystore. The general security rule of the private
+key is that once it is generated, it stays with the user or the machine,
+never migrates, never leaves its home, and it has just two states:
+private and compromised.</p>
 </div>
 <div class="paragraph">
 <p>The following subcommands enable and disable secure admin:</p>
@@ -6289,11 +6336,13 @@ self-signed certificate for remote instances.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Both private keys are stored in the domain-wide DAS keystore file, keystore.jks.</p>
+<p>Both private keys are stored in the domain-wide DAS keystore file, keystore.p12
+(PKCS12 format, recommended). For legacy compatibility, keystore.jks (JKS format) is also supported.</p>
 </li>
 <li>
 <p>Both public certificates are stored in the domain-wide DAS truststore
-file, cacerts.jks.</p>
+file, cacerts.p12 (PKCS12 format, recommended). For legacy compatibility,
+cacerts.jks (JKS format) is also supported.</p>
 </li>
 </ul>
 </div>
@@ -6352,7 +6401,7 @@ self-signed certificates in the keystore, similar to the following:</p>
 <div class="paragraph">
 <p>You can list the contents of the keystore without supplying a password.
 However, for a request that affects the private key, such as the
-keytool.exe <code>--certreq</code> option, the keystore password is required. This
+keytool <code>--certreq</code> option, the keystore password is required. This
 is the master password and has a default value of changeit unless you
 change it with the <code>change-master-password</code> subcommand.</p>
 </div>
@@ -6362,24 +6411,17 @@ change it with the <code>change-master-password</code> subcommand.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool.exe -list -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -list -keystore keystore.p12
 Enter keystore password:
-
-*****************  WARNING WARNING WARNING  *****************
-* The integrity of the information stored in your keystore  *
-* has NOT been verified!  In order to verify its integrity, *
-* you must provide your keystore password.                  *
-*****************  WARNING WARNING WARNING  *****************
-
 Keystore type: JKS
 Keystore provider: SUN
 
 Your keystore contains 2 entries
 
-glassfish-instance, Jan 3, 2011, PrivateKeyEntry,
-Certificate fingerprint (MD5): 06:A4:83:84:57:52:9C:2F:E1:FD:08:68:BB:2D:ED:E8
-s1as, Jan 3, 2011, PrivateKeyEntry,
-Certificate fingerprint (MD5): 8B:7D:5A:4A:32:36:1B:5D:6A:29:66:01:B0:A3:CB:85</code></pre>
+glassfish-instance, 16. 6. 2025, PrivateKeyEntry,
+Certificate fingerprint (SHA-256): F1:A6:22:25:2E:1A:15:66:FE:C5:93:87:FE:C9:4A:EF:7F:B1:51:D9:54:C2:7D:19:B3:77:45:D4:75:8A:92:D8
+s1as, 16. 6. 2025, PrivateKeyEntry,
+Certificate fingerprint (SHA-256): 28:D2:74:B2:F0:85:C2:3E:B8:23:77:2C:B9:4B:A9:44:18:04:90:EC:7A:C1:43:A3:74:FA:73:0D:2C:8B:BE:FA</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6414,65 +6456,86 @@ the future. )</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>D:\glassfish7\glassfish\bin&gt;asadmin enable-secure-admin
+<pre class="CodeRay highlight"><code>asadmin change-admin-password
+Enter admin user name [default: admin]&gt;
+Enter the admin password&gt;
+Enter the new admin password&gt;
+Enter the new admin password again&gt;
+Command change-admin-password executed successfully.
+
+asadmin enable-secure-admin
 Command enable-secure-admin executed successfully.
 
-
-D:\glassfish7\glassfish\bin&gt;asadmin stop-domain domain1
-Waiting for the domain to stop .......
+asadmin stop-domain domain1
+Waiting for the domain to stop
+Waiting finished after 403 ms.
 Command stop-domain executed successfully.
 
-D:\glassfish7\glassfish\bin&gt;asadmin start-domain domain1
-Waiting for domain1 to start ..............................
+Executing: nohup /usr/lib/jvm/jdk21/bin/java ...
+Please look at the server log for more details...
+Waiting for domain1 to start .
+Waiting finished after 1 830 ms.
 Successfully started the domain : domain1
-domain  Location: D:\glassfish7\glassfish\domains\domain1
-Log File: D:\glassfish7\glassfish\domains\domain1\logs\server.log
-Admin Port: 4848
+domain  Location: glassfish8/glassfish/domains/domain1
+Log File: glassfish8/glassfish/domains/domain1/logs/server.log
+Admin Port: 4 848
 Command start-domain executed successfully.
 
-D:\glassfish7\glassfish\bin&gt;asadmin list-domains
+asadmin --passwordfile passwordfile.txt --host myhost --port 4848 --user admin get '*'
 [
 [
   Version: V3
-  Subject: CN=machine.oracle.com, OU=GlassFish, O=Oracle Corporation, L=San
-ta Clara, ST=California, C=US
-  Signature Algorithm: SHA1withRSA, OID = 1.2.840.113549.1.1.5
+  Subject: CN=myhost, OU=GlassFish, O=Eclipse Foundation
+  Signature Algorithm: SHA384withRSA, OID = 1.2.840.113549.1.1.12
 
-  Key:  Sun RSA public key, 1024 bits
-  modulus: 916043595073784449632358756374297330881618062298549101072702252458856
-74079656358328568800001548507219262910864311924824938195045822088563459253216383
-21100660819657204757523896415606833471499564071226722478056407102318862796797465
-6245090519956376357288295037519504394674686082145398885236913866246525691704749
+  Key:  Sun RSA public key, 3072 bits
+  params: null
+  modulus: 3549735436017293395944399646050811605943532483330731639481598849195313135835601143069278775941912833227184154864170476669765109167152322363083299440076144545884210810695275245235290371125049221504343452636546115539000689261660824058752199649413127695714057216403304620479663537593783643718815826174936353744083157948002549899647579875863433879715246339821979167572445791066895925940334028702098718914449598747058452632825884946661997817063467477967082246499686706849812768296403131210992247963632289343046508299415274685878207623087456003937980779990473138786661103933170076403008263876046472449325091195878634067766001042523423726589500567402223394224478674606376189686528174927512280324403247720016525605021176037293387708549982440787482868276910788669896670774159413950077457746564502690943667525041381015485689956421709895164590278363335180710355827189740931402932913235081939232805280270340849976056857048054492958525153
   public exponent: 65537
-  Validity: [From: Tue Jan 04 14:30:08 EST 2011,
-               To: Fri Jan 01 14:30:08 EST 2021]
-  Issuer: CN=machine.oracle.com, OU=GlassFish, O=Oracle Corporation, L=Sant
-a Clara, ST=California, C=US
-  SerialNumber: [    4d237540]
+  Validity: [From: Mon Jun 16 23:57:45 CEST 2025,
+               To: Thu Jun 14 23:57:45 CEST 2035]
+  Issuer: CN=dmatej-tux, OU=GlassFish, O=Eclipse Foundation
+  SerialNumber: 68:68:c4:b6:10:00:3b:60
 
 Certificate Extensions: 1
 [1]: ObjectId: 2.5.29.14 Criticality=false
 SubjectKeyIdentifier [
 KeyIdentifier [
-0000: AF 8B 90 1E 51 9A 80 1B   EB A4 D9 C6 01 8A A0 FD  ....Q...........
-0010: DE EC 83 8A                                        ....
+0000: DE 76 7A 17 89 52 81 A2   16 D7 98 9A F1 88 E0 77  .vz..R.........w
+0010: B5 35 45 42                                        .5EB
 ]
 ]
 
 ]
-  Algorithm: [SHA1withRSA]
+  Algorithm: [SHA384withRSA]
   Signature:
-0000: 3F 2B 30 CE 97 0B 5E F3   72 0E 60 18 8D 3B 04 DC  ?+0...^.r.`..;..
-0010: 26 E6 7A 6F D0 19 CC 26   1D 90 C0 DE 33 4E 53 FB  &amp;.zo...&amp;....3NS.
-0020: DC E7 AE 78 9E BA EF 14   86 57 36 D4 3E 9B C9 FB  ...x.....W6.&gt;...
-0030: C0 B4 EF 72 27 D9 4F 79   1F 89 91 B8 96 26 33 64  ...r'.Oy.....&amp;3d
-0040: 9F 4B 04 4B 83 B9 BF 4D   54 B4 8F 75 17 1A 51 BD  .K.K...MT..u..Q.
-0050: F3 69 94 CE 90 95 08 55   2C 07 D2 23 AC AE EC 6D  .i.....U,..#...m
-0060: 84 B6 3D 00 FB FE 92 50   37 1A 2D 00 F1 21 5C E6  ..=....P7.-..!\.
-0070: 1F 39 26 B2 5D C1 FD C8   B1 4F CC EE 26 84 B8 B5  .9&amp;.]....O..&amp;...
+0000: 2D FC 98 9B B6 4D 0F 13   89 1B 50 17 FF 46 14 84  -....M....P..F..
+0010: C2 42 42 4C EF DC 2A 49   FC 6C D4 CE E1 78 36 28  .BBL..*I.l...x6(
+0020: CC 24 A1 F0 99 6E 6A 2D   09 A0 C2 56 76 E9 02 0B  .$...nj-...Vv...
+0030: B7 AA 19 FE 95 0A BB 7C   35 C8 23 FE CE 01 A9 CE  ........5.#.....
+0040: 4D 7D A0 90 14 F6 4A C6   74 68 6E 4A 78 40 1F 82  M.....J.thnJx@..
+0050: D0 2D 2D 91 CB 29 B7 14   37 9D B8 4A 41 39 41 63  .--..)..7..JA9Ac
+0060: 21 B9 0D 91 CA 94 70 38   35 F1 5A 94 53 12 03 E3  !.....p85.Z.S...
+0070: 16 73 DE 5A 2A F4 73 80   2D 3A 12 A4 E2 96 8F 4A  .s.Z*.s.-:.....J
+0080: 62 08 E3 CB 2F AE 61 D8   D4 37 14 0D AC 9C D2 38  b.../.a..7.....8
+0090: 6F C6 FF B7 BF B7 B0 EC   D7 78 70 55 24 81 AB D8  o........xpU$...
+00A0: A8 28 65 F6 87 08 BB CE   29 19 66 B0 8E F2 AB D1  .(e.....).f.....
+00B0: B3 12 C1 E9 A5 8C 29 F6   7B 49 B4 77 EA F9 88 D7  ......)..I.w....
+00C0: 56 B6 C1 74 6B F5 71 B3   59 E8 CF B3 3F BA 44 F3  V..tk.q.Y...?.D.
+00D0: DB 00 5F 9C 47 7A 23 A7   F4 CE 35 E4 9D 38 3E 4E  .._.Gz#...5..8&gt;N
+00E0: E8 9F 3F 04 A3 A9 BB 60   B3 7E 76 9D CA DF 82 2C  ..?....`..v....,
+00F0: FE 5C 94 91 0A BA D4 DA   DF ED 92 CE F3 09 7D 8C  .\..............
+0100: 7C 8F 25 C4 87 25 69 34   C5 DF 6B 66 CE F9 51 73  ..%..%i4..kf..Qs
+0110: 9C 40 81 0C 7F 4F FF 9D   E9 F8 A2 24 3F EB 72 5D  .@...O.....$?.r]
+0120: 52 F2 D5 7D ED DA 8B 96   07 AC 66 A3 B8 A7 94 35  R.........f....5
+0130: 64 B7 15 26 B3 D8 5D 30   65 C0 3D A7 C4 BF D2 CB  d..&amp;..]0e.=.....
+0140: 1B E7 2C AB 76 68 72 77   C4 C1 21 69 D0 B8 8F B3  ..,.vhrw..!i....
+0150: 4F 00 09 51 0D BF F3 A8   16 00 73 58 F4 E7 95 CF  O..Q......sX....
+0160: ED 80 65 6E 01 51 3D 09   F7 EB 1A 7A 76 63 7D DD  ..en.Q=....zvc..
+0170: 6D 3D 11 6D 15 01 D6 EC   E4 24 51 9A A5 FC 9C 7E  m=.m.....$Q.....
 
 ]
-Do you trust the above certificate [y|N] --&gt;</code></pre>
+Do you trust the above certificate [y|N] --&gt;y</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6527,7 +6590,7 @@ the <code>s1as</code> alias before doing so.</p>
 <p>If you decide to use the <code>s1as</code> and <code>glassfish-instance</code> aliases with
 your own certificates, you will first need to disable secure admin (if
 enabled) and then change or delete the exiting <code>s1as</code> alias from both
-the <code>keystore.jks</code> keystore and <code>cacerts.jks</code> truststore for the DAS.
+the <code>keystore.p12</code> keystore and <code>cacerts.p12</code> truststore for the DAS.
 You can use the <code>--changealias</code> or <code>--delete</code> option of <code>keytool</code> to
 accomplish this. Then, import your own certificates.</p>
 </div>
@@ -6606,40 +6669,75 @@ you can use keytool to display the DN of a certificate:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool.exe -v -list -keystore keystore.jks
+<pre class="CodeRay highlight"><code>keytool -v -list -keystore keystore.p12
 Enter keystore password:
-
 Keystore type: JKS
 Keystore provider: SUN
 
 Your keystore contains 2 entries
 
 Alias name: glassfish-instance
-Creation date: Jul 7, 2011
+Creation date: 16. 6. 2025
 Entry type: PrivateKeyEntry
 Certificate chain length: 1
 Certificate[1]:
-Owner: CN=systemname.amer.oracle.com-instance, OU=GlassFish,
-O=Oracle Corporation, L=Santa Clara, ST=California, C=US
-Issuer: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
- L=Santa Clara, ST=California, C=US
-Serial number: 4e15d6e7
-Valid from: Thu Jul 07 11:55:19 EDT 2011 until: Sun Jul 04 11:55:19 EDT 2021
+Owner: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Serial number: e99681e61da6a953
+Valid from: Mon Jun 16 17:13:17 CEST 2025 until: Thu Jun 14 17:13:17 CEST 2035
 Certificate fingerprints:
-         MD5:  05:6E:01:D6:CE:9D:29:DA:55:D9:10:5E:BE:CC:55:05
-         SHA1: 2A:6D:A2:52:A5:2B:ED:DE:CD:B4:76:4A:65:9D:B5:79:A6:EA:3C:10
-         Signature algorithm name: SHA1withRSA
-         Version: 3
+         SHA1: 37:6D:39:C1:F5:57:86:07:61:2D:0D:6C:93:E6:13:E5:05:CF:4A:5C
+         SHA256: F1:A6:22:25:2E:1A:15:66:FE:C5:93:87:FE:C9:4A:EF:7F:B1:51:D9:54:C2:7D:19:B3:77:45:D4:75:8A:92:D8
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
 
 Extensions:
 
 #1: ObjectId: 2.5.29.14 Criticality=false
 SubjectKeyIdentifier [
 KeyIdentifier [
-0000: 96 99 36 B6 CF 60 1E 8A   AE 25 75 4E C8 34 AA AB  ..6..`...%uN.4..
-0010: E1 3B CF 03                                        .;..
+0000: 83 D4 5A 15 9E 87 E8 B3   5C D3 F9 D3 7F 06 2F D0  ..Z.....\...../.
+0010: CF E5 AB F0                                        ....
 ]
-]</code></pre>
+]
+
+
+
+*******************************************
+*******************************************
+
+
+Alias name: s1as
+Creation date: 16. 6. 2025
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Serial number: a1cbb63cfa2050c4
+Valid from: Mon Jun 16 17:13:16 CEST 2025 until: Thu Jun 14 17:13:16 CEST 2035
+Certificate fingerprints:
+         SHA1: 59:80:01:EB:F7:99:E8:37:BA:6E:49:D1:B7:2B:74:42:8A:89:23:CE
+         SHA256: 28:D2:74:B2:F0:85:C2:3E:B8:23:77:2C:B9:4B:A9:44:18:04:90:EC:7A:C1:43:A3:74:FA:73:0D:2C:8B:BE:FA
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 16 BE A5 C1 AB A0 66 8B   63 66 64 02 C8 25 7C A9  ......f.cfd..%..
+0010: 0F B1 C8 5E                                        ...^
+]
+]
+
+
+
+*******************************************
+*******************************************</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6656,35 +6754,68 @@ truststore, you can use keytool to display the alias of a certificate:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>keytool.exe -v -list -keystore cacerts.jks
+<pre class="CodeRay highlight"><code>keytool -v -list -keystore cacerts.p12
 Enter keystore password:
-:
-:
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 2 entries
+
 Alias name: glassfish-instance
-Creation date: Jul 7, 2011
+Creation date: 16. 6. 2025
 Entry type: trustedCertEntry
 
-Owner: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
-L=Santa Clara, ST=California, C=US
-Issuer: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
- L=Santa Clara, ST=California, C=US
-Serial number: 4e15d6e7
-Valid from: Thu Jul 07 11:55:19 EDT 2011 until: Sun Jul 04 11:55:19 EDT 2021
+Owner: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost-instance, OU=GlassFish, O=Eclipse Foundation
+Serial number: e99681e61da6a953
+Valid from: Mon Jun 16 17:13:17 CEST 2025 until: Thu Jun 14 17:13:17 CEST 2035
 Certificate fingerprints:
-         MD5:  05:6E:01:D6:CE:9D:29:DA:55:D9:10:5E:BE:CC:55:05
-         SHA1: 2A:6D:A2:52:A5:2B:ED:DE:CD:B4:76:4A:65:9D:B5:79:A6:EA:3C:10
-         Signature algorithm name: SHA1withRSA
-         Version: 3
+         SHA1: 37:6D:39:C1:F5:57:86:07:61:2D:0D:6C:93:E6:13:E5:05:CF:4A:5C
+         SHA256: F1:A6:22:25:2E:1A:15:66:FE:C5:93:87:FE:C9:4A:EF:7F:B1:51:D9:54:C2:7D:19:B3:77:45:D4:75:8A:92:D8
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
 
 Extensions:
 
 #1: ObjectId: 2.5.29.14 Criticality=false
 SubjectKeyIdentifier [
 KeyIdentifier [
-0000: 96 99 36 B6 CF 60 1E 8A   AE 25 75 4E C8 34 AA AB  ..6..`...%uN.4..
-0010: E1 3B CF 03                                        .;..
+0000: 83 D4 5A 15 9E 87 E8 B3   5C D3 F9 D3 7F 06 2F D0  ..Z.....\...../.
+0010: CF E5 AB F0                                        ....
 ]
-]</code></pre>
+]
+
+*******************************************
+*******************************************
+
+Alias name: s1as
+Creation date: 16. 6. 2025
+Entry type: trustedCertEntry
+
+Owner: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Issuer: CN=localhost, OU=GlassFish, O=Eclipse Foundation
+Serial number: a1cbb63cfa2050c4
+Valid from: Mon Jun 16 17:13:16 CEST 2025 until: Thu Jun 14 17:13:16 CEST 2035
+Certificate fingerprints:
+         SHA1: 59:80:01:EB:F7:99:E8:37:BA:6E:49:D1:B7:2B:74:42:8A:89:23:CE
+         SHA256: 28:D2:74:B2:F0:85:C2:3E:B8:23:77:2C:B9:4B:A9:44:18:04:90:EC:7A:C1:43:A3:74:FA:73:0D:2C:8B:BE:FA
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 3072-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 16 BE A5 C1 AB A0 66 8B   63 66 64 02 C8 25 7C A9  ......f.cfd..%..
+0010: 0F B1 C8 5E                                        ...^
+]
+]
+
+*******************************************
+*******************************************</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6711,10 +6842,7 @@ in secure administration:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; enable-secure-admin-principal
-&quot;CN=system.amer.oracle.com,OU=GlassFish,
-O=Oracle Corporation,L=Santa Clara,ST=California,C=US&quot;
-
+<pre class="CodeRay highlight"><code>asadmin enable-secure-admin-principal &quot;CN=myadmin,OU=GlassFish,O=Eclipse Foundation&quot;
 Command enable-secure-admin-principal executed successfully.</code></pre>
 </div>
 </div>
@@ -7300,11 +7428,12 @@ help you protect it properly.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>See Also: <a href="https://www.oracle.com/us/products/ondemand/index.html" class="bare">https://www.oracle.com/us/products/ondemand/index.html</a> <a id="gksce"></a> <a id="read-security-publications"></a></p>
+<p><a id="gksce"></a><a id="read-security-publications"></a>
+See Also: <code><a href="https://www.oracle.com/us/products/ondemand/index.html" class="bare">https://www.oracle.com/us/products/ondemand/index.html</a></code></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="read-security-publications-2"><a class="anchor" href="#read-security-publications-2"></a>Read Security Publications</h4>
+<h4 id="read-security-publications"><a class="anchor" href="#read-security-publications"></a>Read Security Publications</h4>
 <div class="paragraph">
 <p>Read about security issues:</p>
 </div>
@@ -7477,11 +7606,11 @@ however, you can use any JDBC-compliant database.</p>
 </div>
 <div class="paragraph">
 <p>The directory and filename location of a private keystore, such as
-keystore.jks</p>
+keystore.p12.</p>
 </div>
 <div class="paragraph">
 <p>The directory and filename location of a Root Certificate Authority (CA)
-keystore, such as cacerts.jks.</p>
+keystore, such as cacerts.p12.</p>
 </div>
 <div class="paragraph">
 <p>For example, operating systems provide utilities such as umask and chmod
@@ -7620,7 +7749,7 @@ intruders have should they get partial access to a production machine.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable security auditing.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If the operating system on which Eclipse GlassFish runs supports security auditing of file and directory access,
-Oracle recommends using audit logging to track any denied directory or
+it is recommended to use audit logging to track any denied directory or
 file access violations. Administrators should ensure that sufficient
 disk space is available for the audit log.</p></td>
 </tr>
@@ -7653,7 +7782,7 @@ and critical patch updates.</p></td>
 <p>Eclipse GlassFish provides a powerful and flexible set of software tools
 for securing the subsystems and applications that run on a server
 instance. The following table provides a checklist of essential features
-that Oracle recommends you use to secure your production environment.</p>
+that are recommended for use to secure your production environment.</p>
 </div>
 <div id="gkscz" class="paragraph">
 <p>Table 6-2 Securing Eclipse GlassFish</p>
@@ -7830,7 +7959,7 @@ group need to be members of that group.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Create no fewer than two user accounts in the asadmin group.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The user
 admin is created when you install Eclipse GlassFish. For production
-environments, create at least one other account in the asadmin group in
+environments, it is recommended to create at least one other account in the asadmin group in
 case one account password is compromised. When creating asadmin users
 give them unique names that cannot be easily guessed.</p></td>
 </tr>
@@ -7852,6 +7981,44 @@ way.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">By default, Eclipse GlassFish opens several listener ports upon
 startup, but you can restrict this by disabling unused listeners. This
 step helps prevent access from malicious attackers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable the Administration Console in production environments.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For production deployments, consider disabling the Administration Console to reduce the attack surface and prevent unauthorized access to administrative functions.</p>
+</div>
+<div class="paragraph">
+<p>The Administration Console provides powerful management capabilities that should not be exposed in production environments where remote administration is not required. Web-based administrative interfaces are vulnerable to Cross-Site Request Forgery (CSRF) attacks where malicious links can execute administrative commands if clicked while an administrator is logged in.</p>
+</div>
+<div class="paragraph">
+<p>To disable the Administration Console:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the configuration property:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin set server.admin-service.property.adminConsoleStartup=never</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart the domain:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin restart-domain</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use command-line administration tools (<code>asadmin</code>) for production management tasks instead.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="administration-guide.html#to-disable-the-administration-console-loading">To Disable the Administration Console Loading</a> for detailed instructions.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -7971,7 +8138,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-27 15:24:16 UTC
+Last updated 2026-02-04 18:20:44 UTC
 </div>
 </div>
 </body>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Release Notes, Release 7</title>
+<title>Eclipse GlassFish Release Notes, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Release Notes, Release 7</h1>
+<h1>Eclipse GlassFish Release Notes, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -27,20 +27,18 @@
 <li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
 </ul>
 </li>
-<li><a href="#GSRLN">1 Eclipse GlassFish 7 Release Notes</a>
+<li><a href="#GSRLN">1 Eclipse GlassFish 8 Release Notes</a>
 <ul class="sectlevel2">
-<li><a href="#revision-history">Revision History</a></li>
-<li><a href="#whats-new-in-the-glassfish-server-release">What&#8217;s New in the Eclipse GlassFish 7 Release?</a></li>
+<li><a href="#whats-new-in-the-glassfish-server-release">What&#8217;s New in the Eclipse GlassFish 8 Release?</a></li>
 <li><a href="#hardware-and-software-requirements">Hardware and Software Requirements</a>
 <ul class="sectlevel3">
 <li><a href="#required-jdk-versions">Required JDK Versions</a></li>
-<li><a href="#required-disk-space">Required Disk Space</a></li>
 <li><a href="#required-free-ports">Required Free Ports</a></li>
 <li><a href="#message-queue-broker-requirements">Message Queue Broker Requirements</a></li>
 <li><a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the JDK Software</a></li>
 </ul>
 </li>
-<li><a href="#known-issues-in-eclipse-glassfish-7">Known Issues in Eclipse GlassFish 7</a>
+<li><a href="#known-issues-in-eclipse-glassfish-8">Known Issues in Eclipse GlassFish 8</a>
 <ul class="sectlevel3">
 <li><a href="#jaxb-and-jax-ws-no-longer-part-of-java-ee-platform">JAXB and JAX-WS no longer part of Jakarta EE platform</a></li>
 <li><a href="#resource-validation-property-is-enabled-in-the-jvm-option-for-deployment">Resource validation property is enabled in the JVM option for deployment</a></li>
@@ -53,18 +51,14 @@
 <li><a href="#asadmin-subcommands"><code>asadmin</code> Subcommands</a></li>
 <li><a href="#deprecated-unsupported-and-obsolete-options">Deprecated, Unsupported, and Obsolete Options</a></li>
 <li><a href="#applications-that-use-apache-derby">Applications That Use Apache Derby</a></li>
-<li><a href="#no-support-for-client-vm-on-windows-amd64">No Support for Client VM on Windows AMD64</a></li>
 <li><a href="#metro-reliable-messaging-in-inorder-delivery-mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></li>
 <li><a href="#no-support-for-kerberos-on-aix">No Support for Kerberos on AIX</a></li>
 </ul>
 </li>
-<li><a href="#documentation-errata">Documentation Errata</a>
-<ul class="sectlevel3">
-<li><a href="#upgrading-to-oracle-glassfish-server-is-not-necessary">Upgrading to Eclipse GlassFish Is Not Necessary</a></li>
-</ul>
-</li>
 <li><a href="#features-available-only-in-the-full-platform">Features Available Only in the Full Platform</a></li>
-<li><a href="#java-ee-standards-support">Jakarta EE Standards Support</a></li>
+<li><a href="#jakarta-ee-support">Jakarta EE Standards Support</a></li>
+<li><a href="#microprofile-support">MicroProfile Standards Support</a></li>
+<li><a href="#extensions-support">Extensions to the Standard APIs</a></li>
 <li><a href="#how-to-report-problems-and-provide-feedback">How to Report Problems and Provide Feedback</a></li>
 <li><a href="#additional-resources">Additional Resources</a></li>
 </ul>
@@ -80,23 +74,27 @@
 <p>Release Notes</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>Contributed 2018 - 2024</p>
+<p>Contributed 2018 - 2026</p>
 </div>
 <div class="paragraph">
-<p>These Release Notes provide late-breaking information about Eclipse GlassFish 7
+<p>These Release Notes provide late-breaking information about Eclipse GlassFish 8
 software and documentation. Also included are a summary of
-new product features in the 7 release, and descriptions and
+new product features in the 8 release, and descriptions and
 workarounds for known issues and limitations.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Release Notes, Release 7</p>
+<p>Eclipse GlassFish Release Notes, Release 8</p>
 </div>
 <div class="paragraph">
-<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2019,2026 Contributors to the Eclipse Foundation.
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
 <p>This program and the accompanying materials are made available under the
@@ -126,35 +124,12 @@ trademark of The Open Group.</p>
 <div class="sect1">
 <h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>This documentation is part of the Java Enterprise Edition contribution
-to the Eclipse Foundation and is not intended for use in relation to
-Java Enterprise Edition or Orace GlassFish. The documentation is in the
-process of being revised to reflect the new Jakarta EE branding.
-Additional changes will be made as requirements and procedures evolve
-for Jakarta EE. Where applicable, references to Jakarta EE or Java
-Enterprise Edition should be considered references to Jakarta EE.</p>
-</div>
-<div class="paragraph">
-<p>Please see the Title page for additional license information.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>This preface contains information about and conventions for the entire
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -338,7 +313,7 @@ based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.</p>
 </li>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/">The Jakarta EE Tutorial</a>.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.</p>
 </li>
@@ -355,7 +330,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -521,13 +496,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -542,13 +517,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -577,74 +552,56 @@ In configuration files, domain-dir is represented as follows:
 </div>
 </div>
 <div class="sect1">
-<h2 id="GSRLN"><a class="anchor" href="#GSRLN"></a>1 Eclipse GlassFish 7 Release Notes</h2>
+<h2 id="GSRLN"><a class="anchor" href="#GSRLN"></a>1 Eclipse GlassFish 8 Release Notes</h2>
 <div class="sectionbody">
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To Be Done</p>
-</div>
-<div class="paragraph">
-<p>This page must be updated before the release!</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Eclipse GlassFish provides a lightweight, modular server for the
-development of Java Platform Enterprise Edition (Jakarta EE) 8
-applications. It is the Reference Implementation for Jakarta EE. It
-delivers a highly productive platform for developing with the latest
-Jakarta EE technologies.</p>
+development of Jakarta EE 11 applications. It is the first Compatible
+Implementation for Jakarta EE. It delivers a highly productive
+platform for developing with the latest Jakarta EE technologies.</p>
 </div>
 <div class="paragraph">
-<p>For any issue or information on Eclipse GlassFish,
-see the <a href="https://glassfish.org/" class="bare">https://glassfish.org/</a>.</p>
+<p>For any issues or information about Eclipse GlassFish,
+see <a href="https://glassfish.org/" class="bare">https://glassfish.org/</a>.</p>
 </div>
 <div class="paragraph">
-<p>These Release Notes provide late-breaking information about Eclipse GlassFish 7
+<p>These Release Notes provide late-breaking information about Eclipse GlassFish 8
 software and documentation. These Release Notes include
 summaries of supported hardware, operating environments, and JDK and
 JDBC/RDBMS requirements. Also included are a summary of new product
-features in the 7 release, and descriptions and workarounds for known
+features in the 8 release, and descriptions and workarounds for known
 issues and limitations.</p>
 </div>
 <div class="paragraph">
 <p>Refer to this document prior to installing, configuring, or using
-Eclipse GlassFish 7 software. Consult this document periodically to
+Eclipse GlassFish 8 software. Consult this document periodically to
 view the most up-to-date product information.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#revision-history">"Revision History"</a></p>
-</li>
-<li>
-<p><a href="#whats-new-in-the-glassfish-server-release">"What&#8217;s New in the Eclipse GlassFish 7 Release?"</a></p>
+<p><a href="#whats-new-in-the-glassfish-server-release">"What&#8217;s New in the Eclipse GlassFish 8 Release?"</a></p>
 </li>
 <li>
 <p><a href="#hardware-and-software-requirements">"Hardware and Software Requirements"</a></p>
 </li>
 <li>
-<p><a href="#GSRLN00253">"Known Issues in Eclipse GlassFish 7"</a></p>
+<p><a href="#GSRLN00253">"Known Issues in Eclipse GlassFish 8"</a></p>
 </li>
 <li>
 <p><a href="#restrictions-and-deprecated-functionality">"Restrictions and Deprecated Functionality"</a></p>
 </li>
 <li>
-<p><a href="#documentation-errata">"Documentation Errata"</a></p>
-</li>
-<li>
 <p><a href="#features-available-only-in-the-full-platform">"Features Available Only in the Full Platform"</a></p>
 </li>
 <li>
-<p><a href="#java-ee-standards-support">"Jakarta EE Standards Support"</a></p>
+<p><a href="#jakarta-ee-support">"Jakarta EE Standards Support"</a></p>
+</li>
+<li>
+<p><a href="#microprofile-support">"MicroProfile Standards Support"</a></p>
+</li>
+<li>
+<p><a href="#extensions-support">"Extensions to the Standard APIs"</a></p>
 </li>
 <li>
 <p><a href="#how-to-report-problems-and-provide-feedback">"How to Report Problems and Provide Feedback"</a></p>
@@ -655,64 +612,79 @@ view the most up-to-date product information.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="revision-history"><a class="anchor" href="#revision-history"></a>Revision History</h3>
+<h3 id="whats-new-in-the-glassfish-server-release"><a class="anchor" href="#whats-new-in-the-glassfish-server-release"></a>What&#8217;s New in the Eclipse GlassFish 8 Release?</h3>
 <div class="paragraph">
-<p>This section lists the revision history for these Release Notes.</p>
-</div>
-<div id="gabzd" class="paragraph">
-<p>Table 1-1 Revision History</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Date</th>
-<th class="tableblock halign-left valign-top">Description of Changes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">September 2022</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse GlassFish 7.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="whats-new-in-the-glassfish-server-release"><a class="anchor" href="#whats-new-in-the-glassfish-server-release"></a>What&#8217;s New in the Eclipse GlassFish 7 Release?</h3>
-<div class="paragraph">
-<p>GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE 10
-introduces &#8230;&#8203; To Be Done</p>
+<p>Eclipse GlassFish 8 is a Compatible Implementation of the Jakarta EE 11 Platform.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 includes the following new and updated Jakarta EE standards.</p>
-</div>
-<div class="paragraph">
-<p>New Features</p>
+<p>Key new features in Eclipse GlassFish 8 include:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>To Be Done</p>
+<p>Support for both <a href="https://jakarta.ee/specifications/persistence/">Jakarta Persistence</a> entities and <a href="https://jakarta.ee/specifications/nosql/">Jakarta NoSQL</a> entities in <a href="application-development-guide.html#using-jakarta-data-repositories">Jakarta Data repositories</a></p>
+</li>
+<li>
+<p><a href="application-development-guide.html#microprofile-jwt-qualifier">@MicroProfileJwtAuthenticationMechanism CDI qualifier</a> for direct injection of the built-in MicroProfile JWT authentication mechanism (see <a href="application-development-guide.html#microprofile-jwt-integration">MicroProfile JWT Integration</a>)</p>
+</li>
+<li>
+<p>Enhanced virtual threads support with Java 21+ for improved concurrency performance</p>
+</li>
+<li>
+<p>Java 21+ minimum requirement with support up to JDK 25 (see <a href="#required-jdk-versions">Required JDK Versions</a>)</p>
+</li>
+<li>
+<p>MicroProfile APIs expanded to Web Profile and Embedded GlassFish (since Eclipse GlassFish 7.1.0) (see <a href="#microprofile-support">MicroProfile Standards Support</a>)</p>
+</li>
+<li>
+<p>Monitoring via JMX supported in Embedded Eclipse GlassFish</p>
+</li>
+<li>
+<p>Enhanced performance and stability improvements</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Updated</p>
+<p>Eclipse GlassFish 8 also supports the following features:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>To Be Done</p>
+<p><a href="https://microprofile.io/specifications/config/">MicroProfile Config</a>  API</p>
+</li>
+<li>
+<p><a href="https://microprofile.io/specifications/jwt/">MicroProfile JWT</a> API</p>
+</li>
+<li>
+<p><a href="https://microprofile.io/specifications/rest-client">MicroProfile REST Client</a> API (since Eclipse GlassFish 7.0.6)</p>
+</li>
+<li>
+<p><a href="https://microprofile.io/specifications/health">MicroProfile Health</a> API (since Eclipse GlassFish 7.1.0)</p>
+</li>
+<li>
+<p><a href="https://jakarta.ee/specifications/mvc/">Jakarta MVC</a> API updated to version 2.0</p>
+</li>
+<li>
+<p><a href="embedded-server-guide.html#running-from-command-line">Runnable Embedded GlassFish JAR</a> (since Eclipse GlassFish 7.0.18)</p>
+</li>
+<li>
+<p><a href="administration-guide.html#log-executed-admin-commands">Admin Command Logger</a> (since Eclipse GlassFish 7.0.16)</p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/glassfish/discussions/25343">SSH nodes on Windows</a> via the native Windows SSH service (since Eclipse GlassFish 7.0.23)</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For a complete list of the Jakarta EE technologies included in Eclipse GlassFish 7,
-see <a href="#java-ee-standards-support">Jakarta EE Standards Support</a>.</p>
+<p>For a complete list of the Jakarta EE technologies included in Eclipse GlassFish 8.0.0,
+see <a href="#jakarta-ee-support">Jakarta EE Standards Support</a>.</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of the MicroProfile technologies included in Eclipse GlassFish 8.0.0,
+see <a href="#microprofile-support">MicroProfile Standards Support</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about changes in Eclipse GlassFish 8 and all its minor and patch versions, check out the page about <a href="https://glassfish.org/download_gf8.html">all the Eclipse GlassFish 8 releases</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -722,31 +694,37 @@ see <a href="#java-ee-standards-support">Jakarta EE Standards Support</a>.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The main thrust of the Eclipse GlassFish 7 release
-is to provide an application server for developers to explore and begin
-exploiting the new and updated technologies in the Jakarta EE 10 platform.
-Thus, the following features of Eclipse GlassFish were not a focus of
-this release:</p>
+<p>While Eclipse GlassFish 8 milestone releases focused on providing an application server for developers to explore and begin
+exploiting the new and updated technologies in the Jakarta EE {jakartaee] platform, the final Eclipse GlassFish 8 version
+focuses on providing a stable and reliable platform for production use.</p>
+</div>
+<div class="paragraph">
+<p>The following features of Eclipse GlassFish were improved in the 8.0.0 version or later patch releases:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Clusters and centralized management of standalone instances</p>
+<p>Clusters and centralized management of instances</p>
 </li>
 <li>
 <p>High availability features</p>
 </li>
 <li>
-<p>Upgrade</p>
+<p>Startup time and deployment time</p>
 </li>
 <li>
-<p>Embedded Server</p>
+<p>Performance and memory usage</p>
+</li>
+<li>
+<p>Security</p>
+</li>
+<li>
+<p>Embedded GlassFish</p>
+</li>
+<li>
+<p>Stability and automated test coverage</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>These features are included in the release, but they may not function
-properly with some of the new features added in support of the Jakarta EE 10 platform.</p>
 </div>
 </td>
 </tr>
@@ -757,7 +735,7 @@ properly with some of the new features added in support of the Jakarta EE 10 pla
 <h3 id="hardware-and-software-requirements"><a class="anchor" href="#hardware-and-software-requirements"></a>Hardware and Software Requirements</h3>
 <div class="paragraph">
 <p>This section lists the requirements that must be met before installing
-Eclipse GlassFish Release 7 software.</p>
+Eclipse GlassFish Release 8 software.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -766,9 +744,6 @@ Eclipse GlassFish Release 7 software.</p>
 <ul>
 <li>
 <p><a href="#required-jdk-versions">Required JDK Versions</a></p>
-</li>
-<li>
-<p><a href="#required-disk-space">Required Disk Space</a></p>
 </li>
 <li>
 <p><a href="#required-free-ports">Required Free Ports</a></p>
@@ -784,7 +759,7 @@ Eclipse GlassFish Release 7 software.</p>
 <div class="sect3">
 <h4 id="required-jdk-versions"><a class="anchor" href="#required-jdk-versions"></a>Required JDK Versions</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish Release 7 requires Java 11 minimum and runs on JDK 11 to JDK 23.</p>
+<p>Eclipse GlassFish Release 8 requires Java 21 minimum and runs on JDK 21 to JDK 25, with experimental support for higher versions.</p>
 </div>
 <div class="paragraph">
 <p>Also be sure to see <a href="#paths-and-environment-settings-for-the-jdk-software">Paths and Environment Settings for the
@@ -807,39 +782,6 @@ DAS or server instance have a minimum of 1 GB RAM.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="required-disk-space"><a class="anchor" href="#required-disk-space"></a>Required Disk Space</h4>
-<div class="paragraph">
-<p>The download sizes for Eclipse GlassFish 7 vary depending on the
-package you choose. The following are the approximate sizes of the ZIP
-packages for the Full and Web profiles:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Full <code>*.zip</code>: 114 MB (136 MB unzipped)</p>
-</li>
-<li>
-<p>Web <code>*.zip</code>: 64.9 MB (82.9 MB unzipped)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The installation sizes will vary depending on your configuration, but
-the approximate amount of disk space used by Eclipse GlassFish 7 is as
-follows:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Full: 138 MB</p>
-</li>
-<li>
-<p>Web: 84.4 MB</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="required-free-ports"><a class="anchor" href="#required-free-ports"></a>Required Free Ports</h4>
 <div class="paragraph">
 <p>You must have sixteen unused ports available for the ports Eclipse GlassFish uses. The installation program automatically detects ports that
@@ -850,7 +792,7 @@ assigns a randomly selected port number from the dynamic port range. The
 selected port number might not be the next available port number.</p>
 </div>
 <div class="paragraph">
-<p>Table 1-2 Default Port Assignments for Eclipse GlassFish 7</p>
+<p>Table 1-2 Default Port Assignments for Eclipse GlassFish 8</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1029,9 +971,8 @@ configuration, as this has not been tested.</p>
 <div class="sect3">
 <h4 id="message-queue-broker-requirements"><a class="anchor" href="#message-queue-broker-requirements"></a>Message Queue Broker Requirements</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is now bundled with Message Queue (MQ) Broker
-5.1.1. Refer to the
-<a href="https://github.com/eclipse-ee4j/glassfishdoc/5.1/mq-release-notes.pdf"><code>Open Message Queue Release Notes</code></a>
+<p>Eclipse GlassFish 8 is bundled with Eclipse OpenMQ 6.7.0.
+Refer to the {mq.docs.url}[Eclipse OpenMQ documentation]
 for complete information about MQ Broker requirements.</p>
 </div>
 </div>
@@ -1132,10 +1073,10 @@ property in the in the as-install<code>/config/asenv.conf</code> file.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="known-issues-in-eclipse-glassfish-7"><a class="anchor" href="#known-issues-in-eclipse-glassfish-7"></a>Known Issues in Eclipse GlassFish 7</h3>
+<h3 id="known-issues-in-eclipse-glassfish-8"><a class="anchor" href="#known-issues-in-eclipse-glassfish-8"></a>Known Issues in Eclipse GlassFish 8</h3>
 <div class="paragraph">
 <p>This section describes known issues and any available workarounds for
-Eclipse GlassFish 7 software.</p>
+Eclipse GlassFish 8 software.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -1173,8 +1114,8 @@ the jars are packaged in GlassFish.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>These jars are present only in the full profile of GlassFish and
-not part of web profile.</p>
+<p>These jars are present only in the Full Platform distribution of GlassFish and
+not part of the Web Profile distribution.</p>
 </div>
 </td>
 </tr>
@@ -1194,7 +1135,7 @@ not part of web profile.</p>
 <h5 id="description-2"><a class="anchor" href="#description-2"></a>Description</h5>
 <div class="paragraph">
 <p>A new JVM option for deployment - deployment.resource.validation is
-introduced in Eclipse GlassFish 7. This property is set to True by
+introduced in Eclipse GlassFish 8. This property is set to True by
 default so that each resource is validated during deployment time. This
 ensures that all resources are created beforehand. This property is
 applicable for administration server as well as instances when clusters
@@ -1251,7 +1192,7 @@ been removed from the Eclipse GlassFish installation.</p>
 <div class="sect4">
 <h5 id="description-4"><a class="anchor" href="#description-4"></a>Description</h5>
 <div class="paragraph">
-<p>In the previous releases, Java DB was used as the database for Eclipse GlassFishs. With the release of Eclipse GlassFish 7, Apache Derby
+<p>In the previous releases, Java DB was used as the database for Eclipse GlassFishs. With the release of Eclipse GlassFish 8, Apache Derby
 10.13.1.1 has replaced Java DB as the database for Eclipse GlassFishs.</p>
 </div>
 </div>
@@ -1267,7 +1208,7 @@ been removed from the Eclipse GlassFish installation.</p>
 <h3 id="restrictions-and-deprecated-functionality"><a class="anchor" href="#restrictions-and-deprecated-functionality"></a>Restrictions and Deprecated Functionality</h3>
 <div class="paragraph">
 <p>This section describes restrictions and deprecated functionality in
-Eclipse GlassFish 7.</p>
+Eclipse GlassFish 8.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -1284,9 +1225,6 @@ Eclipse GlassFish 7.</p>
 <p><a href="#applications-that-use-apache-derby">Applications That Use Apache Derby</a></p>
 </li>
 <li>
-<p><a href="#no-support-for-client-vm-on-windows-amd64">No Support for Client VM on Windows AMD64</a></p>
-</li>
-<li>
 <p><a href="#metro-reliable-messaging-in-inorder-delivery-mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></p>
 </li>
 </ul>
@@ -1294,7 +1232,7 @@ Eclipse GlassFish 7.</p>
 <div class="sect3">
 <h4 id="asadmin-subcommands"><a class="anchor" href="#asadmin-subcommands"></a><code>asadmin</code> Subcommands</h4>
 <div class="paragraph">
-<p>In Eclipse GlassFish 7, it is recommended that utility options of the
+<p>In Eclipse GlassFish 8, it is recommended that utility options of the
 <code>asadmin</code> command precede the subcommand. Utility options are options
 that control the behavior of the <code>asadmin</code> utility, as distinguished
 from subcommand options. Use of the following options after the
@@ -1499,11 +1437,11 @@ option is still valid in other subcommands such as <code>create-domain</code>,
 <div class="sect3">
 <h4 id="applications-that-use-apache-derby"><a class="anchor" href="#applications-that-use-apache-derby"></a>Applications That Use Apache Derby</h4>
 <div class="paragraph">
-<p>The directory location of Apache Derby in Eclipse GlassFish 7 has
+<p>The directory location of Apache Derby in Eclipse GlassFish 8 has
 changed from its location in previous installations. Suppose that you
 have deployed applications that use Apache Derby databases in your
 previous server installation, and you upgrade your existing installation
-to Eclipse GlassFish 7. If you run the <code>asadmin start-database</code> command
+to Eclipse GlassFish 8. If you run the <code>asadmin start-database</code> command
 and successfully start Apache Derby, you could run into problems while
 trying to run applications that were deployed on your previous server
 installation.</p>
@@ -1529,27 +1467,16 @@ Derby. For example:</p>
 </div>
 </li>
 <li>
-<p>After upgrade, start Eclipse GlassFish 7.</p>
+<p>After upgrade, start Eclipse GlassFish 8.</p>
 </li>
 </ol>
-</div>
-</div>
-<div class="sect3">
-<h4 id="no-support-for-client-vm-on-windows-amd64"><a class="anchor" href="#no-support-for-client-vm-on-windows-amd64"></a>No Support for Client VM on Windows AMD64</h4>
-<div class="paragraph">
-<p>By default, the Eclipse GlassFish DAS uses the Client VM to achieve best
-startup and deployment performance. If you are using Windows AMD64, edit
-the <code>domain.xml</code> file to remove the line
-<code>&lt;jvm-options&gt;-client&lt;jvm-options&gt;</code>. In this case, JVM ergonomics
-chooses the appropriate kind of VM for the given platform. Note that
-server instances use the Server VM by default.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="metro-reliable-messaging-in-inorder-delivery-mode"><a class="anchor" href="#metro-reliable-messaging-in-inorder-delivery-mode"></a>Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</h4>
 <div class="paragraph">
 <p>The Metro Reliable Messaging in <code>InOrder</code> Delivery mode has not been
-tested for high availability in Eclipse GlassFish 7. The feature may
+tested for high availability in Eclipse GlassFish 8. The feature may
 work, but it has not been formally tested and is therefore not a
 supported feature.</p>
 </div>
@@ -1557,7 +1484,7 @@ supported feature.</p>
 <div class="sect3">
 <h4 id="no-support-for-kerberos-on-aix"><a class="anchor" href="#no-support-for-kerberos-on-aix"></a>No Support for Kerberos on AIX</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 does not support Kerberos on the AIX platform.</p>
+<p>Eclipse GlassFish 8 does not support Kerberos on the AIX platform.</p>
 </div>
 <div class="paragraph">
 <p>For the complete report about this issue, see
@@ -1566,44 +1493,9 @@ supported feature.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="documentation-errata"><a class="anchor" href="#documentation-errata"></a>Documentation Errata</h3>
-<div class="paragraph">
-<p>This section describes documentation errata.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#upgrading-to-oracle-glassfish-server-is-not-necessary">Upgrading to Eclipse GlassFish Is Not Necessary</a></p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="upgrading-to-oracle-glassfish-server-is-not-necessary"><a class="anchor" href="#upgrading-to-oracle-glassfish-server-is-not-necessary"></a>Upgrading to Eclipse GlassFish Is Not Necessary</h4>
-<div class="paragraph">
-<p>The Eclipse GlassFish Administration Guide discusses
-upgrading Eclipse GlassFish to Eclipse GlassFish. Eclipse GlassFish 4.x is only an open source release, so this
-upgrade is not necessary.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Upgrading may not work for Eclipse GlassFish 7</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="features-available-only-in-the-full-platform"><a class="anchor" href="#features-available-only-in-the-full-platform"></a>Features Available Only in the Full Platform</h3>
 <div class="paragraph">
-<p>The following features of Eclipse GlassFish 7 are available only in the
+<p>The following features of Eclipse GlassFish 8 are available only in the
 Full Platform:</p>
 </div>
 <div class="ulist">
@@ -1645,16 +1537,23 @@ related to web services are ignored.</p>
 <p>Connector modules that use only outbound communication features and
 work-management that does not involve inbound communication features are
 supported in the Web Profile. Other connector features are supported
-only in the Eclipse GlassFish 7 full platform.</p>
+only in the Eclipse GlassFish 8 full platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="java-ee-standards-support"><a class="anchor" href="#java-ee-standards-support"></a>Jakarta EE Standards Support</h3>
+<h3 id="jakarta-ee-support"><a class="anchor" href="#jakarta-ee-support"></a>Jakarta EE Standards Support<a id="java-ee-standards-support"></a></h3>
 <div class="paragraph">
 <p><a href="#gjxcp">Table 1-4</a> lists the Jakarta EE standards implemented in
-Eclipse GlassFish 7. The table also indicates the distributions in
+Eclipse GlassFish 8. The table also indicates the distributions in
 which the implementation of a standard is available.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="ulist">
 <ul>
 <li>
@@ -1666,8 +1565,12 @@ distribution.</p>
 </li>
 </ul>
 </div>
+</td>
+</tr>
+</table>
+</div>
 <div id="gjxcp" class="paragraph">
-<p>Table 1-4 Jakarta EE Standards Implementations in Eclipse GlassFish 7</p>
+<p>Table 1-4 Jakarta EE Standards Implementations in Eclipse GlassFish 8.0.0</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1680,74 +1583,86 @@ distribution.</p>
 <tr>
 <th class="tableblock halign-left valign-top">Jakarta EE Standard</th>
 <th class="tableblock halign-left valign-top">Version</th>
-<th class="tableblock halign-left valign-top">Eclipse GlassFish 7 Full Platform</th>
-<th class="tableblock halign-left valign-top">Eclipse GlassFish 7 Web Profile</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 8.0.0 Full Platform</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 8.0.0 Web Profile</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/platform/10/">Jakarta EE Specification</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/data/">Jakarta Data</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/nosql/">Jakarta NoSQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/activation/">Activation</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/security/">Security</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/batch/">Batch</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/concurrency/">Concurrency</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/jsonp/">JSON Processing</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/jsonb/">JSON Binding</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/websocket/">WebSocket</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.2.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/websocket/">Servlet</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/pages/">Server Pages</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/expression-language/">Expression Language</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
@@ -1759,91 +1674,91 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/tags/">Standard Tag Library</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/mvc/">MVC</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/faces/">JavaServer Faces</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/faces/">Java Server Faces</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.1.2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/annotations/">Annotations</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/transactions/">Transactions</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/persistence/">Persistence</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/managedbeans/">Managed Beans</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/interceptors/">Interceptors</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.2.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/dependency-injection/">Dependency Injection</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.1.MR</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/cdi/">Contexts and Dependency Injection</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/persistence/">Enterprise Beans</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/restful-ws/">RESTful Web Services</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/bean-validation/">Bean Validation</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/connectors/">Connectors</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X<sup>*</sup></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-web-services/">XML Web Services</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1855,7 +1770,7 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/xml-binding/">XML Binding</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.6</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1873,25 +1788,25 @@ distribution.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/messaging/">Messaging</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/mail/">Mail</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/authentication/">Authentication</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://jakarta.ee/specifications/authorization/">Authorization</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1924,46 +1839,299 @@ distribution.</p>
 <div class="paragraph">
 <p><sup>*</sup> Standalone Connector 1.7 Container only.</p>
 </div>
-<div class="paragraph">
-<p>Building on these standards, Eclipse GlassFish 7 provides a number of
-extensions, including the following:</p>
 </div>
+<div class="sect2">
+<h3 id="microprofile-support"><a class="anchor" href="#microprofile-support"></a>MicroProfile Standards Support</h3>
+<div class="paragraph">
+<p><a href="#microprofile-table">Table 1-5</a> lists the MicroProfile standards implemented in Eclipse GlassFish 8.0.0. The table also indicates the distributions in which the implementation of a standard is available.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Ajax (asynchronous JavaScript and XML): Retrieves and displays new
-data for a portion of a web page without affecting the rest of the page.</p>
+<p>X indicates that the implementation is available in the distribution.</p>
 </li>
 <li>
-<p>Metro: A web services stack that implements Java Architecture for XML
-Binding (JAXB) and Java APIs for XML Web Services 2.3 (JAX-WS 2.3).</p>
-</li>
-<li>
-<p>Grizzly: A framework for building scalable and robust servers using
-New I/O (NIO) APIs, which make scaling to thousands of users possible.
-The ability to embed components that support HTTP, Bayeux Protocol, Java
-Servlet API, and Comet is provided.</p>
+<p>- indicates that the implementation is not available in the distribution.</p>
 </li>
 </ul>
 </div>
+</td>
+</tr>
+</table>
+</div>
+<div id="microprofile-table" class="paragraph">
+<p>Table 1-5 MicroProfile Standards Implementations in Eclipse GlassFish 8.0.0</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 48.9795%;">
+<col style="width: 10.204%;">
+<col style="width: 10.204%;">
+<col style="width: 10.204%;">
+<col style="width: 10.204%;">
+<col style="width: 10.2045%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">MicroProfile Standard</th>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 8.0.0 Full Platform</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 8.0.0 Web Profile</th>
+<th class="tableblock halign-left valign-top">Embedded Eclipse GlassFish 8.0.0 All</th>
+<th class="tableblock halign-left valign-top">Embedded Eclipse GlassFish 8.0.0 Web</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/config/">MicroProfile Config</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/jwt/">MicroProfile JWT Authentication</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/rest-client/">MicroProfile REST Client</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://microprofile.io/specifications/health/">MicroProfile Health</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="extensions-support"><a class="anchor" href="#extensions-support"></a>Extensions to the Standard APIs</h3>
+<div class="paragraph">
+<p>Building on the Jakarta EE and MicroProfile standards, Eclipse GlassFish 8.0.0 provides a number of components and extensions, including the following:</p>
+</div>
+<div class="paragraph">
+<p>Table 1-6 Components and extensions provided by Eclipse GlassFish 8.0.0</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">APIs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Angus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Mail 2.1.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides email services.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Epicyro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Authentication 3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low-level SPI for authentication mechanisms.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Exousia</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Authorization 3.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low-level SPI for authorization modules.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Jersey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta RESTful Web Services 4.0.0, MicroProfile REST Client 4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Framework for RESTful web services and clients.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse JNoSQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1.12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Data 1.0.1, Jakarta NoSQL 1.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Support for NoSQL databases and Jakarta Data APIs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Krazo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta MVC 3.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MVC framework for web applications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Metro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JAXB, Jakarta XML Web Services 4.0.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web services stack.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Mojarra</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.1.6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Faces 4.1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Faces implementation with Mojarra extensions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse OpenMQ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Messaging 3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Highly available messaging broker.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Parsson</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1.7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta JSON Processing 2.1.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Processing implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Soteria</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Security 4.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication and authorization services.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Tyrus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta WebSocket 2.2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WebSocket endpoints framework.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Yasson</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta JSON Binding 3.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Binding implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse WaSP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Pages 4.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pages implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EclipseLink</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0.0-B13</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Persistence 3.2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Persistence implementation with extensions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FasterXML Jackson</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.21.0</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alternative JSON processing and binding implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GlassFish Concurro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{concurrent-version}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Concurrency 3.1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Concurrency utilities.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GlassFish Grizzly</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0.0</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scalable server framework supporting HTTP, Bayeux, Servlet API, Comet.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GlassFish HK2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0-M3</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dependency injection framework.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GlassFish Shoal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clustering framework for high availability.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Helidon Config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.3.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MicroProfile Config 3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration framework for applications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hibernate Validator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.1.0.Final</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Validation 3.1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validation implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nimbus JOSE JWT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.7</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Handling JSON Web Tokens (JWT) and JSON Object Signing and Encryption (JOSE).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OmniFaces MicroProfile JWT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MicroProfile JWT Authentication 2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT authentication for REST endpoints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Weld</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0.4.Final</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Contexts and Dependency Injection 4.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CDI implementation.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="how-to-report-problems-and-provide-feedback"><a class="anchor" href="#how-to-report-problems-and-provide-feedback"></a>How to Report Problems and Provide Feedback</h3>
 <div class="paragraph">
-<p>If you have problems with Eclipse GlassFish 7, provide feedback through
+<p>If you have problems with Eclipse GlassFish 8, provide feedback through
 one of the following mechanisms:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://javaee.groups.io/g/glassfish">Eclipse GlassFish forum</a>
-(<code><a href="https://javaee.groups.io/g/glassfish" class="bare">https://javaee.groups.io/g/glassfish</a></code>) — A variety of Eclipse GlassFish
-community for various interests and feedback</p>
+<p><a href="https://glassfish.org/CONTRIBUTING.html">Eclipse GlassFish Community</a>
+(<code><a href="https://glassfish.org/CONTRIBUTING.html" class="bare">https://glassfish.org/CONTRIBUTING.html</a></code>) — A variety of Eclipse GlassFish
+community channels for various interests and feedback</p>
 </li>
 <li>
-<p><a href="https://github.com/javaee/glassfish/issues">GlassFish Issue track</a>er
-(<code><a href="https://github.com/javaee/glassfish/issues" class="bare">https://github.com/javaee/glassfish/issues</a></code>) — Eclipse GlassFish
+<p><a href="https://accounts.eclipse.org/mailing-list/glassfish-dev">Eclipse GlassFish Mailing List</a>
+(<code><a href="https://accounts.eclipse.org/mailing-list/glassfish-dev" class="bare">https://accounts.eclipse.org/mailing-list/glassfish-dev</a></code>) — Subscribe to the Eclipse GlassFish Developer Mailing List <code>glassfish-dev</code></p>
+</li>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/glassfish/issues">GlassFish Issue tracker</a>
+(<code><a href="https://github.com/eclipse-ee4j/glassfish/issues" class="bare">https://github.com/eclipse-ee4j/glassfish/issues</a></code>) — Eclipse GlassFish
 project dashboards and issue tracking database</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If using Eclipse GlassFish in production, it&#8217;s strongly recommended contacting companies that specialize on professional support for it. These companies are listed at:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://glassfish.org/support.html">Professional Services and Support for Eclipse GlassFish</a> (<code><a href="https://glassfish.org/support.html" class="bare">https://glassfish.org/support.html</a></code>)</p>
 </li>
 </ul>
 </div>
@@ -1976,8 +2144,16 @@ project dashboards and issue tracking database</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/eclipse-ee4j/glassfish">Eclipse GlassFish Community</a>
-(<code><a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a></code>)</p>
+<p><a href="https://glassfish.org/CONTRIBUTING.html">Eclipse GlassFish Community</a>
+(<code><a href="https://glassfish.org/CONTRIBUTING.html" class="bare">https://glassfish.org/CONTRIBUTING.html</a></code>)</p>
+</li>
+<li>
+<p><a href="https://glassfish.org">Eclipse GlassFish page</a>
+(<code><a href="https://glassfish.org" class="bare">https://glassfish.org</a></code>)</p>
+</li>
+<li>
+<p><a href="https://projects.eclipse.org/projects/ee4j.glassfish">Eclipse GlassFish project page</a>
+(<code><a href="https://projects.eclipse.org/projects/ee4j.glassfish" class="bare">https://projects.eclipse.org/projects/ee4j.glassfish</a></code>)</p>
 </li>
 </ul>
 </div>
@@ -1987,7 +2163,7 @@ project dashboards and issue tracking database</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-27 15:23:48 UTC
+Last updated 2026-02-04 18:20:18 UTC
 </div>
 </div>
 </body>

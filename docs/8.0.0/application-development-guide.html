@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Application Development Guide, Release 7</title>
+<title>Eclipse GlassFish Application Development Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Application Development Guide, Release 7</h1>
+<h1>Eclipse GlassFish Application Development Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -91,7 +91,11 @@
 <li><a href="#developing-applications-and-application-components">7. Developing Applications and Application Components</a></li>
 <li><a href="#api-for-dev">8. API for development</a>
 <ul class="sectlevel2">
-<li><a href="#glassfish-api">GlassFish API</a></li>
+<li><a href="#glassfish-api">GlassFish API</a>
+<ul class="sectlevel3">
+<li><a href="#microprofile-jwt-integration">MicroProfile JWT Integration</a></li>
+</ul>
+</li>
 <li><a href="#glassfish-ee-api">GlassFish EE API</a></li>
 <li><a href="#simple-glassfish-api">Simple GlassFish API</a></li>
 </ul>
@@ -194,7 +198,91 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-web-applications">12. Developing Web Applications</a>
+<li><a href="#using-jakarta-data-repositories">12. Using Jakarta Data Repositories</a>
+<ul class="sectlevel2">
+<li><a href="#overview-of-jakarta-data">Overview of Jakarta Data</a></li>
+<li><a href="#choosing-between-jpa-and-nosql">Choosing Between JPA and NoSQL</a></li>
+<li><a href="#basic-repository-example">Basic Repository Example</a>
+<ul class="sectlevel3">
+<li><a href="#jpa-entity-example">JPA Entity Example</a></li>
+<li><a href="#repository-interface-recommended-approach">Repository Interface (Recommended Approach)</a></li>
+</ul>
+</li>
+<li><a href="#defining-repository-interfaces">Defining Repository Interfaces</a></li>
+<li><a href="#query-methods">Query Methods</a>
+<ul class="sectlevel3">
+<li><a href="#supported-query-annotations">Supported Query Annotations</a></li>
+<li><a href="#parameter-annotations">Parameter Annotations</a></li>
+<li><a href="#annotated-query-examples">Annotated Query Examples</a></li>
+</ul>
+</li>
+<li><a href="#custom-queries">Custom Queries</a>
+<ul class="sectlevel3">
+<li><a href="#jdql-vs-jpql">JDQL vs JPQL</a></li>
+<li><a href="#custom-query-examples">Custom Query Examples</a></li>
+</ul>
+</li>
+<li><a href="#method-name-based-queries">Method Name-Based Queries (Deprecated)</a>
+<ul class="sectlevel3">
+<li><a href="#supported-keywords">Supported Keywords</a></li>
+<li><a href="#property-expressions">Property Expressions</a></li>
+<li><a href="#method-name-examples">Method Name-Based Query Examples</a></li>
+<li><a href="#nested-property-access">Nested Property Access</a></li>
+</ul>
+</li>
+<li><a href="#pagination-and-sorting">Pagination and Sorting</a>
+<ul class="sectlevel3">
+<li><a href="#using-pageable">Using Pageable</a></li>
+<li><a href="#usage-example">Usage Example</a></li>
+</ul>
+</li>
+<li><a href="#configuring-jpa-data-repositories">Configuring JPA Data Repositories</a>
+<ul class="sectlevel3">
+<li><a href="#adding-jpa-dependencies">Adding Dependencies</a></li>
+<li><a href="#jpa-persistence-unit-configuration">Jakarta Persistence Configuration</a></li>
+<li><a href="#custom-jpa-data-source">Custom Data Source Configuration (Recommended)</a></li>
+<li><a href="#jpa-entitymanager-integration">EntityManager Integration</a></li>
+<li><a href="#jpa-entitymanager-configuration">EntityManager Configuration Options</a></li>
+<li><a href="#mixing-repositories-and-entitymanager">Mixing Repository and EntityManager Operations</a></li>
+</ul>
+</li>
+<li><a href="#configuring-nosql-data-repositories">Configuring NoSQL Data Repositories</a>
+<ul class="sectlevel3">
+<li><a href="#adding-nosql-dependencies">Adding Dependencies</a></li>
+<li><a href="#nosql-database-categories">NoSQL Database Categories</a></li>
+<li><a href="#nosql-entity-definition">NoSQL Entity Definition</a></li>
+<li><a href="#nosql-entity-examples">NoSQL Entity Examples</a></li>
+<li><a href="#nosql-repository-usage">Repository Usage with NoSQL Entities</a></li>
+<li><a href="#nosql-database-configuration">Database Configuration</a></li>
+<li><a href="#adding-nosql-database-dependencies">Adding NoSQL Database Dependencies</a></li>
+<li><a href="#supported-nosql-databases">Supported NoSQL Databases</a></li>
+<li><a href="#programmatic-nosql-configuration">Programmatic Configuration</a></li>
+</ul>
+</li>
+<li><a href="#transaction-management">Transaction Management</a>
+<ul class="sectlevel3">
+<li><a href="#declarative-transactions">Declarative Transactions</a></li>
+<li><a href="#custom-transaction-behavior">Custom Transaction Behavior</a></li>
+</ul>
+</li>
+<li><a href="#jakarta-validation-support">Jakarta Validation Support</a>
+<ul class="sectlevel3">
+<li><a href="#parameter-validation">Parameter Validation</a></li>
+<li><a href="#handling-validation-errors">Handling Validation Errors</a></li>
+</ul>
+</li>
+<li><a href="#limitations-and-considerations">Limitations and Considerations</a>
+<ul class="sectlevel3">
+<li><a href="#general-limitations">General Limitations</a></li>
+<li><a href="#mixed-jpa-and-nosql-entity-usage">Mixed JPA and NoSQL Entity Usage</a></li>
+<li><a href="#jpa-specific-considerations">JPA Entity Considerations</a></li>
+<li><a href="#nosql-specific-limitations">NoSQL Entity Limitations</a></li>
+<li><a href="#troubleshooting">Common Issues and Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#developing-web-applications">13. Developing Web Applications</a>
 <ul class="sectlevel2">
 <li><a href="#using-servlets">Using Servlets</a>
 <ul class="sectlevel3">
@@ -241,7 +329,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-enterprise-javabeans-technology">13. Using Enterprise JavaBeans Technology</a>
+<li><a href="#using-enterprise-javabeans-technology">14. Using Enterprise JavaBeans Technology</a>
 <ul class="sectlevel2">
 <li><a href="#value-added-features">Value Added Features</a>
 <ul class="sectlevel3">
@@ -280,7 +368,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-container-managed-persistence">14. Using Container-Managed Persistence</a>
+<li><a href="#using-container-managed-persistence">15. Using Container-Managed Persistence</a>
 <ul class="sectlevel2">
 <li><a href="#glassfish-server-support-for-cmp">Eclipse GlassFish Support for CMP</a></li>
 <li><a href="#cmp-mapping">CMP Mapping</a>
@@ -336,7 +424,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-java-clients">15. Developing Java Clients</a>
+<li><a href="#developing-java-clients">16. Developing Java Clients</a>
 <ul class="sectlevel2">
 <li><a href="#introducing-the-application-client-container">Introducing the Application Client Container</a>
 <ul class="sectlevel3">
@@ -372,7 +460,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#developing-connectors">16. Developing Connectors</a>
+<li><a href="#developing-connectors">17. Developing Connectors</a>
 <ul class="sectlevel2">
 <li><a href="#connector-support-in-the-glassfish-server">Connector Support in the Eclipse GlassFish</a>
 <ul class="sectlevel3">
@@ -401,7 +489,7 @@
 <li><a href="#configuring-a-message-driven-bean-to-use-a-resource-adapter">Configuring a Message Driven Bean to Use a Resource Adapter</a></li>
 </ul>
 </li>
-<li><a href="#developing-lifecycle-listeners">17. Developing Lifecycle Listeners</a>
+<li><a href="#developing-lifecycle-listeners">18. Developing Lifecycle Listeners</a>
 <ul class="sectlevel2">
 <li><a href="#server-life-cycle-events">Server Life Cycle Events</a></li>
 <li><a href="#the-lifecyclelistener-interface">The LifecycleListener Interface</a></li>
@@ -411,7 +499,7 @@
 <li><a href="#considerations-for-lifecycle-modules">Considerations for Lifecycle Modules</a></li>
 </ul>
 </li>
-<li><a href="#developing-osgi-enabled-java-ee-applications">18. Developing OSGi-enabled Jakarta EE Applications</a>
+<li><a href="#developing-osgi-enabled-java-ee-applications">19. Developing OSGi-enabled Jakarta EE Applications</a>
 <ul class="sectlevel2">
 <li><a href="#overview-of-osgi-application-and-glassfish-server">Overview of OSGi Application and Eclipse GlassFish</a>
 <ul class="sectlevel3">
@@ -429,8 +517,8 @@
 </ul>
 </li>
 <li><a href="#part-iii">Part III</a></li>
-<li><a href="#using-services-and-apis">19. Using Services and APIs</a></li>
-<li><a href="#using-the-jdbc-api-for-database-access">20. Using the JDBC API for Database Access</a>
+<li><a href="#using-services-and-apis">20. Using Services and APIs</a></li>
+<li><a href="#using-the-jdbc-api-for-database-access">21. Using the JDBC API for Database Access</a>
 <ul class="sectlevel2">
 <li><a href="#statements">Statements</a>
 <ul class="sectlevel3">
@@ -468,7 +556,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-the-transaction-service">21. Using the Transaction Service</a>
+<li><a href="#using-the-transaction-service">22. Using the Transaction Service</a>
 <ul class="sectlevel2">
 <li><a href="#handling-transactions-with-databases">Handling Transactions with Databases</a>
 <ul class="sectlevel3">
@@ -493,7 +581,7 @@
 <li><a href="#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction">The Transaction Manager, the Transaction Synchronization Registry, and <code>UserTransaction</code></a></li>
 </ul>
 </li>
-<li><a href="#using-the-java-naming-and-directory-interface">22. Using the Java Naming and Directory Interface</a>
+<li><a href="#using-the-java-naming-and-directory-interface">23. Using the Java Naming and Directory Interface</a>
 <ul class="sectlevel2">
 <li><a href="#accessing-the-naming-context">Accessing the Naming Context</a>
 <ul class="sectlevel3">
@@ -517,7 +605,7 @@
 <li><a href="#mapping-references">Mapping References</a></li>
 </ul>
 </li>
-<li><a href="#using-the-java-message-service">23. Using the Java Message Service</a>
+<li><a href="#using-the-java-message-service">24. Using the Java Message Service</a>
 <ul class="sectlevel2">
 <li><a href="#using-application-scoped-jms-resources">Using Application-Scoped JMS Resources</a></li>
 <li><a href="#load-balanced-message-inflow">Load-Balanced Message Inflow</a></li>
@@ -530,7 +618,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#using-the-jakarta-mail-api">24. Using the Jakarta Mail API</a>
+<li><a href="#using-the-jakarta-mail-api">25. Using the Jakarta Mail API</a>
 <ul class="sectlevel2">
 <li><a href="#introducing-jakarta-mail">Introducing Jakarta Mail</a></li>
 <li><a href="#creating-a-jakarta-mail-session">Creating a Jakarta Mail Session</a></li>
@@ -556,10 +644,10 @@
 <p>Application Development Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>Contributed 2018 - 2024</p>
+<p>Contributed 2018 - 2026</p>
 </div>
 <div class="paragraph">
 <p>This Application Development Guide describes how to create and run Java
@@ -573,10 +661,14 @@ applications using Oracle servers and software.</p>
 <hr>
 <div class="paragraph">
 <p>Eclipse GlassFish Application Development Guide,
-Release 7</p>
+Release 8</p>
 </div>
 <div class="paragraph">
-<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2019,2026 Contributors to the Eclipse Foundation.
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
 <p>This program and the accompanying materials are made available under the
@@ -643,7 +735,7 @@ and deploy Jakarta EE applications using Eclipse GlassFishs.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -827,7 +919,7 @@ based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.</p>
 </li>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/">The Jakarta EE Tutorial</a>.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.</p>
 </li>
@@ -844,7 +936,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -1010,13 +1102,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -1031,13 +1123,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -1981,12 +2073,12 @@ For example, for UNIX systems:</p>
 <ul>
 <li>
 <p>Java Platform Debugger Architecture - The Java Debugger:
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/architecture.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/architecture.html</a></code>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a></code></p>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/specs/jpda/architecture.html" class="bare">https://docs.oracle.com/en/java/javase/21/docs/specs/jpda/architecture.html</a></code>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/21/docs/specs/jpda/jpda.html</a></code></p>
 </li>
 <li>
 <p>Java Platform Debugger Architecture - Connecting with JDB:
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html</a></code></p>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/specs/man/jdb.html" class="bare">https://docs.oracle.com/en/java/javase/21/docs/specs/man/jdb.html</a></code></p>
 </li>
 </ul>
 </div>
@@ -2570,6 +2662,80 @@ After you have created the JPL file, use this an input to <code>JPROBE_ARGS_0</c
 <div class="paragraph">
 <p>This will already add <code>scattered-archive-api.jar</code> as a transitive dependency.</p>
 </div>
+<div class="sect3">
+<h4 id="microprofile-jwt-integration"><a class="anchor" href="#microprofile-jwt-integration"></a>MicroProfile JWT Integration</h4>
+<div class="paragraph">
+<p>The GlassFish API includes CDI qualifiers for integrating with built-in security mechanisms.</p>
+</div>
+<div class="sect4">
+<h5 id="microprofile-jwt-qualifier"><a class="anchor" href="#microprofile-jwt-qualifier"></a>@MicroProfileJwtAuthenticationMechanism Qualifier</h5>
+<div class="paragraph">
+<p>The <code>@MicroProfileJwtAuthenticationMechanism</code> qualifier allows direct injection of the GlassFish built-in MicroProfile JWT authentication mechanism:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="keyword">import</span> <span class="include">jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism</span>;
+<span class="keyword">import</span> <span class="include">org.glassfish.api.security.jwt.MicroProfileJwtAuthenticationMechanism</span>;
+
+<span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SecurityService</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="annotation">@MicroProfileJwtAuthenticationMechanism</span>
+    <span class="directive">private</span> HttpAuthenticationMechanism jwtAuthMechanism;
+
+    <span class="comment">// Use the JWT authentication mechanism directly</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This qualifier provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Direct Access</strong>: Direct access to the GlassFish JWT authentication mechanism</p>
+</li>
+<li>
+<p><strong>CDI Integration</strong>: Seamless integration with CDI dependency injection</p>
+</li>
+<li>
+<p><strong>Type Safety</strong>: Uses the standard <code>HttpAuthenticationMechanism</code> interface</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>@MicroProfileJwtAuthenticationMechanism</code> qualifier is complementary to the qualifiers for the standard Jakarta Security mechanisms like the Basic authentication mechanism. It can be combined with the other standard mechanisms in the same <code>HttpAuthenticationMechanismHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>@ApplicationScoped
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION)
+public class CustomAuthenticationHandler implements HttpAuthenticationMechanismHandler {
+
+    @Inject
+    @MicroProfileJwtAuthenticationMechanism
+    HttpAuthenticationMechanism jwtAuthentication;
+
+    @Inject
+    @BasicAuthenticationMechanismDefinition.BasicAuthenticationMechanism
+    HttpAuthenticationMechanism basicAuthentication;
+
+    @Override
+    public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext messageContext) throws AuthenticationException {
+        // delegate to one of the two mechanisms
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="glassfish-ee-api"><a class="anchor" href="#glassfish-ee-api"></a>GlassFish EE API</h3>
@@ -2627,7 +2793,7 @@ Security Guide</a>.</p>
 </div>
 <div class="paragraph">
 <p>For general information about Jakarta EE security, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2">Security</a>
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html">Security</a>
 in The Jakarta EE Tutorial.</p>
 </div>
 <div class="paragraph">
@@ -2744,7 +2910,7 @@ Containers as included in the Jakarta EE specification and defined by
 </li>
 <li>
 <p>Support for Web Services Interoperability Technologies (WSIT) as described in
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services-interoperability-and-jakarta-xml-web-services">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/websvcs/xml-websvcs/xml-websvcs.html">
 Jakarta EE Tutorial</a>.</p>
 </li>
 <li>
@@ -2899,7 +3065,7 @@ EE specification.</p>
 </div>
 <div class="paragraph">
 <p>For more information about programmatic security, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-programmatic-security-with-web-applications">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/#using-programmatic-security-with-web-applications">
 Using Programmatic Security</a> in the The Jakarta EE Tutorial.</p>
 </div>
 </div>
@@ -3177,7 +3343,7 @@ available at <code><a href="https://jakarta.ee/specifications/authentication/" c
 <div class="paragraph">
 <p>For general information about realms and login modules, see the section
 about working with realms, users, groups, and roles in
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html">
 Introduction to Security in the Jakarta EE Platform</a>
 in The Jakarta EE Tutorial.</p>
 </div>
@@ -3964,12 +4130,12 @@ manager factory, the EJB container sets this JVM option for you.</p>
 </div>
 <div class="paragraph">
 <p>You must grant additional permissions to CDI-enabled Jakarta EE
-applications that are deployed in a Eclipse GlassFish 7 domain or
+applications that are deployed in a Eclipse GlassFish 8 domain or
 cluster for which security manager is enabled. These additional
 permissions are not required when security manager is disabled.</p>
 </div>
 <div class="paragraph">
-<p>To deploy CDI-enabled Jakarta EE applications in a Eclipse GlassFish 7
+<p>To deploy CDI-enabled Jakarta EE applications in a Eclipse GlassFish 8
 domain or cluster for which security manager is enabled, add the
 following permissions to the applications:</p>
 </div>
@@ -4053,7 +4219,7 @@ not supported.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>"<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2">Introduction to
+<p>"<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html">Introduction to
 Security in the Jakarta EE Platform</a>" in The Jakarta EE Tutorial</p>
 </li>
 <li>
@@ -5920,9 +6086,8 @@ The following topics are addressed here:</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If you installed the Web Profile, web services are not supported unless
-the optional Metro Web Services Stack add-on component is downloaded
-from the Update Tool. Without the Metro add-on component, a servlet or
+<p>If you installed the Web Profile, web services are not supported.
+Without the Metro add-on component, a servlet or
 EJB component cannot be a web service endpoint, and the
 <code>glassfish-web.xml</code> and <code>glassfish-ejb-jar.xml</code> elements related to web
 services are ignored.</p>
@@ -5938,7 +6103,7 @@ and Eclipse do this automatically.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>"<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services">Web Services</a>"
+<p>"<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/websvcs/xml-websvcs/xml-websvcs.html">Web Services</a>"
 in The Jakarta EE Tutorial shows how to deploy simple web services to
 Eclipse GlassFish.</p>
 </div>
@@ -5968,7 +6133,7 @@ Metro WSIT Guide</a></p>
 <h3 id="creating-portable-web-service-artifacts"><a class="anchor" href="#creating-portable-web-service-artifacts"></a>Creating Portable Web Service Artifacts</h3>
 <div class="paragraph">
 <p>For a tutorial that shows how to use the <code>wsimport</code> and <code>wsgen</code>
-commands, see "<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services">
+commands, see "<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/websvcs/xml-websvcs/xml-websvcs.html">
 Web Services</a>" in The Jakarta EE Tutorial.</p>
 </div>
 </div>
@@ -6281,7 +6446,7 @@ container.</p>
 <a href="http://jcp.org/aboutJava/communityprocess/pfd/jsr317/index.html">Java
 Specification Request (JSR) 317</a>. For basic information about the Java
 Persistence API, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence">Persistence</a>
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html">Persistence</a>
 in The Jakarta EE Tutorial.</p>
 </div>
 </li>
@@ -6386,7 +6551,7 @@ in Eclipse GlassFish Administration Guide.</p>
 </li>
 <li>
 <p>Create the application. For guidance in writing your application,
-see <a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence">Persistence</a>
+see <a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html">Persistence</a>
 in The Jakarta EE Tutorial.</p>
 </li>
 <li>
@@ -7240,7 +7405,1868 @@ For more information, see
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-web-applications"><a class="anchor" href="#developing-web-applications"></a>12. Developing Web Applications</h2>
+<h2 id="using-jakarta-data-repositories"><a class="anchor" href="#using-jakarta-data-repositories"></a>12. Using Jakarta Data Repositories</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to use Jakarta Data repositories in Eclipse GlassFish applications. Jakarta Data provides a standard API for data access that simplifies database operations through repository interfaces and automatic query generation.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#overview-of-jakarta-data">Overview of Jakarta Data</a></p>
+</li>
+<li>
+<p><a href="#choosing-between-jpa-and-nosql">Choosing Between JPA and NoSQL</a></p>
+</li>
+<li>
+<p><a href="#basic-repository-example">Basic Repository Example</a></p>
+</li>
+<li>
+<p><a href="#defining-repository-interfaces">Defining Repository Interfaces</a></p>
+</li>
+<li>
+<p><a href="#query-methods">Query Methods</a></p>
+</li>
+<li>
+<p><a href="#custom-queries">Custom Queries</a></p>
+</li>
+<li>
+<p><a href="#method-name-based-queries">Method Name-Based Queries (Deprecated)</a></p>
+</li>
+<li>
+<p><a href="#pagination-and-sorting">Pagination and Sorting</a></p>
+</li>
+<li>
+<p><a href="#configuring-jpa-data-repositories">Configuring JPA Data Repositories</a></p>
+</li>
+<li>
+<p><a href="#configuring-nosql-data-repositories">Configuring NoSQL Data Repositories</a></p>
+</li>
+<li>
+<p><a href="#transaction-management">Transaction Management</a></p>
+</li>
+<li>
+<p><a href="#jakarta-validation-support">Jakarta Validation Support</a></p>
+</li>
+<li>
+<p><a href="#limitations-and-considerations">Limitations and Considerations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about Jakarta Data 1.0.1, see the official <a href="https://jakarta.ee/specifications/data/1.0">Jakarta Data 1.0.1 documentation</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="overview-of-jakarta-data"><a class="anchor" href="#overview-of-jakarta-data"></a>Overview of Jakarta Data</h3>
+<div class="paragraph">
+<p>Jakarta Data is a specification that provides a standard API for data access in Jakarta EE applications. It offers a repository-based programming model that reduces boilerplate code and provides type-safe database operations.</p>
+</div>
+<div class="paragraph">
+<p>Key features of Jakarta Data include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Repository interfaces with automatic implementation generation</p>
+</li>
+<li>
+<p>Query derivation from method names and annotations</p>
+</li>
+<li>
+<p>Support for custom queries using JDQL (Jakarta Data Query Language) or JPQL</p>
+</li>
+<li>
+<p>Built-in pagination and sorting capabilities</p>
+</li>
+<li>
+<p>Integration with Jakarta Persistence (JPA) for relational databases</p>
+</li>
+<li>
+<p>Integration with Jakarta NoSQL for NoSQL databases</p>
+</li>
+<li>
+<p>Type-safe query building</p>
+</li>
+<li>
+<p>Support for both SQL and NoSQL databases in the same application</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Jakarta Data repositories work by defining interfaces that may extend base repository types. The Jakarta Data provider automatically generates implementations of these interfaces at build time or runtime.</p>
+</div>
+<div class="paragraph">
+<p>In Eclipse GlassFish, Jakarta Data is implemented using Eclipse JNoSQL, which provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Unified API</strong> - The same repository interfaces for both SQL and NoSQL databases</p>
+</li>
+<li>
+<p><strong>Multi-database support</strong> - Support for SQL, Document, Key-Value, Wide-Column, and Graph databases</p>
+</li>
+<li>
+<p><strong>JPA integration</strong> - Seamless integration with existing JPA entities for relational databases</p>
+</li>
+<li>
+<p><strong>NoSQL entities</strong> - Support for Jakarta NoSQL entities for NoSQL databases</p>
+</li>
+<li>
+<p><strong>Automatic routing</strong> - Automatic database detection and query creation based on entity type</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="choosing-between-jpa-and-nosql"><a class="anchor" href="#choosing-between-jpa-and-nosql"></a>Choosing Between JPA and NoSQL</h3>
+<div class="paragraph">
+<p>When deciding between JPA entities and NoSQL entities for your Jakarta Data repositories, consider the following factors:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 35%;">
+<col style="width: 35%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Factor</th>
+<th class="tableblock halign-left valign-top">JPA Entities</th>
+<th class="tableblock halign-left valign-top">NoSQL Entities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Database Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relational databases (PostgreSQL, MySQL, Oracle, etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NoSQL databases (MongoDB, Redis, Cassandra, Neo4j, etc.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Structure</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Structured data with relationships</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flexible schemas, nested documents, key-value pairs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Transactions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full JTA transaction support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limited transaction support (database-dependent)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Validation</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Validation supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Manual validation required</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Relationships</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full relationship mapping (@OneToMany, @ManyToOne, etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No relationship mapping (embed or reference manually)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Query Language</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JPQL and JDQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDQL only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema Evolution</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requires database migrations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flexible schema changes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Scalability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vertical scaling (with some horizontal options)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Horizontal scaling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ACID Properties</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full ACID compliance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eventual consistency (varies by database)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Use JPA entities when:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You need strong consistency and ACID transactions</p>
+</li>
+<li>
+<p>Your data has complex relationships</p>
+</li>
+<li>
+<p>You require Jakarta Validation</p>
+</li>
+<li>
+<p>You&#8217;re working with existing relational database schemas</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Use NoSQL entities when:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You need flexible schemas and rapid development</p>
+</li>
+<li>
+<p>You&#8217;re working with large-scale, distributed data</p>
+</li>
+<li>
+<p>Your data is document-oriented or graph-based</p>
+</li>
+<li>
+<p>You need horizontal scalability</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="basic-repository-example"><a class="anchor" href="#basic-repository-example"></a>Basic Repository Example</h3>
+<div class="paragraph">
+<p>This example shows a simple repository interface that extends <code>CrudRepository</code> for a <code>Product</code> JPA entity. It demonstrates both the modern annotated approach and the deprecated method name-based approach.</p>
+</div>
+<div class="sect3">
+<h4 id="jpa-entity-example"><a class="anchor" href="#jpa-entity-example"></a>JPA Entity Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.persistence</span>.*;
+<span class="keyword">import</span> <span class="include">jakarta.validation.constraints</span>.*;
+
+<span class="annotation">@Entity</span>
+<span class="annotation">@Table</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">products</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Product</span> {
+
+    <span class="annotation">@Id</span>
+    <span class="annotation">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)
+    <span class="directive">private</span> <span class="predefined-type">Long</span> id;
+
+    <span class="annotation">@Column</span>(unique = <span class="predefined-constant">true</span>)
+    <span class="annotation">@NotBlank</span>(message = <span class="string"><span class="delimiter">&quot;</span><span class="content">Product code is required</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@Size</span>(max = <span class="integer">20</span>, message = <span class="string"><span class="delimiter">&quot;</span><span class="content">Product code must not exceed 20 characters</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> <span class="predefined-type">String</span> code;
+
+    <span class="annotation">@NotBlank</span>(message = <span class="string"><span class="delimiter">&quot;</span><span class="content">Product name is required</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@Size</span>(max = <span class="integer">100</span>, message = <span class="string"><span class="delimiter">&quot;</span><span class="content">Product name must not exceed 100 characters</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+
+    <span class="directive">private</span> <span class="predefined-type">String</span> category;
+
+    <span class="annotation">@NotNull</span>(message = <span class="string"><span class="delimiter">&quot;</span><span class="content">Price is required</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@DecimalMin</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">0.0</span><span class="delimiter">&quot;</span></span>, inclusive = <span class="predefined-constant">false</span>, message = <span class="string"><span class="delimiter">&quot;</span><span class="content">Price must be greater than 0</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> <span class="predefined-type">BigDecimal</span> price;
+
+    <span class="comment">// Constructors, getters, and setters</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="repository-interface-recommended-approach"><a class="anchor" href="#repository-interface-recommended-approach"></a>Repository Interface (Recommended Approach)</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.data.repository.CrudRepository</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.Repository</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.Find</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.By</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.OrderBy</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.Query</span>;
+
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="comment">// Annotated queries using @Find and @By annotations (RECOMMENDED)</span>
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Product&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> name);
+
+    <span class="annotation">@Find</span>
+    Optional&lt;Product&gt; findProduct(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">code</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> code);
+
+    <span class="annotation">@Find</span>
+    <span class="annotation">@OrderBy</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">price</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Product&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">category</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> category);
+
+    <span class="comment">// Custom query using JDQL</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE price BETWEEN :minPrice AND :maxPrice ORDER BY price</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Product&gt; findProductsByPriceRange(<span class="predefined-type">BigDecimal</span> minPrice, <span class="predefined-type">BigDecimal</span> maxPrice);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="defining-repository-interfaces"><a class="anchor" href="#defining-repository-interfaces"></a>Defining Repository Interfaces</h3>
+<div class="paragraph">
+<p>Jakarta Data repositories are defined as interfaces annotated with <code>@Repository</code> annotation (<code>@jakarta.data.Repository</code>). The interface can extend one of the base repository interfaces, which provide ready-to-use methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Repository&lt;T, K&gt;</code> - Marker interface with no predefined methods</p>
+</li>
+<li>
+<p><code>CrudRepository&lt;T, K&gt;</code> - Adds basic CRUD operations (save, findById, findAll, delete, etc.)</p>
+</li>
+<li>
+<p><code>PageableRepository&lt;T, K&gt;</code> - Extends CrudRepository and adds pagination support</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="query-methods"><a class="anchor" href="#query-methods"></a>Query Methods</h3>
+<div class="paragraph">
+<p>Jakarta Data supports automatic query generation using annotated methods with query annotations like <code>@Find</code>, <code>@Count</code>, <code>@Exists</code>, and <code>@Delete</code> combined with parameter annotations like <code>@By</code>. This is the recommended approach for defining repository methods.</p>
+</div>
+<div class="sect3">
+<h4 id="supported-query-annotations"><a class="anchor" href="#supported-query-annotations"></a>Supported Query Annotations</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Find</code> - Find operations that return entities</p>
+</li>
+<li>
+<p><code>@Count</code> - Count operations that return the number of matching entities</p>
+</li>
+<li>
+<p><code>@Exists</code> - Existence checks that return boolean values</p>
+</li>
+<li>
+<p><code>@Delete</code> - Delete operations that remove entities</p>
+</li>
+<li>
+<p><code>@Insert</code> - Insert operations that create new entities</p>
+</li>
+<li>
+<p><code>@Update</code> - Update operations that modify existing entities</p>
+</li>
+<li>
+<p><code>@Save</code> - Save operations that insert or update entities</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="parameter-annotations"><a class="anchor" href="#parameter-annotations"></a>Parameter Annotations</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@By("propertyName")</code> - Specifies the entity property to query by. Can be nested to specify properties of referenced entities (e.g., <code>@By("customer.address.city")</code>).</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the application is compiled with parameter names preserved in bytecode (e.g., with <code>javac -parameters</code>), <code>@By</code> is not required. The property name will be derived from the parameter name if the <code>@By</code> annotation is not present.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="annotated-query-examples"><a class="anchor" href="#annotated-query-examples"></a>Annotated Query Examples</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.data.repository</span>.*;
+
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">CustomerRepository</span> <span class="directive">extends</span> CrudRepository&lt;Customer, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="comment">// Find by single property</span>
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">lastName</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> lastName);
+
+    <span class="comment">// Multiple conditions (implicit AND)</span>
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">firstName</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> firstName, <span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">lastName</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> lastName);
+
+    <span class="comment">// Nested property access</span>
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">address.city</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> city);
+
+    <span class="comment">// Counting</span>
+    <span class="annotation">@Count</span>
+    <span class="type">long</span> countCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">status</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> status);
+
+    <span class="comment">// Existence checks</span>
+    <span class="annotation">@Exists</span>
+    <span class="type">boolean</span> customerExists(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">email</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> email);
+
+    <span class="comment">// Delete operations</span>
+    <span class="annotation">@Delete</span>
+    <span class="type">void</span> deleteCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">status</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> status);
+
+    <span class="comment">// Insert operations</span>
+    <span class="annotation">@Insert</span>
+    Customer insertCustomer(Customer customer);
+
+    <span class="annotation">@Insert</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; insertCustomers(<span class="predefined-type">List</span>&lt;Customer&gt; customers);
+
+    <span class="comment">// Update operations</span>
+    <span class="annotation">@Update</span>
+    Customer updateCustomer(Customer customer);
+
+    <span class="comment">// Save operations (insert or update)</span>
+    <span class="annotation">@Save</span>
+    Customer saveCustomer(Customer customer);
+
+    <span class="comment">// Null value handling</span>
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">middleName</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> middleName);
+
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;Customer&gt; findCustomersWithNullMiddleName() {
+        <span class="keyword">return</span> findCustomers((<span class="predefined-type">String</span>) <span class="predefined-constant">null</span>);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="custom-queries"><a class="anchor" href="#custom-queries"></a>Custom Queries</h3>
+<div class="paragraph">
+<p>For complex queries that cannot be expressed through annotated methods, Jakarta Data supports custom queries using the <code>@Query</code> annotation. Jakarta Data specifies its own query language called JDQL (Jakarta Data Query Language), which is similar to JPQL (Java Persistence Query Language). Eclipse GlassFish also supports full JPQL queries for JPA entities.</p>
+</div>
+<div class="sect3">
+<h4 id="jdql-vs-jpql"><a class="anchor" href="#jdql-vs-jpql"></a>JDQL vs JPQL</h4>
+<div class="paragraph">
+<p><strong>JDQL (Jakarta Data Query Language):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Simplified syntax that allows omitting the SELECT clause</p>
+</li>
+<li>
+<p>Automatically infers the entity type from the method return type</p>
+</li>
+<li>
+<p>Works with both JPA and NoSQL entities</p>
+</li>
+<li>
+<p>Example: <code>WHERE customer.id = :customerId AND status = :status</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>JPQL (Java Persistence Query Language):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full SQL-like syntax with explicit SELECT clauses</p>
+</li>
+<li>
+<p>Only works with JPA entities</p>
+</li>
+<li>
+<p>More powerful for complex joins and projections</p>
+</li>
+<li>
+<p>Example: <code>SELECT o FROM Order o WHERE o.customer.id = :customerId AND o.status = :status</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="custom-query-examples"><a class="anchor" href="#custom-query-examples"></a>Custom Query Examples</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.data.repository.Query</span>;
+
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">OrderRepository</span> <span class="directive">extends</span> CrudRepository&lt;Order, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="comment">// JDQL query - simplified syntax</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE customer.id = :customerId AND status = :status</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Order&gt; findOrdersByCustomerAndStatus(<span class="predefined-type">Long</span> customerId, <span class="predefined-type">String</span> status);
+
+    <span class="comment">// JDQL query with range conditions</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE orderDate BETWEEN :startDate AND :endDate ORDER BY orderDate DESC</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Order&gt; findOrdersByDateRange(LocalDate startDate, LocalDate endDate);
+
+    <span class="comment">// JDQL query with pattern matching</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE customer.email LIKE :pattern</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Order&gt; findOrdersByCustomerEmailPattern(<span class="predefined-type">String</span> pattern);
+
+    <span class="comment">// JDQL query with collection operations</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE status IN :statuses</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Order&gt; findOrdersByStatuses(<span class="predefined-type">Collection</span>&lt;<span class="predefined-type">String</span>&gt; statuses);
+
+    <span class="comment">// JPQL query with explicit SELECT and JOIN (JPA entities only)</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">SELECT o FROM Order o JOIN o.items i WHERE i.product.category = :category</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Order&gt; findOrdersWithProductCategory(<span class="predefined-type">String</span> category);
+
+    <span class="comment">// JPQL query with aggregation (JPA entities only)</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">SELECT COUNT(o) FROM Order o WHERE o.orderDate &gt;= :startDate</span><span class="delimiter">&quot;</span></span>)
+    <span class="type">long</span> countOrdersSince(LocalDate startDate);
+
+    <span class="comment">// JPQL query with projection (JPA entities only)</span>
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">SELECT NEW com.example.dto.OrderSummary(o.id, o.customer.name, o.total) FROM Order o WHERE o.status = :status</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;OrderSummary&gt; findOrderSummariesByStatus(<span class="predefined-type">String</span> status);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="method-name-based-queries"><a class="anchor" href="#method-name-based-queries"></a>Method Name-Based Queries (Deprecated)</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Method name-based query derivation is deprecated and may be removed in future versions. It&#8217;s provided for migrating existing code to Data repositories. For new code, use the annotated approach shown in the previous sections instead.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish also supports method name-based query derivation using a standardized naming convention. While this approach is deprecated, it&#8217;s still supported for backward compatibility and migration purposes.</p>
+</div>
+<div class="sect3">
+<h4 id="supported-keywords"><a class="anchor" href="#supported-keywords"></a>Supported Keywords</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>findBy</code>, <code>getBy</code>, <code>queryBy</code>, <code>readBy</code> - Find operations</p>
+</li>
+<li>
+<p><code>countBy</code> - Count operations</p>
+</li>
+<li>
+<p><code>existsBy</code> - Existence checks</p>
+</li>
+<li>
+<p><code>deleteBy</code>, <code>removeBy</code> - Delete operations</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="property-expressions"><a class="anchor" href="#property-expressions"></a>Property Expressions</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>And</code>, <code>Or</code> - Logical operators</p>
+</li>
+<li>
+<p><code>Between</code> - Range queries</p>
+</li>
+<li>
+<p><code>LessThan</code>, <code>GreaterThan</code>, <code>LessThanEqual</code>, <code>GreaterThanEqual</code> - Comparison operators</p>
+</li>
+<li>
+<p><code>Like</code>, <code>NotLike</code> - Pattern matching</p>
+</li>
+<li>
+<p><code>In</code>, <code>NotIn</code> - Collection membership</p>
+</li>
+<li>
+<p><code>IsNull</code>, <code>IsNotNull</code> - Null checks</p>
+</li>
+<li>
+<p><code>True</code>, <code>False</code> - Boolean values</p>
+</li>
+<li>
+<p><code>OrderBy</code> - Sorting (can be combined with <code>Asc</code> or <code>Desc</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="method-name-examples"><a class="anchor" href="#method-name-examples"></a>Method Name-Based Query Examples</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">CustomerRepository</span> <span class="directive">extends</span> CrudRepository&lt;Customer, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="comment">// Find by single property</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByLastName(<span class="predefined-type">String</span> lastName);
+
+    <span class="comment">// Multiple conditions with And</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByFirstNameAndLastName(<span class="predefined-type">String</span> firstName, <span class="predefined-type">String</span> lastName);
+
+    <span class="comment">// Or conditions</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByFirstNameOrLastName(<span class="predefined-type">String</span> name);
+
+    <span class="comment">// Comparison operators</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByAgeGreaterThan(<span class="type">int</span> age);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByAgeLessThan(<span class="type">int</span> age);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByAgeGreaterThanEqual(<span class="type">int</span> age);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByAgeLessThanEqual(<span class="type">int</span> age);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByAgeBetween(<span class="type">int</span> minAge, <span class="type">int</span> maxAge);
+
+    <span class="comment">// Pattern matching</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByEmailLike(<span class="predefined-type">String</span> pattern);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByEmailNotLike(<span class="predefined-type">String</span> pattern);
+
+    <span class="comment">// Collection operations</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByStatusIn(<span class="predefined-type">Collection</span>&lt;<span class="predefined-type">String</span>&gt; statuses);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByStatusNotIn(<span class="predefined-type">Collection</span>&lt;<span class="predefined-type">String</span>&gt; statuses);
+
+    <span class="comment">// Null checks</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByMiddleNameIsNull();
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByMiddleNameIsNotNull();
+
+    <span class="comment">// Boolean values</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByActiveTrue();
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByActiveFalse();
+
+    <span class="comment">// Sorting</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByLastNameOrderByFirstNameAsc(<span class="predefined-type">String</span> lastName);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByLastNameOrderByFirstNameDesc(<span class="predefined-type">String</span> lastName);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByStatusOrderByLastNameAscFirstNameAsc(<span class="predefined-type">String</span> status);
+
+    <span class="comment">// Counting</span>
+    <span class="type">long</span> countByStatus(<span class="predefined-type">String</span> status);
+    <span class="type">long</span> countByAgeGreaterThan(<span class="type">int</span> age);
+
+    <span class="comment">// Existence checks</span>
+    <span class="type">boolean</span> existsByEmail(<span class="predefined-type">String</span> email);
+    <span class="type">boolean</span> existsByLastNameAndFirstName(<span class="predefined-type">String</span> lastName, <span class="predefined-type">String</span> firstName);
+
+    <span class="comment">// Delete operations</span>
+    <span class="type">void</span> deleteByStatus(<span class="predefined-type">String</span> status);
+    <span class="type">long</span> removeByAgeGreaterThan(<span class="type">int</span> age);
+
+    <span class="comment">// Complex combinations</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByLastNameAndAgeGreaterThanAndActiveTrue(<span class="predefined-type">String</span> lastName, <span class="type">int</span> age);
+    <span class="predefined-type">List</span>&lt;Customer&gt; findByEmailLikeOrPhoneLike(<span class="predefined-type">String</span> emailPattern, <span class="predefined-type">String</span> phonePattern);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nested-property-access"><a class="anchor" href="#nested-property-access"></a>Nested Property Access</h4>
+<div class="paragraph">
+<p>Method names can also access nested properties using camel case:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">OrderRepository</span> <span class="directive">extends</span> CrudRepository&lt;Order, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="comment">// Access nested properties</span>
+    <span class="predefined-type">List</span>&lt;Order&gt; findByCustomerLastName(<span class="predefined-type">String</span> lastName);
+    <span class="predefined-type">List</span>&lt;Order&gt; findByCustomerAddressCity(<span class="predefined-type">String</span> city);
+    <span class="predefined-type">List</span>&lt;Order&gt; findByCustomerAddressCountry(<span class="predefined-type">String</span> country);
+
+    <span class="comment">// Complex nested queries</span>
+    <span class="predefined-type">List</span>&lt;Order&gt; findByCustomerLastNameAndShippingAddressCity(<span class="predefined-type">String</span> lastName, <span class="predefined-type">String</span> city);
+    <span class="predefined-type">List</span>&lt;Order&gt; findByCustomerActiveAndOrderDateGreaterThan(<span class="type">boolean</span> active, LocalDate date);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="pagination-and-sorting"><a class="anchor" href="#pagination-and-sorting"></a>Pagination and Sorting</h3>
+<div class="paragraph">
+<p>Jakarta Data provides built-in support for pagination and sorting through the <code>Pageable</code> and <code>Sort</code> interfaces.</p>
+</div>
+<div class="sect3">
+<h4 id="using-pageable"><a class="anchor" href="#using-pageable"></a>Using Pageable</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.data.repository.Pageable</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.Page</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.Sort</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.Find</span>;
+<span class="keyword">import</span> <span class="include">jakarta.data.repository.By</span>;
+
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> PageableRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="annotation">@Find</span>
+    Page&lt;Product&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">category</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> category, <span class="predefined-type">Pageable</span> pageable);
+
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE price &gt; :price</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Product&gt; findProductsAbovePrice(<span class="predefined-type">BigDecimal</span> price, Sort sort);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="usage-example"><a class="anchor" href="#usage-example"></a>Usage Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="directive">private</span> ProductRepository productRepository;
+
+<span class="directive">public</span> <span class="type">void</span> demonstratePagination() {
+    <span class="comment">// Create pageable request for page 0, size 10, sorted by name</span>
+    <span class="predefined-type">Pageable</span> pageable = <span class="predefined-type">Pageable</span>.of(<span class="integer">0</span>, <span class="integer">10</span>, Sort.by(<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>).ascending());
+
+    Page&lt;Product&gt; page = productRepository.findProducts(<span class="string"><span class="delimiter">&quot;</span><span class="content">Electronics</span><span class="delimiter">&quot;</span></span>, pageable);
+
+    <span class="predefined-type">List</span>&lt;Product&gt; products = page.getContent();
+    <span class="type">long</span> totalElements = page.getTotalElements();
+    <span class="type">int</span> totalPages = page.getTotalPages();
+    <span class="type">boolean</span> hasNext = page.hasNext();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-jpa-data-repositories"><a class="anchor" href="#configuring-jpa-data-repositories"></a>Configuring JPA Data Repositories</h3>
+<div class="paragraph">
+<p>To use Jakarta Data repositories with JPA entities in your Eclipse GlassFish application, you need to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Add Jakarta Data API dependency</strong> to your project</p>
+</li>
+<li>
+<p><strong>Configure a Jakarta Persistence persistence unit</strong></p>
+</li>
+<li>
+<p><strong>Set up database connection</strong> (optional - uses default Derby database if not specified)</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="adding-jpa-dependencies"><a class="anchor" href="#adding-jpa-dependencies"></a>Adding Dependencies</h4>
+<div class="paragraph">
+<p>Add the Jakarta Data API dependency to your <code>pom.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>jakarta.data<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jakarta.data-api<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, if you&#8217;re using the full Jakarta EE platform:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>11.0.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jpa-persistence-unit-configuration"><a class="anchor" href="#jpa-persistence-unit-configuration"></a>Jakarta Persistence Configuration</h4>
+<div class="paragraph">
+<p>Configure your persistence unit in <code>persistence.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;persistence</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://jakarta.ee/xml/ns/persistence</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">version</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">3.0</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;persistence-unit</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">default</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">transaction-type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">JTA</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;properties&gt;</span>
+            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.persistence.schema-generation.database.action</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">create</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/properties&gt;</span>
+    <span class="tag">&lt;/persistence-unit&gt;</span>
+<span class="tag">&lt;/persistence&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This configuration uses the default data source in Eclipse GlassFish, which points to a Derby database. Make sure Derby is running using the <a href="reference-manual.html#start-database"><code>start-database</code></a> command.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="custom-jpa-data-source"><a class="anchor" href="#custom-jpa-data-source"></a>Custom Data Source Configuration (Recommended)</h4>
+<div class="paragraph">
+<p>For production applications, configure a custom data source using the Eclipse GlassFish administration console or CLI commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># Create connection pool for PostgreSQL
+asadmin create-jdbc-connection-pool \
+  --datasourceclassname org.postgresql.ds.PGSimpleDataSource \
+  --restype javax.sql.DataSource \
+  --property user=myuser:password=mypassword:databaseName=mydb:serverName=localhost:port=5432 \
+  MyPool
+
+# Create JDBC resource
+asadmin create-jdbc-resource --connectionpoolid MyPool jdbc/MyDataSource</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adjust the <code>datasourceclassname</code> and properties according to your database and JDBC driver.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For information on how to install JDBC drivers in Eclipse GlassFish, see <a href="administration-guide.html#jdbc">Administering Database Connectivity</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For more information about these commands, see <a href="reference-manual.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code></a> and <a href="reference-manual.html#create-jdbc-resource"><code>create-jdbc-resource</code></a> in the Reference Manual.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Then reference the custom data source in your <code>persistence.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;persistence-unit</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">myPU</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">transaction-type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">JTA</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;jta-data-source&gt;</span>jdbc/MyDataSource<span class="tag">&lt;/jta-data-source&gt;</span>
+    <span class="tag">&lt;properties&gt;</span>
+        <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.persistence.schema-generation.database.action</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">create</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/properties&gt;</span>
+<span class="tag">&lt;/persistence-unit&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jpa-entitymanager-integration"><a class="anchor" href="#jpa-entitymanager-integration"></a>EntityManager Integration</h4>
+<div class="paragraph">
+<p>You can access the EntityManager used by the repository for custom operations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="comment">// Method to access the repository's EntityManager</span>
+    EntityManager getEntityManager();
+
+    <span class="comment">// Custom method using the repository's EntityManager</span>
+    <span class="keyword">default</span> <span class="predefined-type">List</span>&lt;Product&gt; findProductsWithComplexLogic(<span class="predefined-type">String</span> searchTerm) {
+        EntityManager em = getEntityManager();
+        <span class="keyword">return</span> em.createQuery(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">SELECT p FROM Product p WHERE p.name LIKE :term OR p.description LIKE :term</span><span class="delimiter">&quot;</span></span>,
+            Product.class)
+            .setParameter(<span class="string"><span class="delimiter">&quot;</span><span class="content">term</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">%</span><span class="delimiter">&quot;</span></span> + searchTerm + <span class="string"><span class="delimiter">&quot;</span><span class="content">%</span><span class="delimiter">&quot;</span></span>)
+            .getResultList();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jpa-entitymanager-configuration"><a class="anchor" href="#jpa-entitymanager-configuration"></a>EntityManager Configuration Options</h4>
+<div class="paragraph">
+<p>By default, Jakarta Data repositories use the default EntityManager. You can customize this behavior:</p>
+</div>
+<div class="paragraph">
+<p><strong>Option 1: Specify persistence unit name</strong></p>
+</div>
+<div class="paragraph">
+<p>Use the <code>dataStore</code> attribute of the <code>@Repository</code> annotation to specify which persistence unit the repository should use.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>(dataStore = <span class="string"><span class="delimiter">&quot;</span><span class="content">myPU</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+    <span class="comment">// Repository methods</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Option 2: Use CDI qualifiers</strong></p>
+</div>
+<div class="paragraph">
+<p>Define a custom CDI qualifier and use it to inject a specific EntityManager.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="annotation">@CustomDB</span>
+    EntityManager getEntityManager();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Option 3: Programmatic EntityManager selection</strong></p>
+</div>
+<div class="paragraph">
+<p>Define a default method in the repository interface that returns an <code>EntityManager</code>. This approach allows you to programmatically select the appropriate EntityManager using CDI lookup, JNDI lookup, or any other mechanism.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="keyword">default</span> EntityManager getEntityManager() {
+        <span class="keyword">return</span> CDI.current().select(EntityManager.class, <span class="keyword">new</span> CustomDB.Literal()).get();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="mixing-repositories-and-entitymanager"><a class="anchor" href="#mixing-repositories-and-entitymanager"></a>Mixing Repository and EntityManager Operations</h4>
+<div class="paragraph">
+<p>Repository methods and direct EntityManager operations can be used together in the same transaction when they use the same persistence unit:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="annotation">@Transactional</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">CustomerService</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> EntityManager entityManager;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> CustomerRepository customerRepository;
+
+    <span class="directive">public</span> Customer updateCustomerWithAudit(<span class="predefined-type">Long</span> customerId, CustomerUpdate update) {
+
+        EntityManager repositoryEntityManager = customerRepository.getEntityManager();
+
+        <span class="comment">// Use repository for simple operations</span>
+        Customer customer = customerRepository.findById(customerId)
+            .orElseThrow(() -&gt; <span class="keyword">new</span> EntityNotFoundException(<span class="string"><span class="delimiter">&quot;</span><span class="content">Customer not found</span><span class="delimiter">&quot;</span></span>));
+
+        <span class="comment">// Use EntityManager for complex operations</span>
+        AuditLog audit = <span class="keyword">new</span> AuditLog();
+        audit.setAction(<span class="string"><span class="delimiter">&quot;</span><span class="content">UPDATE_CUSTOMER</span><span class="delimiter">&quot;</span></span>);
+        audit.setEntityId(customerId);
+        audit.setTimestamp(LocalDateTime.now());
+        entityManager.persist(audit);
+
+        <span class="comment">// Alternatively, use the repository's EntityManager to ensure the same persistence context</span>
+        repositoryEntityManager.flush();
+
+        <span class="comment">// Update using repository</span>
+        customer.setName(update.getName());
+        customer.setEmail(update.getEmail());
+
+        <span class="keyword">return</span> customerRepository.save(customer);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-nosql-data-repositories"><a class="anchor" href="#configuring-nosql-data-repositories"></a>Configuring NoSQL Data Repositories</h3>
+<div class="paragraph">
+<p>To use Jakarta Data repositories with NoSQL entities in your Eclipse GlassFish application, you need to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Add Jakarta Data and NoSQL API dependencies</strong> to your project</p>
+</li>
+<li>
+<p><strong>Add NoSQL database driver dependency</strong></p>
+</li>
+<li>
+<p><strong>Configure database connection properties</strong></p>
+</li>
+<li>
+<p><strong>Define NoSQL entities</strong> using Jakarta NoSQL annotations</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="adding-nosql-dependencies"><a class="anchor" href="#adding-nosql-dependencies"></a>Adding Dependencies</h4>
+<div class="paragraph">
+<p>Add the Jakarta Data API dependency (as provided - only compile-time, not included in the application):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>jakarta.data<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jakarta.data-api<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the Jakarta NoSQL API dependency (as provided - only compile-time, not included in the application):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>jakarta.nosql<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jakarta.nosql-api<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the appropriate Eclipse JNoSQL database driver (the driver and its dependencies should be added to the application). For example, for MongoDB:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.jnosql.databases<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jnosql-mongodb<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>{jnosql-version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Eclipse GlassFish does not bundle NoSQL database drivers. You must add the appropriate Eclipse JNoSQL database dependency and its transitive dependencies to your application. If you use Maven or a similar build tool, it will pull all transitive dependencies automatically.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nosql-database-categories"><a class="anchor" href="#nosql-database-categories"></a>NoSQL Database Categories</h4>
+<div class="paragraph">
+<p>Eclipse JNoSQL supports four main categories of NoSQL databases:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Examples</th>
+<th class="tableblock halign-left valign-top">Use Cases</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Document</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB, CouchDB, CouchBase, ArangoDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content management, catalogs, user profiles with nested data</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Key-Value</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis, Hazelcast, Memcached, Riak</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Caching, session storage, shopping carts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Wide-Column</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cassandra, HBase, DynamoDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time-series data, IoT applications, analytics</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Graph</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Neo4j, ArangoDB, OrientDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Social networks, recommendation engines, fraud detection</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="nosql-entity-definition"><a class="anchor" href="#nosql-entity-definition"></a>NoSQL Entity Definition</h4>
+<div class="paragraph">
+<p>NoSQL entities use Jakarta NoSQL annotations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.Entity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies that the class is a NoSQL entity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.Id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the primary key of the entity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.Column</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps a field to a database column/attribute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.Convert</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a converter for the field</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.Embeddable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies that the class is embeddable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.Inheritance</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies inheritance mapping strategy for entities</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.DiscriminatorColumn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the discriminator column for the inheritance mapping strategy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.DiscriminatorValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the discriminator value for the inheritance mapping strategy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@jakarta.nosql.MappedSuperclass</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a class whose mapping information is applied to entities that inherit from it</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Key differences from JPA annotations:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>No <code>@Table</code> annotation - collection/table name is specified in <code>@Entity</code></p>
+</li>
+<li>
+<p>No relationship annotations (<code>@OneToMany</code>, <code>@ManyToOne</code>) - embed or reference manually</p>
+</li>
+<li>
+<p>No <code>@GeneratedValue</code> - primary keys must be assigned manually or assigned automatically be the database</p>
+</li>
+<li>
+<p>No <code>@Version</code> for optimistic locking</p>
+</li>
+<li>
+<p>No <code>@Transient</code> - non-annotated fields are ignored by default</p>
+</li>
+<li>
+<p>Java <code>record</code> types are supported for read-only operations</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nosql-entity-examples"><a class="anchor" href="#nosql-entity-examples"></a>NoSQL Entity Examples</h4>
+<div class="paragraph">
+<p><strong>Class-based entity with embedded objects:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.nosql.Entity</span>;
+<span class="keyword">import</span> <span class="include">jakarta.nosql.Id</span>;
+<span class="keyword">import</span> <span class="include">jakarta.nosql.Column</span>;
+<span class="keyword">import</span> <span class="include">jakarta.nosql.Embeddable</span>;
+
+<span class="annotation">@Entity</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">customers</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Customer</span> {
+
+    <span class="annotation">@Id</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> id;
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> email;
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> Address address; <span class="comment">// Embedded object</span>
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; tags;
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; metadata;
+
+    <span class="comment">// Constructors, getters, and setters</span>
+}
+
+<span class="annotation">@Embeddable</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Address</span> {
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> street;
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> city;
+
+    <span class="annotation">@Column</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> country;
+
+    <span class="comment">// Constructors, getters, and setters</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Record-based entity (read-only):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Entity</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">sensor_data</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> record SensorReading(
+    <span class="annotation">@Id</span> <span class="predefined-type">String</span> id,
+    <span class="annotation">@Column</span> <span class="predefined-type">String</span> sensorId,
+    <span class="annotation">@Column</span> LocalDateTime timestamp,
+    <span class="annotation">@Column</span> <span class="predefined-type">Double</span> temperature,
+    <span class="annotation">@Column</span> <span class="predefined-type">Double</span> humidity,
+    <span class="annotation">@Column</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Double</span>&gt; additionalMetrics
+) {}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nosql-repository-usage"><a class="anchor" href="#nosql-repository-usage"></a>Repository Usage with NoSQL Entities</h4>
+<div class="paragraph">
+<p>NoSQL entities work with the same repository interfaces as JPA entities:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">CustomerRepository</span> <span class="directive">extends</span> CrudRepository&lt;Customer, <span class="predefined-type">String</span>&gt; {
+
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> name);
+
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">address.city</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> city);
+
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE tags IN :tags</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;Customer&gt; findCustomersByTags(<span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; tags);
+
+    <span class="annotation">@Count</span>
+    <span class="type">long</span> countCustomers(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">address.country</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> country);
+}
+
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">SensorReadingRepository</span> <span class="directive">extends</span> CrudRepository&lt;SensorReading, <span class="predefined-type">String</span>&gt; {
+
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;SensorReading&gt; findReadings(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">sensorId</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> sensorId);
+
+    <span class="annotation">@Query</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">WHERE timestamp BETWEEN :start AND :end</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-type">List</span>&lt;SensorReading&gt; findByTimestampRange(LocalDateTime start, LocalDateTime end);
+
+    <span class="annotation">@Count</span>
+    <span class="type">long</span> countBySensorId(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">sensorId</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> sensorId);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nosql-database-configuration"><a class="anchor" href="#nosql-database-configuration"></a>Database Configuration</h4>
+<div class="paragraph">
+<p>NoSQL database connections are configured using MicroProfile Config properties. Configuration varies by database type and specific database.</p>
+</div>
+<div class="paragraph">
+<p><strong>MongoDB Configuration Example:</strong></p>
+</div>
+<div class="paragraph">
+<p>Add properties to your <code>microprofile-config.properties</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"># Document database configuration
+jnosql.document.database=mystore
+jnosql.mongodb.host=localhost:27017
+jnosql.mongodb.user=myuser
+jnosql.mongodb.password=mypassword</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>MongoDB-specific properties:</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.mongodb.host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB server hostname and port (default: localhost:27017)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.mongodb.user</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username for MongoDB authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.mongodb.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for MongoDB authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.mongodb.authentication.source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The source where the user is defined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.mongodb.authentication.mechanism</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication mechanism (see MongoDB JavaDoc)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Common Configuration Properties:</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.&lt;type&gt;.provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified class name of the database configuration provider</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.&lt;type&gt;.database</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database name or identifier</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.&lt;database&gt;.host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database host and port (format: host:port)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.&lt;database&gt;.user</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username for authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.&lt;database&gt;.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jnosql.&lt;database&gt;.timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection timeout in milliseconds</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Where <code>&lt;type&gt;</code> is one of: <code>document</code>, <code>keyvalue</code>, <code>column</code>, <code>graph</code> and <code>&lt;database&gt;</code> is the specific database name.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="adding-nosql-database-dependencies"><a class="anchor" href="#adding-nosql-database-dependencies"></a>Adding NoSQL Database Dependencies</h4>
+<div class="paragraph">
+<p>To use a specific NoSQL database, add the corresponding Eclipse JNoSQL database dependency. For example:</p>
+</div>
+<div class="paragraph">
+<p><strong>MongoDB (Document Database):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.jnosql.databases<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jnosql-mongodb<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>{jnosql-version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Redis (Key-Value Database):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.jnosql.databases<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jnosql-redis<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>{jnosql-version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Cassandra (Wide-Column Database):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.jnosql.databases<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jnosql-cassandra<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>{jnosql-version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Neo4j (Graph Database):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.eclipse.jnosql.databases<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>jnosql-neo4j<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>{jnosql-version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="supported-nosql-databases"><a class="anchor" href="#supported-nosql-databases"></a>Supported NoSQL Databases</h4>
+<div class="paragraph">
+<p>For an up-to-date list of supported databases and driver installation instructions, see the <a href="https://github.com/eclipse-jnosql/jnosql-databases/">Eclipse JNoSQL Databases</a> repository.</p>
+</div>
+<div class="paragraph">
+<p><strong>Document Databases:</strong> MongoDB, CouchDB, CouchBase, OrientDB, ArangoDB, RavenDB, Elasticsearch, Solr</p>
+</div>
+<div class="paragraph">
+<p><strong>Key-Value Databases:</strong> Redis, Hazelcast, Infinispan, Memcached, Riak, Oracle NoSQL, ArangoDB</p>
+</div>
+<div class="paragraph">
+<p><strong>Wide-Column Databases:</strong> Cassandra, HBase, DynamoDB</p>
+</div>
+<div class="paragraph">
+<p><strong>Graph Databases:</strong> Neo4j, OrientDB, ArangoDB, TinkerPop-compatible databases</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="programmatic-nosql-configuration"><a class="anchor" href="#programmatic-nosql-configuration"></a>Programmatic Configuration</h4>
+<div class="paragraph">
+<p>You can configure NoSQL databases programmatically by creating a configuration supplier. The supplier is typically a CDI bean that implements the <code>Supplier</code> interface. it should be annotated with <code>@Alternative</code> and <code>@Priority</code> to override the default configuration.</p>
+</div>
+<div class="paragraph">
+<p>For example, a supplier for MongoDB:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="annotation">@Alternative</span>
+<span class="annotation">@Priority</span>(Interceptor.Priority.APPLICATION)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MongoDBManagerSupplier</span> <span class="directive">implements</span> Supplier&lt;DocumentManager&gt; {
+
+    <span class="annotation">@Produces</span>
+    <span class="directive">public</span> DocumentManager get() {
+        Settings settings = Settings.builder()
+            .put(<span class="string"><span class="delimiter">&quot;</span><span class="content">jnosql.mongodb.host</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">localhost:27017</span><span class="delimiter">&quot;</span></span>)
+            .put(<span class="string"><span class="delimiter">&quot;</span><span class="content">jnosql.document.database</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">mystore</span><span class="delimiter">&quot;</span></span>)
+            .build();
+
+        MongoDBDocumentConfiguration configuration = <span class="keyword">new</span> MongoDBDocumentConfiguration();
+        DocumentManagerFactory factory = configuration.apply(settings);
+        <span class="keyword">return</span> factory.apply(<span class="string"><span class="delimiter">&quot;</span><span class="content">mystore</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="transaction-management"><a class="anchor" href="#transaction-management"></a>Transaction Management</h3>
+<div class="paragraph">
+<p>Jakarta Data repositories integrate with Jakarta EE transaction management for JPA entities. Repository methods automatically participate in existing transactions or create new ones as needed.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Transaction management is currently only supported for JPA entities. NoSQL repositories do not support JTA transactions yet.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="declarative-transactions"><a class="anchor" href="#declarative-transactions"></a>Declarative Transactions</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.ejb.Stateless</span>;
+<span class="keyword">import</span> <span class="include">jakarta.transaction.Transactional</span>;
+
+<span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">OrderService</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> OrderRepository orderRepository;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> ProductRepository productRepository;
+
+    <span class="annotation">@Transactional</span>
+    <span class="directive">public</span> Order createOrder(OrderRequest request) {
+        <span class="comment">// All repository operations participate in the same transaction</span>
+        Product product = productRepository.findById(request.getProductId())
+            .orElseThrow(() -&gt; <span class="keyword">new</span> <span class="exception">IllegalArgumentException</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Product not found</span><span class="delimiter">&quot;</span></span>));
+
+        Order order = <span class="keyword">new</span> Order();
+        order.setProduct(product);
+        order.setQuantity(request.getQuantity());
+        order.setCustomerId(request.getCustomerId());
+
+        <span class="keyword">return</span> orderRepository.save(order);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="custom-transaction-behavior"><a class="anchor" href="#custom-transaction-behavior"></a>Custom Transaction Behavior</h4>
+<div class="paragraph">
+<p>You can override the default transaction behavior using the <code>@Transactional</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">AuditRepository</span> <span class="directive">extends</span> CrudRepository&lt;AuditLog, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="annotation">@Transactional</span>(Transactional.TxType.REQUIRES_NEW)
+    AuditLog save(AuditLog auditLog);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, repository methods use <code>REQUIRED</code> transaction type, which means they join an existing transaction or create a new one if none exists.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jakarta-validation-support"><a class="anchor" href="#jakarta-validation-support"></a>Jakarta Validation Support</h3>
+<div class="paragraph">
+<p>Jakarta Data repositories integrate with Jakarta Validation to validate method parameters and return values for JPA entities.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Validation is currently only supported for JPA entities. NoSQL repositories do not support Jakarta Validation yet.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="parameter-validation"><a class="anchor" href="#parameter-validation"></a>Parameter Validation</h4>
+<div class="paragraph">
+<p>For simple field validation, use annotations directly on parameters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Product&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">price</span><span class="delimiter">&quot;</span></span>) <span class="annotation">@Max</span>(<span class="integer">1000</span>) <span class="annotation">@Min</span>(<span class="integer">0</span>) <span class="predefined-type">BigDecimal</span> maxPrice);
+
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;Product&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">category</span><span class="delimiter">&quot;</span></span>) <span class="annotation">@NotBlank</span> <span class="predefined-type">String</span> category);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For entities with validation annotations, use <code>@Valid</code> on the parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">ProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;Product, <span class="predefined-type">Long</span>&gt; {
+
+    <span class="annotation">@Insert</span>
+    Product insertProduct(<span class="annotation">@Valid</span> Product product);
+
+    <span class="annotation">@Update</span>
+    Product updateProduct(<span class="annotation">@Valid</span> Product product);
+
+    <span class="annotation">@Save</span>
+    Product saveProduct(<span class="annotation">@Valid</span> Product product);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="handling-validation-errors"><a class="anchor" href="#handling-validation-errors"></a>Handling Validation Errors</h4>
+<div class="paragraph">
+<p>Validation errors are thrown as <code>ConstraintViolationException</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ProductService</span> {
+
+    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">System</span>.Logger logger = <span class="predefined-type">System</span>.getLogger(ProductService.class.getName());
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> ProductRepository productRepository;
+
+    <span class="directive">public</span> Product createProduct(Product product) {
+        <span class="keyword">try</span> {
+            <span class="keyword">return</span> productRepository.insertProduct(product);
+        } <span class="keyword">catch</span> (ConstraintViolationException e) {
+            <span class="predefined-type">Set</span>&lt;ConstraintViolation&lt;?&gt;&gt; violations = e.getConstraintViolations();
+            <span class="keyword">for</span> (ConstraintViolation&lt;?&gt; violation : violations) {
+                <span class="predefined-type">String</span> property = violation.getPropertyPath().toString();
+                <span class="predefined-type">String</span> message = violation.getMessage();
+                logger.log(<span class="predefined-type">System</span>.Logger.Level.ERROR,
+                    () -&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">Validation error on </span><span class="delimiter">&quot;</span></span> + property + <span class="string"><span class="delimiter">&quot;</span><span class="content">: </span><span class="delimiter">&quot;</span></span> + message);
+            }
+            <span class="keyword">throw</span> e;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="limitations-and-considerations"><a class="anchor" href="#limitations-and-considerations"></a>Limitations and Considerations</h3>
+<div class="sect3">
+<h4 id="general-limitations"><a class="anchor" href="#general-limitations"></a>General Limitations</h4>
+<div class="paragraph">
+<p><strong>Single NoSQL Database Type per Application</strong></p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish supports only one NoSQL database per application instance.</p>
+</div>
+<div class="paragraph">
+<p>On the other hand, you can use multiple JPA persistence units in the same application. You can also use both JPA and NoSQL Data repositories simultaneously in the same application.</p>
+</div>
+<div class="paragraph">
+<p><strong>Repository Interface Restrictions</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each repository must be dedicated to a single entity type</p>
+</li>
+<li>
+<p>For JPA entities, each repository must use a single persistence unit</p>
+</li>
+<li>
+<p>You cannot mix JPA and NoSQL entities in the same repository interface</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="mixed-jpa-and-nosql-entity-usage"><a class="anchor" href="#mixed-jpa-and-nosql-entity-usage"></a>Mixed JPA and NoSQL Entity Usage</h4>
+<div class="paragraph">
+<p>You can use both JPA entities and NoSQL entities in the same Eclipse GlassFish application by defining separate repository interfaces for each entity type and configuring the appropriate database connections. However, there are important restrictions:</p>
+</div>
+<div class="paragraph">
+<p><strong>Separate Repository Interfaces Required</strong>
+You cannot mix JPA entities and NoSQL entities in the same repository interface. Each repository must be dedicated to a single entity type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// JPA repository - works with relational database</span>
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">JpaProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;JpaProduct, <span class="predefined-type">Long</span>&gt; {
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;JpaProduct&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">category</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> category);
+}
+
+<span class="comment">// NoSQL repository - works with NoSQL database</span>
+<span class="annotation">@Repository</span>
+<span class="directive">public</span> <span class="type">interface</span> <span class="class">NoSqlProductRepository</span> <span class="directive">extends</span> CrudRepository&lt;NoSqlProduct, <span class="predefined-type">String</span>&gt; {
+    <span class="annotation">@Find</span>
+    <span class="predefined-type">List</span>&lt;NoSqlProduct&gt; findProducts(<span class="annotation">@By</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">category</span><span class="delimiter">&quot;</span></span>) <span class="predefined-type">String</span> category);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Separate Database Configurations</strong>
+Configure separate database connections for JPA and NoSQL entities:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JPA entities use <code>persistence.xml</code> and JDBC data sources</p>
+</li>
+<li>
+<p>NoSQL entities use MicroProfile Config properties</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>No Cross-Database Transactions</strong>
+Transactions cannot span across JPA and NoSQL databases. Each database type manages its own transaction context.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jpa-specific-considerations"><a class="anchor" href="#jpa-specific-considerations"></a>JPA Entity Considerations</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Full JTA transaction support</p>
+</li>
+<li>
+<p>Jakarta Validation integration</p>
+</li>
+<li>
+<p>JPQL and JDQL query support</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nosql-specific-limitations"><a class="anchor" href="#nosql-specific-limitations"></a>NoSQL Entity Limitations</h4>
+<div class="paragraph">
+<p><strong>Current Limitations:</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>No Jakarta Validation Support</strong>
+Validation annotations on NoSQL entities and repository parameters are ignored. Implement validation manually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">NoSQLProductService</span> {
+
+    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">System</span>.Logger logger = <span class="predefined-type">System</span>.getLogger(NoSQLProductService.class.getName());
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> NoSQLProductRepository repository;
+
+    <span class="directive">public</span> NoSQLProduct createProduct(NoSQLProduct product) {
+        <span class="comment">// Manual validation</span>
+        <span class="keyword">if</span> (product.getName() == <span class="predefined-constant">null</span> || product.getName().isBlank()) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">IllegalArgumentException</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Product name is required</span><span class="delimiter">&quot;</span></span>);
+        }
+        <span class="keyword">if</span> (product.getPrice() == <span class="predefined-constant">null</span> || product.getPrice().compareTo(<span class="predefined-type">BigDecimal</span>.ZERO) &lt;= <span class="integer">0</span>) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">IllegalArgumentException</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Product price must be greater than zero</span><span class="delimiter">&quot;</span></span>);
+        }
+
+        logger.log(<span class="predefined-type">System</span>.Logger.Level.INFO, () -&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">Creating product: </span><span class="delimiter">&quot;</span></span> + product.getName());
+        <span class="keyword">return</span> repository.save(product);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>No JTA Transaction Support</strong>
+NoSQL repositories do not participate in JTA transactions. Manage transactions manually if supported by your database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">NoSQLOrderService</span> {
+
+    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">System</span>.Logger logger = <span class="predefined-type">System</span>.getLogger(NoSQLOrderService.class.getName());
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> NoSQLOrderRepository orderRepository;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> NoSQLCustomerRepository customerRepository;
+
+    <span class="directive">public</span> <span class="type">void</span> processOrder(NoSQLOrder order) {
+        <span class="comment">// No automatic transaction management</span>
+        <span class="comment">// Implement compensation logic if needed</span>
+        <span class="keyword">try</span> {
+            orderRepository.save(order);
+            <span class="comment">// Update customer separately - no transaction guarantees</span>
+            NoSQLCustomer customer = customerRepository.findById(order.getCustomerId())
+                .orElseThrow();
+            customer.incrementOrderCount();
+            customerRepository.save(customer);
+
+            logger.log(<span class="predefined-type">System</span>.Logger.Level.INFO, () -&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">Order processed successfully</span><span class="delimiter">&quot;</span></span>);
+        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+            logger.log(<span class="predefined-type">System</span>.Logger.Level.ERROR, () -&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">Failed to process order: </span><span class="delimiter">&quot;</span></span> + e.getMessage());
+            <span class="comment">// Implement manual rollback if needed</span>
+            <span class="keyword">throw</span> e;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Single NoSQL Database per Application</strong>
+You can only configure one NoSQL database per application instance.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>Common Issues and Troubleshooting</h4>
+<div class="paragraph">
+<p><strong>Configuration Issues:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Verify database drivers are properly installed</p>
+</li>
+<li>
+<p>Check MicroProfile Config properties syntax</p>
+</li>
+<li>
+<p>Ensure persistence.xml is in the correct location</p>
+</li>
+<li>
+<p>Validate JNDI resource names match configuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Runtime Issues:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check database connectivity and credentials</p>
+</li>
+<li>
+<p>Verify entity annotations are correct</p>
+</li>
+<li>
+<p>Ensure repository interfaces are properly annotated</p>
+</li>
+<li>
+<p>Review application logs for detailed error messages</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more detailed troubleshooting, enable debug logging:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"># Enable Jakarta Data and JNoSQL debug logging
+org.eclipse.jnosql.level=FINE
+org.glassfish.main.jnosql.level=FINE
+# Enable EclipseLink (Jakarta Persistence) logging
+org.eclipse.persistence.level=FINE</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-web-applications"><a class="anchor" href="#developing-web-applications"></a>13. Developing Web Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how web applications are supported in the Eclipse GlassFish.</p>
@@ -7269,7 +9295,7 @@ For more information, see
 </div>
 <div class="paragraph">
 <p>For general information about web applications, see
-"<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#getting-started-with-web-applications">
+"<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/webapp/webapp.html">
 The Web Tier</a>" in The Jakarta EE Tutorial.</p>
 </div>
 <div class="admonitionblock note">
@@ -10067,7 +12093,7 @@ Application Deployment Guide</a>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-enterprise-javabeans-technology"><a class="anchor" href="#using-enterprise-javabeans-technology"></a>13. Using Enterprise JavaBeans Technology</h2>
+<h2 id="using-enterprise-javabeans-technology"><a class="anchor" href="#using-enterprise-javabeans-technology"></a>14. Using Enterprise JavaBeans Technology</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how Enterprise JavaBeans ( EJB) technology is
@@ -10097,7 +12123,7 @@ supported in the Eclipse GlassFish.</p>
 </div>
 <div class="paragraph">
 <p>For general information about enterprise beans, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#enterprise-beans">Enterprise Beans</a>
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/entbeans/ejb-intro/ejb-intro.html">Enterprise Beans</a>
 in The Jakarta EE Tutorial.</p>
 </div>
 <div class="admonitionblock note">
@@ -10495,7 +12521,7 @@ correspond to these IDs from the timer database.</p>
 <p>This procedure explains how to deploy an EJB timer to a cluster.</p>
 </div>
 <div class="paragraph">
-<p>By default, the Eclipse GlassFish 7 timer service points to the
+<p>By default, the Eclipse GlassFish 8 timer service points to the
 preconfigured <code>jdbc/__TimerPool</code> resource, which uses an embedded Apache
 Derby database configuration that will not work in clustered
 environments.</p>
@@ -11823,7 +13849,7 @@ message is a redelivered message.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-container-managed-persistence"><a class="anchor" href="#using-container-managed-persistence"></a>14. Using Container-Managed Persistence</h2>
+<h2 id="using-container-managed-persistence"><a class="anchor" href="#using-container-managed-persistence"></a>15. Using Container-Managed Persistence</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains information on how EJB 2.1 container-managed
@@ -14053,7 +16079,7 @@ FK_FOR_ACCESSPRIVILEGES     <span class="predefined-type">VARCHAR</span>(<span c
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-java-clients"><a class="anchor" href="#developing-java-clients"></a>15. Developing Java Clients</h2>
+<h2 id="developing-java-clients"><a class="anchor" href="#developing-java-clients"></a>16. Developing Java Clients</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to develop, assemble, and deploy Java
@@ -14199,7 +16225,7 @@ Start</a>.</p>
 <div class="sect3">
 <h4 id="application-client-jar-file"><a class="anchor" href="#application-client-jar-file"></a>Application Client JAR File</h4>
 <div class="paragraph">
-<p>In Eclipse GlassFish 7, the downloaded appclient JAR file is smaller
+<p>In Eclipse GlassFish 8, the downloaded appclient JAR file is smaller
 than in previous releases, with dependent classes in separate JAR files.
 When copying the downloaded appclient to another location, make sure to
 include the JAR files containing the dependent classes as well. You can
@@ -14409,7 +16435,7 @@ Client Using the <code>appclient</code> Script</a>.</p>
 <p>Create a JMS client.</p>
 <div class="paragraph">
 <p>For detailed instructions on developing a JMS client, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-messaging-examples">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/messaging/jms-examples/jms-examples.html">
 Java Message Service Examples</a>" in The Jakarta EE Tutorial.</p>
 </div>
 </li>
@@ -14825,7 +16851,9 @@ organization does not already have one.</p>
 <p>Replace the Eclipse GlassFish self-signed certificate with the
 trusted certificate by importing the trusted certificate into the
 Eclipse GlassFish keystore using the <code>s1as</code> alias. By default, the
-keystore is located at domain-dir`/config/keystore.jks`.</p>
+keystore is located at domain-dir`/config/keystore.p12` (PKCS12 format,
+recommended). For legacy compatibility, JKS format keystores
+(<code>keystore.jks</code>) are also supported.</p>
 <div class="paragraph">
 <p>For more information about importing a trusted certificate into the
 domain keystore, see "<a href="security-guide.html#administering-jsse-certificates">Administering JSSE Certificates</a>"
@@ -16090,7 +18118,7 @@ Deployment Guide.</p>
 <p>Create a JMS client.</p>
 <div class="paragraph">
 <p>For detailed instructions on developing a JMS client, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-messaging-examples">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/messaging/jms-examples/jms-examples.html">
 Java Message Service Examples</a> in The Jakarta EE Tutorial.</p>
 </div>
 </li>
@@ -16166,7 +18194,7 @@ compatible, you merely need to run the <code>main</code> class.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-connectors"><a class="anchor" href="#developing-connectors"></a>16. Developing Connectors</h2>
+<h2 id="developing-connectors"><a class="anchor" href="#developing-connectors"></a>17. Developing Connectors</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes Eclipse GlassFish support for the Jakarta EE
@@ -16208,7 +18236,7 @@ features are supported only in the full Eclipse GlassFish.</p>
 </div>
 <div class="paragraph">
 <p>For more information about connectors, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#resource-adapters-and-contracts">
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/supporttechs/connectors/connectors.html">
 Resource Adapters and Contracts</a> in The Jakarta EE Tutorial.</p>
 </div>
 <div class="paragraph">
@@ -16978,7 +19006,7 @@ activation configuration properties.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-lifecycle-listeners"><a class="anchor" href="#developing-lifecycle-listeners"></a>17. Developing Lifecycle Listeners</h2>
+<h2 id="developing-lifecycle-listeners"><a class="anchor" href="#developing-lifecycle-listeners"></a>18. Developing Lifecycle Listeners</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Lifecycle listener modules provide a means of running short or long
@@ -17232,7 +19260,7 @@ naming context, it can get this after the <code>STARTUP_EVENT</code>,
 </div>
 </div>
 <div class="sect1">
-<h2 id="developing-osgi-enabled-java-ee-applications"><a class="anchor" href="#developing-osgi-enabled-java-ee-applications"></a>18. Developing OSGi-enabled Jakarta EE Applications</h2>
+<h2 id="developing-osgi-enabled-java-ee-applications"><a class="anchor" href="#developing-osgi-enabled-java-ee-applications"></a>19. Developing OSGi-enabled Jakarta EE Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes the features and interfaces that Eclipse GlassFish
@@ -17893,13 +19921,13 @@ in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-services-and-apis"><a class="anchor" href="#using-services-and-apis"></a>19. Using Services and APIs</h2>
+<h2 id="using-services-and-apis"><a class="anchor" href="#using-services-and-apis"></a>20. Using Services and APIs</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-jdbc-api-for-database-access"><a class="anchor" href="#using-the-jdbc-api-for-database-access"></a>20. Using the JDBC API for Database Access</h2>
+<h2 id="using-the-jdbc-api-for-database-access"><a class="anchor" href="#using-the-jdbc-api-for-database-access"></a>21. Using the JDBC API for Database Access</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to use the Java Database Connectivity (JDBC)
@@ -18415,7 +20443,7 @@ environment:</p>
 <p><code>match-connections</code></p>
 </li>
 <li>
-<p><code>max-connection-usage</code></p>
+<p><code>max-connection-usage-count</code></p>
 </li>
 <li>
 <p><code>idle-timeout</code></p>
@@ -18834,7 +20862,7 @@ connection pool.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-transaction-service"><a class="anchor" href="#using-the-transaction-service"></a>21. Using the Transaction Service</h2>
+<h2 id="using-the-transaction-service"><a class="anchor" href="#using-the-transaction-service"></a>22. Using the Transaction Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Jakarta EE platform provides several abstractions that simplify
@@ -18869,7 +20897,7 @@ Guide and the following site:
 </div>
 <div class="paragraph">
 <p>You might also want to read
-"<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions">Transactions</a>"
+"<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/supporttechs/transactions/transactions.html">Transactions</a>"
 in The Jakarta EE Tutorial.</p>
 </div>
 <div class="sect2">
@@ -19354,7 +21382,7 @@ the application code.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-java-naming-and-directory-interface"><a class="anchor" href="#using-the-java-naming-and-directory-interface"></a>22. Using the Java Naming and Directory Interface</h2>
+<h2 id="using-the-java-naming-and-directory-interface"><a class="anchor" href="#using-the-java-naming-and-directory-interface"></a>23. Using the Java Naming and Directory Interface</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A naming service maintains a set of bindings, which relate names to
@@ -19467,7 +21495,7 @@ have the same name.</p>
 <div class="paragraph">
 <p>If an EJB component is a kind of session bean and it is deployed to any
 implementation supporting the EJB 3.1specification (for example,
-Eclipse GlassFish 7), it automatically has one or more portable JNDI
+Eclipse GlassFish 8), it automatically has one or more portable JNDI
 names defined based on the syntax in the specification. Note that this
 is true of existing EJB 3.0 and 2.x applications that are deployed to an
 implementation supporting EJB 3.1. No code changes are required to the
@@ -19563,20 +21591,20 @@ name is <code>jdbc/Foo</code>.</p>
 <div class="sect3">
 <h4 id="disabling-glassfish-server-v2-jndi-names"><a class="anchor" href="#disabling-glassfish-server-v2-jndi-names"></a>Disabling Eclipse GlassFish V2 JNDI Names</h4>
 <div class="paragraph">
-<p>The EJB 3.1 specification supported by Eclipse GlassFish 7 defines
+<p>The EJB 3.1 specification supported by Eclipse GlassFish 8 defines
 portable EJB JNDI names for session beans. Because of this, there is
 less need to continue to use older vendor-specific JNDI names.</p>
 </div>
 <div class="paragraph">
 <p>By default, Eclipse GlassFish V2-specific JNDI names are applied
-automatically by Eclipse GlassFish 7 for backward compatibility.
+automatically by Eclipse GlassFish 8 for backward compatibility.
 However, this can lead to some ease-of-use issues. For example,
 deploying two different applications containing a remote EJB component
 that exposes the same remote interface causes a conflict between the
 default JNDI names.</p>
 </div>
 <div class="paragraph">
-<p>The default handling of V2-specific JNDI names in Eclipse GlassFish 7
+<p>The default handling of V2-specific JNDI names in Eclipse GlassFish 8
 can be managed by using the <code>asadmin</code> command:</p>
 </div>
 <div class="listingblock">
@@ -20125,7 +22153,7 @@ in Eclipse GlassFish.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-java-message-service"><a class="anchor" href="#using-the-java-message-service"></a>23. Using the Java Message Service</h2>
+<h2 id="using-the-java-message-service"><a class="anchor" href="#using-the-java-message-service"></a>24. Using the Java Message Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to use the Java Message Service (JMS) API.
@@ -20149,7 +22177,7 @@ the Web Profile.</p>
 </div>
 <div class="paragraph">
 <p>For information about the JMS, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#messaging">Messaging</a>
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/messaging/jms-concepts/jms-concepts.html">Messaging</a>
 in The Jakarta EE Tutorial.</p>
 </div>
 <div class="paragraph">
@@ -20421,7 +22449,7 @@ SOAPMessage soapMessage = MessageTransformer.SOAPMessageFromJMSMessage(message, 
 </div>
 </div>
 <div class="sect1">
-<h2 id="using-the-jakarta-mail-api"><a class="anchor" href="#using-the-jakarta-mail-api"></a>24. Using the Jakarta Mail API</h2>
+<h2 id="using-the-jakarta-mail-api"><a class="anchor" href="#using-the-jakarta-mail-api"></a>25. Using the Jakarta Mail API</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter describes how to use the Jakarta Mail API, which provides a set
@@ -20756,7 +22784,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-27 15:16:07 UTC
+Last updated 2026-02-04 18:13:01 UTC
 </div>
 </div>
 </body>

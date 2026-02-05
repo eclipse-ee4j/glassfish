@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Administration Guide, Release 7</title>
+<title>Eclipse GlassFish Administration Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Administration Guide, Release 7</h1>
+<h1>Eclipse GlassFish Administration Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -34,6 +34,7 @@
 <ul class="sectlevel3">
 <li><a href="#initial-configuration-tasks">Initial Configuration Tasks</a></li>
 <li><a href="#how-dotted-names-work-for-configuration">How Dotted Names Work for Configuration</a></li>
+<li><a href="#variable-references-in-configuration">Variable references in Configuration</a></li>
 <li><a href="#configuration-files">Configuration Files</a></li>
 <li><a href="#impact-of-configuration-changes">Impact of Configuration Changes</a></li>
 </ul>
@@ -109,7 +110,7 @@
 <li><a href="#supported-content-types-in-requests-to-rest-resources">Supported Content Types in Requests to REST Resources</a></li>
 </ul>
 </li>
-<li><a href="#log-executed-admin-commands">Log executed admin commands</a></li>
+<li><a href="#log-executed-admin-commands">Admin Command Logger - log executed admin commands</a></li>
 </ul>
 </li>
 <li><a href="#administering-domains">3 Administering Domains</a>
@@ -193,6 +194,12 @@
 <li><a href="#to-list-thread-pools">To List Thread Pools</a></li>
 <li><a href="#to-update-a-thread-pool">To Update a Thread Pool</a></li>
 <li><a href="#to-delete-a-thread-pool">To Delete a Thread Pool</a></li>
+</ul>
+</li>
+<li><a href="#using-virtual-threads">Using Virtual Threads</a>
+<ul class="sectlevel3">
+<li><a href="#configuring-virtual-threads">Configuring Virtual Threads</a></li>
+<li><a href="#virtual-thread-behavior">Virtual Thread Behavior</a></li>
 </ul>
 </li>
 </ul>
@@ -665,21 +672,25 @@
 <p>Administration Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>Contributed 2018 - 2024</p>
+<p>Contributed 2018 - 2026</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 Administration Guide provides
+<p>Eclipse GlassFish 8 Administration Guide provides
 instructions for configuring and administering Eclipse GlassFish.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Administration Guide, Release 7</p>
+<p>Eclipse GlassFish Administration Guide, Release 8</p>
 </div>
 <div class="paragraph">
-<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2019,2026 Contributors to the Eclipse Foundation.
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
 <p>This program and the accompanying materials are made available under the
@@ -719,7 +730,7 @@ Eclipse GlassFish.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -903,7 +914,7 @@ based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.</p>
 </li>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/">The Jakarta EE Tutorial</a>.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.</p>
 </li>
@@ -920,7 +931,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -1086,13 +1097,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -1107,13 +1118,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -1199,7 +1210,7 @@ administration values.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>For the zip bundle of Eclipse GlassFish 7, the default administrator
+<p>For the zip bundle of Eclipse GlassFish 8, the default administrator
 login is <code>admin</code>, with no password, which means that no login is
 required.</p>
 </div>
@@ -1331,6 +1342,9 @@ configuration file.</p>
 </li>
 <li>
 <p><a href="#how-dotted-names-work-for-configuration">How Dotted Names Work for Configuration</a></p>
+</li>
+<li>
+<p><a href="#variable-references-in-configuration">Variable references in Configuration</a></p>
 </li>
 <li>
 <p><a href="#configuration-files">Configuration Files</a></p>
@@ -1586,6 +1600,144 @@ to true:</p>
 </li>
 </ol>
 </div>
+</div>
+<div class="sect3">
+<h4 id="variable-references-in-configuration"><a class="anchor" href="#variable-references-in-configuration"></a>Variable references in Configuration</h4>
+<div class="paragraph">
+<p>Instead of using hard-coded textual values in configuration files, you can use
+variable references. Variable references are used to refer to values that are either repeatedly used through the configuration (e.g. a path to a directory), or values that should be different for different instances that share the same configuration (e.g. a port number), or values that are not known at the time of configuration. Variable references cannot be used for properties that expect a number or another non-textual value.</p>
+</div>
+<div class="paragraph">
+<p>You can specify variable reference as <code>${variable}</code>, where <code>variable</code> is the name of the variable. The value of the variable can contain another variable reference, which is resolved recursively. Variable reference can be used together with other textual values or variable references, for example, <code>${variable}/path/to/${filename}</code>.</p>
+</div>
+<div class="paragraph">
+<p>Variables are resolved from the following sources, in the order of precedence:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>System properties. They can be specified either using a <code>-D</code> JVM option, or as a system property for a target using the <a href="reference-manual.html#create-jvm-options"><code>create-jvm-options</code></a> command. It&#8217;s also possible to reference any existing JVM system property, including standard Java properties like <code>java.home</code></p>
+</li>
+<li>
+<p>Environment variables. They can be either with the exact same name, or name with non-alphanumeric characters replaced with <code>_</code>, or additionally with alphanumeric characters in uppercase. For example, if the variable reference is ${my.variable}, it will be first resolved against <code>my.variable</code>, then against <code>my_variable</code>, then against <code>MY_VARIABLE</code>. This allows defining variables that are not valid environment variable identifiers, such as those containing a hyphen (<code>-</code>) or a dot (<code>.</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a variable reference is not resolved, the reference will not be replaced. So, if a variable <code>variable</code> is not defined, the value <code>${variable}</code> will simply remain <code>${variable}</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>System properties that adjust variable resolution:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.glassfish.variableExpansion.envDisabled</code> -  disables resolution from environment variables and allows only resolving from system properties. This allows keeping the behavior of older versions of Eclipse GlassFish</p>
+</li>
+<li>
+<p><code>org.glassfish.variableExpansion.envPreferred</code> - changes the priority - values are resolved first from environment variables and then from system properties</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following is a list of variables defined by Eclipse GlassFish that can be used in variable references:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 30%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.agentRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for (remote) nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/nodes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.configName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server-config</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.configRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The config directory in the domain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/config</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.derbyRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for the Apache Derby database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/javadb</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.domainName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the domain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>domain1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.domainsRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory for domains</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/domains</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.hostName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host name of the server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>192.168.0.1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.imqBin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The directory where the Message Queue binaries are located</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/mq/bin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.imqLib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The directory where the Message Queue libraries are located</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/mq/lib</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.installRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>glassfish</code> directory in the Eclipse GlassFish installation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.installRootURI</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI of the <code>glassfish</code> directory in the Eclipse GlassFish installation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file:/path/to/glassfish_installation/glassfish/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server instance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory of the domain configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation/glassfish/domains/domain1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceRootURI</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI of the domain configuration root</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file:/path/to/glassfish_installation/glassfish/domains/domain1/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.javaRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory of the Java installation used to run the current JVM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/java_installation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.productRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root directory of the Eclipse GlassFish installation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/path/to/glassfish_installation</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="configuration-files"><a class="anchor" href="#configuration-files"></a>Configuration Files</h4>
@@ -2173,6 +2325,56 @@ For instructions, see <a href="#to-restart-a-domain">To Restart a Domain</a>.</p
 </div>
 </div>
 <div class="sect4">
+<h5 id="administration-console-security-considerations"><a class="anchor" href="#administration-console-security-considerations"></a>Administration Console Security Considerations</h5>
+<div class="paragraph">
+<p>The Administration Console provides a web-based interface for managing Eclipse GlassFish domains and instances. While convenient for development and testing, the Administration Console presents security considerations for production environments:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Attack Surface</strong>: The console exposes administrative functionality through HTTP/HTTPS endpoints that could be targeted by attackers.</p>
+</li>
+<li>
+<p><strong>Authentication</strong>: Even with proper authentication, web-based interfaces are subject to various web application attacks.</p>
+</li>
+<li>
+<p><strong>Network Exposure</strong>: The console typically listens on network interfaces that may be accessible from untrusted networks.</p>
+</li>
+<li>
+<p><strong>Cross-Site Request Forgery (CSRF)</strong>: Administrators logged into the console are vulnerable to phishing attacks where malicious links can execute arbitrary administrative commands if clicked while authenticated.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Production Recommendation</strong>: For production deployments, it is recommended to disable the Administration Console and use command-line tools (<code>asadmin</code>) for administrative tasks. This reduces the attack surface and eliminates web-based attack vectors.</p>
+</div>
+<div class="paragraph">
+<p>If the Administration Console must remain enabled in production:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enable secure administration using <code>enable-secure-admin</code></p>
+</li>
+<li>
+<p>Use strong authentication credentials</p>
+</li>
+<li>
+<p>Restrict network access using firewalls</p>
+</li>
+<li>
+<p>Monitor access logs for suspicious activity</p>
+</li>
+<li>
+<p>Keep Eclipse GlassFish updated with security patches</p>
+</li>
+<li>
+<p><strong>Avoid clicking unverified links while logged in</strong>: Log out of the Administration Console before browsing to external sites to prevent CSRF attacks that could execute administrative commands</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
 <h5 id="to-disable-the-administration-console-loading"><a class="anchor" href="#to-disable-the-administration-console-loading"></a>To Disable the Administration Console Loading</h5>
 <div class="paragraph">
 <p>Disabling the Administration Console loading involves changing the value of the property
@@ -2577,7 +2779,7 @@ and unzip the required files.</p>
 </div>
 </li>
 <li>
-<p>Download the following files to the parent of the <code>glassfish7</code>
+<p>Download the following files to the parent of the <code>glassfish8</code>
 directory of your Eclipse GlassFish installation.
 <a href="http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip"><code>glassfish-osgi-http-3.1.2.zip</code></a></p>
 <div class="paragraph">
@@ -2836,7 +3038,7 @@ system, use backslashes (\) instead. For example:</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides instructions for performing general administration
-tasks in the Eclipse GlassFish 7 environment by
+tasks in the Eclipse GlassFish 8 environment by
 using the <code>asadmin</code> command-line utility.</p>
 </div>
 <div class="paragraph">
@@ -4761,7 +4963,7 @@ the <code>POST</code> method.</p>
       }
     ],
     &quot;entity&quot;:{
-      &quot;installDir&quot;:&quot;\/export\/glassfish7&quot;,
+      &quot;installDir&quot;:&quot;\/export\/glassfish8&quot;,
       &quot;name&quot;:&quot;sj01&quot;,
       &quot;nodeDir&quot;:null,
       &quot;nodeHost&quot;:
@@ -4870,7 +5072,7 @@ for administration is 4848.</p>
       }
     ],
     &quot;entity&quot;:{
-      &quot;installDir&quot;:&quot;\/export\/glassfish7&quot;,
+      &quot;installDir&quot;:&quot;\/export\/glassfish8&quot;,
       &quot;name&quot;:&quot;sj01&quot;,
       &quot;nodeDir&quot;:null,
       &quot;nodeHost&quot;:
@@ -5801,7 +6003,7 @@ example is <code><a href="http://localhost:4848/management/domain/nodes/node/sj0
       }
     ],
     <span class="key"><span class="delimiter">&quot;</span><span class="content">entity</span><span class="delimiter">&quot;</span></span>:{
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">installDir</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="char">\/</span><span class="content">export</span><span class="char">\/</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">installDir</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="char">\/</span><span class="content">export</span><span class="char">\/</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">sj01</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">nodeDir</span><span class="delimiter">&quot;</span></span>:<span class="value">null</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">nodeHost</span><span class="delimiter">&quot;</span></span>:
@@ -6145,7 +6347,7 @@ example is <code><a href="http://localhost:4848/management/domain/nodes/node/sj0
    <span class="tag">&lt;/entry&gt;</span>
    <span class="tag">&lt;entry</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">entity</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;map&gt;</span>
-     <span class="tag">&lt;entry</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">installDir</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/export/glassfish7</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+     <span class="tag">&lt;entry</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">installDir</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/export/glassfish8</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
      <span class="tag">&lt;entry</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sj01</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
      <span class="tag">&lt;entry</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">nodeDir</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
      <span class="tag">&lt;entry</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">SSH</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
@@ -6975,7 +7177,7 @@ example is <code><a href="http://localhost:4848/management/domain/view-log/detai
       <span class="key"><span class="delimiter">&quot;</span><span class="content">recordNumber</span><span class="delimiter">&quot;</span></span>:<span class="integer">475</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggedDateTimeInMS</span><span class="delimiter">&quot;</span></span>:<span class="integer">1300743782815</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggedLevel</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>,
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">productName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">productName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggerName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">org.glassfish.admingui</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">nameValuePairs</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">_ThreadID=25;_ThreadName=Thread-1;</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">messageID</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
@@ -6985,7 +7187,7 @@ example is <code><a href="http://localhost:4848/management/domain/view-log/detai
       <span class="key"><span class="delimiter">&quot;</span><span class="content">recordNumber</span><span class="delimiter">&quot;</span></span>:<span class="integer">474</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggedDateTimeInMS</span><span class="delimiter">&quot;</span></span>:<span class="integer">1300728893368</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggedLevel</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>,
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">productName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">productName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggerName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">nameValuePairs</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">_ThreadID=238;_ThreadName=Thread-1;</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">messageID</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
@@ -6995,7 +7197,7 @@ example is <code><a href="http://localhost:4848/management/domain/view-log/detai
       <span class="key"><span class="delimiter">&quot;</span><span class="content">recordNumber</span><span class="delimiter">&quot;</span></span>:<span class="integer">473</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggedDateTimeInMS</span><span class="delimiter">&quot;</span></span>:<span class="integer">1300728893367</span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggedLevel</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>,
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">productName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">productName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">loggerName</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system.core.com.sun.enterprise.v3.server</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">nameValuePairs</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">_ThreadID=238;_ThreadName=Thread-1;</span><span class="delimiter">&quot;</span></span>,
       <span class="key"><span class="delimiter">&quot;</span><span class="content">messageID</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">CORE10010</span><span class="delimiter">&quot;</span></span>,
@@ -7105,15 +7307,15 @@ example is <code><a href="http://localhost:4848/management/domain/view-log/detai
  <span class="tag">&lt;record</span> <span class="attribute-name">loggedDateTimeInMS</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1300743782815</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">loggedLevel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>
  <span class="attribute-name">loggerName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.glassfish.admingui</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">messageID</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
  <span class="attribute-name">nameValuePairs</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_ThreadID=25;_ThreadName=Thread-1;</span><span class="delimiter">&quot;</span></span>
- <span class="attribute-name">productName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">recordNumber</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">475</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+ <span class="attribute-name">productName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">recordNumber</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">475</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
  <span class="tag">&lt;record</span> <span class="attribute-name">loggedDateTimeInMS</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1300728893368</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">loggedLevel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>
  <span class="attribute-name">loggerName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter</span><span class="delimiter">&quot;</span></span>
   <span class="attribute-name">messageID</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">nameValuePairs</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_ThreadID=238;_ThreadName=Thread-1;</span><span class="delimiter">&quot;</span></span>
-  <span class="attribute-name">productName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">recordNumber</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">474</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="attribute-name">productName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">recordNumber</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">474</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
  <span class="tag">&lt;record</span> <span class="attribute-name">loggedDateTimeInMS</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1300728893367</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">loggedLevel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">INFO</span><span class="delimiter">&quot;</span></span>
  <span class="attribute-name">loggerName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system.core.com.sun.enterprise.v3.server</span><span class="delimiter">&quot;</span></span>
  <span class="attribute-name">messageid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">core10010</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">nameValuePairs</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_ThreadID=238;_ThreadName=Thread-1;</span><span class="delimiter">&quot;</span></span>
- <span class="attribute-name">productName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish7</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">recordNumber</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">473</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+ <span class="attribute-name">productName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">glassfish8</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">recordNumber</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">473</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
 <span class="tag">&lt;/records&gt;</span></code></pre>
 </div>
 </div>
@@ -7160,9 +7362,9 @@ specify the type through the <code>-H</code> option as follows:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="log-executed-admin-commands"><a class="anchor" href="#log-executed-admin-commands"></a>Log executed admin commands</h3>
+<h3 id="log-executed-admin-commands"><a class="anchor" href="#log-executed-admin-commands"></a>Admin Command Logger - log executed admin commands</h3>
 <div class="paragraph">
-<p>It&#8217;s possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.</p>
+<p>The Admin Command Logger makes it possible to log admin commands executed either using the asadmin CLI, Admin Console, or the REST interface.</p>
 </div>
 <div class="paragraph">
 <p>To enable this logging, set the system property <code>glassfish.commandlogger.logmode</code> on the DAS server to one of the following values:</p>
@@ -8332,16 +8534,16 @@ The Windows Service was created successfully.  It is ready to be started.  Here 
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 Eclipse GlassFish
-Domain Directory: C:\glassfish7\glassfish\domains\domain1
-Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
+Domain Directory: C:\glassfish8\glassfish\domains\domain1
+Configuration file for Windows Services Wrapper: C:\glassfish8\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
-Start Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  start
-Stop Command:   C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  stop
-Uninstall Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Start Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  start
+Stop Command:   C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Uninstall Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
-Install Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Install Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 install
 
 This message is also available in a file named PlatformServices.log in the domain's
@@ -8425,7 +8627,7 @@ Here are the most typical Linux commands of interest:
 * /etc/init.d/GlassFish_domain1 restart
 
 For your convenience this message has also been saved to this file:
-/export/glassfish7/glassfish/domains/domain1/PlatformServices.log
+/export/glassfish8/glassfish/domains/domain1/PlatformServices.log
 Command create-service executed successfully.</code></pre>
 </div>
 </div>
@@ -8513,9 +8715,9 @@ The Service was created successfully. Here are the details:
 Name of the service:application/GlassFish/domain1
 Type of the service:Domain
 Configuration location of the service:/home/gfuser/glassfish-installations
-/glassfish7/glassfish/domains
+/glassfish8/glassfish/domains
 Manifest file location on the system:/var/svc/manifest/application
-/GlassFish/domain1_home_gfuser_glassfish-installations_glassfish7
+/GlassFish/domain1_home_gfuser_glassfish-installations_glassfish8
 _glassfish_domains/Domain-service-smf.xml.
 You have created the service but you need to start it yourself.
 Here are the most typical Solaris commands of interest:
@@ -8751,7 +8953,7 @@ most recent backup stored in a specified backup directory:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; restore-domain --backupdir /net/backups.example.com/glassfish domain1
-Restored the domain (domain1) to /home/user1/glassfish7/glassfish/domains/domain1
+Restored the domain (domain1) to /home/user1/glassfish8/glassfish/domains/domain1
 Command restore-domain executed successfully.</code></pre>
 </div>
 </div>
@@ -9025,7 +9227,7 @@ typing <code>asadmin help uptime</code> at the command line.</p>
 <div class="sect3">
 <h4 id="to-switch-a-domain-to-another-supported-java-version"><a class="anchor" href="#to-switch-a-domain-to-another-supported-java-version"></a>To Switch a Domain to Another Supported Java Version</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 requires Java SE 11 as the underlying virtual
+<p>Eclipse GlassFish 8 requires Java SE 11 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).</p>
 </div>
 <div class="admonitionblock note">
@@ -9234,8 +9436,8 @@ Command stop-domain executed successfully.
 $ asadmin start-domain
 Waiting for domain1 to start ........................
 Successfully started the domain : domain1
-domain  Location: /export/glassfish7/glassfish/domains/domain1
-Log File: /export/glassfish7/glassfish/domains/domain1/logs/server.log
+domain  Location: /export/glassfish8/glassfish/domains/domain1
+Log File: /export/glassfish8/glassfish/domains/domain1/logs/server.log
 Admin Port: 4849
 Command start-domain executed successfully.</code></pre>
 </div>
@@ -9289,7 +9491,7 @@ typing the following commands at the command line:</p>
 <div class="paragraph">
 <p>This chapter provides procedures for administering the Virtual Machine
 for the Java platform (Java Virtual Machine) or JVM machine) in the
-Eclipse GlassFish 7 environment by using the
+Eclipse GlassFish 8 environment by using the
 <code>asadmin</code> command-line utility.</p>
 </div>
 <div class="paragraph">
@@ -9421,11 +9623,13 @@ subcommand.</p>
 -XX: UnlockDiagnosticVMOptions
 -Dcom.sun.enterprise.config.config_environment_factory_class=com.sun.enterprise.
 config.serverbeans.AppserverConfigEnvironmentFactory
--Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
+-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12
 -XX:NewRatio=2
--Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
 -Djdbc.drivers=org.apache.derby.jdbc.ClientDriver
--Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks
+-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12
+
+# NOTE: PKCS12 format (.p12) is recommended. For legacy compatibility,
+# JKS format (.jks) is also supported.
 -client
 -Djava.ext.dirs=${com.sun.aas.javaRoot}/lib/ext${path.separator}${com.sun.aas.ja
 vaRoot}/jre/lib/ext${path.separator}${com.sun.aas.instanceRoot}/lib/ext${path.se
@@ -9697,7 +9901,7 @@ typing <code>asadmin help delete-profiler</code> at the command line.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides procedures for administering thread pools in the
-Eclipse GlassFish 7 environment by using the
+Eclipse GlassFish 8 environment by using the
 <code>asadmin</code> command-line utility.</p>
 </div>
 <div class="paragraph">
@@ -9710,6 +9914,9 @@ Eclipse GlassFish 7 environment by using the
 </li>
 <li>
 <p><a href="#configuring-thread-pools">Configuring Thread Pools</a></p>
+</li>
+<li>
+<p><a href="#using-virtual-threads">Using Virtual Threads</a></p>
 </li>
 </ul>
 </div>
@@ -10000,6 +10207,65 @@ typing <code>asadmin help delete-threadpool</code> at the command line.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="using-virtual-threads"><a class="anchor" href="#using-virtual-threads"></a>Using Virtual Threads</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish supports virtual threads for HTTP request processing, providing improved scalability for high-concurrency applications.</p>
+</div>
+<div class="sect3">
+<h4 id="configuring-virtual-threads"><a class="anchor" href="#configuring-virtual-threads"></a>Configuring Virtual Threads</h4>
+<div class="paragraph">
+<p>To enable virtual threads for an HTTP thread pool, set the thread pool&#8217;s class name to the virtual thread executor service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.VirtualThreadExecutorService
+Command set executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To revert to platform threads, set the class name back to the default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.GrizzlyExecutorService
+Command set executed successfully</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="virtual-thread-behavior"><a class="anchor" href="#virtual-thread-behavior"></a>Virtual Thread Behavior</h4>
+<div class="paragraph">
+<p>When virtual threads are enabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A new virtual thread is created for each HTTP request and destroyed when the request completes</p>
+</li>
+<li>
+<p>Maximum parallel requests equals the sum of <code>max-thread-pool-size</code> and <code>max-queue-size</code></p>
+</li>
+<li>
+<p>The <code>min-thread-pool-size</code> and <code>idle-timeout</code> parameters are ignored</p>
+</li>
+<li>
+<p>Configuration changes apply immediately without requiring a server restart</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For optimal performance with virtual threads, set high limits:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=10000
+asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.max-queue-size=10000
+Command set executed successfully</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -10007,7 +10273,7 @@ typing <code>asadmin help delete-threadpool</code> at the command line.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter explains how to administer web applications in the
-Eclipse GlassFish 7 environment.</p>
+Eclipse GlassFish 8 environment.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -10261,7 +10527,7 @@ container with web servers such as Apache HTTP Server. By using
 <div class="paragraph">
 <p>You can also use <code>mod_jk</code> directly at the JSP/servlet engine for load
 balancing. For more information about configuring <code>mod_jk</code> and Apache
-HTTP Server for load balancing with Eclipse GlassFish 7 refer to
+HTTP Server for load balancing with Eclipse GlassFish 8 refer to
 "<a href="ha-administration-guide.html#configuring-http-load-balancing">Configuring HTTP Load Balancing</a>" in Eclipse GlassFish High Availability Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -10971,7 +11237,7 @@ of the Eclipse GlassFish instances in the cluster.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides instructions on how to configure logging and how
-to view log information in the Eclipse GlassFish 7 environment.</p>
+to view log information in the Eclipse GlassFish 8 environment.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -11009,9 +11275,9 @@ in the server runtime and determine the overall health of the server.</p>
 <p>Although application components can use other logging frameworks as
 <code><a href="https://www.slf4j.org/">SLF4J</a></code> or <code><a href="https://logging.apache.org/log4j/2.x/">LOG4J2</a></code>,
 we recommend to use the
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/package-summary.html">Java Util Logging Framework</a></code>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.logging/java/util/logging/package-summary.html">Java Util Logging Framework</a></code>
 or even better it&#8217;s latest facade
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.Logger.html">System.Logger</a></code>.</p>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.Logger.html">System.Logger</a></code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -11594,7 +11860,7 @@ Default is 100 Megabytes. The final file will be slightly larger.</p>
 <h5 id="SimpleLogHandler"><a class="anchor" href="#SimpleLogHandler"></a>SimpleLogHandler</h5>
 <div class="paragraph">
 <p>The <code>org.glassfish.main.jul.handler.SimpleLogHandler</code> has similar targets as the
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/ConsoleHandler.html">`ConsoleHandler</code></a>`,
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.logging/java/util/logging/ConsoleHandler.html">`ConsoleHandler</code></a>`,
 with few differences:</p>
 </div>
 <div class="ulist">
@@ -11731,7 +11997,7 @@ the Oracle Diagnostic Loggging Format (ODL).</p>
 <div class="listingblock">
 <div class="content">
 <pre>[2022-08-01T19:43:29.952291+02:00] [GlassFish 7.0] [INFO] [] [com.sun.enterprise.server.logging.LogManagerService] [tid: _ThreadID=1 _ThreadName=main] [levelValue: 800] [[
-Using property file: /app/appservers/glassfish7/glassfish/domains/domain1/config/logging.properties]]
+Using property file: /app/appservers/glassfish8/glassfish/domains/domain1/config/logging.properties]]
 
 [2022-08-01T19:43:29.986871+02:00] [GlassFish 7.0] [INFO] [NCLS-LOGGING-00009] [com.sun.enterprise.server.logging.LogManagerService] [tid: _ThreadID=1 _ThreadName=main] [levelValue: 800] [[
 Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150 2022-08-01T11:18:51+0200)]]</pre>
@@ -11759,7 +12025,7 @@ See <a href="#excluded-fields">Excluded Fields</a></p>
 <p><code>printSource</code> - if set to <code>true</code>, logs the class and method which created the log record. Default is <code>false</code>.</p>
 </li>
 <li>
-<p><code>timestampFormat</code> - see the <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a></code> documentation.
+<p><code>timestampFormat</code> - see the <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a></code> documentation.
 Default is <code><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a></code> timestamp with microseconds and time zone.</p>
 </li>
 </ul>
@@ -11774,7 +12040,7 @@ the Uniform Loggging Format.</p>
 <div class="listingblock">
 <div class="content">
 <pre>[#|2022-08-02T18:16:29.677628+02:00|INFO|GlassFish 7.0|com.sun.enterprise.server.logging.LogManagerService|_ThreadID=1;_ThreadName=main;_LevelValue=800;|
-Using property file: /app/appservers/glassfish7/glassfish/domains/domain1/config/logging.properties|#]
+Using property file: /app/appservers/glassfish8/glassfish/domains/domain1/config/logging.properties|#]
 
 [#|2022-08-02T18:16:29.755356+02:00|INFO|GlassFish 7.0|com.sun.enterprise.server.logging.LogManagerService|_ThreadID=1;_ThreadName=main;_LevelValue=800;_MessageID=NCLS-LOGGING-00009;|
 Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150 2022-08-01T11:18:51+0200)|#]</pre>
@@ -11808,7 +12074,7 @@ See <a href="#excluded-fields">Excluded Fields</a></p>
 <p><code>recordMarker.end</code> - the suffix of the log record, default is <code>|#]</code>.</p>
 </li>
 <li>
-<p><code>timestampFormat</code> - see the <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a></code> documentation.
+<p><code>timestampFormat</code> - see the <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a></code> documentation.
 Default is <code><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a></code> timestamp with microseconds and time zone.</p>
 </li>
 </ul>
@@ -11821,7 +12087,7 @@ Default is <code><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a></
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>22:50:43.174228    INFO                 main          com.sun.enterprise.server.logging.LogManagerService Using property file: /app/appservers/glassfish7/glassfish/domains/domain1/config/logging.properties
+<pre>22:50:43.174228    INFO                 main          com.sun.enterprise.server.logging.LogManagerService Using property file: /app/appservers/glassfish8/glassfish/domains/domain1/config/logging.properties
 22:50:43.266648    INFO                 main          com.sun.enterprise.server.logging.LogManagerService Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150 2022-08-01T11:18:51+0200)</pre>
 </div>
 </div>
@@ -11841,7 +12107,7 @@ while when set to <code>false</code> it prefers the logger name.</p>
 <p><code>size.class</code> - number of characters taken by the class name column. Default is 60.</p>
 </li>
 <li>
-<p><code>timestampFormat</code> - see the <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a></code> documentation.
+<p><code>timestampFormat</code> - see the <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a></code> documentation.
 Default is <code><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a></code> time with microseconds (not date, no timezone).</p>
 </li>
 </ul>
@@ -11852,7 +12118,7 @@ Default is <code><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a></
 <div class="paragraph">
 <p>The full name is <code>java.util.logging.SimpleFormatter</code>. It is a default formatter provided by the JDK,
 simple but very flexible. It&#8217;s most important property is <code>format</code>. Read the
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/SimpleFormatter.html">documentation of the SimpleFormatter class</a></code>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.logging/java/util/logging/SimpleFormatter.html">documentation of the SimpleFormatter class</a></code>
 for more.</p>
 </div>
 </div>
@@ -13066,7 +13332,7 @@ you can print all actual logger names and levels as we described in <a href="#to
 <h2 id="administering-the-monitoring-service"><a class="anchor" href="#administering-the-monitoring-service"></a>8 Administering the Monitoring Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter explains how to monitor the Eclipse GlassFish 7 components and services by using the <code>asadmin</code> command-line
+<p>This chapter explains how to monitor the Eclipse GlassFish 8 components and services by using the <code>asadmin</code> command-line
 utility. Instructions for configuring JConsole to monitor Eclipse GlassFish resources are also provided.</p>
 </div>
 <div class="paragraph">
@@ -17118,7 +17384,7 @@ something like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>[#|2009-12-03T10:25:17.737-0800|INFO|glassfish7.0|
+<pre class="CodeRay highlight"><code>[#|2009-12-03T10:25:17.737-0800|INFO|glassfish8.0|
 x..system.tools.admin.org.glassfish.server|_ThreadID=20;
 _ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService
 URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]</code></pre>
@@ -17171,7 +17437,7 @@ the <code>amx</code> and <code>java.lang</code> domains.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides procedures for administering life cycle modules in
-the Eclipse GlassFish 7 environment.</p>
+the Eclipse GlassFish 8 environment.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -17516,7 +17782,7 @@ Eclipse GlassFish, the job repository is a database</p>
 <div class="paragraph">
 <p>For detailed information about batch jobs, batch processing, and the
 batch processing framework, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#batch-processing">Batch Processing</a>
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/supporttechs/batch-processing/batch-processing.html">Batch Processing</a>
 in The Jakarta EE Tutorial. Also see
 <a href="http://jcp.org/en/jsr/detail?id=352">Java Specification Request 352:
 Batch Applications for the Java Platform</a>
@@ -17878,7 +18144,7 @@ line.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides procedures for performing database connectivity
-tasks in the Eclipse GlassFish 7 environment by
+tasks in the Eclipse GlassFish 8 environment by
 using the <code>asadmin</code> command-line utility.</p>
 </div>
 <div class="paragraph">
@@ -18967,7 +19233,7 @@ logs. A sample SQL trace record looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>[#|2009-11-27T15:46:52.202+0530|FINE|glassfish7.0|jakarta.enterprise.resource.sqltrace.com.sun.gjc.util
+<pre class="CodeRay highlight"><code>[#|2009-11-27T15:46:52.202+0530|FINE|glassfish8.0|jakarta.enterprise.resource.sqltrace.com.sun.gjc.util
 |_ThreadID=29;_ThreadName=Thread-1;ClassName=com.sun.gjc.util.SQLTraceLogger;MethodName=sqlTrace;
 |ThreadID=77 | ThreadName=p: thread-pool-1; w: 6 | TimeStamp=1259317012202
 | ClassName=com.sun.gjc.spi.jdbc40.PreparedStatementWrapper40 | MethodName=executeUpdate
@@ -19263,7 +19529,7 @@ typing <code>asadmin help delete-jdbc-resource</code> at the command line.</p>
 <div class="sect3">
 <h4 id="etjdbcdefault-cluster"><a class="anchor" href="#etjdbcdefault-cluster"></a>Enabling the <code>jdbc/__default</code> Resource in a Clustered Environment</h4>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 includes a preconfigured JDBC resource with the
+<p>Eclipse GlassFish 8 includes a preconfigured JDBC resource with the
 JNDI name <code>jdbc/<em>default</code>. This <code>jdbc/</em>default</code> resource is not
 enabled by default, so you need to explicitly enable it if you want to
 use it in a cluster.</p>
@@ -20417,7 +20683,7 @@ only the database name.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides information and procedures for administering
-connections to enterprise information system (EIS) data in the Eclipse GlassFish 7 environment by using the <code>asadmin</code> command-line utility.</p>
+connections to enterprise information system (EIS) data in the Eclipse GlassFish 8 environment by using the <code>asadmin</code> command-line utility.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -21953,7 +22219,7 @@ typing <code>asadmin help delete-admin-object</code> at the command line.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter provides procedures for performing internet connectivity
-tasks in the Eclipse GlassFish 7 environment by
+tasks in the Eclipse GlassFish 8 environment by
 using the <code>asadmin</code> command-line utility.</p>
 </div>
 <div class="paragraph">
@@ -22223,6 +22489,14 @@ subcommand. To use the built-in <code>tcp</code> transport, skip this step.</p>
 To avoid using a thread pool, or to use the built-in <code>http-thread-pool</code>
 thread pool, skip this step.
 For additional thread pool information, see <a href="#administering-thread-pools">Administering Thread Pools</a>.</p>
+<div class="paragraph">
+<p>To enable virtual threads, set the thread pool class name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.thread-pool-name.classname=org.glassfish.grizzly.threadpool.VirtualThreadExecutorService</code></pre>
+</div>
+</div>
 </li>
 <li>
 <p>Create an HTTP listener by using the
@@ -23461,7 +23735,7 @@ through JNDI lookup or resource injection.</p>
 </div>
 <div class="paragraph">
 <p>For detailed information about concurrent resources, see
-<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-concurrency-2">Concurrency Utilities</a>
+<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/supporttechs/concurrency-utilities/concurrency-utilities.html">Concurrency Utilities</a>
 in The Jakarta EE Tutorial. Also see
 <a href="http://jcp.org/en/jsr/detail?id=236">
 Java Specification Request 236: Concurrency Utilities for Jakarta EE</a>.</p>
@@ -29503,20 +29777,20 @@ typing <code>asadmin help delete-jndi-resource</code> at the command line.</p>
 <div class="sect4">
 <h5 id="to-disable-glassfish-server-v2-vendor-specific-jndi-names"><a class="anchor" href="#to-disable-glassfish-server-v2-vendor-specific-jndi-names"></a>To Disable Eclipse GlassFish v2 Vendor-Specific JNDI Names</h5>
 <div class="paragraph">
-<p>The EJB 3.1 specification supported by Eclipse GlassFish 7 defines
+<p>The EJB 3.1 specification supported by Eclipse GlassFish 8 defines
 portable EJB JNDI names. Because of this, there is less need to continue
 to use older vendor-specific JNDI names.</p>
 </div>
 <div class="paragraph">
 <p>By default, Eclipse GlassFish v2-specific JNDI names are applied
-automatically by Eclipse GlassFish 7 for backward compatibility.
+automatically by Eclipse GlassFish 8 for backward compatibility.
 However, this can lead to some ease-of-use issues. For example,
 deploying two different applications containing a Remote EJB component
 that exposes the same remote interface causes a conflict between the
 default JNDI names.</p>
 </div>
 <div class="paragraph">
-<p>The default handling of v2-specific JNDI names in Eclipse GlassFish 7
+<p>The default handling of v2-specific JNDI names in Eclipse GlassFish 8
 can be managed with the <code>asadmin</code> command or with the
 <code>disable-nonportable-jndi-names</code> boolean property for the
 <code>ejb-container</code> element in <code>glassfish-ejb-jar.xml</code>.</p>
@@ -29613,7 +29887,7 @@ online help.</p>
 </div>
 <div class="paragraph">
 <p>You might also want to read
-"<a href="https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions">Transactions</a>"
+"<a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/supporttechs/transactions/transactions.html">Transactions</a>"
 in The Jakarta EE Tutorial.</p>
 </div>
 <div class="sect2">
@@ -30691,7 +30965,7 @@ tested, see the Eclipse GlassFish Release Notes.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This appendix lists the <code>asadmin</code> subcommands that are included with
-this release of the Eclipse GlassFish 7 software.</p>
+this release of the Eclipse GlassFish 8 software.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -30914,12 +31188,6 @@ Remote Shell Commands</a>.</p>
 <p>Sets the values of one or more configurable attributes. For procedural
 information in this guide, see <a href="#configuring-monitoring">Configuring
 Monitoring</a>.</p>
-</dd>
-<dt class="hdlist1"><a href="reference-manual.html#setup-local-dcom"><code>setup-local-dcom</code></a></dt>
-<dd>
-<p>Sets up the Distributed Component Object Model (DCOM) remote protocol
-on the host where the subcommand is run. The DCOM remote protocol is
-available only on Windows systems.</p>
 </dd>
 <dt class="hdlist1"><a href="reference-manual.html#show-component-status"><code>show-component-status</code></a></dt>
 <dd>
@@ -32626,7 +32894,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-27 15:14:02 UTC
+Last updated 2026-02-04 18:10:35 UTC
 </div>
 </div>
 </body>

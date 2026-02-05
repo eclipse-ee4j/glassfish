@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<title>Eclipse GlassFish Embedded Server Guide, Release 7</title>
+<title>Eclipse GlassFish Embedded Server Guide, Release 8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Eclipse GlassFish Embedded Server Guide, Release 7</h1>
+<h1>Eclipse GlassFish Embedded Server Guide, Release 8</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -27,7 +27,7 @@
 <li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
 </ul>
 </li>
-<li><a href="#GSESG">Eclipse GlassFish 7 Embedded Server Guide</a></li>
+<li><a href="#GSESG">Eclipse GlassFish 8 Embedded Server Guide</a></li>
 <li><a href="#introduction-to-embedded-glassfish-server">Introduction to Embedded Eclipse GlassFish</a></li>
 <li><a href="#editions">Embedded Eclipse GlassFish Editions</a></li>
 <li><a href="#embedded-glassfish-server-file-system">Embedded Eclipse GlassFish File System</a>
@@ -98,6 +98,24 @@
 </ul>
 </li>
 <li><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></li>
+<li><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a>
+<ul class="sectlevel2">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#enabling-monitoring-modules">Enabling Monitoring Modules</a>
+<ul class="sectlevel3">
+<li><a href="#method-1-command-line">Method 1: Command Line</a></li>
+<li><a href="#method-2-properties-file">Method 2: Properties File</a></li>
+</ul>
+</li>
+<li><a href="#accessing-monitoring-data">Accessing Monitoring Data</a>
+<ul class="sectlevel3">
+<li><a href="#using-visualvm">Using VisualVM</a></li>
+<li><a href="#exposing-jmx-on-a-specific-port">Exposing JMX on a Specific Port</a></li>
+<li><a href="#available-monitoring-modules">Available Monitoring Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></li>
 <li><a href="#restrictions-for-embedded-glassfish-server">Restrictions for Embedded Eclipse GlassFish</a></li>
 </ul>
@@ -111,10 +129,10 @@
 <p>Embedded Server Guide</p>
 </div>
 <div class="paragraph">
-<p>Release 7</p>
+<p>Release 8</p>
 </div>
 <div class="paragraph">
-<p>Contributed 2018 - 2024</p>
+<p>Contributed 2018 - 2026</p>
 </div>
 <div class="paragraph">
 <p>This document explains how to run applications in embedded Eclipse GlassFish and to develop applications in which
@@ -123,7 +141,7 @@ who are developing applications to run in embedded Eclipse GlassFish. The
 ability to program in the Java language is assumed.</p>
 </div>
 <div class="paragraph">
-<p>Note: The main thrust of the Eclipse GlassFish 7
+<p>Note: The main thrust of the Eclipse GlassFish 8
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Jakarta EE 10
 platform. Thus, the embedded server feature of Eclipse GlassFish was not
@@ -133,10 +151,14 @@ of the Jakarta EE 10 platform.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p>Eclipse GlassFish Embedded Server Guide, Release 7</p>
+<p>Eclipse GlassFish Embedded Server Guide, Release 8</p>
 </div>
 <div class="paragraph">
-<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+<p>Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2019,2026 Contributors to the Eclipse Foundation.
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
 </div>
 <div class="paragraph">
 <p>This program and the accompanying materials are made available under the
@@ -201,7 +223,7 @@ The ability to program in the Java language is assumed.</p>
 Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish 7 is developed through the GlassFish project
+<p>Eclipse GlassFish 8 is developed through the GlassFish project
 open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
 The GlassFish project provides a structured process for developing the
 Eclipse GlassFish platform that makes the new features of the Jakarta EE
@@ -385,7 +407,7 @@ based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.</p>
 </li>
 <li>
-<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+<p><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/">The Jakarta EE Tutorial</a>.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.</p>
 </li>
@@ -402,7 +424,7 @@ Eclipse GlassFish is available as follows.</p>
 located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
 </li>
 <li>
-<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+<p>The API specification for Eclipse GlassFish 8, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
 Eclipse GlassFish product, is located at
 <a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
@@ -568,13 +590,13 @@ In configuration files, as-install is represented as follows:
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8/glassfish</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+<p>SystemDrive<code>:\glassfish8\glassfish</code></p>
 </div>
 </li>
 </ul>
@@ -589,13 +611,13 @@ system, and Mac OS operating system:</p>
 <p>Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:</p>
 <div class="paragraph">
-<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+<p>user&#8217;s-home-directory<code>/glassfish8</code></p>
 </div>
 </li>
 <li>
 <p>Installations on the Windows operating system:</p>
 <div class="paragraph">
-<p>SystemDrive<code>:\glassfish7</code></p>
+<p>SystemDrive<code>:\glassfish8</code></p>
 </div>
 </li>
 </ul>
@@ -624,7 +646,7 @@ In configuration files, domain-dir is represented as follows:
 </div>
 </div>
 <div class="sect1">
-<h2 id="GSESG"><a class="anchor" href="#GSESG"></a>Eclipse GlassFish 7 Embedded Server Guide</h2>
+<h2 id="GSESG"><a class="anchor" href="#GSESG"></a>Eclipse GlassFish 8 Embedded Server Guide</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This document explains how to run applications with embedded Eclipse GlassFish and to develop applications in which
@@ -654,6 +676,9 @@ ability to program in the Java language is assumed.</p>
 </li>
 <li>
 <p><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></p>
+</li>
+<li>
+<p><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a></p>
 </li>
 <li>
 <p><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></p>
@@ -747,11 +772,6 @@ Download this file from
 <p>Contains classes needed for deploying Jakarta EE web applications.
 Download this file from
 <code><a href="https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web" class="bare">https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web</a></code>.</p>
-</dd>
-<dt class="hdlist1"><code>glassfish-embedded-nucleus.jar</code></dt>
-<dd>
-<p>Corresponds to the nucleus distribution. Download this file from
-<code><a href="https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-nucleus" class="bare">https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-nucleus</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>glassfish-embedded-static-shell.jar</code></dt>
 <dd>
@@ -901,11 +921,6 @@ an Embedded Eclipse GlassFish.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>java -jar glassfish-embedded-nucleus.jar</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
 <pre class="CodeRay highlight"><code>java -jar ${as-install}/lib/embedded/glassfish-embedded-static-shell.jar</code></pre>
 </div>
 </div>
@@ -957,7 +972,7 @@ used as the domain configuration file unless specified explicitly with
 </ul>
 </div>
 <div class="paragraph">
-<p>It&#8217;s also possible to start {Eclipse GlassFish on command line with an alternative way, via the main class:</p>
+<p>It&#8217;s also possible to start Eclipse GlassFish on command line with an alternative way, via the main class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1026,10 +1041,9 @@ or info in the application descriptors.</p>
     [--help] [applications or admin commands...]</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code></code></pre>
-</div>
+<div class="paragraph">
+<p>Command line options with a value can be specified in two forms:
+<code>--option=value</code> (e.g., <code>--httpPort=8090</code>) or <code>--option value</code> (e.g., <code>--httpPort 8090</code>).</p>
 </div>
 <div class="paragraph">
 <p><code>--properties=FILE</code></p>
@@ -1055,7 +1069,12 @@ The value will be treated as a command to execute at startup.</p>
 <li>
 <p>Keys that start with the "deploy." prefix, followed by any text. The
 value will be treated as an application to deploy at startup, as if it
-was specified on the command line.
+was specified on the command line.</p>
+</li>
+<li>
+<p>If a property name doesn&#8217;t match any already supported patterns and is not
+a recognized GlassFish property, it will be set as a system property, if
+it&#8217;s not already defined.
 For example, the $Eclipse GlassFish domain directory can be specified with the
 usual Embedded $Eclipse GlassFish property
 "glassfish.embedded.tmpdir=myDomainDir", as well as with the property
@@ -3552,6 +3571,170 @@ command when you invoke Embedded Eclipse GlassFish. For example:</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="monitoring-embedded-glassfish-server-with-jmx"><a class="anchor" href="#monitoring-embedded-glassfish-server-with-jmx"></a>Monitoring Embedded Eclipse GlassFish with JMX</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish supports monitoring through JMX MBeans, similar to regular Eclipse GlassFish Server. However, you must attache the flashlight agent on command line to enable monitoring functionality.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AMX (Application Management Extensions) monitoring is only available in <code>glassfish-embedded-all.jar</code>. The <code>glassfish-embedded-web.jar</code> does not include AMX support, which limits the available monitoring MBeans.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>To enable monitoring in Embedded Eclipse GlassFish, you need the flashlight agent JAR file:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Download from Maven Central: <code>org.glassfish.main.flashlight:flashlight-agent</code></p>
+</li>
+<li>
+<p>Or use from an existing Eclipse GlassFish installation: <code>glassfish/lib/monitor/flashlight-agent.jar</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enabling-monitoring-modules"><a class="anchor" href="#enabling-monitoring-modules"></a>Enabling Monitoring Modules</h3>
+<div class="paragraph">
+<p>By default, the monitoring service and MBeans support are enabled, but no monitoring modules are active. You can enable specific monitoring modules using one of two methods:</p>
+</div>
+<div class="sect3">
+<h4 id="method-1-command-line"><a class="anchor" href="#method-1-command-line"></a>Method 1: Command Line</h4>
+<div class="paragraph">
+<p>Start Embedded Eclipse GlassFish with the <code>enable-monitoring</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="method-2-properties-file"><a class="anchor" href="#method-2-properties-file"></a>Method 2: Properties File</h4>
+<div class="paragraph">
+<p>Create a <code>glassfish.properties</code> file in the current directory with monitoring configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH
+configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then start Embedded Eclipse GlassFish:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-monitoring-data"><a class="anchor" href="#accessing-monitoring-data"></a>Accessing Monitoring Data</h3>
+<div class="paragraph">
+<p>Once monitoring modules are enabled, you can access monitoring data through JMX clients such as VisualVM or JConsole.</p>
+</div>
+<div class="sect3">
+<h4 id="using-visualvm"><a class="anchor" href="#using-visualvm"></a>Using VisualVM</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Connect to the Embedded Eclipse GlassFish process in VisualVM</p>
+</li>
+<li>
+<p>Install the MBeans extension if not already available</p>
+</li>
+<li>
+<p>Navigate to the MBeans tab</p>
+</li>
+<li>
+<p>Execute the <code>bootAMX</code> operation first (this is required, same as with regular Eclipse GlassFish Server)</p>
+</li>
+<li>
+<p>Monitoring data will be available under the <code>amx</code> node, in nodes that end with <code>-mon</code>, such as <code>thread-pool-mon</code> or <code>request-mon</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="exposing-jmx-on-a-specific-port"><a class="anchor" href="#exposing-jmx-on-a-specific-port"></a>Exposing JMX on a Specific Port</h4>
+<div class="paragraph">
+<p>To allow remote JMX connections, you can expose the JMX server on a specific port by adding JVM system properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar \
+     -Dcom.sun.management.jmxremote \
+     -Dcom.sun.management.jmxremote.port=8686 \
+     -Dcom.sun.management.jmxremote.authenticate=false \
+     -Dcom.sun.management.jmxremote.ssl=false \
+     -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Exposing JMX without authentication and SSL is not secure and should only be used in development environments. JMX MBeans include management beans that allow executing administrative operations on Eclipse GlassFish, which could be exploited by unauthorized users. In production environments, always enable authentication and SSL for JMX connections.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="available-monitoring-modules"><a class="anchor" href="#available-monitoring-modules"></a>Available Monitoring Modules</h4>
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish supports the same monitoring modules as regular Eclipse GlassFish Server, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>thread-pool</code> - Thread pool statistics</p>
+</li>
+<li>
+<p><code>http-service</code> - HTTP service metrics</p>
+</li>
+<li>
+<p><code>web-container</code> - Web container statistics</p>
+</li>
+<li>
+<p><code>ejb-container</code> - EJB container metrics</p>
+</li>
+<li>
+<p><code>transaction-service</code> - Transaction service data</p>
+</li>
+<li>
+<p><code>jvm</code> - JVM statistics</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For comprehensive information about available monitoring modules and their metrics, see <a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a> in the Eclipse GlassFish Administration Guide.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="default-java-persistence-data-source-for-embedded-glassfish-server"><a class="anchor" href="#default-java-persistence-data-source-for-embedded-glassfish-server"></a>Default Java Persistence Data Source for Embedded Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -3624,9 +3807,6 @@ nonembedded Eclipse GlassFish with these exceptions:</p>
 <p>Administration Console</p>
 </li>
 <li>
-<p>Update Tool</p>
-</li>
-<li>
 <p>Apache Felix OSGi framework</p>
 </li>
 <li>
@@ -3688,7 +3868,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-05-27 15:17:24 UTC
+Last updated 2026-02-04 18:14:48 UTC
 </div>
 </div>
 </body>

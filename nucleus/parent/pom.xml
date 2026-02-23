@@ -286,6 +286,7 @@
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
+        <jna.version>5.18.1</jna.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
@@ -956,6 +957,11 @@
                 <groupId>org.glassfish.annotations</groupId>
                 <artifactId>logging-annotation-processor</artifactId>
                 <version>${logging-annotation-processor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${jna.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

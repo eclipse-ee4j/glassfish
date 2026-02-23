@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+    Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -29,6 +29,7 @@
 
     <groupId>org.glassfish.main.libpam4j</groupId>
     <artifactId>libpam4j</artifactId>
+    <packaging>glassfish-jar</packaging>
 
     <name>Java binding for libpam.so</name>
 
@@ -40,8 +41,6 @@
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>5.18.1</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -57,35 +56,4 @@
             <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Embed-Dependency>
-                            *;scope=compile;inline=true
-                        </Embed-Dependency>
-
-                        <!-- Export everything from the embedded jar except the folder with so libs in the final bundle -->
-                        <Export-Package>!*-*,*;version=${project.version}</Export-Package>
-
-                        <!-- Exclude unnecessary imports -->
-                        <Import-Package />
-                    </instructions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-bundle</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

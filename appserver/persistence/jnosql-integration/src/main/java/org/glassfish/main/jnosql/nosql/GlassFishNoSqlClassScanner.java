@@ -28,14 +28,11 @@ import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
-import org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner;
-import org.glassfish.persistence.jpa.JPADeployer;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentContext;
 import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
-import static org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner.JPA_DATA_ENABLED_META_DATA_KEY;
 
 /**
  * Server global implementation of class scanner for NoSQL repositories. Must be stateless.

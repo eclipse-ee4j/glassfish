@@ -23,12 +23,19 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.hk2.classmodel.reflect.ClassModel;
+import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
 import org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner;
+import org.glassfish.persistence.jpa.JPADeployer;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
+import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentContext;
+import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
+import static org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner.JPA_DATA_ENABLED_META_DATA_KEY;
 
 /**
  * Server global implementation of class scanner for NoSQL repositories. Must be stateless.
@@ -38,11 +45,31 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
  */
 public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implements ClassScanner {
 
-    private static final System.Logger LOG = System.getLogger(GlassFishJakartaPersistenceClassScanner.class.getName());
+    public static final String NOSQL_DATA_ENABLED_META_DATA_KEY = "NoSqlDataEnabled";
+
+    private static final System.Logger LOG = System.getLogger(GlassFishNoSqlClassScanner.class.getName());
 
     @Override
-    protected boolean isEnabled() {
+    public boolean isEnabled() {
+        final DeploymentContext deploymentContext = getDeploymentContext();
+        if (deploymentContext != null) {
+            Boolean enabled = deploymentContext.getTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, Boolean.class);
+            if (enabled == null) {
+                ApplicationInfo appInfo = deploymentContext.getModuleMetaData(ApplicationInfo.class);
+                enabled = isAnyEntityFound() && super.isEnabled();
+                deploymentContext.addTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, enabled);
+            }
+            return enabled;
+        }
         return true;
+
+    }
+
+    private boolean isAnyEntityFound() {
+        return getTypes().getAllTypes()
+                .stream()
+                .filter(ClassModel.class::isInstance)
+                .anyMatch(type -> type.getAnnotation(Entity.class.getName()) != null);
     }
 
     @Override
@@ -76,14 +103,14 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implem
 
     @Override
     public Set<Class<?>> repositoriesStandard() {
-        Set<Class<?>> result = repositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
+        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
         LOG.log(DEBUG, () -> "Detected standard NoSql repository interfaces: " + result);
         return result;
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
-        Set<Class<?>> result = repositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
+        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
         LOG.log(DEBUG, () -> "Detected custom NoSql interfaces: " + result);
         return result;
     }

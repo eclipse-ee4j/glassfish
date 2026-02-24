@@ -87,6 +87,10 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
 
 /**
  * Created by Krishna Deepak on 6/9/17.
+ *
+ * This should be a stateless event listener. The only public method is the
+ * {@link #event(org.glassfish.api.event.EventListener.Event) } method that responds to deployment events.
+ * That method should clean up all global fields initialized in the method to free memory in case HK2 caches this service.
  */
 @Service
 public class ResourceValidator implements EventListener, ResourceValidatorVisitor {
@@ -161,16 +165,23 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             application = dc.getModuleMetaData(Application.class);
             DeployCommandParameters commandParams = dc.getCommandParameters(DeployCommandParameters.class);
             target = commandParams.target;
-            if (System.getProperty("deployment.resource.validation", "true").equals("false")) {
-                LOG.log(Level.INFO, SKIP_RESOURCE_VALIDATION);
-                return;
+            try {
+                if (System.getProperty("deployment.resource.validation", "true").equals("false")) {
+                    LOG.log(Level.INFO, SKIP_RESOURCE_VALIDATION);
+                    return;
+                }
+                if (application == null) {
+                    return;
+                }
+                AppResources appResources = new AppResources();
+                parseResources(appResources);
+                validateResources(appResources);
+            } finally {
+                // cleanup variables scoped to this method so that they don't remain in HK2 cache
+                dc = null;
+                application = null;
+                target = null;
             }
-            if (application == null) {
-                return;
-            }
-            AppResources appResources = new AppResources();
-            parseResources(appResources);
-            validateResources(appResources);
         }
     }
 

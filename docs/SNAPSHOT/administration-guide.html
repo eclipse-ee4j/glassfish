@@ -10215,20 +10215,20 @@ typing <code>asadmin help delete-threadpool</code> at the command line.</p>
 <div class="sect3">
 <h4 id="configuring-virtual-threads"><a class="anchor" href="#configuring-virtual-threads"></a>Configuring Virtual Threads</h4>
 <div class="paragraph">
-<p>To enable virtual threads for an HTTP thread pool, set the thread pool&#8217;s class name to the virtual thread executor service:</p>
+<p>To enable virtual threads for an HTTP thread pool, set the thread pool&#8217;s <code>virtual</code> option to <code>true</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.VirtualThreadExecutorService
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.virtual=true
 Command set executed successfully</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To revert to platform threads, set the class name back to the default:</p>
+<p>To revert to platform threads, set the value to empty or <code>false</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.GrizzlyExecutorService
+<pre class="CodeRay highlight"><code>asadmin&gt; set server.thread-pools.thread-pool.http-thread-pool.virtual=
 Command set executed successfully</code></pre>
 </div>
 </div>
@@ -32894,7 +32894,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-02-25 10:54:01 UTC
+Last updated 2026-02-25 11:14:54 UTC
 </div>
 </div>
 </body>

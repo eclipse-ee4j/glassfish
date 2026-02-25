@@ -59,10 +59,10 @@ abstract public class BaseGlassFishClassScanner {
 
     /**
      * Whether this scanner is enabled or not. If not enabled, all methods return values as if there were not repository interfaces found.
-     * @return Enabled - will return found repository interfaces, not enabled - will not return any repositories. Enabled by default
+     * @return Enabled - will return found repository interfaces, not enabled - will not return any repositories. By default enabled if any repository found
      */
     protected boolean isEnabled() {
-        return true;
+        return repositoriesStreamMatching(r -> true).findAny().isPresent();
     }
 
     protected Set<Class<?>> findClassesWithAnnotation(Class<?> annotation) {
@@ -80,13 +80,17 @@ abstract public class BaseGlassFishClassScanner {
     }
 
     protected Stream<Class<?>> repositoriesStream() {
-        return repositoriesStreamMatching(r -> true);
+        return enabledRepositoriesStreamMatching(r -> true);
     }
 
-    protected Stream<Class<?>> repositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
+    protected Stream<Class<?>> enabledRepositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
         if (!isEnabled()) {
             return Stream.of();
         }
+        return repositoriesStreamMatching(predicate);
+    }
+
+    protected Stream<Class<?>> repositoriesStreamMatching(Predicate<GeneralInterfaceModel> predicate) {
         // TODO: Prepare a map of types per annotation on the class to avoid iteration over all types
         // TODO: Categorize standard and custom repositories in a single run through the stream
         // - save the result into deployment context, not into this instance, which is shared by all apps

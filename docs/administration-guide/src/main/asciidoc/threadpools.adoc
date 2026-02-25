@@ -225,19 +225,19 @@ typing `asadmin help delete-threadpool` at the command line.
 
 ==== Configuring Virtual Threads
 
-To enable virtual threads for an HTTP thread pool, set the thread pool's class name to the virtual thread executor service:
+To enable virtual threads for an HTTP thread pool, set the thread pool's `virtual` option to `true`:
 
 [source]
 ----
-asadmin> set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.VirtualThreadExecutorService
+asadmin> set server.thread-pools.thread-pool.http-thread-pool.virtual=true
 Command set executed successfully
 ----
 
-To revert to platform threads, set the class name back to the default:
+To revert to platform threads, set the value to empty or `false`:
 
 [source]
 ----
-asadmin> set server.thread-pools.thread-pool.http-thread-pool.classname=org.glassfish.grizzly.threadpool.GrizzlyExecutorService
+asadmin> set server.thread-pools.thread-pool.http-thread-pool.virtual=
 Command set executed successfully
 ----
 

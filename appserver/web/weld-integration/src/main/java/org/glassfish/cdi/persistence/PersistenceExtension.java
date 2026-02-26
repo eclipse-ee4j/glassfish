@@ -57,7 +57,7 @@ public class PersistenceExtension implements Extension  {
 
         if (container instanceof ApplicationInfo applicationInfo) {
 
-        	PersistenceUnitsDescriptor persistenceUnits = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class);
+            PersistenceUnitsDescriptor persistenceUnits = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class);
 
             if (persistenceUnits != null && !persistenceUnits.isEmpty()) {
                 firstPersistenceUnitDescriptor = persistenceUnits.getPersistenceUnitDescriptors().getFirst();

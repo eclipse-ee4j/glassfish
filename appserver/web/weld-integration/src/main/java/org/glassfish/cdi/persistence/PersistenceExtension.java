@@ -71,6 +71,7 @@ public class PersistenceExtension implements Extension  {
                     addBeanForSchemaManager(afterBeanDiscovery, descriptor);
                     addBeanForMetamodel(afterBeanDiscovery, descriptor);
                 }
+                firstPersistenceUnitDescriptor = null;
             }
         }
     }

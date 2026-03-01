@@ -98,8 +98,8 @@
         <dependencies>
             <!-- Jakarta CDI -->
             <dependency>
-                <groupId>jakarta.enterprise</groupId>
-                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <groupId>jakarta.cdi</groupId>
+                <artifactId>jakarta.cdi-api</artifactId>
                 <version>${jakarta.cdi-api.version}</version>
                 <exclusions>
                     <exclusion>
@@ -186,6 +186,17 @@
                         <enabled>true</enabled>
                         <updatePolicy>always</updatePolicy>
                         <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <name>Nexus staging</name>
+                    <id>repo3.eclipse.org</id>
+                    <url>https://repo3.eclipse.org/repository/ee4j-staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
                     </snapshots>
                 </repository>
             </repositories>

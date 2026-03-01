@@ -131,6 +131,16 @@
                                 <requireMavenVersion>
                                     <version>3.9.0</version>
                                 </requireMavenVersion>
+                                <bannedDependencies>
+                                <searchTransitive>true</searchTransitive>
+                                <excludes>
+                                    <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
+                                </excludes>
+                                <message>
+                                    jakarta.enterprise:jakarta.enterprise.cdi-api is forbidden in this build and 
+                                    superseded by jakarta.cdi:jakarta.cdi-api
+                                </message>
+                              </bannedDependencies>
                             </rules>
                         </configuration>
                     </execution>

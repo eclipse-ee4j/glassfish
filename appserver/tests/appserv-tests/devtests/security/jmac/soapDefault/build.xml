@@ -34,7 +34,7 @@
     &commonSecurity;
 
     <target name="all_old" depends="clean, build-providers, setup, build-deploy, run, undeploy, unsetup"/>
-	
+
 	<target name="all" depends="clean, build-providers, setup, build-deploy, run"/>
 
     <target name="clean" depends="init-common">
@@ -67,7 +67,7 @@
             <param name="as.props" value="${as.props} --classname com.sun.s1asdev.security.jmac.soapdefault.SOAPDefaultTestServerAuthModule --layer SOAP --providertype server --requestauthsource sender"/>
             <param name="operand.props" value="SOAPDefaultTestServerAuthModule"/>
         </antcall>
-    	
+
         <antcall target="asadmin-common">
             <param name="admin.command" value="create-message-security-provider"/>
             <param name="as.props" value="${as.props} --classname com.sun.s1asdev.security.jmac.soapdefault.SOAPDefaultTestClientAuthModule --layer SOAP --providertype client --requestauthsource sender"/>
@@ -93,7 +93,7 @@
             <replacevalue><![CDATA[<message-security-config default-client-provider="SOAPDefaultTestClientAuthModule"]]></replacevalue>
         </replace>
     </target>
-	
+
     <target name="build-deploy" depends="init-common">
         <antcall target="build-server"/>
         <antcall target="deploy-common-libraries">
@@ -114,7 +114,7 @@
             <param name="build.classes.dir" value="${build.classes.dir}/servletws/WEB-INF/classes"/>
         </antcall>
     </target>
-	
+
     <target name="build-server" depends="compile-server">
         <mkdir dir="${assemble.dir}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
@@ -178,20 +178,20 @@
         </antcall>
     </target>
 
-	
-	
+
+
 
     <target name="run" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
-    	
+
     	<property name="vmargs.base" value="-Djavax.net.ssl.keyStore=${mykeystore.db.file} -Djavax.net.ssl.trustStore=${mytruststore.db.file} -Djavax.net.ssl.keyStorePassword=${ssl.password} -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
     	<property name="vmargs.suspend" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9007"/>
-    	        
+
     	<property name="vmargs" value="${vmargs.base} ${vmargs.suspend}" if:set="env.client_suspend"/>
     	<property name="vmargs" value="${vmargs.base}" unless:set="env.client_suspend"/>
-    	        
+
     	<echo>${line.separator} RUNNING ${APPCLIENT}${line.separator}${line.separator}  APPCPATH: ${env.S1AS_HOME}/lib/test-${appname}-provider.jar${line.separator}${line.separator}  vmargs: ${vmargs} ${line.separator}${line.separator}  client:  -client ${assemble.dir}/${appname}-clientClient.jar${line.separator}${line.separator}${line.separator}</echo>
-    	        
-    	
+
+
         <exec executable="${APPCLIENT}">
             <env key="APPCPATH" value="${env.S1AS_HOME}/lib/test-${appname}-provider.jar"/>
             <env key="VMARGS" value="${vmargs}"/>
@@ -205,14 +205,14 @@
         </exec>
     </target>
 
-	
-	
-	
+
+
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
         <antcall target="undeploy-client-common"/>
     </target>
-	
+
     <target name="unsetup" depends="init-common">
         <replace file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml">
             <replacetoken><![CDATA[<provider-config class-name="com.sun.s1asdev.security.jmac.soap.SOAPDefaultTestClientAuthModule" provider-id="SOAPDefaultTestClientAuthModule" provider-type="client">

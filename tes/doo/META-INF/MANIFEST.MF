@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Build-Jdk-Spec: 17
+Bundle-Description: Jakarta Concurrency 3.1 Specification
+Bundle-DocURL: https://www.eclipse.org
+Bundle-License: http://www.eclipse.org/legal/epl-2.0, https://www.gnu.or
+ g/software/classpath/license.html
+Bundle-ManifestVersion: 2
+Bundle-Name: Jakarta Concurrency
+Bundle-SymbolicName: jakarta.enterprise.concurrent-api
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 3.1.1
+Export-Package: jakarta.enterprise.concurrent;version="3.1.1";uses:="jak
+ arta.enterprise.util,jakarta.interceptor",jakarta.enterprise.concurrent
+ .spi;version="3.1.1"
+Extension-Name: jakarta.enterprise.concurrent
+Implementation-Version: 3.1.1
+Import-Package: jakarta.enterprise.util;version="[4.1,5)",jakarta.interc
+ eptor;version="[2.2,3)",java.io,java.lang,java.lang.annotation,java.lan
+ g.invoke,java.time,java.time.chrono,java.util,java.util.concurrent,java
+ .util.function,java.util.stream
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
+Specification-Version: 3.1
+Tool: Bnd-6.3.1.202206071316
+

@@ -28,7 +28,7 @@
         <echo unless:set="env.ejb_annotations" message="@@## Set environment variable 'ejb_annotations' to name of single test dir to run only that one. ##@@${line.separator}" />
         <echo if:set="env.ejb_annotations" message="@@## environment variable 'ejb_annotations' set. Running only ${env.ejb_annotations}  ##@@${line.separator}" />
 
-    	
+
         <run-ejb_annotations-test path="noname" />
     	<run-ejb_annotations-test path="nointf" />
     	<run-ejb_annotations-test path="security" />
@@ -68,7 +68,7 @@
         <run-ejb_annotations-test path="portmethodinjection" />
         <run-ejb_annotations-test path="wsRef-webservice-features" />
     </target>
-	
+
 	<macrodef name="run-ejb_annotations-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
         <attribute name="path" />
         <sequential>

@@ -94,7 +94,7 @@
                         ant all (Executes all the ejb-ejb31-embedded tests)
         </echo>
     </target>
-	
+
 	<macrodef name="run-ejb32-embedded-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
         <attribute name="path" />
         <attribute name="target" />

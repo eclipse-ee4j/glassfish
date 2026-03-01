@@ -17,7 +17,7 @@
 
 package org.glassfish.weld;
 
-import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.el.ELAwareBeanManager;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -40,10 +40,10 @@ public class WeldContextListener implements ServletContextListener {
     private Logger logger = CDILoggerInfo.getLogger();
 
     @Inject
-    private BeanManager beanManager;
+    private ELAwareBeanManager beanManager;
 
     /**
-     * Stash the Weld EL Resolver and Weld EL Context Listener so it is recognized by JSP.
+     * Stash the Weld EL Resolver and Weld EL Context Listener so it is recognized by Jakarta Pages.
      */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

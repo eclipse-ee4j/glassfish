@@ -7,7 +7,7 @@ Bundle-ManifestVersion: 2
 Bundle-DocURL: https://github.com/eclipse/microprofile-jwt-auth/microp
  rofile-jwt-auth-api
 Bundle-Vendor: Eclipse Foundation
-Import-Package: jakarta.enterprise.util;version="[3.0,5)",jakarta.inje
+Import-Package: jakarta.enterprise.util;version="[3.0,6)",jakarta.inje
  ct;version="[2.0,3)",jakarta.json;version="[2.0,3)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
 Bundle-Developers: starksm64;name="Scott M Stark";organization="Red Ha

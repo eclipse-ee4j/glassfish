@@ -33,7 +33,11 @@ public class FelixPrettyPrinter {
     private static final Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
 
     public static void main(String[] args) {
-        System.out.println(prettyPrintExceptionMessage("Unable to resolve org.glassfish.main.concurrent.impl [138](R 138.0): missing requirement [org.glassfish.main.concurrent.impl [138](R 138.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.enterprise.concurrent.spi)(version>=2.0.0)(!(version>=3.0.0))) [caused by: Unable to resolve org.glassfish.jakarta.enterprise.concurrent [190](R 190.0): missing requirement [org.glassfish.jakarta.enterprise.concurrent [190](R 190.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.annotation)(version>=2.1.0)(!(version>=3.0.0)))] Unresolved requirements: [[org.glassfish.main.concurrent.impl [138](R 138.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.enterprise.concurrent.spi)(version>=2.0.0)(!(version>=3.0.0)))]"));
+        System.out.println(prettyPrintExceptionMessage("Unable to resolve org.glassfish.tyrus.container-servlet [56](R 56.0): missing requirement [org.glassfish.tyrus.container-servlet [56](R 56.0)] osgi.wiring.package; (&\n"
+                + "(osgi.wiring.package=org.glassfish.tyrus.core.monitoring)(version>=2.2.0)(!(version>=3.0.0))) [caused by: Unable to resolve org.glassfish.tyrus.core [36](R 36.0): missing requirement [org.glassfish.tyrus.core [36]\n"
+                + "(R 36.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.websocket.server)(version>=2.3.0)(!(version>=3.0.0))) [caused by: Unable to resolve jakarta.websocket-api [112](R 112.0): missing requirement [jakarta.\n"
+                + "websocket-api [112](R 112.0)] osgi.serviceloader; (osgi.serviceloader=jakarta.websocket.server.ServerEndpointConfig$Configurator)]] Unresolved requirements: [[org.glassfish.tyrus.container-servlet [56](R 56.0)] os\n"
+                + "gi.wiring.package; (&(osgi.wiring.package=org.glassfish.tyrus.core.monitoring)(version>=2.2.0)(!(version>=3.0.0)))]"));
     }
 
     /**

@@ -103,7 +103,7 @@
                 ant unsetup (unsets all resources for javaee-comp tests)
         </echo>
     </target>
-    
+
     <macrodef name="run-cdi-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
             <attribute name="path" />
             <attribute name="target" />

@@ -38,7 +38,7 @@
             <pathelement location="${env.APS_HOME}/devtests/cdi/lib/ant-contrib-1.0b3.jar" />
         </classpath>
     </taskdef>
-    
+
     <target name="usage">
         <echo> Usage:
                 ant all (Executes all the smoke tests)

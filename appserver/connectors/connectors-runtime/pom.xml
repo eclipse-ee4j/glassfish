@@ -49,8 +49,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.main.flashlight</groupId>
-            <artifactId>flashlight-framework</artifactId>
+            <groupId>jakarta.resource</groupId>
+            <artifactId>jakarta.resource-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+        </dependency>
+        <dependency>
+             <groupId>jakarta.concurrent</groupId>
+             <artifactId>jakarta.concurrent-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main.connectors</groupId>
+            <artifactId>connectors-internal-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.connectors</groupId>
+            <artifactId>gf-connectors-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -59,8 +77,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>jakarta.resource</groupId>
-            <artifactId>jakarta.resource-api</artifactId>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>config-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -70,6 +89,26 @@
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-ee-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>internal-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>container-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -83,47 +122,17 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2</groupId>
-            <artifactId>hk2-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>glassfish-ee-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.connectors</groupId>
-            <artifactId>connectors-internal-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>glassfish-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.transaction</groupId>
-            <artifactId>transaction-internal-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>internal-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>dol</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.admin</groupId>
-            <artifactId>config-api</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>container-common</artifactId>
+            <groupId>org.glassfish.main.transaction</groupId>
+            <artifactId>transaction-internal-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -134,11 +143,6 @@
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>security-ee</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.connectors</groupId>
-            <artifactId>gf-connectors-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -160,12 +164,9 @@
             <artifactId>gmbal-api-only</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.interceptor</groupId>
-            <artifactId>jakarta.interceptor-api</artifactId>
-        </dependency>
-        <dependency>
-             <groupId>jakarta.enterprise.concurrent</groupId>
-             <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <groupId>org.glassfish.main.flashlight</groupId>
+            <artifactId>flashlight-framework</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

@@ -17,13 +17,10 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfgFactory;
 import com.sun.enterprise.glassfish.bootstrap.launch.GlassfishOsgiBootstrapClassLoader;
-import com.sun.enterprise.glassfish.bootstrap.log.LogFacade;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -32,7 +29,14 @@ import java.util.Properties;
 
 import org.glassfish.main.jdke.props.EnvToPropsConverter;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ARG_SEP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_ARGS;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_CN;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_CP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ORIGINAL_MP;
+import static com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfgFactory.createStartupContextCfg;
 import static com.sun.enterprise.glassfish.bootstrap.cp.ClassLoaderBuilder.createOSGiFrameworkLauncherCL;
+import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION;
 import static com.sun.enterprise.glassfish.bootstrap.log.LogFacade.BOOTSTRAP_LOGGER;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.logging.Level.SEVERE;
@@ -46,18 +50,19 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
  */
 public class GlassFishMain {
 
-    // logging system may override original output streams.
+    // Logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
 
     public static void main(final String[] args) {
         try {
-        checkJdkVersion();
+            checkJdkVersion();
 
             final String platformName = whichPlatform();
+
             // Set the system property to allow downstream code to know the platform on which GlassFish runs.
             setProperty(OSGI_PLATFORM.getPropertyName(), platformName, true);
             final OsgiPlatform platform = OsgiPlatform.valueOf(platformName);
-        STDOUT.println("Launching GlassFish on " + platform + " platform");
+            STDOUT.println("Launching GlassFish on " + platform + " platform");
 
             // FIXME: move to serverfiles
             final File installRoot = ServerFiles.detectInstallRoot();
@@ -65,10 +70,12 @@ public class GlassFishMain {
 
             final Properties properties = initProperties(args);
             STDOUT.println("Resolved properties: " + properties);
+
             final Path instanceRoot = findInstanceRoot(installRoot, properties);
-        final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
-            final StartupContextCfg cfg = StartupContextCfgFactory.createStartupContextCfg(platform, files, properties);
+            final ServerFiles files = new ServerFiles(installRoot.toPath(), instanceRoot);
+            final StartupContextCfg cfg = createStartupContextCfg(platform, files, properties);
             final ClassLoader osgiCL = createOSGiFrameworkLauncherCL(cfg, getSystemClassLoader());
+
             try (GlassfishOsgiBootstrapClassLoader launcherCL = new GlassfishOsgiBootstrapClassLoader(installRoot, osgiCL)) {
                 launcherCL.launchGlassFishServer(cfg.toProperties());
             }
@@ -80,55 +87,61 @@ public class GlassFishMain {
     }
 
 
+    // ## Private methods
 
     private static void checkJdkVersion() {
         int version = Runtime.version().feature();
         if (version < 21) {
-            BOOTSTRAP_LOGGER.log(SEVERE, LogFacade.BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {21, version});
+            BOOTSTRAP_LOGGER.log(SEVERE, BOOTSTRAP_INCORRECT_JDKVERSION, new Object[] {21, version});
             System.exit(1);
         }
     }
 
-    private static Properties initProperties(String[] args) {
-        Properties map = new Properties();
-        if (args.length == 0) {
-            return map;
+    private static Properties initProperties(String[] methodArguments) {
+        Properties initProperties = new Properties();
+        if (methodArguments.length == 0) {
+            return initProperties;
         }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            String name = args[i];
+
+        StringBuilder originalArgumentBuilder = new StringBuilder();
+        for (int i = 0; i < methodArguments.length; i++) {
+            String name = methodArguments[i];
             if (name.startsWith("-")) {
-                // throw it away if there is no value left
-                if (i + 1 < args.length) {
-                    map.put(name, args[++i]);
+                // Throw it away if there is no value left
+                if (i + 1 < methodArguments.length) {
+                    initProperties.put(name, methodArguments[++i]);
                 }
             } else {
                 // default --> last one wins!
-                map.put("default", args[i]);
+                initProperties.put("default", methodArguments[i]);
             }
         }
-        // no sense doing this if we were started by CLI...
-        if (!wasStartedByCLI(map)) {
-            for (int i = 0; i < args.length; i++) {
+
+        // No sense doing this if we were started by CLI...
+        if (!wasStartedByCLI(initProperties)) {
+            for (int i = 0; i < methodArguments.length; i++) {
                 if (i > 0) {
-                    sb.append(BootstrapKeys.ARG_SEP);
+                    originalArgumentBuilder.append(ARG_SEP);
                 }
-                sb.append(args[i]);
+                originalArgumentBuilder.append(methodArguments[i]);
             }
-            map.setProperty(BootstrapKeys.ORIGINAL_ARGS, sb.toString());
-            map.setProperty(BootstrapKeys.ORIGINAL_CP, System.getProperty("java.class.path"));
-            map.setProperty(BootstrapKeys.ORIGINAL_CN, GlassFishMain.class.getName());
-            map.setProperty(BootstrapKeys.ORIGINAL_MP, System.getProperty("jdk.module.path"));
+
+            initProperties.setProperty(ORIGINAL_ARGS, originalArgumentBuilder.toString());
+            initProperties.setProperty(ORIGINAL_CP, System.getProperty("java.class.path"));
+            initProperties.setProperty(ORIGINAL_CN, GlassFishMain.class.getName());
+            initProperties.setProperty(ORIGINAL_MP, System.getProperty("jdk.module.path"));
         }
-        return map;
+
+        return initProperties;
     }
 
 
     private static boolean wasStartedByCLI(final Properties properties) {
         // if we were started by CLI there will be some special args set...
-        return properties.getProperty("-asadmin-classpath") != null
-            && properties.getProperty("-asadmin-classname") != null
-            && properties.getProperty("-asadmin-args") != null;
+        return
+            properties.getProperty("-asadmin-classpath") != null &&
+            properties.getProperty("-asadmin-classname") != null &&
+            properties.getProperty("-asadmin-args") != null;
     }
 
 
@@ -137,10 +150,12 @@ public class GlassFishMain {
         if (platformSysOption != null && !platformSysOption.isBlank()) {
             return platformSysOption.trim();
         }
+
         final String platformEnvOption = System.getenv(OSGI_PLATFORM.getEnvName());
         if (platformEnvOption != null && !platformEnvOption.isBlank()) {
             return platformEnvOption.trim();
         }
+
         return OsgiPlatform.Felix.name();
     }
 
@@ -155,6 +170,7 @@ public class GlassFishMain {
             // that means that this is a DAS.
             instanceDir = getDomainRoot(argsAsProps, installRoot);
         }
+
         verifyDomainRoot(instanceDir);
         return instanceDir.toPath();
     }
@@ -165,6 +181,7 @@ public class GlassFishMain {
         if (isSet(instanceDir)) {
             return new File(instanceDir);
         }
+
         return null;
     }
 
@@ -197,15 +214,18 @@ public class GlassFishMain {
     private static File getDefaultDomainsDir(File installRoot) {
         String envKey = DOMAINS_ROOT.getEnvName();
         String sysKey = DOMAINS_ROOT.getSystemPropertyName();
+
         File domainsDir = new EnvToPropsConverter(installRoot.toPath()).convert(envKey, sysKey);
         if (domainsDir == null) {
             throw new RuntimeException(
                 "Neither " + envKey + " env property nor " + sysKey + " system property is set.");
         }
+
         if (!domainsDir.isDirectory()) {
             throw new RuntimeException(
                 DOMAINS_ROOT.getPropertyName() + "[" + domainsDir + "]" + " is NOT a directory.");
         }
+
         return domainsDir;
     }
 
@@ -237,13 +257,21 @@ public class GlassFishMain {
     private static void verifyDomainRoot(File domainRoot) {
         if (domainRoot == null) {
             throw new RuntimeException("Internal Error: The domain dir is null.");
-        } else if (!domainRoot.exists()) {
+        }
+
+        if (!domainRoot.exists()) {
             throw new RuntimeException("the domain directory does not exist");
-        } else if (!domainRoot.isDirectory()) {
+        }
+
+        if (!domainRoot.isDirectory()) {
             throw new RuntimeException("the domain directory is not a directory.");
-        } else if (!domainRoot.canWrite()) {
+        }
+
+        if (!domainRoot.canWrite()) {
             throw new RuntimeException("the domain directory is not writable.");
-        } else if (!new File(domainRoot, "config").isDirectory()) {
+        }
+
+        if (!new File(domainRoot, "config").isDirectory()) {
             throw new RuntimeException("the domain directory is corrupt - there is no config subdirectory.");
         }
     }

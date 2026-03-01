@@ -61,8 +61,11 @@ public class GlassfishOsgiBootstrapClassLoader extends GlassfishUrlClassLoader {
             @SuppressWarnings("unchecked")
             final Class<Launcher> launcherClass = (Class<Launcher>) loadClass(
                 "org.glassfish.main.boot.osgi.GlassFishOsgiLauncher");
-            final Launcher launcher = launcherClass.getDeclaredConstructor(ClassLoader.class).newInstance(this);
-            launcher.launch(properties);
+
+            launcherClass.getDeclaredConstructor(ClassLoader.class)
+                         .newInstance(this)
+                         .launch(properties);
+
         } catch (Exception e) {
             throw new Error("Failed to launch GlassFish Server!", e);
         }

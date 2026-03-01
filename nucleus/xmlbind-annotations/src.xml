@@ -22,11 +22,11 @@
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 https://maven.apache.org/xsd/assembly-2.1.1.xsd">
     <id>sources</id>
     <includeBaseDirectory>false</includeBaseDirectory>
-    
+
     <formats>
         <format>jar</format>
     </formats>
-    
+
     <fileSets>
         <fileSet>
             <directory>${project.build.directory}/sources</directory>

@@ -368,4 +368,9 @@ public class DummyResponse implements HttpResponse, HttpServletResponse {
     public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
     }
 
+    @Override
+    public void sendEarlyHints() {
+
+    }
+
 }

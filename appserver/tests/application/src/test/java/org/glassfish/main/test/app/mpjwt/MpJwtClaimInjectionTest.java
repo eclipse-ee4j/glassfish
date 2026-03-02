@@ -50,8 +50,17 @@ public class MpJwtClaimInjectionTest {
     private static File tempDir;
 
     @Test
-    void testJwtClaimInjection() throws IOException {
-        File app = createWebApp();
+    void testJwtClaimInjectionWithoutHandler() throws IOException {
+        testJwtClaimInjection(false);
+    }
+
+    @Test
+    void testJwtClaimInjectionWithHandler() throws IOException {
+        testJwtClaimInjection(true);
+    }
+
+    void testJwtClaimInjection(boolean withHandler) throws IOException {
+        File app = createWebApp(withHandler);
         assertThat(ASADMIN.exec("deploy", "--force", "--contextroot", "app", "--name", APP_NAME, app.getAbsolutePath()), asadminOK());
 
         try {
@@ -85,7 +94,7 @@ public class MpJwtClaimInjectionTest {
         return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlzcyI6InRlc3QiLCJhdWQiOiJ0ZXN0In0.test";
     }
 
-    private static File createWebApp() {
+    private static File createWebApp(boolean withHandler) {
         String jwtConfig = """
             mp.jwt.verify.issuer=https://server.example.com
             mp.jwt.verify.publickey.location=/publicKey.pem
@@ -106,9 +115,12 @@ public class MpJwtClaimInjectionTest {
         WebArchive webApp = ShrinkWrap.create(WebArchive.class)
                 .addClass(JwtClaimEndpoint.class)
                 .addClass(JwtApplication.class)
-                .addClass(JwtCustomAuthMechanismHandler.class)
                 .addAsResource(new StringAsset(jwtConfig), "META-INF/microprofile-config.properties")
                 .addAsResource(new StringAsset(publicKey), "publicKey.pem");
+
+        if (withHandler) {
+            webApp = webApp.addClass(JwtCustomAuthMechanismHandler.class);
+        }
 
         LOG.log(INFO, webApp.toString(true));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,11 @@ package org.glassfish.microprofile.jwt;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
+import jakarta.interceptor.Interceptor;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 
 import org.eclipse.microprofile.auth.LoginConfig;
@@ -41,7 +43,9 @@ public class MpJwtCdiExtension implements Extension {
             afterBeanDiscovery.addBean()
                     .scope(ApplicationScoped.class)
                     .beanClass(HttpAuthenticationMechanism.class)
-                    .qualifiers(MicroProfileJwtAuthenticationMechanism.Literal.INSTANCE)
+                    .qualifiers(MicroProfileJwtAuthenticationMechanism.Literal.INSTANCE, Default.Literal.INSTANCE)
+                    .priority(Interceptor.Priority.PLATFORM_BEFORE)
+                    .alternative(true)
                     .types(Object.class, HttpAuthenticationMechanism.class, JWTAuthenticationMechanism.class)
                     .id("mechanism " + LoginConfig.class)
                     .createWith(e -> new JWTAuthenticationMechanism());

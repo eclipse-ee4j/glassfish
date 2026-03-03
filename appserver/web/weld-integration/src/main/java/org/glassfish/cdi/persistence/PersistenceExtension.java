@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -145,7 +145,7 @@ public class PersistenceExtension implements Extension  {
             bean.addQualifier(createAnnotationInstance(loadClass(qualifierClassName)));
         }
         if (descriptor.getQualifiers().isEmpty()) {
-            bean.addQualifier(createAnnotationInstance(descriptor.equals(firstPersistenceUnitDescriptor) ? Default.class : GlassFish.class));
+            bean.addQualifier(createAnnotationInstance(descriptor.equals(firstPersistenceUnitDescriptor) ? Default.class : SecondaryPersistenceUnit.class));
         }
         if (descriptor.getName() != null && !descriptor.getName().isBlank()) {
             bean.addQualifier(NamedLiteral.of(descriptor.getName()));

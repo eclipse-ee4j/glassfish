@@ -285,6 +285,52 @@ pipeline {
             }
          }
       }
+      stage('Check Changes') {
+         steps {
+            checkout scm
+            container('maven') {
+               script {
+                  // Default: run tests
+                  env.SKIP_TESTS = "false"
+
+                  // Only check for docs-only changes in PR builds
+                  if (env.CHANGE_TARGET) {
+                     echo "PR build detected, checking if only docs changed..."
+
+                     def changedFiles = sh(
+                        script: '''
+                           git diff --name-only origin/${CHANGE_TARGET}...HEAD || echo "all"
+                        ''',
+                        returnStdout: true
+                     ).trim()
+
+                     echo "Changed files:\n${changedFiles}"
+
+                     if (changedFiles != "" && changedFiles != "all") {
+                        // Check if all changes are in docs/ directory or subdirectories
+                        def nonDocsChanges = sh(
+                           script: """
+                              echo '${changedFiles}' | grep -v '^docs/' || true
+                           """,
+                           returnStdout: true
+                        ).trim()
+
+                        if (nonDocsChanges == "") {
+                           env.SKIP_TESTS = "true"
+                           echo "✓ Only docs/ changes detected - tests will be skipped"
+                        } else {
+                           echo "✗ Non-docs changes detected - tests will run"
+                        }
+                     } else {
+                        echo "Unable to determine changed files - tests will run"
+                     }
+                  } else {
+                     echo "Non-PR build - tests will always run"
+                  }
+               }
+            }
+         }
+      }
       stage('Build') {
          steps {
             checkout scm
@@ -331,6 +377,9 @@ pipeline {
       }
 
       stage('Test') {
+         when {
+            environment name: 'SKIP_TESTS', value: 'false'
+         }
          parallel {
             stage('main-tests') {
                steps {

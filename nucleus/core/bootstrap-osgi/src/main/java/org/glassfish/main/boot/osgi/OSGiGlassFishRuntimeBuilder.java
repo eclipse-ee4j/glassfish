@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package org.glassfish.main.boot.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys;
 import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
 
 import java.io.File;
@@ -39,13 +38,20 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 
+import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.BUILDER_NAME_PROPERTY;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.BUNDLEIDS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.HK2_CACHE_DIR;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.INHABITANTS_CACHE;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ONDEMAND_BUNDLE_PROVISIONING;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PROVISIONING_OPTIONS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.PROVISIONING_OPTIONS_PREFIX;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
+import static org.glassfish.main.boot.log.LogFacade.CREATE_BUNDLE_PROVISIONER;
+import static org.glassfish.main.boot.log.LogFacade.UPDATING_SYSTEM_BUNDLE;
+import static org.glassfish.main.boot.osgi.FelixPrettyPrinter.prettyPrintFelixMessage;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 
@@ -87,7 +93,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     private Properties newProvisioningOptions;
 
     // These two should be a part of an external interface of HK2, but they are not, so we have to duplicate them here.
-    private OSGiFrameworkLauncher fwLauncher;
+    private OSGiFrameworkLauncher frameworkLauncher;
     private Framework framework;
 
     @Override
@@ -97,13 +103,16 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
             // Set the builder name so that when we check for nonEmbedded() inside GlassFishMainActivator,
             // we can identify the environment.
-            properties.setProperty(BootstrapKeys.BUILDER_NAME_PROPERTY, getClass().getName());
+            properties.setProperty(BUILDER_NAME_PROPERTY, getClass().getName());
+
             // Step 0: Locate and launch a framework
             long t0 = System.currentTimeMillis();
-            fwLauncher = new OSGiFrameworkLauncher(properties, classloader);
-            framework = fwLauncher.launchOSGiFrameWork();
+            frameworkLauncher = new OSGiFrameworkLauncher(properties, classloader);
+            framework = frameworkLauncher.launchOSGiFrameWork();
+
             long t1 = System.currentTimeMillis();
-            LOG.logp(Level.FINE, "OSGiGlassFishRuntimeBuilder", "build", "Launched {0}", framework);
+            LOG.logp(FINE, "OSGiGlassFishRuntimeBuilder", "build", "Launched {0}", framework);
+
 
             // Step 1: install/update/delete bundles
             if (newFramework()) {
@@ -112,33 +121,55 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
                 // this will reconfigure if any provisioning options have changed.
                 reconfigure(properties, classloader);
             }
+
             BundleProvisioner bundleProvisioner = createBundleProvisioner(framework.getBundleContext(), properties);
-            LOG.log(Level.CONFIG, LogFacade.CREATE_BUNDLE_PROVISIONER, bundleProvisioner);
+            LOG.log(CONFIG, CREATE_BUNDLE_PROVISIONER, bundleProvisioner);
             List<Long> bundleIds = bundleProvisioner.installBundles();
 
             if (bundleProvisioner.hasAnyThingChanged()) {
                 bundleProvisioner.refresh();
-                // clean hk2 cache so that updated bundle details will go in there.
+                // Clean hk2 cache so that updated bundle details will go in there.
                 deleteHK2Cache(properties);
+
                 // Save the bundle ids for use during restart.
                 storeBundleIds(bundleIds.toArray(new Long[bundleIds.size()]));
             }
+
             if (bundleProvisioner.isSystemBundleUpdationRequired()) {
-                LOG.log(Level.INFO, LogFacade.UPDATING_SYSTEM_BUNDLE);
+                LOG.log(INFO, UPDATING_SYSTEM_BUNDLE);
                 framework.update();
                 framework.waitForStop(0);
                 framework.init();
                 bundleProvisioner.setBundleContext(framework.getBundleContext());
             }
 
+            FelixErrorCollector.install(framework.getBundleContext());
+
+
             // Step 2: Start bundles
             bundleProvisioner.startBundles();
             long t2 = System.currentTimeMillis();
+
 
             // Step 3: Start the framework, so bundles will get activated as per their start levels
             framework.start();
             long t3 = System.currentTimeMillis();
             printStats(bundleProvisioner, t0, t1, t2, t3);
+
+            if (!FelixErrorCollector.ERRORS.isEmpty()) {
+                StringBuilder errorMsgBuilder = new StringBuilder("\n");
+
+                for (var error : FelixErrorCollector.ERRORS) {
+                    errorMsgBuilder.append(
+                                       prettyPrintFelixMessage(
+                                               framework.getBundleContext(),
+                                               error.getThrowable().getMessage()))
+                                   .append("\n\n");
+                }
+
+                throw new GlassFishException(errorMsgBuilder.toString());
+            }
+
 
             // Step 4: Obtain reference to GlassFishRuntime and return the same
             return getGlassFishRuntime();
@@ -148,29 +179,32 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     @Override
-    public boolean handles(BootstrapProperties bsProps) {
+    public boolean handles(BootstrapProperties bootstrapProperties) {
         // See GLASSFISH-16743 for the reason behind additional check
-        final String builderName = bsProps.getProperty(BootstrapKeys.BUILDER_NAME_PROPERTY);
+        final String builderName = bootstrapProperties.getProperty(BUILDER_NAME_PROPERTY);
         if (builderName != null && !builderName.equals(getClass().getName())) {
             return false;
         }
+
         // This builder can't handle Generic OSGi platform, because we read framework configuration
         // from a framework specific file in MainHelper.buildStartupContext(properties);
-        String platformStr = bsProps.getProperty(OSGI_PLATFORM.getPropertyName());
-        if (platformStr != null && !platformStr.isBlank()) {
-            try {
-                OsgiPlatform osgiPlatform = OsgiPlatform.valueOf(platformStr);
-                switch (osgiPlatform) {
-                    case Felix:
-                    case Equinox:
-                    case Knopflerfish:
-                        return true;
-                }
-            } catch (IllegalArgumentException ex) {
-                // might be a plugged-in custom platform.
-            }
+        String platform = bootstrapProperties.getProperty(OSGI_PLATFORM.getPropertyName());
+        if (isBlank(platform)) {
+            return false;
         }
-        return false;
+
+        OsgiPlatform osgiPlatform;
+        try {
+            osgiPlatform = OsgiPlatform.valueOf(platform);
+        } catch (IllegalArgumentException ex) {
+            // might be a plugged-in custom platform.
+            return false;
+        }
+
+        return switch (osgiPlatform) {
+            case Felix, Equinox, Knopflerfish -> true;
+            default -> false;
+        };
     }
 
     private GlassFishRuntime getGlassFishRuntime() throws GlassFishException {
@@ -230,8 +264,8 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             framework.stop();
             framework.waitForStop(0);
             properties.setProperty(FRAMEWORK_STORAGE_CLEAN, FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-            fwLauncher = new OSGiFrameworkLauncher(properties, classloader);
-            framework = fwLauncher.launchOSGiFrameWork();
+            frameworkLauncher = new OSGiFrameworkLauncher(properties, classloader);
+            framework = frameworkLauncher.launchOSGiFrameWork();
             LOG.logp(Level.FINE, "OSGiGlassFishRuntimeBuilder", "reconfigure", "Launched {0}", framework);
             storeProvisioningOptions(properties);
         }
@@ -323,5 +357,9 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             return new MinimalBundleProvisioner(bctx, props);
         }
         return new BundleProvisioner(bctx, props);
+    }
+
+    public static boolean isBlank(String string) {
+        return string == null || string.isBlank();
     }
 }

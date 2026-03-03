@@ -7,7 +7,7 @@ Bundle-ManifestVersion: 2
 Bundle-DocURL: https://microprofile.io/project/eclipse/microprofile-he
  alth/microprofile-health-api
 Bundle-Vendor: Eclipse Foundation
-Import-Package: jakarta.enterprise.util;version="[3.0,6)",jakarta.inje
+Import-Package: jakarta.enterprise.util;version="[3.0,5)",jakarta.inje
  ct;version="[2.0,4)",org.eclipse.microprofile.health;version="[3.0,5)
  ",org.eclipse.microprofile.health.spi;version="[1.1,2)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"

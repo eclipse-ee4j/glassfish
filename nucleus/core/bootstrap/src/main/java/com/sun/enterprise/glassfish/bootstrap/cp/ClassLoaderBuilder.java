@@ -27,6 +27,7 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.joining;
 import static org.osgi.framework.Constants.EXPORT_PACKAGE;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
 
@@ -51,17 +52,24 @@ public class ClassLoaderBuilder {
      * @param parent Parent class loader for this class loader.
      * @throws IOException
      */
-    public static ClassLoader createOSGiFrameworkLauncherCL(StartupContextCfg cfg, ClassLoader parent)
-        throws IOException {
+    public static ClassLoader createOSGiFrameworkLauncherCL(StartupContextCfg cfg, ClassLoader parent) throws IOException {
         ClassLoader classLoader = getOsgiPlatformAdapter(cfg).addFrameworkJars(new ClassPathBuilder()).build(parent);
-        String osgiPackages = classLoader.resources("META-INF/MANIFEST.MF").map(ClassLoaderBuilder::loadExports)
-            .collect(Collectors.joining(", "));
+
+        String osgiPackages =
+            classLoader.resources("META-INF/MANIFEST.MF")
+                       .map(ClassLoaderBuilder::loadExports)
+                       .collect(joining(", "));
+
         // FIXME: This will not be printed anywhere after failure, because logging could not be configured.
         // BOOTSTRAP_LOGGER.log(INFO, "OSGI framework packages:\n{0}", osgiPackages);
+
         System.err.println("OSGI framework packages:\n" + osgiPackages);
+
         String javaPackages = detectJavaPackages();
         System.err.println("JDK provided packages:\n" + javaPackages);
+
         cfg.setProperty(FRAMEWORK_SYSTEMPACKAGES, osgiPackages + ", " + javaPackages);
+
         return classLoader;
     }
 

@@ -15,23 +15,21 @@
  */
 package org.glassfish.main.boot.osgi;
 
-import org.osgi.framework.*;
-
-import static org.osgi.framework.FrameworkEvent.ERROR;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkEvent;
+
+import static org.osgi.framework.FrameworkEvent.ERROR;
 
 public final class FelixErrorCollector {
 
     public static final BlockingQueue<FrameworkEvent> ERRORS = new LinkedBlockingQueue<>();
 
-    public static void install(BundleContext ctx) {
-        ctx.addFrameworkListener(event -> {
+    public static void install(BundleContext context) {
+        context.addFrameworkListener(event -> {
             if (event.getType() == ERROR && event.getThrowable() != null) {
-                // Optional: only care about resolve/start failures
-                // if (event.getThrowable() instanceof BundleException) { ... }
-
                 ERRORS.offer(event);
             }
         });

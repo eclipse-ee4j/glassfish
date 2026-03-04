@@ -62,11 +62,17 @@ public class FelixPrettyPrinter {
         final StringBuilder bundleBuilder = new StringBuilder(1024);
         bundleBuilder.append(prettyMessage);
 
-        List<Long> bundleIDs = new ArrayList<>();
+        Set<Long> bundleIDs = new LinkedHashSet<>();
 
         bundleIDs.addAll(addExportingBundles(context, prettyMessage, bundleBuilder));
         bundleIDs.addAll(findBundleIds(prettyMessage));
 
+        addBundleInformation(context, bundleIDs, bundleBuilder);
+
+        return bundleBuilder.toString();
+    }
+
+    public static void addBundleInformation(BundleContext context, Set<Long> bundleIDs, StringBuilder bundleBuilder) {
         if (!bundleIDs.isEmpty()) {
             for (Long bundleId : bundleIDs) {
                 Bundle bundle = context.getBundle(bundleId);
@@ -78,9 +84,8 @@ public class FelixPrettyPrinter {
                 }
             }
         }
-
-        return bundleBuilder.toString();
     }
+
 
     /**
      * Prints exception messages from Felix bundle classloading in a more human readable way.
@@ -226,19 +231,6 @@ public class FelixPrettyPrinter {
         }
     }
 
-    public static String addBundleInfo(Bundle bundle, String prettyMessage) {
-        final StringBuilder bundleBuilder = new StringBuilder(1024);
-        bundleBuilder.append("\n").append(prettyMessage);
-        if (bundle != null) {
-            bundleBuilder.append('[').append(bundle.getBundleId()).append("] \n");
-            bundleBuilder.append("jar = ").append(bundle.getLocation());
-            tryAddPomProperties(bundle, bundleBuilder);
-            bundleBuilder.append('\n');
-        }
-
-        return bundleBuilder.toString();
-    }
-
     private static List<Long> addExportingBundles(BundleContext context, String prettyMessage, StringBuilder bundleBuilder) {
         Set<Bundle> exportingBundles = new HashSet<>();
         List<Long> bundleIDs = new ArrayList<>();
@@ -249,31 +241,16 @@ public class FelixPrettyPrinter {
 
             exportingBundles.addAll(findExporters(context, lastPackage));
 
-            if (exportingBundles.isEmpty()) {
-                bundleBuilder.append("\nNo bundles found to export " + lastPackage + "\n");
-            } else {
-                bundleBuilder.append("\nThe following bundles export \"" + lastPackage + "\"\n");
-                for (Bundle bundle : exportingBundles) {
-                    bundleIDs.add(bundle.getBundleId());
+            bundleIDs.addAll(addExportInfo(exportingBundles, lastPackage, bundleBuilder));
 
-                    bundleBuilder.append(bundle.getSymbolicName())
-                                 .append(" ")
-                                 .append(bundle.getVersion())
-                                 .append(" [")
-                                 .append(bundle.getBundleId())
-                                 .append("]")
-                                 .append("\n")
-                                 ;
-                }
-            }
             bundleBuilder.append("\n");
         }
 
         return bundleIDs;
     }
 
-    private static List<Bundle> findExporters(BundleContext ctx, String packageName) {
-        List<Bundle> exporters = new ArrayList<>();
+    public static Set<Bundle> findExporters(BundleContext ctx, String packageName) {
+        Set<Bundle> exporters = new HashSet<>();
 
         for (Bundle b : ctx.getBundles()) {
             BundleRevision rev = b.adapt(BundleRevision.class);
@@ -294,6 +271,31 @@ public class FelixPrettyPrinter {
         }
 
         return exporters;
+    }
+
+    public static List<Long> addExportInfo(Set<Bundle> exportingBundles, String packageName, StringBuilder bundleBuilder) {
+        if (exportingBundles.isEmpty()) {
+            bundleBuilder.append("\nNo bundles found to export " + packageName + "\n");
+            return Collections.emptyList();
+        }
+
+        List<Long> bundleIDs = new ArrayList<>();
+        bundleBuilder.append("\nThe following bundles export \"" + packageName + "\"\n");
+        for (Bundle bundle : exportingBundles) {
+            bundleIDs.add(bundle.getBundleId());
+
+            bundleBuilder.append(bundle.getSymbolicName())
+                         .append(" ")
+                         .append(bundle.getVersion())
+                         .append(" [")
+                         .append(bundle.getBundleId())
+                         .append("]")
+                         .append("\n")
+                         ;
+        }
+
+        return bundleIDs;
+
     }
 
     private static void tryAddPomProperties(Bundle bundle, StringBuilder bundleBuilder) {

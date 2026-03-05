@@ -297,32 +297,19 @@ pipeline {
                   if (env.CHANGE_TARGET) {
                      echo "PR build detected, checking if only docs changed..."
 
-                     def changedFiles = sh(
+                     def relevantChanges = sh(
                         script: '''
-                           git diff --name-only origin/${CHANGE_TARGET}...HEAD || echo "all"
+                           (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
                         ''',
                         returnStdout: true
                      ).trim()
 
-                     echo "Changed files:\n${changedFiles}"
 
-                     if (changedFiles != "" && changedFiles != "all") {
-                        // Check if all changes are in docs/ directory or subdirectories
-                        def nonDocsChanges = sh(
-                           script: """
-                              echo '${changedFiles}' | grep -v '^docs/' || true
-                           """,
-                           returnStdout: true
-                        ).trim()
-
-                        if (nonDocsChanges == "") {
-                           env.SKIP_TESTS = "true"
-                           echo "✓ Only docs/ changes detected - tests will be skipped"
-                        } else {
-                           echo "✗ Non-docs changes detected - tests will run"
-                        }
+                     if (relevantChanges == "") {
+                        env.SKIP_TESTS = "true"
+                        echo "✓ Only docs/ changes detected - tests will be skipped"
                      } else {
-                        echo "Unable to determine changed files - tests will run"
+                        echo "✗ Relevant changes detected - tests will run"
                      }
                   } else {
                      echo "Non-PR build - tests will always run"

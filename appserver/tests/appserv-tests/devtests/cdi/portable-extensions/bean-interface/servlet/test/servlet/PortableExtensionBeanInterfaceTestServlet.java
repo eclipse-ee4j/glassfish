@@ -29,6 +29,7 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.el.ELAwareBeanManager;
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Inject;
 import javax.naming.InitialContext;
@@ -48,17 +49,17 @@ import test.extension.MyExtension;
 
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
 public class PortableExtensionBeanInterfaceTestServlet extends HttpServlet {
+    
     @Inject
     @Preferred
     TestBean tb;
 
     @Inject
-    BeanManager bm;
+    ELAwareBeanManager bm;
 
     String msg = "";
 
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
@@ -71,34 +72,28 @@ public class PortableExtensionBeanInterfaceTestServlet extends HttpServlet {
             msg += "Business method interceptor aroundInvoke not called";
         tb.m2();
         if (TransactionInterceptor.aroundInvokeInvocationCount != 2)
-            msg += "Business method interceptor invocation on method-level "
-                    + "interceptor annotation count not expected. "
-                    + "expected =2, actual="
-                    + TransactionInterceptor.aroundInvokeInvocationCount;
+            msg += "Business method interceptor invocation on method-level " + "interceptor annotation count not expected. "
+                    + "expected =2, actual=" + TransactionInterceptor.aroundInvokeInvocationCount;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
 
         // check if our portable extension was called
         if (!MyExtension.beforeBeanDiscoveryCalled)
-            msg += "Portable Extension lifecycle observer method: "
-                    + "beforeBeanDiscovery not called";
+            msg += "Portable Extension lifecycle observer method: " + "beforeBeanDiscovery not called";
 
         if (!MyExtension.afterBeanDiscoveryCalled)
-            msg += "Portable Extension lifecycle observer method: "
-                    + "afterBeanDiscovery not called or injection of BeanManager "
+            msg += "Portable Extension lifecycle observer method: " + "afterBeanDiscovery not called or injection of BeanManager "
                     + "in an observer method failed";
 
         if (!MyExtension.processAnnotatedTypeCalled)
-            msg += "Portable Extension lifecycle observer method: process "
-                    + "annotated type not called";
+            msg += "Portable Extension lifecycle observer method: process " + "annotated type not called";
 
         // BeanManager lookup
         if (bm == null)
             msg += "Injection of BeanManager into servlet failed";
 
         try {
-            BeanManager bm1 = (BeanManager) (new InitialContext())
-                    .lookup("java:comp/BeanManager");
+            ELAwareBeanManager bm1 = InitialContext.doLookup("java:comp/BeanManager");
             if (bm1 == null)
                 msg += "lookup of BeanManager via component context failed";
         } catch (NamingException e) {
@@ -114,47 +109,34 @@ public class PortableExtensionBeanInterfaceTestServlet extends HttpServlet {
 
     private void testBeanInterface(BeanManager bm2) {
         // all beans in the application
-        System.out.println(bm.getBeans(Object.class,
-                new AnnotationLiteral<Any>() {
-                }).size());
-        Set<Bean<?>> s = bm.getBeans(Object.class,
-                new AnnotationLiteral<Any>() {
-                });
+        System.out.println(bm.getBeans(Object.class, new AnnotationLiteral<Any>() {}).size());
+        Set<Bean<?>> s = bm.getBeans(Object.class, new AnnotationLiteral<Any>() {});
+        
         boolean foundInAllBeansInApplication = false;
         for (Iterator iterator = s.iterator(); iterator.hasNext();) {
             Bean<?> bean = (Bean<?>) iterator.next();
             if (bean.getBeanClass().equals(TestBean.class)) {
                 // found
                 foundInAllBeansInApplication = true;
-                testTestBeanMetadata(bean,
-                        "Testing TestBean obtained through a lookup for all beans in application");
+                testTestBeanMetadata(bean, "Testing TestBean obtained through a lookup for all beans in application");
             }
         }
+        
         if (!foundInAllBeansInApplication)
             msg += "TestBean was not found among all the beans in the application";
-        Bean<?> testBeanThroughType = bm
-                .getBeans(TestBean.class, new AnnotationLiteral<Any>() {
-                }).iterator().next();
-        testTestBeanMetadata(
-                testBeanThroughType,
-                "Testing TestBean obtained through a lookup of TestBean.class with @Any Qualifier");
-        Bean<?> testBeanThroughQualifier = bm
-                .getBeans(Object.class, new AnnotationLiteral<Preferred>() {
-                }).iterator().next();
-        testTestBeanMetadata(
-                testBeanThroughQualifier,
-                "Testing TestBean obtained through a lookup of all beans with @Preferred Qualifier");
+        
+        Bean<?> testBeanThroughType = bm.getBeans(TestBean.class, new AnnotationLiteral<Any>() {}).iterator().next();
+        testTestBeanMetadata(testBeanThroughType, "Testing TestBean obtained through a lookup of TestBean.class with @Any Qualifier");
+        Bean<?> testBeanThroughQualifier = bm.getBeans(Object.class, new AnnotationLiteral<Preferred>() {}).iterator().next();
+        testTestBeanMetadata(testBeanThroughQualifier, "Testing TestBean obtained through a lookup of all beans with @Preferred Qualifier");
 
-        //There should be no Bean for DuplicateTestBean
+        // There should be no Bean for DuplicateTestBean
         try {
-            Bean<?> duplicateTestBeanThroughType = bm.getBeans(
-                    DuplicateTestBean.class, new AnnotationLiteral<Any>() {}).
-                    iterator().next();
+            Bean<?> duplicateTestBeanThroughType = bm.getBeans(DuplicateTestBean.class, new AnnotationLiteral<Any>() {}).iterator().next();
             if (duplicateTestBeanThroughType != null)
-                msg += "Duplicate test bean that has been vetoed by the portable " +
-                        "extension is still present as a valid Bean";
-        } catch(NoSuchElementException nsee){
-            //Expected.
+                msg += "Duplicate test bean that has been vetoed by the portable " + "extension is still present as a valid Bean";
+        } catch (NoSuchElementException nsee) {
+            // Expected.
         }
 
     }
@@ -162,22 +144,19 @@ public class PortableExtensionBeanInterfaceTestServlet extends HttpServlet {
     private void testTestBeanMetadata(Bean<?> bean, String message) {
         System.out.println("++++++" + message + "++++++");
         System.out.println("EL Name:" + bean.getName());
-        check((bean.getName() == null),
-                "TestBean(whose EL name was unspecified)'s ELName is not null");
+        check((bean.getName() == null), "TestBean(whose EL name was unspecified)'s ELName is not null");
         System.out.println(bean.getBeanClass());
-        check((bean.getBeanClass().equals(TestBean.class)),
-                "TestBean(whose EL name was unspecified) Bean's class is not TestBean");
+        check((bean.getBeanClass().equals(TestBean.class)), "TestBean(whose EL name was unspecified) Bean's class is not TestBean");
         System.out.println(bean.getScope());
-        check((bean.getScope().equals(RequestScoped.class)),
-                "TestBean(whose EL name was unspecified) Bean's scope is not RequestScoped");
+        check((bean.getScope().equals(RequestScoped.class)), "TestBean(whose EL name was unspecified) Bean's scope is not RequestScoped");
         System.out.println(bean.getTypes()); // Object, TestBean
-        check((bean.getTypes().size() == 2),
-                "TestBean(whose EL name was unspecified) Bean's types unexpected. Should have been Object and TestBean, instead got "
+        check((bean.getTypes().size() == 2), "TestBean(whose EL name was unspecified) Bean's types unexpected. Should have been Object and TestBean, instead got "
                         + bean.getTypes());
+        
         System.out.println(bean.getQualifiers()); // Any, Preferred
-        check((bean.getQualifiers().size() == 2),
-                "TestBean(whose EL name was unspecified) Bean's qualifiers unexpected. Should have been Any and Preferred, instead got "
+        check((bean.getQualifiers().size() == 2), "TestBean(whose EL name was unspecified) Bean's qualifiers unexpected. Should have been Any and Preferred, instead got "
                         + bean.getTypes());
+        
         Set<Annotation> x = bean.getQualifiers();
         boolean qualifierFound = false;
         for (Iterator iterator = x.iterator(); iterator.hasNext();) {
@@ -186,27 +165,21 @@ public class PortableExtensionBeanInterfaceTestServlet extends HttpServlet {
                 qualifierFound = true;
             }
         }
-        check(qualifierFound,
-                "TestBean's qualifiers does not have Preferred.");
+        
+        check(qualifierFound, "TestBean's qualifiers does not have Preferred.");
     }
 
-    private void testBeanManager(BeanManager bm) {
+    private void testBeanManager(ELAwareBeanManager bm) {
         // Using BeanManager
-        check((bm.getBeans("test_named_bean").size() == 1),
-                "Invalid number of Named Beans");
-        check((bm.getBeans("duplicate_test_bean").size() == 0),
-                "Invalid number of Duplicate Test Bean");
+        check((bm.getBeans("test_named_bean").size() == 1), "Invalid number of Named Beans");
+        check((bm.getBeans("duplicate_test_bean").size() == 0), "Invalid number of Duplicate Test Bean");
         check(bm.getELResolver() != null, "ELResolver is null");
-        check(bm.isInterceptorBinding(Transactional.class),
-                "Transactional is not an interceptor binding");
-        check(bm.isNormalScope(RequestScoped.class),
-                "RequestScoped is not normal scope");
-        check(bm.isPassivatingScope(SessionScoped.class),
-                "SessionScoped is not passivating scope");
+        check(bm.isInterceptorBinding(Transactional.class), "Transactional is not an interceptor binding");
+        check(bm.isNormalScope(RequestScoped.class), "RequestScoped is not normal scope");
+        check(bm.isPassivatingScope(SessionScoped.class), "SessionScoped is not passivating scope");
         check(bm.isQualifier(Preferred.class), "Preferred is not a Qualifier");
         check(!(bm.isScope(Preferred.class)), "Preferred is a Scope class");
-        check(bm.isScope(ConversationScoped.class),
-                "ConversationScoped is not a Scope class");
+        check(bm.isScope(ConversationScoped.class), "ConversationScoped is not a Scope class");
 
     }
 

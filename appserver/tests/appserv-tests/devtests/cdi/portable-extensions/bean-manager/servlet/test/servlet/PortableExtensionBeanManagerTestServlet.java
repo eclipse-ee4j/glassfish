@@ -24,6 +24,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.el.ELAwareBeanManager;
 import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -39,8 +40,6 @@ import test.beans.TransactionInterceptor;
 import test.beans.Transactional;
 import test.extension.MyExtension;
 
-
-
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
 public class PortableExtensionBeanManagerTestServlet extends HttpServlet {
     @Inject
@@ -48,75 +47,69 @@ public class PortableExtensionBeanManagerTestServlet extends HttpServlet {
     TestBean tb;
 
     @Inject
-    BeanManager bm;
+    ELAwareBeanManager beanManager;
 
     String msg = "";
 
-
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
-
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
 
-        if (tb == null)
+        if (tb == null) {
             msg += "Injection of request scoped bean failed";
+        }
 
         tb.m1();
         if (!TransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke not called";
         tb.m2();
         if (TransactionInterceptor.aroundInvokeInvocationCount != 2)
-            msg += "Business method interceptor invocation on method-level "
-                    + "interceptor annotation count not expected. "
-                    + "expected =2, actual="
-                    + TransactionInterceptor.aroundInvokeInvocationCount;
+            msg += "Business method interceptor invocation on method-level " + "interceptor annotation count not expected. "
+                    + "expected =2, actual=" + TransactionInterceptor.aroundInvokeInvocationCount;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
 
-        //check if our portable extension was called
+        // check if our portable extension was called
         if (!MyExtension.beforeBeanDiscoveryCalled)
-            msg += "Portable Extension lifecycle observer method: " +
-                            "beforeBeanDiscovery not called";
+            msg += "Portable Extension lifecycle observer method: " + "beforeBeanDiscovery not called";
 
         if (!MyExtension.afterBeanDiscoveryCalled)
-            msg += "Portable Extension lifecycle observer method: " +
-                            "afterBeanDiscovery not called or injection of BeanManager " +
-                            "in an observer method failed";
+            msg += "Portable Extension lifecycle observer method: " + "afterBeanDiscovery not called or injection of BeanManager "
+                    + "in an observer method failed";
 
         if (!MyExtension.processAnnotatedTypeCalled)
-            msg += "Portable Extension lifecycle observer method: process " +
-                            "annotated type not called";
+            msg += "Portable Extension lifecycle observer method: process " + "annotated type not called";
 
-        //BeanManager lookup
-        if (bm == null)
+        // BeanManager lookup
+        if (beanManager == null)
             msg += "Injection of BeanManager into servlet failed";
 
         try {
-            BeanManager bm1 = (BeanManager) (new InitialContext()).lookup("java:comp/BeanManager");
-            if (bm1 == null)
+            ELAwareBeanManager beanManager1 = InitialContext.doLookup("java:comp/BeanManager");
+            if (beanManager1 == null) {
                 msg += "lookup of BeanManager via component context failed";
+            }
         } catch (NamingException e) {
             e.printStackTrace();
             msg += "NamingException during lookup of BeanManager via component context";
         }
 
-        //Using BeanManager
-        check((bm.getBeans("test_named_bean").size() == 1), "Invalid number of Named Beans");
-        check((bm.getBeans("duplicate_test_bean").size() == 0), "Invalid number of Duplicate Test Beans");
-        check(bm.getELResolver() != null, "ELResolver is null");
-        check(bm.isInterceptorBinding(Transactional.class), "Transactional is not an interceptor binding");
-        check(bm.isNormalScope(RequestScoped.class), "RequestScoped is not normal scope");
-        check(bm.isPassivatingScope(SessionScoped.class), "SessionScoped is not passivating scope");
-        check(bm.isQualifier(Preferred.class), "Preferred is not a Qualifier");
-        check(!(bm.isScope(Preferred.class)), "Preferred is a Scope class");
-        check(bm.isScope(ConversationScoped.class), "ConversationScoped is not a Scope class");
+        // Using BeanManager
+        check((beanManager.getBeans("test_named_bean").size() == 1), "Invalid number of Named Beans");
+        check((beanManager.getBeans("duplicate_test_bean").size() == 0), "Invalid number of Duplicate Test Beans");
+        check(beanManager.getELResolver() != null, "ELResolver is null");
+        check(beanManager.isInterceptorBinding(Transactional.class), "Transactional is not an interceptor binding");
+        check(beanManager.isNormalScope(RequestScoped.class), "RequestScoped is not normal scope");
+        check(beanManager.isPassivatingScope(SessionScoped.class), "SessionScoped is not passivating scope");
+        check(beanManager.isQualifier(Preferred.class), "Preferred is not a Qualifier");
+        check(!(beanManager.isScope(Preferred.class)), "Preferred is a Scope class");
+        check(beanManager.isScope(ConversationScoped.class), "ConversationScoped is not a Scope class");
+        
         writer.write(msg + "\n");
     }
 
-
     private void check(boolean condition, String errorMessage) {
-        if(!condition){
+        if (!condition) {
             msg += errorMessage;
         }
     }

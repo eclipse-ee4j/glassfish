@@ -51,18 +51,18 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.lang-model</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-lang-model-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-el-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

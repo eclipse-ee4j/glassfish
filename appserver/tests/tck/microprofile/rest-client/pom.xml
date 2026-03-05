@@ -46,8 +46,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
@@ -156,7 +156,7 @@
                     <dependenciesToScan>
                         <dependency>org.eclipse.microprofile.rest.client:microprofile-rest-client-tck</dependency>
                     </dependenciesToScan>
-                
+
                     <systemPropertyVariables>
                         <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
                         <ee.omnifish.arquillian.prependDeploySequence>true</ee.omnifish.arquillian.prependDeploySequence>

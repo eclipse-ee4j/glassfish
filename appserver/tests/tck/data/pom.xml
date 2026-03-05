@@ -70,14 +70,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- Test framework -->
             <dependency>
                 <groupId>org.jboss.shrinkwrap</groupId>
                 <artifactId>shrinkwrap-api</artifactId>
                 <version>1.2.6</version>
             </dependency>
-            
+
             <!-- The TCK -->
             <dependency>
                 <groupId>jakarta.data</groupId>

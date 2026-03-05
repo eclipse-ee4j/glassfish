@@ -97,8 +97,8 @@
                                         <include name="jakarta.el-api.jar" />
                                         <include name="jakarta.interceptor-api.jar" />
                                         <include name="jakarta.inject-api.jar" />
-                                        <include name="jakarta.enterprise.lang-model.jar" />
-                                        <include name="jakarta.enterprise.cdi-api.jar" />
+                                        <include name="jakarta.cdi-lang-model-api.jar" />
+                                        <include name="jakarta.cdi-api.jar" />
                                     </fileset>
                                 </unzip>
                             </target>

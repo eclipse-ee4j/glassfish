@@ -28,7 +28,7 @@
 
     <artifactId>glassfish-external-tck-microprofile-config</artifactId>
     <name>TCK: MicroProfile Config</name>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
@@ -67,8 +67,8 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021-2025 Contributors to Eclipse Foundation.
+    Copyright (c) 2021-2026 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -73,10 +73,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.hk2</groupId>
-            <artifactId>hk2-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
@@ -101,16 +97,21 @@
             <artifactId>jakarta.ejb-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-lang-model-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.lang-model</artifactId>
+            <groupId>jakarta.concurrent</groupId>
+            <artifactId>jakarta.concurrent-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.hk2</groupId>
+            <artifactId>hk2-core</artifactId>
         </dependency>
 
         <dependency>

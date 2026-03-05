@@ -96,6 +96,7 @@
             <artifactId>dbschema</artifactId>
             <optional>true</optional>
         </dependency>
+
         <!-- glassfish-common -->
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -148,6 +149,7 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
+
         <!-- nucleus-cluster -->
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
@@ -184,6 +186,7 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+
         <!-- glassfish-common-full -->
         <dependency>
             <groupId>org.glassfish.external</groupId>
@@ -191,6 +194,19 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.deployment</groupId>
+            <artifactId>deployment-jakartaee-full</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Glassfish Jakarta Batch -->
+        <dependency>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+         <dependency>
             <groupId>com.ibm.jbatch</groupId>
             <artifactId>com.ibm.jbatch.container</artifactId>
             <optional>true</optional>
@@ -198,22 +214,6 @@
         <dependency>
             <groupId>com.ibm.jbatch</groupId>
             <artifactId>com.ibm.jbatch.spi</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-connector</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-impl</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>deployment-jakartaee-full</artifactId>
-            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -235,14 +235,11 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
+
+        <!-- Glassfish Jakarta Concurrency -->
         <dependency>
-            <groupId>jakarta.batch</groupId>
-            <artifactId>jakarta.batch-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.concurrent</groupId>
+            <artifactId>jakarta.concurrent-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -250,7 +247,18 @@
             <artifactId>concurro</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-corba -->
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-connector</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-impl</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Glassfish Corba -->
         <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-csiv2-idl</artifactId>
@@ -261,7 +269,8 @@
             <artifactId>glassfish-corba-orb</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-corba-base -->
+
+        <!-- Glassfish Corba-base -->
         <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-internal-api</artifactId>
@@ -297,18 +306,19 @@
             <artifactId>pfl-dynamic</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-ejb -->
+
+        <!-- Glassfish Jakarta Enterprise Beans Full/Heavy -->
+        <dependency>
+            <groupId>org.glassfish.main.ejb</groupId>
+            <artifactId>ejb-full-container</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
             <artifactId>ejb-timer-databases</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.ejb</groupId>
-            <artifactId>ejb-full-container</artifactId>
-            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -329,16 +339,17 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-ejb-lite -->
+
+        <!-- Glassfish Jakarta Enterprise Beans Lite -->
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
-            <artifactId>ejb-client</artifactId>
+            <artifactId>ejb-container</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
-            <artifactId>ejb-container</artifactId>
+            <artifactId>ejb-client</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -354,7 +365,13 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-hk2 -->
+
+        <!-- Glassfish Jakarta Inject / HK2 -->
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
             <artifactId>aopalliance-repackaged</artifactId>
@@ -446,11 +463,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.inject</groupId>
-            <artifactId>jakarta.inject-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
             <optional>true</optional>
@@ -460,7 +472,8 @@
             <artifactId>classmate</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-grizzly -->
+
+        <!-- Glassfish Grizzly -->
         <dependency>
             <groupId>org.glassfish.main.grizzly</groupId>
             <artifactId>nucleus-grizzly-all</artifactId>
@@ -473,7 +486,8 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jca -->
+
+        <!-- Glassfish Jakarta Connectors -->
         <dependency>
             <groupId>org.glassfish.main.connectors</groupId>
             <artifactId>descriptors</artifactId>
@@ -543,20 +557,21 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-cdi -->
+
+        <!-- Glassfish Jakarta CDI -->
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.lang-model</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-lang-model-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-el-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -593,7 +608,8 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jdbc -->
+
+        <!-- Glassfish JDBC -->
         <dependency>
             <groupId>org.glassfish.main.jdbc</groupId>
             <artifactId>jdbc-admin</artifactId>
@@ -613,7 +629,13 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jms -->
+
+        <!-- Glassfish Jakarta Messages -->
+        <dependency>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.connectors</groupId>
             <artifactId>connectors-inbound-runtime</artifactId>
@@ -633,11 +655,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.jms</groupId>
-            <artifactId>jakarta.jms-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.jms</groupId>
             <artifactId>jms-admin</artifactId>
             <version>${project.version}</version>
@@ -649,7 +666,8 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jpa -->
+
+        <!-- Glassfish Jakarta Persistence -->
         <dependency>
             <groupId>org.glassfish.main.persistence</groupId>
             <artifactId>gf-jpa-connector</artifactId>
@@ -714,26 +732,28 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jsf -->
+
+        <!-- Glassfish Jakarta Faces implementation -->
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
+            <groupId>org.glassfish.mojarra</groupId>
+            <artifactId>mojarra</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jta -->
+
+        <!-- Glassfish Jakarta Transactions -->
         <dependency>
             <groupId>org.glassfish.main.transaction</groupId>
             <artifactId>jta</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jts -->
         <dependency>
             <groupId>org.glassfish.main.transaction</groupId>
             <artifactId>jts</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+
         <!-- glassfish-management -->
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -753,6 +773,7 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+
         <!-- glassfish-nucleus -->
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
@@ -916,6 +937,7 @@
             <artifactId>jakarta.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
+
         <!-- glassfish-web -->
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
@@ -1088,6 +1110,12 @@
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-container-glassfish-cdi</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
@@ -1268,6 +1296,7 @@
             <artifactId>jettison</artifactId>
             <optional>true</optional>
         </dependency>
+
         <!-- metro -->
         <dependency>
             <groupId>org.glassfish.main.webservices</groupId>

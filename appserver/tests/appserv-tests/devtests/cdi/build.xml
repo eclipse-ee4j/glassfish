@@ -101,7 +101,7 @@
 
         <!--
                Not running until figherfish is back (narrator: "it never came back")
-               
+
                <if>
                    <equals arg1="${test.embedded.mode}" arg2="true" />
                    <then>

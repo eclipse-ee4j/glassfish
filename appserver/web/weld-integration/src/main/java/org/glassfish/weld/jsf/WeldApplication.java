@@ -19,7 +19,7 @@ package org.glassfish.weld.jsf;
 
 import jakarta.el.ELManager;
 import jakarta.el.ExpressionFactory;
-import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.el.ELAwareBeanManager;
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
 import jakarta.faces.context.FacesContext;
@@ -38,7 +38,7 @@ public class WeldApplication extends ApplicationWrapper {
     public WeldApplication(Application application) {
         super(application);
 
-        BeanManager beanManager = getBeanManager();
+        ELAwareBeanManager beanManager = getBeanManager();
         if (beanManager != null) {
             application.addELContextListener(newInstance("org.jboss.weld.module.web.el.WeldELContextListener"));
             application.addELResolver(beanManager.getELResolver());
@@ -57,7 +57,7 @@ public class WeldApplication extends ApplicationWrapper {
     @Override
     public ExpressionFactory getExpressionFactory() {
         if (expressionFactory == null) {
-            BeanManager beanManager = getBeanManager();
+            ELAwareBeanManager beanManager = getBeanManager();
             if (beanManager != null) {
                 expressionFactory = beanManager.wrapExpressionFactory(getWrapped().getExpressionFactory());
             } else {
@@ -68,7 +68,7 @@ public class WeldApplication extends ApplicationWrapper {
         return expressionFactory;
     }
 
-    private BeanManager getBeanManager() {
+    private ELAwareBeanManager getBeanManager() {
         try {
             return InitialContext.doLookup("java:comp/BeanManager");
         } catch (NamingException e) {

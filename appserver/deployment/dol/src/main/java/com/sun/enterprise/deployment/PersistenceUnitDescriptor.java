@@ -203,6 +203,10 @@ public class PersistenceUnitDescriptor extends Descriptor {
     }
 
     public ValidationMode getValidationMode() {
+        if (validationMode == null) {
+            return ValidationMode.CALLBACK;
+        }
+
         return validationMode;
     }
 

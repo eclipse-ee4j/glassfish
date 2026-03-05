@@ -37,7 +37,7 @@
     &eeCommonProperties;
     -->
     &reporting;
-    
+
     <target name="all">
         <antcall target="jdbc-all"/>
     </target>
@@ -53,15 +53,15 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
-        
+
         <antcall target="run-tests"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
         <record name="jdbc.output" action="stop"/>
     </target>
-    
+
     <target name="jdbc-group1">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
@@ -73,15 +73,15 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
-        
+
         <antcall target="run-tests1"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
         <record name="jdbc.output" action="stop"/>
     </target>
-    
+
     <target name="jdbc-group2">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
@@ -93,15 +93,15 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
-        
+
         <antcall target="run-tests2"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
         <record name="jdbc.output" action="stop"/>
     </target>
-    
+
     <target name="jdbc-group3">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
@@ -113,15 +113,15 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
-        
+
         <antcall target="run-tests3"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
         <record name="jdbc.output" action="stop"/>
     </target>
-    
+
     <target name="jdbc-group4">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
@@ -133,15 +133,15 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
-        
+
         <antcall target="run-tests4"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
         <record name="jdbc.output" action="stop"/>
     </target>
-    
+
     <target name="jdbc-group5">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
@@ -153,9 +153,9 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.output" action="start"/>
-        
+
         <antcall target="run-tests5"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
         </antcall>
@@ -173,9 +173,9 @@
             <fileset dir="." includes="*.output"/>
         </delete>
         <record name="jdbc.secman.output" action="start"/>
-        
+
         <antcall target="run-tests"/>
-        
+
         <antcall target="report">
             <param name="htmlfile" value="${env.APS_HOME}/JDBCSecuritytest_results.html"/>
         </antcall>
@@ -189,7 +189,7 @@
         <antcall target="run-tests4" />
         <antcall target="run-tests5" />
     </target>
-    
+
     <target name="run-tests1">
         <run-jdbc-test path="appauth" target="all"/>
         <run-jdbc-test path="appauthtx" target="all"/>
@@ -199,7 +199,7 @@
         <run-jdbc-test path="contauth1tx" target="all"/>
         <run-jdbc-test path="reconfig" target="all"/>
     </target>
-    
+
     <target name="run-tests2">
         <run-jdbc-test path="autocommit" target="all"/>
         <run-jdbc-test path="jdbcjmsauth" target="all"/>
@@ -211,7 +211,7 @@
         <run-jdbc-test path="nonacc" target="all"/>
         <run-jdbc-test path="lazyassoc" target="all"/>
    </target>
-    
+
     <target name="run-tests3">
         <run-jdbc-test path="markconnectionasbad.local" target="all"/>
         <run-jdbc-test path="markconnectionasbad.xa" target="all"/>
@@ -226,7 +226,7 @@
         <run-jdbc-test path="connleaktracing" target="all"/>
         <run-jdbc-test path="conncreationretry" target="all"/>
     </target>
-    
+
     <target name="run-tests4">
         <run-jdbc-test path="validateatmostonceperiod" target="all"/>
         <run-jdbc-test path="connsharing" target="nonxa"/>
@@ -239,7 +239,7 @@
         <run-jdbc-test path="dmmcf.markconnectionasbad.xa" target="all"/>
         <run-jdbc-test path="dmmcf.appclient" target="all"/>
     </target>
-    
+
     <target name="run-tests5">
         <run-jdbc-test path="tracingsql" target="all"/>
         <run-jdbc-test path="datasource40" target="all"/>
@@ -353,7 +353,7 @@
         <ant dir="simple" target="all"/>
         <record name="simple.output" action="stop"/>
     </target>
-    
+
     <target name="reconfig-test">
         <record name="reconfig.output" action="start"/>
         <ant dir="reconfig" target="all"/>
@@ -569,7 +569,7 @@
             ant all (Executes all the jdbc tests)
         </echo>
     </target>
-    
+
     <macrodef name="run-jdbc-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
         <attribute name="path" />
         <attribute name="target" />

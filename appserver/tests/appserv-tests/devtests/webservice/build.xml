@@ -33,21 +33,21 @@
     	<echo message="@@## Running webservice developer tests ##@@" />
         <echo unless:set="env.webservice" message="@@## Set environment variable 'webservice' to name of single test dir to run only that one. ##@@${line.separator}" />
         <echo if:set="env.webservice" message="@@## environment variable 'webservice' set. Running only ${env.webservice}  ##@@${line.separator}" />
-    	
+
         <delete file="${env.APS_HOME}/test_results.html"/>
         <delete file="${env.APS_HOME}/test_resultsValid.xml"/>
         <delete file="${env.APS_HOME}/test_results.xml"/>
         <delete dir="${env.APS_HOME}/build/module"/>
-        
+
     	<record name="webservice.output" action="start" />
-        
+
     	<run-webservice-test path="filter_urlhandling"/>
     	<run-webservice-test path="annotations"/>
     	<run-webservice-test path="ejb_annotations"/>
         <run-webservice-test path="gf_dd/endpoint_address_uri"/>
-        
+
     	<record name="webservice.output" action="stop" />
-        
+
     	<antcall target="report"/>
         <antcall target="dev-report"/>
     </target>
@@ -72,7 +72,7 @@
                         ant xsdany (Executes the xsdany tests)
         </echo>
     </target>
-	
+
 	<macrodef name="run-webservice-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
 	        <attribute name="path" />
 	        <sequential>

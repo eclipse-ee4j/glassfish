@@ -33,10 +33,10 @@
     <name>GlassFish Microprofile Health Service</name>
 
     <dependencies>
+        <!-- APIs -->
         <dependency>
-            <groupId>org.glassfish.main.microprofile</groupId>
-            <artifactId>microprofile-health</artifactId>
-            <version>${project.version}</version>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -44,9 +44,12 @@
             <artifactId>jakarta.json.bind-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Internal Dependencies -->
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>org.glassfish.main.microprofile</groupId>
+            <artifactId>microprofile-health</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
            <antcall target="clean-common" />
        </target>
-    
+
     <target name="setup" depends="init-common">
         <antcall target="create-user-common">
             <param name="user" value="testuser" />
@@ -44,7 +44,7 @@
             <param name="groups" value="users" />
         </antcall>
     </target>
-    
+
     <target name="compile" depends="clean">
     </target>
 
@@ -54,7 +54,7 @@
         </antcall>
 
         <mkdir dir="${assemble.dir}" />
-        
+
         <antcall target="package-war-common">
             <param name="war.classes" value="${build.classes.dir}" />
             <param name="war.file" value="${assemble.dir}/openUncoveredServletTest-web.war" />

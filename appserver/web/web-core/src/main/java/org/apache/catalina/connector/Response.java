@@ -1736,5 +1736,11 @@ public class Response implements HttpResponse, HttpServletResponse {
         }
     }
 
+    @Override
+    public void sendEarlyHints() {
+        // TODO: EE 12
+
+    }
+
 
 }

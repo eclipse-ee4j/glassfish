@@ -44,7 +44,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class DataRepositoryTest {
 
     private static final System.Logger LOG = System.getLogger(DataRepositoryTest.class.getName());
-    private static final Package TEST_PACKAGE = FooRepository.class.getPackage();
     private static final String APP_NAME = DataRepositoryTest.class.getSimpleName() + "WebApp";
     private static final Asadmin ASADMIN = getAsadmin();
 
@@ -59,8 +58,8 @@ public class DataRepositoryTest {
         switchDerbyPoolToEmbededded();
 
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
-                .addPackage(TEST_PACKAGE).deleteClass(DataRepositoryTest.class)
-                .addAsResource(TEST_PACKAGE, "persistence.xml", "META-INF/persistence.xml");
+                .addPackage(FooRepository.class.getPackage()).deleteClass(DataRepositoryTest.class)
+                .addAsResource(FooRepository.class.getPackage(), "persistence.xml", "META-INF/persistence.xml");
 
         LOG.log(INFO, webArchive.toString(true));
 

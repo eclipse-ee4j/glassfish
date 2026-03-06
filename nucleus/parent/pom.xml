@@ -198,10 +198,10 @@
         <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <jakarta.security-api.version>5.0.0-SNAPSHOT</jakarta.security-api.version>
+        <jakarta.security-api.version>5.0.0-M1</jakarta.security-api.version>
         <jakarta.authorization-api.version>3.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
-        <soteria.version>5.0.0-SNAPSHOT</soteria.version>
+        <soteria.version>5.0.0-M1</soteria.version>
         <exousia.version>3.0.1</exousia.version>
         <epicyro.version>3.1.1</epicyro.version>
         <nimbus.version>10.7</nimbus.version>

@@ -613,6 +613,26 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>jakarta.authentication</groupId>
+            <artifactId>jakarta.authentication-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.authorization</groupId>
+            <artifactId>jakarta.authorization-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>soteria</artifactId>
             <exclusions>
@@ -652,18 +672,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Jakarta Authentication -->
-        <dependency>
-            <groupId>jakarta.authentication</groupId>
-            <artifactId>jakarta.authentication-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.glassfish.epicyro</groupId>
             <artifactId>epicyro</artifactId>
@@ -674,19 +682,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Jakarta Authorization -->
-        <dependency>
-            <groupId>jakarta.authorization</groupId>
-            <artifactId>jakarta.authorization-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
+         <dependency>
             <groupId>org.glassfish.exousia</groupId>
             <artifactId>exousia</artifactId>
             <exclusions>
@@ -697,10 +693,11 @@
             </exclusions>
         </dependency>
 
+
         <!-- Jakarta Concurrency -->
         <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <groupId>jakarta.concurrent</groupId>
+            <artifactId>jakarta.concurrent-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -750,19 +747,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Jakarta Mail -->
         <dependency>
             <groupId>jakarta.mail</groupId>
             <artifactId>jakarta.mail-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.angus</groupId>
-            <artifactId>angus-mail</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -782,6 +771,16 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
             <artifactId>angus-activation</artifactId>
             <exclusions>
                 <exclusion>
@@ -790,6 +789,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Jakarta Servlet-->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -800,16 +801,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
+        <!-- Jakarta Enterprise Beans Full/Heavy -->
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
@@ -820,16 +813,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>jakarta.interceptor</groupId>
-            <artifactId>jakarta.interceptor-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
@@ -1646,9 +1630,19 @@
         </dependency>
 
         <!-- Jakarta Faces -->
+        <dependency>
+           <groupId>jakarta.faces</groupId>
+           <artifactId>jakarta.faces-api</artifactId>
+           <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+       </dependency>
        <dependency>
-           <groupId>org.glassfish</groupId>
-           <artifactId>jakarta.faces</artifactId>
+           <groupId>org.glassfish.mojarra</groupId>
+           <artifactId>mojarra</artifactId>
            <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1668,7 +1662,47 @@
             </exclusions>
         </dependency>
 
-        <!-- glassfish-jcdi -->
+        <!-- Jakarta CDI -->
+        <dependency>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-lang-model-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-el-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>weld-integration</artifactId>
@@ -1723,26 +1757,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.lang-model</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>cdi-api-fragment</artifactId>
             <version>${project.version}</version>
@@ -1754,7 +1768,7 @@
             </exclusions>
         </dependency>
 
-        <!-- json -->
+        <!-- Jakarta JSON -->
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>

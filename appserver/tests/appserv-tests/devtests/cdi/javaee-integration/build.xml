@@ -20,7 +20,7 @@
 <project name="javaee-int-test" default="usage" basedir=".">
 
     <property name="javaee-int-target" value="all" />
-    
+
     <target name="usage">
         <echo> Usage:
                 ant all (Executes all the javaee-int tests)
@@ -33,25 +33,25 @@
                 ant unsetup (unsets all resources for javaee-int tests)
         </echo>
     </target>
-    
+
     <target name="javaee-int">
         <record name="javaee-int.output" action="start" />
-        
+
         <!--
-        
-            Not running until Hibernate Validation supports CDI 4.0. 
+
+            Not running until Hibernate Validation supports CDI 4.0.
             See https://hibernate.atlassian.net/browse/HV-1857
-        
+
         <echo message="   ====  Running builtin-beans" />
         <ant dir="builtin-beans" target="${javaee-int-target}" />
         -->
-        
+
         <echo message="   ====  Running servlet-context-injection-cdi" />
         <ant dir="servlet-context-injection-cdi" target="${javaee-int-target}" />
-        
+
         <echo message="   ====  Running no-interface-local-view-proxy-serializable" />
         <ant dir="no-interface-local-view-proxy-serializable" target="${javaee-int-target}" />
-        
+
         <echo message="   ====  Running normal-bean-injection-ear" />
         <ant dir="normal-bean-injection-ear" target="${javaee-int-target}" />
         <ant dir="programmatic-lookup-ear" target="${javaee-int-target}" />

@@ -125,8 +125,8 @@
         </dependency>-->
 
         <dependency>
-          <groupId>org.glassfish</groupId>
-          <artifactId>jakarta.faces</artifactId>
+          <groupId>org.glassfish.mojarra</groupId>
+          <artifactId>mojarra</artifactId>
           <scope>test</scope>
         </dependency>
 

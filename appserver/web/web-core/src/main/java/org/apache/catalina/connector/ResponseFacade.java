@@ -452,6 +452,13 @@ public class ResponseFacade implements HttpServletResponse {
         response.setTrailerFields(supplier);
     }
 
+    @Override
+    public void sendEarlyHints() {
+        checkResponseNull();
+
+        response.sendEarlyHints();
+    }
+
     private void checkResponseNull() {
         if (response == null) {
             throw new IllegalStateException(rb.getString(NULL_RESPONSE_OBJECT));
@@ -463,5 +470,7 @@ public class ResponseFacade implements HttpServletResponse {
             throw new IllegalStateException();
         }
     }
+
+
 
 }

@@ -71,13 +71,13 @@ Export-Package: org.hibernate.validator;version="9.1.0.Final";uses:="jak
  ng;version="9.1.0.Final",org.hibernate.validator.spi.scripting;version=
  "9.1.0.Final";uses:="jakarta.validation,javax.script",org.hibernate.val
  idator.spi.tracking;version="9.1.0.Final"
-Import-Package: jakarta.persistence;version="[3.0.0,4.0.0)";resolution:=
- optional,jakarta.validation;version="[3.1.1,4.0.0)",jakarta.validation.
- constraints;version="[3.1.1,4.0.0)",jakarta.validation.constraintvalida
- tion;version="[3.1.1,4.0.0)",jakarta.validation.executable;version="[3.
- 1.1,4.0.0)",jakarta.validation.groups;version="[3.1.1,4.0.0)",jakarta.v
- alidation.metadata;version="[3.1.1,4.0.0)",jakarta.validation.spi;versi
- on="[3.1.1,4.0.0)",jakarta.validation.valueextraction;version="[3.1.1,4
+Import-Package: jakarta.persistence;version="[3.0.0,5.0.0)";resolution:=
+ optional,jakarta.validation;version="[3.1.1,5.0.0)",jakarta.validation.
+ constraints;version="[3.1.1,5.0.0)",jakarta.validation.constraintvalida
+ tion;version="[3.1.1,5.0.0)",jakarta.validation.executable;version="[3.
+ 1.1,5.0.0)",jakarta.validation.groups;version="[3.1.1,5.0.0)",jakarta.v
+ alidation.metadata;version="[3.1.1,5.0.0)",jakarta.validation.spi;versi
+ on="[3.1.1,5.0.0)",jakarta.validation.valueextraction;version="[3.1.1,5
  .0.0)",javax.script;version=0,javax.xml.namespace;version=0,javax.xml.s
  tream;version=0,javax.xml.stream.events;version=0,javax.xml.transform;v
  ersion=0,javax.xml.transform.stream;version=0,javax.xml.validation;vers

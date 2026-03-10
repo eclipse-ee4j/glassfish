@@ -14,33 +14,34 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package myapp;
+package org.glassfish.main.test.app.persistence.validation;
 
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
 public class TestServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     @EJB
     private TestEJB testEJB;
 
-    protected void processRequest(HttpServletRequest request,
-                                  HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         boolean status = false;
         String testcase = null;
+
         try {
             out.println("TestServlet at " + request.getContextPath());
             testcase = request.getParameter("tc");
-        System.out.println("testcase = " + testcase);
+            System.out.println("testcase = " + testcase);
 
             if ("initialize".equals(testcase)) {
 
@@ -71,30 +72,28 @@ public class TestServlet extends HttpServlet {
         } catch (Exception ex) {
 
             System.out.println("Failure in TestServlet");
-        out.println("Failure in TestServlet");
+            out.println("Failure in TestServlet");
 
         } finally {
             if (status)
-              out.println(testcase+":pass");
+                out.println(testcase + ":pass");
             else
-              out.println(testcase+":fail");
+                out.println(testcase + ":fail");
             out.close();
         }
     }
 
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 
-
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
-            throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    @Override
     public String getServletInfo() {
         return "TestServlet";
     }

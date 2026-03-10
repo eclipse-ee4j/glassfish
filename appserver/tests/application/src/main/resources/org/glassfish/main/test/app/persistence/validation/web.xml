@@ -17,14 +17,15 @@
 
 -->
 
-<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
-  <persistence-unit name="pu1">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <jta-data-source>jdbc/__default</jta-data-source>
-    <non-jta-data-source>jdbc/__default</non-jta-data-source>
-    <properties>
-       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-       <property name="eclipselink.logging.level" value="INFO"/>
-    </properties>
-  </persistence-unit>
-</persistence>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <servlet>
+        <servlet-name>TestServlet</servlet-name>
+        <servlet-class>org.glassfish.main.test.app.persistence.validation.TestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestServlet</servlet-name>
+        <url-pattern>/test/*</url-pattern>
+    </servlet-mapping>
+</web-app>

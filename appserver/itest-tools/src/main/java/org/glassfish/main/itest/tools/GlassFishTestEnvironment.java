@@ -61,6 +61,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
+import static java.util.logging.Level.INFO;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,6 +91,7 @@ public class GlassFishTestEnvironment {
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
     private static final int ASADMIN_START_DOMAIN_TIMEOUT = 60_000;
+
     /** 1 day. Useful for debugging */
     private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 1000 * 60 * 60 * 24;
 
@@ -97,19 +99,27 @@ public class GlassFishTestEnvironment {
 
     static {
         if (!isGlassFishRunningRemotely()) {
-            LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
-            LOG.log(Level.INFO, "Expected GlassFish directory: {0}", GF_ROOT);
+            LOG.log(INFO, "Using basedir: {0}", BASEDIR);
+            LOG.log(INFO, "Expected GlassFish directory: {0}", GF_ROOT);
+
             changePassword();
-            Thread hook = new Thread(() -> {
-                getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
-            });
-            Runtime.getRuntime().addShutdownHook(hook);
-            final int timeout = isStartDomainSuspendEnabled()
-                    ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
+
+            Runtime.getRuntime()
+                   .addShutdownHook(new Thread(() ->
+                       getAsadmin().exec(30_000, "stop-domain", "--kill", "--force")));
+
             // This is the absolutely first start - if it fails, all other starts will fail too.
             // Note: --suspend implicitly enables --debug
-            assertThat(getAsadmin().exec(timeout,"start-domain",
-                    isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
+            assertThat(
+                getAsadmin().exec(
+                    isStartDomainSuspendEnabled() ?
+                        ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG :
+                        ASADMIN_START_DOMAIN_TIMEOUT,
+                    "start-domain",
+                    isStartDomainSuspendEnabled() ?
+                        "--suspend" :
+                        "--debug"),
+                asadminOK());
         }
     }
 

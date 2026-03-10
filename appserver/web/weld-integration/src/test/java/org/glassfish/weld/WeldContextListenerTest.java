@@ -20,6 +20,7 @@ package org.glassfish.weld;
 import jakarta.el.ELResolver;
 import jakarta.el.ExpressionFactory;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.el.ELAwareBeanManager;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.jsp.JspApplicationContext;
 
@@ -58,7 +59,7 @@ public class WeldContextListenerTest {
         servletContext.getServletContext();
 
         ServletContextEvent servletContextEvent = mockSupport.createMock(ServletContextEvent.class);
-        BeanManager beanManager = mockSupport.createMock(BeanManager.class);
+        ELAwareBeanManager beanManager = mockSupport.createMock(ELAwareBeanManager.class);
         JspApplicationContextImpl jspApplicationContext = new JspApplicationContextImpl(servletContext);
 
         expect(beanManager.getELResolver()).andReturn(elResolver);
@@ -81,7 +82,7 @@ public class WeldContextListenerTest {
     public void testcontextDestroyed() throws Exception {
         EasyMockSupport mockSupport = new EasyMockSupport();
 
-        BeanManager beanManager = mockSupport.createMock(BeanManager.class);
+        ELAwareBeanManager beanManager = mockSupport.createMock(ELAwareBeanManager.class);
         mockSupport.replayAll();
 
         WeldContextListener weldContextListener = getWeldContextListener(beanManager, null);

@@ -600,5 +600,10 @@ public final class ServletFakeArtifactSet extends BaseDistributedPropertySet {
         public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
 
         }
+
+        @Override
+        public void sendEarlyHints() {
+
+        }
     }
 }

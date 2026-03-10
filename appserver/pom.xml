@@ -83,7 +83,7 @@
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
-        <omnifaces-jwt-auth.version>3.0.1</omnifaces-jwt-auth.version>
+        <omnifaces-jwt-auth.version>4.0.0-M1</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
         <microprofile.rest-client.version>4.0</microprofile.rest-client.version>
@@ -129,8 +129,8 @@
                 <version>${jakarta.faces-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.faces</artifactId>
+                <groupId>org.glassfish.mojarra</groupId>
+                <artifactId>mojarra</artifactId>
                 <version>${mojarra.version}</version>
             </dependency>
 
@@ -155,8 +155,8 @@
 
             <!-- Jakarta Concurrency -->
             <dependency>
-                <groupId>jakarta.enterprise.concurrent</groupId>
-                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+                <groupId>jakarta.concurrent</groupId>
+                <artifactId>jakarta.concurrent-api</artifactId>
                 <version>${jakarta.concurrent-api.version}</version>
             </dependency>
             <dependency>
@@ -455,13 +455,13 @@
             </dependency>
 
             <dependency>
-                <groupId>jakarta.enterprise</groupId>
-                <artifactId>jakarta.enterprise.lang-model</artifactId>
+                <groupId>jakarta.cdi</groupId>
+                <artifactId>jakarta.cdi-lang-model-api</artifactId>
                 <version>${jakarta.cdi-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.enterprise</groupId>
-                <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+                <groupId>jakarta.cdi</groupId>
+                <artifactId>jakarta.cdi-el-api</artifactId>
                 <version>${jakarta.cdi-api.version}</version>
                 <exclusions>
                     <exclusion>
@@ -761,8 +761,8 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>org.glassfish</groupId>
-                                <artifactId>jakarta.faces</artifactId>
+                                <groupId>org.glassfish.mojarra</groupId>
+                                <artifactId>mojarra</artifactId>
                                 <version>${mojarra.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
@@ -846,13 +846,13 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>jakarta.enterprise.concurrent</groupId>
-                                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+                                <groupId>jakarta.concurrent</groupId>
+                                <artifactId>jakarta.concurrent-api</artifactId>
                                 <version>${jakarta.concurrent-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>3.1</specVersion>
+                            <specVersion>3.2</specVersion>
                             <specImplVersion>${jakarta.concurrent-api.version}</specImplVersion>
                             <apiPackage>jakarta.enterprise.concurrent</apiPackage>
                         </spec>

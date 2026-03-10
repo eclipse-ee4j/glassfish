@@ -57,6 +57,17 @@ public final class Utility {
         // do not perform any JVM version checking
     }
 
+   /**
+    * Returns true if the given string is null or is blank.
+    *
+    * @param string The string to be checked on blankness.
+    * @return True if the given string is null or is blank.
+    */
+   public static boolean isBlank(String string) {
+       return string == null || string.isBlank();
+   }
+
+
     /**
      * Returns true if the given string is null or is empty.
      *

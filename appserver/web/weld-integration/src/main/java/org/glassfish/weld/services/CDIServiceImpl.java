@@ -44,6 +44,7 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.inject.spi.Interceptor;
+import jakarta.enterprise.inject.spi.el.ELAwareBeanManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Scope;
 import jakarta.servlet.ServletContext;
@@ -162,8 +163,7 @@ public class CDIServiceImpl implements CDIService {
 
     @Override
     public void setELResolver(ServletContext servletContext) throws NamingException {
-        InitialContext context = new InitialContext();
-        BeanManager beanManager = (BeanManager) context.lookup(JNDI_CTX_JAVA_COMPONENT + "BeanManager");
+        ELAwareBeanManager beanManager = InitialContext.doLookup(JNDI_CTX_JAVA_COMPONENT + "BeanManager");
         if (beanManager != null) {
             servletContext.setAttribute("org.glassfish.jsp.beanManagerELResolver", beanManager.getELResolver());
         }

@@ -39,11 +39,11 @@
     <category name="org.jboss">
         <priority value="ERROR"/>
     </category>
-    
+
     <category name="org.jboss.test">
         <priority value="ERROR"/>
     </category>
-    
+
     <category name="com.arjuna">
         <priority value="ERROR"/>
     </category>
@@ -60,15 +60,15 @@
     <category name="org.jboss.weld">
         <priority value="WARN"/>
     </category>
-    
+
     <category name="org.jboss.weld.tck">
         <priority value="INFO"/>
     </category>
-    
+
     <category name="org.jboss.testharness">
         <priority value="INFO"/>
     </category>
-    
+
     <root>
         <priority value="INFO"/>
         <appender-ref ref="CONSOLE"/>

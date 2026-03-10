@@ -383,7 +383,6 @@
         <run-quicklook-test path="web/jsfinjection" target="build-deploy" />
         <run-quicklook-test path="jdbc/jdbcusertx" target="build-deploy" />
         <run-quicklook-test path="persistence/jpainjectemf" target="build-deploy" />
-        <run-quicklook-test path="persistence/jpavalidation" target="build-deploy" />
         <run-quicklook-test path="security/helloworld" target="build-deploy" />
         <run-quicklook-test path="security/basicauth" target="build-deploy" />
         <run-quicklook-test path="ejb/slsbnicmt" target="build-deploy" />
@@ -488,7 +487,6 @@
          <run-quicklook-test path="web/jsfinjection" target="undeploy" />
          <run-quicklook-test path="jdbc/jdbcusertx" target="undeploy" />
          <run-quicklook-test path="persistence/jpainjectemf" target="undeploy" />
-         <run-quicklook-test path="persistence/jpavalidation" target="undeploy" />
          <run-quicklook-test path="security/helloworld" target="undeploy" />
          <run-quicklook-test path="security/basicauth" target="undeploy" />
          <run-quicklook-test path="ejb/slsbnicmt" target="undeploy" />

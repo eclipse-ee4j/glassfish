@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 6.0.0
+Java-Version: 9
+Build-Jdk-Spec: 21
+Bundle-Description: Jakarta WebSocket 2.3
+Bundle-DocURL: https://www.eclipse.org
+Bundle-License: https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.tx
+ t, https://www.gnu.org/software/classpath/license.html
+Bundle-ManifestVersion: 2
+Bundle-Name: Jakarta WebSocket - Server API
+Bundle-SymbolicName: jakarta.websocket-api
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 2.3.0.M2
+Export-Package: jakarta.websocket.server;uses:="jakarta.websocket";versi
+ on="2.3.0.M2"
+Extension-Name: jakarta.websocket
+Implementation-Vendor: Eclipse Foundation
+Implementation-Vendor-Id: org.eclipse
+Implementation-Version: 2.3.0-M2
+Import-Package: jakarta.websocket;version="[2.3,3)",java.io,java.lang,ja
+ va.lang.annotation,java.net,java.security,java.security.cert,java.util
+Private-Package: jakarta.websocket.server,.
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=9))"
+Specification-Version: 2.3
+Tool: Bnd-7.0.0.202310060912

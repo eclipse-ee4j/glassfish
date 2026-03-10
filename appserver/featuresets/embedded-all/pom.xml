@@ -43,6 +43,94 @@
             <type>pom</type>
         </dependency>
 
+        <!-- Jakarta Concurrency -->
+        <dependency>
+            <groupId>jakarta.concurrent</groupId>
+            <artifactId>jakarta.concurrent-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.concurro</groupId>
+            <artifactId>concurro</artifactId>
+        </dependency>
+
+
+        <!-- Jakarta Batch -->
+        <dependency>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.jbatch</groupId>
+            <artifactId>com.ibm.jbatch.container</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.jbatch</groupId>
+            <artifactId>com.ibm.jbatch.spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-connector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.deployment</groupId>
+            <artifactId>deployment-jakartaee-full</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.batch</groupId>
+            <artifactId>glassfish-batch-commands</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.batch</groupId>
+            <artifactId>glassfish-batch-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- Jakarta Messages -->
+        <dependency>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.connectors</groupId>
+            <artifactId>connectors-inbound-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>gf-jms-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>gf-jms-injection</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jms-admin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jms-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jmsra</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>antlr</artifactId>
@@ -100,43 +188,6 @@
             <artifactId>dbschema</artifactId>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.ibm.jbatch</groupId>
-            <artifactId>com.ibm.jbatch.container</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm.jbatch</groupId>
-            <artifactId>com.ibm.jbatch.spi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-connector</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>deployment-jakartaee-full</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.batch</groupId>
-            <artifactId>glassfish-batch-commands</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.batch</groupId>
-            <artifactId>glassfish-batch-connector</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.concurro</groupId>
-            <artifactId>concurro</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-csiv2-idl</artifactId>
@@ -191,59 +242,6 @@
             <artifactId>amx-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- glassfish-ejb-lite -->
-
-        <!-- glassfish-grizzly -->
-
-        <!-- additional grizzly modules package which includes websockets -->
-
-        <!-- glassfish-jca -->
-        <!-- glassfish-jcdi -->
-
-
-        <!-- glassfish-jms -->
-        <dependency>
-            <groupId>org.glassfish.main.connectors</groupId>
-            <artifactId>connectors-inbound-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>gf-jms-connector</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>gf-jms-injection</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>jms-admin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>jms-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>jmsra</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <!-- glassfish-jpa -->
-        <!-- glassfish-jsf -->
-        <!-- glassfish-jta -->
-        <!-- glassfish-jts -->
-        <!-- glassfish-management -->
-        <!-- glassfish-nucleus -->
-        <!-- glassfish-web -->
-
-
-
 
         <dependency>
             <groupId>org.glassfish.main.jackson.module</groupId>
@@ -347,18 +345,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>jakarta.batch</groupId>
-            <artifactId>jakarta.batch-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.jms</groupId>
-            <artifactId>jakarta.jms-api</artifactId>
-        </dependency>
 
         <!-- We cannot unpack dependency from zip file, so we need classes from the jar file -->
         <dependency>

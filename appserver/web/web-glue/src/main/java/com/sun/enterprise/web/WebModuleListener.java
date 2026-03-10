@@ -230,12 +230,12 @@ final class WebModuleListener implements LifecycleListener {
 
         String sysClassPath = ASClassLoaderUtil.getModuleClassPath(defaultServices, webModule.getID(), null);
 
-        // If the configuration flag usMyFaces is set, remove jakarta.faces.jar
+        // If the configuration flag usMyFaces is set, remove mojarra.jar
         // from the system class path
         Boolean useMyFaces = (Boolean) servletContext.getAttribute("com.sun.faces.useMyFaces");
         if (useMyFaces != null && useMyFaces) {
-            sysClassPath = sysClassPath.replace("jakarta.faces.jar", "$disabled$.raj");
-            // jsf-connector.jar manifest has a Class-Path to jakarta.faces.jar
+            sysClassPath = sysClassPath.replace("mojarra.jar", "$disabled$.raj");
+            // jsf-connector.jar manifest has a Class-Path to mojarra.jar
             sysClassPath = sysClassPath.replace("jsf-connector.jar", "$disabled$.raj");
         }
 

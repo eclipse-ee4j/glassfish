@@ -1,10 +1,10 @@
-<!-- Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved. 
-    This program and the accompanying materials are made available under the 
-    terms of the Eclipse Public License v. 2.0, which is available at http://www.eclipse.org/legal/epl-2.0. 
-    This Source Code may also be made available under the following Secondary 
-    Licenses when the conditions for such availability set forth in the Eclipse 
-    Public License v. 2.0 are satisfied: GNU General Public License, version 
-    2 with the GNU Classpath Exception, which is available at https://www.gnu.org/software/classpath/license.html. 
+<!-- Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at http://www.eclipse.org/legal/epl-2.0.
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the Eclipse
+    Public License v. 2.0 are satisfied: GNU General Public License, version
+    2 with the GNU Classpath Exception, which is available at https://www.gnu.org/software/classpath/license.html.
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 -->
 
 <!-- Targets to be shared by all unit tests -->
@@ -44,20 +44,20 @@
 <property name="testServer.dir" value="${s1as.home}/nodes/${node.dir}/${testServer}" />
 <property name="testClusterServer1.dir" value="${s1as.home}/nodes/${node.dir}/${testClusterServer1}" />
 
-<!-- Change the value to control whether deployment tests upload the file 
+<!-- Change the value to control whether deployment tests upload the file
     or not. -->
 <property name="use.upload" value="false" />
 
-<!-- The following property supports the special Windows process-start-up 
-    implementation. On Windows, ant hangs when it runs an asadmin command that 
-    starts a process. This workaround, using the Q/A ant Spawn task, avoids that 
-    problem. Also, see the start-process target defined below. New tests or changes 
-    to existing tests should NOT refer to the ${ASADMIN} script directly if the 
+<!-- The following property supports the special Windows process-start-up
+    implementation. On Windows, ant hangs when it runs an asadmin command that
+    starts a process. This workaround, using the Q/A ant Spawn task, avoids that
+    problem. Also, see the start-process target defined below. New tests or changes
+    to existing tests should NOT refer to the ${ASADMIN} script directly if the
     command starts a process but, instead, should call the start-process task. -->
 <property name="start.process.delay.mins" value="1" />
 
-<!-- The tests use custom Ant tasks. The build of those tasks should occur 
-    before tests run. See the util directory for its own build.xml and the source 
+<!-- The tests use custom Ant tasks. The build of those tasks should occur
+    before tests run. See the util directory for its own build.xml and the source
     files. -->
 
 
@@ -96,7 +96,7 @@
         </and>
     </condition>
 
-    <!-- <condition property="s1as.secure" value="true"> <or> <equals arg1="${EE}" 
+    <!-- <condition property="s1as.secure" value="true"> <or> <equals arg1="${EE}"
         arg2="true"/> <equals arg1="${env.SECURE}" arg2="true"/> </or> </condition> -->
     <property name="s1as.secure" value="false" />
 
@@ -123,8 +123,8 @@
         <pathelement location="${java.home}/lib/tools.jar" />
     </path>
 
-    <!-- See if the custom ant tasks jar file is up-to-date as compare to 
-        the source files. The resulting property will control whether the tasks are 
+    <!-- See if the custom ant tasks jar file is up-to-date as compare to
+        the source files. The resulting property will control whether the tasks are
         compiled and the jar file built because the init.customtasks task uses unless="customtasks.uptodate." -->
     <uptodate property="customtasks.uptodate"
         targetfile="${customtasks.jar}">
@@ -312,13 +312,13 @@
     </condition>
 </target>
 
-<!-- The following target compiles all Java files that are used in custom 
-    Ant tasks and places them into a jar file. Subsequent taskdefs can then refer 
-    to the jar file. Note that the compilation and construction of the jar file 
-    will occur only if the jar file is obsolete compared to the java sources, 
-    thanks to the uptodate setting of customtasks.uptodate in the init target. 
-    Note also that we use a separate build directory so we can capture only the 
-    custom task .class files into the jar and not all .class files under the 
+<!-- The following target compiles all Java files that are used in custom
+    Ant tasks and places them into a jar file. Subsequent taskdefs can then refer
+    to the jar file. Note that the compilation and construction of the jar file
+    will occur only if the jar file is obsolete compared to the java sources,
+    thanks to the uptodate setting of customtasks.uptodate in the init target.
+    Note also that we use a separate build directory so we can capture only the
+    custom task .class files into the jar and not all .class files under the
     util tree. -->
 <target name="init.customtasks" unless="customtasks.uptodate">
     <delete dir="${customtasks.dest}" />
@@ -788,9 +788,9 @@
     <echo file="${testsRoot}/password.txt" append="false">AS_ADMIN_MASTERPASSWORD=changeit</echo>
     <delete file="client.log" />
     <touch file="client.log" />
-    
+
     <record name="client.log" action="start" />
-    
+
     <antcall target="preTestsRun" />
     <antcall target="restart.server" />
     <antcall target="private-all">
@@ -800,7 +800,7 @@
         <arg line="stop-domain" />
     </exec>
     <antcall target="postTestsRun" />
-    
+
     <record name="client.log" action="stop" />
     <echo message="Grep the file client.log for exception/Exception and ensure that none is present" />
 </target>
@@ -838,7 +838,7 @@
         out="${root}/results.html" extension=".html"
         style="${testsRoot}/config/convert.xsl" destdir="." />
     <condition property="hasAnnotation">
-        <!-- need a better way to check if annotation is executed for this 
+        <!-- need a better way to check if annotation is executed for this
             run -->
         <and>
             <or>
@@ -913,8 +913,8 @@
     </antcall>
 </target>
 
-<!-- Paramters: testname - name of the test result - numeric value of the 
-    exit status from the client status - typically FAILED or UNKNOWN log - the 
+<!-- Paramters: testname - name of the test result - numeric value of the
+    exit status from the client status - typically FAILED or UNKNOWN log - the
     log file containing the client output -->
 <target name="writeLogToConsole">
     <tstamp>
@@ -997,7 +997,7 @@
     <antcall target="setupDomain" />
     <antcall target="setupInstance" />
     <antcall target="setupCluster" />
-    
+
     <echo message="Running... asadmin list-instance" />
     <exec executable="${ASADMIN}" failonerror="true">
         <arg line="list-instances --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile}" />
@@ -1045,7 +1045,7 @@
     <exec executable="${ASADMIN}" failonerror="true">
         <arg line="create-local-instance --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --cluster ${testCluster} --systemproperties HTTP_LISTENER_PORT=${deploy.clusterinstance1.httpport}:HTTP_SSL_LISTENER_PORT=2101:IIOP_LISTENER_PORT=${deploy.clusterinstance1.orbport}:IIOP_SSL_LISTENER_PORT=2301:IIOP_SSL_MUTUALAUTH_PORT=2401:JMX_SYSTEM_CONNECTOR_PORT=2501:JMS_PROVIDER_PORT=2601:ASADMIN_LISTENER_PORT=2701 ${testClusterServer1}" />
     </exec>
-    
+
     <echo message="Running... asadmin start-cluster" />
     <antcall target="startCluster" />
     <exec executable="${ASADMIN}" failonerror="true">
@@ -1106,18 +1106,18 @@
 </target>
 
 <target name="deleteCluster" if="doCluster">
-    <!-- stop-cluster does not work so use stop-instance to make sure instance 
+    <!-- stop-cluster does not work so use stop-instance to make sure instance
         is stopped before deleting it -->
     <echo message="Running... asadmin stop-instance" />
     <exec executable="${ASADMIN}">
         <arg line="stop-local-instance --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} ${testClusterServer1}" />
     </exec>
-    
+
     <echo message="Running... asadmin delete-instance" />
     <exec executable="${ASADMIN}">
         <arg line="delete-local-instance --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} ${testClusterServer1}" />
     </exec>
-    
+
     <echo message="Running... asadmin delete-cluster" />
     <exec executable="${ASADMIN}">
         <arg line="delete-cluster --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} ${testCluster}" />
@@ -1149,19 +1149,19 @@
     <echo message="Cleaning up all the test setup" />
     <antcall target="stopInstance" />
     <antcall target="stopCluster" />
-    
+
     <!-- Copy the server logs to preserve them (for error diagnosis) after we delete the instances and the domain. -->
     <mkdir dir="server-logs" />
     <mkdir dir="server-logs/${testDomain}/logs" />
     <copy todir="server-logs/${testDomain}/logs">
         <fileset dir="${testDomain.dir}/logs" includes="*.log *.log.*" />
     </copy>
-    
+
     <mkdir dir="server-logs/${testServer}/logs" />
     <copy todir="server-logs/${testServer}/logs">
         <fileset dir="${testServer.dir}/logs" includes="*.log *.log.*" />
     </copy>
-    
+
     <antcall target="copyClusterLog" />
     <antcall target="deleteInstance" />
     <antcall target="deleteCluster" />
@@ -1273,11 +1273,11 @@
 </target>
 
 
-<!-- On Windows, ant hangs when it runs an asadmin command that starts a 
-    process. To work around that, this task distinguishes between Windows and 
-    non-Windows systems and uses a custom ant task for Windows. Any test that 
-    needs to start a process should NOT use ${ASADMIN} directly but should call 
-    this start-process target instead. Pass the command line to be run as <param 
+<!-- On Windows, ant hangs when it runs an asadmin command that starts a
+    process. To work around that, this task distinguishes between Windows and
+    non-Windows systems and uses a custom ant task for Windows. Any test that
+    needs to start a process should NOT use ${ASADMIN} directly but should call
+    this start-process target instead. Pass the command line to be run as <param
     name="line" value="..."/>. -->
 
 <target name="start-process">
@@ -1296,8 +1296,8 @@
 </target>
 
 
-<!-- The following task works around the Windows/Ant problem that causes 
-    the ant script to hang when it runs an asadmin command that starts a new 
+<!-- The following task works around the Windows/Ant problem that causes
+    the ant script to hang when it runs an asadmin command that starts a new
     process. -->
 <target name="start-process-windows">
     <exec executable="${ASADMIN}" failifexecutionfails="false" spawn="true">
@@ -1309,7 +1309,7 @@
 </target>
 
 
-<!-- For non-Windows systems, ant works fine when invoking asadmin to start 
+<!-- For non-Windows systems, ant works fine when invoking asadmin to start
     a process, so do it that way for those systems. -->
 <target name="start-process-non-windows" xmlns:if="ant:if" xmlns:unless="ant:unless">
     <echo>LINE: ${line} GLASSFISH_SUSPEND: ${env.GLASSFISH_SUSPEND} </echo>

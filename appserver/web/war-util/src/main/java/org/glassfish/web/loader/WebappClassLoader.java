@@ -142,7 +142,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         "org.xml.sax",                               // SAX 1 & 2 (JRE, jrt-fs.jar)
         "org.w3c.dom",                               // DOM 1 & 2 (JRE, jrt-fs.jar)
         "org.glassfish.wasp.taglibs.standard",       // wasp.jar
-        "com.sun.faces",                             // jakarta.faces.jar
+        "com.sun.faces",                             // mojarra.jar
         "org.eclipse.microprofile"                   // MicroProfile classes
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()

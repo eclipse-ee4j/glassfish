@@ -83,7 +83,7 @@
   </message-security-config>]]></replacevalue>
         </replace>
     </target>
-	
+
     <target name="build-deploy" depends="init-common">
         <antcall target="build-server"/>
         <antcall target="deploy-common-libraries">
@@ -105,7 +105,7 @@
             <param name="build.classes.dir" value="${build.classes.dir}/servletws/WEB-INF/classes"/>
         </antcall>
     </target>
-	
+
     <target name="build-server" depends="compile-server">
         <mkdir dir="${assemble.dir}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
@@ -133,8 +133,8 @@
             </fileset>
         </jar>
     </target>
-	
-	
+
+
 
     <target name="compile-client">
         <mkdir dir="${build.classes.dir}/client"/>
@@ -153,12 +153,12 @@
             <replacefilter token="@HOST@" value="${http.host}"/>
             <replacefilter token="@PORT@" value="${http.port}"/>
         </replace>
-    	
+
         <javac srcdir="client" destdir="${build.classes.dir}/client"
           classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/client"
           debug="on" failonerror="true"/>
     </target>
-	
+
     <target name="build-client" depends="compile-client">
         <mkdir dir="${assemble.dir}"/>
 
@@ -173,17 +173,17 @@
                 value="com/sun/**/*.class, com/sun/**/*.xml"/>
         </antcall>
     </target>
-	
+
 
     <target name="run" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
     	<property name="vmargs.base" value="-Djavax.net.ssl.keyStore=${mykeystore.db.file} -Djavax.net.ssl.trustStore=${mytruststore.db.file} -Djavax.net.ssl.keyStorePassword=${ssl.password} -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
     	<property name="vmargs.suspend" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9007"/>
-    	
+
     	<property name="vmargs" value="${vmargs.base} ${vmargs.suspend}" if:set="env.client_suspend"/>
     	<property name="vmargs" value="${vmargs.base}" unless:set="env.client_suspend"/>
-    	
+
     	<echo>${line.separator} RUNNING ${APPCLIENT}${line.separator}${line.separator}   vmargs: ${vmargs} ${line.separator}${line.separator} client:  -client ${assemble.dir}/${appname}-clientClient.jar</echo>
-    	
+
         <exec executable="${APPCLIENT}">
             <env key="APPCPATH" value="${env.S1AS_HOME}/lib/test-${appname}-provider.jar"/>
             <env key="VMARGS" value="${vmargs}"/>
@@ -196,14 +196,14 @@
             <arg line="javaee" />
         </exec>
     </target>
-	
-	
+
+
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
         <antcall target="undeploy-client-common"/>
     </target>
-	
+
     <target name="unsetup" depends="init-common">
         <antcall target="asadmin-common">
             <param name="admin.command" value="delete-message-security-provider"/>
@@ -227,8 +227,8 @@
         <!-- may not be able to delete this file in PC environment -->
         <delete file="${env.S1AS_HOME}/lib/test-${appname}-provider.jar" failonerror="false"/>
     </target>
-	
-	
+
+
 
     <target name="restart">
       <antcall target="restart-server-instance-common"/>

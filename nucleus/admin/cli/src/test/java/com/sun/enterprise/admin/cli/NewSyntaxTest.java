@@ -64,7 +64,7 @@ public class NewSyntaxTest {
         String cmd = "new-command";
         String opt1Name = "--opt1";
         String opt1Value = "operand1";
-        String host = "glassfish.org";
+        String host = "localhost";
         int port = 4544;
         String[] cmdline = new String[] {"--host", host, "--port", Integer.toString(port), "--secure", cmd,
             opt1Name, opt1Value};

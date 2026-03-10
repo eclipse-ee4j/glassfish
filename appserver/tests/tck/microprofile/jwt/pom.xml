@@ -30,7 +30,7 @@
     <artifactId>glassfish-external-tck-microprofile-jwt</artifactId>
     <name>TCK: MicroProfile JWT</name>
     <description>Aggregates dependencies and runs the MicroProfile JWT TCK</description>
-    
+
     <properties>
         <!-- Needed in PublicKeyAsJWKLocationURLTest.createLocationURLDeployment() which cannot use regular injection -->
         <glassfish.httpPort>8080</glassfish.httpPort>

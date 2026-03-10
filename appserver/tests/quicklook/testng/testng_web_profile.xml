@@ -96,13 +96,6 @@
             <class name="test.jpa.jpainjectemf.JpaInjectEMFTestNG" />
         </classes>
     </test>
-    <test name="jpa_validation">
-        <classes>
-            <class
-                name="test.jpa.jpavalidation.JpaValidationTestNG" />
-        </classes>
-    </test>
-
     <test name="security_hello_jsp">
         <classes>
             <class

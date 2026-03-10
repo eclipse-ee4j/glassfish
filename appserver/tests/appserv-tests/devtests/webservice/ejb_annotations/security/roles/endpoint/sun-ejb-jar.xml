@@ -23,7 +23,7 @@
         <role-name>webservicetester</role-name>
         <principal-name>webservicetester</principal-name>
     </security-role-mapping>
-    
+
     <enterprise-beans>
         <ejb>
             <ejb-name>HelloImpl</ejb-name>

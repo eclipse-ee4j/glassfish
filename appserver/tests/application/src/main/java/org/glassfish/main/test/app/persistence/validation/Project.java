@@ -14,21 +14,27 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package myapp;
+package org.glassfish.main.test.app.persistence.validation;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+
 import java.util.Collection;
 
-
 @Entity
-@Table(name="BV_PROJ")
+@Table(name = "BV_PROJ")
 public class Project {
 
-    private int        id;
-    private String    name;
+    private int id;
+    private String name;
     private Collection<Employee> employees;
 
-    public Project() {}
+    public Project() {
+    }
 
     public Project(int id, String name) {
         this.id = id;
@@ -39,14 +45,16 @@ public class Project {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
 
-    @Column(length=20, name="NAME")
+    @Column(length = 20, name = "NAME")
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -55,6 +63,7 @@ public class Project {
     public Collection<Employee> getEmployees() {
         return employees;
     }
+
     public void setEmployees(Collection<Employee> employees) {
         this.employees = employees;
     }

@@ -236,8 +236,8 @@
                                 <argument>-Dglassfish.root=${glassfish.root}</argument>
                                 <argument>-Dglassfish.home=${glassfish.home}</argument>
                                 <argument>-Dmojarra.version=${mojarra.version}</argument>
-                                <argument>-Dsigtest.api.groupId=org.glassfish</argument>
-                                <argument>-Dsigtest.api.artifactId=jakarta.faces</argument>
+                                <argument>-Dsigtest.api.groupId=org.glassfish.mojarra</argument>
+                                <argument>-Dsigtest.api.artifactId=mojarra</argument>
                                 <argument>-Dsigtest.api.version=${mojarra.version}</argument>
                                 <!-- FIXME: Incompatible with current browsers, fixed in Faces TCK master but not in 4.1.1  -->
                                 <argument>-Dtest.selenium=false</argument>

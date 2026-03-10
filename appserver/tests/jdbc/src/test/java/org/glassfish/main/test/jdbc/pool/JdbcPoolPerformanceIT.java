@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -157,6 +157,7 @@ public class JdbcPoolPerformanceIT {
         return ShrinkWrap.create(WebArchive.class)
             .addClasses(GlassFishUserRestEndpoint.class, User.class, RestAppConfig.class)
             .addAsWebInfResource("jdbc/pool/war/persistence.xml", "classes/META-INF/persistence.xml")
+            .addAsWebInfResource("jdbc/pool/war/orm.xml", "classes/META-INF/orm.xml")
         ;
     }
 

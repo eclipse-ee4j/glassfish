@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,8 +46,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.DockerClientFactory;
 
 import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
@@ -76,8 +74,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  */
 @ExtendWith(TestLoggingExtension.class)
 public class JtaTimeoutLoggingITest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JtaTimeoutLoggingITest.class);
 
     private static final Class<AsynchronousTimeoutingJob> ASYNCJOB_CLASS = AsynchronousTimeoutingJob.class;
 

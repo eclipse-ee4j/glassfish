@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.io.File.separatorChar;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
@@ -63,9 +62,6 @@ public class Asadmin {
     };
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("windows");
-    private static final String JAVA_HOME_VALUE = System.getProperty(JAVA_HOME.getSystemPropertyName());
-    private static final String JAVA_EXECUTABLE = JAVA_HOME_VALUE + separatorChar + "bin" + separatorChar + "java"
-        + (IS_WINDOWS ? ".exe" : "");
 
     private final File asadmin;
     private final String adminUser;
@@ -73,6 +69,9 @@ public class Asadmin {
     private final boolean terse;
     private final Map<String, String> environment = new HashMap<>();
     private final Map<String, String> additionalPasswords = new HashMap<>();
+    private Path javaHome;
+    private Path javaExecutable;
+
 
     /**
      * Creates a stateless instance of the tool.
@@ -100,6 +99,20 @@ public class Asadmin {
         this.adminUser = adminUser;
         this.adminPasswordFile = adminPasswordFile;
         this.terse = terse;
+        withJavaHome(null);
+    }
+
+    /**
+     * Sets Java home directory used to set <code>AS_JAVA</code> and <code>JAVA_HOME</code>
+     * environment variables and also to run <code>asadmin.java</code>.
+     *
+     * @param javaHome if null, uses current <code>java.home</code> system property.
+     * @return this
+     */
+    public Asadmin withJavaHome(@SuppressWarnings("hiding") final Path javaHome) {
+        this.javaHome = javaHome == null ? Path.of(System.getProperty(JAVA_HOME.getSystemPropertyName())) : javaHome;
+        this.javaExecutable = this.javaHome.resolve(Path.of("bin", IS_WINDOWS ? "java.exe" : "java"));
+        return this;
     }
 
     /**
@@ -124,6 +137,20 @@ public class Asadmin {
     public Asadmin withPassword(final String name, final String secretValue) {
         this.additionalPasswords.put(name, secretValue);
         return this;
+    }
+
+    /**
+     * @return never null.
+     */
+    public Path getJavaHome() {
+        return this.javaHome;
+    }
+
+    /**
+     * @return never null. Executable file used to run the JVM.
+     */
+    public Path getJavaExecutable() {
+        return this.javaExecutable;
     }
 
     /**
@@ -245,7 +272,7 @@ public class Asadmin {
         LOG.log(INFO, "exec(timeout={0}, detached={1}, args={2})", timeout, detachedAndTerse, parameters);
         final List<String> command = new ArrayList<>();
         if (asadmin.getName().endsWith(".java")) {
-            command.add(JAVA_EXECUTABLE);
+            command.add(getJavaExecutable().toString());
             command.add("-Xms64m");
             command.add("-Xmx64m");
             command.add("-Xss256k");
@@ -291,8 +318,9 @@ public class Asadmin {
         }
 
         // override any env property to what is used by tests
-        processManager.setEnvironment(JAVA_HOME.getEnvName(), JAVA_HOME_VALUE);
-        processManager.setEnvironment(JAVA_ROOT.getEnvName(), JAVA_HOME_VALUE);
+        final String javaHomePath = getJavaHome().toString();
+        processManager.setEnvironment(JAVA_HOME.getEnvName(), javaHomePath);
+        processManager.setEnvironment(JAVA_ROOT.getEnvName(), javaHomePath);
 
         int exitCode;
         String asadminErrorMessage = "";

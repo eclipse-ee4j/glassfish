@@ -164,7 +164,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>4.0.0</jakarta.rest-api.version>
-        <jersey.version>5.0.99-SNAPSHOT</jersey.version>
+        <jersey.version>5.0.0-M1</jersey.version>
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
@@ -183,8 +183,8 @@
         <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>5.0.0-SNAPSHOT</jakarta.faces-api.version>
-        <mojarra.version>5.0.0-SNAPSHOT</mojarra.version>
+        <jakarta.faces-api.version>5.0.0-M1</jakarta.faces-api.version>
+        <mojarra.version>5.0.0-M1</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.3.0-M2</jakarta.websocket-api.version>

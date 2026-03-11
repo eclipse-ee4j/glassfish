@@ -87,19 +87,6 @@ public abstract class Environment {
     }
 
     /**
-     * Start the environment - network and database, children may start more containers.
-     * Then deploys the application.
-     * @param appName
-     *
-     * @param war
-     * @return endpoint of the application.
-     */
-    public WebTarget start(String appName, WebArchive war) {
-        start();
-        return deploy(appName, war);
-    }
-
-    /**
      * Start the environment - network and database
      */
     public void start() {
@@ -185,7 +172,7 @@ public abstract class Environment {
     /**
      * Drop all data and recreate just those existing before the test.
      */
-    public void reinitializeDatabase() {
+    public final void reinitializeDatabase() {
         final String script = "initSchema.sql";
         LOG.log(INFO, "Running script to reinitialize the database schema: " + script);
         dsExecutor.executeScript(script);

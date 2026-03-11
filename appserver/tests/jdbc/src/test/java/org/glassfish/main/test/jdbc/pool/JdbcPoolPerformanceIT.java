@@ -86,8 +86,8 @@ public class JdbcPoolPerformanceIT {
     public static void init() throws Exception {
         assumeTrue(DOCKER_AVAILABLE, "Docker is not available on this environment");
         WebArchive war = getArchiveToDeploy();
-        env = EMBEDDED ? new DockerTestEnvironmentWithEmbedded() : new DockerTestEnvironment();
-        wsEndpoint = env.start(APPNAME, war);
+        env = EMBEDDED ? new DockerTestEnvironmentWithEmbedded() : DockerTestEnvironment.getInstance();
+        wsEndpoint = env.deploy(APPNAME, war);
     }
 
     @AfterAll
@@ -95,7 +95,9 @@ public class JdbcPoolPerformanceIT {
         if (!DOCKER_AVAILABLE) {
             return;
         }
-        env.stop();
+        if (EMBEDDED) {
+            env.stop();
+        }
     }
 
     @Test

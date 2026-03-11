@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -94,7 +94,7 @@ public class RestTestBase {
             Response response = client.get("/domain/view-log");
             assertThat(response.getStatus(), equalTo(200));
 
-            File reportDir = new File(getTargetDirectory(), "surefire-reports");
+            File reportDir = new File(getTargetDirectory().toFile(), "surefire-reports");
             ensureWritableDir(reportDir);
 
             File reportFile = new File(reportDir, testInfo.getTestClass().orElseThrow().getName() + "-server.log");

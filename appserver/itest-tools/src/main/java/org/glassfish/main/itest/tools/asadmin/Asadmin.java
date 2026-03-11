@@ -143,6 +143,10 @@ public class Asadmin {
      * @return never null.
      */
     public Path getJavaHome() {
+        if (this.javaHome == null) {
+            // Lazy resolution, withJavaHome might not be called.
+            withJavaHome(null);
+        }
         return this.javaHome;
     }
 
@@ -150,6 +154,11 @@ public class Asadmin {
      * @return never null. Executable file used to run the JVM.
      */
     public Path getJavaExecutable() {
+        // Checking javaHome as javaExecutable is derived.
+        if (this.javaHome == null) {
+            // Lazy resolution, withJavaHome might not be called.
+            withJavaHome(null);
+        }
         return this.javaExecutable;
     }
 

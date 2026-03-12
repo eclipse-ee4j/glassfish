@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt.services;
 
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
@@ -29,6 +27,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
 
 import static com.sun.enterprise.admin.servermgmt.services.Constants.INITD;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.README;

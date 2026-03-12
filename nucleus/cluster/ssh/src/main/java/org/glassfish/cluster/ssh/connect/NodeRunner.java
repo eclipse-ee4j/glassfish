@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +18,6 @@
 package org.glassfish.cluster.ssh.connect;
 
 import com.sun.enterprise.config.serverbeans.Node;
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
@@ -33,6 +31,8 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.SSHCommandExecutionException;
 import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
 
 import static com.sun.enterprise.admin.util.AdminConstants.AS_INSTALL_DIR_NAME;
 

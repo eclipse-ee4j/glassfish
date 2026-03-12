@@ -56,9 +56,6 @@ import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
-import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 import static java.lang.System.Logger.Level.INFO;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
@@ -191,18 +188,18 @@ public class GlassFishTestEnvironment {
     }
 
     public static KeyStore getDomain1KeyStore() {
-        Path keystore = getDomain1ConfigDirectory().resolve(KEYSTORE_FILENAME_DEFAULT);
+        Path keystore = getDomain1ConfigDirectory().resolve("keystore.p12");
         try {
-            return new KeyTool(keystore.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+            return new KeyTool(keystore.toFile(), "changeit".toCharArray()).loadKeyStore();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
     public static KeyStore getDomain1TrustStore() {
-        Path cacerts = getDomain1ConfigDirectory().resolve(TRUSTSTORE_FILENAME_DEFAULT);
+        Path cacerts = getDomain1ConfigDirectory().resolve("cacrets.p12");
         try {
-            return new KeyTool(cacerts.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+            return new KeyTool(cacerts.toFile(), "changeit".toCharArray()).loadKeyStore();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

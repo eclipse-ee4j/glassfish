@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,6 @@
 
 package org.glassfish.main.itest.tools.asadmin;
 
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
-import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +25,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
+import org.glassfish.main.jdke.process.ProcessManagerTimeoutException;
 
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;

@@ -15,10 +15,6 @@
  */
 package org.glassfish.main.itest.tools.asadmin;
 
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
-import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -35,6 +31,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
+import org.glassfish.main.jdke.process.ProcessManagerTimeoutException;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;

@@ -42,12 +42,12 @@
             <artifactId>rest-client</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.glassfish.main.grizzly</groupId>
-                    <artifactId>nucleus-grizzly-all</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>simple-glassfish-api</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -56,6 +56,13 @@
             <type>zip</type>
             <!-- You can try also other versions just overriding this property-->
             <version>${glassfish.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>glassfish-jdk-extensions</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

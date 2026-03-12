@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.universal.process;
+package org.glassfish.main.jdke.process;
 
 import java.io.BufferedReader;
 import java.io.File;

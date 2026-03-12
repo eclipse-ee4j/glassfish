@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,6 @@
 
 package org.glassfish.cluster.ssh.launcher;
 
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.io.FileUtils;
@@ -31,6 +29,8 @@ import java.util.List;
 
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.sftp.SFTPPath;
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;

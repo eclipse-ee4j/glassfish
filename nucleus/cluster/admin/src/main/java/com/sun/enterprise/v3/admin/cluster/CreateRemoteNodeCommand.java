@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Nodes;
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.cluster.RemoteType;
@@ -40,6 +38,8 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
 
 /**
  * Refactored from CreateNodeSshCommand.java on 9/10/11

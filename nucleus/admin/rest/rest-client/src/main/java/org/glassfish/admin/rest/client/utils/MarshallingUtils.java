@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +21,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -39,14 +38,20 @@ import javax.xml.stream.XMLStreamWriter;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.api.logging.LogHelper;
+
+import static java.lang.System.Logger.Level.ERROR;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author jasonlee
  */
+// FIXME: This should be rewritten as it is guessing types and swallows exception.
 public class MarshallingUtils {
+
+    private static final Logger LOG = System.getLogger(MarshallingUtils.class.getName());
+
     public static List<Map<String, String>> getPropertiesFromJson(String json) {
-        List<Map<String, String>> properties = null;
+        List<Object> properties = null;
         json = json.trim();
         if (json.startsWith("{")) {
             properties = new ArrayList<>();
@@ -55,29 +60,27 @@ public class MarshallingUtils {
             try {
                 properties = processJsonArray(new JSONArray(json));
             } catch (JSONException e) {
-                e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
+                LOG.log(ERROR, e);
             }
         } else {
             throw new RuntimeException("The JSON string must start with { or ["); // i18n
         }
 
-        return properties;
+        return properties == null ? null : properties.stream().map(x -> (Map<String, String>) x).toList();
     }
 
     public static List<Map<String, String>> getPropertiesFromXml(String xml) {
         List<Map<String, String>> list = new ArrayList<>();
-        InputStream input = null;
-        try {
             XMLInputFactory inputFactory = XMLInputFactory.newFactory();
             inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
-            input = new ByteArrayInputStream(xml.trim().getBytes("UTF-8"));
+            try (InputStream input = new ByteArrayInputStream(xml.trim().getBytes(UTF_8))) {
             XMLStreamReader parser = inputFactory.createXMLStreamReader(input);
             while (parser.hasNext()) {
                 int event = parser.next();
                 switch (event) {
                 case XMLStreamConstants.START_ELEMENT: {
                     if ("list".equals(parser.getLocalName())) {
-                        list = processXmlList(parser);
+                        list = processXmlList(parser).stream().map(x -> (Map<String, String>) x).toList();
                     }
                     break;
                 }
@@ -86,19 +89,8 @@ public class MarshallingUtils {
                 }
                 }
             }
-        } catch (UnsupportedEncodingException ex) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_ENCODING_ERROR, ex, "UTF-8");
-            throw new RuntimeException(ex);
-        } catch (XMLStreamException ex) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_XML_STREAM_ERROR, ex);
-        } finally {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-            } catch (IOException ex) {
-                LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_IO_ERROR, ex);
-            }
+        } catch (XMLStreamException | IOException ex) {
+            LOG.log(ERROR, "An error occurred while processing an XML document.", ex);
         }
         return list;
     }
@@ -113,29 +105,30 @@ public class MarshallingUtils {
 
     public static String getXmlForProperties(List<Map<String, String>> properties) {
         try {
-            String xml = null;
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             StringWriter sw = new StringWriter();
             XMLStreamWriter writer = outputFactory.createXMLStreamWriter(sw);
-            writer.writeStartDocument("UTF-8", "1.0");
-            writer.writeStartElement("list");
-            for (Map<String, String> property : properties) {
-                writer.writeStartElement("map");
-                for (Map.Entry<String, String> entry : property.entrySet()) {
-                    writer.writeStartElement("entry");
-                    writer.writeAttribute("key", entry.getKey());
-                    writer.writeAttribute("value", entry.getValue());
+            try {
+                writer.writeStartDocument(UTF_8.name(), "1.0");
+                writer.writeStartElement("list");
+                for (Map<String, String> property : properties) {
+                    writer.writeStartElement("map");
+                    for (Map.Entry<String, String> entry : property.entrySet()) {
+                        writer.writeStartElement("entry");
+                        writer.writeAttribute("key", entry.getKey());
+                        writer.writeAttribute("value", entry.getValue());
+                        writer.writeEndElement();
+                    }
                     writer.writeEndElement();
                 }
                 writer.writeEndElement();
+                writer.writeEndDocument();
+                writer.flush();
+            } finally {
+                writer.close();
             }
-            writer.writeEndElement();
-            writer.writeEndDocument();
-            writer.flush();
-            writer.close();
             return sw.toString();
         } catch (XMLStreamException ex) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_XML_STREAM_ERROR, ex);
             throw new RuntimeException(ex);
         }
     }
@@ -173,11 +166,9 @@ public class MarshallingUtils {
         if (text.startsWith("{")) {
             map = processJsonMap(text);
         } else if (text.startsWith("<")) {
-            InputStream input = null;
-            try {
-                XMLInputFactory inputFactory = XMLInputFactory.newFactory();
-                inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
-                input = new ByteArrayInputStream(text.trim().getBytes("UTF-8"));
+            XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+            inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
+            try (InputStream input = new ByteArrayInputStream(text.trim().getBytes(UTF_8))) {
                 XMLStreamReader parser = inputFactory.createXMLStreamReader(input);
                 while (parser.hasNext()) {
                     int event = parser.next();
@@ -193,20 +184,8 @@ public class MarshallingUtils {
                         }
                     }
                 }
-            } catch (UnsupportedEncodingException ex) {
-                LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_ENCODING_ERROR, ex, "UTF-8");
-                throw new RuntimeException(ex);
-            } catch (XMLStreamException ex) {
-                LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_XML_STREAM_ERROR, ex);
-                throw new RuntimeException(ex);
-            } finally {
-                try {
-                    if (input != null) {
-                        input.close();
-                    }
-                } catch (IOException ex) {
-                    LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_IO_ERROR, ex);
-                }
+            } catch (XMLStreamException | IOException ex) {
+                throw new RuntimeException("Failed to parse text:\n" + text, ex);
             }
         } else {
             System.out.println(text);
@@ -216,8 +195,7 @@ public class MarshallingUtils {
         return map;
     }
 
-    /**************************************************************************/
-    private static Map processJsonMap(String json) {
+    private static Map<String, Object> processJsonMap(String json) {
         try {
             return processJsonObject(new JSONObject(json));
         } catch (JSONException e) {
@@ -229,6 +207,7 @@ public class MarshallingUtils {
     private static Map<String, Object> processJsonObject(JSONObject jo) {
         Map<String, Object> map = new HashMap<>();
         try {
+            @SuppressWarnings("unchecked")
             Iterator<String> i = jo.keys();
             while (i.hasNext()) {
                 String key = i.next();
@@ -246,14 +225,14 @@ public class MarshallingUtils {
                 }
             }
         } catch (JSONException e) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_JSON_ERROR, e);
+            LOG.log(ERROR, "An error occurred while processing a JSON object.", e);
         }
 
         return map;
     }
 
-    private static List processJsonArray(JSONArray ja) {
-        List results = new ArrayList();
+    private static List<Object> processJsonArray(JSONArray ja) {
+        List<Object> results = new ArrayList<>();
 
         try {
             for (int i = 0; i < ja.length(); i++) {
@@ -267,13 +246,13 @@ public class MarshallingUtils {
                 }
             }
         } catch (JSONException e) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_JSON_ERROR, e);
+            LOG.log(ERROR, "An error occurred while processing a JSON object.", e);
         }
 
         return results;
     }
 
-    private static Map processXmlMap(XMLStreamReader parser) throws XMLStreamException {
+    private static Map<String, Object>  processXmlMap(XMLStreamReader parser) throws XMLStreamException {
         boolean endOfMap = false;
         Map<String, Object> entry = new HashMap<>();
         String key = null;
@@ -290,10 +269,10 @@ public class MarshallingUtils {
                         key = null;
                     }
                 } else if ("map".equals(parser.getLocalName())) {
-                    Map value = processXmlMap(parser);
+                    Map<String, Object> value = processXmlMap(parser);
                     entry.put(key, value);
                 } else if ("list".equals(parser.getLocalName())) {
-                    List value = processXmlList(parser);
+                    List<?> value = processXmlList(parser);
                     entry.put(key, value);
                 } else {
                     element = parser.getLocalName();
@@ -328,8 +307,8 @@ public class MarshallingUtils {
         return entry;
     }
 
-    private static List processXmlList(XMLStreamReader parser) throws XMLStreamException {
-        List list = new ArrayList();
+    private static List<?> processXmlList(XMLStreamReader parser) throws XMLStreamException {
+        List<Object> list = new ArrayList<>();
         boolean endOfList = false;
         String element = null;
         while (!endOfList) {
@@ -355,9 +334,9 @@ public class MarshallingUtils {
                 if (element != null) {
                     if ("number".equals(element)) {
                         if (text.contains(".")) {
-                            list.add(Double.parseDouble(text));
+                            list.add(Double.valueOf(text));
                         } else {
-                            list.add(Long.parseLong(text));
+                            list.add(Long.valueOf(text));
                         }
                     } else if ("string".equals(element)) {
                         list.add(text);

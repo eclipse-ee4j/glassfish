@@ -17,11 +17,15 @@
 package org.glassfish.main.itest.tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * The GlassFish environment.
@@ -81,6 +85,28 @@ public class GlassFishEnvironment {
         @SuppressWarnings("hiding") File passwordFile) {
         this.username = username;
         this.passwordFile = passwordFile;
+        return this;
+    }
+
+    /**
+     * Sets credentials for the {@link Asadmin} command api.
+     * Creates an internal temporary password file.
+     *
+     * @param username
+     * @param password
+     * @return this
+     */
+    public GlassFishEnvironment withCredentials(
+        @SuppressWarnings("hiding") String username,
+        String password) {
+        this.username = username;
+        try {
+            Path file = Files.createTempFile("gf-pw", ".txt");
+            Files.writeString(file, "AS_ADMIN_PASSWORD=" + password + "\n", UTF_8);
+            this.passwordFile = file.toAbsolutePath().normalize().toFile();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to create a temporary password file.", e);
+        }
         return this;
     }
 
@@ -145,6 +171,24 @@ public class GlassFishEnvironment {
      */
     public Path getDomainConfigDirectory(String domainName) {
         return getDomainDirectory(domainName).resolve("config");
+    }
+
+    /**
+     * @param domainName name of the domain directory and of the domain.
+     * @return PID of the running domain instance or null.
+     * @throws IllegalStateException if the pid file exists but cannot be read or parsed. That can
+     *             happen when the domain is starting and writes to the file right now.
+     */
+    public Long loadPid(String domainName) throws IllegalStateException {
+        final Path pidFile = getDomainConfigDirectory(domainName).resolve("pid");
+        if (!Files.exists(pidFile)) {
+            return null;
+        }
+        try {
+            return Long.parseLong(Files.readString(pidFile, ISO_8859_1));
+        } catch (final IOException e) {
+            throw new IllegalStateException("Could not load the pid file " + pidFile, e);
+        }
     }
 
     @Override

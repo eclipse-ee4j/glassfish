@@ -197,7 +197,7 @@ public class GlassFishTestEnvironment {
     }
 
     public static KeyStore getDomain1TrustStore() {
-        Path cacerts = getDomain1ConfigDirectory().resolve("cacrets.p12");
+        Path cacerts = getDomain1ConfigDirectory().resolve("cacerts.p12");
         try {
             return new KeyTool(cacerts.toFile(), "changeit".toCharArray()).loadKeyStore();
         } catch (IOException e) {

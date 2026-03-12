@@ -154,7 +154,7 @@
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
-        <easymock.version>5.5.0</easymock.version>
+        <easymock.version>5.6.0</easymock.version>
         <junit.version>5.12.1</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
@@ -1114,7 +1114,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.19</version>
+                    <version>1.0.20</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -78,7 +78,7 @@ public class JspReloadGeneratedServletIfUpdatedTest {
     @Test
     public void doTest() throws Exception {
         doHttpGet("This is my output");
-        Path sourceFile = GlassFishTestEnvironment.getTargetDirectory().toPath().resolve(
+        Path sourceFile = GlassFishTestEnvironment.getTargetDirectory().resolve(
             Path.of("classes", "org", "apache", "jsp", "reload", JSP_FILE_NAME + "_jsp.class"));
         Path targetFile = GlassFishTestEnvironment.getDomain1Directory().resolve(Path.of("generated", "jsp",
             APP_NAME, "org", "apache", "jsp", "reload", JSP_FILE_NAME + "_jsp.class"));

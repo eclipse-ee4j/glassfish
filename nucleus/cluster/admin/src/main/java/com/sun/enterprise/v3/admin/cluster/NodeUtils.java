@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.SshAuth;
 import com.sun.enterprise.config.serverbeans.SshConnector;
 import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.ExceptionUtil;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.cluster.RemoteType;
@@ -49,6 +48,7 @@ import org.glassfish.cluster.ssh.sftp.SFTPPath;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.RelativePathResolver;
+import org.glassfish.main.jdke.process.ProcessManagerException;
 
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import jakarta.ws.rs.client.Client;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
@@ -43,9 +44,6 @@ import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -57,11 +55,10 @@ import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.StartServ;
 import org.glassfish.main.jdke.security.KeyTool;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
-import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+import static java.lang.System.Logger.Level.INFO;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.main.itest.tools.GlassFishEnvironment.IS_WINDOWS;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -70,21 +67,26 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * <p>
  * Ensures that the domain in executed before first test started, and that the domain stops
  * after tests are finished.
+ * <p>
+ * It is a simplified static usage of {@link GlassFishEnvironment} which is much more flexible,
+ * but for tests we usually use defaults.
  *
  * @author David Matejcek
  * @author Ondro Mihalyi
  */
 public class GlassFishTestEnvironment {
-    private static final Logger LOG = Logger.getLogger(GlassFishTestEnvironment.class.getName());
+    private static final Logger LOG = System.getLogger(GlassFishTestEnvironment.class.getName());
 
-    private static final File BASEDIR = detectBasedir();
-    private static final File GF_ROOT = resolveGlassFishRoot();
+    private static final Path BASEDIR = detectBasedir();
+    private static final Path JAVA_HOME_PATH = Path.of(System.getProperty(JAVA_HOME.getSystemPropertyName()));
+
+    private static final GlassFishEnvironment ENV;
+    private static final Path GF_ROOT = resolveGlassFishProductRoot();
 
     private static final String ADMIN_USER = "admin";
     private static final String ADMIN_PASSWORD = "admintest";
 
-    private static final File ASADMIN = findAsadmin();
-    private static final File STARTSERV = findStartServ();
+    private static final File ASADMIN_FILE = GF_ROOT.resolve(Path.of("bin", "asadmin.java")).toFile();
     private static final File JARSIGNER = findJarSigner();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
@@ -93,23 +95,24 @@ public class GlassFishTestEnvironment {
     /** 1 day. Useful for debugging */
     private static final int ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG = 1000 * 60 * 60 * 24;
 
-    private static HttpClient client;
-
     static {
-        if (!isGlassFishRunningRemotely()) {
-            LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
-            LOG.log(Level.INFO, "Expected GlassFish directory: {0}", GF_ROOT);
-            changePassword();
-            Thread hook = new Thread(() -> {
-                getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
-            });
-            Runtime.getRuntime().addShutdownHook(hook);
+        if (isGlassFishRunningRemotely()) {
+            ENV = null;
+        } else {
+            LOG.log(INFO, "Using basedir: {0}", BASEDIR);
+            LOG.log(INFO, "Expected GlassFish directory: {0}", GF_ROOT);
+            changePassword(ASADMIN_FILE, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
+            ENV = new GlassFishEnvironment(GF_ROOT, true)
+                .withJavaHome(JAVA_HOME_PATH)
+                .withCredentials(ADMIN_USER, PASSWORD_FILE);
             final int timeout = isStartDomainSuspendEnabled()
-                    ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG : ASADMIN_START_DOMAIN_TIMEOUT;
+                    ? ASADMIN_START_DOMAIN_TIMEOUT_FOR_DEBUG
+                    : ASADMIN_START_DOMAIN_TIMEOUT;
             // This is the absolutely first start - if it fails, all other starts will fail too.
             // Note: --suspend implicitly enables --debug
-            assertThat(getAsadmin().exec(timeout,"start-domain",
-                    isStartDomainSuspendEnabled() ? "--suspend" : "--debug"), asadminOK());
+            assertThat(
+                ENV.getAsadmin().exec(timeout, "start-domain", isStartDomainSuspendEnabled() ? "--suspend" : "--debug"),
+                asadminOK());
         }
     }
 
@@ -119,7 +122,7 @@ public class GlassFishTestEnvironment {
      *         <code>glassfish</code> (without version number).
      */
     public static File getGlassFishDirectory() {
-        return GF_ROOT;
+        return ENV.getGlassFishDir().toFile();
     }
 
 
@@ -127,7 +130,7 @@ public class GlassFishTestEnvironment {
      * @return {@link Asadmin} command api for tests.
      */
     public static Asadmin getAsadmin() {
-        return getAsadmin(true);
+        return ENV.getAsadmin(true);
     }
 
     /**
@@ -135,24 +138,23 @@ public class GlassFishTestEnvironment {
      * @return {@link Asadmin} command api for tests.
      */
     public static Asadmin getAsadmin(boolean terse) {
-        return new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE, terse);
+        return ENV.getAsadmin(terse);
     }
 
     /**
-     * @return {@link Asadmin} command api for tests.
+     * @return {@link StartServ} command api for tests.
      */
     public static StartServ getStartServ() {
-        return new StartServ(STARTSERV);
+        return ENV.getStartServ();
     }
-
 
     /**
      * @return {@link Asadmin} command api for tests.
      */
     public static StartServ getStartServInTopLevelBin() {
-        return new StartServ(findStartServ("../"));
+        // ENV.getBinDir() returns glassfish[n]/glassfish/bin, we need glassfish[n]/bin here.
+        return new StartServ(GF_ROOT.resolve(Path.of("bin", IS_WINDOWS ? "startserv.bat" : "startserv")).toFile());
     }
-
 
     public static JarSigner getJarSigner() {
         return new JarSigner(JARSIGNER);
@@ -162,39 +164,43 @@ public class GlassFishTestEnvironment {
      * @return {@link Asadmin} command api for tests.
      */
     public static File getAppClient() {
-        return new File(getGlassFishDirectory(), isWindows() ? "bin/appclient.bat" : "bin/appclient");
+        return ENV.getBinDir().resolve(IS_WINDOWS ? "appclient.bat" : "appclient").toFile();
     }
 
     /**
      * @return project's target directory.
      */
-    public static File getTargetDirectory() {
-        return new File(BASEDIR, "target");
+    public static Path getTargetDirectory() {
+        return BASEDIR.resolve("target");
     }
-
 
     /**
      * @return domain1 directory absolute path
      */
     public static Path getDomain1Directory() {
-        return GF_ROOT.toPath().resolve(Paths.get("domains", "domain1"));
+        return ENV.getDomainDirectory("domain1");
     }
 
+    /**
+     * @return domain1 config directory absolute path
+     */
+    public static Path getDomain1ConfigDirectory() {
+        return ENV.getDomainConfigDirectory("domain1");
+    }
 
     public static KeyStore getDomain1KeyStore() {
-        Path keystore = getDomain1Directory().resolve(Paths.get("config", KEYSTORE_FILENAME_DEFAULT));
+        Path keystore = getDomain1ConfigDirectory().resolve("keystore.p12");
         try {
-            return new KeyTool(keystore.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+            return new KeyTool(keystore.toFile(), "changeit".toCharArray()).loadKeyStore();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-
     public static KeyStore getDomain1TrustStore() {
-        Path cacerts = getDomain1Directory().resolve(Paths.get("config", TRUSTSTORE_FILENAME_DEFAULT));
+        Path cacerts = getDomain1ConfigDirectory().resolve("cacerts.p12");
         try {
-            return new KeyTool(cacerts.toFile(), KEYSTORE_PASSWORD_DEFAULT.toCharArray()).loadKeyStore();
+            return new KeyTool(cacerts.toFile(), "changeit".toCharArray()).loadKeyStore();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -256,7 +262,7 @@ public class GlassFishTestEnvironment {
         throws IOException {
         final String protocol = secured ? "https" : "http";
         @SuppressWarnings("unchecked")
-        final T connection = (T) new URL(protocol + "://localhost:" + port + context).openConnection();
+        final T connection = (T) URI.create(protocol + "://localhost:" + port + context).toURL().openConnection();
         if (System.getProperty("glassfish.suspend") != null) {
             connection.setReadTimeout(0);
             connection.setConnectTimeout(0);
@@ -291,7 +297,7 @@ public class GlassFishTestEnvironment {
      * @param port
      * @param context - part of the url behind the <code>http://localhost:[port]</code>
      * @return a new disconnected {@link HttpResponse}.
-     * @throws IOException
+     * @throws Exception
      */
     public static HttpResponse<String> getHttpResource(final boolean secured, final int port, final String context)
         throws Exception {
@@ -301,7 +307,9 @@ public class GlassFishTestEnvironment {
                 .timeout(Duration.ofSeconds(15))
                 .header("X-Requested-By", "JUnit5Test")
                 .build();
-        return newInsecureHttpClient().send(request, ofString(StandardCharsets.UTF_8));
+        try (HttpClient client = newInsecureHttpClient()) {
+            return client.send(request, ofString(StandardCharsets.UTF_8));
+        }
     }
 
     public static URI webSocketUri(final int port, final String context) throws URISyntaxException {
@@ -328,7 +336,7 @@ public class GlassFishTestEnvironment {
             Files.writeString(passwordFile,
                 "AS_ADMIN_PASSWORD=" + ADMIN_PASSWORD + "\nAS_ADMIN_USERPASSWORD=" + password + "\n",
                 StandardOpenOption.APPEND);
-            Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, passwordFile.toFile());
+            Asadmin asadmin = new Asadmin(ASADMIN_FILE, ADMIN_USER, passwordFile.toFile());
             assertThat(asadmin.exec("create-file-user", "--groups", String.join(",", groupNames), "--authrealmname",
                 realmName, "--target", "server", user), asadminOK());
         } catch (IOException e) {
@@ -342,8 +350,8 @@ public class GlassFishTestEnvironment {
      * This will delete the jobs.xml file
      */
     public static void deleteJobsFile() {
-        Path path = GF_ROOT.toPath().resolve(Paths.get("domains", "domain1", "config", "jobs.xml"));
-        LOG.log(Level.CONFIG, "Deleting: " + path);
+        Path path = ENV.getGlassFishDir().resolve(Paths.get("domains", "domain1", "config", "jobs.xml"));
+        LOG.log(INFO, "Deleting: {0}", path);
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
@@ -369,48 +377,34 @@ public class GlassFishTestEnvironment {
      *
      * @return Absolute path to the glassfish directory.
      */
-    private static File detectBasedir() {
+    private static Path detectBasedir() {
         final String basedir = System.getProperty("basedir");
         if (basedir != null) {
-            return new File(basedir);
+            return Path.of(basedir);
         }
         final File target = new File("target");
         if (target.exists()) {
-            return target.getAbsoluteFile().getParentFile();
+            return target.getAbsoluteFile().toPath().normalize();
         }
-        return new File(".").getAbsoluteFile().getParentFile();
+        return new File(".").getAbsoluteFile().getParentFile().toPath().normalize();
     }
 
 
-    private static File resolveGlassFishRoot() {
-        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish8", "glassfish")).toFile();
-        if (gfDir == null || !gfDir.exists()) {
+    private static Path resolveGlassFishProductRoot() {
+        final File gfDir = BASEDIR.resolve(Path.of("target", "glassfish8")).toFile();
+        if (!gfDir.exists()) {
             throw new IllegalStateException("The expected GlassFish home directory doesn't exist: " + gfDir);
         }
-        return gfDir;
-    }
-
-
-    private static File findAsadmin() {
-        return new File(GF_ROOT, "bin/asadmin.java");
-    }
-
-    private static File findStartServ(String... optionalPrefix) {
-        String prefix = optionalPrefix.length > 0 ? optionalPrefix[0] : "";
-        return new File(GF_ROOT, isWindows() ? prefix + "bin/startserv.bat" : prefix + "bin/startserv");
+        return gfDir.toPath();
     }
 
     private static File findJarSigner() {
-        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
+        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()),
+            IS_WINDOWS ? "bin/jarsigner.exe" : "bin/jarsigner");
     }
-
-    private static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
-    }
-
 
     private static File findPasswordFile(final String filename) {
-        File output = new File(getTargetDirectory(), filename);
+        File output = getTargetDirectory().resolve(filename).toFile();
         if (output.exists()) {
             return output;
         }
@@ -433,12 +427,13 @@ public class GlassFishTestEnvironment {
     }
 
 
-    private static void changePassword() {
-        final Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
+    private static void changePassword(File asadminFile, String adminUser, File passwordFileForUpdate) {
+        final Asadmin asadmin = new Asadmin(asadminFile, adminUser, passwordFileForUpdate).withJavaHome(JAVA_HOME_PATH);
         final AsadminResult result = asadmin.exec(20_000, "change-admin-password");
         if (result.isError()) {
-            // probably changed by previous execution without maven clean
-            System.out.println("Admin password NOT changed.");
+            System.out
+                .println("Admin password NOT changed - probably changed by previous execution without maven clean:\n"
+                    + result.getOutput());
         } else {
             System.out.println("Admin password changed.");
         }
@@ -493,17 +488,9 @@ public class GlassFishTestEnvironment {
     }
 
     private static HttpClient newInsecureHttpClient() throws KeyManagementException, NoSuchAlgorithmException {
-        if (client == null) {
-            // Java 17 doesn't allow to close http client, so we reuse a global one.
-            // Once we start using Java 21, client should be created for every call and returned instance should be closed
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, new SecureRandom());
-            client = HttpClient.newBuilder()
-                    .sslContext(sslContext)
-                    .connectTimeout(Duration.ofMillis(100))
-                    .build();
-        }
-        return client;
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, trustAllCerts, new SecureRandom());
+        return HttpClient.newBuilder().sslContext(sslContext).connectTimeout(Duration.ofMillis(100)).build();
     }
 
     // FIXME: add loading of the right certificate from keystore.

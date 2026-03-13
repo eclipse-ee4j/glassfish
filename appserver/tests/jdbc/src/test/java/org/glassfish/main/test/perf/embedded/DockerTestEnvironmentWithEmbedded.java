@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,14 +46,7 @@ public class DockerTestEnvironmentWithEmbedded extends Environment {
         app = new EmbeddedGlassFishContainer(getNetwork(), "admin", "A", getDatabase());
         Thread hook = new Thread(this::stop);
         Runtime.getRuntime().addShutdownHook(hook);
-    }
-
-
-    @Override
-    public WebTarget start(String appName, WebArchive war) {
         super.start();
-        undeploy(appName);
-        return deploy(appName, war);
     }
 
     @Override

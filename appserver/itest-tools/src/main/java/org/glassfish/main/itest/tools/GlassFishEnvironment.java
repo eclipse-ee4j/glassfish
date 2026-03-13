@@ -26,6 +26,7 @@ import org.glassfish.main.itest.tools.asadmin.StartServ;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Locale.ENGLISH;
 
 /**
  * The GlassFish environment.
@@ -34,9 +35,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class GlassFishEnvironment {
 
-    private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("windows");
+    /**
+     * True if the operating system is windows. Useful to decide if an executable file should have
+     * suffix usual on the operating system.
+     */
+    public static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase(ENGLISH).contains("windows");
 
     private final Path glassFishDir;
+    private final Path binDir;
     private final File asadminFile;
     private final File startServFile;
 
@@ -45,18 +51,19 @@ public class GlassFishEnvironment {
     private String username;
     private File passwordFile;
 
-
     /**
      * @param productRoot <code>glassfish[n]</code> directory containing <code>glassfish</code> directory, must exist.
      * @param autoStop true to add shutdown hook automatically stopping the domain.
+     * @throws IllegalArgumentException if the productRoot doesn't contain the glassfish directory.
      */
-    public GlassFishEnvironment(Path productRoot, boolean autoStop) {
+    public GlassFishEnvironment(Path productRoot, boolean autoStop) throws IllegalArgumentException {
         this.glassFishDir = productRoot.resolve("glassfish");
         if (!Files.isDirectory(productRoot)) {
             throw new IllegalArgumentException("The path is not an existing directory: " + this.glassFishDir);
         }
-        this.asadminFile = findAsadmin(glassFishDir);
-        this.startServFile = findStartServ(glassFishDir);
+        this.binDir = glassFishDir.resolve("bin");
+        this.asadminFile = findAsadmin(binDir);
+        this.startServFile = findStartServ(binDir);
         withJavaHome(null);
         withDomainsDirectory(null);
         if (autoStop) {
@@ -67,8 +74,13 @@ public class GlassFishEnvironment {
         }
     }
 
-
-    public GlassFishEnvironment withJavaHome(Path javaHome) {
+    /**
+     * Sets the JDK home directory.
+     *
+     * @param javaHome if null, the value is set from the system property <code>java.home</code>
+     * @return this
+     */
+    public GlassFishEnvironment withJavaHome(@SuppressWarnings("hiding") Path javaHome) {
         this.javaHome = javaHome;
         return this;
     }
@@ -95,10 +107,11 @@ public class GlassFishEnvironment {
      * @param username
      * @param password
      * @return this
+     * @throws IllegalStateException if the temporary password file could not be created.
      */
     public GlassFishEnvironment withCredentials(
         @SuppressWarnings("hiding") String username,
-        String password) {
+        String password) throws IllegalStateException {
         this.username = username;
         try {
             Path file = Files.createTempFile("gf-pw", ".txt");
@@ -126,6 +139,13 @@ public class GlassFishEnvironment {
      */
     public Path getGlassFishDir() {
         return this.glassFishDir;
+    }
+
+    /**
+     * @return <code>.../glassfish[n]/glassfish/bin</code>, never null.
+     */
+    public Path getBinDir() {
+        return this.binDir;
     }
 
     /**
@@ -196,15 +216,16 @@ public class GlassFishEnvironment {
         return super.toString() + "[" + this.glassFishDir + "]";
     }
 
-    private static File findAsadmin(Path glassFishDir) {
-        final File file = glassFishDir.resolve(Path.of("bin", "asadmin.java")).toFile();
+    private static File findAsadmin(Path binDir) {
+        final File file = binDir.resolve("asadmin.java").toFile();
         if (file.isFile()) {
             return file;
         }
-        return glassFishDir.resolve(Path.of("bin", IS_WINDOWS ? "asadmin.bat" : "asadmin")).toFile();
+        // Older versions don't have asadmin.java.
+        return binDir.resolve(IS_WINDOWS ? "asadmin.bat" : "asadmin").toFile();
     }
 
-    private static File findStartServ(Path glassFishDir) {
-        return glassFishDir.resolve(Path.of("bin", IS_WINDOWS ? "startserv.bat" : "startserv")).toFile();
+    private static File findStartServ(Path binDir) {
+        return binDir.resolve(IS_WINDOWS ? "startserv.bat" : "startserv").toFile();
     }
 }

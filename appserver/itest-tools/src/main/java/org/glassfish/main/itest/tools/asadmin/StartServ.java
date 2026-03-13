@@ -17,19 +17,21 @@
 package org.glassfish.main.itest.tools.asadmin;
 
 import java.io.File;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.main.jdke.process.ProcessManager;
 import org.glassfish.main.jdke.process.ProcessManagerException;
 import org.glassfish.main.jdke.process.ProcessManagerTimeoutException;
 
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 
@@ -40,7 +42,7 @@ import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
  * @author Ondro Mihalyi
  */
 public class StartServ {
-    private static final Logger LOG = Logger.getLogger(StartServ.class.getName());
+    private static final Logger LOG = System.getLogger(StartServ.class.getName());
 
     private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
 
@@ -118,8 +120,7 @@ public class StartServ {
      */
     public AsadminResult exec(final int timeout, final String... args) {
         final List<String> parameters = Arrays.asList(args);
-        LOG.log(Level.INFO, "exec(script={0}, timeout={1}, args={2})",
-            new Object[] {startServ.getName(), timeout, parameters});
+        LOG.log(INFO, "exec(script={0}, timeout={1}, args={2})", startServ.getName(), timeout, parameters);
         final List<String> command = new ArrayList<>();
         command.add(startServ.getAbsolutePath());
         command.addAll(parameters);
@@ -131,7 +132,7 @@ public class StartServ {
         for (Entry<String, String> env : this.environment.entrySet()) {
             processManager.setEnvironment(env.getKey(), env.getValue());
         }
-        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(Level.FINEST)) {
+        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(TRACE)) {
             processManager.setEnvironment("AS_TRACE", "true");
         }
         // override any env property to what is used by tests
@@ -146,7 +147,7 @@ public class StartServ {
             asadminErrorMessage = e.getMessage();
             exitCode = 1;
         } catch (final ProcessManagerException e) {
-            LOG.log(Level.SEVERE, "The execution failed.", e);
+            LOG.log(ERROR, "The execution failed.", e);
             asadminErrorMessage = e.getMessage();
             exitCode = 1;
         }

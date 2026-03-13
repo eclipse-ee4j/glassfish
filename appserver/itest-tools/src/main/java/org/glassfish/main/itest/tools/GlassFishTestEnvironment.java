@@ -44,7 +44,6 @@ import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Locale;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -59,6 +58,7 @@ import org.glassfish.main.jdke.security.KeyTool;
 import static java.lang.System.Logger.Level.INFO;
 import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.glassfish.embeddable.GlassFishVariable.JAVA_HOME;
+import static org.glassfish.main.itest.tools.GlassFishEnvironment.IS_WINDOWS;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -81,12 +81,12 @@ public class GlassFishTestEnvironment {
     private static final Path JAVA_HOME_PATH = Path.of(System.getProperty(JAVA_HOME.getSystemPropertyName()));
 
     private static final GlassFishEnvironment ENV;
-    private static final Path GF_ROOT = resolveGlassFishRoot();
+    private static final Path GF_ROOT = resolveGlassFishProductRoot();
 
     private static final String ADMIN_USER = "admin";
     private static final String ADMIN_PASSWORD = "admintest";
 
-    private static final File ASADMIN = findAsadmin();
+    private static final File ASADMIN_FILE = GF_ROOT.resolve(Path.of("bin", "asadmin.java")).toFile();
     private static final File JARSIGNER = findJarSigner();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
@@ -101,7 +101,7 @@ public class GlassFishTestEnvironment {
         } else {
             LOG.log(INFO, "Using basedir: {0}", BASEDIR);
             LOG.log(INFO, "Expected GlassFish directory: {0}", GF_ROOT);
-            changePassword(ASADMIN, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
+            changePassword(ASADMIN_FILE, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
             ENV = new GlassFishEnvironment(GF_ROOT, true)
                 .withJavaHome(JAVA_HOME_PATH)
                 .withCredentials(ADMIN_USER, PASSWORD_FILE);
@@ -152,7 +152,8 @@ public class GlassFishTestEnvironment {
      * @return {@link Asadmin} command api for tests.
      */
     public static StartServ getStartServInTopLevelBin() {
-        return new StartServ(GF_ROOT.resolve(Path.of("bin", isWindows() ? "startserv.bat" : "startserv")).toFile());
+        // ENV.getBinDir() returns glassfish[n]/glassfish/bin, we need glassfish[n]/bin here.
+        return new StartServ(GF_ROOT.resolve(Path.of("bin", IS_WINDOWS ? "startserv.bat" : "startserv")).toFile());
     }
 
     public static JarSigner getJarSigner() {
@@ -163,7 +164,7 @@ public class GlassFishTestEnvironment {
      * @return {@link Asadmin} command api for tests.
      */
     public static File getAppClient() {
-        return new File(getGlassFishDirectory(), isWindows() ? "bin/appclient.bat" : "bin/appclient");
+        return ENV.getBinDir().resolve(IS_WINDOWS ? "appclient.bat" : "appclient").toFile();
     }
 
     /**
@@ -335,7 +336,7 @@ public class GlassFishTestEnvironment {
             Files.writeString(passwordFile,
                 "AS_ADMIN_PASSWORD=" + ADMIN_PASSWORD + "\nAS_ADMIN_USERPASSWORD=" + password + "\n",
                 StandardOpenOption.APPEND);
-            Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, passwordFile.toFile());
+            Asadmin asadmin = new Asadmin(ASADMIN_FILE, ADMIN_USER, passwordFile.toFile());
             assertThat(asadmin.exec("create-file-user", "--groups", String.join(",", groupNames), "--authrealmname",
                 realmName, "--target", "server", user), asadminOK());
         } catch (IOException e) {
@@ -389,7 +390,7 @@ public class GlassFishTestEnvironment {
     }
 
 
-    private static Path resolveGlassFishRoot() {
+    private static Path resolveGlassFishProductRoot() {
         final File gfDir = BASEDIR.resolve(Path.of("target", "glassfish8")).toFile();
         if (!gfDir.exists()) {
             throw new IllegalStateException("The expected GlassFish home directory doesn't exist: " + gfDir);
@@ -397,19 +398,10 @@ public class GlassFishTestEnvironment {
         return gfDir.toPath();
     }
 
-
-    private static File findAsadmin() {
-        return GF_ROOT.resolve(Path.of("bin", "asadmin.java")).toFile();
-    }
-
     private static File findJarSigner() {
-        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()), isWindows() ? "bin/jarsigner.exe" : "bin/jarsigner");
+        return new File(System.getProperty(JAVA_HOME.getSystemPropertyName()),
+            IS_WINDOWS ? "bin/jarsigner.exe" : "bin/jarsigner");
     }
-
-    private static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
-    }
-
 
     private static File findPasswordFile(final String filename) {
         File output = getTargetDirectory().resolve(filename).toFile();

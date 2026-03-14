@@ -250,15 +250,14 @@ public class RestTestBase {
     protected List<String> getCommandResults(Response response) {
         String document = response.readEntity(String.class);
         List<String> results = new ArrayList<>();
-        Map map = MarshallingUtils.buildMapFromDocument(document);
+        Map<String, Object> map = MarshallingUtils.buildMapFromDocument(document);
         String message = (String) map.get("message");
-        if (message != null && !"".equals(message)) {
+        if (message != null && !message.isEmpty()) {
             results.add(message);
         }
         Object children = map.get("children");
         if (children instanceof List) {
-            for (Object child : (List) children) {
-                Map childMap = (Map) child;
+            for (Map<String, ?> childMap : (List<Map<String, ?>>) children) {
                 message = (String) childMap.get("message");
                 if (message != null) {
                     results.add(message);
@@ -269,17 +268,16 @@ public class RestTestBase {
     }
 
     protected Map<String, String> getChildResources(Response response) {
-        Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        Map<String, Object> responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         LOG.log(INFO, "responseMap: \n{0}", responseMap);
-        Map<String, Map> extraProperties = (Map<String, Map>) responseMap.get("extraProperties");
+        Map<String, Map<String, ?>> extraProperties = (Map<String, Map<String, ?>>) responseMap.get("extraProperties");
         if (extraProperties != null) {
-            return extraProperties.get("childResources");
+            return (Map<String, String>) extraProperties.get("childResources");
         }
 
         return new HashMap<>();
     }
 
-    @SuppressWarnings("unchecked")
     protected Map<String, Object> getExtraProperties(Response response) {
         Map<String, Object> responseEntity = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         if (responseEntity == null) {
@@ -289,8 +287,8 @@ public class RestTestBase {
     }
 
     protected List<Map<String, String>> getProperties(Response response) {
-        Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
-        Map extraProperties = (Map) responseMap.get("extraProperties");
+        Map<String, Object> responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        Map<?, ?> extraProperties = (Map<?, ?>) responseMap.get("extraProperties");
         if (extraProperties != null) {
             return (List<Map<String, String>>) extraProperties.get("properties");
         }

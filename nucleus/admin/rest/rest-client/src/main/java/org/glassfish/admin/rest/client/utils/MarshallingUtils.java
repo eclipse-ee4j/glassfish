@@ -20,7 +20,6 @@ package org.glassfish.admin.rest.client.utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,134 +28,74 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
+ * Primitive implementation of JSON and XML unmarshaller.
+ * It is used just internally.
+ *
+ * @deprecated Used just by two REST admin services and tests.
  * @author jasonlee
  */
-// FIXME: This should be rewritten as it is guessing types and swallows exception.
+@Deprecated
 public class MarshallingUtils {
 
     private static final Logger LOG = System.getLogger(MarshallingUtils.class.getName());
 
+    // Used just by JsonPropertyListReader
+    @Deprecated
     public static List<Map<String, String>> getPropertiesFromJson(String json) {
-        List<Object> properties = null;
+        LOG.log(TRACE, "getPropertiesFromJson, json:\n{0}", json);
         json = json.trim();
         if (json.startsWith("{")) {
-            properties = new ArrayList<>();
-            properties.add(processJsonMap(json));
+            return List.of(convertValuesToString(processJsonMap(json)));
         } else if (json.startsWith("[")) {
             try {
-                properties = processJsonArray(new JSONArray(json));
-            } catch (JSONException e) {
-                LOG.log(ERROR, e);
+                return convertMapValuesToString(processJsonArray(new JSONArray(json)));
+            } catch (Exception e) {
+                throw new RuntimeException("Unprocessable JsonArray!", e);
             }
         } else {
-            throw new RuntimeException("The JSON string must start with { or ["); // i18n
+            throw new RuntimeException("The JSON string must start with { or [");
         }
-
-        return properties == null ? null : properties.stream().map(x -> (Map<String, String>) x).toList();
     }
 
+    // Used just by XmlPropertyListReader
+    @Deprecated
     public static List<Map<String, String>> getPropertiesFromXml(String xml) {
+        LOG.log(TRACE, "getPropertiesFromXml, xml:\n{0}", xml);
         XMLInputFactory inputFactory = XMLInputFactory.newFactory();
         inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
         try (InputStream input = new ByteArrayInputStream(xml.trim().getBytes(UTF_8))) {
             XMLStreamReader parser = inputFactory.createXMLStreamReader(input);
             while (parser.hasNext()) {
                 int event = parser.next();
-                switch (event) {
-                    case XMLStreamConstants.START_ELEMENT: {
-                        if ("list".equals(parser.getLocalName())) {
-                            return processXmlList(parser).stream().map(x -> (Map<String, String>) x).toList();
-                        }
-                        break;
-                    }
-                    default: {
-                        // no-op
-                    }
+                if (event == XMLStreamConstants.START_ELEMENT && "list".equals(parser.getLocalName())) {
+                    return convertMapValuesToString(processXmlList(parser));
                 }
             }
-        } catch (XMLStreamException | IOException ex) {
-            LOG.log(ERROR, "An error occurred while processing an XML document.", ex);
-        }
-        return new ArrayList<>();
-    }
-
-    public static String getXmlForProperties(final Map<String, String> properties) {
-        return getXmlForProperties(new ArrayList<Map<String, String>>() {
-            {
-                add(properties);
-            }
-        });
-    }
-
-    public static String getXmlForProperties(List<Map<String, String>> properties) {
-        try {
-            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            StringWriter sw = new StringWriter();
-            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(sw);
-            try {
-                writer.writeStartDocument(UTF_8.name(), "1.0");
-                writer.writeStartElement("list");
-                for (Map<String, String> property : properties) {
-                    writer.writeStartElement("map");
-                    for (Map.Entry<String, String> entry : property.entrySet()) {
-                        writer.writeStartElement("entry");
-                        writer.writeAttribute("key", entry.getKey());
-                        writer.writeAttribute("value", entry.getValue());
-                        writer.writeEndElement();
-                    }
-                    writer.writeEndElement();
-                }
-                writer.writeEndElement();
-                writer.writeEndDocument();
-                writer.flush();
-            } finally {
-                writer.close();
-            }
-            return sw.toString();
-        } catch (XMLStreamException ex) {
-            throw new RuntimeException(ex);
+            return List.of();
+        } catch (XMLStreamException | IOException e) {
+            throw new RuntimeException("An error occurred while processing an XML document.", e);
         }
     }
 
-    public static String getJsonForProperties(final Map<String, String> properties) {
-        return getJsonForProperties(new ArrayList<Map<String, String>>() {
-            {
-                add(properties);
-            }
-        });
-    }
-
-    public static String getJsonForProperties(List<Map<String, String>> properties) {
-        JSONArray list = new JSONArray();
-        for (Map<String, String> property : properties) {
-            try {
-                list.put(property);
-            } catch (JSONException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        return list.toString();
-    }
-
+    // Used just by our tests
+    @Deprecated
     public static Map<String, Object> buildMapFromDocument(String text) {
+        LOG.log(TRACE, "buildMapFromDocument, text:\n{0}", text);
         if (text == null || text.isEmpty()) {
-            return new HashMap<>();
+            return Map.of();
         }
-        text = text.trim();
         if (text.startsWith("{")) {
             return processJsonMap(text);
         } else if (text.startsWith("<")) {
@@ -166,84 +105,80 @@ public class MarshallingUtils {
                 XMLStreamReader parser = inputFactory.createXMLStreamReader(input);
                 while (parser.hasNext()) {
                     int event = parser.next();
-                    switch (event) {
-                        case XMLStreamConstants.START_ELEMENT: {
-                            if ("map".equals(parser.getLocalName())) {
-                                return processXmlMap(parser);
-                            }
-                            break;
-                        }
-                        default: {
-                            // No-op
-                        }
+                    if (event == XMLStreamConstants.START_ELEMENT && "map".equals(parser.getLocalName())) {
+                        return processXmlMap(parser);
                     }
                 }
+                return Map.of();
             } catch (XMLStreamException | IOException ex) {
                 throw new RuntimeException("Failed to parse text:\n" + text, ex);
             }
         } else {
-            throw new RuntimeException("An unknown document type was provided:  " + text);
+            throw new RuntimeException("An unknown document type was provided: " + text);
         }
-        return null;
     }
 
     private static Map<String, Object> processJsonMap(String json) {
         try {
             return processJsonObject(new JSONObject(json));
         } catch (JSONException e) {
-            // FIXME: Really swallow exception?
-            return new HashMap<>();
+            throw new RuntimeException(e);
         }
     }
 
     private static Map<String, Object> processJsonObject(JSONObject jo) {
         Map<String, Object> map = new HashMap<>();
-        try {
-            @SuppressWarnings("unchecked")
-            Iterator<String> i = jo.keys();
-            while (i.hasNext()) {
-                String key = i.next();
-                Object value = jo.get(key);
-                if (value instanceof JSONArray) {
-                    map.put(key, processJsonArray((JSONArray) value));
-                } else if (value instanceof JSONObject) {
-                    map.put(key, processJsonObject((JSONObject) value));
-                } else if (value.getClass().getSimpleName().equalsIgnoreCase("null")) {
-                    // The Map may not store null values, but we shouldn't rely on
-                    // that behavior, just to be safe
-                    map.put(key, null);
-                } else {
-                    map.put(key, value);
-                }
+        final Iterator<?> iterator = jo.keys();
+        while (iterator.hasNext()) {
+            final String key = iterator.next().toString();
+            final Object value;
+            try {
+                value = jo.get(key);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
-        } catch (JSONException e) {
-            LOG.log(ERROR, "An error occurred while processing a JSON object.", e);
+            if (value instanceof JSONArray) {
+                map.put(key, processJsonArray((JSONArray) value));
+            } else if (value instanceof JSONObject) {
+                map.put(key, processJsonObject((JSONObject) value));
+            } else if (value.getClass().getSimpleName().equalsIgnoreCase("null")) {
+                // The Map may not store null values, but we shouldn't rely on
+                // that behavior, just to be safe
+                map.put(key, null);
+            } else {
+                map.put(key, value);
+            }
         }
         return map;
     }
 
+    /**
+     * @param jsonArray
+     * @return list containing lists, maps and objects
+     */
     private static List<Object> processJsonArray(JSONArray jsonArray) {
-        List<Object> results = new ArrayList<>();
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Object entry = jsonArray.get(i);
-                if (entry instanceof JSONArray) {
-                    results.add(processJsonArray((JSONArray) entry));
-                } else if (entry instanceof JSONObject) {
-                    results.add(processJsonObject((JSONObject) entry));
-                } else {
-                    results.add(entry);
-                }
+        final List<Object> results = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            final Object entry;
+            try {
+                entry = jsonArray.get(i);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
-        } catch (JSONException e) {
-            LOG.log(ERROR, "An error occurred while processing a JSON object.", e);
+            if (entry instanceof JSONArray) {
+                results.add(processJsonArray((JSONArray) entry));
+            } else if (entry instanceof JSONObject) {
+                results.add(processJsonObject((JSONObject) entry));
+            } else {
+                results.add(entry);
+            }
         }
         return results;
     }
 
     private static Map<String, Object>  processXmlMap(XMLStreamReader parser) throws XMLStreamException {
         boolean endOfMap = false;
-        Map<String, Object> entry = new HashMap<>();
+        final Map<String, Object> entry = new HashMap<>();
         String key = null;
         String elementLocalName = null;
         while (!endOfMap) {
@@ -258,11 +193,9 @@ public class MarshallingUtils {
                             key = null;
                         }
                     } else if ("map".equals(parser.getLocalName())) {
-                        Map<String, Object> value = processXmlMap(parser);
-                        entry.put(key, value);
+                        entry.put(key, processXmlMap(parser));
                     } else if ("list".equals(parser.getLocalName())) {
-                        List<?> value = processXmlList(parser);
-                        entry.put(key, value);
+                        entry.put(key, processXmlList(parser));
                     } else {
                         elementLocalName = parser.getLocalName();
                     }
@@ -296,7 +229,7 @@ public class MarshallingUtils {
         return entry;
     }
 
-    private static List<?> processXmlList(XMLStreamReader parser) throws XMLStreamException {
+    private static List<Object> processXmlList(XMLStreamReader parser) throws XMLStreamException {
         List<Object> list = new ArrayList<>();
         boolean endOfList = false;
         String element = null;
@@ -337,5 +270,15 @@ public class MarshallingUtils {
             }
         }
         return list;
+    }
+
+    private static List<Map<String, String>> convertMapValuesToString(List<Object> list) {
+        return list.stream().filter(m -> m instanceof Map).map(m -> (Map<String, Object>) m).map(MarshallingUtils::convertValuesToString).toList();
+    }
+
+    private static Map<String, String> convertValuesToString(Map<String, Object> map) {
+        Map<String, String> strings = new HashMap<>();
+        map.forEach((k, v) -> strings.put(k, v == null ? null : v.toString()));
+        return strings;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.glassfish.admin.rest.client.utils.MarshallingUtils;
+import org.codehaus.jettison.json.JSONException;
 import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
@@ -339,8 +339,16 @@ public class PropertiesBagITest extends RestTestBase {
         assertTrue(isPropertyFound(getProperties(response), PROP_DOMAIN_NAME));
     }
 
-    private String buildPayload(List<Map<String, String>> properties) {
-        return MarshallingUtils.getJsonForProperties(properties);
+    public static String buildPayload(List<Map<String, String>> properties) {
+        final JSONArray list = new JSONArray();
+        for (Map<String, String> property : properties) {
+            try {
+                list.put(property);
+            } catch (JSONException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return list.toString();
     }
 
     private boolean isPropertyFound(List<Map<String, String>> properties, String name) {

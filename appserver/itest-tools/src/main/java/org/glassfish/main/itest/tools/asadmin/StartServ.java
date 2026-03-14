@@ -78,7 +78,7 @@ public class StartServ {
      * @param textToWaitFor
      * @return this
      */
-    public StartServ withTextToWaitFor(@SuppressWarnings("hiding") final String textToWaitFor) {
+    public StartServ withTextToWaitFor(final String textToWaitFor) {
         this.textToWaitFor = textToWaitFor;
         return this;
     }

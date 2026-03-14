@@ -672,7 +672,7 @@ Table 1-4 Jakarta EE Standards Implementations in {productName} {product-current
 |-
 
 |https://jakarta.ee/specifications/concurrency/[Concurrency]
-|{jakarta-concurrent-api-version}
+|{jakarta-concurrency-api-version}
 |X
 |X
 
@@ -923,7 +923,7 @@ Table 1-6 Components and extensions provided by {productName} {product-currentVe
 |Eclipse WaSP |{wasp-version} |Jakarta Pages {jakarta-pages-api-version} |Pages implementation.
 |EclipseLink |{eclipselink-version} |Jakarta Persistence {jakarta-persistence-api-version} |Persistence implementation with extensions.
 |FasterXML Jackson |{jackson-version} | |Alternative JSON processing and binding implementation.
-|GlassFish Concurro |{concurrent-version} |Jakarta Concurrency {jakarta-concurrent-api-version} |Concurrency utilities.
+|GlassFish Concurro |{concurro-version} |Jakarta Concurrency {jakarta-concurrency-api-version} |Concurrency utilities.
 |GlassFish Grizzly |{grizzly-version} | |Scalable server framework supporting HTTP, Bayeux, Servlet API, Comet.
 |GlassFish HK2 |{hk2-version} | |Dependency injection framework.
 |GlassFish Shoal |{shoal-version} | |Clustering framework for high availability.

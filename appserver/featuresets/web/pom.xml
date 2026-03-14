@@ -696,8 +696,8 @@
 
         <!-- Jakarta Concurrency -->
         <dependency>
-            <groupId>jakarta.concurrent</groupId>
-            <artifactId>jakarta.concurrent-api</artifactId>
+            <groupId>jakarta.concurrency</groupId>
+            <artifactId>jakarta.concurrency-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

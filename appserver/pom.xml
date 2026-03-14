@@ -155,9 +155,9 @@
 
             <!-- Jakarta Concurrency -->
             <dependency>
-                <groupId>jakarta.concurrent</groupId>
-                <artifactId>jakarta.concurrent-api</artifactId>
-                <version>${jakarta.concurrent-api.version}</version>
+                <groupId>jakarta.concurrency</groupId>
+                <artifactId>jakarta.concurrency-api</artifactId>
+                <version>${jakarta.concurrency-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.concurro</groupId>
@@ -846,14 +846,14 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>jakarta.concurrent</groupId>
-                                <artifactId>jakarta.concurrent-api</artifactId>
-                                <version>${jakarta.concurrent-api.version}</version>
+                                <groupId>jakarta.concurrency</groupId>
+                                <artifactId>jakarta.concurrency-api</artifactId>
+                                <version>${jakarta.concurrency-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
                             <specVersion>3.2</specVersion>
-                            <specImplVersion>${jakarta.concurrent-api.version}</specImplVersion>
+                            <specImplVersion>${jakarta.concurrency-api.version}</specImplVersion>
                             <apiPackage>jakarta.enterprise.concurrent</apiPackage>
                         </spec>
                         <spec>

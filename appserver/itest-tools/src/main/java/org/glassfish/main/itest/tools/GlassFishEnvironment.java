@@ -80,7 +80,7 @@ public class GlassFishEnvironment {
      * @param javaHome if null, the value is set from the system property <code>java.home</code>
      * @return this
      */
-    public GlassFishEnvironment withJavaHome(@SuppressWarnings("hiding") Path javaHome) {
+    public GlassFishEnvironment withJavaHome(Path javaHome) {
         this.javaHome = javaHome;
         return this;
     }
@@ -92,9 +92,7 @@ public class GlassFishEnvironment {
      * @param passwordFile
      * @return this
      */
-    public GlassFishEnvironment withCredentials(
-        @SuppressWarnings("hiding") String username,
-        @SuppressWarnings("hiding") File passwordFile) {
+    public GlassFishEnvironment withCredentials(String username, File passwordFile) {
         this.username = username;
         this.passwordFile = passwordFile;
         return this;
@@ -109,9 +107,7 @@ public class GlassFishEnvironment {
      * @return this
      * @throws IllegalStateException if the temporary password file could not be created.
      */
-    public GlassFishEnvironment withCredentials(
-        @SuppressWarnings("hiding") String username,
-        String password) throws IllegalStateException {
+    public GlassFishEnvironment withCredentials(String username, String password) throws IllegalStateException {
         this.username = username;
         try {
             Path file = Files.createTempFile("gf-pw", ".txt");

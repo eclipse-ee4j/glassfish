@@ -109,7 +109,7 @@ public class Asadmin {
      * @param javaHome if null, uses current <code>java.home</code> system property.
      * @return this
      */
-    public Asadmin withJavaHome(@SuppressWarnings("hiding") final Path javaHome) {
+    public Asadmin withJavaHome(final Path javaHome) {
         this.javaHome = javaHome == null ? Path.of(System.getProperty(JAVA_HOME.getSystemPropertyName())) : javaHome;
         this.javaExecutable = this.javaHome.resolve(Path.of("bin", IS_WINDOWS ? "java.exe" : "java"));
         return this;

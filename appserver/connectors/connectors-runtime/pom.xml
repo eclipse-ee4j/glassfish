@@ -57,8 +57,8 @@
             <artifactId>jakarta.interceptor-api</artifactId>
         </dependency>
         <dependency>
-             <groupId>jakarta.concurrent</groupId>
-             <artifactId>jakarta.concurrent-api</artifactId>
+             <groupId>jakarta.concurrency</groupId>
+             <artifactId>jakarta.concurrency-api</artifactId>
         </dependency>
 
         <dependency>

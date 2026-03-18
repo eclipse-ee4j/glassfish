@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ module org.glassfish.main.jdke {
     exports org.glassfish.main.jdke;
     exports org.glassfish.main.jdke.cl;
     exports org.glassfish.main.jdke.i18n;
+    exports org.glassfish.main.jdke.process;
     exports org.glassfish.main.jdke.props;
     exports org.glassfish.main.jdke.security;
 }

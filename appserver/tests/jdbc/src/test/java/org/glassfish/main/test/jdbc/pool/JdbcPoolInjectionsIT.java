@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,26 +39,27 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @ExtendWith(TestLoggingExtension.class)
 public class JdbcPoolInjectionsIT {
     private static final String APPNAME = "dspools";
-    private static boolean dockerAvailable;
+    private static final boolean DOCKER_AVAILABLE = DockerClientFactory.instance().isDockerAvailable();
     private static DockerTestEnvironment environment;
     private static WebTarget wsEndpoint;
 
 
     @BeforeAll
     public static void init() throws Exception {
-        dockerAvailable = DockerClientFactory.instance().isDockerAvailable();
-        assumeTrue(dockerAvailable, "Docker is not available on this environment");
+        assumeTrue(DOCKER_AVAILABLE, "Docker is not available on this environment");
         environment = DockerTestEnvironment.getInstance();
         wsEndpoint = environment.deploy(APPNAME, DataSourceDefinitionBean.class, JdbcDsName.class, RestAppConfig.class);
     }
 
     @AfterAll
     public static void cleanup() throws Exception {
-        if (!dockerAvailable) {
+        if (!DOCKER_AVAILABLE) {
             return;
         }
-        environment.undeploy(APPNAME);
-        environment.reinitializeDatabase();
+        if (environment != null) {
+            environment.undeploy(APPNAME);
+            environment.reinitializeDatabase();
+        }
     }
 
     @Test

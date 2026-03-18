@@ -26,7 +26,9 @@ import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
@@ -38,9 +40,11 @@ import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
@@ -67,7 +71,13 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
      */
     void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
-        final Types types = getTypes();
+        boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
+        boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
+
+        // We use empty types if we don't need real types instance to free some memory after deployment
+        // TODO: Keep only required types - entities and repositories, to avoid keeping the whole types instance after deployment
+        // TODO: optionally create repositories at deployment, to fail deployment if an error in repository definition
+        final Types types = (jpaEnabled || noSqlEnabled) ? getTypes() : emptyTypes();
 
         afterBeanDiscovery.<JakartaDataApplicationContext>addBean()
                 .types(JakartaDataApplicationContext.class)
@@ -127,6 +137,26 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                         .getService(Deployment.class)
                         .getCurrentDeploymentContext();
         return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
+    }
+
+    private static Types emptyTypes() {
+        return new Types() {
+            @Override
+            public Collection<Type> getAllTypes() {
+                return Set.of();
+            }
+
+            @Override
+            public Type getBy(String string) {
+                return null;
+            }
+
+            @Override
+            public <T extends Type> T getBy(Class<T> type, String string) {
+                return null;
+            }
+
+        };
     }
 
 }

@@ -1,4 +1,18 @@
-## About
+<!--
+  Copyright (c) 2026 Contributors to the Eclipse Foundation.
+
+  This program and the accompanying materials are made available under the
+  terms of the Eclipse Public License v. 2.0, which is available at
+  http://www.eclipse.org/legal/epl-2.0.
+
+  This Source Code may also be made available under the following Secondary
+  Licenses when the conditions for such availability set forth in the
+  Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+  version 2 with the GNU Classpath Exception, which is available at
+  https://www.gnu.org/software/classpath/license.html.
+
+  SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+-->
 
 **Eclipse GlassFish** is a lightweight yet powerful open-source application server that fully implements the **[Jakarta EE](compatibility)** platform. Designed for flexibility, scalability, and reliability, it provides a production-ready environment that adheres strictly to open standards without proprietary dependencies.
 
@@ -81,6 +95,16 @@ GlassFish delivers comprehensive support for all required and optional **Jakarta
 
 ## Latest News
 
+## Feb 5, 2026 -- Eclipse GlassFish 8.0.0 Available
+
+The GlassFish team is thrilled to announce the release of Eclipse GlassFish 8.0.0, a major milestone implementing Jakarta EE 11!
+
+This release brings enterprise-grade Java to a new level with virtual thread support for improved concurrency, Jakarta Data support for simplified data access, and full compliance with the Jakarta EE 11 specification. GlassFish 8 requires JDK 21 or higher and removes the deprecated SecurityManager-based authorization in favor of modern security approaches.
+
+Learn what's new in this new major release in this article: [GlassFish 8 Released: Enterprise-Grade Java Redefined](https://omnifish.ee/glassfish-8-released-enterprise-grade-java-redefined/)
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## Dec 6, 2025 -- Eclipse GlassFish 7.1.0 Available
 
 This is the first release after several months of intensive work on fixes and feature upgrades.
@@ -90,7 +114,9 @@ GlassFish 7.1.0 introduces support for Microprofile Health, switches keystores f
 
 The GlassFish team is now heavily working on GlassFish 8.0 version, which will come very soon, with all the enhancements from GlassFish 7.1.0, full support for Jakarta EE 11, and much more. Stay tuned!
 
-More info about GlassFish 7.1.0 and download links are available in the [GlassFish Download page](download.md).
+Read what's new in GlassFish 7.1.0 in this article: [GlassFish 7.1: Major New Features and Improvements](https://omnifish.ee/glassfish-7-1-major-new-features-and-improvements/)
+
+Download links for GlassFish 7.1.0 are available in the [GlassFish Download page](download.md).
 
 ## May 27, 2025 -- Eclipse GlassFish 7.0.25 Available
 

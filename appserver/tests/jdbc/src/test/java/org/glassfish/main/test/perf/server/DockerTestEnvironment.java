@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.Container.ExecResult;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.test.jdbc.pool.war.JdbcDsName.JDBC_DS_POOL_A;
@@ -95,7 +95,7 @@ public class DockerTestEnvironment extends Environment {
     @Override
     public void start() {
         super.start();
-        PostgreSQLContainer<?> db = getDatabase();
+        PostgreSQLContainer db = getDatabase();
         appServer.start();
         for (String jndiName : new String[] {JDBC_DS_POOL_A, JDBC_DS_POOL_B}) {
             final String poolName = "domain-pool-" + jndiName.charAt(jndiName.length() - 1);

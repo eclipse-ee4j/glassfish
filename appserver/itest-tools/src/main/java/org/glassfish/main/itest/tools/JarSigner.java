@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,16 +16,16 @@
 
 package org.glassfish.main.itest.tools;
 
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
-import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
-
 import java.io.File;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.glassfish.main.jdke.process.ProcessManager;
+import org.glassfish.main.jdke.process.ProcessManagerException;
+import org.glassfish.main.jdke.process.ProcessManagerTimeoutException;
 
 /**
  * Tool for executing jarsigner/jarsigner.exe commands.

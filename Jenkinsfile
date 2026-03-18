@@ -285,6 +285,39 @@ pipeline {
             }
          }
       }
+      stage('Check Changes') {
+         steps {
+            checkout scm
+            container('maven') {
+               script {
+                  // Default: run tests
+                  env.SKIP_TESTS = "false"
+
+                  // Only check for docs-only changes in PR builds
+                  if (env.CHANGE_TARGET) {
+                     echo "PR build detected, checking if only docs changed..."
+
+                     def relevantChanges = sh(
+                        script: '''
+                           (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
+                        ''',
+                        returnStdout: true
+                     ).trim()
+
+
+                     if (relevantChanges == "") {
+                        env.SKIP_TESTS = "true"
+                        echo "✓ Only docs/ changes detected - tests will be skipped"
+                     } else {
+                        echo "✗ Relevant changes detected - tests will run"
+                     }
+                  } else {
+                     echo "Non-PR build - tests will always run"
+                  }
+               }
+            }
+         }
+      }
       stage('Build') {
          steps {
             checkout scm
@@ -331,6 +364,9 @@ pipeline {
       }
 
       stage('Test') {
+         when {
+            environment name: 'SKIP_TESTS', value: 'false'
+         }
          parallel {
             stage('main-tests') {
                steps {

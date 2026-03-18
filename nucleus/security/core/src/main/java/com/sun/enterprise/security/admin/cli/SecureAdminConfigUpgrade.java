@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.security.SecurityUpgradeService;
-import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.net.NetUtils;
 
 import jakarta.inject.Inject;
@@ -53,6 +52,7 @@ import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.main.jdke.process.ProcessManagerException;
 import org.glassfish.main.jdke.security.KeyTool;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Transaction;

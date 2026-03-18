@@ -13,16 +13,15 @@ CREATE TABLE IF NOT EXISTS "Brand" (
 
 -- Empty table for the performance test
 CREATE TABLE IF NOT EXISTS "GlassFishUser" (
-  id int not null,
-  name varchar(255),
-  PRIMARY KEY (id)
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255)
 );
 
 CREATE INDEX IF NOT EXISTS "GlassFishUserName" ON "GlassFishUser" USING BTREE ("name");
 
 DELETE FROM "JEEVersion" WHERE 1=1;
 DELETE FROM "Brand" WHERE 1=1;
-DELETE FROm "GlassFishUser" WHERE 1=1;
+DELETE FROM "GlassFishUser" WHERE 1=1;
 
 INSERT INTO "JEEVersion" (id, name, year) VALUES
     (1, 'J2EE 1.2', 1999),

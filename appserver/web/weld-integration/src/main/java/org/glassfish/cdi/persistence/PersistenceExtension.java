@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,6 +48,8 @@ import static com.sun.enterprise.util.AnnotationUtil.createAnnotationInstance;
 
 public class PersistenceExtension implements Extension  {
 
+    private PersistenceUnitDescriptor firstPersistenceUnitDescriptor;
+
     public void afterBean(final @Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
         var container = Globals.get(InvocationManager.class)
                                   .getCurrentInvocation()
@@ -55,9 +57,10 @@ public class PersistenceExtension implements Extension  {
 
         if (container instanceof ApplicationInfo applicationInfo) {
 
-            var persistenceUnits = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class);
+            PersistenceUnitsDescriptor persistenceUnits = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class);
 
-            if (persistenceUnits != null) {
+            if (persistenceUnits != null && !persistenceUnits.isEmpty()) {
+                firstPersistenceUnitDescriptor = persistenceUnits.getPersistenceUnitDescriptors().getFirst();
                 for (PersistenceUnitDescriptor descriptor : persistenceUnits.getPersistenceUnitDescriptors()) {
                     addBeanForEntityManager(afterBeanDiscovery, descriptor);
                     addBeanForEntityManagerFactory(afterBeanDiscovery, descriptor);
@@ -68,6 +71,7 @@ public class PersistenceExtension implements Extension  {
                     addBeanForSchemaManager(afterBeanDiscovery, descriptor);
                     addBeanForMetamodel(afterBeanDiscovery, descriptor);
                 }
+                firstPersistenceUnitDescriptor = null;
             }
         }
     }
@@ -141,7 +145,7 @@ public class PersistenceExtension implements Extension  {
             bean.addQualifier(createAnnotationInstance(loadClass(qualifierClassName)));
         }
         if (descriptor.getQualifiers().isEmpty()) {
-            bean.addQualifier(createAnnotationInstance(Default.class));
+            bean.addQualifier(createAnnotationInstance(descriptor.equals(firstPersistenceUnitDescriptor) ? Default.class : SecondaryPersistenceUnit.class));
         }
         if (descriptor.getName() != null && !descriptor.getName().isBlank()) {
             bean.addQualifier(NamedLiteral.of(descriptor.getName()));

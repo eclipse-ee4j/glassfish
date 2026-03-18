@@ -246,7 +246,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     @Override
     public void clearThreadTx() {
         setCurrentTransaction(null);
-        delegates.set(null);
+        delegates.remove();
     }
 
     /**
@@ -876,7 +876,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
 
         } finally {
             setCurrentTransaction(null); // clear current thread's tx
-            delegates.set(null);
+            delegates.remove();
             if (acquiredlock) {
                 getDelegate().getReadLock().unlock(); // XXX releaseReadLock();
             }
@@ -908,7 +908,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
 
         } finally {
             setCurrentTransaction(null); // clear current thread's tx
-            delegates.set(null);
+            delegates.remove();
             if (acquiredlock) {
                 getDelegate().getReadLock().unlock(); // XXX releaseReadLock();
             }

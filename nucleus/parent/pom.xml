@@ -297,6 +297,7 @@
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
+        <jna.version>5.18.1</jna.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
@@ -767,11 +768,27 @@
                 <version>${asm.version}</version>
             </dependency>
 
+            <!--
+                 Java Native Access (JNA) to your project — a library that allows Java code to call native shared
+                 libraries (.dll, .so, .dylib) without writing any JNI (Java Native Interface) boilerplate code.
+            -->
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${jna.version}</version>
+            </dependency>
+
+            <!--
+                StAX API (Streaming API for XML)
+                This dependency provides the StAX (Streaming API for XML) interfaces — a standard Java API for reading
+                and writing XML documents using a pull-parsing model.
+            -->
             <dependency>
                 <groupId>javax.xml.stream</groupId>
                 <artifactId>stax-api</artifactId>
                 <version>${stax-api.version}</version>
             </dependency>
+
             <!-- Jettison is a Java library for converting XML to JSON -->
             <dependency>
                 <groupId>org.codehaus.jettison</groupId>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
@@ -52,7 +52,7 @@ public abstract class Environment {
     private final Network network = Network.newNetwork();
 
     @SuppressWarnings("resource")
-    private final PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:17.6")
+    private final PostgreSQLContainer database = new PostgreSQLContainer("postgres:18")
         .withNetwork(network).withDatabaseName("testdb").withExposedPorts(5432).withCreateContainerCmdModifier(cmd -> {
             cmd.withHostName("tc-testdb");
             cmd.withAttachStderr(true);
@@ -65,6 +65,7 @@ public abstract class Environment {
         })
         .withLogConsumer(o -> LOG_DB.log(INFO, o.getUtf8StringWithoutLineEnding()))
         .withCommand("postgres",
+            // log_statement=all when you have problems
             "-c", "log_statement=none",
             "-c", "log_destination=stderr",
             "-c", "max_connections=" + LIMIT_DBSERVER_CONNECTION_COUNT
@@ -81,21 +82,8 @@ public abstract class Environment {
     /**
      * @return database container
      */
-    public PostgreSQLContainer<?> getDatabase() {
+    public PostgreSQLContainer getDatabase() {
         return database;
-    }
-
-    /**
-     * Start the environment - network and database, children may start more containers.
-     * Then deploys the application.
-     * @param appName
-     *
-     * @param war
-     * @return endpoint of the application.
-     */
-    public WebTarget start(String appName, WebArchive war) {
-        start();
-        return deploy(appName, war);
     }
 
     /**
@@ -103,7 +91,7 @@ public abstract class Environment {
      */
     public void start() {
         assumeTrue(DockerClientFactory.instance().isDockerAvailable(), "Docker is not available on this environment");
-        PostgreSQLContainer<?> db = getDatabase();
+        PostgreSQLContainer db = getDatabase();
         db.start();
 
         final PGSimpleDataSource dataSource = new PGSimpleDataSource();
@@ -122,7 +110,7 @@ public abstract class Environment {
      * Stops all virtual computers, and destroys the virtual network.
      */
     public void stop() {
-        PostgreSQLContainer<?> db = getDatabase();
+        PostgreSQLContainer db = getDatabase();
         if (db.isRunning()) {
             closeSilently(db);
         }
@@ -184,8 +172,12 @@ public abstract class Environment {
     /**
      * Drop all data and recreate just those existing before the test.
      */
-    public void reinitializeDatabase() {
-        dsExecutor.executeScript("initSchema.sql");
+    public final void reinitializeDatabase() {
+        final String script = "initSchema.sql";
+        LOG.log(INFO, "Running script to reinitialize the database schema: " + script);
+        dsExecutor.executeScript(script);
+        // The db is case sensitive
+        dsExecutor.executeStatements(new String[] {"SELECT * FROM \"GlassFishUser\""});
     }
 
     /**

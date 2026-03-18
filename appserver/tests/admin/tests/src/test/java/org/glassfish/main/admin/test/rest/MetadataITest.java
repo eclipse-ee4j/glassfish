@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,7 +42,7 @@ public class MetadataITest extends RestTestBase {
         assertEquals(200, response.getStatus());
         // Really dumb test.  Should be good enough for now
 
-        Map extraProperties = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        Map<String, Object> extraProperties = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         assertNotNull(extraProperties);
 
         // Another dumb test to make sure that "name" shows up on the HTML page

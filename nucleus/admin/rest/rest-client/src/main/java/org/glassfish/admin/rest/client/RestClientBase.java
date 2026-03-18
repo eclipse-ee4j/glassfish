@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -209,7 +210,7 @@ public abstract class RestClientBase {
                 if (params != null) {
                     for (Map.Entry<String, Map> param : params.entrySet()) {
                         String paramName = param.getKey();
-                        Map<String, String> md = (Map<String, String>) param.getValue();
+                        Map<String, String> md = param.getValue();
                         metadata.put(paramName, md.get("type"));
 
                     }

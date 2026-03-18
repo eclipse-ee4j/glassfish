@@ -492,20 +492,6 @@ public class Util {
         }
     }
 
-
-    private static String[] getNameAndSuffix(String fileName) {
-        if (fileName == null) {
-            return new String[2];
-        }
-        int dotPosition = fileName.lastIndexOf('.');
-        if (dotPosition < 1) {
-            // on Linux: files with dots as the first char mean hidden files.
-            // or the dot wasn't found at all
-            return new String[] {fileName, null};
-        }
-        return new String[] {fileName.substring(0, dotPosition), fileName.substring(dotPosition)};
-    }
-
     public static boolean isGenericType(Type type) {
         return ParameterizedType.class.isAssignableFrom(type.getClass());
     }

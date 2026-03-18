@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -133,7 +133,7 @@ public final class StartServerHelper {
         if (!terse) {
             if (launcher.isSuspendEnabled()) {
                 // If the server starts suspended, user needs to see this before it happens.
-                System.out.print("Debugging is configured to listen on port " + launcher.getDebugPort()
+                System.out.println("Debugging is configured to listen on port " + launcher.getDebugPort()
                     + ". Server's JVM is set to suspend.");
             }
         }

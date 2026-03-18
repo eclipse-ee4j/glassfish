@@ -61,6 +61,20 @@ Using GlassFish in all major IDEs is documented at the OmniFish developer pages:
 * [GlassFish in Eclipse IDE](https://omnifish.ee/developers/glassfish-server/ide-plugins-for-glassfish/eclipse-ide/)
 * [GlassFish in Netbeans](https://omnifish.ee/developers/glassfish-server/ide-plugins-for-glassfish/netbeans/)
 
+## Maven Plugins {#maven-plugins}
+
+Maven plugins for GlassFish:
+
+* [Embedded GlassFish Maven Plugin](https://github.com/eclipse-ee4j/glassfish-maven-embedded-plugin) - A Maven plugin for managing Embedded GlassFish server instances during the build lifecycle, useful for integration testing and running applications directly from Maven.
+
+## Arquillian Containers {#arquillian-containers}
+
+Information about using GlassFish with Arquillian for integration testing:
+
+* [GlassFish Arquillian Containers by OmniFish](https://omnifish.ee/developers/glassfish-server/arquillian-containers/)
+
+NOTE: There are no official Arquillian containers by the GlassFish project and the containers provided by the Arquillian project are obsolete and unmaintained. OmniFish provides up-to-date containers for GlassFish.
+
 ## Jakarta EE Documentation {#jakarta-ee}
 
 GlassFish, Jakarta EE Platform, and GlassFish Embedded, Jakarta EE Platform, provide the following Jakarta EE APIs:

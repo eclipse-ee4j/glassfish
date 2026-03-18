@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,8 +37,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.CLASS_LOG_MANAGER_GLASSFISH;
 import static org.glassfish.main.jul.cfg.GlassFishLoggingConstants.JVM_OPT_LOGGING_CFG_DEFAULT_LEVEL;
@@ -66,12 +66,8 @@ public class EmbeddedGlassFishContainer extends GenericContainer<EmbeddedGlassFi
 
     /**
      * Creates preconfigured container with GlassFish.
-     *
-     * @param network
-     * @param hostname
-     * @param logPrefix
      */
-    public EmbeddedGlassFishContainer(Network network, String hostname, String logPrefix, PostgreSQLContainer<?> db) {
+    public EmbeddedGlassFishContainer(Network network, String hostname, String logPrefix, PostgreSQLContainer db) {
         super("eclipse-temurin:" + Runtime.version().feature());
         PomEquippedResolveStage resolver = Maven.resolver()
             .loadPomFromFile(JUnitSystem.detectBasedir().resolve("pom.xml").toFile());
@@ -124,7 +120,7 @@ public class EmbeddedGlassFishContainer extends GenericContainer<EmbeddedGlassFi
         return URI.create("http://" + getHost() + ":" + getMappedPort(8080) + "/" + context);
     }
 
-    private static Path generateProperties(PostgreSQLContainer<?> db, final String poolName) {
+    private static Path generateProperties(PostgreSQLContainer db, final String poolName) {
         try {
             Path properties = Files.createTempFile("gf-cfg", "properties");
             Properties cfg = new Properties();

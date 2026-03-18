@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -78,20 +78,19 @@ public abstract class ProxyImpl implements Proxy {
                 Response.Status status = Response.Status.fromStatusCode(response.getStatus());
                 if (status.getFamily() == jakarta.ws.rs.core.Response.Status.Family.SUCCESSFUL) {
                     String jsonDoc = response.readEntity(String.class);
-                    Map responseMap = MarshallingUtils.buildMapFromDocument(jsonDoc);
-                    Map resultExtraProperties = (Map) responseMap.get("extraProperties");
+                    Map<String, Object> responseMap = MarshallingUtils.buildMapFromDocument(jsonDoc);
+                    Map<?, ?> resultExtraProperties = (Map<?, ?>) responseMap.get("extraProperties");
                     if (resultExtraProperties != null) {
                         Object entity = resultExtraProperties.get("entity");
                         if (entity != null) {
                             proxiedResponse.put("entity", entity);
                         }
 
-                        @SuppressWarnings({ "unchecked" })
                         Map<String, String> childResources = (Map<String, String>) resultExtraProperties.get("childResources");
                         for (Map.Entry<String, String> entry : childResources.entrySet()) {
                             String targetURL = null;
                             try {
-                                URL originalURL = new URL(entry.getValue());
+                                URL originalURL = URI.create(entry.getValue()).toURL();
                                 //Construct targetURL which has host+port of DAS and path from originalURL
                                 targetURL = constructTargetURLPath(sourceUriInfo, originalURL).build().toASCIIString();
                             } catch (MalformedURLException e) {
@@ -150,11 +149,13 @@ public abstract class ProxyImpl implements Proxy {
         private final String host;
 
         public BasicHostnameVerifier(String host) {
-            if (host == null)
+            if (host == null) {
                 throw new IllegalArgumentException("null host");
+            }
             this.host = host;
         }
 
+        @Override
         public boolean verify(String s, SSLSession sslSession) {
             return host.equals(s);
         }

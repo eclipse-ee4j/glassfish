@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -87,7 +87,7 @@ public class FileUtilsTest {
     @Test
     public void testCopyDirectoriesFiles() throws Exception {
         File outputDir = new File(tempDir, "outputDir");
-        File testDir = new File(FileUtilsTest.class.getResource("/process").toURI());
+        File testDir = new File(FileUtilsTest.class.getResource("/config").toURI());
         FileUtils.copy(testDir, outputDir);
         assertEquals(FileUtils.getSize(testDir), FileUtils.getSize(outputDir));
     }

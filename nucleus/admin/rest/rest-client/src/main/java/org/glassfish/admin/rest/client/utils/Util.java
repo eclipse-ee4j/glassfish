@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,26 @@
 
 package org.glassfish.admin.rest.client.utils;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.api.logging.LogHelper;
+
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  *
  * @author jdlee
  */
 public class Util {
+
+    private static final Logger LOG = System.getLogger(Util.class.getName());
 
     public static Map<String, Object> processJsonMap(String json) {
         Map<String, Object> map;
@@ -60,7 +64,7 @@ public class Util {
                 }
             }
         } catch (JSONException e) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_JSON_ERROR, e);
+            LOG.log(ERROR, "Failed to process provided JSON object.", e);
         }
 
         return map;
@@ -81,7 +85,7 @@ public class Util {
                 }
             }
         } catch (JSONException e) {
-            LogHelper.log(RestClientLogging.logger, Level.SEVERE, RestClientLogging.REST_CLIENT_JSON_ERROR, e);
+            LOG.log(ERROR, "Failed to process provided JSON array.", e);
         }
 
         return results;

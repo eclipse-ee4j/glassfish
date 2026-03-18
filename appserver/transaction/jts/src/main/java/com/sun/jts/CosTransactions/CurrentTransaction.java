@@ -178,7 +178,7 @@ public class CurrentTransaction {
                 }
                 else
                     result=true;
-                m_tid.set(null);
+                m_tid.remove();
 
                 // The parent transaction has effectively been suspended - add it to the
                 // set of suspended transactions.
@@ -261,7 +261,7 @@ public class CurrentTransaction {
                 Thread thread = Thread.currentThread();
                 threadContexts.remove(thread);
             }
-            m_tid.set(null);
+            m_tid.remove();
 
             // Decrement the count of associations for the Control object.
 
@@ -379,7 +379,7 @@ public class CurrentTransaction {
                         Thread thread = Thread.currentThread();
                         threadContexts.remove(thread);
                     }
-                    m_tid.set(null);
+                    m_tid.remove();
 
                     // XA support: If there was a current IControl, inform all registered
                     // StaticResource objects of the end of the thread association.

@@ -940,6 +940,11 @@
             <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+        </dependency>
+
 
         <!-- Glassfish Nucleus -->
 

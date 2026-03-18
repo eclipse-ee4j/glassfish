@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,14 +20,20 @@ package org.glassfish.main.admin.test.rest;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
 
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_XML;
-import static org.glassfish.admin.rest.client.utils.MarshallingUtils.getXmlForProperties;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -72,5 +78,40 @@ public class ServerPropertyITest extends RestTestBase {
         //Clean up to leave domain.xml good for next run
         response = managementClient.delete(propertyURL, new HashMap<String, String>());
         assertEquals(200, response.getStatus());
+    }
+
+
+    private static String getXmlForProperties(final Map<String, String> properties) {
+        return getXmlForProperties(List.of(properties));
+    }
+
+    private static String getXmlForProperties(List<Map<String, String>> properties) {
+        try {
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            StringWriter sw = new StringWriter();
+            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(sw);
+            try {
+                writer.writeStartDocument(UTF_8.name(), "1.0");
+                writer.writeStartElement("list");
+                for (Map<String, String> property : properties) {
+                    writer.writeStartElement("map");
+                    for (Map.Entry<String, String> entry : property.entrySet()) {
+                        writer.writeStartElement("entry");
+                        writer.writeAttribute("key", entry.getKey());
+                        writer.writeAttribute("value", entry.getValue());
+                        writer.writeEndElement();
+                    }
+                    writer.writeEndElement();
+                }
+                writer.writeEndElement();
+                writer.writeEndDocument();
+                writer.flush();
+            } finally {
+                writer.close();
+            }
+            return sw.toString();
+        } catch (XMLStreamException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

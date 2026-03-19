@@ -87,22 +87,10 @@
         </classes>
     </test>
 
-    <test name="jpa_inject_emf">
-        <classes>
-            <class name="test.jpa.jpainjectemf.JpaInjectEMFTestNG" />
-        </classes>
-    </test>
-
     <test name="security_hello_jsp">
         <classes>
             <class
                 name="test.security.hellojsp.HelloSecurityTestNG" />
-        </classes>
-    </test>
-
-    <test name="security_hello_basicauth">
-        <classes>
-            <class name="test.security.basicauth.BasicAuthTestNG" />
         </classes>
     </test>
 

@@ -321,6 +321,23 @@ public class GlassFishTestEnvironment {
         return new URI(protocol + "://localhost:" + port + context);
     }
 
+
+    /**
+     * Creates the unencrypted password file on the local file system and uses it to create the user
+     * record in the file realm.
+     *
+     * @param user
+     * @param password
+     * @param groupNames
+     */
+    public static void createUser(String user, String password, String... groupNames) {
+        createFileUser("file", user, password, groupNames);
+    }
+
+    public static void deleteUser(String user) {
+        deleteFileUser("file", user);
+    }
+
     /**
      * Creates the unencrypted password file on the local file system and uses it to create the user
      * record in the file realm.
@@ -346,6 +363,12 @@ public class GlassFishTestEnvironment {
         }
     }
 
+    public static void deleteFileUser(String realmName, String user) {
+        Asadmin asadmin = getAsadmin();
+
+        asadmin.exec("delete-file-user", "--authrealmname", realmName, "--target", "server", user);
+    }
+
     /**
      * This will delete the jobs.xml file
      */
@@ -361,6 +384,21 @@ public class GlassFishTestEnvironment {
 
 
     /** Default is org.apache.derby.jdbc.ClientDataSource */
+    public static void switchDerbyPoolToUniqueEmbededded() {
+        assertThat(getAsadmin(true).exec(5_000, "set",
+            "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
+            "resources.jdbc-connection-pool.DerbyPool.property.PortNumber=",
+            "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
+            "resources.jdbc-connection-pool.DerbyPool.property.URL=",
+            "resources.jdbc-connection-pool.DerbyPool.property.DatabaseName=" + "TEST_DB" + System.nanoTime(),
+            "resources.jdbc-connection-pool.DerbyPool.property.connectionAttributes=;create=true"
+        ), asadminOK());
+
+        // Just to see the result in log.
+        assertThat(getAsadmin(true).exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*"), asadminOK());
+    }
+
+    /** Default is org.apache.derby.jdbc.ClientDataSource */
     public static void switchDerbyPoolToEmbededded() {
         final AsadminResult result = getAsadmin(true).exec(5_000, "set",
             "resources.jdbc-connection-pool.DerbyPool.datasource-classname=org.apache.derby.jdbc.EmbeddedDataSource",
@@ -368,6 +406,7 @@ public class GlassFishTestEnvironment {
             "resources.jdbc-connection-pool.DerbyPool.property.serverName=",
             "resources.jdbc-connection-pool.DerbyPool.property.URL=");
         assertThat(result, asadminOK());
+
         // Just to see the result in log.
         assertThat(getAsadmin(true).exec(5_000, "get", "resources.jdbc-connection-pool.DerbyPool.*"), asadminOK());
     }

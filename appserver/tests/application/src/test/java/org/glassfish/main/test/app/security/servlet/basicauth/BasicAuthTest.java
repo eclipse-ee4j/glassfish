@@ -1,0 +1,163 @@
+/*
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package org.glassfish.main.test.app.security.servlet.basicauth;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+
+import org.glassfish.main.itest.tools.ITestBase;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.createUser;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.deleteUser;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * A simple Web BASIC auth test.
+ *
+ */
+public class BasicAuthTest extends ITestBase {
+
+    @BeforeAll
+    public void deploy() throws Exception {
+        createUser("testuser3", "secret", "testgroup1");
+        createUser("testuser42", "secret", "testgroup5");
+        createUser("j2ee", "j2ee", "testgroup10");
+
+        doDeploy(
+            ShrinkWrap.create(WebArchive.class, BasicAuthTest.class.getSimpleName() + "WebApp")
+                      .addAsWebResource(
+                          BasicAuthTest.class.getPackage(), "Test.jsp", "Test.jsp")
+                      .addAsWebInfResource(
+                          BasicAuthTest.class.getPackage(), "web.xml", "web.xml")
+                      .addAsWebInfResource(
+                          BasicAuthTest.class.getPackage(), "sun-web.xml", "sun-web.xml"));
+    }
+
+
+    /**
+     * Must be invoked with (host,port) args. Nothing else is parameterized, this is intended as throwaway after the SQE web
+     * test framework exists. User/authorization info is hardcoded and must match the values in descriptors and build.xml.
+     *
+     */
+    @Test
+    public void testAuthRoleMappedUser() throws Exception {
+        // GET with a user who maps directly to role
+        String testName = "BASIC auth: Role Mapped User, testuser3";
+
+        try {
+            String result = "RESULT: principal: testuser3";
+            goGet(host, port, result, "Authorization: Basic dGVzdHVzZXIzOnNlY3JldA==\n");
+            assertTrue(true, testName);
+        } catch (Throwable t) {
+            System.out.println(t.getMessage());
+            assertFalse(true, testName);
+        }
+    }
+
+    @Test
+    public void testAuthGroupMappedUser() {
+        // GET with a user who maps through group
+        String testName = "BASIC auth: Group mapped user, testuser42";
+
+        try {
+            String result = "RESULT: principal: testuser42";
+            goGet(host, port, result, "Authorization: Basic dGVzdHVzZXI0MjpzZWNyZXQ=\n");
+            assertTrue(true, testName);
+        } catch (Throwable t) {
+            System.out.println(t.getMessage());
+            assertFalse(true, testName);
+        }
+    }
+
+    @Test
+    public void testAuthNotAuthorizedUser() {
+        // GET with a valid user who is not authorized
+        String testName = "BASIC auth: Not authorized user, testuser42";
+
+        try {
+
+            String result = "HTTP/1.1 403";
+            goGet(host, port, result, "Authorization: Basic ajJlZTpqMmVl\n");
+            assertTrue(true, testName);
+        } catch (Throwable t) {
+            System.out.println(t.getMessage());
+            assertFalse(true, testName);
+        }
+    }
+
+    @Test
+    public void testAuthNotValidPassword() {
+        // GET with a valid user,bad password
+        String testName = "BASIC auth: Valid user and invalid password";
+        try {
+
+            String result = "HTTP/1.1 401";
+            goGet(host, port, result, "Authorization: Basic ajJlZTo=\n");
+            assertTrue(true, testName);
+        } catch (Throwable t) {
+            System.out.println(t.getMessage());
+            assertFalse(true, testName);
+        }
+
+    }
+
+    @AfterAll
+    protected void cleanup() throws Exception {
+        deleteUser("testuser3");
+        deleteUser("testuser42");
+        deleteUser("j2ee");
+    }
+
+
+
+    /**
+     * Connect to host:port and issue GET with given auth info. This is hardcoded to expect the output that is generated by
+     * the Test.jsp used in this test case.
+     *
+     */
+    private void goGet(String host, String port, String result, String auth) throws Exception {
+        try (Socket socket = new Socket(host, Integer.parseInt(port))) {
+            OutputStream os = socket.getOutputStream();
+
+            os.write(("GET /" + appName + "/Test.jsp HTTP/1.0\n").getBytes());
+            os.write(auth.getBytes());
+            os.write("\n".getBytes());
+
+            BufferedReader bis = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            String line = null;
+            while ((line = bis.readLine()) != null) {
+                echo(line);
+                if (line.indexOf(result) != -1) {
+                    socket.close();
+                    return;
+                }
+            }
+        }
+
+        throw new Exception("String not found: " + result);
+    }
+
+}

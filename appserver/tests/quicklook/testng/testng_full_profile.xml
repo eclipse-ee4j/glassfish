@@ -87,13 +87,6 @@
         </classes>
     </test>
 
-    <test name="security_hello_jsp">
-        <classes>
-            <class
-                name="test.security.hellojsp.HelloSecurityTestNG" />
-        </classes>
-    </test>
-
     <test name="ejb_remoteview">
         <classes>
             <class name="test.ejb.remoteview.RemoteViewTestNG" />

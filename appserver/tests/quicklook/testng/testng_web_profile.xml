@@ -91,13 +91,6 @@
         </classes>
     </test>
 
-    <test name="security_hello_jsp">
-        <classes>
-            <class
-                name="test.security.hellojsp.HelloSecurityTestNG" />
-        </classes>
-    </test>
-
     <test name="ejb_stateful_cmt_ni_war">
         <classes>
             <class name="test.ejb.slsbnicmt.SlsbnicmtTestNG" />

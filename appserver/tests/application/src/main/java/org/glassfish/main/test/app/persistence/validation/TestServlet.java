@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
 
         try {
             out.println("TestServlet at " + request.getContextPath());
-            testcase = request.getParameter("tc");
+            testcase = request.getParameter("testcase");
             System.out.println("testcase = " + testcase);
 
             if ("initialize".equals(testcase)) {

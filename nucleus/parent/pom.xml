@@ -98,10 +98,10 @@
         <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
-        <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
+        <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
 
         <!-- Jakarta SOAP (with Attachments) -->
-        <webservices.version>4.0.5</webservices.version>
+        <webservices.version>4.0.6</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
@@ -215,7 +215,7 @@
         <!-- ORB -->
         <pfl.version>5.1.0</pfl.version>
         <glassfish-corba.version>5.0.0</glassfish-corba.version>
-        <gmbal.version>4.1.0</gmbal.version>
+        <gmbal.version>4.1.1</gmbal.version>
 
         <shoal.version>4.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>

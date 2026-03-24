@@ -65,8 +65,7 @@
             <artifactId>sigtest-maven-plugin</artifactId>
         </dependency>
 
-        <!-- APIs referenced by TCK that do not require implementations for standalone
-        tests -->
+        <!-- APIs referenced by TCK that do not require implementations for standalone tests -->
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-api</artifactId>

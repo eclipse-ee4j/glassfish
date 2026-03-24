@@ -226,7 +226,7 @@
         <commons-io.version>2.21.0</commons-io.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.6.2.Final</jboss.logging.version>
+        <jboss.logging.version>3.6.3.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.9.1</asm.version>
         <jsch.version>2.27.9</jsch.version>

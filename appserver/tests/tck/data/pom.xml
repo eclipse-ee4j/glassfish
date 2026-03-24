@@ -70,14 +70,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- Test framework -->
             <dependency>
                 <groupId>org.jboss.shrinkwrap</groupId>
                 <artifactId>shrinkwrap-api</artifactId>
                 <version>1.2.6</version>
             </dependency>
-            
+
             <!-- The TCK -->
             <dependency>
                 <groupId>jakarta.data</groupId>
@@ -106,7 +106,6 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>1.7.36</version>
             </dependency>
 
         </dependencies>
@@ -194,7 +193,6 @@
                 <dependency>
                     <groupId>ee.omnifish.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-managed</artifactId>
-                    <version>2.1.1</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>

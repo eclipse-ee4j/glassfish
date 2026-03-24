@@ -38,40 +38,31 @@
     </modules>
 
     <properties>
-        <jnosql.version>1.1.11</jnosql.version>
         <glassfish.version.main>8</glassfish.version.main>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
 
-        <maven.compiler.release>17</maven.compiler.release>
-
         <jakarta.data.tck.version>1.0.1</jakarta.data.tck.version>
 
-        <sigtest.version>2.3</sigtest.version>
-        <weld.version>6.0.3.Final</weld.version>
-        <omnifish.arquillian.version>2.1.1</omnifish.arquillian.version>
-        <testcontainers.version>1.21.3</testcontainers.version>
+        <weld.version>6.0.4.Final</weld.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-<!--            <dependency>
-                <groupId>jakarta.tck</groupId>
-                <artifactId>glassfish-runner-bom</artifactId>
-                <version>11.0.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>-->
+            <!--
+                In 1.10.x ArquillianExtension lost handleTestExecutionException method,
+                however StandaloneExtension in the data-tck depends on it.
+                Note that until some test fails, you will not experience it.
+            -->
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.9.4.Final</version>
+                <version>1.9.5.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
-            <!-- Test framework -->
             <dependency>
                 <groupId>org.jboss.shrinkwrap</groupId>
                 <artifactId>shrinkwrap-api</artifactId>
@@ -83,12 +74,6 @@
                 <groupId>jakarta.data</groupId>
                 <artifactId>jakarta.data-tck</artifactId>
                 <version>${jakarta.data.tck.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <!-- Signature Test Plugin -->
@@ -103,11 +88,6 @@
                 <artifactId>testcontainers</artifactId>
                 <version>${testcontainers.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-jdk14</artifactId>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -115,16 +95,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.14.0</version>
-                    <configuration>
-                        <release>17</release>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.8.1</version>
                     <executions>
                         <execution>
                             <id>unpack-glassfish</id>
@@ -147,10 +118,8 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!-- Surefire plugin - Entrypoint for Junit5 -->
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.3</version>
                     <configuration>
                         <dependenciesToScan>
                             <dependency>jakarta.data:jakarta.data-tck</dependency>

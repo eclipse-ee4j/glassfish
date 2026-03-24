@@ -239,7 +239,7 @@
         <jackson-annotations.version>2.21</jackson-annotations.version>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.5.4</jettison.version>
+        <jettison.version>1.5.5</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
         <jna.version>5.18.1</jna.version>
 

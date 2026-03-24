@@ -1414,6 +1414,10 @@
                                                     <type>regex</type>
                                                     <version>.*-RC.*</version>
                                                 </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*payara.*</version>
+                                                </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
 
@@ -1935,6 +1939,10 @@
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>.*payara.*</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>

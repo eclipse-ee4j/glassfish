@@ -164,7 +164,7 @@
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
-        <openmq.version>6.7.0</openmq.version>
+        <openmq.version>6.8.0</openmq.version>
 
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.0.1</jakarta.data-api.version>

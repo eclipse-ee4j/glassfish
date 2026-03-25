@@ -33,7 +33,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>8.0.1-SNAPSHOT</version>
+    <version>8.0.1</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Nucleus Parent</name>
@@ -264,7 +264,7 @@
         <deploy.skip>false</deploy.skip>
 
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2026-02-04T18:29:07Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-03-25T12:36:28Z</project.build.outputTimestamp>
 
         <!-- Show to developers by default -->
         <checkstyle.consoleOutput>true</checkstyle.consoleOutput>

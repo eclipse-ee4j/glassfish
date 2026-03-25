@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>8.0.1-SNAPSHOT</version>
+        <version>8.0.1</version>
     </parent>
 
     <artifactId>glassfish-external-tck-servlet</artifactId>

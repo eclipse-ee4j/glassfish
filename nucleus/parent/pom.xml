@@ -2483,7 +2483,7 @@
                 <!-- Until we fix everything -->
                 <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
                 <release.projectName>Eclipse GlassFish</release.projectName>
-                <release.autopublish>false</release.autopublish>
+                <release.autoPublish>false</release.autoPublish>
                 <release.waitUntil>published</release.waitUntil>
             </properties>
         </profile>

@@ -24,13 +24,13 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.2</version>
         <relativePath />
     </parent>
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-main-aggregator</artifactId>
-    <version>8.0.1-SNAPSHOT</version>
+    <version>8.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Aggregator POM</name>
@@ -43,7 +43,7 @@
     </scm>
 
     <properties>
-        <project.build.outputTimestamp>2026-02-04T18:29:02Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-03-25T13:27:53Z</project.build.outputTimestamp>
     </properties>
 
     <build>

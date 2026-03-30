@@ -28,6 +28,8 @@
                     <exclude>META-INF/loggerinfo/*</exclude>
                     <exclude>module-info.class</exclude>
                     <exclude>META-INF/versions/*/module-info.class</exclude>
+                    <!-- Helidon's impl is sometimes first -->
+                    <exclude>META-INF/services/org.eclipse.microprofile.config.spi.ConfigProviderResolver</exclude>
                     <exclude>*.jar</exclude>
                 </excludes>
             </unpackOptions>
@@ -69,6 +71,13 @@
         </file>
     </files>
     <fileSets>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>META-INF/services/*</include>
+            </includes>
+            <outputDirectory></outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>target/jars/glassfish/lib</directory>
             <includes>

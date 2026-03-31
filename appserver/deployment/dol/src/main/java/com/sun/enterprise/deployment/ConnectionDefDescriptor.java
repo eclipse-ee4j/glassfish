@@ -29,9 +29,9 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Sheetal Vartak
  */
-public class ConnectionDefDescriptor extends Descriptor {
+public class ConnectionDefDescriptor extends Descriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private final OrderedSet<ConnectorConfigProperty> configProperties = new OrderedSet<>();
     private String managedConnectionFactoryImpl = "";
     private String connectionIntf = "";
@@ -55,25 +55,19 @@ public class ConnectionDefDescriptor extends Descriptor {
     }
 
 
-    /**
-     * Set of ConnectorConfigProperty
-     */
+    @Override
     public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
 
-    /**
-     * Add a configProperty to the set
-     */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.add(configProperty);
     }
 
 
-    /**
-     * Add a configProperty to the set
-     */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.remove(configProperty);
     }

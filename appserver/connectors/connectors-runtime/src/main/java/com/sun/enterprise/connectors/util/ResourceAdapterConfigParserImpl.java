@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,12 +20,11 @@ package com.sun.enterprise.connectors.util;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.OrderedSet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * This is Resource Adapter configuration parser. It parses the
@@ -78,13 +77,12 @@ public class ResourceAdapterConfigParserImpl implements ConnectorConfigParser {
         *                                 allraConfigPropsWithDefVals
         */
 
-        Set ddVals = desc.getConfigProperties();
+        OrderedSet<ConnectorConfigProperty> ddVals = desc.getConfigProperties();
         Properties mergedVals = null;
         String className = desc.getResourceAdapterClass();
         Properties introspectedVals = null;
         if (className != null && className.length() != 0) {
-            introspectedVals = configParserUtil.introspectJavaBean(
-                    className, ddVals, false, rarName);
+            introspectedVals = configParserUtil.introspectJavaBean(className, ddVals, false, rarName);
             mergedVals = configParserUtil.mergeProps(ddVals, introspectedVals);
         }
         return mergedVals;
@@ -99,14 +97,9 @@ public class ResourceAdapterConfigParserImpl implements ConnectorConfigParser {
         }
 
         List<String> confidentialProperties = new ArrayList<>();
-        Set configProperties = desc.getConfigProperties();
-        if(configProperties != null){
-            Iterator iterator = configProperties.iterator();
-            while(iterator.hasNext()){
-                ConnectorConfigProperty ccp = (ConnectorConfigProperty)iterator.next();
-                if(ccp.isConfidential()){
-                    confidentialProperties.add(ccp.getName());
-                }
+        for (ConnectorConfigProperty ccp : desc.getConfigProperties()) {
+            if (ccp.isConfidential()) {
+                confidentialProperties.add(ccp.getName());
             }
         }
         return confidentialProperties;

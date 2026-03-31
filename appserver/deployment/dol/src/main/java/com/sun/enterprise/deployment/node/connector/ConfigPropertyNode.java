@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +17,8 @@
 
 package com.sun.enterprise.deployment.node.connector;
 
-import com.sun.enterprise.deployment.AdminObject;
-import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.MessageListener;
+import com.sun.enterprise.deployment.ConnectorConfigPropertySetDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
@@ -47,25 +44,9 @@ public class ConfigPropertyNode extends DeploymentDescriptorNode<ConnectorConfig
 
     private ConnectorConfigProperty config;
 
-    public static Node write(Node parent, AdminObject descriptor) {
+    public static Node write(Node parent, ConnectorConfigPropertySetDescriptor descriptor) {
         return write(parent, descriptor.getConfigProperties());
     }
-
-
-    public static Node write(Node parent, ConnectionDefDescriptor descriptor) {
-        return write(parent, descriptor.getConfigProperties());
-    }
-
-
-    public static Node write(Node parent, ConnectorDescriptor descriptor) {
-        return write(parent, descriptor.getConfigProperties());
-    }
-
-
-    public static Node write(Node parent, MessageListener descriptor) {
-        return write(parent, descriptor.getConfigProperties());
-    }
-
 
     @Override
     public ConnectorConfigProperty getDescriptor() {

@@ -25,9 +25,9 @@ import org.glassfish.deployment.common.Descriptor;
  * @author Qingqing Ouyang
  * @author Sheetal Vartak
  */
-public class AdminObject extends Descriptor {
+public class AdminObject extends Descriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private String theInterface;
     private String theClass;
     private final OrderedSet<ConnectorConfigProperty> configProperties;
@@ -67,6 +67,7 @@ public class AdminObject extends Descriptor {
     /**
      * @return Set of EnvironmentProperty
      */
+    @Override
     public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
@@ -75,6 +76,7 @@ public class AdminObject extends Descriptor {
     /**
      * Add a configProperty to the set
      */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.add(configProperty);
     }
@@ -83,6 +85,7 @@ public class AdminObject extends Descriptor {
     /**
      * Add a configProperty to the set
      */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.remove(configProperty);
     }

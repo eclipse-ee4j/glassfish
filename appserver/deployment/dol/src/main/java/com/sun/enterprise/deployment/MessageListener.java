@@ -25,9 +25,9 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Sheetal Vartak
  */
-public class MessageListener extends Descriptor {
+public class MessageListener extends Descriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private String msgListenerType;
     private String activationSpecClass;
     private final OrderedSet<ConnectorConfigProperty> configProperties;
@@ -60,25 +60,19 @@ public class MessageListener extends Descriptor {
     }
 
 
-    /**
-     * add a connector-configProperty to the set
-     */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         this.configProperties.add(configProperty);
     }
 
 
-    /**
-     * remove a connector-configProperty from the set
-     */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         this.configProperties.remove(configProperty);
     }
 
 
-    /**
-     * @return Set of ConnectorConfigProperty
-     */
+    @Override
     public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }

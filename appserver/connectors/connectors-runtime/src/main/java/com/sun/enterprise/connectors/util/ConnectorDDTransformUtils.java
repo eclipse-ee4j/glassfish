@@ -162,10 +162,8 @@ public class ConnectorDDTransformUtils {
      *                   takes precedence over  values present in deployment descriptors.
      * @return Set of merged properties.
      */
-    public static Set<ConnectorConfigProperty> mergeProps(
-        List<Property> props,
-        Set<ConnectorConfigProperty> defaultMCFProps) {
-        return mergeProps(props, defaultMCFProps, new Properties());
+    public static Set<ConnectorConfigProperty> mergeProps(List<Property> props, ConnectorDescriptor descriptor) {
+        return mergeProps(props, descriptor.getConfigProperties(), new Properties());
     }
 
     /**

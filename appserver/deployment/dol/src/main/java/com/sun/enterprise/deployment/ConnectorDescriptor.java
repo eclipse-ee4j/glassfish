@@ -47,9 +47,9 @@ import org.glassfish.deployment.common.DescriptorVisitor;
  * @author Tony Ng
  * @author Qingqing Ouyang
  */
-public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
+public class ConnectorDescriptor extends CommonResourceBundleDescriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private String connectorDescription = "";
     private String vendorName = "";
     private String eisType = "";
@@ -159,23 +159,22 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         resourceAdapterClass = raClass;
     }
 
-    /**
-     * Set of ConnectorConfigProperty
-     */
+    public void setConfigProperties(Set<ConnectorConfigProperty> newProperties) {
+        configProperties.clear();
+        configProperties.addAll(newProperties);
+    }
+
+    @Override
     public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
-    /**
-     * add a configProperty to the set
-     */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         this.configProperties.add(configProperty);
     }
 
-    /**
-     * remove a configProperty from the set
-     */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.remove(configProperty);
     }

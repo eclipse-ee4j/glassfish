@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -333,24 +333,19 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
      * @return merged set of config properties
      */
     protected Set<ConnectorConfigProperty> mergeRAConfiguration(ResourceAdapterConfig raConfig, List<Property> raConfigProps) {
-        Set<ConnectorConfigProperty> mergedProps;
         if (raConfig != null) {
             raConfigProps = raConfig.getProperty();
         }
-        mergedProps = ConnectorDDTransformUtils.mergeProps(raConfigProps, getDescriptor().getConfigProperties());
-        return mergedProps;
+        return ConnectorDDTransformUtils.mergeProps(raConfigProps, getDescriptor());
     }
 
     private void logMergedProperties(Set<ConnectorConfigProperty> mergedProps) {
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Passing in the following properties " +
-                    "before calling RA.start of " + this.moduleName_);
             StringBuilder b = new StringBuilder();
             for (ConnectorConfigProperty element : mergedProps) {
-                b.append("\nName: " + element.getName()
-                        + " Value: " + element.getValue());
+                b.append("\nName: " + element.getName() + " Value: " + element.getValue());
             }
-            _logger.fine(b.toString());
+            _logger.fine("Passing in the following properties before calling RA.start of " + this.moduleName_ + b);
         }
     }
 
@@ -410,15 +405,13 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
             throw new ConnectorRuntimeException(msg);
         }
 
-        AdministeredObjectResource aor = new AdministeredObjectResource(resourceInfo);
+        final AdministeredObjectResource aor = new AdministeredObjectResource(resourceInfo);
         aor.initialize(adminObject);
         aor.setResourceAdapter(connectorName);
 
-        ConnectorConfigProperty[] envProps = adminObject.getConfigProperties().toArray(ConnectorConfigProperty[]::new);
-
-        //Add default config properties to aor
+        // Add default config properties to aor
         // Override them if same config properties are provided by the user
-        for (ConnectorConfigProperty envProp : envProps) {
+        for (ConnectorConfigProperty envProp : adminObject.getConfigProperties()) {
             String name = envProp.getName();
             String userValue = (String) props.remove(name);
             if (userValue == null) {
@@ -428,10 +421,9 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
             }
         }
 
-        //Add non-default config properties provided by the user to aor
-        Iterator<Object> iter = props.keySet().iterator();
-        while (iter.hasNext()) {
-            String name = (String) iter.next();
+        // Add non-default config properties provided by the user to aor
+        final Set<String> keys = props.stringPropertyNames();
+        for (String name : keys) {
             String userValue = props.getProperty(name);
             if (userValue != null) {
                 aor.addConfigProperty(new ConnectorConfigProperty(name, userValue, userValue));

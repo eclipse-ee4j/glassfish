@@ -264,18 +264,18 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Add a configProperty to the set
+     * @param configProperty a configProperty to add to the set
      */
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
-        getConnectionDef().getConfigProperties().add(configProperty);
+        getConnectionDef().addConfigProperty(configProperty);
     }
 
 
     /**
-     * Add a configProperty to the set
+     * @param configProperty to remove
      */
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
-        getConnectionDef().getConfigProperties().remove(configProperty);
+        getConnectionDef().removeConfigProperty(configProperty);
     }
 
 

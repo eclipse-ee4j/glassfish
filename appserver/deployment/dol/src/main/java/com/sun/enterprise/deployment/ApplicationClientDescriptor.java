@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,11 +75,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * object that must be saved.
      */
     public boolean hasRuntimeInformation() {
-        for (NamedDescriptor next : this.getNamedDescriptors()) {
-            if (!next.getJndiName().isEmpty()) {
+        for (NamedDescriptor namedDescriptor : getNamedDescriptors()) {
+            if (!namedDescriptor.getJndiName().isEmpty()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -102,10 +103,11 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * @return the fq Java clasname of this application client [{0}].
      */
     public String getMainClassName() {
-        if (this.mainClassName == null) {
-            this.mainClassName = "";
+        if (mainClassName == null) {
+            mainClassName = "";
         }
-        return this.mainClassName;
+
+        return mainClassName;
     }
 
     /**
@@ -149,11 +151,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public Set<EnvironmentProperty> getEnvironmentProperties() {
-        if (this.environmentProperties == null) {
-            this.environmentProperties = new OrderedSet<>();
+        if (environmentProperties == null) {
+            environmentProperties = new OrderedSet<>();
         }
-        this.environmentProperties = new OrderedSet<>(this.environmentProperties);
-        return this.environmentProperties;
+
+        environmentProperties = new OrderedSet<>(environmentProperties);
+        return environmentProperties;
     }
 
     /**
@@ -162,11 +165,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public EnvironmentProperty getEnvironmentPropertyByName(String name) {
-        for (EnvironmentProperty ev : this.getEnvironmentProperties()) {
-            if (ev.getName().equals(name)) {
-                return ev;
+        for (EnvironmentProperty environmentProperty : getEnvironmentProperties()) {
+            if (environmentProperty.getName().equals(name)) {
+                return environmentProperty;
             }
         }
+
         throw new IllegalArgumentException(
             localStrings.getLocalString("enterprise.deployment.exceptionappclienthasnoenvpropertybyname",
                 "This application client [{0}] has no environment property by the name of [{1}]",
@@ -179,7 +183,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public void addEnvironmentProperty(EnvironmentProperty environmentProperty) {
-        this.getEnvironmentProperties().add(environmentProperty);
+        getEnvironmentProperties().add(environmentProperty);
     }
 
     /**
@@ -187,7 +191,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
-        this.getEnvironmentProperties().remove(environmentProperty);
+        getEnvironmentProperties().remove(environmentProperty);
     }
 
     /**
@@ -195,27 +199,24 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
-        if (this.ejbReferences == null) {
-            this.ejbReferences = new OrderedSet<>();
+        if (ejbReferences == null) {
+            ejbReferences = new OrderedSet<>();
         }
-        this.ejbReferences = new OrderedSet<>(this.ejbReferences);
-        return this.ejbReferences;
-    }
 
+        ejbReferences = new OrderedSet<>(ejbReferences);
+        return ejbReferences;
+    }
 
     @Override
     public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
-        this.getEjbReferenceDescriptors().add(ejbReference);
+        getEjbReferenceDescriptors().add(ejbReference);
         ejbReference.setReferringBundleDescriptor(this);
-
     }
-
 
     @Override
     public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
-        this.getEjbReferenceDescriptors().remove(ejbReference);
+        getEjbReferenceDescriptors().remove(ejbReference);
         ejbReference.setReferringBundleDescriptor(null);
-
     }
 
     @Override
@@ -226,14 +227,16 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
     @Override
     public void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
         String className = postConstructDesc.getLifecycleCallbackClass();
+
         boolean found = false;
-        for (LifecycleCallbackDescriptor next : getPostConstructDescriptors()) {
-            if ( (next.getLifecycleCallbackClass() != null) &&
-                next.getLifecycleCallbackClass().equals(className)) {
+        for (LifecycleCallbackDescriptor postConstructDescriptor : getPostConstructDescriptors()) {
+            if ( (postConstructDescriptor.getLifecycleCallbackClass() != null) &&
+                postConstructDescriptor.getLifecycleCallbackClass().equals(className)) {
                 found = true;
                 break;
             }
         }
+
         if (!found) {
             getPostConstructDescriptors().add(postConstructDesc);
         }
@@ -260,6 +263,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
                 break;
             }
         }
+
         if (!found) {
             getPreDestroyDescriptors().add(preDestroyDesc);
         }
@@ -304,11 +308,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
-        for (ServiceReferenceDescriptor srd : this.getServiceReferenceDescriptors()) {
-            if (srd.getName().equals(name)) {
-                return srd;
+        for (ServiceReferenceDescriptor serviceReference : getServiceReferenceDescriptors()) {
+            if (serviceReference.getName().equals(name)) {
+                return serviceReference;
             }
         }
+
         throw new IllegalArgumentException(
             localStrings.getLocalString("enterprise.deployment.exceptionappclienthasnoservicerefbyname",
                 "This application client [{0}] has no service reference by the name of [{1}]",
@@ -318,11 +323,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
 
     @Override
     public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
-        if (this.messageDestReferences == null) {
-            this.messageDestReferences = new OrderedSet<>();
+        if (messageDestReferences == null) {
+            messageDestReferences = new OrderedSet<>();
         }
-        this.messageDestReferences = new OrderedSet<>(this.messageDestReferences);
-        return this.messageDestReferences;
+
+        messageDestReferences = new OrderedSet<>(messageDestReferences);
+        return messageDestReferences;
     }
 
     @Override
@@ -344,11 +350,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name) {
-        for (MessageDestinationReferenceDescriptor mdr : this.getMessageDestinationReferenceDescriptors()) {
-            if (mdr.getName().equals(name)) {
-                return mdr;
+        for (MessageDestinationReferenceDescriptor messageDestinationReference : getMessageDestinationReferenceDescriptors()) {
+            if (messageDestinationReference.getName().equals(name)) {
+                return messageDestinationReference;
             }
         }
+
         throw new IllegalArgumentException(localStrings.getLocalString("exceptionappclienthasnomsgdestrefbyname",
             "This application client [{0}] has no message destination reference by the name of [{1}]",
             new Object[] {getName(), name}));
@@ -360,22 +367,21 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
-        if (this.resourceEnvReferences == null) {
-            this.resourceEnvReferences = new OrderedSet<>();
+        if (resourceEnvReferences == null) {
+            resourceEnvReferences = new OrderedSet<>();
         }
-        return this.resourceEnvReferences = new OrderedSet<>(this.resourceEnvReferences);
+
+        return resourceEnvReferences = new OrderedSet<>(resourceEnvReferences);
     }
 
     @Override
     public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
-        this.getResourceEnvReferenceDescriptors().add(resourceEnvReference);
-
+        getResourceEnvReferenceDescriptors().add(resourceEnvReference);
     }
 
     @Override
     public void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
-        this.getResourceEnvReferenceDescriptors().remove(resourceEnvReference);
-
+        getResourceEnvReferenceDescriptors().remove(resourceEnvReference);
     }
 
     /**
@@ -383,11 +389,12 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * if it is not found.
      */
     public EjbReferenceDescriptor getEjbReferenceByName(String name) {
-        for (EjbReferenceDescriptor ejr : this.getEjbReferenceDescriptors()) {
-            if (ejr.getName().equals(name)) {
-                return ejr;
+        for (EjbReferenceDescriptor ejbReference : getEjbReferenceDescriptors()) {
+            if (ejbReference.getName().equals(name)) {
+                return ejbReference;
             }
         }
+
         throw new IllegalArgumentException(localStrings.getLocalString(
             "exceptionappclienthasnoejbrefbyname",
             "This application client [{0}] has no ejb reference by the name of [{1}]",
@@ -410,6 +417,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
                 return next;
             }
         }
+
         throw new IllegalArgumentException(localStrings.getLocalString(
             "exceptionappclienthasnoentitymgrfactoryrefbyname",
             "This application client [{0}] has no entity manager factory reference by the name of [{1}]",
@@ -453,11 +461,13 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
 
     @Override
     public EjbReferenceDescriptor getEjbReference(String name) {
-        for (EjbReferenceDescriptor ejr : this.getEjbReferenceDescriptors()) {
-            if (ejr.getName().equals(name)) {
-                return ejr;
+        for (EjbReferenceDescriptor ejbReference : getEjbReferenceDescriptors()) {
+            if (ejbReference.getName().equals(name) ||
+               (ejbReference.getLinkName() != null && ejbReference.getLinkName().equals(name))) {
+                return ejbReference;
             }
         }
+
         throw new IllegalArgumentException(localStrings.getLocalString(
             "exceptionappclienthasnoejbrefbyname",
             "This application client [{0}] has no ejb reference by the name of [{1}]",
@@ -471,6 +481,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
                 return jdr;
             }
         }
+
         throw new IllegalArgumentException(localStrings.getLocalString(
             "enterprise.deployment.exceptionappclienthasnoesourceenvrefbyname",
             "This application client [{0}] has no resource environment reference by the name of [{1}]",
@@ -505,8 +516,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
 
     @Override
     public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
-        this.getResourceReferenceDescriptors().add(resourceReference);
-
+        getResourceReferenceDescriptors().add(resourceReference);
     }
 
     /**
@@ -514,8 +524,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
-        this.getResourceReferenceDescriptors().remove(resourceReference);
-
+        getResourceReferenceDescriptors().remove(resourceReference);
     }
 
     /**

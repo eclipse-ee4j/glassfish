@@ -298,9 +298,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     //
 
 
-    /**
-     * @return Set of EnvironmentProperty elements.
-     */
     @Override
     public Set<EnvironmentProperty> getActivationConfigProperties() {
         return activationConfig.getActivationConfig();

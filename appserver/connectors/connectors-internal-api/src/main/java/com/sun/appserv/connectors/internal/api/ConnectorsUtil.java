@@ -459,23 +459,19 @@ public class ConnectorsUtil {
         Set<EnvironmentProperty> mergedProps = new HashSet<>();
         Set<String> runtimePropNames = new HashSet<>();
         Set<EnvironmentProperty> runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
-        if (runtimeProps != null) {
-            for (EnvironmentProperty entry : runtimeProps) {
-                mergedProps.add(entry);
-                String propName = entry.getName();
-                runtimePropNames.add(propName);
-            }
+        for (EnvironmentProperty entry : runtimeProps) {
+            mergedProps.add(entry);
+            String propName = entry.getName();
+            runtimePropNames.add(propName);
         }
 
         Set<EnvironmentProperty> standardProps = msgDesc.getActivationConfigProperties();
-        if (standardProps != null) {
-            for (EnvironmentProperty entry : standardProps) {
-                String propName = entry.getName();
-                if (runtimePropNames.contains(propName)) {
-                    continue;
-                }
-                mergedProps.add(entry);
+        for (EnvironmentProperty entry : standardProps) {
+            String propName = entry.getName();
+            if (runtimePropNames.contains(propName)) {
+                continue;
             }
+            mergedProps.add(entry);
         }
 
         return mergedProps;

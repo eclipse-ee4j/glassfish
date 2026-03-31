@@ -20,8 +20,6 @@ package org.glassfish.ejb.deployment.descriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.OrderedSet;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -47,7 +45,7 @@ public final class ActivationConfigDescriptor extends Descriptor {
         toStringBuffer.append("Activation Config: ").append(activationConfig);
     }
 
-    public Set<EnvironmentProperty> getActivationConfig() {
+    public OrderedSet<EnvironmentProperty> getActivationConfig() {
         return activationConfig;
     }
 }

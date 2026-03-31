@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
-        <artifactId>microprofile</artifactId>
+        <artifactId>microprofile-tests</artifactId>
         <version>8.0.2-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.embedded.microprofile</groupId>
-    <artifactId>config</artifactId>
+    <artifactId>microprofile-config-test</artifactId>
     <name>Test MicroProfile Config</name>
 
     <dependencies>
@@ -34,7 +34,7 @@
 
     <profiles>
         <profile>
-            <id>run-with-uber-jar</id>
+            <id>embedded-all</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -46,13 +46,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>run-with-uber-jar-web</id>
-            <activation>
-                <property>
-                    <name>build</name>
-                    <value>uber-jar-web</value>
-                </property>
-            </activation>
+            <id>embedded-web</id>
             <dependencies>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
@@ -61,21 +55,14 @@
             </dependencies>
         </profile>
         <profile>
-            <id>run-with-shell-jar</id>
-            <activation>
-                <property>
-                    <name>build</name>
-                    <value>static-shell</value>
-                </property>
-            </activation>
+            <id>embedded-static-shell-jar</id>
             <dependencies>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-static-shell</artifactId>
                     <version>${project.version}</version>
                     <scope>system</scope>
-                    <systemPath>${env.S1AS_HOME}/lib/embedded/glassfish-embedded-static-shell.jar
-                    </systemPath>
+                    <systemPath>${env.S1AS_HOME}/lib/embedded/glassfish-embedded-static-shell.jar</systemPath>
                 </dependency>
             </dependencies>
         </profile>

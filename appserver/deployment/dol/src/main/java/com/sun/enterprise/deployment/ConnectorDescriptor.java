@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,31 +58,31 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     private LicenseDescriptor licenseDescriptor;
 
     // connector1.0 old stuff, need clean up
-    private final Set<ConnectorConfigProperty> configProperties;
-    private Set<SecurityPermission> securityPermissions;
+    private final OrderedSet<ConnectorConfigProperty> configProperties;
+    private OrderedSet<SecurityPermission> securityPermissions;
 
     // connector1.5 begin
     private String resourceAdapterClass = "";
     private OutboundResourceAdapter outboundRA;
     private InboundResourceAdapter inboundRA;
-    private final Set<AdminObject> adminObjects;
+    private final OrderedSet<AdminObject> adminObjects;
 
     private SunConnector sunConnector;
 
     // following are all the get and set methods for the
     // various variables listed above
-    private final Set<String> requiredWorkContexts;
+    private final OrderedSet<String> requiredWorkContexts;
 
     // book keeping annotations that cannot be processed up-front. These will be processed
     // during validation phase of the descriptor
-    private transient Set<AnnotationInfo> connectorAnnotations;
+    private transient OrderedSet<AnnotationInfo> connectorAnnotations;
 
     private boolean validConnectorAnnotationProcessed;
 
     private transient Map<String, Set<AnnotationInfo>> configPropertyAnnotations;
 
     // default resource names for this resource-adpater
-    private final Set<SimpleJndiName> defaultResourceNames;
+    private final OrderedSet<SimpleJndiName> defaultResourceNames;
 
     private transient Set<String> configPropertyProcessedClasses;
 
@@ -98,7 +98,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
 
-    public Set<String> getRequiredWorkContexts() {
+    public OrderedSet<String> getRequiredWorkContexts() {
         return this.requiredWorkContexts;
     }
 
@@ -122,7 +122,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * Set of SecurityPermission objects
      */
-    public Set<SecurityPermission> getSecurityPermissions() {
+    public OrderedSet<SecurityPermission> getSecurityPermissions() {
         if (securityPermissions == null) {
             securityPermissions = new OrderedSet<>();
         }
@@ -162,7 +162,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * Set of ConnectorConfigProperty
      */
-    public Set<ConnectorConfigProperty> getConfigProperties() {
+    public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
@@ -207,7 +207,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * @return admin objects
      */
-    public Set<AdminObject> getAdminObjects() {
+    public OrderedSet<AdminObject> getAdminObjects() {
         return adminObjects;
     }
 
@@ -620,7 +620,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         connectorAnnotations.add(c);
     }
 
-    public Set<AnnotationInfo> getConnectorAnnotations(){
+    public OrderedSet<AnnotationInfo> getConnectorAnnotations(){
         return connectorAnnotations;
     }
 
@@ -663,7 +663,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * Used while detecting RARs referred by deployed applications
      * @return default resources' names
      */
-    public Collection<SimpleJndiName> getDefaultResourcesNames(){
+    public OrderedSet<SimpleJndiName> getDefaultResourcesNames(){
         return defaultResourceNames;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -81,11 +81,11 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
      */
     public static final String DELETE = "DELETE";
 
-    private Set<InitializationParameter> initializationParameters;
-    private final Set<String> urlPatterns = new UrlPatternsSet();
+    private OrderedSet<InitializationParameter> initializationParameters;
+    private final UrlPatternsSet urlPatterns = new UrlPatternsSet();
     private String canonicalName;
     private Integer loadOnStartUp;
-    private Set<SecurityRoleReference> securityRoleReferences;
+    private OrderedSet<SecurityRoleReference> securityRoleReferences;
 
     private RunAsIdentityDescriptor runAs;
     private WebBundleDescriptor webBundleDescriptor;
@@ -128,7 +128,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
 
 
     @Override
-    public Set<InitializationParameter> getInitializationParameterSet() {
+    public OrderedSet<InitializationParameter> getInitializationParameterSet() {
         if (this.initializationParameters == null) {
             this.initializationParameters = new OrderedSet<>();
         }
@@ -184,7 +184,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
      * @return the set of URL pattern aliases for this component.
      */
     @Override
-    public Set<String> getUrlPatternsSet() {
+    public OrderedSet<String> getUrlPatternsSet() {
         return urlPatterns;
     }
 
@@ -269,7 +269,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
     }
 
     @Override
-    public Set<SecurityRoleReference> getSecurityRoleReferenceSet() {
+    public OrderedSet<SecurityRoleReference> getSecurityRoleReferenceSet() {
         if (this.securityRoleReferences == null) {
             this.securityRoleReferences = new OrderedSet<>();
         }

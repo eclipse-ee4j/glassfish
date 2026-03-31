@@ -226,8 +226,8 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
      * @return set of service-ref from ejbs contained in this bundle this bundle or empty set
      *         if none
      */
-    public Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
-        Set<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
+    public OrderedSet<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
+        OrderedSet<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
         for (EjbDescriptor ejb : ejbs) {
             serviceRefs.addAll(ejb.getServiceReferenceDescriptors());
         }

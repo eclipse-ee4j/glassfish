@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -34,7 +32,7 @@ import org.glassfish.deployment.common.Descriptor;
 public class ConnectionDefDescriptor extends Descriptor {
 
     private static final long serialVersionUID = 1L;
-    private final Set<ConnectorConfigProperty> configProperties = new OrderedSet<>();
+    private final OrderedSet<ConnectorConfigProperty> configProperties = new OrderedSet<>();
     private String managedConnectionFactoryImpl = "";
     private String connectionIntf = "";
     private String connectionImpl = "";
@@ -60,7 +58,7 @@ public class ConnectionDefDescriptor extends Descriptor {
     /**
      * Set of ConnectorConfigProperty
      */
-    public Set<ConnectorConfigProperty> getConfigProperties() {
+    public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,10 +44,11 @@ public class OutboundResourceAdapter extends Descriptor {
 
     private static final long serialVersionUID = 1L;
 
+    private final OrderedSet<AuthMechanism> authMechanisms;
+    private final OrderedSet<ConnectionDefDescriptor> connectionDefs;
+
     private TransactionSupportLevel transactionSupport = LocalTransaction;
-    private Set<AuthMechanism> authMechanisms;
     private boolean reauthenticationSupport;
-    private final Set<ConnectionDefDescriptor> connectionDefs;
 
     /*Set variables indicates that a particular attribute is set by DD processing so that
       annotation processing need not (must not) set the values from annotation */
@@ -123,12 +124,9 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Set of AuthMechanism objects
+     * @return Set of AuthMechanism objects
      */
-    public Set<AuthMechanism> getAuthMechanisms() {
-        if (authMechanisms == null) {
-            authMechanisms = new OrderedSet<>();
-        }
+    public OrderedSet<AuthMechanism> getAuthMechanisms() {
         return authMechanisms;
     }
 
@@ -223,7 +221,7 @@ public class OutboundResourceAdapter extends Descriptor {
     /**
      * @return the set of connection definitions
      */
-    public Set<ConnectionDefDescriptor> getConnectionDefs() {
+    public OrderedSet<ConnectionDefDescriptor> getConnectionDefs() {
         return connectionDefs;
     }
 

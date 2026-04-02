@@ -168,7 +168,7 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                               tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
                               '''
                               sh """
-                              mvn -B -e clean verify -Pci -pl :${job} -amd
+                              mvn -B -e clean verify -Psnapshots -pl :${job} -amd
                               """
                            }
                         } finally {

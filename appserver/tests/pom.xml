@@ -35,7 +35,7 @@
     <name>GlassFish Tests</name>
 
     <properties>
-        <testcontainers.version>2.0.3</testcontainers.version>
+        <testcontainers.version>2.0.4</testcontainers.version>
     </properties>
 
     <dependencyManagement>

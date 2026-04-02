@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,6 @@ import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.grizzly.servlet.ServletHandler;
 import org.glassfish.web.deployment.util.WebServerInfo;
 
 /**
@@ -51,7 +50,7 @@ public class WebServicesApplication implements ApplicationContainer<Object> {
 
     private ArrayList<EjbEndpoint> ejbendpoints;
 
-    private final ServletHandler httpHandler;
+    private final EjbWSAdapter httpHandler;
 
     private final RequestDispatcher dispatcher;
 

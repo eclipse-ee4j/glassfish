@@ -153,6 +153,7 @@
                         <DynamicImport-Package>org.glassfish.flashlight.provider</DynamicImport-Package>
                         <Import-Package>
                             jakarta.ejb;resolution:=optional,
+                            org.glassfish.grizzly.servlet;version="4",
                             *
                         </Import-Package>
                     </instructions>

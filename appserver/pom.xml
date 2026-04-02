@@ -75,7 +75,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.3.3</helidon-config.version>
+        <helidon-config.version>4.4.0</helidon-config.version>
 
 
         <!-- MicroProfile Health -->

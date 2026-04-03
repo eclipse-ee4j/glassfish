@@ -28,15 +28,16 @@ The following topics are addressed here:
 
 == Introduction to Embedded {productName}
 
-Embedded {productName} enables you to use
-{productName} as a library or run applications from command line. Embedded {productName} also enables
-you to run {productName} inside any Virtual Machine for the Java
+Embedded {productName} enables you to run {productName} as a
+self-contained executable JAR from the command line. It can also be used as a
+library embedded in your application, inside any Virtual Machine for the Java
 platform (Java Virtual Machine or JVM).
 
 No installation or configuration of embedded {productName} is
-required. The ability to run {productName}
-without installation or configuration simplifies the process of bundling
-{productName} with applications or running applications from command line.
+required. Running {productName} without installation or configuration
+makes it well suited for production deployments in cloud environments,
+containerized workloads, and CI/CD pipelines, as well as for local
+development and integration testing.
 
 
 You can use embedded {productName} in the following ways:
@@ -50,11 +51,10 @@ Embeddable API with Embedded {productName}])
 
 Embedded {productName} provides a plug-in for
 http://maven.apache.org/[Apache Maven] (`http://maven.apache.org/`).
-This plug-in simplifies the testing of applications by enabling you to
-build an application and run it with {productName} on a single
-system. Testing and debugging are simplified because the need for an
-installed and configured {productName} is eliminated. Therefore, you
-can run unit tests automatically in every build.
+This plug-in enables you to build and run applications with {productName}
+on a single system, without requiring a separate installed and configured
+{productName}. This is useful both for production builds and for running
+integration tests as part of the build process.
 
 
 [NOTE]
@@ -2175,8 +2175,13 @@ API is used. To disable weaving, set the
 
 == Restrictions for Embedded {productName}
 
-The `glassfish-embedded-web.jar` file for embedded {productName}
-supports only these features of nonembedded {productName}:
+Embedded {productName} is intentionally designed as a lighter runtime
+suitable for cloud deployments, containerized environments, and
+self-contained applications. The following describes the scope of each
+JAR variant.
+
+The `glassfish-embedded-web.jar` file provides a focused web runtime
+that includes:
 
 * The following web technologies of the Jakarta EE platform:
 
@@ -2192,7 +2197,7 @@ supports only these features of nonembedded {productName}:
 
 The `glassfish-embedded-all.jar` and
 `glassfish-embedded-static-shell.jar` files support all features of
-nonembedded {productName} with these exceptions:
+nonembedded {productName} with these exceptions that are intentionally not included to keep it lighter than {productName} Server :
 
 * Installers
 * Administration Console

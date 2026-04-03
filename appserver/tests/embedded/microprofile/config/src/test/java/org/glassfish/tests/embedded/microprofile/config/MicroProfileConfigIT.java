@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
 
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
@@ -37,9 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test MicroProfile Config functionality in embedded GlassFish
  */
-public class MicroProfileConfigTest {
+public class MicroProfileConfigIT {
 
-    private static final String PROJECT_DIR = System.getProperty("basedir", System.getProperty("user.dir"));
+    private static final Path PROJECT_DIR = detectBasedir();
     private static final int HTTP_PORT = 8080;
     private static final String APP_NAME = "config";
 
@@ -53,10 +54,8 @@ public class MicroProfileConfigTest {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish(props);
         glassfish.start();
 
-        File classesDir = new File(PROJECT_DIR, "target/classes");
-
         ScatteredArchive sa = new ScatteredArchive(APP_NAME, ScatteredArchive.Type.WAR);
-        sa.addClassPath(classesDir);
+        sa.addClassPath(PROJECT_DIR.resolve(Path.of("target", "classes")).toFile());
         URI warURI = sa.toURI();
 
         Deployer deployer = glassfish.getDeployer();
@@ -65,13 +64,14 @@ public class MicroProfileConfigTest {
 
     @Test
     void testConfigValueInjection() throws Exception {
-        URL servlet = new URL("http://localhost:" + HTTP_PORT + "/" + APP_NAME + "/config");
+        URL servlet = URI.create("http://localhost:" + HTTP_PORT + "/" + APP_NAME + "/config").toURL();
         URLConnection connection = servlet.openConnection();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String response = reader.readLine();
-        reader.close();
-
+        String response;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            response = reader.readLine();
+        }
         assertEquals("Hello MicroProfile,Injected", response);
+
     }
 
     @AfterAll
@@ -83,4 +83,19 @@ public class MicroProfileConfigTest {
             glassfish.dispose();
         }
     }
+
+    private static Path detectBasedir() {
+        // Maven would set this property.
+        final String basedir = System.getProperty("basedir");
+        if (basedir != null) {
+            return new File(basedir).toPath().toAbsolutePath();
+        }
+        // Maybe we are standing in the basedir.
+        final File target = new File("target");
+        if (target.exists()) {
+            return target.toPath().toAbsolutePath().getParent();
+        }
+        // Eclipse IDE sometimes uses target as the current dir.
+        return new File(".").toPath().toAbsolutePath().getParent();
+   }
 }

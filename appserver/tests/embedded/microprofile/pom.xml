@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>org.glassfish.tests.embedded</groupId>
-    <artifactId>microprofile</artifactId>
+    <artifactId>microprofile-tests</artifactId>
     <packaging>pom</packaging>
     <name>MicroProfile Tests</name>
 

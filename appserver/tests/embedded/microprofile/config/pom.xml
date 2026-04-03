@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
-        <artifactId>microprofile</artifactId>
+        <artifactId>microprofile-tests</artifactId>
         <version>9.0.0-SNAPSHOT</version>
     </parent>
 

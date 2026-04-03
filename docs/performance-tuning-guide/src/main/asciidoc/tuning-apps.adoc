@@ -605,7 +605,7 @@ If you have a legacy rich-client application that directly uses the
 CosNaming service (not a recommended configuration), then you must
 generate the stubs for your application explicitly using RMIC. For more
 information, see the xref:troubleshooting-guide.adoc#GSTSG[{productName}
-Troubleshooting Guide] for more details.
+Server Troubleshooting Guide] for more details.
 
 [[remove-unneeded-stateful-session-beans]]
 

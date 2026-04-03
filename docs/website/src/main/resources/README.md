@@ -16,7 +16,10 @@
 
 **Eclipse GlassFish** is a lightweight yet powerful open-source application server that fully implements the **[Jakarta EE](compatibility)** platform. Designed for flexibility, scalability, and reliability, it provides a production-ready environment that adheres strictly to open standards without proprietary dependencies.
 
-GlassFish delivers comprehensive support for all required and optional **Jakarta EE APIs**, successfully passing all corresponding **Technology Compatibility Kits (TCKs)**. It includes an advanced administration console, clustering capabilities, and a rich set of tools that streamline both development and deployment. Continuously maintained under the **Eclipse Foundation**, GlassFish remains a robust and standards-compliant choice for modern enterprise applications.
+GlassFish delivers comprehensive support for all required and optional **Jakarta EE APIs**, successfully passing all corresponding **Technology Compatibility Kits (TCKs)**. Continuously maintained under the **Eclipse Foundation**, GlassFish comes in two deployment modes:
+
+- **GlassFish Server** — the full application server with administration console, clustering, and high availability, designed for robust on-premise and traditional enterprise deployments.
+- **Embedded GlassFish** — a self-contained executable JAR requiring no installation, designed for cloud-native deployments, containers, microservices, integration testing, and embedding directly into applications. Run with `java -jar glassfish-embedded-all.jar`.
 
 <style>
 /* Inline CSS to create banner-style panels in a responsive grid */
@@ -86,8 +89,8 @@ GlassFish delivers comprehensive support for all required and optional **Jakarta
 </div>
 
 <div class="gf-card">
-<h3>Cloud Ready</h3>
-<p>Container-friendly and tunable for cost-efficient cloud deployment.</p>
+<h3>Cloud-Native</h3>
+<p>Embedded GlassFish runs as a single executable JAR — no installation needed. Ideal for containers, cloud, and microservices.</p>
 </div>
 
 </div>

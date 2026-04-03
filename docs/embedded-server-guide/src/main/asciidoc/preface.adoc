@@ -52,8 +52,8 @@ the software and the documentation and includes a comprehensive,
 table-based summary of the supported hardware, operating system, Java
 Development Kit (JDK), and database drivers.
 
-|xref:quick-start-guide.adoc#GSQSG[Quick Start Guide]
-|Explains how to get started with the {productName} product.
+|xref:quick-start-guide.adoc#GSQSG[Server Quick Start Guide]
+|Explains how to get started with the {productName} Server.
 
 |xref:installation-guide.adoc#GSING[Installation Guide]
 |Explains how to install the software and its components.
@@ -73,7 +73,7 @@ from the command line by using the xref:reference-manual.adoc#asadmin[`asadmin`(
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
-|xref:security-guide.adoc#GSSCG[Security Guide]
+|xref:security-guide.adoc#GSSCG[Server Security Guide]
 |Provides instructions for configuring and administering {productName} security.
 
 |xref:application-deployment-guide.adoc#GSDPG[Application Deployment Guide]
@@ -104,7 +104,7 @@ scalability through failover and load balancing.
 |xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide]
 |Explains how to optimize the performance of {productName}.
 
-|xref:troubleshooting-guide.adoc#GSTSG[Troubleshooting Guide]
+|xref:troubleshooting-guide.adoc#GSTSG[Server Troubleshooting Guide]
 |Describes common problems that you might encounter when using {productName} and explains how to solve them.
 
 |xref:error-messages-reference.adoc#GSEMR[Error Message Reference]

@@ -92,7 +92,7 @@ asadmin-options::
     an implementation of the javax.security.auth.spi.LoginModule
     interface, and then plug the module into a `jaas-context`. For more
     information, see "xref:security-guide.adoc#custom-authentication-of-client-certificate-in-ssl-mutual-authentication[Custom Authentication of Client
-    Certificate in SSL Mutual Authentication]" in {productName} Security Guide.
+    Certificate in SSL Mutual Authentication]" in {productName} Server Security Guide.
 
   * You can specify the following properties for `JDBCRealm`:
 

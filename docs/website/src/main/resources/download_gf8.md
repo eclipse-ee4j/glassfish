@@ -21,9 +21,9 @@ Eclipse GlassFish is an application server, implementing Jakarta EE. This releas
   * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/8.0.0)
 * [Eclipse GlassFish 8.0.0, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-8.0.0.zip) (zip)
   * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/8.0.0)
-* [Eclipse GlassFish Embedded 8.0.0, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.0/glassfish-embedded-all-8.0.0.jar) (jar)
+* [Eclipse GlassFish Embedded 8.0.0, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.0/glassfish-embedded-all-8.0.0.jar) (jar) — run with `java -jar glassfish-embedded-all-8.0.0.jar`, no installation required
   * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/8.0.0)
-* [Eclipse GlassFish Embedded 8.0.0, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.0/glassfish-embedded-web-8.0.0.jar) (jar)
+* [Eclipse GlassFish Embedded 8.0.0, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.0/glassfish-embedded-web-8.0.0.jar) (jar) — run with `java -jar glassfish-embedded-web-8.0.0.jar`, no installation required
   * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/8.0.0)
 
 More details:

@@ -1,29 +1,29 @@
 type=page
 status=published
-title={productName} Troubleshooting Guide, Release 8
+title={productName} Server Troubleshooting Guide, Release 8
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= {productName} Troubleshooting Guide, Release 8
+= {productName} Server Troubleshooting Guide, Release 8
 
 [[eclipse-glassfish-server]]
 == {productName}
 
-Troubleshooting Guide
+Server Troubleshooting Guide
 
 Release 8
 
 Contributed 2018 - 2026
 
 This guide describes common problems that you might encounter when using
-{productName} and how to solve them.
+{productName} Server and how to solve them.
 
 [[sthref1]]
 
 '''''
 
-{productName} Troubleshooting Guide, Release 8
+{productName} Server Troubleshooting Guide, Release 8
 
 Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
 

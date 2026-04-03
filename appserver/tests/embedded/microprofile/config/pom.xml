@@ -5,19 +5,15 @@
 
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
-        <artifactId>microprofile</artifactId>
+        <artifactId>microprofile-tests</artifactId>
         <version>9.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.embedded.microprofile</groupId>
-    <artifactId>config</artifactId>
+    <artifactId>microprofile-config-test</artifactId>
     <name>Test MicroProfile Config</name>
 
     <dependencies>
-        <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>jakarta.cdi</groupId>
             <artifactId>jakarta.cdi-api</artifactId>
@@ -26,8 +22,12 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-
         <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+        </dependency>
+
+         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
@@ -35,7 +35,7 @@
 
     <profiles>
         <profile>
-            <id>run-with-uber-jar</id>
+            <id>embedded-all</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -47,13 +47,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>run-with-uber-jar-web</id>
-            <activation>
-                <property>
-                    <name>build</name>
-                    <value>uber-jar-web</value>
-                </property>
-            </activation>
+            <id>embedded-web</id>
             <dependencies>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
@@ -62,21 +56,14 @@
             </dependencies>
         </profile>
         <profile>
-            <id>run-with-shell-jar</id>
-            <activation>
-                <property>
-                    <name>build</name>
-                    <value>static-shell</value>
-                </property>
-            </activation>
+            <id>embedded-static-shell-jar</id>
             <dependencies>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-static-shell</artifactId>
                     <version>${project.version}</version>
                     <scope>system</scope>
-                    <systemPath>${env.S1AS_HOME}/lib/embedded/glassfish-embedded-static-shell.jar
-                    </systemPath>
+                    <systemPath>${env.S1AS_HOME}/lib/embedded/glassfish-embedded-static-shell.jar</systemPath>
                 </dependency>
             </dependencies>
         </profile>

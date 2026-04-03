@@ -71,7 +71,7 @@ public class MpConfigProviderResolver extends ConfigProviderResolver {
             lock.lock();
             Config config = CONFIGS.get(loader);
 
-            if (null == config) {
+            if (config == null) {
                 lock.unlock();
                 lock = RW_LOCK.writeLock();
                 lock.lock();

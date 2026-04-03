@@ -46,17 +46,45 @@ The following topics are addressed here:
 [[glassfish-server-documentation-set]]
 === {productName} Documentation Set
 
-The {productName} documentation set describes deployment planning and
-system installation. For an introduction to {productName}, refer to
-the books in the order in which they are listed in the following table.
+The {productName} documentation set is organized into the following groups.
+
+==== Common {productName} Guides
+
+These guides apply to all {productName} variants.
 
 [width="100%",cols="<30%,<70%",options="header",]
 |===
 |Book Title |Description
-|xref:release-notes.adoc#GSRLN[Release Notes] |Provides late-breaking information about
-the software and the documentation and includes a comprehensive,
-table-based summary of the supported hardware, operating system, Java
-Development Kit (JDK), and database drivers.
+
+|xref:release-notes.adoc#GSRLN[Release Notes]
+|Provides late-breaking information about the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java Development Kit (JDK), and database drivers.
+
+|xref:application-development-guide.adoc#GSDVG[Application Development Guide]
+|Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the {productName}.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.
+
+|xref:error-messages-reference.adoc#GSEMR[Error Message Reference]
+|Describes error messages that you might encounter when using {productName}.
+
+|xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide]
+|Explains how to optimize the performance of {productName}.
+
+|xref:reference-manual.adoc#GSRFM[Reference Manual]
+|Provides reference information in man page format for {productName} administration commands, utility
+commands, and related concepts.
+|===
+
+==== {productName} Server Guides
+
+These guides are specific to the {productName} Server installation.
+
+[width="100%",cols="<30%,<70%",options="header",]
+|===
+|Book Title |Description
 
 |xref:quick-start-guide.adoc#GSQSG[Server Quick Start Guide]
 |Explains how to get started with the {productName} Server.
@@ -75,23 +103,16 @@ your system and enterprise.
 
 |xref:administration-guide.adoc#GSADG[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
-from the command line by using the xref:reference-manual.adoc#asadmin[`asadmin`(1M)] utility.
+from the command line by using the xref:reference-manual.adoc#asadmin[`asadmin`] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
 |xref:security-guide.adoc#GSSCG[Server Security Guide]
-|Provides instructions for configuring and administering {productName} security.
+|Provides instructions for configuring and administering {productName} Server security.
 
 |xref:application-deployment-guide.adoc#GSDPG[Application Deployment Guide]
 |Explains how to assemble and deploy applications to the {productName} and provides information
 about deployment descriptors.
-
-|xref:application-development-guide.adoc#GSDVG[Application Development Guide]
-|Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
-applications that are intended to run on the {productName}.
-These applications follow the open Java standards model for Jakarta EE components
-and application programmer interfaces (APIs).
-This guide provides information about developer tools, security, and debugging.
 
 |xref:add-on-component-development-guide.adoc#GSACG[Add-On Component Development Guide]
 |Explains how to use published interfaces of {productName} to develop add-on components
@@ -99,26 +120,33 @@ for {productName}.
 This document explains how to perform only those tasks that ensure that the add-on component
 is suitable for {productName}.
 
-|xref:embedded-server-guide.adoc#GSESG[Embedded Server Guide]
-|Explains how to run applications in embedded {productName} and to develop applications
-in which {productName} is embedded.
-
 |xref:ha-administration-guide.adoc#GSHAG[High Availability Administration Guide]
 |Explains how to configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
-|xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide]
-|Explains how to optimize the performance of {productName}.
-
 |xref:troubleshooting-guide.adoc#GSTSG[Server Troubleshooting Guide]
-|Describes common problems that you might encounter when using {productName} and explains how to solve them.
+|Describes common problems that you might encounter when using {productName} Server and explains how to solve them.
+|===
 
-|xref:error-messages-reference.adoc#GSEMR[Error Message Reference]
-|Describes error messages that you might encounter when using {productName}.
+==== Embedded {productName} Guides
 
-|xref:reference-manual.adoc#GSRFM[Reference Manual]
-|Provides reference information in man page format for {productName} administration commands, utility
-commands, and related concepts.
+These guides cover running {productName} as a self-contained executable JAR for cloud deployments,
+containers, and embedding in applications.
+
+[width="100%",cols="<30%,<70%",options="header",]
+|===
+|Book Title |Description
+
+|xref:embedded-server-guide.adoc#GSESG[Embedded Server Guide]
+|Explains how to run applications with Embedded {productName} from the command line or as a library,
+suitable for cloud deployments, containers, and integration testing.
+|===
+
+==== Eclipse Open MQ Documentation
+
+[width="100%",cols="<30%,<70%",options="header",]
+|===
+|Book Title |Description
 
 |link:{mq-release-notes-url}[Message Queue Release Notes]
 |Describes new features, compatibility issues, and existing bugs for Open Message Queue.
@@ -144,10 +172,6 @@ applications (Java clients) that work with {productName}.
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.
 |===
-
-
-
-
 [[related-documentation]]
 === Related Documentation
 
@@ -317,4 +341,3 @@ In configuration files, domain-dir is represented as follows:
 |Represents the directory for a server instance.
 |domain-dir/instance-name
 |===
-

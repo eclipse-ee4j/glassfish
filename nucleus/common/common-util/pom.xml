@@ -94,6 +94,14 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -114,6 +122,14 @@
                     <instructions>
                         <Bundle-Activator>org.glassfish.common.util.CommonUtilsActivator</Bundle-Activator>
                     </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jarFilePath>${project.build.directory}/${project.build.finalName}.jar</jarFilePath>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

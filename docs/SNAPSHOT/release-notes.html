@@ -20,7 +20,14 @@
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
 <li><a href="#preface">Preface</a>
 <ul class="sectlevel2">
-<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a>
+<ul class="sectlevel3">
+<li><a href="#common-eclipse-glassfish-guides">Common Eclipse GlassFish Guides</a></li>
+<li><a href="#eclipse-glassfish-server-guides">Eclipse GlassFish Server Guides</a></li>
+<li><a href="#embedded-eclipse-glassfish-guides">Embedded Eclipse GlassFish Guides</a></li>
+<li><a href="#eclipse-open-mq-documentation">Eclipse Open MQ Documentation</a></li>
+</ul>
+</li>
 <li><a href="#related-documentation">Related Documentation</a></li>
 <li><a href="#typographic-conventions">Typographic Conventions</a></li>
 <li><a href="#symbol-conventions">Symbol Conventions</a></li>
@@ -163,9 +170,12 @@ Eclipse GlassFish.</p>
 <div class="sect2">
 <h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
 <div class="paragraph">
-<p>The Eclipse GlassFish documentation set describes deployment planning and
-system installation. For an introduction to Eclipse GlassFish, refer to
-the books in the order in which they are listed in the following table.</p>
+<p>The Eclipse GlassFish documentation set is organized into the following groups.</p>
+</div>
+<div class="sect3">
+<h4 id="common-eclipse-glassfish-guides"><a class="anchor" href="#common-eclipse-glassfish-guides"></a>Common Eclipse GlassFish Guides</h4>
+<div class="paragraph">
+<p>These guides apply to all Eclipse GlassFish variants.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -181,14 +191,53 @@ the books in the order in which they are listed in the following table.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#GSRLN">Release Notes</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
-the software and the documentation and includes a comprehensive,
-table-based summary of the supported hardware, operating system, Java
-Development Kit (JDK), and database drivers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java Development Kit (JDK), and database drivers.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish product.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="eclipse-glassfish-server-guides"><a class="anchor" href="#eclipse-glassfish-server-guides"></a>Eclipse GlassFish Server Guides</h4>
+<div class="paragraph">
+<p>These guides are specific to the Eclipse GlassFish Server installation.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Server Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish Server.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
@@ -208,26 +257,18 @@ your system and enterprise.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
-from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code></a> utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish security.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Server Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish Server security.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and deploy applications to the Eclipse GlassFish and provides information
 about deployment descriptors.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
-applications that are intended to run on the Eclipse GlassFish.
-These applications follow the open Java standards model for Jakarta EE components
-and application programmer interfaces (APIs).
-This guide provides information about developer tools, security, and debugging.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="add-on-component-development-guide.html#GSACG">Add-On Component Development Guide</a></p></td>
@@ -237,32 +278,57 @@ This document explains how to perform only those tasks that ensure that the add-
 is suitable for Eclipse GlassFish.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in embedded Eclipse GlassFish and to develop applications
-in which Eclipse GlassFish is embedded.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure Eclipse GlassFish to provide higher availability and
 scalability through failover and load balancing.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Server Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish Server and explains how to solve them.</p></td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-eclipse-glassfish-guides"><a class="anchor" href="#embedded-eclipse-glassfish-guides"></a>Embedded Eclipse GlassFish Guides</h4>
+<div class="paragraph">
+<p>These guides cover running Eclipse GlassFish as a self-contained executable JAR for cloud deployments,
+containers, and embedding in applications.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish and explains how to solve them.</p></td>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications with Embedded Eclipse GlassFish from the command line or as a library,
+suitable for cloud deployments, containers, and integration testing.</p></td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="eclipse-open-mq-documentation"><a class="anchor" href="#eclipse-open-mq-documentation"></a>Eclipse Open MQ Documentation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
-commands, and related concepts.</p></td>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
@@ -295,6 +361,7 @@ Queue messaging service to send, receive, and process Message Queue messages.</p
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
@@ -2163,7 +2230,7 @@ project dashboards and issue tracking database</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-31 14:18:25 UTC
+Last updated 2026-04-04 14:16:22 UTC
 </div>
 </div>
 </body>

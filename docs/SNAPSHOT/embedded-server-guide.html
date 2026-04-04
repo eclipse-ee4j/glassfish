@@ -20,7 +20,14 @@
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
 <li><a href="#preface">Preface</a>
 <ul class="sectlevel2">
-<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a>
+<ul class="sectlevel3">
+<li><a href="#common-eclipse-glassfish-guides">Common Eclipse GlassFish Guides</a></li>
+<li><a href="#eclipse-glassfish-server-guides">Eclipse GlassFish Server Guides</a></li>
+<li><a href="#embedded-eclipse-glassfish-guides">Embedded Eclipse GlassFish Guides</a></li>
+<li><a href="#eclipse-open-mq-documentation">Eclipse Open MQ Documentation</a></li>
+</ul>
+</li>
 <li><a href="#related-documentation">Related Documentation</a></li>
 <li><a href="#typographic-conventions">Typographic Conventions</a></li>
 <li><a href="#symbol-conventions">Symbol Conventions</a></li>
@@ -30,13 +37,6 @@
 <li><a href="#GSESG">Eclipse GlassFish 8 Embedded Server Guide</a></li>
 <li><a href="#introduction-to-embedded-glassfish-server">Introduction to Embedded Eclipse GlassFish</a></li>
 <li><a href="#editions">Embedded Eclipse GlassFish Editions</a></li>
-<li><a href="#embedded-glassfish-server-file-system">Embedded Eclipse GlassFish File System</a>
-<ul class="sectlevel2">
-<li><a href="#installation-root-directory">Installation Root Directory</a></li>
-<li><a href="#instance-root-directory">Instance Root Directory</a></li>
-<li><a href="#the-domain-xml-file">The <code>domain.xml</code> File</a></li>
-</ul>
-</li>
 <li><a href="#running-from-command-line">Running Eclipse GlassFish Embedded Server from Command Line</a>
 <ul class="sectlevel2">
 <li><a href="#examples-of-running-embedded-eclipse-glassfish-from-command-line">Examples of Running Embedded Eclipse GlassFish from Command Line</a>
@@ -48,6 +48,24 @@
 </ul>
 </li>
 <li><a href="#command-line-arguments-supported-by-embedded-eclipse-glassfish">Command-line Arguments Supported by Embedded Eclipse GlassFish</a></li>
+</ul>
+</li>
+<li><a href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server">Using the Maven Plug-in for Embedded Eclipse GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a></li>
+<li><a href="#to-build-and-start-an-application-from-maven">To Build and Start an Application From Maven</a></li>
+<li><a href="#to-stop-embedded-glassfish-server">To Stop Embedded Eclipse GlassFish</a></li>
+<li><a href="#to-redeploy-an-application-that-was-built-and-started-from-maven">To Redeploy an Application That Was Built and Started From Maven</a></li>
+<li><a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#embedded-glassfishrun-goal"><code>embedded-glassfish:run</code> Goal</a></li>
+<li><a href="#embedded-glassfishstart-goal"><code>embedded-glassfish:start</code> Goal</a></li>
+<li><a href="#embedded-glassfishdeploy-goal"><code>embedded-glassfish:deploy</code> Goal</a></li>
+<li><a href="#embedded-glassfishundeploy-goal"><code>embedded-glassfish:undeploy</code> Goal</a></li>
+<li><a href="#embedded-glassfishstop-goal"><code>embedded-glassfish:stop</code> Goal</a></li>
+<li><a href="#embedded-glassfishadmin-goal"><code>embedded-glassfish:admin</code> Goal</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#including-the-glassfish-server-embedded-server-api-in-applications">Including the Eclipse GlassFish Embedded Server API in Applications</a>
@@ -72,31 +90,7 @@
 <li><a href="#sample-applications">Sample Applications</a></li>
 </ul>
 </li>
-<li><a href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server">Testing Applications with the Maven Plug-in for Embedded Eclipse GlassFish</a>
-<ul class="sectlevel2">
-<li><a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a></li>
-<li><a href="#to-build-and-start-an-application-from-maven">To Build and Start an Application From Maven</a></li>
-<li><a href="#to-stop-embedded-glassfish-server">To Stop Embedded Eclipse GlassFish</a></li>
-<li><a href="#to-redeploy-an-application-that-was-built-and-started-from-maven">To Redeploy an Application That Was Built and Started From Maven</a></li>
-<li><a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>
-<ul class="sectlevel3">
-<li><a href="#embedded-glassfishrun-goal"><code>embedded-glassfish:run</code> Goal</a></li>
-<li><a href="#embedded-glassfishstart-goal"><code>embedded-glassfish:start</code> Goal</a></li>
-<li><a href="#embedded-glassfishdeploy-goal"><code>embedded-glassfish:deploy</code> Goal</a></li>
-<li><a href="#embedded-glassfishundeploy-goal"><code>embedded-glassfish:undeploy</code> Goal</a></li>
-<li><a href="#embedded-glassfishstop-goal"><code>embedded-glassfish:stop</code> Goal</a></li>
-<li><a href="#embedded-glassfishadmin-goal"><code>embedded-glassfish:admin</code> Goal</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#using-the-ejb-3-1-embeddable-api-with-embedded-eclipse-glassfish">Using the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a>
-<ul class="sectlevel2">
-<li><a href="#to-use-the-ejb-3-1-embeddable-api-with-embedded-eclipse-glassfish">To Use the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a></li>
-<li><a href="#ejb-3-1-embeddable-api-properties">EJB 3.1 Embeddable API Properties</a></li>
-<li><a href="#using-maven-with-the-ejb-3-1-embeddable-api-and-embedded-eclipse-glassfish">Using Maven with the EJB 3.1 Embeddable API and Embedded Eclipse GlassFish</a></li>
-</ul>
-</li>
+<li><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></li>
 <li><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></li>
 <li><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a>
 <ul class="sectlevel2">
@@ -116,7 +110,20 @@
 </li>
 </ul>
 </li>
-<li><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></li>
+<li><a href="#embedded-glassfish-server-file-system">Embedded Eclipse GlassFish File System</a>
+<ul class="sectlevel2">
+<li><a href="#installation-root-directory">Installation Root Directory</a></li>
+<li><a href="#instance-root-directory">Instance Root Directory</a></li>
+<li><a href="#the-domain-xml-file">The <code>domain.xml</code> File</a></li>
+</ul>
+</li>
+<li><a href="#using-the-ejb-3-1-embeddable-api-with-embedded-eclipse-glassfish">Using the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#to-use-the-ejb-3-1-embeddable-api-with-embedded-eclipse-glassfish">To Use the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a></li>
+<li><a href="#ejb-3-1-embeddable-api-properties">EJB 3.1 Embeddable API Properties</a></li>
+<li><a href="#using-maven-with-the-ejb-3-1-embeddable-api-and-embedded-eclipse-glassfish">Using Maven with the EJB 3.1 Embeddable API and Embedded Eclipse GlassFish</a></li>
+</ul>
+</li>
 <li><a href="#restrictions-for-embedded-glassfish-server">Restrictions for Embedded Eclipse GlassFish</a></li>
 </ul>
 </div>
@@ -141,13 +148,11 @@ who are developing applications to run in embedded Eclipse GlassFish. The
 ability to program in the Java language is assumed.</p>
 </div>
 <div class="paragraph">
-<p>Note: The main thrust of the Eclipse GlassFish 8
-release is to provide an application server for developers to explore
-and begin exploiting the new and updated technologies in the Jakarta EE 10
-platform. Thus, the embedded server feature of Eclipse GlassFish was not
-a focus of this release. This feature is included in the release, but it
-may not function properly with some of the new features added in support
-of the Jakarta EE 10 platform.</p>
+<p>Note: Since Eclipse GlassFish 7.1.0, Embedded Eclipse GlassFish is a fully supported
+and actively maintained feature, covered by the internal test suite.
+Running applications from the command line using the Embedded Eclipse GlassFish JAR
+is the recommended approach and is suitable for production deployments,
+including cloud environments. Embedding Embedded GlassFish into Java applications or using for testing purposes is also supported.</p>
 </div>
 <hr>
 <div class="paragraph">
@@ -188,34 +193,12 @@ trademark of The Open Group.</p>
 <div class="sect1">
 <h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>This documentation is part of the Java Enterprise Edition contribution
-to the Eclipse Foundation and is not intended for use in relation to
-Java Enterprise Edition or Orace GlassFish. The documentation is in the
-process of being revised to reflect the new Jakarta EE branding.
-Additional changes will be made as requirements and procedures evolve
-for Jakarta EE. Where applicable, references to Jakarta EE or Java
-Enterprise Edition should be considered references to Jakarta EE.</p>
-</div>
-<div class="paragraph">
-<p>Please see the Title page for additional license information.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>This document explains how to run applications in embedded
+<p>This document explains how to run applications with Embedded
 Eclipse GlassFish and to develop applications in which
 Eclipse GlassFish is embedded. This document is for software developers
-who are developing applications to run in embedded Eclipse GlassFish.
+who are developing applications to run with Embedded Eclipse GlassFish,
+whether for production deployments, cloud environments, or testing.
 The ability to program in the Java language is assumed.</p>
 </div>
 <div class="paragraph">
@@ -257,9 +240,12 @@ Eclipse GlassFish.</p>
 <div class="sect2">
 <h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
 <div class="paragraph">
-<p>The Eclipse GlassFish documentation set describes deployment planning and
-system installation. For an introduction to Eclipse GlassFish, refer to
-the books in the order in which they are listed in the following table.</p>
+<p>The Eclipse GlassFish documentation set is organized into the following groups.</p>
+</div>
+<div class="sect3">
+<h4 id="common-eclipse-glassfish-guides"><a class="anchor" href="#common-eclipse-glassfish-guides"></a>Common Eclipse GlassFish Guides</h4>
+<div class="paragraph">
+<p>These guides apply to all Eclipse GlassFish variants.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -275,14 +261,53 @@ the books in the order in which they are listed in the following table.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="release-notes.html#GSRLN">Release Notes</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
-the software and the documentation and includes a comprehensive,
-table-based summary of the supported hardware, operating system, Java
-Development Kit (JDK), and database drivers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java Development Kit (JDK), and database drivers.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish product.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="eclipse-glassfish-server-guides"><a class="anchor" href="#eclipse-glassfish-server-guides"></a>Eclipse GlassFish Server Guides</h4>
+<div class="paragraph">
+<p>These guides are specific to the Eclipse GlassFish Server installation.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Server Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish Server.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
@@ -302,26 +327,18 @@ your system and enterprise.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
-from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code></a> utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish security.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Server Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish Server security.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and deploy applications to the Eclipse GlassFish and provides information
 about deployment descriptors.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
-applications that are intended to run on the Eclipse GlassFish.
-These applications follow the open Java standards model for Jakarta EE components
-and application programmer interfaces (APIs).
-This guide provides information about developer tools, security, and debugging.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="add-on-component-development-guide.html#GSACG">Add-On Component Development Guide</a></p></td>
@@ -331,32 +348,57 @@ This document explains how to perform only those tasks that ensure that the add-
 is suitable for Eclipse GlassFish.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#GSESG">Embedded Server Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in embedded Eclipse GlassFish and to develop applications
-in which Eclipse GlassFish is embedded.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure Eclipse GlassFish to provide higher availability and
 scalability through failover and load balancing.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Server Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish Server and explains how to solve them.</p></td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-eclipse-glassfish-guides"><a class="anchor" href="#embedded-eclipse-glassfish-guides"></a>Embedded Eclipse GlassFish Guides</h4>
+<div class="paragraph">
+<p>These guides cover running Eclipse GlassFish as a self-contained executable JAR for cloud deployments,
+containers, and embedding in applications.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish and explains how to solve them.</p></td>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications with Embedded Eclipse GlassFish from the command line or as a library,
+suitable for cloud deployments, containers, and integration testing.</p></td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="eclipse-open-mq-documentation"><a class="anchor" href="#eclipse-open-mq-documentation"></a>Eclipse Open MQ Documentation</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
-commands, and related concepts.</p></td>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
@@ -389,6 +431,7 @@ Queue messaging service to send, receive, and process Message Queue messages.</p
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
@@ -663,16 +706,16 @@ ability to program in the Java language is assumed.</p>
 <p><a href="#introduction-to-embedded-glassfish-server">Introduction to Embedded Eclipse GlassFish</a></p>
 </li>
 <li>
-<p><a href="#embedded-glassfish-server-file-system">Embedded Eclipse GlassFish File System</a></p>
+<p><a href="#running-from-command-line">Running Eclipse GlassFish Embedded Server from Command Line</a></p>
+</li>
+<li>
+<p><a href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server">Using the Maven Plug-in for Embedded Eclipse GlassFish</a></p>
 </li>
 <li>
 <p><a href="#including-the-glassfish-server-embedded-server-api-in-applications">Including the Eclipse GlassFish Embedded Server API in Applications</a></p>
 </li>
 <li>
-<p><a href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server">Testing Applications with the Maven Plug-in for Embedded Eclipse GlassFish</a></p>
-</li>
-<li>
-<p><a href="#GSESG00039">Using the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a></p>
+<p><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></p>
 </li>
 <li>
 <p><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></p>
@@ -681,7 +724,10 @@ ability to program in the Java language is assumed.</p>
 <p><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a></p>
 </li>
 <li>
-<p><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></p>
+<p><a href="#embedded-glassfish-server-file-system">Embedded Eclipse GlassFish File System</a></p>
+</li>
+<li>
+<p><a href="#GSESG00039">Using the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a></p>
 </li>
 <li>
 <p><a href="#restrictions-for-embedded-glassfish-server">Restrictions for Embedded Eclipse GlassFish</a></p>
@@ -694,16 +740,17 @@ ability to program in the Java language is assumed.</p>
 <h2 id="introduction-to-embedded-glassfish-server"><a class="anchor" href="#introduction-to-embedded-glassfish-server"></a>Introduction to Embedded Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Embedded Eclipse GlassFish enables you to use
-Eclipse GlassFish as a library or run applications from command line. Embedded Eclipse GlassFish also enables
-you to run Eclipse GlassFish inside any Virtual Machine for the Java
+<p>Embedded Eclipse GlassFish enables you to run Eclipse GlassFish as a
+self-contained executable JAR from the command line. It can also be used as a
+library embedded in your application, inside any Virtual Machine for the Java
 platform (Java Virtual Machine or JVM).</p>
 </div>
 <div class="paragraph">
 <p>No installation or configuration of embedded Eclipse GlassFish is
-required. The ability to run Eclipse GlassFish
-without installation or configuration simplifies the process of bundling
-Eclipse GlassFish with applications or running applications from command line.</p>
+required. Running Eclipse GlassFish without installation or configuration
+makes it well suited for production deployments in cloud environments,
+containerized workloads, and CI/CD pipelines, as well as for local
+development and integration testing.</p>
 </div>
 <div class="paragraph">
 <p>You can use embedded Eclipse GlassFish in the following ways:</p>
@@ -717,7 +764,7 @@ Eclipse GlassFish with applications or running applications from command line.</
 <p>As an executable JAR, executed with <code>java -jar</code> (see <a href="#running-from-command-line">Running Eclipse GlassFish Embedded Server from Command Line</a>)</p>
 </li>
 <li>
-<p>With the Maven Plug-in (see <a href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server">Testing Applications with the
+<p>With the Maven Plug-in (see <a href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server">Using the
 Maven Plug-in for Embedded Eclipse GlassFish</a>)</p>
 </li>
 <li>
@@ -729,11 +776,10 @@ Embeddable API with Embedded Eclipse GlassFish</a>)</p>
 <div class="paragraph">
 <p>Embedded Eclipse GlassFish provides a plug-in for
 <a href="http://maven.apache.org/">Apache Maven</a> (<code><a href="http://maven.apache.org/" class="bare">http://maven.apache.org/</a></code>).
-This plug-in simplifies the testing of applications by enabling you to
-build an application and run it with Eclipse GlassFish on a single
-system. Testing and debugging are simplified because the need for an
-installed and configured Eclipse GlassFish is eliminated. Therefore, you
-can run unit tests automatically in every build.</p>
+This plug-in enables you to build and run applications with Eclipse GlassFish
+on a single system, without requiring a separate installed and configured
+Eclipse GlassFish. This is useful both for production builds and for running
+integration tests as part of the build process.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -785,121 +831,6 @@ explanation of as-install, see <a href="#installation-root-directory">Installati
 Directory</a>.</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="embedded-glassfish-server-file-system"><a class="anchor" href="#embedded-glassfish-server-file-system"></a>Embedded Eclipse GlassFish File System</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The following Embedded Eclipse GlassFish directories and files are
-important if you are referencing a nonembedded installation of Eclipse GlassFish:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#installation-root-directory">Installation Root Directory</a></p>
-</li>
-<li>
-<p><a href="#instance-root-directory">Instance Root Directory</a></p>
-</li>
-<li>
-<p><a href="#GSESG00056">The <code>domain.xml</code> File</a></p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="installation-root-directory"><a class="anchor" href="#installation-root-directory"></a>Installation Root Directory</h3>
-<div class="paragraph">
-<p>The installation root directory, represented as as-install, is the
-parent of the directory that embedded Eclipse GlassFish uses for
-configuration files. This directory corresponds to the base directory
-for an installation of Eclipse GlassFish. Configuration files are
-contained in the following directories in the base directory for an
-installation of Eclipse GlassFish:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>domains</code></p>
-</li>
-<li>
-<p><code>lib</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Specify the installation root directory only if you have a valid
-nonembedded Eclipse GlassFish installation and are using
-<code>glassfish-embedded-static-shell.jar</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="instance-root-directory"><a class="anchor" href="#instance-root-directory"></a>Instance Root Directory</h3>
-<div class="paragraph">
-<p>The instance root directory, also known as the domain directory, represented as domain-dir, is the parent
-directory of a server instance directory. Embedded Eclipse GlassFish uses the server instance directory for domain
-configuration files.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If you have valid custom as-install and domain-dir
-directories, specify both in the <code>BootstrapProperties</code> and
-<code>GlassFishProperties</code> classes respectively as described in
-<a href="#creating-and-configuring-an-embedded-glassfish-server">Creating and Configuring an Embedded Eclipse GlassFish</a>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>If domain-dir is not specified, Eclipse GlassFish creates a directory
-named <code>gfembed</code>random-number<code>tmp</code> in a temporary directory, where
-random-number is a randomly generated 19-digit number. Eclipse GlassFish
-then copies configuration files into this directory. The temporary
-directory is the value of the system property <code>java.io.tmpdir</code>. You can
-override this value by specifying the <code>glassfish.embedded.tmpdir</code>
-property in the <code>GlassFishProperties</code> class or as a system property.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSESG00056"></a><a id="the-domain.xml-file"></a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="the-domain-xml-file"><a class="anchor" href="#the-domain-xml-file"></a>The <code>domain.xml</code> File</h3>
-<div class="paragraph">
-<p>Using an existing <code>domain.xml</code> file avoids the need to configure
-embedded Eclipse GlassFish programmatically in your application. Your
-application obtains domain configuration data from an existing
-<code>domain.xml</code> file. You can create this file by using the administrative
-interfaces of an installation of nonembedded Eclipse GlassFish. To
-specify an existing <code>domain.xml</code> file, invoke the <code>setConfigFileURI</code>
-method of the <code>GlassFishProperties</code> class as described in
-<a href="#creating-and-configuring-an-embedded-glassfish-server">Creating and Configuring an Embedded Eclipse GlassFish</a>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The built-in <code>domain.xml</code> file used by default by Embedded Eclipse GlassFish can be found in the Embedded Eclipse GlassFish JAR files, in path
-<code>org/glassfish/embed/domain.xml</code>. You can customize this
-file and pass it in using the <code>setConfigFileURI</code> method while creating
-an Embedded Eclipse GlassFish.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 </div>
@@ -1194,6 +1125,902 @@ admin commands are the same commands supported by Eclipse GlassFish Server&#8217
 command line tool or by the "CommandRunner" Java class in the Eclipse GlassFish Simple Public API.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server"><a class="anchor" href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server"></a>Using the Maven Plug-in for Embedded Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you are using <a href="http://maven.apache.org/">Apache Maven</a>
+(<code><a href="http://maven.apache.org/" class="bare">http://maven.apache.org/</a></code>), the plug-in for embedded Eclipse GlassFish
+enables you to build, deploy, and run applications with a single Maven goal,
+without requiring a separate installed and configured Eclipse GlassFish.
+This is useful for running applications in development, for CI/CD pipelines,
+and for integration testing as part of the build process.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a></p>
+</li>
+<li>
+<p><a href="#to-build-and-start-an-application-from-maven">To Build and Start an Application From Maven</a></p>
+</li>
+<li>
+<p><a href="#to-stop-embedded-glassfish-server">To Stop Embedded Eclipse GlassFish</a></p>
+</li>
+<li>
+<p><a href="#to-redeploy-an-application-that-was-built-and-started-from-maven">To Redeploy an Application That Was Built and Started From Maven</a></p>
+</li>
+<li>
+<p><a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Predefined Maven goals for embedded Eclipse GlassFish are described in
+<a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>.</p>
+</div>
+<div class="paragraph">
+<p>To use Maven with Embedded Eclipse GlassFish and the EJB 3.1 Embeddable
+API, see <a href="#GSESG00064">Using Maven with the EJB 3.1 Embeddable API and
+Embedded Eclipse GlassFish</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="to-set-up-your-maven-environment"><a class="anchor" href="#to-set-up-your-maven-environment"></a>To Set Up Your Maven Environment</h3>
+<div class="paragraph">
+<p>Setting up your Maven environment enables Maven to download the required
+embedded Eclipse GlassFish distribution file when you build your project.
+Setting up your Maven environment also identifies the plug-in that
+enables you to build and start an unpackaged application with a single
+Maven goal.</p>
+</div>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that <a href="http://maven.apache.org/">Apache Maven</a>
+(<code><a href="http://maven.apache.org/" class="bare">http://maven.apache.org/</a></code>) is installed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Identify the Maven plug-in for embedded Eclipse GlassFish.</p>
+<div class="paragraph">
+<p>Add the following <code>plugin</code> element to your POM file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">...
+        ...
+        <span class="tag">&lt;plugins&gt;</span>
+            ...
+            <span class="tag">&lt;plugin&gt;</span>
+                <span class="tag">&lt;groupId&gt;</span>org.glassfish.embedded<span class="tag">&lt;/groupId&gt;</span>
+                <span class="tag">&lt;artifactId&gt;</span>embedded-glassfish-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+                <span class="tag">&lt;version&gt;</span>version<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;/plugin&gt;</span>
+            ...
+        <span class="tag">&lt;/plugins&gt;</span>
+...</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">version</dt>
+<dd>
+<p>The version to use. The version of the final promoted build for this
+release is <code>7.0</code>. The Maven plug-in is not bound to a specific version
+of Eclipse GlassFish. You can specify the version you want to use. If
+no version is specified, a default version is used.</p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>Configure the the path to the application WAR, and other standard settings.</p>
+<div class="paragraph">
+<p>Add the following <code>configuration</code> element to your POM file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">...
+        <span class="tag">&lt;plugins&gt;</span>
+            ...
+            <span class="tag">&lt;plugin&gt;</span>
+                ...
+                <span class="tag">&lt;configuration&gt;</span>
+                    <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
+                    <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
+                    <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
+                    <span class="tag">&lt;autoDelete&gt;</span>true<span class="tag">&lt;/autoDelete&gt;</span>
+                    ...
+                <span class="tag">&lt;/configuration&gt;</span>
+                ...
+            <span class="tag">&lt;/plugin&gt;</span>
+            ...
+        <span class="tag">&lt;/plugins&gt;</span>
+...</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">app</dt>
+<dd>
+<p>In the app parameter, substitute the archive file or directory for your
+application. The optional port, contextRoot, and autoDelete parameters
+show example values. For details, see <a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for
+Embedded Eclipse GlassFish</a>.</p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>Perform advanced plug-in configuration. This step is optional.
+Add the following <code>configuration</code> element to your POM file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">...
+        <span class="tag">&lt;plugins&gt;</span>
+            ...
+            <span class="tag">&lt;plugin&gt;</span>
+                ...
+                <span class="tag">&lt;configuration&gt;</span>
+                    <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
+                    <span class="tag">&lt;name&gt;</span>test<span class="tag">&lt;/name&gt;</span>
+                    <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
+                    <span class="tag">&lt;ports&gt;</span>
+                        <span class="tag">&lt;http-listener&gt;</span>8080<span class="tag">&lt;/http-listener&gt;</span>
+                        <span class="tag">&lt;https-listener&gt;</span>8181<span class="tag">&lt;/https-listener&gt;</span>
+                    <span class="tag">&lt;/ports&gt;</span>
+                    <span class="tag">&lt;bootstrapProperties&gt;</span>
+                        <span class="tag">&lt;property&gt;</span>test_key=test_value<span class="tag">&lt;/property&gt;</span>
+                    <span class="tag">&lt;/bootstrapProperties&gt;</span>
+                    <span class="tag">&lt;bootstrapPropertiesFile&gt;</span>bootstrap.properties<span class="tag">&lt;/bootstrapPropertiesFile&gt;</span>
+                    <span class="tag">&lt;glassfishProperties&gt;</span>
+<span class="tag">&lt;property&gt;</span>server.jms-service.jms-host.default_JMS_host.port=17676<span class="tag">&lt;/property&gt;</span>
+                    <span class="tag">&lt;/glassfishProperties&gt;</span>
+                    <span class="tag">&lt;glassfishPropertiesFile&gt;</span>glassfish.properties<span class="tag">&lt;/glassfishPropertiesFile&gt;</span>
+                    <span class="tag">&lt;systemProperties&gt;</span>
+                        <span class="tag">&lt;property&gt;</span>ANTLR_USE_DIRECT_CLASS_LOADING=true<span class="tag">&lt;/property&gt;</span>
+                    <span class="tag">&lt;/systemProperties&gt;</span>
+                    <span class="tag">&lt;systemPropertiesFile&gt;</span>system.properties<span class="tag">&lt;/systemPropertiesFile&gt;</span>
+                <span class="tag">&lt;/configuration&gt;</span>
+                <span class="tag">&lt;executions&gt;</span>
+                    <span class="tag">&lt;execution&gt;</span>
+                        <span class="tag">&lt;goals&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>start<span class="tag">&lt;/goal&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>deploy<span class="tag">&lt;/goal&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>undeploy<span class="tag">&lt;/goal&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>stop<span class="tag">&lt;/goal&gt;</span>
+                        <span class="tag">&lt;/goals&gt;</span>
+                    <span class="tag">&lt;/execution&gt;</span>
+                <span class="tag">&lt;/executions&gt;</span>
+            <span class="tag">&lt;/plugin&gt;</span>
+            ...
+        <span class="tag">&lt;/plugins&gt;</span>
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure Maven goals.
+Add <code>execution</code> elements to your POM file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">...
+        <span class="tag">&lt;plugins&gt;</span>
+            ...
+            <span class="tag">&lt;plugin&gt;</span>
+                ...
+                <span class="tag">&lt;executions&gt;</span>
+                    <span class="tag">&lt;execution&gt;</span>
+                        <span class="tag">&lt;phase&gt;</span>install<span class="tag">&lt;/phase&gt;</span>
+                        <span class="tag">&lt;goals&gt;</span>
+                            <span class="tag">&lt;goal&gt;</span>goal<span class="tag">&lt;/goal&gt;</span>
+                        <span class="tag">&lt;/goals&gt;</span>
+                    <span class="tag">&lt;/execution&gt;</span>
+                <span class="tag">&lt;/executions&gt;</span>
+                ...
+            <span class="tag">&lt;/plugin&gt;</span>
+            ...
+        <span class="tag">&lt;/plugins&gt;</span>
+...</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">goal</dt>
+<dd>
+<p>The goal to use. See <a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+<div id="gjkod" class="paragraph">
+<p>Example 1-13 POM File for Configuring Maven to Use Embedded Eclipse GlassFish</p>
+</div>
+<div class="paragraph">
+<p>This example shows a POM file for configuring Maven to use embedded Eclipse GlassFish.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="comment">&lt;!--
+Line breaks in the following element are for readability purposes only
+--&gt;</span>
+<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span>
+<span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+<span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span>
+<span class="content">http://maven.apache.org/maven-v4_0_0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+
+  <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>org.example<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>maven-glassfish-plugin-tester<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;name&gt;</span>Maven Embedded Glassfish Plugin Example<span class="tag">&lt;/name&gt;</span>
+  <span class="tag">&lt;build&gt;</span>
+    <span class="tag">&lt;plugins&gt;</span>
+      <span class="tag">&lt;plugin&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.glassfish.embedded<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>embedded-glassfish-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>7.0<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;configuration&gt;</span>
+          <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
+          <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
+          <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
+          <span class="tag">&lt;autoDelete&gt;</span>true<span class="tag">&lt;/autoDelete&gt;</span>
+       <span class="tag">&lt;/configuration&gt;</span>
+       <span class="tag">&lt;executions&gt;</span>
+          <span class="tag">&lt;execution&gt;</span>
+             <span class="tag">&lt;phase&gt;</span>install<span class="tag">&lt;/phase&gt;</span>
+             <span class="tag">&lt;goals&gt;</span>
+                   <span class="tag">&lt;goal&gt;</span>run<span class="tag">&lt;/goal&gt;</span>
+             <span class="tag">&lt;/goals&gt;</span>
+          <span class="tag">&lt;/execution&gt;</span>
+       <span class="tag">&lt;/executions&gt;</span>
+     <span class="tag">&lt;/plugin&gt;</span>
+    <span class="tag">&lt;/plugins&gt;</span>
+  <span class="tag">&lt;/build&gt;</span>
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="to-build-and-start-an-application-from-maven"><a class="anchor" href="#to-build-and-start-an-application-from-maven"></a>To Build and Start an Application From Maven</h3>
+<div class="paragraph">
+<p>If you are using Maven to manage the development of your application,
+you can use a Maven goal to build and start the application in embedded
+Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that your Maven environment is configured, as described in
+<a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Include the path to the Maven executable file <code>mvn</code> in your path
+statement.</p>
+</li>
+<li>
+<p>Ensure that the <code>JAVA_HOME</code> environment variable is defined.</p>
+</li>
+<li>
+<p>Create a directory for the Maven project for your application.</p>
+</li>
+<li>
+<p>Copy to your project directory the POM file that you created in
+<a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a>.</p>
+</li>
+<li>
+<p>Run the following command in your project directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command performs the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Installs the Maven repository in a directory named <code>.m2</code> under your
+home directory.</p>
+</li>
+<li>
+<p>Starts Embedded Eclipse GlassFish.</p>
+</li>
+<li>
+<p>Deploys your application.</p>
+<div class="paragraph">
+<p>The application continues to run in Embedded Eclipse GlassFish until
+Embedded Eclipse GlassFish is stopped.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="to-stop-embedded-glassfish-server"><a class="anchor" href="#to-stop-embedded-glassfish-server"></a>To Stop Embedded Eclipse GlassFish</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change to the root directory of the Maven project for your
+application.</p>
+</li>
+<li>
+<p>Run the Maven goal to stop the application in embedded Eclipse GlassFish.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn embedded-glassfish:stop</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This runs the <code>stop</code> method of the <code>GlassFish</code> object and any other
+methods that are required to shut down the server in an orderly fashion.
+See <a href="#stopping-an-embedded-glassfish-server-from-an-application">Stopping an Embedded Eclipse GlassFish From an
+Application</a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="to-redeploy-an-application-that-was-built-and-started-from-maven"><a class="anchor" href="#to-redeploy-an-application-that-was-built-and-started-from-maven"></a>To Redeploy an Application That Was Built and Started From Maven</h3>
+<div class="paragraph">
+<p>An application that was built and started from Maven continues to run in
+Embedded Eclipse GlassFish until Embedded Eclipse GlassFish is stopped.
+While the application is running, you can test changes to the
+application by redeploying it.</p>
+</div>
+<div class="paragraph">
+<p>To redeploy, in the window from where the application was built and
+started from Maven, press Enter.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="maven-goals-for-embedded-glassfish-server"><a class="anchor" href="#maven-goals-for-embedded-glassfish-server"></a>Maven Goals for Embedded Eclipse GlassFish</h3>
+<div class="paragraph">
+<p>You can use the following Maven goals with embedded Eclipse GlassFish:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#embedded-glassfishrun-goal"><code>embedded-glassfish:run</code> Goal</a></p>
+</li>
+<li>
+<p><a href="#embedded-glassfishstart-goal"><code>embedded-glassfish:start</code> Goal</a></p>
+</li>
+<li>
+<p><a href="#embedded-glassfishdeploy-goal"><code>embedded-glassfish:deploy</code> Goal</a></p>
+</li>
+<li>
+<p><a href="#embedded-glassfishundeploy-goal"><code>embedded-glassfish:undeploy</code> Goal</a></p>
+</li>
+<li>
+<p><a href="#embedded-glassfishstop-goal"><code>embedded-glassfish:stop</code> Goal</a></p>
+</li>
+<li>
+<p><a href="#embedded-glassfishadmin-goal"><code>embedded-glassfish:admin</code> Goal</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfishrun-goal"><a class="anchor" href="#embedded-glassfishrun-goal"></a><code>embedded-glassfish:run</code> Goal</h4>
+<div class="paragraph">
+<p>This goal starts the server and deploys an application. You can redeploy
+if you change the application. The application can be a packaged archive
+or a directory that contains an exploded application. You can set the
+parameters described in the following table.</p>
+</div>
+<div id="gjkws" class="paragraph">
+<p>Table 1-5 <code>embedded-glassfish:run</code> Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 18%;">
+<col style="width: 42%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">app</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The archive file or directory for the application to be deployed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containerType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The container to start: <code>web</code>, <code>ejb</code>, <code>jpa</code>, or <code>all</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">installRoot</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#installation-root-directory">Installation Root Directory</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instanceRoot</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>In order of precedence:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>glassfish.embedded.tmpdir</code> property value specified in <code>GlassFishProperties</code> object</p>
+</li>
+<li>
+<p><code>glassfish.embedded.tmpdir</code> system property value</p>
+</li>
+<li>
+<p><code>java.io.tmpdir</code> system property value</p>
+</li>
+<li>
+<p>as-install<code>/domains/domain1</code> if a nonembedded installation is referenced</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#instance-root-directory">Instance Root Directory</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">configFile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir<code>/config/domain.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The
+configuration file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. Must be set explicitly or defined in the configuration
+file.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The HTTP or HTTPS port.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>In order of precedence:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>application-name</code> or <code>module-name</code> in the deployment descriptor.</p>
+</li>
+<li>
+<p>The name of the archive file without the extension or the directory name.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information, see "<a href="application-deployment-guide.html#naming-standards">Naming Standards</a>" in
+Eclipse GlassFish Application Deployment Guide.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contextRoot</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the application.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The context root
+of the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">precompileJsp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, JSP pages are precompiled
+during deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dbVendorName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the database vendor for
+which tables can be created. Allowed values are <code>javadb</code>, <code>db2</code>,
+<code>mssql</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>, <code>pointbase</code>, <code>derby</code> (also for
+CloudScape), and <code>sybase</code>, case-insensitive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createTables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>create-tables-at-deploy</code> attribute in
+<code>sun-ejb-jar.xml</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, creates database tables during
+deployment for beans that are automatically mapped by the EJB container.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dropTables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>drop-tables-at-undeploy</code> attribute in
+<code>sun-ejb-jar.xml</code>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>(optional) If <code>true</code>, and deployment and undeployment occur in the same
+JVM session, database tables that were automatically created when the
+bean(s) were deployed are dropped when the bean(s) are undeployed.</p>
+</div>
+<div class="paragraph">
+<p>If <code>true</code>, the name parameter must be specified or tables may not be
+dropped.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">autoDelete</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>(optional) If <code>true</code>, deletes the contents of the <a href="#instance-root-directory">Instance
+Root Directory</a> when the server is stopped.</p>
+</div>
+<div class="paragraph">
+<p>Caution: Do not set <code>autoDelete</code> to <code>true</code> if you are using
+<code>installRoot</code> to refer to a preexisting Eclipse GlassFish installation.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfishstart-goal"><a class="anchor" href="#embedded-glassfishstart-goal"></a><code>embedded-glassfish:start</code> Goal</h4>
+<div class="paragraph">
+<p>This goal starts the server. You can set the parameters described in the
+following table.</p>
+</div>
+<div id="gjkye" class="paragraph">
+<p>Table 1-6 <code>embedded-glassfish:start</code> Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 17%;">
+<col style="width: 38%;">
+<col style="width: 45%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containerType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The container to start: <code>web</code>, <code>ejb</code>,
+<code>jpa</code>, or <code>all</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">installRoot</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#installation-root-directory">Installation Root
+Directory</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instanceRoot</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>In order of precedence:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>glassfish.embedded.tmpdir</code> system property value</p>
+</li>
+<li>
+<p><code>java.io.tmpdir</code> system property value</p>
+</li>
+<li>
+<p>as-install<code>/domains/domain1</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#instance-root-directory">Instance Root Directory</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">configFile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/config/domain.xml`</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The
+configuration file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. Must be set explicitly or defined in the configuration
+file.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The HTTP or HTTPS port.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">autoDelete</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>(optional) If <code>true</code>, deletes the contents of the <a href="#instance-root-directory">Instance
+Root Directory</a> when the server is stopped.</p>
+</div>
+<div class="paragraph">
+<p>Caution: Do not set <code>autoDelete</code> to <code>true</code> if you are using
+<code>installRoot</code> to refer to a preexisting Eclipse GlassFish installation.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfishdeploy-goal"><a class="anchor" href="#embedded-glassfishdeploy-goal"></a><code>embedded-glassfish:deploy</code> Goal</h4>
+<div class="paragraph">
+<p>This goal deploys an application. You can redeploy if you change the
+application. The application can be a packaged archive or a directory
+that contains an exploded application. You can set the parameters
+described in the following table.</p>
+</div>
+<div id="gjkvv" class="paragraph">
+<p>Table 1-7 <code>embedded-glassfish:deploy</code> Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 18%;">
+<col style="width: 39%;">
+<col style="width: 43%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">app</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The archive file or directory for the application to be
+deployed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>In order of precedence:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>application-name</code> or <code>module-name</code> in the deployment descriptor.</p>
+</li>
+<li>
+<p>The name of the archive file without the extension or the directory
+name.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information, see "<a href="application-deployment-guide.html#naming-standards">Naming Standards</a>" in
+Eclipse GlassFish Application Deployment Guide.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contextRoot</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the application.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The context root
+of the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">precompileJsp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, JSP pages are precompiled
+during deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dbVendorName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the database vendor for
+which tables can be created. Allowed values are <code>javadb</code>, <code>db2</code>,
+<code>mssql</code>, <code>oracle</code>, <code>postgresql</code>, <code>pointbase</code>, <code>derby</code> (also for
+CloudScape), and <code>sybase</code>, case-insensitive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createTables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>create-tables-at-deploy</code> attribute in
+<code>sun-ejb-jar.xml</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, creates database tables during
+deployment for beans that are automatically mapped by the EJB container.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfishundeploy-goal"><a class="anchor" href="#embedded-glassfishundeploy-goal"></a><code>embedded-glassfish:undeploy</code> Goal</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you reference a nonembedded Eclipse GlassFish installation using the
+<code>glassfish-embedded-static-shell.jar</code> file and do not undeploy your
+applications in the same server life cycle in which you deployed them,
+expanded archives for these applications remain under the
+domain-dir<code>/applications</code> directory.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This goal undeploys an application. You can set the parameters described
+in the following table.</p>
+</div>
+<div id="gjkxf" class="paragraph">
+<p>Table 1-8 <code>embedded-glassfish:undeploy</code> Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 34%;">
+<col style="width: 52%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the name is omitted, all applications are undeployed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The
+name of the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dropTables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>drop-tables-at-undeploy</code> attribute in
+<code>sun-ejb-jar.xml</code>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>(optional) If <code>true</code>, and deployment and undeployment occur in the same
+JVM session, database tables that were automatically created when the
+bean(s) were deployed are dropped when the bean(s) are undeployed.</p>
+</div>
+<div class="paragraph">
+<p>If <code>true</code>, the name parameter must be specified or tables may not be
+dropped.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cascade</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>(optional) If <code>true</code>, deletes all connection pools and connector
+resources associated with the resource adapter being undeployed.</p>
+</div>
+<div class="paragraph">
+<p>If <code>false</code>, undeployment fails if any pools or resources are still
+associated with the resource adapter.</p>
+</div>
+<div class="paragraph">
+<p>This attribute is applicable to connectors (resource adapters) and
+applications with connector modules.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfishstop-goal"><a class="anchor" href="#embedded-glassfishstop-goal"></a><code>embedded-glassfish:stop</code> Goal</h4>
+<div class="paragraph">
+<p>This goal stops the server. You can set the parameters described in the
+following table.</p>
+</div>
+<div id="gjkwm" class="paragraph">
+<p>Table 1-9 <code>embedded-glassfish:stop</code> Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 17%;">
+<col style="width: 67%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to stop.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfishadmin-goal"><a class="anchor" href="#embedded-glassfishadmin-goal"></a><code>embedded-glassfish:admin</code> Goal</h4>
+<div class="paragraph">
+<p>This goal runs a Eclipse GlassFish administration command. You must use
+either the command and commandParameters parameters in combination or
+the commandLine parameter. For more information about administration
+commands, see the <a href="reference-manual.html#GSRFM">Eclipse GlassFish
+Reference Manual</a>. You can set the parameters described in the following
+table.</p>
+</div>
+<div id="gjkwe" class="paragraph">
+<p>Table 1-10 <code>embedded-glassfish:start</code> Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 24%;">
+<col style="width: 10%;">
+<col style="width: 66%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server on which to run the
+command.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">command</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the command, for example
+<code>createJdbcResource</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commandParameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A map of the command parameters. See the
+<code>org.glassfish.embeddable.admin.CommandParameters</code> class at
+<code><a href="https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html" class="bare">https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html</a></code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commandLine</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The full <code>asadmin</code> syntax of the command.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -2293,729 +3120,324 @@ preserving this file when the application is stopped.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server"><a class="anchor" href="#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server"></a>Testing Applications with the Maven Plug-in for Embedded Eclipse GlassFish</h2>
+<h2 id="default-java-persistence-data-source-for-embedded-glassfish-server"><a class="anchor" href="#default-java-persistence-data-source-for-embedded-glassfish-server"></a>Default Java Persistence Data Source for Embedded Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you are using <a href="http://maven.apache.org/">Apache Maven</a>
-(<code><a href="http://maven.apache.org/" class="bare">http://maven.apache.org/</a></code>), the plug-in for embedded Eclipse GlassFish
-simplifies the testing of applications. This plug-in enables you to
-build and start an unpackaged application with a single Maven goal.</p>
+<p>The <code>jdbc/__default</code> Java DB database is preconfigured with Embedded
+Eclipse GlassFish. It is used when an application is deployed in Embedded
+Eclipse GlassFish that uses Java Persistence but doesn&#8217;t specify a data
+source. Embedded Eclipse GlassFish uses the embedded Java DB database
+created in a temporary domain that is destroyed when Embedded Eclipse GlassFish is stopped. You can use a Java DB database configured with
+nonembedded Eclipse GlassFish if you explicitly specify the instance root
+directory or the configuration file.</p>
 </div>
 <div class="paragraph">
-<p>The following topics are addressed here:</p>
+<p>By default, weaving is enabled when the Eclipse GlassFish Embedded Server
+API is used. To disable weaving, set the
+<code>org.glassfish.persistence.embedded.weaving.enabled</code> property to
+<code>false</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-log-levels-in-embedded-glassfish-server"><a class="anchor" href="#changing-log-levels-in-embedded-glassfish-server"></a>Changing Log Levels in Embedded Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To change log levels in Embedded Eclipse GlassFish, you can follow the
+steps in this section or you can use the Embedded Server API as shown in
+<a href="#gjlfm">Example 1-11</a>. For more information about Eclipse GlassFish
+logging, see "<a href="administration-guide.html#administering-the-logging-service">Administering the Logging Service</a>" in
+Eclipse GlassFish Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>You can change log levels in Embedded Eclipse GlassFish in either of the
+following ways:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a></p>
+<p>Using the Eclipse GlassFish Embedded Server API</p>
 </li>
 <li>
-<p><a href="#to-build-and-start-an-application-from-maven">To Build and Start an Application From Maven</a></p>
-</li>
-<li>
-<p><a href="#to-stop-embedded-glassfish-server">To Stop Embedded Eclipse GlassFish</a></p>
-</li>
-<li>
-<p><a href="#to-redeploy-an-application-that-was-built-and-started-from-maven">To Redeploy an Application That Was Built and Started From Maven</a></p>
-</li>
-<li>
-<p><a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a></p>
+<p>Creating a custom logging configuration file</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Predefined Maven goals for embedded Eclipse GlassFish are described in
-<a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>.</p>
+<p>Both these ways use logger names. For a list of logger names, use the
+<a href="reference-manual.html#list-log-levels"><code>list-log-levels</code></a> subcommand.</p>
+</div>
+<div id="gkrhh" class="paragraph">
+<p>Example 1-15 Using the Eclipse GlassFish Embedded Server API</p>
 </div>
 <div class="paragraph">
-<p>To use Maven with Embedded Eclipse GlassFish and the EJB 3.1 Embeddable
-API, see <a href="#GSESG00064">Using Maven with the EJB 3.1 Embeddable API and
-Embedded Eclipse GlassFish</a>.</p>
-</div>
-<div class="sect2">
-<h3 id="to-set-up-your-maven-environment"><a class="anchor" href="#to-set-up-your-maven-environment"></a>To Set Up Your Maven Environment</h3>
-<div class="paragraph">
-<p>Setting up your Maven environment enables Maven to download the required
-embedded Eclipse GlassFish distribution file when you build your project.
-Setting up your Maven environment also identifies the plug-in that
-enables you to build and start an unpackaged application with a single
-Maven goal.</p>
-</div>
-<div class="paragraph">
-<p>Before You Begin</p>
-</div>
-<div class="paragraph">
-<p>Ensure that <a href="http://maven.apache.org/">Apache Maven</a>
-(<code><a href="http://maven.apache.org/" class="bare">http://maven.apache.org/</a></code>) is installed.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Identify the Maven plug-in for embedded Eclipse GlassFish.</p>
-<div class="paragraph">
-<p>Add the following <code>plugin</code> element to your POM file:</p>
+<p>This example shows how to set log levels using the <code>getLogger</code> method in
+the API.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
-        ...
-        <span class="tag">&lt;plugins&gt;</span>
-            ...
-            <span class="tag">&lt;plugin&gt;</span>
-                <span class="tag">&lt;groupId&gt;</span>org.glassfish.embedded<span class="tag">&lt;/groupId&gt;</span>
-                <span class="tag">&lt;artifactId&gt;</span>embedded-glassfish-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
-                <span class="tag">&lt;version&gt;</span>version<span class="tag">&lt;/version&gt;</span>
-            <span class="tag">&lt;/plugin&gt;</span>
-            ...
-        <span class="tag">&lt;/plugins&gt;</span>
-...</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">version</dt>
-<dd>
-<p>The version to use. The version of the final promoted build for this
-release is <code>7.0</code>. The Maven plug-in is not bound to a specific version
-of Eclipse GlassFish. You can specify the version you want to use. If
-no version is specified, a default version is used.</p>
-</dd>
-</dl>
-</div>
-</li>
-<li>
-<p>Configure the the path to the application WAR, and other standard settings.</p>
-<div class="paragraph">
-<p>Add the following <code>configuration</code> element to your POM file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
-        <span class="tag">&lt;plugins&gt;</span>
-            ...
-            <span class="tag">&lt;plugin&gt;</span>
-                ...
-                <span class="tag">&lt;configuration&gt;</span>
-                    <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
-                    <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
-                    <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
-                    <span class="tag">&lt;autoDelete&gt;</span>true<span class="tag">&lt;/autoDelete&gt;</span>
-                    ...
-                <span class="tag">&lt;/configuration&gt;</span>
-                ...
-            <span class="tag">&lt;/plugin&gt;</span>
-            ...
-        <span class="tag">&lt;/plugins&gt;</span>
-...</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">app</dt>
-<dd>
-<p>In the app parameter, substitute the archive file or directory for your
-application. The optional port, contextRoot, and autoDelete parameters
-show example values. For details, see <a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for
-Embedded Eclipse GlassFish</a>.</p>
-</dd>
-</dl>
-</div>
-</li>
-<li>
-<p>Perform advanced plug-in configuration. This step is optional.
-Add the following <code>configuration</code> element to your POM file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
-        <span class="tag">&lt;plugins&gt;</span>
-            ...
-            <span class="tag">&lt;plugin&gt;</span>
-                ...
-                <span class="tag">&lt;configuration&gt;</span>
-                    <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
-                    <span class="tag">&lt;name&gt;</span>test<span class="tag">&lt;/name&gt;</span>
-                    <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
-                    <span class="tag">&lt;ports&gt;</span>
-                        <span class="tag">&lt;http-listener&gt;</span>8080<span class="tag">&lt;/http-listener&gt;</span>
-                        <span class="tag">&lt;https-listener&gt;</span>8181<span class="tag">&lt;/https-listener&gt;</span>
-                    <span class="tag">&lt;/ports&gt;</span>
-                    <span class="tag">&lt;bootstrapProperties&gt;</span>
-                        <span class="tag">&lt;property&gt;</span>test_key=test_value<span class="tag">&lt;/property&gt;</span>
-                    <span class="tag">&lt;/bootstrapProperties&gt;</span>
-                    <span class="tag">&lt;bootstrapPropertiesFile&gt;</span>bootstrap.properties<span class="tag">&lt;/bootstrapPropertiesFile&gt;</span>
-                    <span class="tag">&lt;glassfishProperties&gt;</span>
-<span class="tag">&lt;property&gt;</span>server.jms-service.jms-host.default_JMS_host.port=17676<span class="tag">&lt;/property&gt;</span>
-                    <span class="tag">&lt;/glassfishProperties&gt;</span>
-                    <span class="tag">&lt;glassfishPropertiesFile&gt;</span>glassfish.properties<span class="tag">&lt;/glassfishPropertiesFile&gt;</span>
-                    <span class="tag">&lt;systemProperties&gt;</span>
-                        <span class="tag">&lt;property&gt;</span>ANTLR_USE_DIRECT_CLASS_LOADING=true<span class="tag">&lt;/property&gt;</span>
-                    <span class="tag">&lt;/systemProperties&gt;</span>
-                    <span class="tag">&lt;systemPropertiesFile&gt;</span>system.properties<span class="tag">&lt;/systemPropertiesFile&gt;</span>
-                <span class="tag">&lt;/configuration&gt;</span>
-                <span class="tag">&lt;executions&gt;</span>
-                    <span class="tag">&lt;execution&gt;</span>
-                        <span class="tag">&lt;goals&gt;</span>
-                            <span class="tag">&lt;goal&gt;</span>start<span class="tag">&lt;/goal&gt;</span>
-                            <span class="tag">&lt;goal&gt;</span>deploy<span class="tag">&lt;/goal&gt;</span>
-                            <span class="tag">&lt;goal&gt;</span>undeploy<span class="tag">&lt;/goal&gt;</span>
-                            <span class="tag">&lt;goal&gt;</span>stop<span class="tag">&lt;/goal&gt;</span>
-                        <span class="tag">&lt;/goals&gt;</span>
-                    <span class="tag">&lt;/execution&gt;</span>
-                <span class="tag">&lt;/executions&gt;</span>
-            <span class="tag">&lt;/plugin&gt;</span>
-            ...
-        <span class="tag">&lt;/plugins&gt;</span>
-...</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Configure Maven goals.
-Add <code>execution</code> elements to your POM file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
-        <span class="tag">&lt;plugins&gt;</span>
-            ...
-            <span class="tag">&lt;plugin&gt;</span>
-                ...
-                <span class="tag">&lt;executions&gt;</span>
-                    <span class="tag">&lt;execution&gt;</span>
-                        <span class="tag">&lt;phase&gt;</span>install<span class="tag">&lt;/phase&gt;</span>
-                        <span class="tag">&lt;goals&gt;</span>
-                            <span class="tag">&lt;goal&gt;</span>goal<span class="tag">&lt;/goal&gt;</span>
-                        <span class="tag">&lt;/goals&gt;</span>
-                    <span class="tag">&lt;/execution&gt;</span>
-                <span class="tag">&lt;/executions&gt;</span>
-                ...
-            <span class="tag">&lt;/plugin&gt;</span>
-            ...
-        <span class="tag">&lt;/plugins&gt;</span>
-...</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">goal</dt>
-<dd>
-<p>The goal to use. See <a href="#maven-goals-for-embedded-glassfish-server">Maven Goals for Embedded Eclipse GlassFish</a>.</p>
-</dd>
-</dl>
-</div>
-</li>
-</ol>
-</div>
-<div id="gjkod" class="paragraph">
-<p>Example 1-13 POM File for Configuring Maven to Use Embedded Eclipse GlassFish</p>
-</div>
-<div class="paragraph">
-<p>This example shows a POM file for configuring Maven to use embedded Eclipse GlassFish.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="comment">&lt;!--
-Line breaks in the following element are for readability purposes only
---&gt;</span>
-<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">&quot;</span></span>
-<span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
-<span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://maven.apache.org/POM/4.0.0</span>
-<span class="content">http://maven.apache.org/maven-v4_0_0.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.glassfish.embeddable</span>.*;
 
-  <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
-  <span class="tag">&lt;groupId&gt;</span>org.example<span class="tag">&lt;/groupId&gt;</span>
-  <span class="tag">&lt;artifactId&gt;</span>maven-glassfish-plugin-tester<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-  <span class="tag">&lt;name&gt;</span>Maven Embedded Glassfish Plugin Example<span class="tag">&lt;/name&gt;</span>
-  <span class="tag">&lt;build&gt;</span>
-    <span class="tag">&lt;plugins&gt;</span>
-      <span class="tag">&lt;plugin&gt;</span>
-        <span class="tag">&lt;groupId&gt;</span>org.glassfish.embedded<span class="tag">&lt;/groupId&gt;</span>
-        <span class="tag">&lt;artifactId&gt;</span>embedded-glassfish-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>7.0<span class="tag">&lt;/version&gt;</span>
-        <span class="tag">&lt;configuration&gt;</span>
-          <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
-          <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
-          <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
-          <span class="tag">&lt;autoDelete&gt;</span>true<span class="tag">&lt;/autoDelete&gt;</span>
-       <span class="tag">&lt;/configuration&gt;</span>
-       <span class="tag">&lt;executions&gt;</span>
-          <span class="tag">&lt;execution&gt;</span>
-             <span class="tag">&lt;phase&gt;</span>install<span class="tag">&lt;/phase&gt;</span>
-             <span class="tag">&lt;goals&gt;</span>
-                   <span class="tag">&lt;goal&gt;</span>run<span class="tag">&lt;/goal&gt;</span>
-             <span class="tag">&lt;/goals&gt;</span>
-          <span class="tag">&lt;/execution&gt;</span>
-       <span class="tag">&lt;/executions&gt;</span>
-     <span class="tag">&lt;/plugin&gt;</span>
-    <span class="tag">&lt;/plugins&gt;</span>
-  <span class="tag">&lt;/build&gt;</span>
-<span class="tag">&lt;/project&gt;</span></code></pre>
+<span class="comment">// Create Embedded GlassFish</span>
+GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
+
+<span class="comment">// Set the log levels. For example, set 'deployment' and 'server' log levels to FINEST</span>
+<span class="predefined-type">Logger</span>.getLogger(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>).getHandlers()[<span class="integer">0</span>].setLevel(<span class="predefined-type">Level</span>.FINEST);
+<span class="predefined-type">Logger</span>.getLogger(<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system.tools.deployment</span><span class="delimiter">&quot;</span></span>).setLevel(<span class="predefined-type">Level</span>.FINEST);
+<span class="predefined-type">Logger</span>.getLogger(<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system</span><span class="delimiter">&quot;</span></span>).setLevel(<span class="predefined-type">Level</span>.FINEST);
+
+<span class="comment">// Start Embedded GlassFish and deploy an application.</span>
+<span class="comment">// You will see all the FINEST logs printed on the console.</span>
+glassfish.start();
+glassfish.getDeployer().deploy(<span class="keyword">new</span> <span class="predefined-type">File</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">sample.war</span><span class="delimiter">&quot;</span></span>));
+
+<span class="comment">// Dispose Embedded GlassFish</span>
+glassfish.dispose();</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="to-build-and-start-an-application-from-maven"><a class="anchor" href="#to-build-and-start-an-application-from-maven"></a>To Build and Start an Application From Maven</h3>
-<div class="paragraph">
-<p>If you are using Maven to manage the development of your application,
-you can use a Maven goal to build and start the application in embedded
-Eclipse GlassFish.</p>
+<div id="gkrgw" class="paragraph">
+<p>Example 1-16 Creating a Custom Logging Configuration File</p>
 </div>
 <div class="paragraph">
-<p>Before You Begin</p>
+<p>This example shows the contents of a custom logging configuration file,
+<code>customlogging.properties</code>.</p>
 </div>
-<div class="paragraph">
-<p>Ensure that your Maven environment is configured, as described in
-<a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a>.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Include the path to the Maven executable file <code>mvn</code> in your path
-statement.</p>
-</li>
-<li>
-<p>Ensure that the <code>JAVA_HOME</code> environment variable is defined.</p>
-</li>
-<li>
-<p>Create a directory for the Maven project for your application.</p>
-</li>
-<li>
-<p>Copy to your project directory the POM file that you created in
-<a href="#to-set-up-your-maven-environment">To Set Up Your Maven Environment</a>.</p>
-</li>
-<li>
-<p>Run the following command in your project directory:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>mvn install</code></pre>
+<pre class="CodeRay highlight"><code>handlers = java.util.logging.ConsoleHandler
+java.util.logging.ConsoleHandler.level = FINEST
+jakarta.enterprise.system.tools.deployment.level = FINEST
+jakarta.enterprise.system.level = FINEST</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This command performs the following actions:</p>
+<p>Pass the name of this custom logging configuration file to the <code>java</code>
+command when you invoke Embedded Eclipse GlassFish. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFish</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="monitoring-embedded-glassfish-server-with-jmx"><a class="anchor" href="#monitoring-embedded-glassfish-server-with-jmx"></a>Monitoring Embedded Eclipse GlassFish with JMX</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish supports monitoring through JMX MBeans, similar to regular Eclipse GlassFish Server. However, you must attache the flashlight agent on command line to enable monitoring functionality.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AMX (Application Management Extensions) monitoring is only available in <code>glassfish-embedded-all.jar</code>. The <code>glassfish-embedded-web.jar</code> does not include AMX support, which limits the available monitoring MBeans.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>To enable monitoring in Embedded Eclipse GlassFish, you need the flashlight agent JAR file:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Installs the Maven repository in a directory named <code>.m2</code> under your
-home directory.</p>
+<p>Download from Maven Central: <code>org.glassfish.main.flashlight:flashlight-agent</code></p>
 </li>
 <li>
-<p>Starts Embedded Eclipse GlassFish.</p>
-</li>
-<li>
-<p>Deploys your application.</p>
-<div class="paragraph">
-<p>The application continues to run in Embedded Eclipse GlassFish until
-Embedded Eclipse GlassFish is stopped.</p>
-</div>
+<p>Or use from an existing Eclipse GlassFish installation: <code>glassfish/lib/monitor/flashlight-agent.jar</code></p>
 </li>
 </ul>
 </div>
+</div>
+<div class="sect2">
+<h3 id="enabling-monitoring-modules"><a class="anchor" href="#enabling-monitoring-modules"></a>Enabling Monitoring Modules</h3>
+<div class="paragraph">
+<p>By default, the monitoring service and MBeans support are enabled, but no monitoring modules are active. You can enable specific monitoring modules using one of two methods:</p>
+</div>
+<div class="sect3">
+<h4 id="method-1-command-line"><a class="anchor" href="#method-1-command-line"></a>Method 1: Command Line</h4>
+<div class="paragraph">
+<p>Start Embedded Eclipse GlassFish with the <code>enable-monitoring</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="method-2-properties-file"><a class="anchor" href="#method-2-properties-file"></a>Method 2: Properties File</h4>
+<div class="paragraph">
+<p>Create a <code>glassfish.properties</code> file in the current directory with monitoring configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH
+configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then start Embedded Eclipse GlassFish:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-monitoring-data"><a class="anchor" href="#accessing-monitoring-data"></a>Accessing Monitoring Data</h3>
+<div class="paragraph">
+<p>Once monitoring modules are enabled, you can access monitoring data through JMX clients such as VisualVM or JConsole.</p>
+</div>
+<div class="sect3">
+<h4 id="using-visualvm"><a class="anchor" href="#using-visualvm"></a>Using VisualVM</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Connect to the Embedded Eclipse GlassFish process in VisualVM</p>
+</li>
+<li>
+<p>Install the MBeans extension if not already available</p>
+</li>
+<li>
+<p>Navigate to the MBeans tab</p>
+</li>
+<li>
+<p>Execute the <code>bootAMX</code> operation first (this is required, same as with regular Eclipse GlassFish Server)</p>
+</li>
+<li>
+<p>Monitoring data will be available under the <code>amx</code> node, in nodes that end with <code>-mon</code>, such as <code>thread-pool-mon</code> or <code>request-mon</code></p>
 </li>
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="to-stop-embedded-glassfish-server"><a class="anchor" href="#to-stop-embedded-glassfish-server"></a>To Stop Embedded Eclipse GlassFish</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Change to the root directory of the Maven project for your
-application.</p>
-</li>
-<li>
-<p>Run the Maven goal to stop the application in embedded Eclipse GlassFish.</p>
+<div class="sect3">
+<h4 id="exposing-jmx-on-a-specific-port"><a class="anchor" href="#exposing-jmx-on-a-specific-port"></a>Exposing JMX on a Specific Port</h4>
+<div class="paragraph">
+<p>To allow remote JMX connections, you can expose the JMX server on a specific port by adding JVM system properties:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>mvn embedded-glassfish:stop</code></pre>
+<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar \
+     -Dcom.sun.management.jmxremote \
+     -Dcom.sun.management.jmxremote.port=8686 \
+     -Dcom.sun.management.jmxremote.authenticate=false \
+     -Dcom.sun.management.jmxremote.ssl=false \
+     -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Exposing JMX without authentication and SSL is not secure and should only be used in development environments. JMX MBeans include management beans that allow executing administrative operations on Eclipse GlassFish, which could be exploited by unauthorized users. In production environments, always enable authentication and SSL for JMX connections.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="available-monitoring-modules"><a class="anchor" href="#available-monitoring-modules"></a>Available Monitoring Modules</h4>
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish supports the same monitoring modules as regular Eclipse GlassFish Server, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>thread-pool</code> - Thread pool statistics</p>
+</li>
+<li>
+<p><code>http-service</code> - HTTP service metrics</p>
+</li>
+<li>
+<p><code>web-container</code> - Web container statistics</p>
+</li>
+<li>
+<p><code>ejb-container</code> - EJB container metrics</p>
+</li>
+<li>
+<p><code>transaction-service</code> - Transaction service data</p>
+</li>
+<li>
+<p><code>jvm</code> - JVM statistics</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>This runs the <code>stop</code> method of the <code>GlassFish</code> object and any other
-methods that are required to shut down the server in an orderly fashion.
-See <a href="#stopping-an-embedded-glassfish-server-from-an-application">Stopping an Embedded Eclipse GlassFish From an
-Application</a>.</p>
+<p>For comprehensive information about available monitoring modules and their metrics, see <a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a> in the Eclipse GlassFish Administration Guide.</p>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="embedded-glassfish-server-file-system"><a class="anchor" href="#embedded-glassfish-server-file-system"></a>Embedded Eclipse GlassFish File System</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following Embedded Eclipse GlassFish directories and files are
+important if you are referencing a nonembedded installation of Eclipse GlassFish:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#installation-root-directory">Installation Root Directory</a></p>
 </li>
-</ol>
+<li>
+<p><a href="#instance-root-directory">Instance Root Directory</a></p>
+</li>
+<li>
+<p><a href="#GSESG00056">The <code>domain.xml</code> File</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="installation-root-directory"><a class="anchor" href="#installation-root-directory"></a>Installation Root Directory</h3>
+<div class="paragraph">
+<p>The installation root directory, represented as as-install, is the
+parent of the directory that embedded Eclipse GlassFish uses for
+configuration files. This directory corresponds to the base directory
+for an installation of Eclipse GlassFish. Configuration files are
+contained in the following directories in the base directory for an
+installation of Eclipse GlassFish:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>domains</code></p>
+</li>
+<li>
+<p><code>lib</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Specify the installation root directory only if you have a valid
+nonembedded Eclipse GlassFish installation and are using
+<code>glassfish-embedded-static-shell.jar</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="to-redeploy-an-application-that-was-built-and-started-from-maven"><a class="anchor" href="#to-redeploy-an-application-that-was-built-and-started-from-maven"></a>To Redeploy an Application That Was Built and Started From Maven</h3>
+<h3 id="instance-root-directory"><a class="anchor" href="#instance-root-directory"></a>Instance Root Directory</h3>
 <div class="paragraph">
-<p>An application that was built and started from Maven continues to run in
-Embedded Eclipse GlassFish until Embedded Eclipse GlassFish is stopped.
-While the application is running, you can test changes to the
-application by redeploying it.</p>
+<p>The instance root directory, also known as the domain directory, represented as domain-dir, is the parent
+directory of a server instance directory. Embedded Eclipse GlassFish uses the server instance directory for domain
+configuration files.</p>
 </div>
-<div class="paragraph">
-<p>To redeploy, in the window from where the application was built and
-started from Maven, press Enter.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="maven-goals-for-embedded-glassfish-server"><a class="anchor" href="#maven-goals-for-embedded-glassfish-server"></a>Maven Goals for Embedded Eclipse GlassFish</h3>
-<div class="paragraph">
-<p>You can use the following Maven goals to test your applications with
-embedded Eclipse GlassFish:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#embedded-glassfishrun-goal"><code>embedded-glassfish:run</code> Goal</a></p>
-</li>
-<li>
-<p><a href="#embedded-glassfishstart-goal"><code>embedded-glassfish:start</code> Goal</a></p>
-</li>
-<li>
-<p><a href="#embedded-glassfishdeploy-goal"><code>embedded-glassfish:deploy</code> Goal</a></p>
-</li>
-<li>
-<p><a href="#embedded-glassfishundeploy-goal"><code>embedded-glassfish:undeploy</code> Goal</a></p>
-</li>
-<li>
-<p><a href="#embedded-glassfishstop-goal"><code>embedded-glassfish:stop</code> Goal</a></p>
-</li>
-<li>
-<p><a href="#embedded-glassfishadmin-goal"><code>embedded-glassfish:admin</code> Goal</a></p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="embedded-glassfishrun-goal"><a class="anchor" href="#embedded-glassfishrun-goal"></a><code>embedded-glassfish:run</code> Goal</h4>
-<div class="paragraph">
-<p>This goal starts the server and deploys an application. You can redeploy
-if you change the application. The application can be a packaged archive
-or a directory that contains an exploded application. You can set the
-parameters described in the following table.</p>
-</div>
-<div id="gjkws" class="paragraph">
-<p>Table 1-5 <code>embedded-glassfish:run</code> Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 18%;">
-<col style="width: 42%;">
-<col style="width: 40%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">app</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The archive file or directory for the application to be deployed.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">containerType</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The container to start: <code>web</code>, <code>ejb</code>, <code>jpa</code>, or <code>all</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">installRoot</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#installation-root-directory">Installation Root Directory</a>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">instanceRoot</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>In order of precedence:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>glassfish.embedded.tmpdir</code> property value specified in <code>GlassFishProperties</code> object</p>
-</li>
-<li>
-<p><code>glassfish.embedded.tmpdir</code> system property value</p>
-</li>
-<li>
-<p><code>java.io.tmpdir</code> system property value</p>
-</li>
-<li>
-<p>as-install<code>/domains/domain1</code> if a nonembedded installation is referenced</p>
-</li>
-</ul>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#instance-root-directory">Instance Root Directory</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">configFile</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir<code>/config/domain.xml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The
-configuration file.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None. Must be set explicitly or defined in the configuration
-file.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The HTTP or HTTPS port.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>In order of precedence:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>application-name</code> or <code>module-name</code> in the deployment descriptor.</p>
-</li>
-<li>
-<p>The name of the archive file without the extension or the directory name.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For more information, see "<a href="application-deployment-guide.html#naming-standards">Naming Standards</a>" in
-Eclipse GlassFish Application Deployment Guide.</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the application.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contextRoot</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the application.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The context root
-of the application.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">precompileJsp</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, JSP pages are precompiled
-during deployment.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dbVendorName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the database vendor for
-which tables can be created. Allowed values are <code>javadb</code>, <code>db2</code>,
-<code>mssql</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>, <code>pointbase</code>, <code>derby</code> (also for
-CloudScape), and <code>sybase</code>, case-insensitive.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">createTables</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>create-tables-at-deploy</code> attribute in
-<code>sun-ejb-jar.xml</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, creates database tables during
-deployment for beans that are automatically mapped by the EJB container.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dropTables</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>drop-tables-at-undeploy</code> attribute in
-<code>sun-ejb-jar.xml</code>.</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(optional) If <code>true</code>, and deployment and undeployment occur in the same
-JVM session, database tables that were automatically created when the
-bean(s) were deployed are dropped when the bean(s) are undeployed.</p>
-</div>
-<div class="paragraph">
-<p>If <code>true</code>, the name parameter must be specified or tables may not be
-dropped.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">autoDelete</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(optional) If <code>true</code>, deletes the contents of the <a href="#instance-root-directory">Instance
-Root Directory</a> when the server is stopped.</p>
-</div>
-<div class="paragraph">
-<p>Caution: Do not set <code>autoDelete</code> to <code>true</code> if you are using
-<code>installRoot</code> to refer to a preexisting Eclipse GlassFish installation.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="embedded-glassfishstart-goal"><a class="anchor" href="#embedded-glassfishstart-goal"></a><code>embedded-glassfish:start</code> Goal</h4>
-<div class="paragraph">
-<p>This goal starts the server. You can set the parameters described in the
-following table.</p>
-</div>
-<div id="gjkye" class="paragraph">
-<p>Table 1-6 <code>embedded-glassfish:start</code> Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 17%;">
-<col style="width: 38%;">
-<col style="width: 45%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">containerType</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The container to start: <code>web</code>, <code>ejb</code>,
-<code>jpa</code>, or <code>all</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">installRoot</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#installation-root-directory">Installation Root
-Directory</a>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">instanceRoot</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>In order of precedence:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>glassfish.embedded.tmpdir</code> system property value</p>
-</li>
-<li>
-<p><code>java.io.tmpdir</code> system property value</p>
-</li>
-<li>
-<p>as-install<code>/domains/domain1</code></p>
-</li>
-</ul>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The <a href="#instance-root-directory">Instance Root Directory</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">configFile</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/config/domain.xml`</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The
-configuration file.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None. Must be set explicitly or defined in the configuration
-file.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The HTTP or HTTPS port.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">autoDelete</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(optional) If <code>true</code>, deletes the contents of the <a href="#instance-root-directory">Instance
-Root Directory</a> when the server is stopped.</p>
-</div>
-<div class="paragraph">
-<p>Caution: Do not set <code>autoDelete</code> to <code>true</code> if you are using
-<code>installRoot</code> to refer to a preexisting Eclipse GlassFish installation.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="embedded-glassfishdeploy-goal"><a class="anchor" href="#embedded-glassfishdeploy-goal"></a><code>embedded-glassfish:deploy</code> Goal</h4>
-<div class="paragraph">
-<p>This goal deploys an application. You can redeploy if you change the
-application. The application can be a packaged archive or a directory
-that contains an exploded application. You can set the parameters
-described in the following table.</p>
-</div>
-<div id="gjkvv" class="paragraph">
-<p>Table 1-7 <code>embedded-glassfish:deploy</code> Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 18%;">
-<col style="width: 39%;">
-<col style="width: 43%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">app</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The archive file or directory for the application to be
-deployed.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>In order of precedence:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>application-name</code> or <code>module-name</code> in the deployment descriptor.</p>
-</li>
-<li>
-<p>The name of the archive file without the extension or the directory
-name.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For more information, see "<a href="application-deployment-guide.html#naming-standards">Naming Standards</a>" in
-Eclipse GlassFish Application Deployment Guide.</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the application.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contextRoot</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the application.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The context root
-of the application.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">precompileJsp</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, JSP pages are precompiled
-during deployment.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dbVendorName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name of the database vendor for
-which tables can be created. Allowed values are <code>javadb</code>, <code>db2</code>,
-<code>mssql</code>, <code>oracle</code>, <code>postgresql</code>, <code>pointbase</code>, <code>derby</code> (also for
-CloudScape), and <code>sybase</code>, case-insensitive.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">createTables</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>create-tables-at-deploy</code> attribute in
-<code>sun-ejb-jar.xml</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If <code>true</code>, creates database tables during
-deployment for beans that are automatically mapped by the EJB container.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="embedded-glassfishundeploy-goal"><a class="anchor" href="#embedded-glassfishundeploy-goal"></a><code>embedded-glassfish:undeploy</code> Goal</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3024,168 +3446,59 @@ deployment for beans that are automatically mapped by the EJB container.</p></td
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If you reference a nonembedded Eclipse GlassFish installation using the
-<code>glassfish-embedded-static-shell.jar</code> file and do not undeploy your
-applications in the same server life cycle in which you deployed them,
-expanded archives for these applications remain under the
-domain-dir<code>/applications</code> directory.</p>
+<p>If you have valid custom as-install and domain-dir
+directories, specify both in the <code>BootstrapProperties</code> and
+<code>GlassFishProperties</code> classes respectively as described in
+<a href="#creating-and-configuring-an-embedded-glassfish-server">Creating and Configuring an Embedded Eclipse GlassFish</a>.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>This goal undeploys an application. You can set the parameters described
-in the following table.</p>
-</div>
-<div id="gjkxf" class="paragraph">
-<p>Table 1-8 <code>embedded-glassfish:undeploy</code> Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 14%;">
-<col style="width: 34%;">
-<col style="width: 52%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If the name is omitted, all applications are undeployed.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The
-name of the application.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to start.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dropTables</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>drop-tables-at-undeploy</code> attribute in
-<code>sun-ejb-jar.xml</code>.</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(optional) If <code>true</code>, and deployment and undeployment occur in the same
-JVM session, database tables that were automatically created when the
-bean(s) were deployed are dropped when the bean(s) are undeployed.</p>
+<p>If domain-dir is not specified, Eclipse GlassFish creates a directory
+named <code>gfembed</code>random-number<code>tmp</code> in a temporary directory, where
+random-number is a randomly generated 19-digit number. Eclipse GlassFish
+then copies configuration files into this directory. The temporary
+directory is the value of the system property <code>java.io.tmpdir</code>. You can
+override this value by specifying the <code>glassfish.embedded.tmpdir</code>
+property in the <code>GlassFishProperties</code> class or as a system property.</p>
 </div>
 <div class="paragraph">
-<p>If <code>true</code>, the name parameter must be specified or tables may not be
-dropped.</p>
-</div></div></td>
-</tr>
+<p><a id="GSESG00056"></a><a id="the-domain.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="the-domain-xml-file"><a class="anchor" href="#the-domain-xml-file"></a>The <code>domain.xml</code> File</h3>
+<div class="paragraph">
+<p>Using an existing <code>domain.xml</code> file avoids the need to configure
+embedded Eclipse GlassFish programmatically in your application. Your
+application obtains domain configuration data from an existing
+<code>domain.xml</code> file. You can create this file by using the administrative
+interfaces of an installation of nonembedded Eclipse GlassFish. To
+specify an existing <code>domain.xml</code> file, invoke the <code>setConfigFileURI</code>
+method of the <code>GlassFishProperties</code> class as described in
+<a href="#creating-and-configuring-an-embedded-glassfish-server">Creating and Configuring an Embedded Eclipse GlassFish</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">cascade</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(optional) If <code>true</code>, deletes all connection pools and connector
-resources associated with the resource adapter being undeployed.</p>
-</div>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>If <code>false</code>, undeployment fails if any pools or resources are still
-associated with the resource adapter.</p>
+<p>The built-in <code>domain.xml</code> file used by default by Embedded Eclipse GlassFish can be found in the Embedded Eclipse GlassFish JAR files, in path
+<code>org/glassfish/embed/domain.xml</code>. You can customize this
+file and pass it in using the <code>setConfigFileURI</code> method while creating
+an Embedded Eclipse GlassFish.</p>
 </div>
-<div class="paragraph">
-<p>This attribute is applicable to connectors (resource adapters) and
-applications with connector modules.</p>
-</div></div></td>
+</td>
 </tr>
-</tbody>
 </table>
 </div>
-<div class="sect3">
-<h4 id="embedded-glassfishstop-goal"><a class="anchor" href="#embedded-glassfishstop-goal"></a><code>embedded-glassfish:stop</code> Goal</h4>
-<div class="paragraph">
-<p>This goal stops the server. You can set the parameters described in the
-following table.</p>
-</div>
-<div id="gjkwm" class="paragraph">
-<p>Table 1-9 <code>embedded-glassfish:stop</code> Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 17%;">
-<col style="width: 67%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server to stop.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="embedded-glassfishadmin-goal"><a class="anchor" href="#embedded-glassfishadmin-goal"></a><code>embedded-glassfish:admin</code> Goal</h4>
-<div class="paragraph">
-<p>This goal runs a Eclipse GlassFish administration command. You must use
-either the command and commandParameters parameters in combination or
-the commandLine parameter. For more information about administration
-commands, see the <a href="reference-manual.html#GSRFM">Eclipse GlassFish
-Reference Manual</a>. You can set the parameters described in the following
-table.</p>
-</div>
-<div id="gjkwe" class="paragraph">
-<p>Table 1-10 <code>embedded-glassfish:start</code> Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 24%;">
-<col style="width: 10%;">
-<col style="width: 66%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">serverID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The ID of the server on which to run the
-command.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">command</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the command, for example
-<code>createJdbcResource</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commandParameters</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A map of the command parameters. See the
-<code>org.glassfish.embeddable.admin.CommandParameters</code> class at
-<code><a href="https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html" class="bare">https://www.javadoc.io/doc/org.glassfish.main.common/glassfish-api/latest/org/glassfish/api/admin/CommandParameters.html</a></code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commandLine</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The full <code>asadmin</code> syntax of the command.</p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph">
 <p><a id="GSESG00039"></a><a id="using-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server"></a></p>
-</div>
 </div>
 </div>
 </div>
@@ -3489,277 +3802,17 @@ Line breaks in the following element are for readability purposes only
 </div>
 </div>
 <div class="sect1">
-<h2 id="changing-log-levels-in-embedded-glassfish-server"><a class="anchor" href="#changing-log-levels-in-embedded-glassfish-server"></a>Changing Log Levels in Embedded Eclipse GlassFish</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To change log levels in Embedded Eclipse GlassFish, you can follow the
-steps in this section or you can use the Embedded Server API as shown in
-<a href="#gjlfm">Example 1-11</a>. For more information about Eclipse GlassFish
-logging, see "<a href="administration-guide.html#administering-the-logging-service">Administering the Logging Service</a>" in
-Eclipse GlassFish Administration Guide.</p>
-</div>
-<div class="paragraph">
-<p>You can change log levels in Embedded Eclipse GlassFish in either of the
-following ways:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Using the Eclipse GlassFish Embedded Server API</p>
-</li>
-<li>
-<p>Creating a custom logging configuration file</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Both these ways use logger names. For a list of logger names, use the
-<a href="reference-manual.html#list-log-levels"><code>list-log-levels</code></a> subcommand.</p>
-</div>
-<div id="gkrhh" class="paragraph">
-<p>Example 1-15 Using the Eclipse GlassFish Embedded Server API</p>
-</div>
-<div class="paragraph">
-<p>This example shows how to set log levels using the <code>getLogger</code> method in
-the API.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.glassfish.embeddable</span>.*;
-
-<span class="comment">// Create Embedded GlassFish</span>
-GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
-
-<span class="comment">// Set the log levels. For example, set 'deployment' and 'server' log levels to FINEST</span>
-<span class="predefined-type">Logger</span>.getLogger(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>).getHandlers()[<span class="integer">0</span>].setLevel(<span class="predefined-type">Level</span>.FINEST);
-<span class="predefined-type">Logger</span>.getLogger(<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system.tools.deployment</span><span class="delimiter">&quot;</span></span>).setLevel(<span class="predefined-type">Level</span>.FINEST);
-<span class="predefined-type">Logger</span>.getLogger(<span class="string"><span class="delimiter">&quot;</span><span class="content">jakarta.enterprise.system</span><span class="delimiter">&quot;</span></span>).setLevel(<span class="predefined-type">Level</span>.FINEST);
-
-<span class="comment">// Start Embedded GlassFish and deploy an application.</span>
-<span class="comment">// You will see all the FINEST logs printed on the console.</span>
-glassfish.start();
-glassfish.getDeployer().deploy(<span class="keyword">new</span> <span class="predefined-type">File</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">sample.war</span><span class="delimiter">&quot;</span></span>));
-
-<span class="comment">// Dispose Embedded GlassFish</span>
-glassfish.dispose();</code></pre>
-</div>
-</div>
-<div id="gkrgw" class="paragraph">
-<p>Example 1-16 Creating a Custom Logging Configuration File</p>
-</div>
-<div class="paragraph">
-<p>This example shows the contents of a custom logging configuration file,
-<code>customlogging.properties</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>handlers = java.util.logging.ConsoleHandler
-java.util.logging.ConsoleHandler.level = FINEST
-jakarta.enterprise.system.tools.deployment.level = FINEST
-jakarta.enterprise.system.level = FINEST</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Pass the name of this custom logging configuration file to the <code>java</code>
-command when you invoke Embedded Eclipse GlassFish. For example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFish</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="monitoring-embedded-glassfish-server-with-jmx"><a class="anchor" href="#monitoring-embedded-glassfish-server-with-jmx"></a>Monitoring Embedded Eclipse GlassFish with JMX</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Embedded Eclipse GlassFish supports monitoring through JMX MBeans, similar to regular Eclipse GlassFish Server. However, you must attache the flashlight agent on command line to enable monitoring functionality.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>AMX (Application Management Extensions) monitoring is only available in <code>glassfish-embedded-all.jar</code>. The <code>glassfish-embedded-web.jar</code> does not include AMX support, which limits the available monitoring MBeans.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h3>
-<div class="paragraph">
-<p>To enable monitoring in Embedded Eclipse GlassFish, you need the flashlight agent JAR file:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Download from Maven Central: <code>org.glassfish.main.flashlight:flashlight-agent</code></p>
-</li>
-<li>
-<p>Or use from an existing Eclipse GlassFish installation: <code>glassfish/lib/monitor/flashlight-agent.jar</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="enabling-monitoring-modules"><a class="anchor" href="#enabling-monitoring-modules"></a>Enabling Monitoring Modules</h3>
-<div class="paragraph">
-<p>By default, the monitoring service and MBeans support are enabled, but no monitoring modules are active. You can enable specific monitoring modules using one of two methods:</p>
-</div>
-<div class="sect3">
-<h4 id="method-1-command-line"><a class="anchor" href="#method-1-command-line"></a>Method 1: Command Line</h4>
-<div class="paragraph">
-<p>Start Embedded Eclipse GlassFish with the <code>enable-monitoring</code> command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="method-2-properties-file"><a class="anchor" href="#method-2-properties-file"></a>Method 2: Properties File</h4>
-<div class="paragraph">
-<p>Create a <code>glassfish.properties</code> file in the current directory with monitoring configuration:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>configs.config.server-config.monitoring-service.module-monitoring-levels.thread-pool=HIGH
-configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then start Embedded Eclipse GlassFish:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar -jar glassfish-embedded-all.jar</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="accessing-monitoring-data"><a class="anchor" href="#accessing-monitoring-data"></a>Accessing Monitoring Data</h3>
-<div class="paragraph">
-<p>Once monitoring modules are enabled, you can access monitoring data through JMX clients such as VisualVM or JConsole.</p>
-</div>
-<div class="sect3">
-<h4 id="using-visualvm"><a class="anchor" href="#using-visualvm"></a>Using VisualVM</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Connect to the Embedded Eclipse GlassFish process in VisualVM</p>
-</li>
-<li>
-<p>Install the MBeans extension if not already available</p>
-</li>
-<li>
-<p>Navigate to the MBeans tab</p>
-</li>
-<li>
-<p>Execute the <code>bootAMX</code> operation first (this is required, same as with regular Eclipse GlassFish Server)</p>
-</li>
-<li>
-<p>Monitoring data will be available under the <code>amx</code> node, in nodes that end with <code>-mon</code>, such as <code>thread-pool-mon</code> or <code>request-mon</code></p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect3">
-<h4 id="exposing-jmx-on-a-specific-port"><a class="anchor" href="#exposing-jmx-on-a-specific-port"></a>Exposing JMX on a Specific Port</h4>
-<div class="paragraph">
-<p>To allow remote JMX connections, you can expose the JMX server on a specific port by adding JVM system properties:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>java -javaagent:/path/to/flashlight-agent.jar \
-     -Dcom.sun.management.jmxremote \
-     -Dcom.sun.management.jmxremote.port=8686 \
-     -Dcom.sun.management.jmxremote.authenticate=false \
-     -Dcom.sun.management.jmxremote.ssl=false \
-     -jar glassfish-embedded-all.jar 'enable-monitoring --modules thread-pool:http-service'</code></pre>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Exposing JMX without authentication and SSL is not secure and should only be used in development environments. JMX MBeans include management beans that allow executing administrative operations on Eclipse GlassFish, which could be exploited by unauthorized users. In production environments, always enable authentication and SSL for JMX connections.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="available-monitoring-modules"><a class="anchor" href="#available-monitoring-modules"></a>Available Monitoring Modules</h4>
-<div class="paragraph">
-<p>Embedded Eclipse GlassFish supports the same monitoring modules as regular Eclipse GlassFish Server, including:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>thread-pool</code> - Thread pool statistics</p>
-</li>
-<li>
-<p><code>http-service</code> - HTTP service metrics</p>
-</li>
-<li>
-<p><code>web-container</code> - Web container statistics</p>
-</li>
-<li>
-<p><code>ejb-container</code> - EJB container metrics</p>
-</li>
-<li>
-<p><code>transaction-service</code> - Transaction service data</p>
-</li>
-<li>
-<p><code>jvm</code> - JVM statistics</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For comprehensive information about available monitoring modules and their metrics, see <a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a> in the Eclipse GlassFish Administration Guide.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="default-java-persistence-data-source-for-embedded-glassfish-server"><a class="anchor" href="#default-java-persistence-data-source-for-embedded-glassfish-server"></a>Default Java Persistence Data Source for Embedded Eclipse GlassFish</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The <code>jdbc/__default</code> Java DB database is preconfigured with Embedded
-Eclipse GlassFish. It is used when an application is deployed in Embedded
-Eclipse GlassFish that uses Java Persistence but doesn&#8217;t specify a data
-source. Embedded Eclipse GlassFish uses the embedded Java DB database
-created in a temporary domain that is destroyed when Embedded Eclipse GlassFish is stopped. You can use a Java DB database configured with
-nonembedded Eclipse GlassFish if you explicitly specify the instance root
-directory or the configuration file.</p>
-</div>
-<div class="paragraph">
-<p>By default, weaving is enabled when the Eclipse GlassFish Embedded Server
-API is used. To disable weaving, set the
-<code>org.glassfish.persistence.embedded.weaving.enabled</code> property to
-<code>false</code>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="restrictions-for-embedded-glassfish-server"><a class="anchor" href="#restrictions-for-embedded-glassfish-server"></a>Restrictions for Embedded Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>glassfish-embedded-web.jar</code> file for embedded Eclipse GlassFish
-supports only these features of nonembedded Eclipse GlassFish:</p>
+<p>Embedded Eclipse GlassFish is intentionally designed as a lighter runtime
+suitable for cloud deployments, containerized environments, and
+self-contained applications. The following describes the scope of each
+JAR variant.</p>
+</div>
+<div class="paragraph">
+<p>The <code>glassfish-embedded-web.jar</code> file provides a focused web runtime
+that includes:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3796,7 +3849,7 @@ supports only these features of nonembedded Eclipse GlassFish:</p>
 <div class="paragraph">
 <p>The <code>glassfish-embedded-all.jar</code> and
 <code>glassfish-embedded-static-shell.jar</code> files support all features of
-nonembedded Eclipse GlassFish with these exceptions:</p>
+nonembedded Eclipse GlassFish with these exceptions that are intentionally not included to keep it lighter than Eclipse GlassFish Server :</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3868,7 +3921,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-31 14:13:13 UTC
+Last updated 2026-04-04 14:12:18 UTC
 </div>
 </div>
 </body>

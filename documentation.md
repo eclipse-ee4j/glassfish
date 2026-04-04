@@ -6,38 +6,46 @@ layout: documentation
 
 ## Current Release - 8.0.0 {#current}
 
+### Common GlassFish guides (for GlassFish variants)
+
+* [Application Development Guide](docs/latest/application-development-guide.html)
+  ([pdf](docs/latest/application-development-guide.pdf))
+* [Error Messages Reference](docs/latest/error-messages-reference.html)
+  ([pdf](docs/latest/error-messages-reference.pdf))
+* [Performance Tuning Guide](docs/latest/performance-tuning-guide.html)
+  ([pdf](docs/latest/performance-tuning-guide.pdf))
+* [Reference Manual](docs/latest/reference-manual.html)
+  ([pdf](docs/latest/reference-manual.pdf))
+* [Release Notes](docs/latest/release-notes.html)
+  ([pdf](docs/latest/release-notes.pdf))
+
+### GlassFish Server guides
+
 * [Add On Component Development Guide](docs/latest/add-on-component-development-guide.html)
   ([pdf](docs/latest/add-on-component-development-guide.pdf))
 * [Administration Guide](docs/latest/administration-guide.html)
   ([pdf](docs/latest/administration-guide.pdf))
 * [Application Deployment Guide](docs/latest/application-deployment-guide.html)
   ([pdf](docs/latest/application-deployment-guide.pdf))
-* [Application Development Guide](docs/latest/application-development-guide.html)
-  ([pdf](docs/latest/application-development-guide.pdf))
 * [Deployment Planning Guide](docs/latest/deployment-planning-guide.html)
   ([pdf](docs/latest/deployment-planning-guide.pdf))
-* [Embedded Server Guide](docs/latest/embedded-server-guide.html)
-  ([pdf](docs/latest/embedded-server-guide.pdf))
-* [Error Messages Reference](docs/latest/error-messages-reference.html)
-  ([pdf](docs/latest/error-messages-reference.pdf))
 * [High Availability Administration Guide](docs/latest/ha-administration-guide.html)
   ([pdf](docs/latest/ha-administration-guide.pdf))
 * [Installation Guide](docs/latest/installation-guide.html)
   ([pdf](docs/latest/installation-guide.pdf))
-* [Performance Tuning Guide](docs/latest/performance-tuning-guide.html)
-  ([pdf](docs/latest/performance-tuning-guide.pdf))
-* [Quick Start Guide](docs/latest/quick-start-guide.html)
+* [Server Quick Start Guide](docs/latest/quick-start-guide.html)
   ([pdf](docs/latest/quick-start-guide.pdf))
-* [Reference Manual](docs/latest/reference-manual.html)
-  ([pdf](docs/latest/reference-manual.pdf))
-* [Release Notes](docs/latest/release-notes.html)
-  ([pdf](docs/latest/release-notes.pdf))
-* [Security Guide](docs/latest/security-guide.html)
+* [Server Security Guide](docs/latest/security-guide.html)
   ([pdf](docs/latest/security-guide.pdf))
-* [Troubleshooting Guide](docs/latest/troubleshooting-guide.html)
+* [Server Troubleshooting Guide](docs/latest/troubleshooting-guide.html)
   ([pdf](docs/latest/troubleshooting-guide.pdf))
 * [Upgrade Guide](docs/latest/upgrade-guide.html)
   ([pdf](docs/latest/upgrade-guide.pdf))
+
+### Embedded GlassFish guides
+
+* [Embedded Server Guide](docs/latest/embedded-server-guide.html)
+  ([pdf](docs/latest/embedded-server-guide.pdf))
 
 ### Guides for other GlassFish versions {#older}
 
@@ -93,14 +101,18 @@ GlassFish, Jakarta EE Web Profile, and GlassFish Embedded, Jakarta EE Web Profil
 
 ## MicroProfile Documentation {#microprofile}
 
-GlassFish 8.0.0, Jakarta EE Platform, provides the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs:
+All variants of GlassFish 8.0.0 provide the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs (since GlassFish 7.1.0):
 
 * [MicroProfile Config 3.1](https://github.com/eclipse/microprofile-config/releases/tag/3.1)
 * [MicroProfile JWT RBAC 2.1](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1)
 * [MicroProfile Rest Client 3.0](https://github.com/eclipse/microprofile-rest-client/releases/tag/3.0)
 
+The above MicroProfile APIs are supported by all the following GlassFish variants:
 
-GlassFish, Jakarta EE Web Profile, GlassFish Embedded, Jakarta EE Platform, and GlassFish Embedded, Jakarta EE Web Profile don't provide any MicroProfile APIs.
+* GlassFish 8.0.0, Jakarta EE Platform
+* GlassFish 8.0.0, Jakarta EE Web Profile
+* GlassFish Embedded 8.0.0, Jakarta EE Platform
+* GlassFish Embedded 8.0.0, Jakarta EE Web Profile
 
 
 ## Eclipse Open MQ Documentation {#open-mq}

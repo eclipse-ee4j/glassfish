@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package com.sun.enterprise.connectors.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.AdminObject;
 import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorConfigPropertySetDescriptor;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.InboundResourceAdapter;
 import com.sun.enterprise.deployment.MessageListener;
@@ -304,12 +305,12 @@ public class ConfigPropertyHandler extends AbstractHandler {
             while (adminObjectItr.hasNext()) {
                 AdminObject adminObject = adminObjectItr.next();
                 if (adminObject.getAdminObjectClass().equals(declaringClass.getName())) {
-                    if (!(isConfigDefined(adminObject.getConfigProperties(), ep))) {
+                    if (!(isConfigDefined(adminObject, ep))) {
                         adminObject.addConfigProperty(ep);
                     }
                     String uniqueName = adminObject.getAdminObjectInterface() + "_" + adminObject.getAdminObjectClass();
                     if (!desc.getConfigPropertyProcessedClasses().contains(uniqueName)) {
-                        processParent(declaringClass.getSuperclass(), adminObject.getConfigProperties());
+                        processParent(declaringClass.getSuperclass(), adminObject);
                         desc.addConfigPropertyProcessedClass(declaringClass.getName());
                     }
                 }
@@ -322,11 +323,11 @@ public class ConfigPropertyHandler extends AbstractHandler {
         Class<?> adminObjectClass, Class<?> adminObjectIntf) {
         AdminObject adminObject = desc.getAdminObject(adminObjectIntf.getName(), adminObjectClass.getName());
         if (adminObject != null) {
-            if (!(isConfigDefined(adminObject.getConfigProperties(), ep))) {
+            if (!(isConfigDefined(adminObject, ep))) {
                 adminObject.addConfigProperty(ep);
             }
             if (!desc.getConfigPropertyProcessedClasses().contains(adminObjectClass.getName())) {
-                processParent(adminObjectClass.getSuperclass(), adminObject.getConfigProperties());
+                processParent(adminObjectClass.getSuperclass(), adminObject);
                 desc.addConfigPropertyProcessedClass(adminObjectClass.getName());
             }
         } else {
@@ -359,11 +360,11 @@ public class ConfigPropertyHandler extends AbstractHandler {
                         // this particular message-listener-type. If so, we should not add config-property as they
                         // belong to a particular activation-spec class.
                         if (ml.getActivationSpecClass().equals(declaringClass.getName())) {
-                            if (!(isConfigDefined(ml.getConfigProperties(), ep))) {
+                            if (!(isConfigDefined(ml, ep))) {
                                 ml.addConfigProperty(ep);
                             }
                             if (!desc.getConfigPropertyProcessedClasses().contains(declaringClass.getName())) {
-                                processParent(declaringClass.getSuperclass(), ml.getConfigProperties());
+                                processParent(declaringClass.getSuperclass(), ml);
                                 desc.addConfigPropertyProcessedClass(declaringClass.getName());
                             }
                         }
@@ -377,11 +378,11 @@ public class ConfigPropertyHandler extends AbstractHandler {
                 while (mlItr.hasNext()) {
                     MessageListener ml = mlItr.next();
                     if (ml.getActivationSpecClass().equals(declaringClass.getName())) {
-                        if (!(isConfigDefined(ml.getConfigProperties(), ep))) {
+                        if (!(isConfigDefined(ml, ep))) {
                             ml.addConfigProperty(ep);
                         }
                         if (!desc.getConfigPropertyProcessedClasses().contains(declaringClass.getName())) {
-                            processParent(declaringClass.getSuperclass(), ml.getConfigProperties());
+                            processParent(declaringClass.getSuperclass(), ml);
                             desc.addConfigPropertyProcessedClass(declaringClass.getName());
                         }
                     }
@@ -398,14 +399,14 @@ public class ConfigPropertyHandler extends AbstractHandler {
             Set<ConnectionDefDescriptor> connectionDefinitions = ora.getConnectionDefs();
             for (ConnectionDefDescriptor cd : connectionDefinitions) {
                 if (cd.getManagedConnectionFactoryImpl().equals(declaringClass.getName())) {
-                    if (!(isConfigDefined(cd.getConfigProperties(), ep))) {
+                    if (!(isConfigDefined(cd, ep))) {
                         cd.addConfigProperty(ep);
                     }
                     // As same MCF class can be used for multiple connection-definitions
                     // store it based on connection-factory-interface class which is the unique
                     // identifier for a connection-definition
                     if (!desc.getConfigPropertyProcessedClasses().contains(cd.getConnectionFactoryIntf())) {
-                        processParent(declaringClass.getSuperclass(), cd.getConfigProperties());
+                        processParent(declaringClass.getSuperclass(), cd);
                         desc.addConfigPropertyProcessedClass(cd.getConnectionFactoryIntf());
                     }
                 }
@@ -441,11 +442,11 @@ public class ConfigPropertyHandler extends AbstractHandler {
             return false;
         }
 
-        if (!(isConfigDefined(desc.getConfigProperties(), ep))) {
+        if (!(isConfigDefined(desc, ep))) {
             desc.addConfigProperty(ep);
         }
         if (!desc.getConfigPropertyProcessedClasses().contains(declaringClass.getName())) {
-            processParent(declaringClass.getSuperclass(), desc.getConfigProperties());
+            processParent(declaringClass.getSuperclass(), desc);
             desc.addConfigPropertyProcessedClass(declaringClass.getName());
         }
         // indicate that the config-property is processed
@@ -521,8 +522,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
         return SUCCESS;
     }
 
-
-    public static void processParent(Class<?> claz, Set<ConnectorConfigProperty> configProperties) {
+    public static void processParent(Class<?> claz, ConnectorConfigPropertySetDescriptor descriptor) {
         if (claz == null) {
             return;
         }
@@ -537,7 +537,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
                 }
                 String defaultValue = property.defaultValue();
                 Class<?> type = getType(property, m.getParameterTypes()[0]);
-                processConfigProperty(configProperties, m.getName().substring(3), property, defaultValue, type);
+                processConfigProperty(descriptor, m.getName().substring(3), property, defaultValue, type);
             }
         }
 
@@ -554,40 +554,40 @@ public class ConfigPropertyHandler extends AbstractHandler {
                 if (defaultValue == null || defaultValue.isEmpty()) {
                     defaultValue = deriveDefaultValueOfField(f);
                 }
-                processConfigProperty(configProperties, f.getName(), property, defaultValue, f.getType());
+                processConfigProperty(descriptor, f.getName(), property, defaultValue, f.getType());
             }
         }
 
         // process its super-class
         if (claz.getSuperclass() != null) {
-            processParent(claz.getSuperclass(), configProperties);
+            processParent(claz.getSuperclass(), descriptor);
         }
     }
 
 
-    private static void processConfigProperty(Set<ConnectorConfigProperty> configProperties, String propertyName,
+    private static void processConfigProperty(ConnectorConfigPropertySetDescriptor descriptor, String propertyName,
         ConfigProperty property, String defaultValue, Class<?> declaredEntityType) {
-        String description = "";
-        if (property.description() != null && property.description().length > 0) {
+        String description;
+        if (property.description() == null || property.description().length == 0) {
+            description = "";
+        } else {
             description = property.description()[0];
         }
         Class<?> type = getType(property, declaredEntityType);
         ConnectorConfigProperty ccp = getConfigProperty(defaultValue, description, property.ignore(),
             property.supportsDynamicUpdates(), property.confidential(), type, propertyName);
-        if (!isConfigDefined(configProperties, ccp)) {
-            configProperties.add(ccp);
+        if (!isConfigDefined(descriptor, ccp)) {
+            descriptor.addConfigProperty(ccp);
         }
     }
 
-    private static boolean isConfigDefined(Set<ConnectorConfigProperty> configProperties, ConnectorConfigProperty ep) {
-        boolean result = false;
-        for (ConnectorConfigProperty ddEnvProperty : configProperties) {
-            if (ddEnvProperty.getName().equals(ep.getName())) {
-                result = true;
-                break;
+    private static boolean isConfigDefined(ConnectorConfigPropertySetDescriptor descriptor, ConnectorConfigProperty ep) {
+        for (ConnectorConfigProperty property : descriptor.getConfigProperties()) {
+            if (property.getName().equals(ep.getName())) {
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
 

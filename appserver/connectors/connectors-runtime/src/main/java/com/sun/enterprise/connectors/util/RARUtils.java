@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +20,6 @@ package com.sun.enterprise.connectors.util;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
@@ -30,10 +28,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,44 +67,6 @@ public class RARUtils {
                  || clz.equals(Byte.class) || clz.equals(Short.class)
                  || clz.equals(Integer.class) || clz.equals(Long.class)
                  || clz.equals(Float.class) || clz.equals(Double.class));
-    }
-
-   /**
-     * Prepares the name/value pairs for ActivationSpec. <p>
-     * Rule: <p>
-     * 1. The name/value pairs are the union of activation-config on
-     *    standard DD (message-driven) and runtime DD (mdb-resource-adapter)
-     * 2. If there are duplicate property settings, the value in runtime
-     *    activation-config will overwrite the one in the standard
-     *    activation-config.
-     */
-    public static Set<EnvironmentProperty> getMergedActivationConfigProperties(EjbMessageBeanDescriptor msgDesc) {
-
-        Set<EnvironmentProperty> mergedProps = new HashSet<>();
-        Set<String> runtimePropNames = new HashSet<>();
-
-        Set<EnvironmentProperty> runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
-        if(runtimeProps != null){
-            for (EnvironmentProperty entry : runtimeProps) {
-                mergedProps.add(entry);
-                String propName = entry.getName();
-                runtimePropNames.add(propName);
-            }
-        }
-
-        Set<EnvironmentProperty> standardProps = msgDesc.getActivationConfigProperties();
-        if(standardProps != null){
-            for (EnvironmentProperty entry : standardProps) {
-                String propName = entry.getName();
-                if (runtimePropNames.contains(propName)) {
-                    continue;
-                }
-                mergedProps.add(entry);
-            }
-        }
-
-        return mergedProps;
-
     }
 
     public static Class<?> loadClassFromRar(String rarName, String beanClassName) throws ConnectorRuntimeException{

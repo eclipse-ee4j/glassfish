@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +20,6 @@ package org.glassfish.ejb.deployment.descriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.OrderedSet;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -31,24 +30,22 @@ import org.glassfish.deployment.common.Descriptor;
 
 public final class ActivationConfigDescriptor extends Descriptor {
 
-    // Set of EnvironmentProperty entries
-    private Set<EnvironmentProperty> activationConfig;
+    private final OrderedSet<EnvironmentProperty> activationConfig;
 
-    public ActivationConfigDescriptor()
-    {
-        activationConfig = new OrderedSet<EnvironmentProperty>();
+    public ActivationConfigDescriptor() {
+        activationConfig = new OrderedSet<>();
     }
 
     public ActivationConfigDescriptor(ActivationConfigDescriptor other) {
-        activationConfig = new OrderedSet<EnvironmentProperty>(other.activationConfig);
-     }
+        activationConfig = new OrderedSet<>(other.activationConfig);
+    }
 
     @Override
     public void print(StringBuffer toStringBuffer) {
-        toStringBuffer.append("Activation Config : ").append(activationConfig);
+        toStringBuffer.append("Activation Config: ").append(activationConfig);
     }
 
-    public Set<EnvironmentProperty> getActivationConfig() {
+    public OrderedSet<EnvironmentProperty> getActivationConfig() {
         return activationConfig;
     }
 }

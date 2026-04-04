@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,10 +20,6 @@ import jakarta.servlet.descriptor.JspConfigDescriptor;
 import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 import jakarta.servlet.descriptor.TaglibDescriptor;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 
@@ -32,17 +28,17 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class JspConfigDefinitionDescriptor extends Descriptor implements JspConfigDescriptor {
 
-    private final Set<TaglibDescriptor> taglibs = new OrderedSet<>();
-    private final List<JspPropertyGroupDescriptor> jspGroups = new OrderedSet<>();
+    private final OrderedSet<TaglibDescriptor> taglibs = new OrderedSet<>();
+    private final OrderedSet<JspPropertyGroupDescriptor> jspGroups = new OrderedSet<>();
 
     @Override
-    public Collection<TaglibDescriptor> getTaglibs() {
+    public OrderedSet<TaglibDescriptor> getTaglibs() {
         return taglibs;
     }
 
 
     @Override
-    public Collection<JspPropertyGroupDescriptor> getJspPropertyGroups() {
+    public OrderedSet<JspPropertyGroupDescriptor> getJspPropertyGroups() {
         return jspGroups;
     }
 

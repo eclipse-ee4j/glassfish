@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,26 +91,26 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     private final Map<String, String> extensionProperty = new HashMap<>(4);
 
     private final List<AppListenerDescriptor> appListenerDescriptors = new ArrayList<>();
-    private final Set<ContextParameter> contextParameters = new OrderedSet<>();
-    private final Set<EjbReferenceDescriptor> ejbReferences = new OrderedSet<>();
+    private final OrderedSet<ContextParameter> contextParameters = new OrderedSet<>();
+    private final OrderedSet<EjbReferenceDescriptor> ejbReferences = new OrderedSet<>();
     private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
-    private final Set<EnvironmentProperty> environmentEntries = new OrderedSet<>();
+    private final OrderedSet<EnvironmentProperty> environmentEntries = new OrderedSet<>();
     private final Set<ErrorPageDescriptor> errorPageDescriptors = new HashSet<>();
     private final Map<String, String> jarName2WebFragNameMap = new HashMap<>();
-    private final Set<MessageDestinationReferenceDescriptor> messageDestReferences = new OrderedSet<>();
-    private final Set<MimeMapping> mimeMappings = new OrderedSet<>();
+    private final OrderedSet<MessageDestinationReferenceDescriptor> messageDestReferences = new OrderedSet<>();
+    private final OrderedSet<MimeMapping> mimeMappings = new OrderedSet<>();
     private final List<String> orderedLibs = new ArrayList<>();
     private final Set<LifecycleCallbackDescriptor> postConstructDescs = new HashSet<>();
     private final Set<LifecycleCallbackDescriptor> preDestroyDescs = new HashSet<>();
-    private final Set<ResourceEnvReferenceDescriptor> resourceEnvRefReferences = new OrderedSet<>();
-    private final Set<ResourceReferenceDescriptor> resourceReferences = new OrderedSet<>();
+    private final OrderedSet<ResourceEnvReferenceDescriptor> resourceEnvRefReferences = new OrderedSet<>();
+    private final OrderedSet<ResourceReferenceDescriptor> resourceReferences = new OrderedSet<>();
     private final Set<SecurityConstraint> securityConstraints = new HashSet<>();
-    private final Set<ServiceReferenceDescriptor> serviceReferences = new OrderedSet<>();
+    private final OrderedSet<ServiceReferenceDescriptor> serviceReferences = new OrderedSet<>();
     private final List<ServletFilter> servletFilters = new ArrayList<>();
     private final List<ServletFilterMapping> servletFilterMappings = new ArrayList<>();
-    private final Set<WebComponentDescriptor> webComponentDescriptors = new OrderedSet<>();
-    private final Set<String> welcomeFiles = new OrderedSet<>();
+    private final OrderedSet<WebComponentDescriptor> webComponentDescriptors = new OrderedSet<>();
+    private final OrderedSet<String> welcomeFiles = new OrderedSet<>();
 
 
     /** this is for checking whether there are more than one servlets for a given url-pattern */
@@ -180,7 +180,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     @Override
     public boolean isEmpty() {
-        return webComponentDescriptors == null || webComponentDescriptors.isEmpty();
+        return webComponentDescriptors.isEmpty();
     }
 
 
@@ -486,7 +486,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @return the Set of my Context Parameters.
      */
-    public Set<ContextParameter> getContextParameters() {
+    public OrderedSet<ContextParameter> getContextParameters() {
         return contextParameters;
     }
 
@@ -523,7 +523,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
+    public OrderedSet<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         return ejbReferences;
     }
 
@@ -650,7 +650,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<EnvironmentProperty> getEnvironmentProperties() {
+    public OrderedSet<EnvironmentProperty> getEnvironmentProperties() {
         return getEnvironmentEntries();
     }
 
@@ -658,7 +658,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @return {@link Set} of {@link EnvironmentProperty}, never null but may be empty.
      */
-    public Set<EnvironmentProperty> getEnvironmentEntries() {
+    public OrderedSet<EnvironmentProperty> getEnvironmentEntries() {
         return environmentEntries;
     }
 
@@ -793,7 +793,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
+    public OrderedSet<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
         return messageDestReferences;
     }
 
@@ -841,7 +841,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @return a set of mime mappings.
      */
-    public Set<MimeMapping> getMimeMappings() {
+    public OrderedSet<MimeMapping> getMimeMappings() {
         return mimeMappings;
     }
 
@@ -952,7 +952,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
+    public OrderedSet<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
         return resourceEnvRefReferences;
     }
 
@@ -997,7 +997,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
+    public OrderedSet<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         return resourceReferences;
     }
 
@@ -1117,7 +1117,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
+    public OrderedSet<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
         return serviceReferences;
     }
 
@@ -1224,7 +1224,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @return the Set of Web COmponent Descriptors (JSP or JavaServlets) in me.
      */
-    public Set<WebComponentDescriptor> getWebComponentDescriptors() {
+    public OrderedSet<WebComponentDescriptor> getWebComponentDescriptors() {
         return webComponentDescriptors;
     }
 
@@ -1303,7 +1303,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @return set of the welcome files I have..
      */
-    public Set<String> getWelcomeFiles() {
+    public OrderedSet<String> getWelcomeFiles() {
         return welcomeFiles;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,12 +45,12 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
     private BundleDescriptor bundleDescriptor;
 
-    private Set<EnvironmentProperty> environmentProperties;
-    private Set<EjbReferenceDescriptor> ejbReferences;
-    private Set<ResourceEnvReferenceDescriptor> resourceEnvReferences;
-    private Set<MessageDestinationReferenceDescriptor> messageDestReferences;
-    private Set<ResourceReferenceDescriptor> resourceReferences;
-    private Set<ServiceReferenceDescriptor> serviceReferences;
+    private OrderedSet<EnvironmentProperty> environmentProperties;
+    private OrderedSet<EjbReferenceDescriptor> ejbReferences;
+    private OrderedSet<ResourceEnvReferenceDescriptor> resourceEnvReferences;
+    private OrderedSet<MessageDestinationReferenceDescriptor> messageDestReferences;
+    private OrderedSet<ResourceReferenceDescriptor> resourceReferences;
+    private OrderedSet<ServiceReferenceDescriptor> serviceReferences;
     private Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences;
     private Set<EntityManagerReferenceDescriptor> entityManagerReferences;
 
@@ -159,11 +159,10 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
+    public OrderedSet<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         if (this.ejbReferences == null) {
             this.ejbReferences = new OrderedSet<>();
         }
-        this.ejbReferences = new OrderedSet<>(this.ejbReferences);
         return this.ejbReferences;
     }
 
@@ -200,11 +199,10 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
+    public OrderedSet<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
         if (this.messageDestReferences == null) {
             this.messageDestReferences = new OrderedSet<>();
         }
-        this.messageDestReferences = new OrderedSet<>(this.messageDestReferences);
         return this.messageDestReferences;
     }
 
@@ -223,11 +221,10 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set<EnvironmentProperty> getEnvironmentProperties() {
+    public OrderedSet<EnvironmentProperty> getEnvironmentProperties() {
         if (this.environmentProperties == null) {
             this.environmentProperties = new OrderedSet<>();
         }
-        this.environmentProperties = new OrderedSet<>(this.environmentProperties);
         return this.environmentProperties;
     }
 
@@ -262,11 +259,10 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
+    public OrderedSet<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
         if (this.serviceReferences == null) {
             this.serviceReferences = new OrderedSet<>();
         }
-        this.serviceReferences = new OrderedSet<>(this.serviceReferences);
         return this.serviceReferences;
     }
 
@@ -299,11 +295,10 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
+    public OrderedSet<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         if (this.resourceReferences == null) {
             this.resourceReferences = new OrderedSet<>();
         }
-        this.resourceReferences = new OrderedSet<>(this.resourceReferences);
         return this.resourceReferences;
     }
 
@@ -336,11 +331,10 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
+    public OrderedSet<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
         if (this.resourceEnvReferences == null) {
             this.resourceEnvReferences = new OrderedSet<>();
         }
-        this.resourceEnvReferences = new OrderedSet<>(this.resourceEnvReferences);
         return this.resourceEnvReferences;
     }
 

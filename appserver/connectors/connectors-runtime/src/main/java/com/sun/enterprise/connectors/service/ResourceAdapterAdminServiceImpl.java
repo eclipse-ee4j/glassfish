@@ -261,29 +261,21 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
      * is in use is not transmitted to the client dynamically. All such changes
      * would be visible on ACC client restart.
      */
-
-    private void updateRAConfigInDescriptor(ConnectorDescriptor connectorDescriptor,
-                                            String moduleName) {
-
-        ResourceAdapterConfig raConfig =
-                ConnectorRegistry.getInstance().getResourceAdapterConfig(moduleName);
-
+    private void updateRAConfigInDescriptor(ConnectorDescriptor connectorDescriptor, String moduleName) {
+        ResourceAdapterConfig raConfig = ConnectorRegistry.getInstance().getResourceAdapterConfig(moduleName);
         List<Property> raConfigProps = null;
         if (raConfig != null) {
             raConfigProps = raConfig.getProperty();
         }
 
-        if(_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("current RAConfig In Descriptor " + connectorDescriptor.getConfigProperties());
         }
 
         if (raConfigProps != null) {
-            Set mergedProps = ConnectorDDTransformUtils.mergeProps(
-                    raConfigProps, connectorDescriptor.getConfigProperties());
-            Set actualProps = connectorDescriptor.getConfigProperties();
-            actualProps.clear();
-            actualProps.addAll(mergedProps);
-            if(_logger.isLoggable(Level.FINE)) {
+            connectorDescriptor
+                .setConfigProperties(ConnectorDDTransformUtils.mergeProps(raConfigProps, connectorDescriptor));
+            if (_logger.isLoggable(Level.FINE)) {
                 _logger.fine("updated RAConfig In Descriptor " + connectorDescriptor.getConfigProperties());
             }
         }

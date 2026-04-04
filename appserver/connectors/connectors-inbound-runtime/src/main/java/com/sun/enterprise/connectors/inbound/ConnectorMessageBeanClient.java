@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -233,7 +233,6 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
 
         ActivationSpec activationSpec = (ActivationSpec) aClass.getDeclaredConstructor().newInstance();
         Set<EnvironmentProperty> props = ConnectorsUtil.getMergedActivationConfigProperties(getDescriptor());
-
         SetMethodAction<EnvironmentProperty> action = new SetMethodAction<>(activationSpec, props);
         action.run();
 

@@ -56,16 +56,18 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
     private static final long serialVersionUID = 1L;
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ApplicationClientDescriptor.class);
 
-    private Set<EnvironmentProperty> environmentProperties;
-    private Set<EjbReferenceDescriptor> ejbReferences;
-    private Set<ResourceEnvReferenceDescriptor> resourceEnvReferences;
-    private Set<MessageDestinationReferenceDescriptor> messageDestReferences;
-    private Set<ResourceReferenceDescriptor> resourceReferences;
-    private Set<ServiceReferenceDescriptor> serviceReferences;
     private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
     private final Set<LifecycleCallbackDescriptor> postConstructDescs = new HashSet<>();
     private final Set<LifecycleCallbackDescriptor> preDestroyDescs = new HashSet<>();
+
+    private OrderedSet<EnvironmentProperty> environmentProperties;
+    private OrderedSet<EjbReferenceDescriptor> ejbReferences;
+    private OrderedSet<ResourceEnvReferenceDescriptor> resourceEnvReferences;
+    private OrderedSet<MessageDestinationReferenceDescriptor> messageDestReferences;
+    private OrderedSet<ResourceReferenceDescriptor> resourceReferences;
+    private OrderedSet<ServiceReferenceDescriptor> serviceReferences;
+
     private String mainClassName;
     private String callbackHandler;
     private JavaWebStartAccessDescriptor jwsAccessDescriptor;
@@ -150,12 +152,10 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * Returns the set of environment properties of this app client.
      */
     @Override
-    public Set<EnvironmentProperty> getEnvironmentProperties() {
+    public OrderedSet<EnvironmentProperty> getEnvironmentProperties() {
         if (environmentProperties == null) {
             environmentProperties = new OrderedSet<>();
         }
-
-        environmentProperties = new OrderedSet<>(environmentProperties);
         return environmentProperties;
     }
 
@@ -198,12 +198,10 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * Return the set of references to ejbs that I have.
      */
     @Override
-    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
+    public OrderedSet<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         if (ejbReferences == null) {
             ejbReferences = new OrderedSet<>();
         }
-
-        ejbReferences = new OrderedSet<>(ejbReferences);
         return ejbReferences;
     }
 
@@ -281,11 +279,10 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
     }
 
     @Override
-    public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
+    public OrderedSet<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
         if (this.serviceReferences == null) {
             this.serviceReferences = new OrderedSet<>();
         }
-        this.serviceReferences = new OrderedSet<>(this.serviceReferences);
         return this.serviceReferences;
     }
 
@@ -322,12 +319,10 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
+    public OrderedSet<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
         if (messageDestReferences == null) {
             messageDestReferences = new OrderedSet<>();
         }
-
-        messageDestReferences = new OrderedSet<>(messageDestReferences);
         return messageDestReferences;
     }
 
@@ -366,12 +361,11 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * Return the set of resource environment references this ejb declares.
      */
     @Override
-    public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
+    public OrderedSet<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
         if (resourceEnvReferences == null) {
             resourceEnvReferences = new OrderedSet<>();
         }
-
-        return resourceEnvReferences = new OrderedSet<>(resourceEnvReferences);
+        return resourceEnvReferences;
     }
 
     @Override
@@ -489,11 +483,10 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
     }
 
     @Override
-    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
+    public OrderedSet<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         if (this.resourceReferences == null) {
             this.resourceReferences = new OrderedSet<>();
         }
-        this.resourceReferences = new OrderedSet<>(this.resourceReferences);
         return this.resourceReferences;
     }
 

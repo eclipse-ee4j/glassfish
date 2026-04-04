@@ -98,7 +98,7 @@ as necessary.
 When a domain is created, you are prompted for the administration user
 name and password. If you accept the default, the user `admin` is
 created without password. To reset the administration password, see
-"xref:security-guide.adoc#to-change-an-administration-password[To Change an Administration Password]" in {productName} Security Guide.
+"xref:security-guide.adoc#to-change-an-administration-password[To Change an Administration Password]" in {productName} Server Security Guide.
 
 [[domain-administration-server-das]]
 
@@ -480,7 +480,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help login` at the command line. For additional
 information about passwords, see "xref:security-guide.adoc#administering-passwords[Administering
-Passwords]" in {productName} Security Guide.
+Passwords]" in {productName} Server Security Guide.
 
 [[to-delete-a-domain]]
 

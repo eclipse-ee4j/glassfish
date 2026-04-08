@@ -32,6 +32,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -71,7 +72,8 @@ public class NetUtilsIT {
                         .flatMap(ni -> Collections.list(ni.getInetAddresses()).stream())
                         .map(ContainerClass::toString)
                         .collect(Collectors.joining(", ")));
-                System.out.println("RESULT0: " + com.sun.enterprise.util.net.NetUtils.getHostName());
+                System.out.println("RESULT_getHostName: " + com.sun.enterprise.util.net.NetUtils.getHostName());
+                System.out.println("RESULT_getHostIPs: " + ipAddressessToString(com.sun.enterprise.util.net.NetUtils.getHostIPs()));
                 System.out.println("RESULT_isPortFree: " + com.sun.enterprise.util.net.NetUtils.isPortFree(4848));
                 System.out.println("RESULT_checkPort: " + com.sun.enterprise.util.net.NetUtils.checkPort(4848));
                 System.out.println("RESULT_isLocal: " + com.sun.enterprise.util.net.NetUtils.METHOD_ISLOCAL);
@@ -87,6 +89,10 @@ public class NetUtilsIT {
                 } catch (Exception e) {
                     return address.toString();
                 }
+            }
+
+            private static String ipAddressessToString(String[] addresses) {
+                return String.join(",", addresses);
             }
         }
         """;
@@ -111,10 +117,6 @@ public class NetUtilsIT {
         }
     }
 
-//    JVM, Localhost: docker001/172.17.0.4
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: docker001/172.17.0.4[reachable], localhost/0:0:0:0:0:0:0:1%lo[reachable], localhost/127.0.0.1[reachable]
-//    RESULT0: docker001
     /**
      * The hostname docker001 is mapped to docker virtual network interface by default.
      * Loopback (localhost name) is mapped to 127.0.0.1, but can use also ::1 which has lower priority.
@@ -128,6 +130,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostIPs(logs), stringContainsInOrder(getContainerHostIP())),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -135,10 +138,6 @@ public class NetUtilsIT {
         );
     }
 
-//    JVM, Localhost: docker001/127.0.0.1
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: docker001/172.17.0.4[reachable], localhost/0:0:0:0:0:0:0:1%lo[reachable], localhost/127.0.0.1[reachable]
-//    RESULT0: docker001
     @Test
     void extraHostnameVsLoopback() throws Exception {
         // FIXME: Controversial: known addresses contain docker001/172.17.0.4[reachable]
@@ -153,6 +152,9 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            // Why - ipv4 loopback has special priority.
+            () -> assertThat(getResultForGetHostIPs(logs),
+                stringContainsInOrder("127.0.0.1", getContainerHostIP(), "0:0:0:0:0:0:0:1")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -160,11 +162,6 @@ public class NetUtilsIT {
         );
     }
 
- // Original:
-//    JVM, Localhost: docker001/127.0.0.1
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: docker001/172.17.0.4[reachable], localhost/0:0:0:0:0:0:0:1%lo[reachable], localhost/127.0.0.1[reachable]
-//    RESULT0: docker001
     @Test
     void extraHostnameUnreachableIpVsLoopback() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
@@ -179,6 +176,8 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostIPs(logs),
+                stringContainsInOrder("127.0.0.1", "127.0.0.13", getContainerHostIP(), "0:0:0:0:0:0:0:1")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -186,11 +185,6 @@ public class NetUtilsIT {
         );
     }
 
-// Original:
-//    JVM, Localhost: docker001/127.0.0.13
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: docker001/172.17.0.4[reachable], localhost/0:0:0:0:0:0:0:1%lo[reachable], localhost/127.0.0.1[reachable]
-//    RESULT0: docker001
     @Test
     void extraHostnameUnreachableIP() throws Exception {
         // FIXME: There is another record of the hostname and correct IP, can we reach it?
@@ -203,6 +197,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostIPs(logs), stringContainsInOrder("127.0.0.13", getContainerHostIP())),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -210,11 +205,6 @@ public class NetUtilsIT {
         );
     }
 
-// Original:
-//    JVM, Localhost: docker001/172.17.0.4
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: docker001/172.17.0.4[reachable], localhost/0:0:0:0:0:0:0:1%lo[reachable], localhost/127.0.0.1[reachable]
-//    RESULT0: docker001
     /** localhost should not be mapped to an IP, but we made that, however the mapping has lower priority */
     @Test
     void extraBadLocalhostMapping() throws Exception {
@@ -225,6 +215,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostIPs(logs), stringContainsInOrder(getContainerHostIP())),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -232,11 +223,6 @@ public class NetUtilsIT {
         );
     }
 
-// Original:
-//    JVM, Localhost: Failed to resolve localhost: java.net.UnknownHostException: docker001: docker001: Name or service not known
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: 172.17.0.4/172.17.0.4[reachable], 0:0:0:0:0:0:0:1%lo/0:0:0:0:0:0:0:1%lo[reachable], 127.0.0.1/127.0.0.1[reachable]
-//    RESULT0: null
     @Test
     void emptyHosts() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, "127.0.0.1");
@@ -246,6 +232,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
+            () -> assertThat(getResultForGetHostIPs(logs), equalTo("127.0.0.1")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -253,11 +240,6 @@ public class NetUtilsIT {
         );
     }
 
-// Original:
-//    JVM, Localhost: Failed to resolve localhost: java.net.UnknownHostException: docker001: docker001: Name or service not known
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: 172.17.0.4/172.17.0.4[reachable], localhost/0:0:0:0:0:0:0:1%lo[reachable], 127.0.0.1/127.0.0.1[reachable]
-//    RESULT0: localhost
     @Test
     void justLoopback() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, "localhost");
@@ -267,6 +249,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
+            () -> assertThat(getResultForGetHostIPs(logs), equalTo("0:0:0:0:0:0:0:1")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -274,11 +257,6 @@ public class NetUtilsIT {
         );
     }
 
-// Original:
-//    JVM, Localhost: docker001/0:0:0:0:0:0:0:1
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: 172.17.0.4/172.17.0.4[reachable], docker001/0:0:0:0:0:0:0:1%lo[reachable], 127.0.0.1/127.0.0.1[reachable]
-//    RESULT0: docker001
     @Test
     void justHost() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
@@ -288,6 +266,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostIPs(logs), equalTo("0:0:0:0:0:0:0:1")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -295,28 +274,23 @@ public class NetUtilsIT {
         );
     }
 
-// Original:
-//    JVM, Localhost: Failed to resolve localhost: java.net.UnknownHostException: docker001: docker001: Name or service not known
-//    JVM, LoopbackAddress: localhost/127.0.0.1
-//    JVM, Known local addresses: 172.17.0.4/172.17.0.4[reachable], 0:0:0:0:0:0:0:1%lo/0:0:0:0:0:0:0:1%lo[reachable], 127.0.0.1/127.0.0.1[reachable]
-// Another variant - docker can use host's DNS!
-//    JVM, Known local addresses: 172.17.0.6/172.17.0.6[reachable], netcts.cdn-apple.com/0:0:0:0:0:0:0:1%lo[reachable], localhost.lan/127.0.0.1[reachable]
-//    RESULT0: localhost
     @Test
     void hostnameUnreachable() throws Exception {
-        String hosts = HOSTNAME + " 127.0.0.13\n" + HOSTNAME + " ::1\n"+ HOSTNAME + " 127.0.0.1\n" + "dockerhost 172.17.0.1";
+        String hosts = "127.0.0.13 " + HOSTNAME + "\n::1 " + HOSTNAME + "\n127.0.0.1 " + HOSTNAME
+            + "\n172.17.0.1 dockerhost";
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, "dockerhost");
         String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
         container = createContainerWitHosts(hosts, containerClass);
         container.start();
         final String[] logs = getLogs(container);
-        // FIXME: Controversial: why prefer localhost and not the HOSTNAME with the same IP?
         assertAll(container.getLogs(),
-            () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
+            () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostIPs(logs),
+                stringContainsInOrder("127.0.0.1", "127.0.0.13", "0:0:0:0:0:0:0:1")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("false")),
-            () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // each resolves to different addresses
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("true"))
         );
     }
 
@@ -342,10 +316,14 @@ public class NetUtilsIT {
             .waitingFor(Wait.forLogMessage(".*DONE.*", 1).withStartupTimeout(Duration.ofSeconds(5L)));
     }
 
-    private static String filterMethodIsLocal(String template, String address) {
-        String f1 = filterClassBody(template, "METHOD_ISLOCAL", "isLocal", "\"" + address + "\"");
-        return filterClassBody(f1, "METHOD_ISTHISHOSTLOCAL", "isThisHostLocal", "\"" + address + "\"");
+    private String getContainerHostIP() {
+        // FIXME: The following call is unstable, randomly returns an empty string.
+//        return container.getContainerInfo().getNetworkSettings().getGlobalIPv6Address();
+        return "172.17.";
+    }
 
+    private static String filterMethodIsLocal(String template, String address) {
+        return filterClassBody(template, "METHOD_ISLOCAL", "isLocal", "\"" + address + "\"");
     }
 
     private static String filterMethodIsSameHost(String template, String host1, String host2) {
@@ -362,7 +340,11 @@ public class NetUtilsIT {
     }
 
     private static String getResultForGetHostName(String[] logs) {
-        return getResult("RESULT0: ", logs);
+        return getResult("RESULT_getHostName: ", logs);
+    }
+
+    private static String getResultForGetHostIPs(String[] logs) {
+        return getResult("RESULT_getHostIPs: ", logs);
     }
 
     private static String getResultForIsPortFree(String[] logs) {

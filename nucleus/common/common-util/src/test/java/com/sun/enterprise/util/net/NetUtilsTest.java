@@ -30,9 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- *
- */
 public class NetUtilsTest {
 
     @Test
@@ -73,4 +70,11 @@ public class NetUtilsTest {
         InetAddress[] addresses = NetUtils.getHostAddresses();
         assertThat(addresses, arrayWithSize(greaterThan(0)));
     }
+
+    @Test
+    void getHostIPs() throws Exception {
+        String[] addresses = NetUtils.getHostIPs();
+        assertThat(addresses, arrayWithSize(greaterThan(0)));
+    }
+
 }

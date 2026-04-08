@@ -265,7 +265,7 @@ public final class NetUtils {
             return true;
         }
 
-        String[] myIPs = getHostIPs();
+        final String[] myIPs = getHostIPs();
         for (String myIP : myIPs) {
             if (address.equals(myIP)) {
                 return true;
@@ -345,19 +345,12 @@ public final class NetUtils {
      * @return all the IP addresses of the local host. Never null.
      */
     public static String[] getHostIPs() {
-        try {
-            InetAddress[] adds = getHostAddresses();
-            String[] ips = new String[adds.length];
-            for (int i = 0; i < adds.length; i++) {
-                String ip = trimIP(adds[i].toString());
-                ips[i] = ip;
-            }
-
-            return ips;
-        } catch (Exception e) {
-            LOG.log(TRACE, "Could not resolve address of the local host.", e);
-            return null;
+        InetAddress[] adds = getHostAddresses();
+        String[] ips = new String[adds.length];
+        for (int i = 0; i < adds.length; i++) {
+            ips[i] = adds[i].getHostAddress();
         }
+        return ips;
     }
 
     /**
@@ -429,20 +422,6 @@ public final class NetUtils {
             }
         }
         return hostname;
-    }
-
-    private static String trimIP(String ip) {
-        if (ip == null || ip.isEmpty()) {
-            return ip;
-        }
-
-        int index = ip.lastIndexOf('/');
-
-        if (index >= 0) {
-            return ip.substring(++index);
-        }
-
-        return ip;
     }
 
     public enum PortAvailability {

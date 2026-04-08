@@ -413,29 +413,30 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     public Subject authenticate(Object credentials) {
         String user = "";
         char[] password = "".toCharArray();
-        String host = null;
+        final String host;
         if (credentials instanceof String[]) {
             // this is supposed to be 2-string array with user name and password
-            String[] up = (String[]) credentials;
-            if (up.length == 1) {
-                user = up[0];
-            } else if (up.length >= 2) {
-                user = up[0];
-                password = up[1] != null ? up[1].toCharArray() : "".toCharArray();
+            String[] credentialsArray = (String[]) credentials;
+            if (credentialsArray.length == 1) {
+                user = credentialsArray[0];
+            } else if (credentialsArray.length >= 2) {
+                user = credentialsArray[0];
+                password = credentialsArray[1] == null ? new char[0] : credentialsArray[1].toCharArray();
             }
-            if (up.length > 2) {
-                host = up[2];
+            if (credentialsArray.length > 2) {
+                host = credentialsArray[2];
             } else {
                 try {
-                    /*
-                     * This method is used for JMX over RMI authentication, so
-                     * we can find out the host from RMI.
-                     */
+                    // This method is used for JMX over RMI authentication, so
+                    // we can find out the host from RMI, however it is not reliable as
+                    // the connection might not be open.
                     host = RemoteServer.getClientHost();
                 } catch (ServerNotActiveException ex) {
                     throw new RuntimeException(ex);
                 }
             }
+        } else {
+            host = NetUtils.getHostName();
         }
 
         String realm = as.getSystemJmxConnector().getAuthRealmName(); //yes, for backward compatibility;

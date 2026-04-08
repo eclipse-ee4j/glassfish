@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -602,7 +602,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 Node n = domain.getNodeNamed(node);
                 if (n != null) {
                     String nodeHost = n.getNodeHost();
-                    if (NetUtils.isThisHostLocal(nodeHost)) { // instance on same host as DAS
+                    if (NetUtils.isLocal(nodeHost)) { // instance on same host as DAS
                         int dasAdminPort = domain.getServerNamed("server").getAdminPort();
                         // Don't use the getAdminPort default method directly on the instance being created
                         int instanceAdminPort = new ServerHelper(instance, config).getAdminPort();

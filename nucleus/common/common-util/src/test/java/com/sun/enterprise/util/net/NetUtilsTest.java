@@ -69,24 +69,6 @@ public class NetUtilsTest {
     }
 
     @Test
-    void isThisHostLocal() throws Exception {
-        final InetAddress loopbackAddress = InetAddress.getLoopbackAddress();
-        final InetAddress localHost = InetAddress.getLocalHost();
-        assertAll(
-            () -> assertFalse(NetUtils.isThisHostLocal("8.8.8.8"), "Remote IP"),
-            () -> assertFalse(NetUtils.isThisHostLocal("idonotexist____xxx"), "nonexisting hostname"),
-            () -> assertTrue(NetUtils.isThisHostLocal("localhost"), "hostname - localhost"),
-            () -> assertTrue(NetUtils.isThisHostLocal("127.0.0.1"), "IPv4 address, 127.0.0.1"),
-            () -> assertTrue(NetUtils.isThisHostLocal("0:0:0:0:0:0:0:1"), "IPv6 address 0:0:0:0:0:0:0:1, long format"),
-            () -> assertTrue(NetUtils.isThisHostLocal("::1%lo"), "IPv6 address ::1%lo, short format"),
-            () -> assertTrue(NetUtils.isThisHostLocal(loopbackAddress.getHostAddress()), loopbackAddress.toString()),
-            () -> assertTrue(NetUtils.isThisHostLocal(loopbackAddress.getHostName()), loopbackAddress.toString()),
-            () -> assertTrue(NetUtils.isThisHostLocal(localHost.getHostAddress()), localHost.toString()),
-            () -> assertTrue(NetUtils.isThisHostLocal(localHost.getHostName()), localHost.toString())
-        );
-    }
-
-    @Test
     void getHostAddresses() throws Exception {
         InetAddress[] addresses = NetUtils.getHostAddresses();
         assertThat(addresses, arrayWithSize(greaterThan(0)));

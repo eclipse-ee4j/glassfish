@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
+import com.sun.enterprise.security.cli.CreateFileUser;
 import com.sun.enterprise.util.net.NetUtils;
 
 import jakarta.inject.Inject;
@@ -56,6 +57,7 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
+import org.glassfish.security.services.commands.LDAPAdminAccessConfigurator;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
@@ -72,8 +74,8 @@ import org.jvnet.hk2.annotations.Service;
  * LDAP, the specific group relationships are enforced.</li>
  * </ul>
  * Note that admin security is tested only with FileRealm and LDAPRealm.
- * @see com.sun.enterprise.security.cli.LDAPAdminAccessConfigurator
- * @see com.sun.enterprise.security.cli.CreateFileUser
+ * @see LDAPAdminAccessConfigurator
+ * @see CreateFileUser
  * @since GlassFish v3
  */
 @Service
@@ -210,8 +212,9 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             for (Object principal : ps) {
                 if (principal instanceof Group) {
                     Group group = (Group) principal;
-                    if (group.getName().equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME))
+                    if (group.getName().equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME)) {
                         return true;
+                    }
                 }
             }
             ADMSEC_LOGGER.fine("User is not a member of the special admin group");
@@ -273,7 +276,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
          * Accept the request if secure admin is enabled or if the
          * request is local.
          */
-        if (SecureAdmin.isEnabled(secureAdmin) || NetUtils.isThisHostLocal(host)) {
+        if (SecureAdmin.isEnabled(secureAdmin) || NetUtils.isLocal(host)) {
             return;
         }
         throw new RemoteAdminAccessException();
@@ -437,8 +440,9 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         }
 
         String realm = as.getSystemJmxConnector().getAuthRealmName(); //yes, for backward compatibility;
-        if (realm == null)
+        if (realm == null) {
             realm = as.getAuthRealmName();
+        }
 
         try {
             loginAsAdmin(user, new String(password), realm, host);

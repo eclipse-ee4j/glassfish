@@ -77,7 +77,7 @@ public final class PortManager {
             allPorts = new TreeSet<Integer>();
             newServerPorts = new ServerPorts(cluster, config, domain, newServer);
 
-            isLocal = NetUtils.isThisHostLocal(host);
+            isLocal = NetUtils.isLocal(host);
 
             allServers = domain.getServers().getServer();
 
@@ -183,7 +183,7 @@ public final class PortManager {
         for (Server server : allServers) {
             if (server.isDas()) {
                 serversOnHost.add(new ServerPorts(domain, server));
-            } else if (NetUtils.isThisHostLocal(server.getAdminHost())) {
+            } else if (NetUtils.isLocal(server.getAdminHost())) {
                 serversOnHost.add(new ServerPorts(domain, server));
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -306,7 +306,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             return true;
         }
 
-        if (NetUtils.isThisHostLocal(host1) && NetUtils.isThisHostLocal(host2)) {
+        if (NetUtils.isLocal(host1) && NetUtils.isLocal(host2)) {
             // Hostnames both refer to the local host. Match.
             return true;
         }
@@ -590,7 +590,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
                     dashost = programOpts.getHost();
                 }
                 String hostname = InetAddress.getLocalHost().getHostName();
-                if (hostname.equals(dashost) || NetUtils.isThisHostLocal(dashost)) {
+                if (hostname.equals(dashost) || NetUtils.isLocal(dashost)) {
                     hostname = "localhost" + "-" + domainName;
                 }
                 File f = new File(parent, hostname);

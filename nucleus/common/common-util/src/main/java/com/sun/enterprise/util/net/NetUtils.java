@@ -23,14 +23,12 @@ import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -152,7 +150,7 @@ public final class NetUtils {
         if (portNumber <= 0 || portNumber > MAX_PORT) {
             return false;
         }
-        if (isThisHostLocal(hostName)) {
+        if (isLocal(hostName)) {
             return isPortFreeServer(portNumber);
         }
         return isPortFreeClient(hostName, portNumber);
@@ -284,71 +282,6 @@ public final class NetUtils {
             LOG.log(TRACE, "Unable to resolve the address.", e);
             return false;
         }
-    }
-
-    /**
-     * Return true if hostname represents the current machine.
-     * A null or empty hostname is considered local, as is the
-     * name "localhost".  Otherwise, all the IP addresses
-     * corresponding to hostname are compared with all the IP addresses
-     * corresponding to "localhost", as well as all the IP addresses
-     * for all the network interfaces on this machine.  Note that
-     * hostname can also be an IP address in string form.
-     *
-     * @return true if hostname is the local host
-     */
-    public static boolean isThisHostLocal(String hostname) {
-        if (hostname == null || hostname.isEmpty()) {
-            return true;
-        }
-
-        // now check all the addresses of "localhost"
-        InetAddress[] hostAddrs = null;
-        try {
-            hostAddrs = InetAddress.getAllByName(hostname);
-
-            // any address that's a loopback address is a local address
-            for (InetAddress ia : hostAddrs) {
-                if (ia.isLoopbackAddress()) {
-                    return true;
-                }
-            }
-
-            // are any of our addresses the same as any address of "localhost"?
-            // XXX - redundant with the above check?
-            for (InetAddress lia : InetAddress.getAllByName("localhost")) {
-                for (InetAddress ia : hostAddrs) {
-                    if (lia.equals(ia)) {
-                        return true;
-                    }
-                }
-            }
-        } catch (UnknownHostException e) {
-            LOG.log(TRACE, "Failed to get all addresses of host: " + hostname, e);
-        }
-
-        // it's not localhost, perhaps it's one of the addresses of this host?
-        Enumeration<NetworkInterface> eni = null;
-        try {
-            eni = NetworkInterface.getNetworkInterfaces();
-        } catch (SocketException e) {
-            LOG.log(TRACE, "Failed to get all network interfaces", e);
-            return false;
-        }
-        if (hostAddrs != null) {
-            while (eni.hasMoreElements()) {
-                NetworkInterface ni = eni.nextElement();
-                for (InterfaceAddress intf : ni.getInterfaceAddresses()) {
-                    for (InetAddress ia : hostAddrs) {
-                        if (intf.getAddress().equals(ia)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        // nothing matched, not local
-        return false;
     }
 
     /**

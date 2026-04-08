@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package com.sun.enterprise.util.net;
 import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.InterfaceAddress;
@@ -33,8 +34,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+
 public final class NetUtils {
 
+    private static final Logger LOG = System.getLogger(NetUtils.class.getName());
+    /** Maximal allowed port number */
     public static final int MAX_PORT = 65535;
     private static final String LOCALHOST_IP = "127.0.0.1";
 
@@ -100,7 +106,7 @@ public final class NetUtils {
             return PortAvailability.OK;
         }
 
-        if (isPortFreeClient(null, portNumber)) {
+        if (isPortFreeClient(getHostName(), portNumber)) {
             // can not setup a server socket and can not connect as a client
             // that means we don't have permission...
             return PortAvailability.noPermission;
@@ -108,34 +114,51 @@ public final class NetUtils {
         return PortAvailability.inUse;
     }
 
-    public static boolean isPortStringValid(String portNumber) {
+    /**
+     * @param portNumber
+     * @return true if the port number is an integer between 0 and {@value #MAX_PORT} (both inclusive)
+     */
+    public static boolean isPortValid(String portNumber) {
         try {
             return isPortValid(Integer.parseInt(portNumber));
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException e) {
+            LOG.log(TRACE, "Invalid port number: " + portNumber, e);
             return false;
         }
     }
 
+    /**
+     * @param portNumber
+     * @return true if the port number is between 0 and {@value #MAX_PORT} (both inclusive)
+     */
     public static boolean isPortValid(int portNumber) {
         return portNumber >= 0 && portNumber <= MAX_PORT;
     }
 
+    /**
+     * @param portNumber
+     * @return true if the local/loopback host is not listening on the given port number, false otherwise.
+     */
     public static boolean isPortFree(int portNumber) {
-        return isPortFree(null, portNumber);
+        return isPortFree(getHostName(), portNumber);
     }
 
+    /**
+     * @param hostName
+     * @param portNumber
+     * @return true if the host is not listening on the given port number, false otherwise.
+     */
     public static boolean isPortFree(String hostName, int portNumber) {
         if (portNumber <= 0 || portNumber > MAX_PORT) {
             return false;
         }
-        if (hostName == null || isThisHostLocal(hostName)) {
+        if (isThisHostLocal(hostName)) {
             return isPortFreeServer(portNumber);
         }
         return isPortFreeClient(hostName, portNumber);
     }
 
     private static boolean isPortFreeClient(String hostName, int portNumber) {
-        // If the host name is null, assume localhost
         if (hostName == null) {
             hostName = getHostName();
         }
@@ -143,50 +166,30 @@ public final class NetUtils {
             socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
             return false;
         } catch (IOException e) {
-            // Nobody is listening on this port
+            LOG.log(TRACE, "Nobody is listening on host: " + hostName + ", port: " + portNumber, e);
+            return true;
         }
-        return true;
     }
 
     private static boolean isPortFreeServer(int port) {
-        // check 3 different ip-port combinations.
-        // Amazingly I have seen all 3 possibilities -- so just checking on 0.0.0.0
-        // is not good enough.
-        // Usually it is the 0.0.0.0 -- but JMS (default:7676)
-        // only returns false from the "localhost":port combination.
-        // We want to be aggressively disqualifying ports rather than the other
-        // way around
-
-        // JIRA 19391 April 2013  Byron Nevins
-        // If DNS can not resolve the hostname, then
-        // InetAddress.getLocalHost() will throw an UnknownHostException
-        // Before this change we caught ALL Exceptions and returned false.
-        // So if, say, the system has a bad hostname setup, this method
-        // would say the port is in use.  Which probably is not true.
-        // Change:  log it as a warning the first time and then log it as a FINE.
-
         try {
-            InetAddress add = InetAddress.getByAddress(new byte[] {0, 0, 0, 0});
-
-            if (!isPortFreeServer(port, add)) {
-                // return immediately on "not-free"
-                return false;
-            }
-
+            InetAddress address;
             try {
-                add = InetAddress.getLocalHost();
-            } catch (UnknownHostException uhe) {
-                // Ignore. This exception should be already logged on startup.
+                // System supplies any address mapped to the local host.
+                // That doesn't mean that it is possible to allocate port on it.
+                // The IP/host mapping could be explicitly set in /etc/hosts file, but in fact
+                // no network device has assigned it now.
+                // Then the isPortFreeServer would fail.
+                address = InetAddress.getLocalHost();
+            } catch (UnknownHostException e) {
+                LOG.log(WARNING,
+                    "Could not resolve address of the local host. I will use the loopback address temporarily.", e);
+                address = InetAddress.getLoopbackAddress();
             }
 
-            if (!isPortFreeServer(port, add)) {
-                return false;
-            }
-
-            add = InetAddress.getByName("localhost");
-            return isPortFreeServer(port, add);
+            return isPortFreeServer(port, address);
         } catch (Exception e) {
-            // If we can't get an IP address then we can't check
+            LOG.log(TRACE, "Could not resolve address of the local host.", e);
             return false;
         }
     }
@@ -229,52 +232,58 @@ public final class NetUtils {
         Socket server = new Socket();
         try {
             if (host == null) {
-                host = InetAddress.getByName(null).getHostName();
+                host = getHostName();
             }
-
-            InetSocketAddress whom = new InetSocketAddress(host, port);
-            server.connect(whom, timeoutMilliseconds);
+            InetSocketAddress address = new InetSocketAddress(host, port);
+            server.connect(address, timeoutMilliseconds);
             return true;
         } catch (Exception ex) {
             return false;
         } finally {
             try {
                 server.close();
-            } catch (IOException ex) {
-                // nothing to do
+            } catch (IOException e) {
+                LOG.log(WARNING, "Failed to close the server socket: " + server, e);
             }
         }
     }
 
-
-    public static boolean isRemote(String ip) {
-        return !isLocal(ip);
-    }
-
-    public static boolean isLocal(String ip) {
-        if (ip == null) {
+    /**
+     * Checks if the address represents the local host. The address can be an IP or a hostname.
+     * The method checks if the address is a loopback address, or if it matches any of the IP
+     * addresses of the local host. A null address is considered not local.
+     * If the given address is same as the host name, it is considered local too.
+     * A null address is considered not local.
+     *
+     * @param address IP or hostname
+     * @return true if the address represents the local host, false otherwise.
+     */
+    public static boolean isLocal(final String address) {
+        if (address == null) {
             return false;
         }
 
-        ip = trimIP(ip);
-
-        if (ip.equals(LOCALHOST_IP)) {
+        if (LOCALHOST_IP.equals(address)) {
             return true;
         }
 
         String[] myIPs = getHostIPs();
-
-        if (myIPs == null) {
-            return false;
-        }
-
         for (String myIP : myIPs) {
-            if (ip.equals(myIP)) {
+            if (address.equals(myIP)) {
                 return true;
             }
         }
 
-        return false;
+        if (getHostName().equals(address)) {
+            // if the address is same as the host name, it is considered local too
+            return true;
+        }
+        try {
+            return InetAddress.getByName(address).isLoopbackAddress();
+        } catch (UnknownHostException e) {
+            LOG.log(TRACE, "Unable to resolve the address.", e);
+            return false;
+        }
     }
 
     /**
@@ -289,16 +298,14 @@ public final class NetUtils {
      * @return true if hostname is the local host
      */
     public static boolean isThisHostLocal(String hostname) {
-        // optimize common cases
-        if (hostname == null || hostname.isEmpty() || hostname.equalsIgnoreCase("localhost")) {
+        if (hostname == null || hostname.isEmpty()) {
             return true;
         }
 
         // now check all the addresses of "localhost"
-        InetAddress hostAddrs[] = null;
+        InetAddress[] hostAddrs = null;
         try {
             hostAddrs = InetAddress.getAllByName(hostname);
-            assert hostAddrs != null;
 
             // any address that's a loopback address is a local address
             for (InetAddress ia : hostAddrs) {
@@ -316,15 +323,16 @@ public final class NetUtils {
                     }
                 }
             }
-        } catch (UnknownHostException ex) {
-            // ignore it
+        } catch (UnknownHostException e) {
+            LOG.log(TRACE, "Failed to get all addresses of host: " + hostname, e);
         }
 
         // it's not localhost, perhaps it's one of the addresses of this host?
         Enumeration<NetworkInterface> eni = null;
         try {
             eni = NetworkInterface.getNetworkInterfaces();
-        } catch (SocketException ex) {
+        } catch (SocketException e) {
+            LOG.log(TRACE, "Failed to get all network interfaces", e);
             return false;
         }
         if (hostAddrs != null) {
@@ -344,7 +352,7 @@ public final class NetUtils {
     }
 
     /**
-     * Resolves both hosts and then compares their internet addresses.
+     * Resolves both hosts and then compares their host IP addresses.
      * If they match at least once, those hosts are considered as same.
      * If there is no such address, returns false.
      *
@@ -400,13 +408,12 @@ public final class NetUtils {
         }
     }
 
+    /**
+     * @return all the IP addresses of the local host. Never null.
+     */
     public static String[] getHostIPs() {
         try {
             InetAddress[] adds = getHostAddresses();
-            if (adds == null) {
-                return null;
-            }
-
             String[] ips = new String[adds.length];
             for (int i = 0; i < adds.length; i++) {
                 String ip = trimIP(adds[i].toString());
@@ -419,23 +426,28 @@ public final class NetUtils {
         }
     }
 
+    /**
+     * @return all the addresses of the local host. Never null.
+     */
     public static InetAddress[] getHostAddresses() {
         try {
-            String hname = getHostName();
-            if (hname == null) {
-                return null;
-            }
-            return InetAddress.getAllByName(hname);
+            return InetAddress.getAllByName(getHostName());
         } catch (Exception e) {
-            return null;
+            LOG.log(TRACE, "Could not resolve address of the local host.", e);
+            return new InetAddress[0];
         }
     }
 
+
+    /**
+     * @return resolved host name of the local host (see <code>hostname</code> command on linux) or
+     *         loopback hostname.
+     */
     public static String getHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (Exception e) {
-            return null;
+            return InetAddress.getLoopbackAddress().getHostName();
         }
     }
 
@@ -479,11 +491,9 @@ public final class NetUtils {
                     .findFirst().orElse(hostname);
                 return host;
             } catch (SocketException e) {
-                e.printStackTrace();
+                LOG.log(WARNING, "Failed to list network interfaces.", e);
             }
-
         }
-
         return hostname;
     }
 

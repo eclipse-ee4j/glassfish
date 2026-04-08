@@ -317,7 +317,7 @@ public class NodeUtils {
         boolean installFlag = Boolean.parseBoolean(map.getOne(PARAM_INSTALL));
 
         // We use the resolver to expand any system properties
-        if (!NetUtils.isPortStringValid(resolver.resolve(sshport))) {
+        if (!NetUtils.isPortValid(resolver.resolve(sshport))) {
             throw new CommandValidationException(Strings.get(
                     "ssh.invalid.port", sshport));
         }

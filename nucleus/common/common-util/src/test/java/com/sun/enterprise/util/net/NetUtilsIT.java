@@ -75,6 +75,7 @@ public class NetUtilsIT {
                 System.out.println("RESULT_isPortFree: " + com.sun.enterprise.util.net.NetUtils.isPortFree(4848));
                 System.out.println("RESULT_checkPort: " + com.sun.enterprise.util.net.NetUtils.checkPort(4848));
                 System.out.println("RESULT_isLocal: " + com.sun.enterprise.util.net.NetUtils.METHOD_ISLOCAL);
+                System.out.println("RESULT_isThisHostLocal: " + com.sun.enterprise.util.net.NetUtils.METHOD_ISTHISHOSTLOCAL);
                 System.out.println("RESULT_isSameHost: " + com.sun.enterprise.util.net.NetUtils.METHOD_ISSAMEHOST);
                 System.out.println("DONE.");
             }
@@ -131,6 +132,7 @@ public class NetUtilsIT {
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
             () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // each resolves to different addresses
         );
     }
@@ -155,7 +157,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("true"))
         );
     }
 
@@ -167,7 +171,7 @@ public class NetUtilsIT {
     @Test
     void extraHostnameUnreachableIpVsLoopback() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", "0:0:0:0:0:0:0:1%lo");
         container = createContainer(containerClass)
             .withExtraHost(HOSTNAME, "127.0.0.13") // unreachable IP
             .withExtraHost(HOSTNAME, "::1") // IPv6 localhost
@@ -180,7 +184,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // localhost resolves to IPv4, not IPv6
         );
     }
 
@@ -203,7 +209,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // each resolves to different addresses
         );
     }
 
@@ -224,7 +232,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("false"))
         );
     }
 
@@ -244,7 +254,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("true"))
         );
     }
 
@@ -264,7 +276,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // each resolves to different addresses
         );
     }
 
@@ -284,7 +298,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // each resolves to different addresses
         );
     }
 
@@ -308,7 +324,9 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("false"))
+            () -> assertThat(getResultForIsLocal(logs), equalTo("false")),
+            () -> assertThat(getResultForIsThisHostLocal(logs), equalTo("false")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("false")) // each resolves to different addresses
         );
     }
 
@@ -335,7 +353,9 @@ public class NetUtilsIT {
     }
 
     private static String filterMethodIsLocal(String template, String address) {
-        return filterClassBody(template, "METHOD_ISLOCAL", "isLocal", "\"" + address + "\"");
+        String f1 = filterClassBody(template, "METHOD_ISLOCAL", "isLocal", "\"" + address + "\"");
+        return filterClassBody(f1, "METHOD_ISTHISHOSTLOCAL", "isThisHostLocal", "\"" + address + "\"");
+
     }
 
     private static String filterMethodIsSameHost(String template, String host1, String host2) {
@@ -365,6 +385,10 @@ public class NetUtilsIT {
 
     private static String getResultForIsLocal(String[] logs) {
         return getResult("RESULT_isLocal: ", logs);
+    }
+
+    private static String getResultForIsThisHostLocal(String[] logs) {
+        return getResult("RESULT_isThisHostLocal: ", logs);
     }
 
     private static String getResultForIsSameHost(String[] logs) {

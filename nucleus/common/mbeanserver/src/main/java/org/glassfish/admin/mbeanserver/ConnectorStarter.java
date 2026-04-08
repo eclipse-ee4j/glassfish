@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,9 @@
 
 package org.glassfish.admin.mbeanserver;
 
+import com.sun.enterprise.util.net.NetUtils;
+
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import javax.management.MBeanServer;
 import javax.management.remote.JMXAuthenticator;
@@ -28,34 +30,19 @@ import javax.security.auth.Subject;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
-Start and stop JMX connectors, base class.
+ * Start and stop JMX connectors, base class.
  */
 abstract class ConnectorStarter {
 
-    protected static void debug(final String s) {
-        System.out.println(s);
-    }
     protected final MBeanServer mMBeanServer;
     protected final String mHostName;
     protected final int mPort;
     protected final boolean mSecurityEnabled;
     private final ServiceLocator mHabitat;
     protected final BootAMXListener mBootListener;
-    protected volatile JMXServiceURL mJMXServiceURL = null;
-    protected volatile JMXConnectorServer mConnectorServer = null;
+    protected volatile JMXServiceURL mJMXServiceURL;
+    protected volatile JMXConnectorServer mConnectorServer;
 
-    public JMXServiceURL getJMXServiceURL() {
-        return mJMXServiceURL;
-    }
-
-    public String hostname() throws UnknownHostException {
-        if (mHostName.equals("") || mHostName.equals("0.0.0.0")) {
-            return Util.localhost();
-        } else if (mHostName.contains(":") && !mHostName.startsWith("[")) {
-            return "["+mHostName+"]";
-        }
-        return mHostName;
-    }
 
     ConnectorStarter(
             final MBeanServer mbeanServer,
@@ -74,6 +61,19 @@ abstract class ConnectorStarter {
 
     abstract JMXConnectorServer start() throws Exception;
 
+    public JMXServiceURL getJMXServiceURL() {
+        return mJMXServiceURL;
+    }
+
+    public String hostname() {
+        if (mHostName.isEmpty() || mHostName.equals("0.0.0.0")) {
+            return NetUtils.getHostName();
+        } else if (mHostName.contains(":") && !mHostName.startsWith("[")) {
+            return "["+mHostName+"]";
+        }
+        return mHostName;
+    }
+
     public JMXAuthenticator getAccessController() {
 
         // we return a proxy to avoid instantiating the jmx authenticator until it is actually
@@ -85,6 +85,7 @@ abstract class ConnectorStarter {
              * @param credentials
              * @return
              */
+            @Override
             public Subject authenticate(Object credentials) {
                 // lazy init...
                 // todo : lloyd, if this becomes a performance bottleneck, we should cache
@@ -113,10 +114,3 @@ abstract class ConnectorStarter {
         return mSecurityEnabled;
     }
 }
-
-
-
-
-
-
-

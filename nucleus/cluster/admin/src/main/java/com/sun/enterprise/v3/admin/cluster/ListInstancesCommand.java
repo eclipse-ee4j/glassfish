@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
-import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
@@ -205,22 +206,16 @@ public class ListInstancesCommand implements AdminCommand {
     }
 
     private void yesStatus(List<Server> serverList, int timeoutInMsec, Logger logger) {
-        // Gather a list of InstanceInfo -- one per instance in domain.xml
-        RemoteInstanceCommandHelper helper = new RemoteInstanceCommandHelper(habitat);
-
         for (Server server : serverList) {
             boolean clustered = server.getCluster() != null;
-            int port = helper.getAdminPort(server);
-            String host = server.getAdminHost();
-
             if (standaloneonly && clustered) {
                 continue;
             }
 
             String name = server.getName();
-
             if (name == null) {
-                continue;   // can this happen?!?
+                // can this happen?
+                continue;
             }
 
             Cluster cluster = domain.getClusterForInstance(name);
@@ -231,8 +226,8 @@ public class ListInstancesCommand implements AdminCommand {
                 InstanceInfo ii = new InstanceInfo(
                         habitat,
                         server,
-                        port,
-                        host,
+                        callGetter(server::getAdminPort, -1),
+                        callGetter(server::getAdminHost, "unknown"),
                         clusterName,
                         logger,
                         timeoutInMsec,
@@ -241,7 +236,7 @@ public class ListInstancesCommand implements AdminCommand {
                 infos.add(ii);
             }
         }
-        if (infos.size() < 1) {
+        if (infos.isEmpty()) {
             report.setMessage(NONE);
             return;
         }
@@ -280,8 +275,7 @@ public class ListInstancesCommand implements AdminCommand {
 
         if (long_opt) {
             report.setMessage(InstanceInfo.format(infos));
-        }
-        else {
+        } else {
             report.setMessage(InstanceInfo.formatBrief(infos));
         }
     }
@@ -292,44 +286,41 @@ public class ListInstancesCommand implements AdminCommand {
      */
     private List<Server> createServerList() {
         // 1. no whichTarget specified
-        if (!StringUtils.ok(whichTarget))
+        if (!StringUtils.ok(whichTarget)) {
             return allServers.getServer();
+        }
 
         ReferenceContainer rc = domain.getReferenceContainerNamed(whichTarget);
         // 2. Not a server or a cluster. Could be a config or a Node
         if (rc == null) {
             return getServersForNodeOrConfig();
-        }
-        else if (rc.isServer()) {
+        } else if (rc.isServer()) {
             List<Server> l = new LinkedList<Server>();
             l.add((Server) rc);
             return l;
-        }
-        else if (rc.isCluster()) { // can't be anything else currently! (June 2010)
+        } else if (rc.isCluster()) { // can't be anything else currently! (June 2010)
             Cluster cluster = (Cluster) rc;
             return cluster.getInstances();
-        }
-        else {
+        } else {
             return null;
         }
     }
 
     private List<Server> getServersForNodeOrConfig() {
-        if (whichTarget == null)
+        if (whichTarget == null) {
             throw new NullPointerException("impossible!");
-
+        }
         List<Server> list = getServersForNode();
-
         if (list == null) {
             list = getServersForConfig();
         }
-
         return list;
     }
 
     private List<Server> getServersForNode() {
-        if (whichTarget == null) // FindBugs can't figure out that our caller already checked.
+        if (whichTarget == null) { // FindBugs can't figure out that our caller already checked.
             throw new NullPointerException("impossible!");
+        }
 
         boolean foundNode = false;
         Nodes nodes = domain.getNodes();
@@ -345,12 +336,10 @@ public class ListInstancesCommand implements AdminCommand {
                 }
             }
         }
-        if (!foundNode) {
-            return null;
-        }
-        else {
+        if (foundNode) {
             return domain.getInstancesOnNode(whichTarget);
         }
+        return null;
     }
 
     private List<Server> getServersForConfig() {
@@ -414,5 +403,13 @@ public class ListInstancesCommand implements AdminCommand {
     private void fail(String s) {
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         report.setMessage(s);
+    }
+
+    private static <T> T callGetter(Supplier<T> supplier, T defaultValue) {
+        try {
+            return supplier.get();
+        } catch (RuntimeException e) {
+            return defaultValue;
+        }
     }
 }

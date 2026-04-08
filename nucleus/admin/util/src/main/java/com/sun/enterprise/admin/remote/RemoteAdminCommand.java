@@ -224,11 +224,6 @@ public class RemoteAdminCommand {
         void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
     }
 
-    public RemoteAdminCommand(String name, String host, int port) throws CommandException {
-
-        this(name, host, port, false, "admin", null, Logger.getAnonymousLogger());
-    }
-
     public RemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger)
             throws CommandException {
         this(name, host, port, secure, user, password, logger, null, null, false);

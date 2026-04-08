@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -150,17 +150,16 @@ public class RestartInstanceCommand implements AdminCommand {
             return;
         }
 
-        host = instance.getAdminHost();
-
-        if (host == null) {
-            setError(Strings.get("stop.instance.noHost", instanceName));
-            return;
+        try {
+            host = instance.getAdminHost();
+        } catch (RuntimeException e) {
+            setError("Can not find the name of the host for the instance named " + instanceName + ": " + e.getMessage());
         }
-        port = helper.getAdminPort(instance);
 
-        if (port < 0) {
-            setError(Strings.get("stop.instance.noPort", instanceName));
-            return;
+        try {
+            port = instance.getAdminPort();
+        } catch (RuntimeException e) {
+            setError("Can not find the Admin Port for the instance named " + instanceName + ": " + e.getMessage());
         }
 
         if (!isInstanceRestartable()) {

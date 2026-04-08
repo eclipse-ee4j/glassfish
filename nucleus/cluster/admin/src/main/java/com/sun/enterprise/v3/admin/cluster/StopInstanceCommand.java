@@ -237,19 +237,21 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
             return msg;
         }
 
-        String host = instance.getAdminHost();
-
-        if (host == null) {
-            return Strings.get("stop.instance.noHost", instanceName);
+        String host;
+        try {
+            host = instance.getAdminHost();
+        } catch (RuntimeException e) {
+            return "Can not find the name of the host for the instance named " + instanceName + ": " + e.getMessage();
         }
 
-        int port = helper.getAdminPort(instance);
-
-        if (port < 0) {
-            return Strings.get("stop.instance.noPort", instanceName);
+        int port;
+        try {
+            port = instance.getAdminPort();
+        } catch (RuntimeException e) {
+            return "Can not find the name of the host for the instance named " + instanceName + ": " + e.getMessage();
         }
 
-        if(!instance.isListeningOnAdminPort()) {
+        if (!instance.isListeningOnAdminPort()) {
             return null;
         }
 

@@ -74,7 +74,7 @@ public final class PortManager {
 
             host = new ServerHelper(theNewServer, config).getAdminHost();
 
-            allPorts = new TreeSet<Integer>();
+            allPorts = new TreeSet<>();
             newServerPorts = new ServerPorts(cluster, config, domain, newServer);
 
             isLocal = NetUtils.isLocal(host);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -372,45 +372,42 @@ public class CreateInstanceCommand implements AdminCommand {
      */
     private boolean validateDasOptions(AdminCommandContext context) {
         boolean isDasOptionsValid = true;
-        if (theNode.isLocal() || (!theNode.isLocal() && theNode.getType().equals("SSH"))) {
-            ActionReport report = ctx.getActionReport();
-            report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+        if (!theNode.isLocal() && !"SSH".equals(theNode.getType())) {
+            return true;
+        }
+        ActionReport report = ctx.getActionReport();
+        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
-            NodeUtils nodeUtils = new NodeUtils(habitat);
-            Server dasServer = servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
-            String dasHost = dasServer.getAdminHost();
-            String dasPort = Integer.toString(dasServer.getAdminPort());
+        NodeUtils nodeUtils = new NodeUtils(habitat);
+        Server dasServer = servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
+        ArrayList<String> command = new ArrayList<>();
+        if (!theNode.isLocal()) {
+            // Only specify the DAS host if the node is remote. See issue 13993
+            command.add("--host");
+            command.add(dasServer.getAdminHost());
+        }
 
-            ArrayList<String> command = new ArrayList<>();
+        command.add("--port");
+        command.add(Integer.toString(dasServer.getAdminPort()));
 
-            if (!theNode.isLocal()) {
-                // Only specify the DAS host if the node is remote. See issue 13993
-                command.add("--host");
-                command.add(dasHost);
-            }
+        command.add("_validate-das-options");
 
-            command.add("--port");
-            command.add(dasPort);
+        if (nodeDir != null) {
+            command.add("--nodedir");
+            command.add(nodeDir); //XXX escape spaces?
+        }
 
-            command.add("_validate-das-options");
+        command.add("--node");
+        command.add(node);
 
-            if (nodeDir != null) {
-                command.add("--nodedir");
-                command.add(nodeDir); //XXX escape spaces?
-            }
+        command.add(instance);
 
-            command.add("--node");
-            command.add(node);
+        // Run the command on the node
+        nodeUtils.runAdminCommandOnNode(theNode, command, ctx, "", null, null);
 
-            command.add(instance);
-
-            // Run the command on the node
-            nodeUtils.runAdminCommandOnNode(theNode, command, ctx, "", null, null);
-
-            if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
-                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                isDasOptionsValid = false;
-            }
+        if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            isDasOptionsValid = false;
         }
         return isDasOptionsValid;
     }

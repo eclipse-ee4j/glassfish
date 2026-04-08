@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,7 +55,7 @@ public class ClusterOperationUtil {
     private static final LocalStringManagerImpl strings = new LocalStringManagerImpl(ClusterOperationUtil.class);
 
     //TODO : Begin temp fix for undoable commands
-    private static List<Server> completedInstances = new ArrayList<Server>();
+    private static List<Server> completedInstances = new ArrayList<>();
 
     public static List<Server> getCompletedInstances() {
         return completedInstances;
@@ -126,8 +127,9 @@ public class ClusterOperationUtil {
                                     svr.getName(), commandName));
                         }
                         aReport.setActionExitCode(finalResult);
-                        if (returnValue == ActionReport.ExitCode.SUCCESS)
+                        if (returnValue == ActionReport.ExitCode.SUCCESS) {
                             returnValue = finalResult;
+                        }
                     }
                     continue;
                 }
@@ -146,7 +148,7 @@ public class ClusterOperationUtil {
                     continue;
                 }
                 String host = svr.getAdminHost();
-                int port = rich.getAdminPort(svr);
+                int port = svr.getAdminPort();
                 ActionReport aReport = context.getActionReport().addSubActionsReport();
                 InstanceCommandResult aResult = new InstanceCommandResult();
                 //                InstanceCommandExecutor ice =
@@ -252,16 +254,18 @@ public class ClusterOperationUtil {
                 ActionReport aReport = context.getActionReport().addSubActionsReport();
                 finalResult = FailurePolicy.applyFailurePolicy(failPolicy, ActionReport.ExitCode.FAILURE);
                 if (finalResult == ActionReport.ExitCode.FAILURE) {
-                    if (ex instanceof TimeoutException)
+                    if (ex instanceof TimeoutException) {
                         aReport.setMessage(strings.getLocalString("clusterutil.timeoutwhilewaiting",
                                 "Timed out while waiting for result from instance {0}", s));
-                    else
+                    } else {
                         aReport.setMessage(strings.getLocalString("clusterutil.exceptionwhilewaiting",
                                 "Exception while waiting for result from instance {0} : {1}", s, ex.getLocalizedMessage()));
+                    }
                 }
                 aReport.setActionExitCode(finalResult);
-                if (returnValue == ActionReport.ExitCode.SUCCESS)
+                if (returnValue == ActionReport.ExitCode.SUCCESS) {
                     returnValue = finalResult;
+                }
                 instanceState.setState(s, InstanceState.StateType.RESTART_REQUIRED, false);
                 instanceState.addFailedCommandToInstance(s, commandName, parameters);
             }
@@ -317,8 +321,9 @@ public class ClusterOperationUtil {
         ActionReport.ExitCode result = ActionReport.ExitCode.SUCCESS;
         Target targetService = habitat.getService(Target.class);
         for (String t : targetNames) {
-            if (CommandTarget.DAS.isValid(habitat, t) || CommandTarget.DOMAIN.isValid(habitat, t))
+            if (CommandTarget.DAS.isValid(habitat, t) || CommandTarget.DOMAIN.isValid(habitat, t)) {
                 continue;
+            }
             parameters.set("target", t);
             ActionReport.ExitCode returnValue = replicateCommand(commandName, failPolicy, offlinePolicy, neverStartedPolicy,
                     targetService.getInstances(t), context, parameters, habitat, intermediateDownloadDir);

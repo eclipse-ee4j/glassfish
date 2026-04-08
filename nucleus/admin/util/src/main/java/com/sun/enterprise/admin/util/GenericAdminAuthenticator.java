@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
+import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.logging.Level;
@@ -208,8 +209,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     private boolean ensureGroupMembership(String user, String realm) {
         try {
             SecurityContext secContext = SecurityContext.getCurrent();
-            Set ps = secContext.getPrincipalSet(); //before generics
-            for (Object principal : ps) {
+            Set<Principal> ps = secContext.getPrincipalSet();
+            for (Principal principal : ps) {
                 if (principal instanceof Group) {
                     Group group = (Group) principal;
                     if (group.getName().equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME)) {
@@ -229,9 +230,6 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     private Subject authenticate(final Request req, final String alternateHostname) throws IOException, LoginException {
         final AdminCallbackHandler cbh = new AdminCallbackHandler(habitat, req, alternateHostname, getDefaultAdminUser(), localPassword);
         try {
-            /*
-             * Enforce remote access restrictions, if any.
-             */
             rejectRemoteAdminIfDisabled(cbh);
 
             Subject subject = consumeTokenIfPresent(req);
@@ -271,17 +269,19 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         }
     }
 
+    /*
+     * Accept the request if secure admin is enabled or if the request is local.
+     */
     private void rejectRemoteAdminIfDisabled(final String host) throws RemoteAdminAccessException {
-        /*
-         * Accept the request if secure admin is enabled or if the
-         * request is local.
-         */
-        if (SecureAdmin.isEnabled(secureAdmin) || NetUtils.isLocal(host)) {
-            return;
+        if (!SecureAdmin.isEnabled(secureAdmin) && !NetUtils.isLocal(host)) {
+            throw new RemoteAdminAccessException(
+                "Remote admin access is not allowed when secure admin is disabled. Host=" + host);
         }
-        throw new RemoteAdminAccessException();
     }
 
+    /*
+     * Enforce remote access restrictions, if any.
+     */
     private void rejectRemoteAdminIfDisabled(final AdminCallbackHandler cbh) throws RemoteAdminAccessException {
         /*
          * If the secure admin config is not available then do not try to
@@ -310,12 +310,11 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     }
 
     private Subject consumeTokenIfPresent(final Request req) {
-        Subject result = null;
         final String token = req.getHeader(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
-        if (token != null) {
-            result = authTokenManager.consumeToken(token);
+        if (token == null) {
+            return null;
         }
-        return result;
+        return authTokenManager.consumeToken(token);
     }
 
     /**
@@ -345,8 +344,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         try {
             FileRealm fr = new FileRealm(rf.getAbsolutePath());
             String candidateDefaultAdminUser = null;
-            for (Enumeration users = fr.getUserNames(); users.hasMoreElements();) {
-                String au = (String) users.nextElement();
+            for (Enumeration<String> users = fr.getUserNames(); users.hasMoreElements();) {
+                String au = users.nextElement();
                 FileRealmUser fru = (FileRealmUser) fr.getUser(au);
                 for (String group : fru.getGroups()) {
                     if (group.equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME)) {
@@ -380,14 +379,14 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new LoginException();
         }
 
-        Subject s;
+        Subject subject;
         try {
             rejectRemoteAdminIfDisabled(host);
-            s = authService.login(user, password, null);
+            subject = authService.login(user, password, null);
             if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
                 ADMSEC_LOGGER.log(Level.FINE, "*** Login worked\n  user={0}\n  host={1}\n", new Object[] { user, host });
             }
-            return s;
+            return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
              * Rethrow RemoteAdminAccessException explicitly to avoid it being
@@ -448,10 +447,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             loginAsAdmin(user, new String(password), realm, host);
             return null;
         } catch (LoginException e) {
-            if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
-                ADMSEC_LOGGER.log(Level.FINE, "*** LoginException during JMX auth\n  user={0}\n  host={1}\n  realm={2}",
-                        new Object[] { user, host, realm });
-            }
+            ADMSEC_LOGGER.log(Level.FINE, "LoginException during JMX auth\n  user={0}\n  host={1}\n  realm={2}",
+                new Object[] {user, host, realm});
             throw new SecurityException(e);
         }
     }

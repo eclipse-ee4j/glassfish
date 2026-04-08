@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,12 +53,11 @@ public final class RemoteInstanceCommandHelper {
     }
 
     public final String getHost(final String serverName) {
-        String host = null;
         Server server = getServer(serverName);
-        if (server != null) {
-            host = server.getAdminHost();
+        if (server == null) {
+            return null;
         }
-        return host;
+        return server.getAdminHost();
     }
 
     public final Server getServer(final String serverName) {
@@ -81,13 +80,5 @@ public final class RemoteInstanceCommandHelper {
         }
         String node = server.getNodeRef();
         return StringUtils.ok(node) ? node : "no node";
-    }
-
-    public final int getAdminPort(final String serverName) {
-        return getAdminPort(getServer(serverName));
-    }
-
-    public final int getAdminPort(Server server) {
-        return server.getAdminPort();
     }
 }

@@ -96,9 +96,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     void setNodeDir(String nodeDir) throws PropertyVetoException;
 
     /**
-     * Points to a named host.
+     * Points to a node's host.
      *
-     * @return a named host name
+     * @return a host name, mandatory
      */
     @Attribute
     @Pattern(regexp = NAME_REGEX, message = "{nodehost.invalid.name}", payload = Node.class)

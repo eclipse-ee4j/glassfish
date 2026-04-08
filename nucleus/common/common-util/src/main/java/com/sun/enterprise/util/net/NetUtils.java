@@ -355,6 +355,7 @@ public final class NetUtils {
 
             return ips;
         } catch (Exception e) {
+            LOG.log(TRACE, "Could not resolve address of the local host.", e);
             return null;
         }
     }

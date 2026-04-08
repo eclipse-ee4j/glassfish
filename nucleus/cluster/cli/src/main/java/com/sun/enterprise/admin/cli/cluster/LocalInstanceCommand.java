@@ -285,34 +285,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
      * @return
      */
     private boolean matchingHostnames(String host1, String host2) {
-
-        if (!StringUtils.ok(host1) || !StringUtils.ok(host2)) {
-            if (!StringUtils.ok(host1) && !StringUtils.ok(host2)) {
-                // Both empty/null strings. Consider it a match.
-                return true;
-            } else {
-                // Only one string null/empty. No match.
-                return false;
-            }
-        }
-
-        if (host1.equalsIgnoreCase(host2)) {
-            // Hostnames exactly match. Same host.
-            return true;
-        }
-
-        if (NetUtils.isSameHost(host1, host2)) {
-            // Hostnames don't exactly match, but refer to same IP. Match.
-            return true;
-        }
-
-        if (NetUtils.isLocal(host1) && NetUtils.isLocal(host2)) {
-            // Hostnames both refer to the local host. Match.
-            return true;
-        }
-
-        // Don't match.
-        return false;
+        return NetUtils.isSameHost(host1, host2);
     }
 
     final protected Properties getDasProperties(File propfile) throws CommandException {

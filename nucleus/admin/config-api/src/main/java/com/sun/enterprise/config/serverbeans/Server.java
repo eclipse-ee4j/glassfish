@@ -318,7 +318,10 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         return new ServerHelper(this, getConfig()).getAdminHost();
     }
 
-    default int getAdminPort() throws RuntimeException {
+    /**
+     * @return admin port number, can be null.
+     */
+    default Integer getAdminPort() throws RuntimeException {
         return new ServerHelper(this, getConfig()).getAdminPort();
     }
 
@@ -601,9 +604,9 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 return;
             }
             try {
-                int dasAdminPort = domain.getServerNamed("server").getAdminPort();
+                Integer dasAdminPort = domain.getServerNamed("server").getAdminPort();
                 // Don't use the getAdminPort default method directly on the instance being created
-                int instanceAdminPort = new ServerHelper(instance, config).getAdminPort();
+                Integer instanceAdminPort = new ServerHelper(instance, config).getAdminPort();
                 if (instanceAdminPort == dasAdminPort) {
                     throw new TransactionFailure("Cannot create an instance on the same host as DAS"
                         + " with the same admin port " + dasAdminPort + " as DAS.");

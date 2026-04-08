@@ -56,11 +56,14 @@ public final class ServerHelper {
     }
 
     /**
-     * @return admin host name, never null.
-     * @throws RuntimeException if the admin port is not configured or is not a valid integer
+     * @return admin port, can be null.
+     * @throws RuntimeException if the admin port is not a valid integer
      */
-    public final int getAdminPort() {
+    public final Integer getAdminPort() {
         final String adminPortString = getAdminPortString(server, config);
+        if (adminPortString == null) {
+            return null;
+        }
         final int port;
         try {
             port = Integer.parseInt(adminPortString);

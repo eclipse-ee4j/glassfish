@@ -120,7 +120,7 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
                 return;
             }
             final String host = server.getAdminHost();
-            final int port = server.getAdminPort();
+            final Integer port = server.getAdminPort();
             try {
                 final ServerRemoteAdminCommand remote
                     = new ServerRemoteAdminCommand(locator, "osgi", host, port, false, "admin", "", LOG);

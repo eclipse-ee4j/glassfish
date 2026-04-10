@@ -170,5 +170,5 @@ The Eclipse GlassFish project does not endorse or recommend any of the companies
 
 Professional Services and Enterprise support are available through following companies:
 - [OmniFish](https://omnifish.ee/solutions/#support)
-- [ManageCat](https://www.managecat.com/services-and-support/eclipse-glassfish-enterprise-support)
+- [ManageCat](https://www.managecat.com/services-and-support)
 

@@ -60,8 +60,7 @@ Note that this applies just for tests which are executed by Maven and which use 
 
 ### Special Profiles
 
-* `staging` - In some development stages it may happen that some dependencies are available just in the OSSRH staging repository.
-  Then you have to use this profile, which is not enabled by default.
+* `staging` - This profile was used formerly to access the Staging Maven repository. At this time the repository is not available any more and the profile should not be used.
 * `jacoco` - enables the [JaCoCo](https://www.eclemma.org/jacoco/) agent in tests, so you can import its output to your editor, i.e. Eclipse, and see the code coverage.
 * `jacoco-merge` - merges all JaCoCo output files found in subdirectories and merges them into one. It is useful to see code which wasn't even touched by tests.
 

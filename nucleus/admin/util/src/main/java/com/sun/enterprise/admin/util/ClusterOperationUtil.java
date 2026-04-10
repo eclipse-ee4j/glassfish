@@ -106,7 +106,6 @@ public class ClusterOperationUtil {
         ActionReport.ExitCode returnValue = ActionReport.ExitCode.SUCCESS;
         InstanceStateService instanceState = habitat.getService(InstanceStateService.class);
         validateIntermediateDownloadDir(intermediateDownloadDir);
-        RemoteInstanceCommandHelper rich = new RemoteInstanceCommandHelper(habitat);
         Map<String, Future<InstanceCommandResult>> futures = new HashMap<String, Future<InstanceCommandResult>>();
         try {
             for (Server svr : instancesForReplication) {

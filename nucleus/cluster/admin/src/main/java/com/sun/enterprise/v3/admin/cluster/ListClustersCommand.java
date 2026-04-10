@@ -51,9 +51,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING;
-import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING_DISPLAY;
-
 /**
  *  This is a remote command that lists the clusters.
  * Usage: list-clusters
@@ -73,18 +70,21 @@ import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING_DI
 })
 public final class ListClustersCommand implements AdminCommand {
 
-    @Inject
-    private ServiceLocator habitat;
-    @Inject
-    Domain domain;
-    @Inject
-    InstanceStateService stateService;
-
+    private static final String PARTIALLY_RUNNING_DISPLAY = " partially running";
+    private static final String PARTIALLY_RUNNING = "PARTIALLY_RUNNING";
     private static final String NONE = "Nothing to list.";
     private static final String EOL = "\n";
 
+
+    @Inject
+    private ServiceLocator habitat;
+    @Inject
+    private Domain domain;
+    @Inject
+    private InstanceStateService stateService;
+
     @Param(optional = true, primary = true, defaultValue = "domain")
-    String whichTarget;
+    private String whichTarget;
 
     @Inject
     private Clusters allClusters;

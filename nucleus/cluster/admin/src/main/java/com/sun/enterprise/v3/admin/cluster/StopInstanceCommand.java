@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +18,10 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.admin.remote.ServerRemoteRestAdminCommand;
-import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.v3.admin.StopServer;
@@ -56,9 +56,7 @@ import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.launcher.SSHSession;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.sftp.SFTPPath;
-import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
@@ -86,7 +84,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
             @RestParam(name="id", value="$parent")
         })
 })
-public class StopInstanceCommand extends StopServer implements AdminCommand, PostConstruct {
+public class StopInstanceCommand extends StopServer implements AdminCommand {
 
     @Inject
     private ServiceLocator locator;
@@ -96,8 +94,6 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
     private Nodes nodes;
     @Inject
     private ServerEnvironment env;
-    @Inject
-    IterableProvider<Node> nodeList;
     @Param(optional = true, defaultValue = "true")
     private Boolean force = true;
     @Param(optional = true, defaultValue = "false")
@@ -107,7 +103,6 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
     @Param(optional = true)
     private Integer timeout;
     private Logger logger;
-    private RemoteInstanceCommandHelper helper;
     private ActionReport report;
     private String errorMessage = null;
     private String cmdName = "stop-instance";
@@ -208,17 +203,11 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
         }
     }
 
-    @Override
-    public void postConstruct() {
-        helper = new RemoteInstanceCommandHelper(locator);
-    }
-
     private String initializeInstance() {
         if (!StringUtils.ok(instanceName)) {
             return Strings.get("stop.instance.noInstanceName", cmdName);
         }
-
-        instance = helper.getServer(instanceName);
+        instance = locator.getService(Servers.class).getServer(instanceName);
         if (instance == null) {
             return Strings.get("stop.instance.noSuchInstance", instanceName);
         }

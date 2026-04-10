@@ -57,8 +57,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.v3.admin.cluster.Constants.NONE;
-
 /**
  * AdminCommand to list all instances and their states
  *
@@ -85,6 +83,8 @@ import static com.sun.enterprise.v3.admin.cluster.Constants.NONE;
         description="List Instances")
 })
 public class ListInstancesCommand implements AdminCommand {
+
+    private static final String NONE = "Nothing to list.";
 
     @Inject
     private ServiceLocator habitat;

@@ -450,9 +450,6 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         @Inject
         Servers servers;
 
-        @Inject
-        private ServerEnvironment env;
-
         @Override
         public void decorate(AdminCommandContext context, Nodes parent, Node child) throws PropertyVetoException, TransactionFailure {
             Logger logger = ConfigApiLoggerInfo.getLogger();

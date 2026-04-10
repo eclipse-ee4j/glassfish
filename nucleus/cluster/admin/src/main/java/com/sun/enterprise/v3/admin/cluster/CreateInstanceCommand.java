@@ -24,6 +24,7 @@ import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.util.io.InstanceDirs;
 import com.sun.enterprise.v3.admin.cluster.SecureAdminBootstrapHelper.BootstrapException;
 
@@ -57,7 +58,6 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
-import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -86,13 +86,10 @@ import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
         description="Create Instance")
 })
 public class CreateInstanceCommand implements AdminCommand {
-    private static final String NL = System.getProperty("line.separator");
     @Inject
     private CommandRunner<?> cr;
     @Inject
-    ServiceLocator habitat;
-    @Inject
-    IterableProvider<Node> nodeList;
+    private ServiceLocator locator;
     @Inject
     private Nodes nodes;
     @Inject
@@ -100,12 +97,12 @@ public class CreateInstanceCommand implements AdminCommand {
     @Inject
     private ServerEnvironment env;
     @Param(name = "node", alias = "nodeagent")
-    String node;
+    private String node;
     @Param(name = "config", optional = true)
     @I18n("generic.config")
-    String configRef;
+    private String configRef;
     @Param(name = "cluster", optional = true)
-    String clusterName;
+    private String clusterName;
     @Param(name = "lbenabled", optional = true)
     private Boolean lbEnabled;
     @Param(name = "checkports", optional = true, defaultValue = "true")
@@ -281,7 +278,7 @@ public class CreateInstanceCommand implements AdminCommand {
             String humanCommand = makeCommandHuman(command);
             if (userManagedNodeType()) {
                 String msg = Strings.get("create.instance.config", instance, humanCommand);
-                msg = StringUtils.cat(NL, registerInstanceMessage, msg);
+                msg = StringUtils.cat(System.lineSeparator(), registerInstanceMessage, msg);
                 report.setMessage(msg);
                 return;
             }
@@ -290,7 +287,7 @@ public class CreateInstanceCommand implements AdminCommand {
             String firstErrorMessage = Strings.get("create.instance.filesystem.failed", instance, node, nodeHost);
 
             // Run the command on the node and handle errors.
-            NodeUtils nodeUtils = new NodeUtils(habitat);
+            NodeUtils nodeUtils = new NodeUtils(locator);
             StringBuilder output = new StringBuilder();
             nodeUtils.runAdminCommandOnNode(theNode, command, ctx, firstErrorMessage, humanCommand, output);
 
@@ -304,7 +301,7 @@ public class CreateInstanceCommand implements AdminCommand {
             // If it was successful say so and display the command output
             String msg = Strings.get("create.instance.success", instance, nodeHost);
             if (!terse) {
-                msg = StringUtils.cat(NL, output.toString().trim(), registerInstanceMessage, msg);
+                msg = StringUtils.cat(System.lineSeparator(), output.toString().trim(), registerInstanceMessage, msg);
             }
             report.setMessage(msg);
 
@@ -383,7 +380,7 @@ public class CreateInstanceCommand implements AdminCommand {
         ActionReport report = ctx.getActionReport();
         report.setActionExitCode(SUCCESS);
 
-        NodeUtils nodeUtils = new NodeUtils(habitat);
+        NodeUtils nodeUtils = new NodeUtils(locator);
         Server dasServer = servers.getServer(SystemPropertyConstants.DAS_SERVER_NAME);
         ArrayList<String> command = new ArrayList<>();
         if (!theNode.isLocal()) {
@@ -424,7 +421,7 @@ public class CreateInstanceCommand implements AdminCommand {
         StringBuilder fullCommand = new StringBuilder();
 
         fullCommand.append("lib");
-        fullCommand.append(System.getProperty("file.separator"));
+        fullCommand.append(System.lineSeparator());
         fullCommand.append("nadmin ");
 
         for (String s : command) {
@@ -447,11 +444,9 @@ public class CreateInstanceCommand implements AdminCommand {
         if (theNode.isLocal()) {
             return false;
         }
-
-        if (theNode.getType().equals("SSH")) {
+        if (RemoteType.SSH.name().equals(theNode.getType())) {
             return false;
         }
-
         return true;
     }
 

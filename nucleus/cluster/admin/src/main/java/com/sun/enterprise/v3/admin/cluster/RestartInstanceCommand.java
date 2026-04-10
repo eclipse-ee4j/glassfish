@@ -19,9 +19,9 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.admin.remote.ServerRemoteRestAdminCommand;
-import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
@@ -76,7 +76,7 @@ import static com.sun.enterprise.v3.admin.cluster.StartInstanceCommand.getTimeou
 public class RestartInstanceCommand implements AdminCommand {
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private ServerEnvironment env;
     @Param(optional = false, primary = true)
@@ -88,7 +88,6 @@ public class RestartInstanceCommand implements AdminCommand {
     private Integer timeout;
 
     private Logger logger;
-    private RemoteInstanceCommandHelper helper;
     private ActionReport report;
     private Server instance;
     private String host;
@@ -101,7 +100,6 @@ public class RestartInstanceCommand implements AdminCommand {
     public void execute(AdminCommandContext context) {
         try {
             ctx = context;
-            helper = new RemoteInstanceCommandHelper(habitat);
             report = context.getActionReport();
             logger = context.getLogger();
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
@@ -143,8 +141,7 @@ public class RestartInstanceCommand implements AdminCommand {
             return;
         }
 
-        instance = helper.getServer(instanceName);
-
+        instance = locator.getService(Servers.class).getServer(instanceName);
         if (instance == null) {
             setError(Strings.get("stop.instance.noSuchInstance", instanceName));
             return;
@@ -180,15 +177,13 @@ public class RestartInstanceCommand implements AdminCommand {
             return;
         }
 
-        RemoteRestAdminCommand rac = createRac("_restart-instance");
+        RemoteRestAdminCommand command = createRemoteAdminCommand("_restart-instance");
         // notice how we do NOT send in the instance's name as an operand!!
         ParameterMap map = new ParameterMap();
-
         if (debug != null) {
             map.add("debug", debug);
         }
-
-        rac.executeCommand(map);
+        command.executeCommand(map);
     }
 
     private boolean isInstanceRestartable() throws InstanceNotRunningException {
@@ -196,21 +191,18 @@ public class RestartInstanceCommand implements AdminCommand {
             return false;
         }
 
-        String cmdName = "_get-runtime-info";
-
-        RemoteRestAdminCommand rac;
+        RemoteRestAdminCommand command;
         try {
-            rac = createRac(cmdName);
-            rac.executeCommand(new ParameterMap());
-        }
-        catch (CommandException ex) {
+            command = createRemoteAdminCommand("_get-runtime-info");
+            command.executeCommand(new ParameterMap());
+        } catch (CommandException ex) {
             // there is only one reason that _get-runtime-info would have a problem
             // namely if the instance isn't running.
             throw new InstanceNotRunningException();
         }
 
-        String val = rac.findPropertyInReport("restartable");
-        if (val != null && val.equals("false")) {
+        String restartable = command.findPropertyInReport("restartable");
+        if ("false".equals(restartable)) {
             return false;
         }
         return true;
@@ -231,11 +223,8 @@ public class RestartInstanceCommand implements AdminCommand {
         }, getTimeout(timeout), false);
     }
 
-    private RemoteRestAdminCommand createRac(String cmdName) throws CommandException {
-        // I wonder why the signature is so unwieldy?
-        // hiding it here...
-        return new ServerRemoteRestAdminCommand(habitat, cmdName, host,
-                port, false, "admin", null, logger);
+    private RemoteRestAdminCommand createRemoteAdminCommand(String cmdName) throws CommandException {
+        return new ServerRemoteRestAdminCommand(locator, cmdName, host, port, false, "admin", null, logger);
     }
 
     private void setError(String s) {
@@ -265,10 +254,9 @@ public class RestartInstanceCommand implements AdminCommand {
     }
 
     private String getPid() throws CommandException {
-        String cmdName = "_get-runtime-info";
-        RemoteRestAdminCommand rac = createRac(cmdName);
-        rac.executeCommand(new ParameterMap());
-        return rac.findPropertyInReport("pid");
+        RemoteRestAdminCommand command = createRemoteAdminCommand("_get-runtime-info");
+        command.executeCommand(new ParameterMap());
+        return command.findPropertyInReport("pid");
     }
 
     /*
@@ -279,7 +267,7 @@ public class RestartInstanceCommand implements AdminCommand {
      */
     private void start() {
         try {
-            StartInstanceCommand sic = new StartInstanceCommand(habitat, instanceName, Boolean.parseBoolean(debug),
+            StartInstanceCommand sic = new StartInstanceCommand(locator, instanceName, Boolean.parseBoolean(debug),
                 timeout, env);
             sic.execute(ctx);
         } catch (Exception e) {

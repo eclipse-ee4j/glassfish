@@ -1,6 +1,17 @@
 # Eclipse GlassFish
 
-[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation sponsored by the Eclipse Foundation.
+[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation
+owned by the Eclipse Foundation and developed and maintained by the community.
+
+Information about contributions to the project and partially to the whole ecosystem can be seen here:
+* [GlassFish Project Web Site](https://projects.eclipse.org/projects/ee4j.glassfish/who)
+* [EE4J Project Group Web Site](https://projects.eclipse.org/projects/ee4j/who)
+* [GitHub Insights](https://github.com/eclipse-ee4j/glassfish/graphs/contributors)
+
+There's much more work done on project's open source dependencies too.
+Please consider [contributing](CONTRIBUTING.md) or [sponsoring](https://www.eclipse.org/sponsor) of related projects,
+[contributing individuals and companies](https://docs.github.com/en/sponsors/sponsoring-open-source-contributors)
+or [buying their services.](#professional-services-and-enterprise-support)
 
 ## 📋 Quick Links
 
@@ -160,3 +171,4 @@ The Eclipse GlassFish project does not endorse or recommend any of the companies
 Professional Services and Enterprise support are available through following companies:
 - [OmniFish](https://omnifish.ee/solutions/#support)
 - [ManageCat](https://www.managecat.com/services-and-support/eclipse-glassfish-enterprise-support)
+

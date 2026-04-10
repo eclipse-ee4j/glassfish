@@ -7,6 +7,7 @@
 - [Release Notes](https://github.com/eclipse-ee4j/glassfish/releases)
 - [Building Instructions](#building)
 - [Basic Usage](#basic-usage)
+- [Security Considerations](#security-considerations)
 - [Professional Support](#professional-services-and-enterprise-support)
 
 ## 🔄 Version Compatibility

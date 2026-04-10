@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2026 Contributors to the Eclipse Foundation.
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,26 +14,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-fileRealm {
-	com.sun.enterprise.security.auth.login.FileLoginModule required;
-};
+package org.glassfish.test.security.pam;
 
-ldapRealm {
-	com.sun.enterprise.security.auth.login.LDAPLoginModule required;
-};
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-solarisRealm {
-	com.sun.enterprise.security.auth.login.SolarisLoginModule required;
-};
+import java.io.IOException;
+import java.io.PrintWriter;
 
-jdbcRealm {
-	com.sun.enterprise.security.ee.authentication.glassfish.jdbc.JDBCLoginModule required;
-};
+@WebServlet("/")
+public class HelloServlet extends HttpServlet {
 
-digestRealm {
-    com.sun.enterprise.security.ee.authentication.glassfish.digest.DigestLoginModule required;
-};
-
-pamRealm {
-	com.sun.enterprise.security.ee.authentication.glassfish.pam.PamLoginModule required;
-};
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain; charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            out.println("hello");
+        }
+    }
+}

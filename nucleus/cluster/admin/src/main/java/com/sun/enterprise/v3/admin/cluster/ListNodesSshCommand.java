@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Servers;
+import com.sun.enterprise.util.cluster.RemoteType;
 
 import jakarta.inject.Inject;
 
@@ -67,7 +69,7 @@ public class ListNodesSshCommand implements AdminCommand{
 
         logger = context.getLogger();
 
-        ListNodesHelper lnh = new ListNodesHelper(logger, servers, nodes, "SSH", long_opt, terse);
+        ListNodesHelper lnh = new ListNodesHelper(logger, servers, nodes, RemoteType.SSH, long_opt, terse);
 
         String nodeList = lnh.getNodeList();
 

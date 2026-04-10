@@ -20,6 +20,7 @@ package org.glassfish.cluster.ssh.connect;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.cluster.RemoteType;
 
 import java.io.File;
 import java.lang.System.Logger;
@@ -112,7 +113,7 @@ public class NodeRunner {
             return runAdminCommandOnLocalNode(node, output, args, stdinLines);
         }
         final String type = node.getType();
-        if ("SSH".equals(type)) {
+        if (RemoteType.SSH.name().equals(type)) {
             return runAdminCommandOnRemoteNode(node, output, args, stdinLines);
         }
         throw new UnsupportedOperationException("Node type is not supported: " + type);

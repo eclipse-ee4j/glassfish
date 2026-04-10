@@ -374,7 +374,7 @@ public class CreateInstanceCommand implements AdminCommand {
      * instance. See bug GLASSFISH-14985.
      */
     private boolean validateDasOptions(AdminCommandContext context) {
-        if (!theNode.isLocal() && !"SSH".equals(theNode.getType())) {
+        if (!theNode.isLocal() && !RemoteType.SSH.name().equals(theNode.getType())) {
             return true;
         }
         ActionReport report = ctx.getActionReport();

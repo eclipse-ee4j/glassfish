@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -84,7 +85,7 @@ public class NodeUtils {
     private ServiceLocator locator = null;
 
     NodeUtils(ServiceLocator locator) {
-        this.locator = locator;
+        this.locator = Objects.requireNonNull(locator, "locator");
 
         // Create a resolver that can replace system properties in strings
         Map<String, String> systemPropsMap =
@@ -96,7 +97,7 @@ public class NodeUtils {
         if (node == null) {
             return false;
         }
-        return node.getType().equals("SSH");
+        return RemoteType.SSH.name().equals(node.getType());
     }
 
     /**

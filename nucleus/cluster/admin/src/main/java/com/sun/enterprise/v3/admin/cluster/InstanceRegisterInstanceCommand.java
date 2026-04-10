@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -96,39 +97,6 @@ public class InstanceRegisterInstanceCommand extends InstanceRegisterInstanceCom
                         if (nodehost != null && !"".equals(nodehost))
                             newNode.setNodeHost(nodehost);
                         newNode.setType(type);
-                        //comment out - not needed
-                        /*if (type.equals("SSH")) {
-                            SshConnector sshC = param.createChild(SshConnector.class);
-                            if (sshHost != null && sshHost != "") {
-                                sshC.setSshHost(sshHost);
-
-                            }
-                            if (sshPort != "-1" && sshPort != "") {
-                                sshC.setSshPort(sshPort);
-
-                            }
-                            if (sshuser != null || sshkeyfile != null || sshpassword != null
-                                    || sshkeypassphrase != null) {
-                                SshAuth sshA = sshC.createChild(SshAuth.class);
-                                if (sshuser != null && sshuser != "") {
-                                    sshA.setUserName(sshuser);
-                                }
-                                if (sshkeyfile != null && sshkeyfile != "") {
-                                    sshA.setKeyfile(sshkeyfile);
-                                }
-                                if (sshpassword != null && sshpassword != "") {
-                                    sshA.setPassword(sshpassword);
-                                }
-                                if (sshkeypassphrase != null && sshkeypassphrase != "") {
-                                    sshA.setKeyPassphrase(sshkeypassphrase);
-                                }
-                                sshC.setSshAuth(sshA);
-                            }
-                            if (sshC != null) {
-                                newNode.setSshConnector(sshC);
-                            }
-                        }*/
-
                         param.getNode().add(newNode);
                         return newNode;
                     }
@@ -148,23 +116,6 @@ public class InstanceRegisterInstanceCommand extends InstanceRegisterInstanceCom
                         //newServer.setLbWeight(lbWeight);
                         newServer.setName(instanceName);
                         newServer.setNodeRef(node);
-
-                        // comment out - not needed
-                        /*if (resourceRefs != null && !resourceRefs.isEmpty()) {
-                            for (String ref: resourceRefs) {
-                                ResourceRef newRR = newServer.createChild(ResourceRef.class);
-                                newRR.setRef(ref);
-                                newServer.getResourceRef().add(newRR);
-                            }
-                        }
-
-                        if (appRefs != null && !appRefs.isEmpty()) {
-                            for (String ar : appRefs) {
-                                ApplicationRef newAR = newServer.createChild(ApplicationRef.class);
-                                newAR.setRef(ar);
-                                newServer.getApplicationRef().add(newAR);
-                            }
-                        }*/
 
                         if (systemProperties != null) {
                             for (final Map.Entry<Object, Object> entry : systemProperties.entrySet()) {
@@ -215,10 +166,5 @@ public class InstanceRegisterInstanceCommand extends InstanceRegisterInstanceCom
             report.setFailureCause(e);
             return;
         }
-
-
-
     }
-
-
 }

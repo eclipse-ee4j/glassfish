@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,23 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ClusterHandler.java
- *
- * Created on July 1,2010  9:32 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-/**
- *
- * @author anilam
- */
 package org.glassfish.admingui.common.handlers;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
@@ -49,6 +39,9 @@ import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.admingui.common.util.TargetUtil;
 import org.glassfish.api.admin.InstanceState;
 
+/**
+ * @author anilam 2010
+ */
 public class ClusterHandler {
     public static final String CLUSTER_RESOURCE_NAME = "org.glassfish.cluster.admingui.Strings";
 
@@ -56,10 +49,6 @@ public class ClusterHandler {
     public static final String RUNNING = "RUNNING";
     public static final String NOT_RUNNING = "NOT_RUNNING";
     public static final String PARTIALLY_RUNNING = "PARTIALLY_RUNNING";
-
-    /** Creates a new instance of InstanceHandler */
-    public ClusterHandler() {
-    }
 
     /**
      * This method takes in a list of instances with status, which is the output of list-instances
@@ -86,15 +75,13 @@ public class ClusterHandler {
         try{
             for (Iterator it=statusMap.values().iterator(); it.hasNext(); ) {
                 Object value = it.next();
-                if (value.toString().equals(InstanceState.StateType.RUNNING.getDescription())){
+                if (value.toString().equals(InstanceState.StateType.RUNNING.getDescription())) {
                     running++;
-                }else
-                if (value.toString().equals(InstanceState.StateType.NOT_RUNNING.getDescription())){
+                } else if (value.toString().equals(InstanceState.StateType.NOT_RUNNING.getDescription())) {
                     notRunning++;
-                }else
-                if (value.toString().equals(InstanceState.StateType.RESTART_REQUIRED.getDescription())){
+                } else if (value.toString().equals(InstanceState.StateType.RESTART_REQUIRED.getDescription())) {
                     requireRestart++;
-                }else {
+                } else {
                     GuiUtil.getLogger().severe("Unknown Status");
                 }
             }
@@ -328,18 +315,19 @@ public class ClusterHandler {
             String endpoint = "";
             if(action.equals("delete-node-uninstall")){
                 try{
-                    if ("CONFIG".equals(type)){
+                    if (RemoteType.CONFIG.name().equals(type)){
                         endpoint = prefix + "delete-node-config";
                         payload = new HashMap();
                         payload.put("id", nodeName);
                     }else
-                    if ("SSH".equals(type)){
+                    if (RemoteType.SSH.name().equals(type)){
                         endpoint = prefix +  "delete-node-ssh";
                         payload = new HashMap();
                         payload.put("id", nodeName);
                         payload.put("uninstall", "true");
-                    }else
-                    GuiUtil.getLogger().info(endpoint);
+                    } else {
+                        GuiUtil.getLogger().info(endpoint);
+                    }
                     RestUtil.restRequest(endpoint, payload, "DELETE",null, false);
                 }catch (Exception ex){
                     GuiUtil.getLogger().severe(

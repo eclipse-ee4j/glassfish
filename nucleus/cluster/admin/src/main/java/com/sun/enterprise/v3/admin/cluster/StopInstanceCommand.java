@@ -24,6 +24,7 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.v3.admin.StopServer;
 
 import jakarta.inject.Inject;
@@ -166,7 +167,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand {
                     errorMessage = Strings.get("stop.instance.timeout.completely", instanceName);
                 }
             }
-        } else if (node.getType().equals("SSH")) {
+        } else if (RemoteType.SSH.name().equals(node.getType())) {
             SSHLauncher launcher = new SSHLauncher(node);
             SFTPPath sftpPath = SFTPPath.of(pidFilePath);
             try (SSHSession session = launcher.openSession(); SFTPClient ftpClient = session.createSFTPClient()) {

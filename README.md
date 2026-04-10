@@ -3,7 +3,7 @@
 [Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation
 owned by the Eclipse Foundation and developed and maintained by the community.
 
-Information about contributions to the project and partially to the whole ecosystem can be seen here:
+Information about contributions to the project and partially to the whole ecosystem can be found here:
 * [GlassFish Project Web Site](https://projects.eclipse.org/projects/ee4j.glassfish/who)
 * [EE4J Project Group Web Site](https://projects.eclipse.org/projects/ee4j/who)
 * [GitHub Insights](https://github.com/eclipse-ee4j/glassfish/graphs/contributors)

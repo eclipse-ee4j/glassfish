@@ -89,28 +89,28 @@ They are quite old and have high technical debt, but at this moment they still p
 
 :warning: Some of the scripts do in-place filtering or generate other sources which remain and later affect subsequent executions. You have to remove those changes manually.
 
-* `./runtests.sh batch_all` - Usual time: 1 minute
-* `./runtests.sh cdi_all` - Usual time: 6 minutes
-* `./runtests.sh connector_group_1` - Usual time: 16 minutes
-* `./runtests.sh connector_group_2` - Usual time: 3 minutes
-* `./runtests.sh connector_group_3` - Usual time: 4 minutes
-* `./runtests.sh connector_group_4` - Usual time: 16 minutes
-* `./runtests.sh deployment_all` - Usual time: 8 minutes
-* `./runtests.sh ejb_group_1` - Usual time: 10 minutes
-* `./runtests.sh ejb_group_2` - Usual time: 7 minutes
-* `./runtests.sh ejb_group_3` - Usual time: 18 minutes
-* `./runtests.sh ejb_group_embedded` - Usual time: 4 minutes
-* `./runtests.sh ejb_group_all` - Usual time: 4 minutes
-* `./runtests.sh jdbc_all` - Usual time: 20 minutes
-* `./runtests.sh naming_all` - Usual time: 2 minutes
-* `./runtests.sh persistence_all` - Usual time: 3 minutes
-* `./runtests.sh security_all` - Usual time: 8 minutes
-* `./runtests.sh web_jsp` - Usual time: 8 minutes
-* `./runtests.sh webservice_all` - Usual time: 10 minutes
-* `./runtests.sh ejb_web_all` - Usual time: 4 minutes
-* `./runtests.sh ql_gf_web_profile_all` - Usual time: 2 minutes
-* `./runtests.sh ql_gf_full_profile_all` - Usual time: 4 minutes
-
+```
+* ./runtests.sh batch_all # Usual time: 1 minute
+* ./runtests.sh cdi_all # Usual time: 6 minutes
+* ./runtests.sh connector_group_1 # Usual time: 16 minutes
+* ./runtests.sh connector_group_2 # Usual time: 3 minutes
+* ./runtests.sh connector_group_3 # Usual time: 4 minutes
+* ./runtests.sh connector_group_4 # Usual time: 16 minutes
+* ./runtests.sh deployment_all # Usual time: 8 minutes
+* ./runtests.sh ejb_group_1 # Usual time: 10 minutes
+* ./runtests.sh ejb_group_2 # Usual time: 7 minutes
+* ./runtests.sh ejb_group_3 # Usual time: 18 minutes
+* ./runtests.sh ejb_group_embedded # Usual time: 4 minutes
+* ./runtests.sh jdbc_all # Usual time: 20 minutes
+* ./runtests.sh naming_all # Usual time: 2 minutes
+* ./runtests.sh persistence_all # Usual time: 3 minutes
+* ./runtests.sh security_all # Usual time: 8 minutes
+* ./runtests.sh web_jsp # Usual time: 8 minutes
+* ./runtests.sh webservice_all # Usual time: 10 minutes
+* ./runtests.sh ejb_web_all # Usual time: 4 minutes
+* ./runtests.sh ql_gf_web_profile_all # Usual time: 2 minutes
+* ./runtests.sh ql_gf_full_profile_all # Usual time: 4 minutes
+```
 * many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
 
 ### Pull request workflow

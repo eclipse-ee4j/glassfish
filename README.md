@@ -126,11 +126,15 @@ Build server results of pull requests can be found at [CI Glassfish](https://ci.
 
 ## Security Considerations
 
-For production deployments, consider the following security measures:
-
-* **Disable the Admin Console**: The web-based Administration Console should be disabled in production environments to reduce attack surface and prevent CSRF attacks where malicious links can execute admin commands. Use `asadmin set server.admin-service.property.adminConsoleStartup=never` and restart the domain.
-* **Enable Secure Admin**: Use `asadmin enable-secure-admin` to secure administrative communications.
-* **Use strong passwords**: Change default passwords and use strong authentication.
+> [!IMPORTANT]
+> For production deployments, consider the following security measures:
+> * **Don't use domain1**: The `domain1` can be used just in automated tests but never on production as it contains
+    private keys which are implicitly compromised. You should create a new domain for your environment.
+> * **Disable the Admin Console**: The web-based Administration Console should be disabled in production environments
+   to reduce attack surface and prevent CSRF attacks where malicious links can execute admin commands.
+   Use `asadmin set server.admin-service.property.adminConsoleStartup=never` and restart the domain.
+> * **Enable Secure Admin**: Use `asadmin enable-secure-admin` to secure administrative communications.
+> * **Use strong passwords**: Change default passwords and use strong authentication.
 
 For comprehensive security guidance, see the [Security Guide](docs/latest/security-guide.html).
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,7 @@ import com.sun.enterprise.util.ColumnFormatter;
 import com.sun.enterprise.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -44,29 +46,48 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 public final class InstanceInfo {
 
+    private final ServiceLocator habitat;
+    private final String host;
+    private final int port;
+    private final String name;
+    private long uptime = -1;
+    private String state = null;
+    private InstanceState.StateType ssState;
+    private final String cluster;
+    private final Logger logger;
+    private final int timeoutInMsec;
+    private Future<InstanceCommandResult> future;
+    private final ActionReport report;
+    private final InstanceStateService stateService;
+    private final Server svr;
+    private int pid;
+    private boolean running;
+    private static final String NOT_RUNNING = Strings.get("ListInstances.NotRunning");
+    private static final String NAME = Strings.get("ListInstances.name");
+    private static final String HOST = Strings.get("ListInstances.host");
+    private static final String PORT = Strings.get("ListInstances.port");
+    private static final String PID = Strings.get("ListInstances.pid");
+    private static final String STATE = Strings.get("ListInstances.state");
+    private static final String CLUSTER = Strings.get("ListInstances.cluster");
+    private static final String NO_CLUSTER = "---";
+
     public InstanceInfo(ServiceLocator habitat, Server svr, int port0, String host0, String cluster0,
             Logger logger0, int timeout0, ActionReport report, InstanceStateService stateService) {
-        if (svr == null )
-//            if (svr == null || host0 == null)
-            throw new NullPointerException("null arguments");
-
         this.habitat = habitat;
-        this.svr = svr;
+        this.svr = Objects.requireNonNull(svr, "server");
         name = svr.getName();
         port = port0;
-        if (host0 == null)
-            host="not yet assigned";
-        else
-            host = host0;
+        host = host0;
         logger = logger0;
         timeoutInMsec = timeout0;
         this.report = report;
         this.stateService = stateService;
 
-        if (!StringUtils.ok(cluster0))
-            cluster = null;
-        else
+        if (StringUtils.ok(cluster0)) {
             cluster = cluster0;
+        } else {
+            cluster = null;
+        }
         future = pingInstance();
     }
 
@@ -74,8 +95,9 @@ public final class InstanceInfo {
     public final String toString() {
         String cl = "";
 
-        if (cluster != null)
+        if (cluster != null) {
             cl = ", cluster: " + getCluster();
+        }
 
         return "name: " + getName()
                 + ", host: " + getHost()
@@ -133,7 +155,9 @@ public final class InstanceInfo {
             List<String> failedCmds = stateService.getFailedCommands(name);
             if (!failedCmds.isEmpty()) {
                 StringBuilder list = new StringBuilder();
-                for (String z : failedCmds) list.append(z).append("; ");
+                for (String z : failedCmds) {
+                    list.append(z).append("; ");
+                }
                 display.append(" [pending config changes are: ").append(list).append("]");
             }
         }
@@ -269,28 +293,4 @@ public final class InstanceInfo {
     private String formatTime(long uptime) {
         return Strings.get("instanceinfo.uptime", new Duration(uptime));
     }
-    private final ServiceLocator habitat;
-    private final String host;
-    private final int port;
-    private final String name;
-    private long uptime = -1;
-    private String state = null;
-    private InstanceState.StateType ssState;
-    private final String cluster;
-    private final Logger logger;
-    private final int timeoutInMsec;
-    private Future<InstanceCommandResult> future;
-    private final ActionReport report;
-    private final InstanceStateService stateService;
-    private final Server svr;
-    private int pid;
-    private boolean running;
-    private static final String NOT_RUNNING = Strings.get("ListInstances.NotRunning");
-    private static final String NAME = Strings.get("ListInstances.name");
-    private static final String HOST = Strings.get("ListInstances.host");
-    private static final String PORT = Strings.get("ListInstances.port");
-    private static final String PID = Strings.get("ListInstances.pid");
-    private static final String STATE = Strings.get("ListInstances.state");
-    private static final String CLUSTER = Strings.get("ListInstances.cluster");
-    private static final String NO_CLUSTER = "---";
 }

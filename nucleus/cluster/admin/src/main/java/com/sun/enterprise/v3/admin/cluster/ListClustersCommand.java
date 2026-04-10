@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
-import com.sun.enterprise.admin.util.RemoteInstanceCommandHelper;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Clusters;
 import com.sun.enterprise.config.serverbeans.Config;
@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
@@ -49,9 +50,6 @@ import org.glassfish.api.admin.config.ReferenceContainer;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING;
-import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING_DISPLAY;
 
 /**
  *  This is a remote command that lists the clusters.
@@ -72,22 +70,26 @@ import static com.sun.enterprise.v3.admin.cluster.Constants.PARTIALLY_RUNNING_DI
 })
 public final class ListClustersCommand implements AdminCommand {
 
-    @Inject
-    private ServiceLocator habitat;
-    @Inject
-    Domain domain;
-    @Inject
-    InstanceStateService stateService;
-
+    private static final String PARTIALLY_RUNNING_DISPLAY = " partially running";
+    private static final String PARTIALLY_RUNNING = "PARTIALLY_RUNNING";
     private static final String NONE = "Nothing to list.";
     private static final String EOL = "\n";
 
+
+    @Inject
+    private ServiceLocator habitat;
+    @Inject
+    private Domain domain;
+    @Inject
+    private InstanceStateService stateService;
+
     @Param(optional = true, primary = true, defaultValue = "domain")
-    String whichTarget;
+    private String whichTarget;
 
     @Inject
     private Clusters allClusters;
 
+    @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
@@ -97,13 +99,11 @@ public final class ListClustersCommand implements AdminCommand {
         List<Cluster> clusterList = null;
         //Fix for issue 13057 list-clusters doesn't take an operand
         //defaults to domain
-        if (whichTarget.equals("domain" )) {
+        if (whichTarget.equals("domain")) {
             Clusters clusters = domain.getClusters();
             clusterList = clusters.getCluster();
         } else {
-
             clusterList = createClusterList();
-
             if (clusterList == null) {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(Strings.get("list.instances.badTarget", whichTarget));
@@ -132,24 +132,21 @@ public final class ListClustersCommand implements AdminCommand {
                 ci.serversEmpty = true;
                 clusterMap.put(clusterName,ci);
             }
-            //Fix for issue 16273 create all InstanceInfos which will ping the instances
-            //Then check the status for them
             for (Server server : servers) {
                 String name = server.getName();
-
                 if (name != null) {
                     ActionReport tReport = habitat.getService(ActionReport.class, "html");
                     InstanceInfo ii = new InstanceInfo(
-                            habitat, server,
-                            new RemoteInstanceCommandHelper(habitat).getAdminPort(server),
-                            server.getAdminHost(),
-                            clusterName, logger, timeoutInMsec, tReport, stateService);
+                        habitat, server,
+                        callGetter(server::getAdminPort, -1),
+                        callGetter(server::getAdminHost, "unknown"),
+                        clusterName, logger, timeoutInMsec, tReport, stateService);
                     infos.add(ii);
                 }
             }
         }
 
-        for(InstanceInfo ii : infos) {
+        for (InstanceInfo ii : infos) {
 
             String clusterforInstance = ii.getCluster();
             ClusterInfo ci = clusterMap.get(clusterforInstance);
@@ -175,17 +172,15 @@ public final class ListClustersCommand implements AdminCommand {
 
         String display;
         String value ;
-        for(ClusterInfo ci : clusterMap.values()) {
+        for (ClusterInfo ci : clusterMap.values()) {
 
             if (ci.serversEmpty ||  !ci.atleastOneInstanceRunning) {
                 display = InstanceState.StateType.NOT_RUNNING.getDisplayString();
                 value = InstanceState.StateType.NOT_RUNNING.getDescription();
-            }
-            else if (ci.allInstancesRunning) {
+            } else if (ci.allInstancesRunning) {
                 display = InstanceState.StateType.RUNNING.getDisplayString();
                 value = InstanceState.StateType.RUNNING.getDescription();
-            }
-            else {
+            } else {
                 display = PARTIALLY_RUNNING_DISPLAY;
                 value = PARTIALLY_RUNNING;
             }
@@ -199,48 +194,46 @@ public final class ListClustersCommand implements AdminCommand {
         report.setMessage(output.substring(0,output.length()-1 ));
     }
 
-    /*
-    * if target was junk then return all the clusters
-    */
+    /**
+     * if target was junk then return all the clusters
+     */
     private List<Cluster> createClusterList() {
         // 1. no whichTarget specified
-        if (!StringUtils.ok(whichTarget))
+        if (!StringUtils.ok(whichTarget)) {
             return allClusters.getCluster();
+        }
 
         ReferenceContainer rc = domain.getReferenceContainerNamed(whichTarget);
         // 2. Not a server or a cluster. Could be a config or a Node
         if (rc == null) {
             return getClustersForNodeOrConfig();
-        }
-        else if (rc.isServer()) {
-            Server s =((Server) rc);
+        } else if (rc.isServer()) {
+            Server s = ((Server) rc);
             List<Cluster> cl = new LinkedList<Cluster>();
             cl.add(s.getCluster());
-            return  cl;
-        }
-        else if (rc.isCluster()) {
+            return cl;
+        } else if (rc.isCluster()) {
             Cluster cluster = (Cluster) rc;
             List<Cluster> cl = new LinkedList<Cluster>();
             cl.add(cluster);
             return cl;
-        }
-        else
+        } else {
             return null;
+        }
     }
 
-     private List<Cluster> getClustersForNodeOrConfig() {
-        if (whichTarget == null)
+    private List<Cluster> getClustersForNodeOrConfig() {
+        if (whichTarget == null) {
             throw new NullPointerException("impossible!");
-
+        }
         List<Cluster> list = getClustersForNode();
-
-        if (list == null)
+        if (list == null) {
             list = getClustersForConfig();
-
+        }
         return list;
     }
 
-     private List<Cluster> getClustersForNode() {
+    private List<Cluster> getClustersForNode() {
         boolean foundNode = false;
         Nodes nodes = domain.getNodes();
 
@@ -255,30 +248,37 @@ public final class ListClustersCommand implements AdminCommand {
                 }
             }
         }
-         if (!foundNode)
-             return null;
-         else
-             return domain.getClustersOnNode(whichTarget);
+        if (foundNode) {
+            return domain.getClustersOnNode(whichTarget);
+        }
+        return null;
     }
 
-     private List<Cluster> getClustersForConfig() {
+    private List<Cluster> getClustersForConfig() {
         Config config = domain.getConfigNamed(whichTarget);
-
-        if (config == null)
+        if (config == null) {
             return null;
+        }
 
         List<ReferenceContainer> rcs = domain.getReferenceContainersOf(config);
         List<Cluster> clusters = new LinkedList<Cluster>();
-
-        for (ReferenceContainer rc : rcs)
-            if (rc.isCluster())
+        for (ReferenceContainer rc : rcs) {
+            if (rc.isCluster()) {
                 clusters.add((Cluster) rc);
-
+            }
+        }
         return clusters;
     }
 
-     private static class ClusterInfo {
+    private static <T> T callGetter(Supplier<T> supplier, T defaultValue) {
+        try {
+            return supplier.get();
+        } catch (RuntimeException e) {
+            return defaultValue;
+        }
+    }
 
+    private static class ClusterInfo {
         private boolean atleastOneInstanceRunning = false;
         private boolean allInstancesRunning = true;
         private boolean serversEmpty = false;
@@ -288,11 +288,8 @@ public final class ListClustersCommand implements AdminCommand {
             return name;
         }
 
-        private ClusterInfo (String name) {
+        private ClusterInfo(String name) {
             this.name = name;
         }
-
     }
 }
-
-

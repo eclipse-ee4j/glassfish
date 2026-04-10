@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -132,7 +132,7 @@ public class UpdateNodeCommand implements AdminCommand {
         }
         //validate installdir if passed and running on localhost
         if (StringUtils.ok(nodehost)){
-            if (NetUtils.isThisHostLocal(nodehost) && StringUtils.ok(installdir)){
+            if (NetUtils.isLocal(nodehost) && StringUtils.ok(installdir)){
                 TokenResolver resolver = null;
 
                 // Create a resolver that can replace system properties in strings

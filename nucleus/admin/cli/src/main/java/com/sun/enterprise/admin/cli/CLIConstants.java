@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package com.sun.enterprise.admin.cli;
 
 import java.lang.System.Logger.Level;
+import java.net.InetAddress;
 import java.time.Duration;
 
 import org.glassfish.embeddable.GlassFishVariable;
@@ -32,7 +33,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
  */
 public final class CLIConstants {
     public static final int DEFAULT_ADMIN_PORT = 4848;
-    public static final String DEFAULT_HOSTNAME = "localhost";
+    public static final String DEFAULT_HOSTNAME = InetAddress.getLoopbackAddress().getHostName();
     public static final String EOL = System.lineSeparator();
 
     public static final Duration WAIT_FOR_DAS_TIME_MS = getEnv(TIMEOUT_START_SERVER);

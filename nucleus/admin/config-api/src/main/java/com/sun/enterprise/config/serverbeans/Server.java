@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -311,24 +311,18 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         return name != null && !name.equals("server");
     }
 
-    default String getAdminHost() {
-        try {
-            ServerHelper helper = new ServerHelper(this, getConfig());
-            return helper.getAdminHost();
-        } catch (Exception e) {
-            // drop through...
-        }
-        return null;
+    /**
+     * @return admin host name, never null.
+     */
+    default String getAdminHost() throws RuntimeException {
+        return new ServerHelper(this, getConfig()).getAdminHost();
     }
 
-    default int getAdminPort() {
-        try {
-            ServerHelper helper = new ServerHelper(this, getConfig());
-            return helper.getAdminPort();
-        } catch (Exception e) {
-            // drop through...
-        }
-        return -1;
+    /**
+     * @return admin port number, can be null.
+     */
+    default Integer getAdminPort() throws RuntimeException {
+        return new ServerHelper(this, getConfig()).getAdminPort();
     }
 
     default Config getConfig() {
@@ -592,29 +586,33 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 }
             }
 
-            checkAdminPort(instance, ourConfig, localStrings);
+            checkAdminPort(instance, ourConfig);
             setupSupplemental(context, instance);
         }
 
-        private void checkAdminPort(final Server instance, final Config config, LocalStringManagerImpl localStrings)
+        private void checkAdminPort(final Server instance, final Config config)
                 throws TransactionFailure {
-            if (node != null) {
-                Node n = domain.getNodeNamed(node);
-                if (n != null) {
-                    String nodeHost = n.getNodeHost();
-                    if (NetUtils.isThisHostLocal(nodeHost)) { // instance on same host as DAS
-                        int dasAdminPort = domain.getServerNamed("server").getAdminPort();
-                        // Don't use the getAdminPort default method directly on the instance being created
-                        int instanceAdminPort = new ServerHelper(instance, config).getAdminPort();
-                        if (instanceAdminPort != -1 && dasAdminPort != -1) {
-                            if (instanceAdminPort == dasAdminPort) {
-                                throw new TransactionFailure(localStrings.getLocalString("Server.cannotHaveSameAdminPortAsDAS",
-                                        "Cannot create an instance on the same host as DAS with the same admin port as DAS: {0}.",
-                                        instanceAdminPort + ""));
-                            }
-                        }
-                    }
+            if (node == null) {
+                return;
+            }
+            Node n = domain.getNodeNamed(node);
+            if (n == null) {
+                return;
+            }
+            String nodeHost = n.getNodeHost();
+            if (!NetUtils.isLocal(nodeHost)) {
+                return;
+            }
+            try {
+                Integer dasAdminPort = domain.getServerNamed("server").getAdminPort();
+                // Don't use the getAdminPort default method directly on the instance being created
+                Integer instanceAdminPort = new ServerHelper(instance, config).getAdminPort();
+                if (instanceAdminPort == dasAdminPort) {
+                    throw new TransactionFailure("Cannot create an instance on the same host as DAS"
+                        + " with the same admin port " + dasAdminPort + " as DAS.");
                 }
+            } catch (RuntimeException e) {
+                throw new TransactionFailure("Cannot create an instance: " + e.getMessage(), e);
             }
         }
 

@@ -220,6 +220,9 @@
         <shoal.version>4.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
+
+        <!-- Build plugins -->
+        <command.security.maven.plugin.version>1.0.21</command.security.maven.plugin.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
@@ -1373,7 +1376,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.20</version>
+                    <version>${command.security.maven.plugin.version}</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>

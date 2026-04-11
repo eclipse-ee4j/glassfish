@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.jvnet.hk2.annotations.Service;
-import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.IORInterceptor;
@@ -47,12 +47,16 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
     private static final Logger LOG = LogDomains.getLogger(SecurityIIOPInterceptorFactory.class, SECURITY_LOGGER, false);
     final String interceptorFactory = System.getProperty(AlternateSecurityInterceptorFactory.SEC_INTEROP_INTFACTORY_PROP);
-    private ClientRequestInterceptor creq;
-    private ServerRequestInterceptor sreq;
-    private SecIORInterceptor sior;
 
     @Inject
     private ProcessEnvironment penv;
+
+    @Inject
+    private GlassFishORBLocator orbLocator;
+
+    private ClientRequestInterceptor creq;
+    private ServerRequestInterceptor sreq;
+    private SecIORInterceptor sior;
 
     private AlternateSecurityInterceptorFactory altSecFactory;
 
@@ -83,9 +87,7 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
             }
             // also register the IOR Interceptor here
             if (info instanceof com.sun.corba.ee.spi.legacy.interceptor.ORBInitInfoExt) {
-                com.sun.corba.ee.spi.legacy.interceptor.ORBInitInfoExt infoExt = (com.sun.corba.ee.spi.legacy.interceptor.ORBInitInfoExt) info;
-                IORInterceptor secIOR = getSecIORInterceptorInstance(codec, infoExt.getORB());
-                info.add_ior_interceptor(secIOR);
+                info.add_ior_interceptor(getSecIORInterceptorInstance(codec));
             }
 
         } catch (DuplicateName ex) {
@@ -96,40 +98,36 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
     private synchronized boolean createAlternateSecurityInterceptorFactory() {
         try {
-            Class clazz = Thread.currentThread().getContextClassLoader().loadClass(interceptorFactory);
+            Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(interceptorFactory);
             if (AlternateSecurityInterceptorFactory.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
-                altSecFactory = (AlternateSecurityInterceptorFactory) clazz.newInstance();
+                altSecFactory = (AlternateSecurityInterceptorFactory) clazz.getConstructor().newInstance();
                 return true;
             }
             LOG.log(Level.INFO, "Not a valid factory class: {0}. Must implement {1}",
                 new Object[] {interceptorFactory, AlternateSecurityInterceptorFactory.class});
-        } catch (ClassNotFoundException ex) {
-            LOG.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
-        } catch (InstantiationException ex) {
-            LOG.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
-        } catch (IllegalAccessException ex) {
-            LOG.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
+        } catch (Exception ex) {
+            LOG.log(Level.WARNING, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
         }
         return false;
     }
 
     private synchronized ClientRequestInterceptor getClientInterceptorInstance(Codec codec) {
         if (creq == null) {
-            creq = new SecClientRequestInterceptor("SecClientRequestInterceptor", codec);
+            creq = new SecClientRequestInterceptor("SecClientRequestInterceptor", codec, orbLocator);
         }
         return creq;
     }
 
     private synchronized ServerRequestInterceptor getServerInterceptorInstance(Codec codec) {
         if (sreq == null) {
-            sreq = new SecServerRequestInterceptor("SecServerRequestInterceptor", codec);
+            sreq = new SecServerRequestInterceptor("SecServerRequestInterceptor", codec, orbLocator);
         }
         return sreq;
     }
 
-    private synchronized IORInterceptor getSecIORInterceptorInstance(Codec codec, ORB orb) {
+    private synchronized IORInterceptor getSecIORInterceptorInstance(Codec codec) {
         if (sior == null) {
-            sior = new SecIORInterceptor(codec, orb);
+            sior = new SecIORInterceptor(codec, orbLocator);
         }
         return sior;
     }

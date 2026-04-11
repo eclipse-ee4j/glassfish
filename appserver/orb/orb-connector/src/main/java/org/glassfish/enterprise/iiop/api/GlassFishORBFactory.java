@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,13 @@
 
 package org.glassfish.enterprise.iiop.api;
 
+import com.sun.enterprise.deployment.EjbDescriptor;
+
 import java.util.Properties;
 
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
+import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
 /**
@@ -33,6 +37,7 @@ public interface GlassFishORBFactory {
     String ENV_IS_SERVER_PROPERTY = "com.sun.corba.ee.ORBEnvironmentIsGlassFishServer";
 
     ORB createORB(Properties props);
+
     int getOTSPolicyType();
 
     int getCSIv2PolicyType();
@@ -50,4 +55,6 @@ public interface GlassFishORBFactory {
     boolean isEjbCall(ServerRequestInfo sri);
 
     String getIIOPEndpoints();
+
+    EjbDescriptor getEjbDescriptor(IORInfo iorInfo);
 }

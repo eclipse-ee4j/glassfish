@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,8 +23,8 @@ import javax.naming.NamingException;
 
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
-import org.omg.CORBA.ORB;
 
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
@@ -36,29 +36,23 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 @Service
 @NamespacePrefixes(ORBNamingProxy.ORB_CONTEXT)
 public class ORBNamingProxy implements NamedNamingObjectProxy {
-
+    // Must not be private so it can be used in the annotation
     static final String ORB_CONTEXT = JNDI_CTX_JAVA_COMPONENT + "ORB";
 
     @Inject
-    private GlassFishORBHelper orbHelper;
+    private ORBLocator orbLocator;
 
     @Override
     public Object handle(String name) throws NamingException {
-
-        ORB orb = null;
-
-        if (ORB_CONTEXT.equals(name)) {
-            try {
-                orb = orbHelper.getORB();
-            } catch(Throwable t) {
-                NamingException ne = new NamingException("Error retrieving orb for java:comp/ORB lookup");
-                ne.initCause(t);
-                throw ne;
-            }
+        if (!ORB_CONTEXT.equals(name)) {
+            return null;
         }
-
-        return orb;
+        try {
+            return orbLocator.getORB();
+        } catch(Throwable t) {
+            NamingException ne = new NamingException("Error retrieving orb for java:comp/ORB lookup");
+            ne.initCause(t);
+            throw ne;
+        }
     }
-
-
 }

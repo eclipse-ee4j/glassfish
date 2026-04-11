@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.iiop.security;
 
+import com.sun.corba.ee.spi.transport.SocketInfo;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.security.ssl.J2EEKeyManager;
 import com.sun.enterprise.security.ssl.SSLUtils;
@@ -33,8 +34,9 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
+import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
@@ -53,20 +55,6 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     @Inject
     private SSLUtils sslUtils;
-
-    private GlassFishORBHelper orbHelper;
-
-    private Object appClientSSL;
-
-    @Override
-    public Object getAppClientSSL() {
-        return this.appClientSSL;
-    }
-
-    @Override
-    public void setAppClientSSL(Object ssl) {
-        this.appClientSSL = ssl;
-    }
 
     @Override
     public KeyManager[] getKeyManagers(String alias) {
@@ -111,22 +99,17 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
     }
 
     @Override
-    public Object getSSLPortsAsSocketInfo(Object ior) {
+    public List<SocketInfo> getSSLPortsAsSocketInfo(com.sun.corba.ee.spi.ior.IOR ior) {
         SecurityMechanismSelector selector = Lookups.getSecurityMechanismSelector();
         return selector.getSSLSocketInfo(ior);
     }
 
     @Override
-    public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, Object sInfos) {
-        List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos = (List<com.sun.corba.ee.spi.folb.SocketInfo>) sInfos;
-        orbHelper = Lookups.getGlassFishORBHelper();
-        TaggedComponent result = null;
-        org.omg.CORBA.ORB orb = orbHelper.getORB();
+    public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos) {
         int sslMutualAuthPort = -1;
         try {
-            if (iorInfo instanceof com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt) {
-                sslMutualAuthPort = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt) iorInfo)
-                    .getServerPort("SSL_MUTUALAUTH");
+            if (iorInfo instanceof com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt extInfo) {
+                sslMutualAuthPort = extInfo.getServerPort("SSL_MUTUALAUTH");
             }
         } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
             LOG.log(FINE, "UnknownType exception", ute);
@@ -134,12 +117,13 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
         LOG.log(FINE, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
-        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(orb, sslMutualAuthPort);
-        EjbDescriptor desc = ctc.getEjbDescriptor(iorInfo);
-        if (desc != null) {
-            result = ctc.createSecurityTaggedComponent(socketInfos, desc);
+        // Cannot be an injected field, leads to a cyclic dependency, makes HK2 angry.
+        final GlassFishORBLocator orbLocator = Globals.get(GlassFishORBLocator.class);
+        EjbDescriptor desc = orbLocator.getEjbDescriptor(iorInfo);
+        if (desc == null) {
+            return null;
         }
-        return result;
+        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getORB());
+        return ctc.createSecurityTaggedComponent(socketInfos, desc);
     }
-
 }

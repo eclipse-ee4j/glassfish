@@ -213,8 +213,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     @Override
     public RemoteReferenceFactory getRemoteReferenceFactory(
         EjbContainerFacade container, boolean remoteHomeView, String id) {
-        RemoteReferenceFactory factory = new POARemoteReferenceFactory(container, this, orb, remoteHomeView, id);
-        return factory;
+        return new POARemoteReferenceFactory(container, orb, remoteHomeView, id);
     }
 
 

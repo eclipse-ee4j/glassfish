@@ -98,7 +98,6 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     private final ClassLoader appClassLoader;
 
     private ORB orb;
-    private POAProtocolMgr protocolMgr;
     private final PresentationManager presentationMgr;
 
     private ReferenceFactory ejbHomeReferenceFactory ;
@@ -128,10 +127,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     private static final int INSTANCEKEYLEN_OFFSET = 8;
     private static final int INSTANCEKEY_OFFSET = 12;
 
-    POARemoteReferenceFactory(EjbContainerFacade container, POAProtocolMgr protocolMgr,
-                  ORB orb, boolean remoteHomeView, String id) {
-
-        this.protocolMgr = protocolMgr;
+    POARemoteReferenceFactory(EjbContainerFacade container, ORB orb, boolean remoteHomeView, String id) {
         this.orb = orb;
         this.poaId_EJBHome   = id + "-EJBHome";
         this.poaId_EJBObject = id + "-EJBObject";
@@ -334,16 +330,12 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
 
     // NOTE: The repoid is only needed for logging.
     private org.omg.CORBA.Object _createRef(ReferenceFactory rf, byte[] instanceKey, String repoid) throws Exception {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "\t\tIn POARemoteReferenceFactory._createRef, repositoryId = {0}", repoid);
-        }
+        logger.log(Level.FINE, "\t\tIn POARemoteReferenceFactory._createRef, repositoryId = {0}", repoid);
 
         // Create the ejbKey using EJB's unique id + instanceKey
         byte[] ejbKey = createEJBKey(ejbDescriptor.getUniqueId(), instanceKey);
 
-        org.omg.CORBA.Object obj = rf.createReference(ejbKey);
-
-        return obj;
+        return rf.createReference(ejbKey);
     }
 
 
@@ -448,8 +440,6 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
             ejbDescriptor = null;
 
             orb = null;
-            protocolMgr = null;
-
         } catch (Throwable th) {
             logger.log(Level.SEVERE, "Exception during " + "POARemoteRefFactory::destroy()", th);
         }

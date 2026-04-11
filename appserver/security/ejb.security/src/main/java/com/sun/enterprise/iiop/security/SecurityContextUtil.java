@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.iiop.security;
 
 import com.sun.corba.ee.spi.ior.IOR;
-import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 import com.sun.enterprise.common.iiop.security.SecurityContext;
 import com.sun.enterprise.security.CORBAObjectPermission;
@@ -34,7 +33,7 @@ import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
@@ -61,7 +60,7 @@ public class SecurityContextUtil implements PostConstruct {
     private static final String IS_A = "_is_a";
 
     @Inject
-    private GlassFishORBHelper orbHelper;
+    private GlassFishORBLocator orbLocator;
 
     @Inject
     private SecurityMechanismSelector securityMechanismSelector;
@@ -79,9 +78,9 @@ public class SecurityContextUtil implements PostConstruct {
      * @throws InvalidMechanismException
      * @throws InvalidIdentityTokenException
      */
-    public SecurityContext getSecurityContext(org.omg.CORBA.Object effective_target) throws InvalidMechanismException, InvalidIdentityTokenException {
-        IOR ior = ((ORB) orbHelper.getORB()).getIOR(effective_target, false);
-
+    public SecurityContext getSecurityContext(org.omg.CORBA.Object effective_target)
+        throws InvalidMechanismException, InvalidIdentityTokenException {
+        IOR ior = ((com.sun.corba.ee.spi.orb.ORB) orbLocator.getORB()).getIOR(effective_target, false);
         if (StubAdapter.isStub(effective_target)) {
             if (StubAdapter.isLocal(effective_target)) {
                 // XXX: Workaround for non-null connection object ri for local invocation.
@@ -173,8 +172,7 @@ public class SecurityContextUtil implements PostConstruct {
     // Return true if authorization succeeds, false otherwise.
     private boolean authorizeCORBA(byte[] object_id, String method) throws Exception {
         // Check if target is an EJB
-        ProtocolManager protocolManager = orbHelper.getProtocolManager();
-
+        ProtocolManager protocolManager = orbLocator.getProtocolManager();
         // Check to make sure protocolMgr is not null.
         // This could happen during server initialization or if this call
         // is on a callback object in the client VM.

@@ -29,8 +29,8 @@ infrastructure.
 12. Create the release on Glassfish.org. Do a PR for the **main** branch with:
     -  an update for the website in [`docs/website/src/main/resources`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources):
         - in [`download_gf8.md`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources/download_gf7.md),
-          create a section for the new version at the top, based on the previous version. Update the info based on the release notes in github,
-          e.g. https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.1
+          create a section for the new version at the top, based on the previous version.
+          Update the info based on the release notes on [GitHub](https://github.com/eclipse-ee4j/glassfish/releases)
         - in [`download.md`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources/download.md),
           replace information in the "Eclipse GlassFish 8.x" section at the top with info for the new version in `download_gf8.md`
         - check [`README.md`](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/website/src/main/resources/README.md),

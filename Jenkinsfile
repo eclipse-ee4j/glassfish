@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+* Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
 * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
 *
 * This program and the accompanying materials are made available under the
@@ -329,10 +329,10 @@ pipeline {
                       timeout(time: 1, unit: 'HOURS') {
                          sh '''
                          # Validate the structure in all submodules (especially version ids)
-                         mvn -V -B -e -fae clean validate -Ptck,set-version-id
+                         mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
                          '''
                          sh '''
-                         mvn -B -e install -Pfastest,ci -T4C
+                         mvn -B -e install -Pfastest,ci,snapshots -T4C
                          '''
                          sh '''
                          mvn -B -e clean
@@ -378,7 +378,7 @@ pipeline {
                            dumpSysInfo()
                            timeout(time: 4, unit: 'HOURS') {
                               sh '''
-                              mvn -B -e clean verify -Pqa,ci,ci-main-tests
+                              mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
                               '''
                            }
                         } finally {

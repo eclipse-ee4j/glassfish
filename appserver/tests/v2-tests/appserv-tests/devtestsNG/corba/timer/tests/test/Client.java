@@ -171,7 +171,7 @@ public class Client {
         // Setup timing points and a top-level timer
         Properties props = new Properties() ;
         props.setProperty( "org.omg.CORBA.ORBClass",
-            "com.sun.corba.ee.impl.orb.ORBImpl" ) ;
+            "org.glassfish.enterprise.iiop.impl.GlassFishOrbImpl" ) ;
         ORB orb = (ORB)ORB.init( new String[0], props ) ;
 
         try {

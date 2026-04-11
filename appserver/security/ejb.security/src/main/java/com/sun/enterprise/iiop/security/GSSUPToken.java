@@ -146,8 +146,7 @@ public class GSSUPToken {
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Username (UTF8) " + GSSUtils.dumpHex(name_utf8));
-            // _logger.fine("Password (UTF8) " + GSSUtils.dumpHex(password_utf8));
-            LOG.fine("Password (UTF8) " + "########");
+            LOG.fine("Password (UTF8) ########");
             LOG.fine("Targetname      " + GSSUtils.dumpHex(target_name));
         }
 
@@ -212,8 +211,7 @@ public class GSSUPToken {
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("IIOP:Username (UTF8) " + GSSUtils.dumpHex(name_utf8));
-            // _logger.fine("IIOP:Password (UTF8) " + GSSUtils.dumpHex(password_utf8));
-            LOG.fine("IIOP:Password (UTF8) " + "########");
+            LOG.fine("IIOP:Password (UTF8) ########");
             LOG.fine("IIOP:Targetname      " + GSSUtils.dumpHex(target_name));
         }
         /* Construct a PasswordCredential */
@@ -308,15 +306,11 @@ public class GSSUPToken {
      * @return byte[] the byte array representation of the GSSToken
      */
     byte[] getGSSToken() throws GSSException {
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "IIOP:GSSUP mech token : " + GSSUtils.dumpHex(cdr_encoded_token));
-        }
+        LOG.log(Level.FINER, () -> "IIOP:GSSUP mech token: " + GSSUtils.dumpHex(cdr_encoded_token));
         /* construct a GSSAPI token ( hdr + mechanism token ) */
         byte[] gsstoken = GSSUtils.createMechIndToken(GSSUtils.GSSUP_MECH_OID, cdr_encoded_token);
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "IIOP:GSSUP token length : " + gsstoken.length);
-            LOG.log(Level.FINER, "IIOP:GSSUP token: " + GSSUtils.dumpHex(gsstoken));
-        }
+        LOG.log(Level.FINER,
+            () -> "IIOP:GSSUP token length: " + gsstoken.length + ", token: " + GSSUtils.dumpHex(gsstoken));
         return gsstoken;
     }
 

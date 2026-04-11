@@ -118,6 +118,7 @@ import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.DeploymentTracing;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.kernel.KernelLoggerInfo;
+import org.glassfish.main.jul.record.GlassFishLogRecord;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
@@ -1088,8 +1089,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             try {
                 container = engineInfo.getContainer();
             } catch (Exception e) {
-                LogRecord log = new LogRecord(SEVERE, KernelLoggerInfo.cantStartContainer);
-                log.setParameters(new Object[]{engineInfo.getSniffer().getModuleType()});
+                LogRecord log = new GlassFishLogRecord(SEVERE, KernelLoggerInfo.cantStartContainer, true);
+                log.setParameters(new Object[] {engineInfo.getSniffer().getModuleType()});
                 log.setThrown(e);
                 LOG.log(log);
                 return false;
@@ -2254,7 +2255,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     }
 
     private String getApplicationType(ApplicationInfo appInfo) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (appInfo.getSniffers().size() > 0) {
             for (Sniffer sniffer : appInfo.getSniffers()) {
                 if (sniffer.isUserVisible()) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -78,7 +79,7 @@ public class GetClientStubsCommand implements AdminCommand, AdminCommandSecurity
     private String localDir;
 
     @AccessRequired.To("read")
-    private Application matchingApp = null;
+    private Application matchingApp;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {

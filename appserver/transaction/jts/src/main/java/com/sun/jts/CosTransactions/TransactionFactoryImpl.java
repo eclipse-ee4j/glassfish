@@ -1,7 +1,7 @@
 /*
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -114,6 +114,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      * @exception SystemException  An error occurred.
      *
      */
+    @Override
     public Control create(int timeOut) throws SystemException {
 
         Control result = null;
@@ -125,7 +126,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
         }
 
         if (Configuration.isLocalFactory()) {
-            result = (Control) cimpl;
+            result = cimpl;
         } else {
             result = cimpl.object();
         }
@@ -195,7 +196,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
                         "Control object :" + result +
                         " corresponding to this transaction has been created, "+
                         "GTID is : "+
-                        ((TopCoordinator)coordinator).superInfo.globalTID.toString());
+                        coordinator.superInfo.globalTID.toString());
             }
 
         } catch (Throwable exc) {
@@ -207,7 +208,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
             }
 
             if (result != null) {
-                ((ControlImpl) result).doFinalize();
+                result.doFinalize();
             }
 
             result = null;
@@ -227,6 +228,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      * @exception SystemException  An error occurred.
      *
      */
+    @Override
     public Control recreate(PropagationContext context)
             throws SystemException {
 
@@ -409,7 +411,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
             // We do not create a local Terminator
 
             if (Configuration.isLocalFactory()) {
-                result = (Control) new ControlImpl(null, subordinate, globalTID,
+                result = new ControlImpl(null, subordinate, globalTID,
                                      subordinate.getLocalTID()
                                     );
             } else {
@@ -493,7 +495,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
             // Create a new Control object for the transaction.
             // We do not create a local Terminator.
             if (Configuration.isLocalFactory()) {
-                result = (Control) new ControlImpl(null, subordinate, tid,
+                result = new ControlImpl(null, subordinate, tid,
                                      subordinate.getLocalTID()
                                     );
             } else {
@@ -559,8 +561,8 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
                 try {
                     namingContext = NamingContextHelper.narrow(
                         Configuration.getORB().resolve_initial_references("NameService"/*#Frozen*/));
-                } catch (Exception exc) {
-                    _logger.log(Level.WARNING,"jts.orb_not_running");
+                } catch (Exception e) {
+                    _logger.log(Level.WARNING,"The ORB daemon, ORBD, is not running.", e);
                     // Return - otherwise it'll just be an NPE reported in the next block
                     return thisRef;
                 }
@@ -569,9 +571,9 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
                     NameComponent nc = new NameComponent(TransactionFactoryHelper.id(), "");
                     NameComponent path[] = { nc };
                     namingContext.rebind(path, thisRef);
-                } catch (Exception exc) {
-                    _logger.log(Level.WARNING,"jts.cannot_register_with_orb",
-                            "TransactionFactory");
+                } catch (Exception e) {
+                    _logger.log(Level.WARNING, "Cannot register [" + thisRef + "] instance with the ORB.", e);
+
                 }
             } catch (Exception exc) {
                 _logger.log(Level.SEVERE,"jts.create_transactionfactory_object_error");
@@ -606,8 +608,9 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
         } else if (poa != null) {
             try {
                 result = (TransactionFactoryImpl) poa.reference_to_servant(factory);
-                if( result.thisRef == null )
+                if( result.thisRef == null ) {
                     result.thisRef = factory;
+                }
             } catch( Exception exc ) {
                 _logger.log(Level.WARNING,"jts.cannot_locate_servant",
                         "TransactionFactory");
@@ -623,34 +626,42 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      * interface method implementation below shall be discarded.
      */
 
+    @Override
     public org.omg.CORBA.Object _duplicate() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public void _release() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public boolean _is_a(String repository_id) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public boolean _is_equivalent(org.omg.CORBA.Object that) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public boolean _non_existent() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public int _hash(int maximum) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public Request _request(String operation) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public Request _create_request(Context ctx,
                    String operation,
                    NVList arg_list,
@@ -658,6 +669,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public Request _create_request(Context ctx,
                    String operation,
                    NVList arg_list,
@@ -667,18 +679,22 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public org.omg.CORBA.Object _get_interface_def() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public org.omg.CORBA.Policy _get_policy(int policy_type) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public org.omg.CORBA.DomainManager[] _get_domain_managers() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
+    @Override
     public org.omg.CORBA.Object _set_policy_override(
             org.omg.CORBA.Policy[] policies,
             org.omg.CORBA.SetOverrideType set_add) {

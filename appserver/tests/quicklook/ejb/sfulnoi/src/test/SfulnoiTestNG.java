@@ -75,6 +75,7 @@ public class SfulnoiTestNG {
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = null;
         while ((line = input.readLine()) != null) {
+            echo("Response line: " + line);
             if (line.contains(EXPECTED_RESPONSE)) {
                 result = true;
                 break;

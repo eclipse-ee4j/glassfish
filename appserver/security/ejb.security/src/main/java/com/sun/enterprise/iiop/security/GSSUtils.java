@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -124,10 +124,7 @@ public class GSSUtils {
      */
 
     public static byte[] importName(Oid oid, byte[] externalName) throws GSSException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Attempting to import mechanism independent name");
-            LOG.log(Level.FINE, dumpHex(externalName));
-        }
+        LOG.log(Level.FINE, () -> "Attempting to import mechanism independent name\n" + dumpHex(externalName));
 
         GSSException e = new GSSException(GSSException.BAD_NAME);
 
@@ -183,10 +180,7 @@ public class GSSUtils {
     /* verify if exportedName is of object ObjectIdentifier. */
 
     public static boolean verifyMechOID(Oid oid, byte[] externalName) throws GSSException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Attempting to verify mechanism independent name");
-            LOG.log(Level.FINE, dumpHex(externalName));
-        }
+        LOG.log(Level.FINE, () -> "Attempting to verify mechanism independent name\n" + dumpHex(externalName));
 
         GSSException e = new GSSException(GSSException.BAD_NAME);
 
@@ -267,16 +261,9 @@ public class GSSUtils {
      */
 
     public static byte[] getDER(Oid id) throws GSSException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Returning OID in DER format");
-            LOG.log(Level.FINE, "    OID = " + id.toString());
-        }
-
+        LOG.log(Level.FINE, () -> "Returning OID in DER format\nOID = " + id);
         byte[] oid = id.getDER();
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "    DER OID: " + dumpHex(oid));
-        }
-
+        LOG.log(Level.FINE, () -> "DER OID: " + dumpHex(oid));
         return oid;
     }
 
@@ -308,9 +295,7 @@ public class GSSUtils {
 
         byte[] token = new byte[1 // for 0x60
                 + getDERLengthSize(deroid.length + mechtok.length) + deroid.length + mechtok.length];
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Going to create a mechanism independent token");
-        }
+        LOG.log(Level.FINE, "Going to create a mechanism independent token");
         int index = 0;
 
         token[index++] = 0x60;
@@ -322,10 +307,7 @@ public class GSSUtils {
         index += deroid.length;
         System.arraycopy(mechtok, 0, token, index, mechtok.length);
 
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Mechanism independent token created: ");
-            LOG.log(Level.FINE, dumpHex(token));
-        }
+        LOG.log(Level.FINE, () -> "Mechanism independent token created:\n" + dumpHex(token));
 
         return token;
     }
@@ -337,20 +319,13 @@ public class GSSUtils {
 
     public static byte[] getMechToken(Oid oid, byte[] token) {
         byte[] mechtoken = null;
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Received mechanism independent token: ");
-            LOG.log(Level.FINE, dumpHex(token));
-        }
-
+        LOG.log(Level.FINE, () -> "Received mechanism independent token:\n" + dumpHex(token));
         try {
             int index = verifyTokenHeader(oid, token);
             int mechtoklen = token.length - index;
             mechtoken = new byte[mechtoklen];
             System.arraycopy(token, index, mechtoken, 0, mechtoklen);
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Mechanism specific token : ");
-                LOG.log(Level.FINE, dumpHex(mechtoken));
-            }
+            LOG.log(Level.FINE, () -> "Mechanism specific token:\n" + dumpHex(token));
         } catch (GSSException e) {
             LOG.log(Level.SEVERE, "Invalid token header", e);
         }
@@ -413,7 +388,7 @@ public class GSSUtils {
         int mechoidlen = getDER(oid).length;
 
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Mechanism specific token index : " + index + mechoidlen);
+            LOG.log(Level.FINE, "Mechanism specific token index: " + index + ":" + mechoidlen);
             LOG.log(Level.FINE, "Successfully verified header in the mechanism independent token.");
         }
         return (index + mechoidlen); // starting position of mech specific token
@@ -511,5 +486,4 @@ public class GSSUtils {
             LOG.log(Level.SEVERE, "main crashed", e);
         }
     }
-
 }

@@ -19,7 +19,7 @@
  * and open the template in the editor.
  */
 
-package org.glassfish.full.admingui;
+package org.glassfish.admingui.plugin.jmail;
 
 import java.net.URL;
 

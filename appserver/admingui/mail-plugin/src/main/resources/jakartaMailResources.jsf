@@ -16,13 +16,14 @@
 
 -->
 
-<!-- full/mailResources.jsf -->
+<!-- jmail/jakartaMailResources.jsf -->
 
 
 <!initPage
     setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
-    setResourceBundle(key="i18njmail" bundle="org.glassfish.full.admingui.Strings");
-    setResourceBundle(key="help_jmail" bundle="org.glassfish.full.admingui.Helplinks")
+    setResourceBundle(key="i18nfull" bundle="org.glassfish.full.admingui.Strings");
+    setResourceBundle(key="i18njmail" bundle="org.glassfish.jmail.admingui.Strings");
+    setResourceBundle(key="help_jmail" bundle="org.glassfish.jmail.admingui.Helplinks")
 />
 <!composition template="/templates/default.layout"
     guiTitle="$resource{i18njmail.javaMailSessions.pageTitle}"
@@ -57,26 +58,26 @@ foreach(var="entry" list="#{requestScope.entries}") {
 	// NOTE:  removed it.  This pattern is done in other places, so I left
 	// NOTE:  it in as a reminder to change those other places.
         
-        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18njmail.msg.JS.confirmDeleteCR}");
-        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/full/mailResourceNew.jsf");
-        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/full/mailResources.jsf");
-        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/full/mailResourceEdit.jsf");
+        setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18nfull.msg.JS.confirmDeleteCR}");
+        setPageSessionAttribute(key="createLink" value="#{request.contextPath}/jmail/mailResourceNew.jsf");
+        setPageSessionAttribute(key="listLink" value="#{request.contextPath}/jmail/jakartaMailResources.jsf");
+        setPageSessionAttribute(key="editLink" value="#{request.contextPath}/jmail/mailResourceEdit.jsf");
         setPageSessionAttribute(key="tableTitle" value="$resource{i18njmail.resourcesTable.sessions}");
 
-        setPageSessionAttribute(key="generalPage" value="#{request.contextPath}/full/mailResourceEdit.jsf");
+        setPageSessionAttribute(key="generalPage" value="#{request.contextPath}/jmail/mailResourceEdit.jsf");
         setPageSessionAttribute(key="targetPage" value="#{request.contextPath}/common/resourceNode/resourceEditTargets.jsf");
         
         setPageSessionAttribute(key="hasPool" value="#{false}" );
         setPageSessionAttribute(key="hasResType" value="#{false}" );
     />
     </event>
-"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:mailResources");</script>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:jakartaMailResources");</script>
             <sun:form id="propertyForm">
 #include "/common/shared/alertMsg_1.inc"
                  <sun:title id="propertyContentPage" title="$resource{i18njmail.javaMailSessions.pageTitle}"
                  helpText="$resource{i18njmail.javaMailSessions.pageTitleHelp}" />
 		 "<br /> <br />
-#include "/full/resourcesTable.inc"     
+#include "/jmail/shared/resourcesTable.inc"
 	<sun:hidden id="helpKey" value="$resource{help_jmail.javaMailSessions}" />
             </sun:form>
 </define>

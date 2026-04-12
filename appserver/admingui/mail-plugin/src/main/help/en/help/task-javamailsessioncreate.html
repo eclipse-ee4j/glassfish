@@ -18,23 +18,23 @@
 
 <p><a id="task-javamailsessioncreate" name="task-javamailsessioncreate"></a><a id="GHJML00011" name="GHJML00011"></a></p>
 
-<h4><a id="sthref4" name="sthref4"></a>To Create a JavaMail Session</h4>
+<h4><a id="sthref4" name="sthref4"></a>To Create a Jakarta Mail Session</h4>
 <a name="BEGIN" id="BEGIN"></a>
 <ol>
 <li>
 <p>In the navigation tree, expand the Resources node.</p>
 </li>
 <li>
-<p>Under the Resources node, select JavaMail Sessions.</p>
-<p>The JavaMail Sessions page opens.</p>
+<p>Under the Resources node, select Jakarta Mail Sessions.</p>
+<p>The Jakarta Mail Sessions page opens.</p>
 </li>
 <li>
 <p>In the Sessions table, click New.</p>
-<p>The New JavaMail Session page opens.</p>
+<p>The New Jakarta Mail Session page opens.</p>
 </li>
 <li>
 <p>In the JNDI Name field, type a unique name for the mail session resource.</p>
-<p>Use the naming sub-context prefix <code>mail/</code> for JavaMail resources. For example: <code>mail/MySession</code>. The name must contain only alphanumeric, underscore, dash, or dot characters.</p>
+<p>Use the naming sub-context prefix <code>mail/</code> for Jakarta Mail resources. For example: <code>mail/MySession</code>. The name must contain only alphanumeric, underscore, dash, or dot characters.</p>
 </li>
 <li>
 <p>In the Mail Host field, type the host name of the default mail server.</p>
@@ -88,11 +88,11 @@
 </li>
 <li>
 <p>Select the Debug checkbox to enable extra debugging output, including a protocol trace, for this mail session.</p>
-<p>If the JavaMail log level is set to <code>FINE</code> or finer, the debugging output is generated and is included in the system log file. See <a href="../../../common/en/help/task-eelogginglevels.html">To Configure Log Levels</a> for information about setting the log level. This option is disabled by default.</p>
+<p>If the Jakarta Mail log level is set to <code>FINE</code> or finer, the debugging output is generated and is included in the system log file. See <a href="../../../common/en/help/task-eelogginglevels.html">To Configure Log Levels</a> for information about setting the log level. This option is disabled by default.</p>
 </li>
 <li>
 <p>In the Additional Properties table, specify additional properties required by applications, such as a protocol-specific host or username property.</p>
-<p>For a list of the available properties, see the JavaMail API documentation (<code><a href="http://java.sun.com/products/javamail/javadocs/index.html">http://java.sun.com/products/javamail/javadocs/index.html</a></code>). Additional properties must begin with <code>mail-</code> and must use hyphens, not periods, as separators. For example, <code>mail-debug</code> is correct, but <code>mail.debug</code> is not. The GlassFish Server back end converts the hyphens into the periods expected by the JavaMail API.</p>
+<p>For a list of the available properties, see the Jakarta Mail API documentation (<code><a href="http://java.sun.com/products/javamail/javadocs/index.html">http://java.sun.com/products/javamail/javadocs/index.html</a></code>). Additional properties must begin with <code>mail-</code> and must use hyphens, not periods, as separators. For example, <code>mail-debug</code> is correct, but <code>mail.debug</code> is not. The GlassFish Server back end converts the hyphens into the periods expected by the Jakarta Mail API.</p>
 <p>To add a property, click the Add Property button. In the blank row that appears, type the property name in the Name field, and type the property value in the Value field.</p>
 </li>
 <li>
@@ -107,10 +107,10 @@
 <h5>See Also</h5>
 <ul>
 <li>
-<p><a href="task-javamailsessionsedit.html">To Edit a JavaMail Session</a></p>
+<p><a href="task-javamailsessionsedit.html">To Edit a Jakarta Mail Session</a></p>
 </li>
 <li>
-<p><a href="task-javamailsessionsdelete.html">To Delete a JavaMail Session</a></p>
+<p><a href="task-javamailsessionsdelete.html">To Delete a Jakarta Mail Session</a></p>
 </li>
 </ul>
 

@@ -19,14 +19,6 @@
 
 <console-config id="full">
     <integration-point
-        id="full_jmailNodes"
-        type="org.glassfish.admingui:navNode"
-        priority="600"
-        parentId="resources"
-        content="jmailTreeNode.jsf"
-    />
-
-    <integration-point
         id="full_jndiNodes"
         type="org.glassfish.admingui:navNode"
         priority="500"
@@ -108,12 +100,6 @@
     />
     <!-- add dropdown option for the resource dropdown of cluster/standalone instance resource table. -->
     <integration-point
-            id="jmailResourceDropDown"
-            type="org.glassfish.admingui:resourceTypeDropdown"
-            priority="500"
-            content="full/mailResourceNew.jsf|org.glassfish.admingui.core.Strings|tree.javaMailSessions"
-    />
-    <integration-point
             id="customResourceDropDown"
             type="org.glassfish.admingui:resourceTypeDropdown"
             priority="300"
@@ -127,12 +113,6 @@
     />
 
     <integration-point
-            id="jmailFilter"
-            type="org.glassfish.admingui:resFilterDropdown"
-            priority="500"
-            content="mail-resource|org.glassfish.admingui.core.Strings|tree.javaMailSessions"
-    />
-    <integration-point
             id="customFilter"
             type="org.glassfish.admingui:resFilterDropdown"
             priority="300"
@@ -144,7 +124,6 @@
             priority="400"
             content="external-jndi-resource|org.glassfish.admingui.core.Strings|tree.externalResources"
     />
-
 
     <integration-point
             id="serverBatch"

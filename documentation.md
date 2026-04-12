@@ -4,7 +4,7 @@ layout: documentation
 
 # Eclipse GlassFish Guides
 
-## Current Release - 8.0.0 {#current}
+## Current Release - 8.0.1 {#current}
 
 ### Common GlassFish guides (for GlassFish variants)
 
@@ -101,7 +101,7 @@ GlassFish, Jakarta EE Web Profile, and GlassFish Embedded, Jakarta EE Web Profil
 
 ## MicroProfile Documentation {#microprofile}
 
-All variants of GlassFish 8.0.0 provide the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs (since GlassFish 7.1.0):
+All variants of GlassFish 8.0.1 provide the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs (since GlassFish 7.1.0):
 
 * [MicroProfile Config 3.1](https://github.com/eclipse/microprofile-config/releases/tag/3.1)
 * [MicroProfile JWT RBAC 2.1](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1)
@@ -109,10 +109,10 @@ All variants of GlassFish 8.0.0 provide the following [MicroProfile 6.1](https:/
 
 The above MicroProfile APIs are supported by all the following GlassFish variants:
 
-* GlassFish 8.0.0, Jakarta EE Platform
-* GlassFish 8.0.0, Jakarta EE Web Profile
-* GlassFish Embedded 8.0.0, Jakarta EE Platform
-* GlassFish Embedded 8.0.0, Jakarta EE Web Profile
+* GlassFish 8.0.1, Jakarta EE Platform
+* GlassFish 8.0.1, Jakarta EE Web Profile
+* GlassFish Embedded 8.0.1, Jakarta EE Platform
+* GlassFish Embedded 8.0.1, Jakarta EE Web Profile
 
 
 ## Eclipse Open MQ Documentation {#open-mq}

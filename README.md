@@ -24,6 +24,7 @@ or [buying their services.](#professional-services-and-enterprise-support)
 
 ## 📦 Download Links
 
+* [Eclipse Downloads](https://download.eclipse.org/justj/?file=ee4j/glassfish)
 * Maven Central:
     * [GlassFish Server Full Profile](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/versions)
     * [GlassFish Server Web Profile](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/versions)

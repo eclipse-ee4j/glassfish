@@ -9,6 +9,11 @@
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <dependencySets>
+        <!--
+            microprofile-config contains GlassFish-specific overrides of Helidon resources. 
+            It must be unpacked before all other jars so its classes take precedence.
+            Note that the default behavior of assembly plugin is that it skips duplicates, first occurence wins.
+        -->
         <dependencySet>
             <unpack>true</unpack>
             <outputDirectory></outputDirectory>
@@ -32,10 +37,43 @@
                 </excludes>
             </unpackOptions>
             <includes>
-                <include>*:*:jar:*</include>
+                <include>org.glassfish.main.microprofile:microprofile-config</include>
             </includes>
         </dependencySet>
 
+        <!-- All jars except microprofile-config, which must be unpacked first (see above) -->        <dependencySet>
+            <unpack>true</unpack>
+            <outputDirectory></outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+            <useStrictFiltering>true</useStrictFiltering>
+            <scope>compile</scope>
+            <unpackOptions>
+                <excludes>
+                    <exclude>META-INF/LICENSE</exclude>
+                    <exclude>META-INF/NOTICE</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/*.inf</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>META-INF/hk2-locator/*</exclude>
+                    <exclude>META-INF/loggerinfo/*</exclude>
+                    <exclude>module-info.class</exclude>
+                    <exclude>META-INF/versions/*/module-info.class</exclude>
+                    <exclude>*.jar</exclude>
+                    <!-- Service files from microprofile-config should be excluded, not merged -->
+                    <exclude>META-INF/services/org.eclipse.microprofile.config.spi.ConfigProviderResolver</exclude>
+                    <exclude>META-INF/services/org.eclipse.microprofile.config.spi.Converter</exclude>
+                    <!-- End of Service files from microprofile-config -->
+                </excludes>
+            </unpackOptions>
+            <includes>
+                <include>*:*:jar:*</include>
+            </includes>
+            <excludes>
+                <exclude>org.glassfish.main.microprofile:microprofile-config</exclude>
+            </excludes>
+        </dependencySet>
     </dependencySets>
 
     <files>

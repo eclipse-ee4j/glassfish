@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024,2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger.Level;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +43,7 @@ public final class StartupContextCfgFactory {
 
     /** Location of the unified config properties file relative to the domain directory */
     private static final Path CONFIG_PROPERTIES = Path.of("config", "osgi.properties");
+    private static final System.Logger LOG = System.getLogger(StartupContextCfgFactory.class.getName());
 
 
     private StartupContextCfgFactory() {
@@ -87,6 +89,8 @@ public final class StartupContextCfgFactory {
         }
         platformCfg.putAll(properties);
 
+        addMissingPropertiesBasedOnJavaVersion(platformCfg);
+
         // Perform variable substitution
         for (String name : platformCfg.stringPropertyNames()) {
             platformCfg.setProperty(name, FelixUtil.substVars(platformCfg.getProperty(name), name, null, platformCfg));
@@ -101,6 +105,26 @@ public final class StartupContextCfgFactory {
         return new StartupContextCfg(platform, files, platformCfg);
     }
 
+    private static void addMissingPropertiesBasedOnJavaVersion(Properties platformCfg) {
+        String javaSpecVersion = System.getProperty("java.vm.specification.version");
+        if (javaSpecVersion != null) {
+            String eecapKey = "eecap-" + javaSpecVersion;
+            final String CAPABILITIES_KEY = "org.osgi.framework.system.capabilities";
+            boolean hasCapabilitiesProperty = platformCfg.containsKey(CAPABILITIES_KEY);
+            if (!hasCapabilitiesProperty || !platformCfg.containsKey(eecapKey)) {
+                StringBuilder eecapValue = new StringBuilder()
+                        .append("osgi.ee; osgi.ee=\"OSGi/Minimum\"; version:List<Version>=\"1.0,1.1,1.2\", osgi.ee;")
+                        .append(" osgi.ee=\"JavaSE\"; version:List<Version>=\"1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,9,10");
+                for (int javaVersion = 11; javaVersion <= Integer.parseInt(javaSpecVersion); javaVersion++) {
+                    eecapValue.append(",").append(javaVersion);
+                }
+                eecapValue.append("\", osgi.ee; osgi.ee=\"UNKNOWN\"");
+                String keyName = hasCapabilitiesProperty ? eecapKey : CAPABILITIES_KEY;
+                platformCfg.put(keyName, eecapValue.toString());
+                LOG.log(Level.DEBUG, () -> "Adding missing OSGi property " + keyName + "=" + eecapValue);
+            }
+        }
+    }
 
     /**
      * @return platform specific configuration information

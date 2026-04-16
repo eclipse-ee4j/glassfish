@@ -31,7 +31,6 @@ import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.IORInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
 import static com.sun.enterprise.iiop.security.AlternateSecurityInterceptorFactory.SEC_INTEROP_INTFACTORY_PROP;
 import static java.lang.System.Logger.Level.INFO;
@@ -89,8 +88,8 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
                 info.add_ior_interceptor(getSecIORInterceptorInstance(codec));
             }
 
-        } catch (DuplicateName ex) {
-            throw new RuntimeException(ex);
+        } catch (org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName e) {
+            throw new RuntimeException(e);
         }
         return ret;
     }

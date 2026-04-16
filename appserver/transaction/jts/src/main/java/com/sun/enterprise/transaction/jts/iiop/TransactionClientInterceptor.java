@@ -19,7 +19,6 @@ package com.sun.enterprise.transaction.jts.iiop;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
@@ -28,7 +27,7 @@ import static com.sun.corba.ee.spi.presentation.rmi.StubAdapter.isLocal;
 
 public class TransactionClientInterceptor extends LocalObject implements ClientRequestInterceptor, Comparable<TransactionClientInterceptor> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private String name;
     private int order;
@@ -37,13 +36,14 @@ public class TransactionClientInterceptor extends LocalObject implements ClientR
     /**
      * Create the interceptor.
      *
-     * @param the name of the interceptor.
-     * @param the order in which the interceptor should be invoked.
+     * @param name the name of the interceptor.
+     * @param order the order in which the interceptor should be invoked.
+     * @param transactionManager
      */
-    public TransactionClientInterceptor(String name, int order, ServiceLocator serviceLocator) {
+    public TransactionClientInterceptor(String name, int order, JavaEETransactionManager transactionManager) {
         this.name = name;
         this.order = order;
-        eeTransactionManager = serviceLocator.getService(JavaEETransactionManager.class);
+        this.eeTransactionManager = transactionManager;
     }
 
     @Override

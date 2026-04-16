@@ -157,14 +157,14 @@ public final class GlassFishORBManager {
     }
 
     String getIIOPEndpoints() {
-        return gmsClient.getIIOPEndpoints() ;
+        return gmsClient == null ? null : gmsClient.getIIOPEndpoints() ;
     }
 
     ORB createOrb(Properties props) {
         LOG.log(DEBUG, "createOrb(props={0})", props);
         final HK2Module orbOsgiModule = resolveCorbaOrbOsgiModule();
         final GroupInfoService clusterGroupInfo;
-        if (processType.isServer() && gmsClient.isGMSAvailable()) {
+        if (gmsClient != null && gmsClient.isGMSAvailable()) {
             clusterGroupInfo = gmsClient.getGroupInfoService();
         } else {
             clusterGroupInfo = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +19,7 @@ package org.glassfish.enterprise.iiop.api;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
 
-import java.nio.channels.SelectableChannel;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
@@ -42,26 +40,18 @@ public interface GlassFishORBFactory {
 
     int getOTSPolicyType();
 
-    int getCSIv2PolicyType();
-
     Properties getCSIv2Props();
 
     void setCSIv2Prop(String name, String value);
 
+    /**
+     * @return port evaluated from system properties and other sources. Can be used to connect.
+     */
     int getORBInitialPort();
-
-    String getORBHost(ORB orb);
-
-    int getORBPort(ORB orb);
 
     boolean isEjbCall(ServerRequestInfo sri);
 
     String getIIOPEndpoints();
 
     EjbDescriptor getEjbDescriptor(IORInfo iorInfo);
-
-    /**
-     * @param acceptorDelegate
-     */
-    void enableLazyAcceptor(Consumer<SelectableChannel> acceptorDelegate);
 }

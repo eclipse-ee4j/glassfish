@@ -22,6 +22,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import java.lang.System.Logger;
 import java.util.List;
 
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.enterprise.iiop.util.IIOPUtils;
 import org.glassfish.gms.bootstrap.GMSAdapter;
@@ -40,13 +41,12 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
     private static final Logger LOG = System.getLogger(SecIORInterceptor.class.getName());
 
     private final GMSAdapter gmsAdapter;
-    private final GMSAdapterService gmsAdapterService;
     private final GlassFishORBLocator orbLocator;
 
     SecIORInterceptor(Codec c, GlassFishORBLocator orbLocator) {
         this.orbLocator = orbLocator;
-        this.gmsAdapterService = Lookups.getGMSAdapterService();
-        if (this.gmsAdapterService == null) {
+        final GMSAdapterService gmsAdapterService = Lookups.getGMSAdapterService();
+        if (gmsAdapterService == null) {
             this.gmsAdapter = null;
         } else {
             this.gmsAdapter = gmsAdapterService.getGMSAdapter();
@@ -90,7 +90,8 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
         int sslMutualAuthPort = getServerPort("SSL_MUTUALAUTH");
         LOG.log(DEBUG, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
-        EjbDescriptor desc = orbLocator.getEjbDescriptor(iorInfo);
+        GlassFishORBFactory orbFactory = orbLocator.getOrbFactory();
+        EjbDescriptor desc = orbFactory.getEjbDescriptor(iorInfo);
         int sslport = getServerPort("SSL");
         LOG.log(DEBUG, "sslport: {0}", sslport);
 
@@ -98,7 +99,7 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
         final TaggedComponent csiv2Comp;
         if (desc == null) {
             // this is not an EJB object, must be a non-EJB CORBA object
-            csiv2Comp = ctc.createSecurityTaggedComponent(sslport, orbLocator.getCSIv2Props());
+            csiv2Comp = ctc.createSecurityTaggedComponent(sslport, orbFactory.getCSIv2Props());
         } else {
             csiv2Comp = ctc.createSecurityTaggedComponent(sslport, desc);
         }
@@ -110,17 +111,17 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
         IiopListener[] iiopListenerBeans = listenersList.toArray(new IiopListener[listenersList.size()]);
 
         for (IiopListener ilisten : iiopListenerBeans) {
-            if (mech.equalsIgnoreCase("SSL")) {
-                if (ilisten.getSecurityEnabled().equalsIgnoreCase("true") && ilisten.getSsl() != null
-                        && !ilisten.getSsl().getClientAuthEnabled().equalsIgnoreCase("true")) {
+            if ("SSL".equalsIgnoreCase(mech)) {
+                if ("true".equalsIgnoreCase(ilisten.getSecurityEnabled()) && ilisten.getSsl() != null
+                        && !"true".equalsIgnoreCase(ilisten.getSsl().getClientAuthEnabled())) {
                     return Integer.parseInt(ilisten.getPort());
                 }
             } else if (mech.equalsIgnoreCase("SSL_MUTUALAUTH")) {
-                if (ilisten.getSecurityEnabled().equalsIgnoreCase("true") && ilisten.getSsl() != null
-                        && ilisten.getSsl().getClientAuthEnabled().equalsIgnoreCase("true")) {
+                if ("true".equalsIgnoreCase(ilisten.getSecurityEnabled()) && ilisten.getSsl() != null
+                        && "true".equalsIgnoreCase(ilisten.getSsl().getClientAuthEnabled())) {
                     return Integer.parseInt(ilisten.getPort());
                 }
-            } else if (!ilisten.getSecurityEnabled().equalsIgnoreCase("true")) {
+            } else if (!"true".equalsIgnoreCase(ilisten.getSecurityEnabled())) {
                 return Integer.parseInt(ilisten.getPort());
             }
         }

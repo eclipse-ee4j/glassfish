@@ -606,29 +606,6 @@ final class CSIV2TaggedComponentInfo {
         return list;
     }
 
-    /**
-     * Retrieve the SSL tagged component from the compound security mechanism.
-     */
-    TLS_SEC_TRANS getSSLInformation(CompoundSecMech mech) {
-        org.omg.IOP.TaggedComponent pcomp = mech.transport_mech;
-        TLS_SEC_TRANS ssl = getSSLComponent(pcomp);
-        return ssl;
-    }
-
-    private TLS_SEC_TRANS getSSLComponent(org.omg.IOP.TaggedComponent comp) {
-
-        // a TAG_NULL_TAG implies that SSL is not required
-        if (comp.tag == TAG_NULL_TAG.value) {
-            return null;
-        }
-
-        byte[] b = comp.component_data;
-        CDRInputObject in = new EncapsInputStream(orb, b, b.length);
-        in.consumeEndian();
-        return TLS_SEC_TRANSHelper.read(in);
-    }
-
-
     // Type of simple closure used for createCompoundSecMechs
     private interface DescriptorMaker extends Function<EjbIORConfigurationDescriptor, org.omg.IOP.TaggedComponent> {
     }

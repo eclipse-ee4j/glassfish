@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.iiop.security;
 
+import com.sun.corba.ee.impl.encoding.CDRInputObject;
+import com.sun.corba.ee.impl.encoding.EncapsInputStream;
 import com.sun.corba.ee.org.omg.CSI.ITTAnonymous;
 import com.sun.corba.ee.org.omg.CSI.ITTDistinguishedName;
 import com.sun.corba.ee.org.omg.CSI.ITTPrincipalName;
@@ -30,7 +32,9 @@ import com.sun.corba.ee.org.omg.CSIIOP.EstablishTrustInTarget;
 import com.sun.corba.ee.org.omg.CSIIOP.IdentityAssertion;
 import com.sun.corba.ee.org.omg.CSIIOP.Integrity;
 import com.sun.corba.ee.org.omg.CSIIOP.SAS_ContextSec;
+import com.sun.corba.ee.org.omg.CSIIOP.TAG_NULL_TAG;
 import com.sun.corba.ee.org.omg.CSIIOP.TLS_SEC_TRANS;
+import com.sun.corba.ee.org.omg.CSIIOP.TLS_SEC_TRANSHelper;
 import com.sun.corba.ee.org.omg.CSIIOP.TransportAddress;
 import com.sun.corba.ee.spi.ior.IOR;
 import com.sun.corba.ee.spi.ior.iiop.IIOPAddress;
@@ -105,38 +109,23 @@ public final class SecurityMechanismSelector implements PostConstruct {
     public static final String CLIENT_CONNECTION_CONTEXT = "ClientConnContext";
     // public static final String SERVER_CONNECTION_CONTEXT = "ServerConnContext";
 
-    private Set<EjbIORConfigurationDescriptor> corbaIORDescSet;
-    private boolean sslRequired;
-
-    // List of hosts trusted by the client for sending passwords to.
-    // Also, list of hosts trusted by the server for accepting propagated
-    // identities.
-    // private static String[] serverTrustedHosts = null;
+    @Inject
+    private SSLUtils sslUtils;
+    @Inject
+    private GlassFishORBLocator orbLocator;
+    @Inject
+    private GlassFishORBFactory orbFactory;
+    @Inject
+    private ProcessEnvironment processEnv;
 
     /**
      * A reference to POAProtocolMgr will be obtained dynamically
      * and set if not null. So set it to null here.
      */
     private ProtocolManager protocolMgr;
-
-    @Inject
-    private SSLUtils sslUtils;
-
-    @Inject
-    private GlassFishORBLocator orbLocator;
-    @Inject
-    private GlassFishORBFactory orbFactory;
-
     private CSIV2TaggedComponentInfo ctc;
-
-    @Inject
-    private ProcessEnvironment processEnv;
-
-    /**
-     * Read the client and server preferences from the config files.
-     */
-    public SecurityMechanismSelector() {
-    }
+    private Set<EjbIORConfigurationDescriptor> corbaIORDescSet;
+    private boolean sslRequired;
 
     @Override
     public void postConstruct() {
@@ -188,6 +177,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
      * return null if SSL should not be used or an SocketInfo containing the SSL port if SSL should be used.
      */
     public SocketInfo getSSLPort(IOR ior, ConnectionContext ctx) {
+        // blocks until orb initialization completes.
         CompoundSecMech mechanism = null;
         try {
             mechanism = selectSecurityMechanism(ior);
@@ -199,7 +189,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
         TLS_SEC_TRANS ssl = null;
         if (mechanism != null) {
-            ssl = getCtc().getSSLInformation(mechanism);
+            ssl = getSSLInformation(mechanism);
         }
 
         if (ssl == null) {
@@ -208,7 +198,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
             }
             // Attempt to create SSL connection to host, ORBInitialPort
             IIOPAddress addr = ((IIOPProfileTemplate) ior.getProfile().getTaggedProfileTemplate()).getPrimaryAddress();
-            return createSocketInfo("SecurityMechanismSelector1", "SSL", addr.getHost(), orbLocator.getORBPort());
+            int port = orbLocator.getORBData().getORBInitialPort();
+            return createSocketInfo("SecurityMechanismSelector1", "SSL", addr.getHost(), port);
         }
 
         int targetRequires = ssl.target_requires;
@@ -257,6 +248,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
     }
 
     public java.util.List<SocketInfo> getSSLPorts(IOR ior, ConnectionContext ctx) {
+        // blocks until orb initialization completes.
+        orbLocator.getORB();
         CompoundSecMech mechanism = null;
         try {
             mechanism = selectSecurityMechanism(ior);
@@ -268,7 +261,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
         TLS_SEC_TRANS ssl = null;
         if (mechanism != null) {
-            ssl = getCtc().getSSLInformation(mechanism);
+            ssl = getSSLInformation(mechanism);
         }
 
         if (ssl == null) {
@@ -277,7 +270,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
             }
             // Attempt to create SSL connection to host, ORBInitialPort
             IIOPAddress addr = ((IIOPProfileTemplate) ior.getProfile().getTaggedProfileTemplate()).getPrimaryAddress();
-            SocketInfo info = createSocketInfo("SecurityMechanismSelector1", "SSL", addr.getHost(), orbLocator.getORBPort());
+            int port = orbLocator.getORBData().getORBInitialPort();
+            SocketInfo info = createSocketInfo("SecurityMechanismSelector1", "SSL", addr.getHost(), port);
             List<SocketInfo> sInfos = new ArrayList<>();
             sInfos.add(info);
             return sInfos;
@@ -697,7 +691,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     private boolean useMechanism(CompoundSecMech mech) {
         boolean val = true;
-        TLS_SEC_TRANS tls = getCtc().getSSLInformation(mech);
+        TLS_SEC_TRANS tls = getSSLInformation(mech);
 
         if (mech.sas_context_mech.supported_naming_mechanisms.length > 0 && !isMechanismSupported(mech.sas_context_mech)) {
             return false;
@@ -1185,10 +1179,10 @@ public final class SecurityMechanismSelector implements PostConstruct {
         // need to print out top port value and hosr ior.getProfile().isLocal();
         String typeId = ior.getTypeId();
         CompoundSecMech[] mechList = tCI.getSecurityMechanisms(ior);
-        return getSecurityMechanismString(tCI, mechList, typeId);
+        return getSecurityMechanismString(mechList, typeId);
     }
 
-    public static String getSecurityMechanismString(CSIV2TaggedComponentInfo tCI, CompoundSecMech[] list, String name) {
+    private String getSecurityMechanismString(CompoundSecMech[] list, String name) {
         StringBuilder b = new StringBuilder();
         b.append("\ntypeId: ").append(name);
         try {
@@ -1203,7 +1197,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
                     }
                 }
 
-                TLS_SEC_TRANS ssl = tCI.getSSLInformation(m);
+                TLS_SEC_TRANS ssl = getSSLInformation(m);
                 if (ssl != null) {
                     b.append("\n\tTLS_SEC_TRANS\n\t\tTarget Requires:");
                     keys = assocOptions.keys();
@@ -1316,4 +1310,25 @@ public final class SecurityMechanismSelector implements PostConstruct {
         return b.toString();
     }
 
+    /**
+     * Retrieve the SSL tagged component from the compound security mechanism.
+     */
+    private TLS_SEC_TRANS getSSLInformation(CompoundSecMech mech) {
+        org.omg.IOP.TaggedComponent pcomp = mech.transport_mech;
+        TLS_SEC_TRANS ssl = getSSLComponent(pcomp);
+        return ssl;
+    }
+
+    private TLS_SEC_TRANS getSSLComponent(org.omg.IOP.TaggedComponent comp) {
+
+        // a TAG_NULL_TAG implies that SSL is not required
+        if (comp.tag == TAG_NULL_TAG.value) {
+            return null;
+        }
+
+        byte[] b = comp.component_data;
+        CDRInputObject in = new EncapsInputStream(orbLocator.getORB(), b, b.length);
+        in.consumeEndian();
+        return TLS_SEC_TRANSHelper.read(in);
+    }
 }

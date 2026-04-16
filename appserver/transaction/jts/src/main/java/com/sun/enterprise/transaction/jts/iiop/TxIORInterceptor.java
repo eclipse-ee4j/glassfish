@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,7 @@ import com.sun.logging.LogDomains;
 
 import java.util.logging.Logger;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.INTERNAL;
@@ -71,7 +71,8 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
             // Add OTS tagged components. These are always the same for all EJBs
             OTSPolicy otsPolicy = null;
             try {
-                otsPolicy = (OTSPolicy) iorInfo.get_effective_policy(serviceLocator.getService(GlassFishORBLocator.class).getOTSPolicyType());
+                otsPolicy = (OTSPolicy) iorInfo
+                    .get_effective_policy(serviceLocator.getService(GlassFishORBFactory.class).getOTSPolicyType());
             } catch (INV_POLICY ex) {
                 LOG.log(FINE, "TxIORInterceptor.establish_components: OTSPolicy not present");
             }

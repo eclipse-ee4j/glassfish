@@ -103,7 +103,9 @@ class IiopFolbGmsClient implements CallBack {
                 String instanceName = gmsAdapter.getModule().getInstanceName();
                 LOG.log(DEBUG, "instanceName={0}", instanceName);
 
-                myServer = servers.getServer(instanceName);
+                if (instanceName != null) {
+                    myServer = servers.getServer(instanceName);
+                }
                 LOG.log(DEBUG, "myServer={0}", myServer);
 
                 gis = new GroupInfoServiceGMSImpl();
@@ -322,6 +324,9 @@ class IiopFolbGmsClient implements CallBack {
 
 
     private Map<String, ClusterInstanceInfo> getAllClusterInstanceInfo() {
+        if (myServer == null) {
+            return Map.of();
+        }
         final Cluster myCluster = myServer.getCluster();
         LOG.log(DEBUG, "getAllClusterInstanceInfo: myCluster {0}", myCluster);
 

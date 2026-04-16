@@ -21,12 +21,9 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import jakarta.inject.Inject;
 
 import java.lang.System.Logger;
-import java.nio.channels.SelectableChannel;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
-import org.glassfish.enterprise.iiop.api.OrbInitializationNode;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -37,6 +34,7 @@ import org.omg.PortableInterceptor.ServerRequestInfo;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
+import static org.glassfish.enterprise.iiop.impl.POARemoteReferenceFactory.CSIv2_POLICY_TYPE;
 
 /**
  * @author Mahesh Kannan 2009
@@ -61,11 +59,6 @@ public class GlassFishORBFactoryImpl implements GlassFishORBFactory, PostConstru
     }
 
     @Override
-    public int getCSIv2PolicyType() {
-        return POARemoteReferenceFactory.CSIv2_POLICY_TYPE;
-    }
-
-    @Override
     public ORB createORB(Properties props) {
         return gfORBManager.createOrb(props);
     }
@@ -83,16 +76,6 @@ public class GlassFishORBFactoryImpl implements GlassFishORBFactory, PostConstru
     @Override
     public int getORBInitialPort() {
         return gfORBManager.getORBInitialPort();
-    }
-
-    @Override
-    public String getORBHost(ORB orb) {
-        return ((com.sun.corba.ee.spi.orb.ORB) orb).getORBData().getORBInitialHost();
-    }
-
-    @Override
-    public int getORBPort(ORB orb) {
-        return ((com.sun.corba.ee.spi.orb.ORB) orb).getORBData().getORBInitialPort();
     }
 
     /**
@@ -118,7 +101,7 @@ public class GlassFishORBFactoryImpl implements GlassFishORBFactory, PostConstru
     public EjbDescriptor getEjbDescriptor(IORInfo iorInfo) {
         CSIv2Policy csiv2Policy = null;
         try {
-            csiv2Policy = (CSIv2Policy) iorInfo.get_effective_policy(getCSIv2PolicyType());
+            csiv2Policy = (CSIv2Policy) iorInfo.get_effective_policy(CSIv2_POLICY_TYPE);
         } catch (INV_POLICY e) {
             LOG.log(TRACE, "CSIv2Policy cound not be loaded", e);
         }
@@ -130,10 +113,5 @@ public class GlassFishORBFactoryImpl implements GlassFishORBFactory, PostConstru
             return csiv2Policy.getEjbDescriptor();
         }
         return null;
-    }
-
-    @Override
-    public void enableLazyAcceptor(Consumer<SelectableChannel> acceptorDelegate) {
-        serviceLocator.getService(OrbInitializationNode.class).setAcceptor(acceptorDelegate);
     }
 }

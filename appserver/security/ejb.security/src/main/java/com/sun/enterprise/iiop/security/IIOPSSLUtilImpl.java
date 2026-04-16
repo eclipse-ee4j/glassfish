@@ -34,9 +34,10 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
-import org.glassfish.internal.api.Globals;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
@@ -55,6 +56,9 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     @Inject
     private SSLUtils sslUtils;
+
+    @Inject
+    private ServiceLocator serviceLocator;
 
     @Override
     public KeyManager[] getKeyManagers(String alias) {
@@ -115,15 +119,14 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
         } catch (UnknownType ute) {
             LOG.log(DEBUG, "UnknownType exception", ute);
         }
-
         LOG.log(DEBUG, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
-        // Cannot be an injected field, leads to a cyclic dependency, makes HK2 angry.
-        final GlassFishORBLocator orbLocator = Globals.get(GlassFishORBLocator.class);
-        EjbDescriptor desc = orbLocator.getEjbDescriptor(iorInfo);
+
+        EjbDescriptor desc = serviceLocator.getService(GlassFishORBFactory.class).getEjbDescriptor(iorInfo);
         if (desc == null) {
             return null;
         }
+        ORBLocator orbLocator = serviceLocator.getService(ORBLocator.class);
         CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getORB());
         return ctc.createSecurityTaggedComponent(socketInfos, desc);
     }

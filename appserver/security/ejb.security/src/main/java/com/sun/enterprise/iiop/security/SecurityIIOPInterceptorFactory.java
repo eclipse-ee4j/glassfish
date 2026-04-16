@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +17,10 @@
 
 package com.sun.enterprise.iiop.security;
 
-import com.sun.logging.LogDomains;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
@@ -33,10 +30,12 @@ import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.IORInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfo;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
+import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
-import static com.sun.logging.LogDomains.SECURITY_LOGGER;
+import static com.sun.enterprise.iiop.security.AlternateSecurityInterceptorFactory.SEC_INTEROP_INTFACTORY_PROP;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * @author Kumar
@@ -45,8 +44,8 @@ import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 @Singleton
 public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
-    private static final Logger LOG = LogDomains.getLogger(SecurityIIOPInterceptorFactory.class, SECURITY_LOGGER, false);
-    final String interceptorFactory = System.getProperty(AlternateSecurityInterceptorFactory.SEC_INTEROP_INTFACTORY_PROP);
+    private static final Logger LOG = System.getLogger(SecurityIIOPInterceptorFactory.class.getName());
+    private final String interceptorFactory = System.getProperty(SEC_INTEROP_INTFACTORY_PROP);
 
     @Inject
     private ProcessEnvironment penv;
@@ -103,10 +102,10 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
                 altSecFactory = (AlternateSecurityInterceptorFactory) clazz.getConstructor().newInstance();
                 return true;
             }
-            LOG.log(Level.INFO, "Not a valid factory class: {0}. Must implement {1}",
-                new Object[] {interceptorFactory, AlternateSecurityInterceptorFactory.class});
+            LOG.log(INFO, "Not a valid factory class: {0}. Must implement {1}", interceptorFactory,
+                AlternateSecurityInterceptorFactory.class);
         } catch (Exception ex) {
-            LOG.log(Level.WARNING, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
+            LOG.log(WARNING, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
         }
         return false;
     }

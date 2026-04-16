@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,8 @@
  */
 
 package org.glassfish.internal.api;
+
+import com.sun.enterprise.util.net.NetUtils;
 
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
@@ -37,7 +39,7 @@ public interface ORBLocator {
     // but we can't reference ORBConstants from the naming bundle!
     String FOLB_CLIENT_GROUP_INFO_SERVICE = "FolbClientGroupInfoService";
 
-    String DEFAULT_ORB_INIT_HOST = "localhost";
+    String DEFAULT_ORB_INIT_HOST = NetUtils.getHostName();
     String DEFAULT_ORB_INIT_PORT = "3700";
 
     // This property is true if SSL is required to be used by
@@ -59,6 +61,4 @@ public interface ORBLocator {
      * @return an initialized ORB instance
      */
     ORB getORB();
-
-    int getORBPort();
 }

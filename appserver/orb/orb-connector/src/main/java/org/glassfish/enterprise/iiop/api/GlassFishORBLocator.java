@@ -18,7 +18,7 @@
 package org.glassfish.enterprise.iiop.api;
 
 import com.sun.corba.ee.impl.folb.InitialGroupInfoService;
-import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.corba.ee.spi.orb.ORBData;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
@@ -36,11 +36,10 @@ import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
-import org.omg.PortableInterceptor.IORInfo;
-import org.omg.PortableInterceptor.ServerRequestInfo;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
@@ -62,6 +61,9 @@ public class GlassFishORBLocator implements ORBLocator {
     private static final ThreadLocal<Consumer<SelectableChannel>> TMP_ACCEPTOR_DELEGATE = new ThreadLocal<>();
 
     @Inject
+    private ServiceLocator serviceLocator;
+
+    @Inject
     private ProcessEnvironment environment;
 
     @Inject
@@ -72,9 +74,6 @@ public class GlassFishORBLocator implements ORBLocator {
 
     @Inject
     private Provider<GlassfishNamingManager> glassfishNamingManagerProvider;
-
-    @Inject
-    private GlassFishORBFactory orbFactory;
 
     private ProtocolManager protocolManager;
 
@@ -162,7 +161,7 @@ public class GlassFishORBLocator implements ORBLocator {
             try {
                 try {
                     initialize(environment.getProcessType().isServer());
-                    orbFactory.enableLazyAcceptor(TMP_ACCEPTOR_DELEGATE.get());
+                    serviceLocator.getService(OrbInitializationNode.class).setAcceptor(TMP_ACCEPTOR_DELEGATE.get());
                     return orb;
                 } catch (Exception e) {
                     failure = e;
@@ -185,7 +184,7 @@ public class GlassFishORBLocator implements ORBLocator {
         LOG.log(DEBUG, "getORB(): Initialization started by " + Thread.currentThread(), new Exception());
         final Properties props = new Properties();
         props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.toString(isServer));
-        this.orb = orbFactory.createORB(props);
+        this.orb = getOrbFactory().createORB(props);
         if (isServer) {
             // Does the JNDI binding
             new InitialGroupInfoService(orb);
@@ -246,40 +245,19 @@ public class GlassFishORBLocator implements ORBLocator {
         return orb != null && initializerThread == null;
     }
 
-    public int getOTSPolicyType() {
-        return orbFactory.getOTSPolicyType();
+    /**
+     *
+     * @return {@link GlassFishORBFactory} used to create and initialize the ORB.
+     */
+    public GlassFishORBFactory getOrbFactory() {
+        return serviceLocator.getService(GlassFishORBFactory.class);
     }
 
-    public int getCSIv2PolicyType() {
-        return orbFactory.getCSIv2PolicyType();
-    }
-
-    public Properties getCSIv2Props() {
-        return orbFactory.getCSIv2Props();
-    }
-
-    public void setCSIv2Prop(String name, String value) {
-        orbFactory.setCSIv2Prop(name, value);
-    }
-
-    public int getORBInitialPort() {
-        return orbFactory.getORBInitialPort();
-    }
-
-    public EjbDescriptor getEjbDescriptor(IORInfo iorInfo) {
-        return orbFactory.getEjbDescriptor(iorInfo);
-    }
-
-    @Override
-    public int getORBPort() {
-        while (!isORBInitialized()) {
-            Thread.onSpinWait();
-        }
-        return orbFactory.getORBPort(orb);
-    }
-
-    public boolean isEjbCall(ServerRequestInfo sri) {
-        return orbFactory.isEjbCall(sri);
+    /**
+     * @return {@link ORBData} ORB configuration data
+     */
+    public ORBData getORBData() {
+        return ((com.sun.corba.ee.spi.orb.ORB) getORB()).getORBData();
     }
 
     /**

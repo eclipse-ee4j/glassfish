@@ -33,6 +33,7 @@ import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.PortableInterceptor.IORInterceptor {
 
@@ -68,6 +69,8 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
         try {
             addCSIv2Components(iorInfo);
         } catch (Exception e) {
+            // The corba-orb library is swallowing the exception!
+            LOG.log(WARNING, "Failed to add CSIv2 components for " + iorInfo, e);
             throw new IllegalStateException("Failed to add CSIv2 components!", e);
         }
     }
@@ -75,7 +78,6 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
     private void addCSIv2Components(IORInfo iorInfo) {
         LOG.log(DEBUG, "addCSIv2Components(iorInfo={0})", iorInfo);
         if (gmsAdapter != null) {
-
             // If this app server instance is part of a dynamic cluster (that is,
             // one that supports RMI-IIOP failover and load balancing, DO NOT
             // create the CSIv2 components here. Instead, handle this in the
@@ -92,7 +94,7 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
         int sslport = getServerPort("SSL");
         LOG.log(DEBUG, "sslport: {0}", sslport);
 
-        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getPartiallyInitializedOrb());
+        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getORB());
         final TaggedComponent csiv2Comp;
         if (desc == null) {
             // this is not an EJB object, must be a non-EJB CORBA object

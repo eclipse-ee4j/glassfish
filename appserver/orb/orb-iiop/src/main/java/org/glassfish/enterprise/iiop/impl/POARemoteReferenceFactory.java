@@ -323,7 +323,6 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
             return (Remote) stub;
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "iiop.createreference_exception", e.toString());
             throw new RuntimeException("Unable to create reference ", e);
         }
     }
@@ -430,6 +429,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
 
     @Override
     public void destroy() {
+        logger.log(Level.FINEST, "destroy(})");
         try {
             ejbHomeReferenceFactory.destroy() ;
             ejbObjectReferenceFactory.destroy() ;
@@ -441,7 +441,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
 
             orb = null;
         } catch (Throwable th) {
-            logger.log(Level.SEVERE, "Exception during " + "POARemoteRefFactory::destroy()", th);
+            logger.log(Level.SEVERE, "Exception during POARemoteRefFactory::destroy()", th);
         }
     }
 

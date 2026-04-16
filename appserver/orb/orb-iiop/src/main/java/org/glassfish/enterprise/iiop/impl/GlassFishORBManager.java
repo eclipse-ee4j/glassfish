@@ -148,6 +148,7 @@ public final class GlassFishORBManager {
     }
 
     void setCSIv2Prop(String name, String value) {
+        LOG.log(DEBUG, "setCSIv2Prop(name={0}, value={1})", name, value);
         csiv2Props.setProperty(name, value);
     }
 

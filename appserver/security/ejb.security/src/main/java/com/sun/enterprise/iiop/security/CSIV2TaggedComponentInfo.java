@@ -87,11 +87,13 @@ final class CSIV2TaggedComponentInfo {
     private ORB orb;
 
     CSIV2TaggedComponentInfo(ORB orb) {
+        LOG.log(DEBUG, "CSIV2TaggedComponentInfo(orb={0})", orb);
         this.sslMutualAuthPort = 0;
         this.orb = orb;
     }
 
     CSIV2TaggedComponentInfo(int sslMutualAuthPort, ORB orb) {
+        LOG.log(DEBUG, "CSIV2TaggedComponentInfo(sslMutualAuthPort={0}, orb={1})", orb);
         this.sslMutualAuthPort = sslMutualAuthPort;
         this.orb = orb;
     }

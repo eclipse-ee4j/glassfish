@@ -157,12 +157,12 @@
         <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
 
         <!-- Jakarta SOAP (with Attachments) -->
-        <webservices.version>4.0.5</webservices.version>
+        <webservices.version>4.0.6</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>4.0.0-M4</hk2.version>
-        <hk2.plugin.version>4.0.0-M4</hk2.plugin.version>
+        <hk2.version>4.0.0</hk2.version>
+        <hk2.plugin.version>4.0.0</hk2.plugin.version>
 
         <!-- Jakarta CDI -->
         <jakarta.cdi-api.version>5.0.0.Alpha3</jakarta.cdi-api.version>
@@ -171,7 +171,7 @@
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.5</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.6</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>4.0.7</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>4.0.0</jakarta.rest-api.version>
@@ -179,7 +179,7 @@
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
-        <eclipselink.version>5.0.0-B13</eclipselink.version>
+        <eclipselink.version>5.0.0</eclipselink.version>
         <eclipselink.asm.version>9.9.0</eclipselink.asm.version>
 
         <!-- Jakarta Mail -->
@@ -202,7 +202,7 @@
         <tyrus.version>2.3.0-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrency-api.version>3.2.0-M3</jakarta.concurrency-api.version>
+        <jakarta.concurrency-api.version>3.2.0-M2</jakarta.concurrency-api.version>
         <concurro.version>3.2.0-M1</concurro.version>
 
         <!-- Jakarta Interceptors -->
@@ -215,7 +215,7 @@
         <soteria.version>5.0.0-M1</soteria.version>
         <exousia.version>3.0.1</exousia.version>
         <epicyro.version>3.1.1</epicyro.version>
-        <nimbus.version>10.8</nimbus.version>
+        <nimbus.version>10.9</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -261,7 +261,7 @@
         <!-- Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.4</xmlsec.version>
         <woodstox.version>7.1.1</woodstox.version>
-        <stax2-api.version>4.2.2</stax2-api.version>
+        <stax2-api.version>4.3.0</stax2-api.version>
 
         <!-- GlassFish Components -->
         <grizzly.version>5.0.0</grizzly.version>
@@ -282,20 +282,20 @@
         <commons-io.version>2.21.0</commons-io.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.6.2.Final</jboss.logging.version>
+        <jboss.logging.version>3.6.3.Final</jboss.logging.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.9.1</asm.version>
-        <jsch.version>2.27.8</jsch.version>
+        <jsch.version>2.28.0</jsch.version>
         <antlr2.version>2.7.7</antlr2.version>
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
-        <ant.version>1.10.15</ant.version>
+        <ant.version>1.10.16</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.21.1</jackson.version>
+        <jackson.version>2.21.2</jackson.version>
         <jackson.version2>2.21</jackson.version2>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.5.4</jettison.version>
+        <jettison.version>1.5.5</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
         <jna.version>5.18.1</jna.version>
 
@@ -433,6 +433,34 @@
                 <artifactId>hk2-config-generator</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- These are overriden by hk2-bom -->
+            <dependency>
+                <groupId>org.glassfish.grizzly</groupId>
+                <artifactId>grizzly-http-servlet</artifactId>
+                <version>${grizzly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-grizzly2-http</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.inject</groupId>
+                <artifactId>jersey-hk2</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+
 
             <!-- Jakarta XML Binding -->
             <dependency>
@@ -973,7 +1001,7 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
-                <version>1.10.15</version>
+                <version>1.10.16</version>
             </dependency>
             <dependency>
                 <groupId>com.github.mwiede</groupId>

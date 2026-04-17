@@ -373,8 +373,7 @@ public class ConnectorConnectionPoolDeployer
         if(rarName.trim().equals(ConnectorConstants.DEFAULT_JMS_ADAPTER)){
             properties.put("AddressList","localhost");
         }
-        Set mergedProps = ConnectorDDTransformUtils.mergeProps(props, cdd.getConfigProperties(),properties);
-        cdi.setMCFConfigProperties(mergedProps);
+        cdi.setMCFConfigProperties(ConnectorDDTransformUtils.mergeProps(props, cdd.getConfigProperties(), properties));
         cdi.setResourceAdapterConfigProperties(connectorDescriptor.getConfigProperties());
         ccp.setConnectorDescriptorInfo(cdi);
         ccp.setSecurityMaps(SecurityMapUtils.getConnectorSecurityMaps(securityMaps));

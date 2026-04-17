@@ -83,6 +83,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
@@ -429,14 +430,14 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
      * and reported a PE connection url limitation.
      */
     @Override
-    protected Set mergeRAConfiguration(ResourceAdapterConfig raConfig, List<Property> raConfigProps) {
-        // private void hackMergedProps(Set mergedProps) {
-        if (!(connectorRuntime.isServer())) {
-            return super.mergeRAConfiguration(raConfig, raConfigProps);
-        }
+    protected Set<ConnectorConfigProperty> mergeRAConfiguration(ResourceAdapterConfig raConfig,
+        List<Property> raConfigProps) {
         Set<ConnectorConfigProperty> mergedProps = super.mergeRAConfiguration(raConfig, raConfigProps);
-        String brokerType = null;
+        if (!connectorRuntime.isServer()) {
+            return mergedProps;
+        }
 
+        String brokerType = null;
         for (ConnectorConfigProperty element : mergedProps) {
             if (element.getName().equals(ActiveJmsResourceAdapter.BROKERTYPE)) {
                 brokerType = element.getValue();
@@ -446,7 +447,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         try {
             cluster = isClustered();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, "isClustered method failed.", e);
         }
         // hack is required only for nonclustered nonremote brokers.
         if (!cluster && brokerType != null) {
@@ -476,9 +477,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         if (isServer() && !isSystemRar(moduleName_)) {
             createAllConnectorResources();
         }
-        if (LOG.isLoggable(FINE)) {
-            LOG.log(FINE, "Completed Active Resource adapter setup", moduleName_);
-        }
+        LOG.log(FINE, "Completed Active Resource adapter setup for module {0}", moduleName_);
     }
 
     /**

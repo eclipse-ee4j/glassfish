@@ -1,35 +1,50 @@
 # Eclipse GlassFish
 
-[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation sponsored by the Eclipse Foundation.
+[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation
+owned by the Eclipse Foundation and developed and maintained by the community.
+
+Information about contributions to the project and partially to the whole ecosystem can be found here:
+* [GlassFish Project Web Site](https://projects.eclipse.org/projects/ee4j.glassfish/who)
+* [EE4J Project Group Web Site](https://projects.eclipse.org/projects/ee4j/who)
+* [GitHub Insights](https://github.com/eclipse-ee4j/glassfish/graphs/contributors)
+
+There's much more work done on project's open source dependencies too.
+Please consider [contributing](CONTRIBUTING.md) or [sponsoring](https://www.eclipse.org/sponsor) of related projects,
+[contributing individuals and companies](https://docs.github.com/en/sponsors/sponsoring-open-source-contributors)
+or [buying their services.](#professional-services-and-enterprise-support)
 
 ## 📋 Quick Links
 
+- [Download Links](#download-links)
 - [Release Notes](https://github.com/eclipse-ee4j/glassfish/releases)
 - [Building Instructions](#building)
 - [Basic Usage](#basic-usage)
+- [Security Considerations](#security-considerations)
 - [Professional Support](#professional-services-and-enterprise-support)
+
+## 📦 Download Links
+
+* [Eclipse Downloads](https://download.eclipse.org/justj/?file=ee4j/glassfish)
+* Maven Central:
+    * [GlassFish Server Full Profile](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/versions)
+    * [GlassFish Server Web Profile](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/versions)
+    * [Embedded GlassFish All](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/versions)
+    * [Embedded GlassFish Web](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/versions)
+* Docker Images on GitHub:
+    * [GlassFish Server Full Profile](https://github.com/eclipse-ee4j/glassfish.docker/pkgs/container/glassfish)
+    * [Embedded GlassFish All](https://github.com/eclipse-ee4j/glassfish.docker/pkgs/container/embedded-glassfish)
 
 ## 🔄 Version Compatibility
 
 | GlassFish Version | Jakarta EE Version | Java Requirements |
-|-------------------|-------------------|-------------------|
-| 8.0.0 | Jakarta EE 11 | Java 21, 25 |
-| 7.1.0 | Jakarta EE 10 | Java 17, 21, 25 |
-| 7.0.25 | Jakarta EE 10 | Java 11, 17, 21 |
-| 6.2.5 | Jakarta EE 9.1 | Java 11, 17 |
-| 6.1.0 | Jakarta EE 9.1 | Java 11 |
-| 6.0.0 | Jakarta EE 9 | Java 8 |
-| 5.1.0 | Java EE 8 / Jakarta EE 8 | Java 8 |
-
-## 📦 Distribution
-
-After building, find distributions at:
-- **GlassFish Server Full Profile**: `appserver/distributions/glassfish/target/glassfish.zip`
-- **GlassFish Server Web Profile**: `appserver/distributions/web/target/web.zip`
-- **Embedded GlassFish All**:
-`appserver/extras/embedded/all/target/glassfish-embedded-all.jar`
-- **Embedded GlassFish Web**:
-`appserver/extras/embedded/web/target/glassfish-embedded-web.jar`
+|:------------------|:-------------------|:------------------|
+| 8.0.0             | 11                 | 21, 25            |
+| 7.1.0             | 10                 | 17, 21, 25        |
+| 7.0.25            | 10                 | 11, 17, 21        |
+| 6.2.5             | 9.1                | 11, 17            |
+| 6.1.0             | 9.1                | 11                |
+| 6.0.0             | 9                  | 8                 |
+| 5.1.0             | 8 and Java EE 8    | 8                 |
 
 ## Building
 
@@ -58,10 +73,19 @@ If you use Maven 3.9+, we recommend that you copy the `.mvn/maven.config.templat
 If you want to see more logs you can use the `-Dtest.logLevel=FINEST` option set to an appropriate log level.
 Note that this applies just for tests which are executed by Maven and which use the **GlassFish Java Util Logging Extension (GJULE)**.
 
+### 📦 Distribution
+
+After building, find distributions at:
+- **GlassFish Server Full Profile**: `appserver/distributions/glassfish/target/glassfish.zip`
+- **GlassFish Server Web Profile**: `appserver/distributions/web/target/web.zip`
+- **Embedded GlassFish All**:
+`appserver/extras/embedded/all/target/glassfish-embedded-all.jar`
+- **Embedded GlassFish Web**:
+`appserver/extras/embedded/web/target/glassfish-embedded-web.jar`
+
 ### Special Profiles
 
-* `staging` - In some development stages it may happen that some dependencies are available just in the OSSRH staging repository.
-  Then you have to use this profile, which is not enabled by default.
+* `staging` - This profile was used formerly to access the Staging Maven repository. At this time the repository is not available any more and the profile should not be used.
 * `jacoco` - enables the [JaCoCo](https://www.eclemma.org/jacoco/) agent in tests, so you can import its output to your editor, i.e. Eclipse, and see the code coverage.
 * `jacoco-merge` - merges all JaCoCo output files found in subdirectories and merges them into one. It is useful to see code which wasn't even touched by tests.
 
@@ -89,28 +113,28 @@ They are quite old and have high technical debt, but at this moment they still p
 
 :warning: Some of the scripts do in-place filtering or generate other sources which remain and later affect subsequent executions. You have to remove those changes manually.
 
-* `./runtests.sh batch_all` - Usual time: 1 minute
-* `./runtests.sh cdi_all` - Usual time: 6 minutes
-* `./runtests.sh connector_group_1` - Usual time: 16 minutes
-* `./runtests.sh connector_group_2` - Usual time: 3 minutes
-* `./runtests.sh connector_group_3` - Usual time: 4 minutes
-* `./runtests.sh connector_group_4` - Usual time: 16 minutes
-* `./runtests.sh deployment_all` - Usual time: 8 minutes
-* `./runtests.sh ejb_group_1` - Usual time: 10 minutes
-* `./runtests.sh ejb_group_2` - Usual time: 7 minutes
-* `./runtests.sh ejb_group_3` - Usual time: 18 minutes
-* `./runtests.sh ejb_group_embedded` - Usual time: 4 minutes
-* `./runtests.sh ejb_group_all` - Usual time: 4 minutes
-* `./runtests.sh jdbc_all` - Usual time: 20 minutes
-* `./runtests.sh naming_all` - Usual time: 2 minutes
-* `./runtests.sh persistence_all` - Usual time: 3 minutes
-* `./runtests.sh security_all` - Usual time: 8 minutes
-* `./runtests.sh web_jsp` - Usual time: 8 minutes
-* `./runtests.sh webservice_all` - Usual time: 10 minutes
-* `./runtests.sh ejb_web_all` - Usual time: 4 minutes
-* `./runtests.sh ql_gf_web_profile_all` - Usual time: 2 minutes
-* `./runtests.sh ql_gf_full_profile_all` - Usual time: 4 minutes
-
+```
+* ./runtests.sh batch_all # Usual time: 1 minute
+* ./runtests.sh cdi_all # Usual time: 6 minutes
+* ./runtests.sh connector_group_1 # Usual time: 16 minutes
+* ./runtests.sh connector_group_2 # Usual time: 3 minutes
+* ./runtests.sh connector_group_3 # Usual time: 4 minutes
+* ./runtests.sh connector_group_4 # Usual time: 16 minutes
+* ./runtests.sh deployment_all # Usual time: 8 minutes
+* ./runtests.sh ejb_group_1 # Usual time: 10 minutes
+* ./runtests.sh ejb_group_2 # Usual time: 7 minutes
+* ./runtests.sh ejb_group_3 # Usual time: 18 minutes
+* ./runtests.sh ejb_group_embedded # Usual time: 4 minutes
+* ./runtests.sh jdbc_all # Usual time: 20 minutes
+* ./runtests.sh naming_all # Usual time: 2 minutes
+* ./runtests.sh persistence_all # Usual time: 3 minutes
+* ./runtests.sh security_all # Usual time: 8 minutes
+* ./runtests.sh web_jsp # Usual time: 8 minutes
+* ./runtests.sh webservice_all # Usual time: 10 minutes
+* ./runtests.sh ejb_web_all # Usual time: 4 minutes
+* ./runtests.sh ql_gf_web_profile_all # Usual time: 2 minutes
+* ./runtests.sh ql_gf_full_profile_all # Usual time: 4 minutes
+```
 * many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
 
 ### Pull request workflow
@@ -127,11 +151,15 @@ Build server results of pull requests can be found at [CI Glassfish](https://ci.
 
 ## Security Considerations
 
-For production deployments, consider the following security measures:
-
-* **Disable the Admin Console**: The web-based Administration Console should be disabled in production environments to reduce attack surface and prevent CSRF attacks where malicious links can execute admin commands. Use `asadmin set server.admin-service.property.adminConsoleStartup=never` and restart the domain.
-* **Enable Secure Admin**: Use `asadmin enable-secure-admin` to secure administrative communications.
-* **Use strong passwords**: Change default passwords and use strong authentication.
+> [!IMPORTANT]
+> For production deployments, consider the following security measures:
+> * **Don't use domain1**: The `domain1` can be used just in automated tests but never on production as it contains
+    private keys which are implicitly compromised. You should create a new domain for your environment.
+> * **Disable the Admin Console**: The web-based Administration Console should be disabled in production environments
+   to reduce attack surface and prevent CSRF attacks where malicious links can execute admin commands.
+   Use `asadmin set server.admin-service.property.adminConsoleStartup=never` and restart the domain.
+> * **Enable Secure Admin**: Use `asadmin enable-secure-admin` to secure administrative communications.
+> * **Use strong passwords**: Change default passwords and use strong authentication.
 
 For comprehensive security guidance, see the [Security Guide](docs/latest/security-guide.html).
 
@@ -143,4 +171,5 @@ The Eclipse GlassFish project does not endorse or recommend any of the companies
 
 Professional Services and Enterprise support are available through following companies:
 - [OmniFish](https://omnifish.ee/solutions/#support)
-- [ManageCat](https://www.managecat.com/services-and-support/eclipse-glassfish-enterprise-support)
+- [ManageCat](https://www.managecat.com/services-and-support)
+

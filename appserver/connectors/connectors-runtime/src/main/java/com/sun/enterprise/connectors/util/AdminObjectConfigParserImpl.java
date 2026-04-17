@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.AdminObject;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.OrderedSet;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
@@ -168,12 +169,11 @@ public class AdminObjectConfigParserImpl implements AdminObjectConfigParser {
         *  mergedVals       -> merged props of raConfigPros and
         *                                 allraConfigPropsWithDefVals
         */
-        Set ddVals = adminObject.getConfigProperties();
+        OrderedSet<ConnectorConfigProperty> ddVals = adminObject.getConfigProperties();
         String className = adminObject.getAdminObjectClass();
         Properties mergedVals = null;
         if (className != null && className.length() != 0) {
-            Properties introspectedVals =
-                    configParserUtil.introspectJavaBean(className, ddVals, false, raName);
+            Properties introspectedVals = configParserUtil.introspectJavaBean(className, ddVals, false, raName);
             mergedVals = configParserUtil.mergeProps(ddVals, introspectedVals);
         }
         return mergedVals;
@@ -287,15 +287,10 @@ public class AdminObjectConfigParserImpl implements AdminObjectConfigParser {
 
         AdminObject adminObject = getAdminObject(desc, interfaceName, className );
         List<String> confidentialProperties = new ArrayList<>();
-        if(adminObject != null){
-            Set configProperties = adminObject.getConfigProperties();
-            if(configProperties != null){
-                Iterator iterator = configProperties.iterator();
-                while(iterator.hasNext()){
-                    ConnectorConfigProperty ccp = (ConnectorConfigProperty)iterator.next();
-                    if(ccp.isConfidential()){
-                        confidentialProperties.add(ccp.getName());
-                    }
+        if (adminObject != null) {
+            for (ConnectorConfigProperty ccp : adminObject.getConfigProperties()) {
+                if (ccp.isConfidential()) {
+                    confidentialProperties.add(ccp.getName());
                 }
             }
         }

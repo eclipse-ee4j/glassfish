@@ -236,21 +236,21 @@ public class Types {
      * For example, given the following
      *
      * <pre>
-     * <xmp>
+     * {@snippet :
      * interface Foo<T> extends List<List<T>> {}
      * interface Bar extends Foo<String> {}
-     * </xmp>
+     * }
      * </pre>
      *
      * This method works like this:
      *
      * <pre>
-     * <xmp>
+     * {@snippet :
      * getBaseClass( Bar, List ) = List<List<String>
      * getBaseClass( Bar, Foo  ) = Foo<String>
      * getBaseClass( Foo<? extends Number>, Collection ) = Collection<List<? extends Number>>
      * getBaseClass( ArrayList<? extends BigInteger>, List ) = List<? extends BigInteger>
-     * </xmp>
+     * }
      * </pre>
      *
      * @param type

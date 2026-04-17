@@ -102,7 +102,7 @@ public @interface Attribute {
      *  are of type defined by basic Java primitives (or wrappers), there is
      *  no need to specify this field. The default value is derived from
      *  method/field declaration.
-     * @see {@link DataType}
+     * @see DataType
      * @return String specifying the name of the data type for the values of this
      * attribute
      */

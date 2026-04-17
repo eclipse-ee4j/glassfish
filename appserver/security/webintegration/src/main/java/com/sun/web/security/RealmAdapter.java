@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1086,11 +1086,9 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                         // does not match with the hostname in the
                         // listener-To avoid performance overhead
                         localHostAdresses = NetUtils.getHostAddresses();
-                        if (localHostAdresses == null) {
-                            // The foreach would throw NPE and getHostAddresses would return null.
+                        if (localHostAdresses.length == 0) {
                             break;
                         }
-
                         InetAddress hostAddress = InetAddress.getByName(hostPort[0]);
                         for (InetAddress inetAdress : localHostAdresses) {
                             if (inetAdress.equals(hostAddress)) {

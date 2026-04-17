@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -27,13 +25,13 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Sheetal Vartak
  */
-public class MessageListener extends Descriptor {
+public class MessageListener extends Descriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private String msgListenerType;
     private String activationSpecClass;
-    private final Set<ConnectorConfigProperty> configProperties;
-    private final Set<EnvironmentProperty> requiredConfigProperties;
+    private final OrderedSet<ConnectorConfigProperty> configProperties;
+    private final OrderedSet<EnvironmentProperty> requiredConfigProperties;
 
     // default constructor
     public MessageListener() {
@@ -62,26 +60,20 @@ public class MessageListener extends Descriptor {
     }
 
 
-    /**
-     * add a connector-configProperty to the set
-     */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         this.configProperties.add(configProperty);
     }
 
 
-    /**
-     * remove a connector-configProperty from the set
-     */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         this.configProperties.remove(configProperty);
     }
 
 
-    /**
-     * @return Set of ConnectorConfigProperty
-     */
-    public Set<ConnectorConfigProperty> getConfigProperties() {
+    @Override
+    public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
@@ -105,7 +97,7 @@ public class MessageListener extends Descriptor {
     /**
      * @return Set of EnvironmentProperty
      */
-    public Set<EnvironmentProperty> getRequiredConfigProperties() {
+    public OrderedSet<EnvironmentProperty> getRequiredConfigProperties() {
         return requiredConfigProperties;
     }
 }

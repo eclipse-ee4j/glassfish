@@ -21,13 +21,11 @@ This document explains how to run applications in embedded {productName} and to 
 who are developing applications to run in embedded {productName}. The
 ability to program in the Java language is assumed.
 
-Note: The main thrust of the {productName} {product-majorVersion}
-release is to provide an application server for developers to explore
-and begin exploiting the new and updated technologies in the Jakarta EE 10
-platform. Thus, the embedded server feature of {productName} was not
-a focus of this release. This feature is included in the release, but it
-may not function properly with some of the new features added in support
-of the Jakarta EE 10 platform.
+Note: Since {productName} 7.1.0, Embedded {productName} is a fully supported
+and actively maintained feature, covered by the internal test suite.
+Running applications from the command line using the Embedded {productName} JAR
+is the recommended approach and is suitable for production deployments,
+including cloud environments. Embedding Embedded GlassFish into Java applications or using for testing purposes is also supported.
 
 [[sthref1]]
 

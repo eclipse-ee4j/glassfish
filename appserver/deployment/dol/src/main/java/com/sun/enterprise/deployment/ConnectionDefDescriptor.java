@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -31,10 +29,10 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Sheetal Vartak
  */
-public class ConnectionDefDescriptor extends Descriptor {
+public class ConnectionDefDescriptor extends Descriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
-    private final Set<ConnectorConfigProperty> configProperties = new OrderedSet<>();
+    private static final long serialVersionUID = 2L;
+    private final OrderedSet<ConnectorConfigProperty> configProperties = new OrderedSet<>();
     private String managedConnectionFactoryImpl = "";
     private String connectionIntf = "";
     private String connectionImpl = "";
@@ -57,25 +55,19 @@ public class ConnectionDefDescriptor extends Descriptor {
     }
 
 
-    /**
-     * Set of ConnectorConfigProperty
-     */
-    public Set<ConnectorConfigProperty> getConfigProperties() {
+    @Override
+    public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
 
-    /**
-     * Add a configProperty to the set
-     */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.add(configProperty);
     }
 
 
-    /**
-     * Add a configProperty to the set
-     */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.remove(configProperty);
     }

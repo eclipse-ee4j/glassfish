@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,7 +74,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     private boolean fullAttribute;
 
     private Application application;
-    private Set<Role> roles;
+    private OrderedSet<Role> roles;
     private Set<MessageDestinationDescriptor> messageDestinations = new HashSet<>();
     private final WebServicesDescriptor webServices = new WebServicesDescriptor();
 
@@ -310,7 +310,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Return the set of com.sun.enterprise.deployment.Role objects I have plus the ones from application
      */
     @Override
-    public Set<Role> getRoles() {
+    public OrderedSet<Role> getRoles() {
         if (roles == null) {
             roles = new OrderedSet<>();
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,28 +51,36 @@ public final class ServerHelper {
     private final Config config;
 
     public ServerHelper(Server theServer, Config theConfig) {
-        server = theServer;
-        config = theConfig;
-
-        if (server == null || config == null) {
-            throw new IllegalArgumentException();
-        }
+        server = Objects.requireNonNull(theServer, "server");
+        config = Objects.requireNonNull(theConfig, "config");
     }
 
-    public final int getAdminPort() {
+    /**
+     * @return admin port, can be null.
+     * @throws RuntimeException if the admin port is not a valid integer
+     */
+    public final Integer getAdminPort() {
+        final String adminPortString = getAdminPortString(server, config);
+        if (adminPortString == null) {
+            return null;
+        }
+        final int port;
         try {
-            String portString = getAdminPortString(server, config);
-            if (portString == null) {
-                return -1; // get out quick.  it is kosher to call with a null Server
-            }
-            return Integer.parseInt(portString);
-        } catch (Exception e) {
-            // drop through...
+            port = Integer.parseInt(adminPortString);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Admin port is not a valid integer: " + adminPortString, e);
         }
-        return -1;
+        if (NetUtils.isPortValid(port)) {
+            return port;
+        }
+        throw new RuntimeException("Admin port is not valid: " + adminPortString);
     }
 
-    public final String getAdminHost() {
+    /**
+     * @return admin host name, never null.
+     * @throws RuntimeException
+     */
+    public final String getAdminHost() throws RuntimeException {
         // Look at the address for the admin-listener first
         String addr = translateAddressAndPort(getAdminListener(config), server, config)[0];
         if (addr != null && !addr.equals("0.0.0.0")) {
@@ -88,7 +97,7 @@ public final class ServerHelper {
                 // We are the DAS. Return our hostname
                 return System.getProperty(HOST_NAME.getSystemPropertyName());
             }
-            return null;
+            return NetUtils.getHostName();
         }
 
         String hostName = null;
@@ -103,14 +112,14 @@ public final class ServerHelper {
             // XXX Hack to get around the fact that the default localhost
             // node entry is malformed
             if (hostName == null && nodeName.equals("localhost-" + domain.getName())) {
-                hostName = "localhost";
+                return InetAddress.getLoopbackAddress().getHostName();
             }
         }
 
-        if (StringUtils.ok(hostName)) {
-            return hostName;
+        if (hostName == null || hostName.isBlank()) {
+            throw new RuntimeException("Unable to resolve admin host name!");
         }
-        return null;
+        return hostName;
     }
 
     // very simple generic check

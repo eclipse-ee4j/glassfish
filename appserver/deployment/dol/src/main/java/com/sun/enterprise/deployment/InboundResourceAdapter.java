@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -35,14 +33,14 @@ import org.glassfish.deployment.common.Descriptor;
 public class InboundResourceAdapter extends Descriptor {
 
     private static final long serialVersionUID = 1L;
-    private final Set<MessageListener> messageListeners;
+    private final OrderedSet<MessageListener> messageListeners;
 
     public InboundResourceAdapter() {
         messageListeners = new OrderedSet<>();
     }
 
 
-    public Set<MessageListener> getMessageListeners() {
+    public OrderedSet<MessageListener> getMessageListeners() {
         return messageListeners;
     }
 

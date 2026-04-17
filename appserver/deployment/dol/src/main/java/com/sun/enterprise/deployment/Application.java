@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,6 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -95,7 +94,7 @@ public class Application extends CommonResourceBundleDescriptor
     private String generatedXMLDir;
 
     // Set of modules in this application
-    private final Set<ModuleDescriptor<BundleDescriptor>> modules = new OrderedSet<>();
+    private final OrderedSet<ModuleDescriptor<BundleDescriptor>> modules = new OrderedSet<>();
 
     // True if unique id has been set.  Allows callers to avoid
     // applying unique ids to subcomponents multiple times.
@@ -168,7 +167,7 @@ public class Application extends CommonResourceBundleDescriptor
     private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
-    private Set<Role> appRoles;
+    private OrderedSet<Role> appRoles;
 
     private String libraryDirectory;
 
@@ -774,8 +773,8 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the Set of roles in the application.
      */
     @Override
-    public Set<Role> getRoles() {
-        Set<Role> roles = new HashSet<>();
+    public OrderedSet<Role> getRoles() {
+        OrderedSet<Role> roles = new OrderedSet<>();
         for (BundleDescriptor bd : getBundleDescriptors()) {
             if (bd != null) {
                 roles.addAll(bd.getRoles());
@@ -785,12 +784,12 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
     /**
-     * Return the set of org.glassfish.security.common.Role objects
+     * @return the set of org.glassfish.security.common.Role objects
      * I have (the ones defined in application xml).
      */
-    public Set<Role> getAppRoles() {
+    public OrderedSet<Role> getAppRoles() {
         if (this.appRoles == null) {
-            this.appRoles = new HashSet<>();
+            this.appRoles = new OrderedSet<>();
         }
         return this.appRoles;
     }
@@ -889,7 +888,7 @@ public class Application extends CommonResourceBundleDescriptor
      *
      * @return the set of bundle descriptors
      */
-    public Set<ModuleDescriptor<BundleDescriptor>> getModules() {
+    public OrderedSet<ModuleDescriptor<BundleDescriptor>> getModules() {
         return modules;
     }
 
@@ -1118,11 +1117,11 @@ public class Application extends CommonResourceBundleDescriptor
      * @param type the bundle descriptor type requested
      * @return the set of bundle descriptors
      */
-    public <T extends BundleDescriptor> Set<T> getBundleDescriptors(Class<T> type) {
+    public <T extends BundleDescriptor> OrderedSet<T> getBundleDescriptors(Class<T> type) {
         if (type == null) {
             return null;
         }
-        Set<T> bundleSet = new OrderedSet<>();
+        OrderedSet<T> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             try {
                 T descriptor = type.cast(aModule.getDescriptor());
@@ -1145,11 +1144,11 @@ public class Application extends CommonResourceBundleDescriptor
      * @param bundleType the bundle descriptor type requested
      * @return the set of bundle descriptors
      */
-    public Set<BundleDescriptor> getBundleDescriptorsOfType(ArchiveType bundleType) {
+    public OrderedSet<BundleDescriptor> getBundleDescriptorsOfType(ArchiveType bundleType) {
         if (bundleType == null) {
-            return Collections.emptySet();
+            return new OrderedSet<>();
         }
-        Set<BundleDescriptor> bundleSet = new OrderedSet<>();
+        final OrderedSet<BundleDescriptor> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             if (Objects.equals(aModule.getDescriptor().getModuleType(), bundleType)) {
                 bundleSet.add(aModule.getDescriptor());
@@ -1172,8 +1171,8 @@ public class Application extends CommonResourceBundleDescriptor
      *
      * @return the set of bundle descriptors
      */
-    public Set<BundleDescriptor> getBundleDescriptors() {
-        Set<BundleDescriptor> bundleSet = new OrderedSet<>();
+    public OrderedSet<BundleDescriptor> getBundleDescriptors() {
+        OrderedSet<BundleDescriptor> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             BundleDescriptor bundleDesc = aModule.getDescriptor();
             if (bundleDesc == null) {

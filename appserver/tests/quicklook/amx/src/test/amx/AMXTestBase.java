@@ -120,7 +120,7 @@ public class AMXTestBase
 
         mDebug = debug;
         mPort = port;
-
+        System.err.println("host=" + mHost + ", port=" + mPort + ", debug=" + mDebug);
         try
         {
             setup();
@@ -211,12 +211,11 @@ public class AMXTestBase
         {
             mMBeanServerConnection = _getMBeanServerConnection();
             mProxyFactory = ProxyFactory.getInstance(mMBeanServerConnection);
-
-            //debug( "AMXTestBase.setup(): millis to connect: " + timing.elapsedMillis() );
+            System.err.println("mProxyFactory=" + mProxyFactory);
             mDomainRoot = _getDomainRoot(mMBeanServerConnection);
-            //debug( "AMXTestBase.setup(): millis to boot AMX: " + timing.elapsedMillis() );
+            System.err.println("mDomainRoot=" + mDomainRoot);
             mQueryMgr = getDomainRootProxy().getQueryMgr();
-            //debug( "AMXTestBase.setup(): millis to get QueryMgr: " + timing.elapsedMillis() );
+            System.err.println("mQueryMgr=" + mQueryMgr);
 
             getMBeansListener();
         }

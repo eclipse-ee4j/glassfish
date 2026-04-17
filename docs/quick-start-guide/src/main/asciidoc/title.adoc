@@ -1,16 +1,16 @@
 type=page
 status=published
-title={productName} Quick Start Guide, Release {product-majorVersion}
+title={productName} Server Quick Start Guide, Release {product-majorVersion}
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= {productName} Quick Start Guide, Release {product-majorVersion}
+= {productName} Server Quick Start Guide, Release {product-majorVersion}
 
 [[eclipse-glassfish-server]]
 == {productName}
 
-Quick Start Guide
+Server Quick Start Guide
 
 Release {product-majorVersion}
 
@@ -18,14 +18,14 @@ Contributed 2018 - 2026
 
 This book demonstrates key features of the {productName} product and
 enables you to quickly learn the basics. Step-by-step procedures
-introduce you to product features and {productName} {product-majorVersion} Quick Start Guide {productName} {product-majorVersion}
-Quick Start Guide you to use them immediately.
+introduce you to product features and {productName} {product-majorVersion} Server Quick Start Guide {productName} {product-majorVersion}
+Server Quick Start Guide you to use them immediately.
 
 [[sthref1]]
 
 '''''
 
-{productName} Quick Start Guide, Release {product-majorVersion}
+{productName} Server Quick Start Guide, Release {product-majorVersion}
 
 Copyright (c) 2025 Contributors to the Eclipse Foundation. All rights reserved.
 

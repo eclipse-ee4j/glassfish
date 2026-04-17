@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,20 +14,28 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.v3.admin.cluster;
+package com.sun.enterprise.deployment;
+
 
 /**
- * Only accessible inside this package.
- * @author bnevins
+ * Interface for descriptors managing collections of {@link ConnectorConfigProperty}.
  */
-class Constants {
-    private Constants() {
-        // no instances are allowed
-    }
+public interface ConnectorConfigPropertySetDescriptor {
 
-    // these are all not localized because REST etc. depends on them.
-    static final String NONE = "Nothing to list.";
+    /**
+     * @return Set of {@link ConnectorConfigProperty} elements
+     */
+    OrderedSet<ConnectorConfigProperty> getConfigProperties();
 
-    static final String PARTIALLY_RUNNING_DISPLAY = " partially running";
-    static final String PARTIALLY_RUNNING = "PARTIALLY_RUNNING";
+
+    /**
+     * @param configProperty to add
+     */
+    void addConfigProperty(ConnectorConfigProperty configProperty);
+
+
+    /**
+     * @param configProperty to remove
+     */
+    void removeConfigProperty(ConnectorConfigProperty configProperty);
 }

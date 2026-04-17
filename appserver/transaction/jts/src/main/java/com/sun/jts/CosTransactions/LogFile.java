@@ -47,7 +47,6 @@ import java.util.logging.Logger;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -84,9 +83,7 @@ class LogFile {
      *
      * @param LogHandle
      *
-     * @return
      *
-     * @see
      */
     LogFile( LogHandle handle ) {
 
@@ -112,9 +109,7 @@ class LogFile {
      * @param recordType  Log record type.
      * @param recordLSN   LSN of the written record.
      *
-     * @return
      *
-     * @see
      */
     synchronized boolean write( int    writeType,
                                 byte[] record,
@@ -153,9 +148,7 @@ class LogFile {
      *
      * @param firstLSN
      *
-     * @return
      *
-     * @see
      */
     synchronized boolean checkpoint( LogLSN firstLSN ) {
 
@@ -188,7 +181,6 @@ class LogFile {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     synchronized boolean writeRestart( byte[] record ) {
 
@@ -209,11 +201,9 @@ class LogFile {
     /**Reads the restart record from the log.
      * <p>
      *
-     * @param
      *
      * @return  The restart record.
      *
-     * @see
      */
     synchronized byte[] readRestart() {
         byte[] result = null;
@@ -234,9 +224,7 @@ class LogFile {
      *
      * @param deleteFile
      *
-     * @return
      *
-     * @see
      */
     synchronized boolean close( boolean deleteFile ) {
 
@@ -262,11 +250,9 @@ class LogFile {
      * The result is returned in a Vector as we do not know ahead of time how
      * many log records there are.
      *
-     * @param
      *
      * @return  The log records.
      *
-     * @see
      */
     synchronized Vector getLogRecords() {
         Vector logRecords = new Vector();
@@ -352,11 +338,8 @@ class LogFile {
 
     /**Dumps the state of the object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void dump() {
         //! somtrDump_OBJECT_HEADER;

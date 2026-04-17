@@ -926,10 +926,9 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         throw new IllegalStateException("Should not reach here");
     }
 
-    // START OF IASRI 4809144
     /**
      * This method is added to create a Principal based on the username only. Hercules stores the username as part of
-     * authentication failover and needs to create a Principal based on username only <sridhar.satuloori@sun.com>
+     * authentication failover and needs to create a Principal based on username only.
      *
      * @param username
      * @return Principal for the user username HERCULES:add

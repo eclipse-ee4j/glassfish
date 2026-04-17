@@ -35,17 +35,17 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
- * Handles the logic of deploying the module/app to the required destination.</br>
+ * Handles the logic of deploying the module/app to the required destination.
  * The destination is specified on the constructor and can be modified by
  * calling setTarget().  The specific directory scanner can be set using
  * setDirectoryScanner, default is AutoDeployDirectoryScanner
- * <p>
- * Created on February 19, 2003, 10:21 AM
  *
- * @author vikas
+ * @author vikas 2003
  * @author tjquinn
  */
 public class AutoDeployer {
+
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AutoDeployer.class);
 
     private Boolean verify=null;
     private Boolean forceDeploy=null;
@@ -56,7 +56,6 @@ public class AutoDeployer {
     private String virtualServer = null;
 
     private String target=null;
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AutoDeployer.class);
     private DirectoryScanner directoryScanner=null;
 
     private boolean cancelDeployment =false;
@@ -522,7 +521,7 @@ public class AutoDeployer {
     }
 
     /**
-     * set cancel flag, which  will ensure that only if there is any current deployment is in process,</br>
+     * set cancel flag, which  will ensure that only if there is any current deployment is in process,
      * it will be completed but the deployer will not do any more deployment.
      * @param value the cancel setting
      */

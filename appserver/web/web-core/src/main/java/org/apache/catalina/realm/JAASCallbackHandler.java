@@ -26,10 +26,8 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 /**
- * <p>
- * Implementation of the JAAS <strong>CallbackHandler</code> interface, used to negotiate delivery of the username and
+ * Implementation of the JAAS <code>CallbackHandler</code> interface, used to negotiate delivery of the username and
  * credentials that were specified to our constructor. No interaction with the user is required (or possible).
- * </p>
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:27:52 $

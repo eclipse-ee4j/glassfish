@@ -257,7 +257,7 @@ public class ConnectorApplication implements ApplicationContainer<ConnectorDescr
     }
 
     /**
-     * event listener to listen to </code>resource-adapter undeploy validation</code> and
+     * event listener to listen to <code>resource-adapter undeploy validation</code> and
      * to validate the undeployment. Undeployment will fail, if resources are found
      * and --cascade is not set.
      * @param event Event

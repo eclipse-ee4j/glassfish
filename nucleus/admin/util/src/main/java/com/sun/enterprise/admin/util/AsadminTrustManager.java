@@ -78,8 +78,8 @@ public class AsadminTrustManager implements X509TrustManager {
     /**
      * Checks if client is trusted given the certificate chain and authorization type string, e.g., "RSA".
      *
-     * @throws {@link CertificateException}
-     * @throws {@link UnsupportedOperationException}
+     * @throws CertificateException
+     * @throws UnsupportedOperationException
      */
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificate, String authType) throws CertificateException {

@@ -17,6 +17,7 @@
 
 package com.sun.gjc.common;
 
+import com.sun.appserv.jdbc.DataSource;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.util.MethodExecutor;
 import com.sun.logging.LogDomains;
@@ -64,9 +65,7 @@ import static java.util.logging.Level.SEVERE;
  * the specification.
  *
  * @author Binod P.G
- * @version 1.0, 02/07/23
- * @see com.sun.gjc.common.DataSourceSpec
- * @see com.sun.gjc.util.MethodExcecutor
+ * @see DataSourceSpec
  */
 public class DataSourceObjectBuilder implements Serializable {
 
@@ -81,7 +80,7 @@ public class DataSourceObjectBuilder implements Serializable {
     /**
      * Construct a DataSource Object from the spec.
      *
-     * @param spec <code> DataSourceSpec </code> object.
+     * @param spec {@link DataSourceSpec} object.
      */
     public DataSourceObjectBuilder(DataSourceSpec spec) {
         this.spec = spec;
@@ -167,7 +166,7 @@ public class DataSourceObjectBuilder implements Serializable {
      * to a set of methodName and parameters. Prepare a hashtable containing these
      * details and return.
      *
-     * @param spec <code> DataSourceSpec </code> object.
+     * @param spec {@link DataSourceSpec} object.
      * @return Hashtable containing method names and parameters,
      * @throws ResourceException If delimiter is not provided and property string is
      * not null.
@@ -256,11 +255,10 @@ public class DataSourceObjectBuilder implements Serializable {
     }
 
     /**
-     * Creates a Datasource object according to the spec.
+     * Creates a {@link DataSource} object according to the spec.
      *
      * @return Initial DataSource Object instance.
-     * @throws <code>ResourceException</code> If class name is wrong or classpath is
-     * not set properly.
+     * @throws ResourceException If class name is wrong or classpath is not set properly.
      */
     private Object getDataSourceObject() throws ResourceException {
         String className = spec.getDetail(CLASSNAME);

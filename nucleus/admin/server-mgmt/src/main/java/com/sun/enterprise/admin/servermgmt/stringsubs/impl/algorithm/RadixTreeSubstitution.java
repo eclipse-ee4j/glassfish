@@ -20,7 +20,7 @@ package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
  * Perform's string substitution for the given input. Substitution process look for the matching input in the given
  * {@link RadixTree} and replaced the string with the corresponding matching value.
  *
- * @see {@link RadixTree}
+ * @see RadixTree
  */
 class RadixTreeSubstitution {
     /** {@link RadixTree} used sub. */

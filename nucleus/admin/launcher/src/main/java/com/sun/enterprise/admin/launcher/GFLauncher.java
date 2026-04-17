@@ -65,7 +65,7 @@ public abstract class GFLauncher {
 
     /**
      * The full commandline string used to start GlassFish in process
-     * <code<>glassFishProcess</code>
+     * <code>glassFishProcess</code>
      */
     private CommandLine commandLine;
 

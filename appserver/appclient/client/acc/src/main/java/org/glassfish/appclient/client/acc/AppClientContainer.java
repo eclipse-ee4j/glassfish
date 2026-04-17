@@ -83,7 +83,7 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
  * <ul>
  * <li>create a new builder for an ACC (see {@link #newBuilder} and {@link AppClientContainerBuilder}),
  * <li>optionally modify the configuration by invoking various builder methods,
- * <li>create an embedded instance of the ACC from the builder using {@link AppClientContainerBuilder#newContainer() },
+ * <li>create an embedded instance of the ACC from the builder using {@link AppClientContainerBuilder#newContainer(Class)},
  * <li>startClient the client using {@link #launch(String[])}, and
  * <li>stop the container using {@link #stop()}.
  * </ul>
@@ -131,41 +131,34 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
  * A simple case in which the calling program provides an app client JAR file and a single TargetServer might look like
  * this:
  * <p>
- * <code>
- *
- * import org.glassfish.appclient.client.acc.AppClientContainer;<br>
- * import org.glassfish.appclient.client.acc.config.TargetServer;<br>
- * <br>
- * AppClientContainerBuilder builder = AppClientContainer.newBuilder(<br>
- * &nbsp;&nbsp;    new TargetServer("localhost", 3700));<br>
- * <br>
- * AppClientContainer acc = builder.newContainer(new File("myAC.jar").toURI());<br>
- * <br>
- * </code>(or, alternatively)<code><br>
- * <br>
+ * <pre>{@code
+ * import org.glassfish.appclient.client.acc.AppClientContainer;
+ * import org.glassfish.appclient.client.acc.config.TargetServer;
+ * AppClientContainerBuilder builder = AppClientContainer.newBuilder(new TargetServer("localhost", 3700));
+ * AppClientContainer acc = builder.newContainer(new File("myAC.jar").toURI());
+ * }</pre>
+ * (or, alternatively)
+ * <pre>{@code
  * AppClientContainer acc = builder.newContainer(MyClient.class);<br>
- * <br>
- * <br</code>Then, <code><br>
- * <br>
- * acc.startClient(clientArgs);<br>
- * // The newContainer method returns as soon as the client's main method returns,<br>
- * // even if the client has started another thread or is using the AWT event<br>
- * // dispatcher thread
- * <br>
- * // At some later point, the program can synchronize with the app client in<br>
- * // a user-specified way at which point it could invoke<br>
- * <br>
- * acc.stop();<br>
- * <br>
- * </code>
+ * }</pre>
+ * Then,
+ * <pre>{@code
+ * acc.startClient(clientArgs);
+ * // The newContainer method returns as soon as the client's main method returns,
+ * // even if the client has started another thread or is using the AWT event
+ * // dispatcher thread.
+ * // At some later point, the program can synchronize with the app client in
+ * // a user-specified way at which point it could invoke
+ * acc.stop();
+ * }</pre>
  * <p>
  * Public methods on the Builder interfaces which set configuration information return the Builder object itself. This
  * allows the calling program to chain together several method invocations, such as
  * <p>
- * <code>
+ * <pre>{@code
  * AppClientContainerBuilder builder = AppClientContainer.newBuilder(...);<br>
  * builder.clientCredentials(myUser, myPass).logger(myLogger);<br>
- * </code>
+ * }</pre>
  *
  * @author tjquinn
  */

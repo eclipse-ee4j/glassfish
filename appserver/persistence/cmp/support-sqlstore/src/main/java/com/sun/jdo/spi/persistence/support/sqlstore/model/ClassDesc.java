@@ -195,6 +195,7 @@ public class ClassDesc
         fetchGroups = new ArrayList();
     }
 
+    @Override
     public String toString() {
         return getName();
     }
@@ -306,7 +307,9 @@ public class ClassDesc
 
     private void loadOidClass() {
 
-        if (oidClass != null) return;
+        if (oidClass != null) {
+            return;
+        }
 
         String keyClassName = pcElement.getKeyClass();
         String suffix = keyClassName.substring(keyClassName.length() - 4);
@@ -699,8 +702,9 @@ public class ClassDesc
                 theFields = fields;
             } else {
                 // It is possible to have hidden fields in the DFG.
-                if ((theFields = hiddenFields) == null)
+                if ((theFields = hiddenFields) == null) {
                     continue;
+                }
             }
 
             for (int j = 0; j < theFields.size(); j++) {
@@ -744,8 +748,9 @@ public class ClassDesc
 
     private void initializeKeyFields() {
         boolean debug = logger.isLoggable(Logger.FINEST);
-        if (oidClass == null)
+        if (oidClass == null) {
             return;
+        }
 
         keyFields = oidClass.getFields();
         keyFieldNames = new String[keyFields.length];
@@ -821,7 +826,7 @@ public class ClassDesc
     }
 
     /**
-     * Registers the version field <cod>versionField</code> with the
+     * Registers the version field <code>versionField</code> with the
      * corresponding table.
      *
      * @param versionField Field used in version consistency check.
@@ -937,7 +942,9 @@ public class ClassDesc
 
             ClassDesc foreignConfig = (ClassDesc) cache.getPersistenceConfig(classType);
 
-            if (foreignConfig == null) continue;
+            if (foreignConfig == null) {
+                continue;
+            }
 
             // Look up the inverse relationship field name if there is any.
             String irName = pcElement.getRelationship(ff.getName()).getInverseRelationshipName();
@@ -1086,14 +1093,17 @@ public class ClassDesc
         }
     }
 
+    @Override
     public Constructor getConstructor() {
         return constructor;
     }
 
+    @Override
     public Class getPersistenceCapableClass() {
         return pcClass;
     }
 
+    @Override
     public Class getOidClass() {
         return oidClass;
     }
@@ -1114,6 +1124,7 @@ public class ClassDesc
         return mdConfig.isNavigable();
     }
 
+    @Override
     public boolean hasVersionConsistency() {
         return mdConfig.getConsistencyLevel() == MappingClassElement.VERSION_CONSISTENCY;
     }
@@ -1202,6 +1213,7 @@ public class ClassDesc
      * Return the key fields as array of java.lang.reflect.Field instances.
      * @return The key fields as array of java.lang.reflect.Field instances.
      */
+    @Override
     public Field[] getKeyFields() {
         return keyFields;
     }
@@ -1210,6 +1222,7 @@ public class ClassDesc
      * Returns the key field names as array of String.
      * @return The key field names as array of String.
      */
+    @Override
     public String[] getKeyFieldNames() {
         return keyFieldNames;
     }
@@ -1423,6 +1436,7 @@ public class ClassDesc
      * fetch group.
      * @see SQLStateManager#requiresImmediateFlush
      */
+    @Override
     public boolean hasLocalNonDFGFields() {
         // All instances with modified DFG fields can be batched with
         // the same statement. If there's a primitive field outside
@@ -1496,7 +1510,7 @@ public class ClassDesc
 
     /**
      * Builds and initializes a new query plan based on the information
-     * passed with the <code>desc<//code> parameter. The returned plan
+     * passed with the <code>desc</code> parameter. The returned plan
      * and its related data structures will be readonly.
      *
      * @param store Store manager

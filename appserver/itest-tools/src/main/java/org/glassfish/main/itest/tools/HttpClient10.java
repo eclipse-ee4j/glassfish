@@ -90,7 +90,7 @@ public class HttpClient10 {
     public static class HttpResponse {
 
         /**
-         * Example: <code>HTTP/1.0 403 Forbidden</copde>
+         * Example: <code>HTTP/1.0 403 Forbidden</code>
          */
         public final String responseLine;
         /**

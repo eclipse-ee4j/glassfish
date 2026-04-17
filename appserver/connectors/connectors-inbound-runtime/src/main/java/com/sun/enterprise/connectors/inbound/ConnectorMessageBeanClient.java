@@ -347,8 +347,8 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      * Internally this method creates a message bean listener from the MDB
      * container and a proxy object fo delivering messages.
      *
-     * @return <code>MessageEndpoint</code> object.
-     * @throws <code>UnavailableException</code>
+     * @return {@link MessageEndpoint} object.
+     * @throws UnavailableException
      * In case of any failure. This
      * should change.
      */

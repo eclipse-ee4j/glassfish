@@ -342,7 +342,7 @@ public final class GFLauncherInfo {
 
     /**
      *
-     * @return a Map<String,String> of processed and packaged args
+     * @return a {@code Map<String,String>} of processed and packaged args
      * @throws com.sun.enterprise.admin.launcher.GFLauncherException
      */
     public Map<String, String> getArgs() throws GFLauncherException {

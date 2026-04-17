@@ -58,8 +58,8 @@ public class SecurityUtils {
      * @param subject <code>Subject</code>
      * @param connectionRequestInfo <code>ConnectionRequestInfo</code>
      * @return <code>PasswordCredential</code>
-     * @throws <code>ResourceException</code> generic exception if operation fails
-     * @throws <code>SecurityException</code> if access to the <code>Subject</code>
+     * @throws ResourceException generic exception if operation fails
+     * @throws SecurityException if access to the <code>Subject</code>
      * instance is denied
      */
     public static PasswordCredential getPasswordCredential(final ManagedConnectionFactory managedConnectionFactory, final Subject subject,

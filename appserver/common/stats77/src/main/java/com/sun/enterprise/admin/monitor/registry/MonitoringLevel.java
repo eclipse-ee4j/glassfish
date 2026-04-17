@@ -19,8 +19,9 @@ package com.sun.enterprise.admin.monitor.registry;
 /**
  * Provides enumerated constants related to various levels
  * at which monitoring could be set
- * @author  Shreedhar Ganapathy<mailto:shreedhar.ganapathy@sun.com>
- * @author  <a href="mailto:Kedar.Mhaswade@sun.com">Kedar Mhaswade</a>
+ *
+ * @author Shreedhar Ganapathy
+ * @author Kedar Mhaswade
  */
 public class MonitoringLevel {
 
@@ -37,6 +38,7 @@ public class MonitoringLevel {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return ( name );
     }
@@ -54,12 +56,13 @@ public class MonitoringLevel {
      * supported strings. The comparison is done case insensitively.
      */
     public static MonitoringLevel instance(String name) {
-        if (OFF.toString().equalsIgnoreCase(name))
+        if (OFF.toString().equalsIgnoreCase(name)) {
             return ( OFF );
-        else if (LOW.toString().equalsIgnoreCase(name))
+        } else if (LOW.toString().equalsIgnoreCase(name)) {
             return ( LOW );
-        else if (HIGH.toString().equalsIgnoreCase(name))
+        } else if (HIGH.toString().equalsIgnoreCase(name)) {
             return ( HIGH );
+        }
         return ( null );
     }
 
@@ -73,12 +76,15 @@ public class MonitoringLevel {
      * @return true if obj is a MonitoringLevel, and has the same name as this
      * MonitoringLevel object.
      */
+    @Override
     public boolean equals(Object obj) {
-    if (obj == this)
+    if (obj == this) {
         return true;
+    }
 
-    if (! (obj instanceof MonitoringLevel))
+    if (! (obj instanceof MonitoringLevel)) {
         return false;
+    }
 
     MonitoringLevel that = (MonitoringLevel) obj;
 
@@ -93,6 +99,7 @@ public class MonitoringLevel {
      *
      * @return Hash code value for this object.
      */
+    @Override
     public int hashCode() {
     return this.name.hashCode();
     }

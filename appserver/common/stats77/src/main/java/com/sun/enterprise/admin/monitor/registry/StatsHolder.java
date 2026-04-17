@@ -31,7 +31,7 @@ import org.glassfish.j2ee.statistics.Stats;
  * changed from OFF to LOW or HIGH, the MBean is registered with an
  * MBeanServer. Calls made to the MBean are delegated to this object
  * which in turn delegates it to underlying Stats object.
- * @author  Shreedhar Ganapathy <mailto:shreedhar.ganapathy@sun.com>
+ * @author  Shreedhar Ganapathy
  */
 public interface StatsHolder {
     /**

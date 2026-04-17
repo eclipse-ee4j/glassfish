@@ -57,7 +57,6 @@ import org.omg.CosTransactions.Vote;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -82,11 +81,8 @@ class CoordinatorTerm implements CompletionHandler {
 
     /**Default CoordinatorTerm constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     CoordinatorTerm() {
     }
@@ -103,9 +99,7 @@ class CoordinatorTerm implements CompletionHandler {
      * @param coord    The Coordinator for the transaction.
      * @param subtran  The subtransaction indicator.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorTerm( CoordinatorImpl coord,
         boolean         subtran ) {
@@ -138,7 +132,6 @@ class CoordinatorTerm implements CompletionHandler {
      *
      * @param promptReturn  Indicates whether to return promptly.
      *
-     * @return
      *
      * @exception TRANSACTION_ROLLEDBACK  The transaction could not be committed and
      *                                   has been rolled back.
@@ -150,7 +143,6 @@ class CoordinatorTerm implements CompletionHandler {
      * @exception SystemException  An error occurred calling another object.
      * @exception LogicErrorException  An internal logic error occurred.
      *
-     * @see
      */
     void commit( boolean promptReturn )
         throws HeuristicMixed, HeuristicHazard, TRANSACTION_ROLLEDBACK,
@@ -428,9 +420,7 @@ class CoordinatorTerm implements CompletionHandler {
      * Uses a private interface to pass the Terminator's rollback request on to
      * the Coordinator.
      *
-     * @param
      *
-     * @return
      *
      * @exception HeuristicHazard  Heuristic action may have been taken by a
      *                             participant in the transaction.
@@ -440,7 +430,6 @@ class CoordinatorTerm implements CompletionHandler {
      * @exception SystemException  An error occurred calling another object.
      * @exception LogicErrorException  An internal logic error occurred.
      *
-     * @see
      */
     void rollback()
         throws HeuristicMixed, HeuristicHazard, SystemException,
@@ -555,9 +544,7 @@ class CoordinatorTerm implements CompletionHandler {
      * @param aborted          Indicates whether the transaction locally aborted.
      * @param heuristicDamage  Indicates local heuristic damage.
      *
-     * @return
      *
-     * @see
      */
 
     public void setCompleted( boolean aborted,
@@ -588,11 +575,8 @@ class CoordinatorTerm implements CompletionHandler {
 
     /**Dumps the state of the object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void dump() {
     }

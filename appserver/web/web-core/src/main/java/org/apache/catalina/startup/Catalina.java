@@ -48,7 +48,7 @@ import org.xml.sax.InputSource;
  *     "catalina.base" system property.   [conf/server.xml]
  * <li><b>-help</b> - Display usage information.
  * <li><b>-stop</b> - Stop the currently running instance of Catalina.
- * </u>
+ * </ul>
  *
  * Should do the same thing as Embedded, but using a server.xml file.
  *
@@ -135,6 +135,7 @@ public class Catalina extends Embedded {
      *
      * @param server The new server
      */
+    @Override
     public void setServer(Server server) {
         this.server = server;
     }
@@ -230,8 +231,9 @@ public class Catalina extends Embedded {
     protected File configFile() {
 
         File file = new File(configFile);
-        if (!file.isAbsolute())
+        if (!file.isAbsolute()) {
             file = new File(System.getProperty("catalina.base"), configFile);
+        }
         return (file);
 
     }
@@ -244,8 +246,9 @@ public class Catalina extends Embedded {
         long t1=System.currentTimeMillis();
         // Initialize the digester
         Digester digester = new Digester();
-        if (debug>0)
+        if (debug>0) {
             digester.setDebug(debug);
+        }
         digester.setValidating(false);
         digester.setClassLoader(standardServerClassLoader);
 
@@ -331,8 +334,9 @@ public class Catalina extends Embedded {
                                                       parentClassLoader));
 
         long t2=System.currentTimeMillis();
-        if (log.isLoggable(Level.FINE))
+        if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Digester for server.xml created " + ( t2-t1 ));
+        }
         return (digester);
 
     }
@@ -345,8 +349,9 @@ public class Catalina extends Embedded {
 
         // Initialize the digester
         Digester digester = new Digester();
-        if (debug>0)
+        if (debug>0) {
             digester.setDebug(debug);
+        }
 
         // Configure the rules we need for shutting down
         digester.addObjectCreate("Server",
@@ -401,8 +406,9 @@ public class Catalina extends Embedded {
             socket = new Socket("127.0.0.1", server.getPort());
             stream = socket.getOutputStream();
             String shutdown = server.getShutdown();
-            for (int i = 0; i < shutdown.length(); i++)
+            for (int i = 0; i < shutdown.length(); i++) {
                 stream.write(shutdown.charAt(i));
+            }
             stream.flush();
         } catch (IOException e) {
             log.log(Level.SEVERE, LogFacade.CATALINA_STOP_EXCEPTION, e);
@@ -431,6 +437,7 @@ public class Catalina extends Embedded {
      * working directory if it has not been set.
      * @deprecated Use initDirs()
      */
+    @Deprecated
     public void setCatalinaBase() {
         initDirs();
     }
@@ -440,6 +447,7 @@ public class Catalina extends Embedded {
      * working directory if it has not been set.
      * @deprecated Use initDirs()
      */
+    @Deprecated
     public void setCatalinaHome() {
         initDirs();
     }
@@ -542,8 +550,9 @@ public class Catalina extends Embedded {
         setCatalinaHome();
         setCatalinaBase();
         try {
-            if (arguments(args))
+            if (arguments(args)) {
                 load();
+            }
         } catch (Exception e) {
             log.log(Level.WARNING, LogFacade.ERROR_LOADING_CONFIGURATION_EXCEPTION, e);
         }
@@ -553,6 +562,7 @@ public class Catalina extends Embedded {
 
     }
 
+    @Override
     public void destroy() {
 
     }
@@ -560,6 +570,7 @@ public class Catalina extends Embedded {
     /**
      * Start a new server instance.
      */
+    @Override
     public void start() {
 
         if (server == null) {
@@ -603,6 +614,7 @@ public class Catalina extends Embedded {
     /**
      * Stop an existing server instance.
      */
+    @Override
     public void stop() {
 
         try {
@@ -661,6 +673,7 @@ public class Catalina extends Embedded {
             super("GlassFish Catalina Shutdown Hook");
         }
 
+        @Override
         public void run() {
 
             if (server != null) {
@@ -693,10 +706,12 @@ final class SetParentClassLoaderRule extends Rule {
 
     ClassLoader parentClassLoader = null;
 
+    @Override
     public void begin(Attributes attributes) throws Exception {
 
-        if (digester.getDebug() >= 1)
+        if (digester.getDebug() >= 1) {
             digester.log("Setting parent class loader");
+        }
 
         Container top = (Container) digester.peek();
         top.setParentClassLoader(parentClassLoader);

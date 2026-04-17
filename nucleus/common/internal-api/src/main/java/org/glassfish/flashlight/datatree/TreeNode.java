@@ -99,7 +99,7 @@ public interface TreeNode extends TreeElement {
     public List<TreeNode> getNodes (String pattern, boolean ignoreDisabled, boolean gfv2Compatible);
 
     /**
-     * Behaves as {@link #getNodes (String, boolean, boolean) with ignoreDisabled set to true
+     * Behaves as {@link #getNodes(String, boolean, boolean)} with ignoreDisabled set to true
      * and gfV2Compatible set to true
      * Pattern is considered to be a GFV2 Compatible Pattern
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -400,11 +400,13 @@ public class ConfigSupport implements ConfigurationUtilities {
         }
     }
 
+
     /**
      * Returns the list of sub-elements supported by a ConfigBean
+     *
      * @return array of classes reprensenting the sub elements of a particular
-     * @throws ClassNotFoundException for severe errors with the model associated
-     * with the passed config bean.
+     * @throws ClassNotFoundException for severe errors with the model associated with the passed
+     *             config bean.
      */
     public static Class<?>[] getSubElementsTypes(ConfigBean bean)
         throws ClassNotFoundException {
@@ -462,11 +464,13 @@ public class ConfigSupport implements ConfigurationUtilities {
      * a TransactionFailure when the creation or settings of attributes failed.
      *
      * Example creating a new http-listener element under http-service
+     * <pre>{@code
      *      ConfigBean httpService = ... // got it from somwhere.
      *      Map<String, String> attributes = new HashMap<String, String>();
      *      attributes.put("id", "jerome-listener");
      *      attributes.put("enabled", "true");
      *      ConfigSupport.createAndSet(httpService, HttpListener.class, attributes);
+     * }</pre>
      *
      * @param parent parent config bean to which the child will be added.
      * @param childType child type
@@ -493,11 +497,13 @@ public class ConfigSupport implements ConfigurationUtilities {
      * a TransactionFailure when the creation or settings of attributes failed.
      *
      * Example creating a new http-listener element under http-service
+     * <pre>{@code
      *      ConfigBean httpService = ... // got it from somwhere.
      *      Map<String, String> attributes = new HashMap<String, String>();
      *      attributes.put("id", "jerome-listener");
      *      attributes.put("enabled", "true");
      *      ConfigSupport.createAndSet(httpService, HttpListener.class, attributes);
+     * }</pre>
      *
      * @param parent parent config bean to which the child will be added.
      * @param childType child type
@@ -545,11 +551,13 @@ public class ConfigSupport implements ConfigurationUtilities {
      * a TransactionFailure when the creation or settings of attributes failed.
      *
      * Example creating a new http-listener element under http-service
+     * <pre>{@code
      *      ConfigBean httpService = ... // got it from somwhere.
      *      Map<String, String> attributes = new HashMap<String, String>();
      *      attributes.put("id", "jerome-listener");
      *      attributes.put("enabled", "true");
      *      ConfigSupport.createAndSet(httpService, HttpListener.class, attributes);
+     * }</pre>
      *
      * @param parent parent config bean to which the child will be added.
      * @param childType child type

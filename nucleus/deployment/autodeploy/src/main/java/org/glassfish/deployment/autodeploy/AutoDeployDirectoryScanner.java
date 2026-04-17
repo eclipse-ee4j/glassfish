@@ -14,13 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * DirectoryScanner.java
- *
- *
- * Created on February 19, 2003, 10:17 AM
- */
-
 package org.glassfish.deployment.autodeploy;
 
 import java.io.File;
@@ -33,13 +26,13 @@ import java.util.logging.Logger;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
- * Implementation of Directory scanner for autodeployment  </br>
- * Providing functionality for scanning the input source directory  </br>
- * and return the list of deployable components for autodeployment.</br>
- * Provide the list of deployable modules/application, depending upon the "type" entry </br>
+ * Implementation of Directory scanner for autodeployment
+ * Providing functionality for scanning the input source directory
+ * and return the list of deployable components for autodeployment.
+ * Provide the list of deployable modules/application, depending upon the "type" entry
  * passed to getAllDeployableEntity(File autodeployDir, String type).
  *
- *@author vikas
+ * @author vikas 2003
  */
 public class AutoDeployDirectoryScanner implements DirectoryScanner{
 
@@ -52,19 +45,21 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
     public AutoDeployDirectoryScanner() {
     }
 
-     public void deployedEntity(File autodeployDir, File deployedEntity) {
-         try {
-         AutoDeployedFilesManager adfm = AutoDeployedFilesManager.loadStatus(autodeployDir);
-         adfm.setDeployedFileInfo(deployedEntity);
-         adfm.writeStatus();
-         } catch (Exception e) {
-             printException(e);
-             // Do nothing
-         }
+    @Override
+    public void deployedEntity(File autodeployDir, File deployedEntity) {
+        try {
+            AutoDeployedFilesManager adfm = AutoDeployedFilesManager.loadStatus(autodeployDir);
+            adfm.setDeployedFileInfo(deployedEntity);
+            adfm.writeStatus();
+        } catch (Exception e) {
+            printException(e);
+            // Do nothing
+        }
 
-     }
+    }
 
-     public void undeployedEntity(File autodeployDir, File undeployedEntity) {
+    @Override
+    public void undeployedEntity(File autodeployDir, File undeployedEntity) {
          try {
          AutoDeployedFilesManager adfm = AutoDeployedFilesManager.loadStatus(autodeployDir);
          adfm.deleteDeployedFileInfo(undeployedEntity);
@@ -80,6 +75,7 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
      * @param autodeployDir
      * @return
      */
+    @Override
     public boolean hasNewDeployableEntity(File autodeployDir) {
         boolean newFilesExist=false;
             try {
@@ -97,6 +93,7 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
 
     }
     // this should never be called from system dir autodeploy code...
+    @Override
     public File[] getAllFilesForUndeployment(File autodeployDir, boolean includeSubdir) {
 
         try {
@@ -112,6 +109,7 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
      * Get the list of all deployable files
      * @param autodeployDir
      * @return  */
+    @Override
     public File[] getAllDeployableModules(File autodeployDir, boolean includeSubDir) {
 
         AutoDeployedFilesManager adfm = null;

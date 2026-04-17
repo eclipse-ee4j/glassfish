@@ -66,7 +66,6 @@ import org.omg.CORBA.ORB;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -134,7 +133,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  state for the given log location.
      *
-     * @see
      */
     static private CoordinatorLogStateHolder getStateHolder(String str) {
         synchronized (logStateHoldertable) {
@@ -158,11 +156,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 
     /**Default CoordinatorLog constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     CoordinatorLog() {
 
@@ -189,11 +184,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 
     /**Default CoordinatorLog destructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized public void doFinalize() {
 
@@ -227,11 +219,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *         outstanding references to the object being finalized.
      *
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized private void reUse() {            // Arun 9/27/99
 
@@ -289,9 +278,7 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @param localTID  The local transaction identifier.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorLog( Long localTID ) {
 
@@ -318,7 +305,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  An object representing the section.
      *
-     * @see
      */
     synchronized java.lang.Object createSection( String sectionName ) {
 
@@ -353,7 +339,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
 
     synchronized boolean addObject( java.lang.Object sectionObj,
@@ -415,7 +400,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
 
     synchronized boolean addData( java.lang.Object sectionObj,
@@ -487,7 +471,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean write( boolean force ) {
 
@@ -509,11 +492,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      * If the CoordinatorLog has state that has previously been written, it records
      * the requirement to rewrite, otherwise it does not record the requirement.
      *
-     * @param
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     private synchronized boolean requireRewrite() {
         boolean result = true;
@@ -540,11 +521,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      * <p>
      * This operation discharges the CoordinatorLog's requirement to rewrite.
      *
-     * @param
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
 
     private boolean rewrite() {
@@ -579,7 +558,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     private boolean reconstruct( DataInputStream dataInput )
         throws IOException {
@@ -673,7 +651,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  The objects.
      *
-     * @see
      */
     java.lang.Object[] getObjects( java.lang.Object sectionObj ) {
         java.lang.Object[] result = null;
@@ -780,7 +757,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  The data.
      *
-     * @see
      */
 
     byte[][] getData( java.lang.Object sectionObj ) {
@@ -822,9 +798,7 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @param localTID  The new local identifier.
      *
-     * @return
      *
-     * @see
      */
     synchronized void setLocalTID( Long localTID ) {
 
@@ -865,11 +839,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      * @param rewrite     Indicates if the record is being rewritten.
      * @param dataOutput  The stream to which to data is output.
      *
-     * @return
      *
      * @exception IOException  The format failed.
      *
-     * @see
      */
     private void formatSection( CoordinatorLogSection section,
         boolean               rewrite,
@@ -992,7 +964,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @exception IOException  The format failed.
      *
-     * @see
      */
     private boolean formatLogRecords( boolean forced )
         throws IOException {
@@ -1059,11 +1030,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 
     /**Provides static initialisation of the CoordinatorLog class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static {
 
@@ -1082,11 +1050,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      * <p>
      * If the log has already been opened, the operation uses the opened LogFile.
      *
-     * @param
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     private static boolean openLog() {
         boolean result = false;
@@ -1137,11 +1103,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      * <p>
      * If the log has already been opened, the operation uses the opened LogFile.
      *
-     * @param
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     private static boolean openLog(String logPath) {
         boolean result = false;
@@ -1191,11 +1155,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
     /**Process the log to build a sequence of CoordinatorLog objects which
      * represent all logged transactions.
      *
-     * @param
      *
      * @return  The CoordinatorLog objects, or null if there are none.
      *
-     * @see
      */
     synchronized static Enumeration getLogged() {
 
@@ -1260,11 +1222,9 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
     /**Process the log to build a sequence of CoordinatorLog objects which
      * represent all logged transactions.
      *
-     * @param
      *
      * @return  The CoordinatorLog objects, or null if there are none.
      *
-     * @see
      */
     synchronized static Enumeration getLogged(String logPath) {
 
@@ -1335,7 +1295,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     private static boolean addLog(Long localTID,
         CoordinatorLog clog ) {
@@ -1365,7 +1324,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     synchronized static boolean removeLog( Long localTID ) {
 
@@ -1468,11 +1426,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      * operation to block other logging operations.  The start of the keypoint is
      * in a separate method which is synchronized.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static void keypoint() {
         CoordinatorLogStateHolder logStateHolder = defaultLogStateHolder;
@@ -1645,9 +1600,7 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @param reason  The reason for the upcall.
      *
-     * @return
      *
-     * @see
      */
 
     public void upcall( int reason ){
@@ -1662,11 +1615,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 
     /**Destroys the state of the CoordinatorLog class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
 
     synchronized static void finalizeAll(){
@@ -1753,7 +1703,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
      *
      * @return  Indicates whether keypoint is required.
      *
-     * @see
      */
 
     synchronized static boolean startKeypoint( LogLSN keypointStartLSN ) {
@@ -1892,11 +1841,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 
     /**Dumps the state of the class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
 
     static void dumpClass() {
@@ -1922,7 +1868,6 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 // CHANGE HISTORY
 //
@@ -1943,9 +1888,7 @@ class CoordinatorLogSection extends java.lang.Object {
      *
      * @param sectionName  The name of the section.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorLogSection( String sectionName ) {
         this.sectionName = sectionName;
@@ -1953,11 +1896,8 @@ class CoordinatorLogSection extends java.lang.Object {
 
     /**Destroys the contents of a CoordinatorLogSection.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void doFinalize() {
         if( unwrittenObjects != null )
@@ -1991,11 +1931,8 @@ class CoordinatorLogSection extends java.lang.Object {
      *         finalize also does not ensure that there are no
      *         outstanding references to the object being finalized.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized void reUse() {            // Arun 9/27/99
 
@@ -2030,7 +1967,6 @@ class CoordinatorLogSection extends java.lang.Object {
  *
  * @author Arun Krishnan
  *
- * @see
  */
 
 class SectionPool {

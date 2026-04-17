@@ -67,7 +67,6 @@ import org.omg.CosTransactions.otid_t;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -109,11 +108,8 @@ public class CurrentTransaction {
 
     /**Initialises the static state of the CurrentTransaction class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static  void initialise() {
 
@@ -138,7 +134,6 @@ public class CurrentTransaction {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     static boolean setCurrent(ControlImpl control, boolean stack) {
         boolean result = false;
@@ -241,7 +236,6 @@ public class CurrentTransaction {
      *
      * @return  The current Control object.
      *
-     * @see
      */
     static ControlImpl endCurrent( boolean unstack ) {
 
@@ -348,7 +342,6 @@ public class CurrentTransaction {
      *
      * @return  The current Control object.
      *
-     * @see
      */
     private static ControlImpl
     endAborted( boolean[/*1*/] aborted, boolean endAssociation) {
@@ -431,9 +424,7 @@ public class CurrentTransaction {
      *
      * @param control  The Control object which has been suspended.
      *
-     * @return
      *
-     * @see
      */
     static void addSuspended( ControlImpl control ) {
         if(statsOn)
@@ -448,7 +439,6 @@ public class CurrentTransaction {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     static boolean removeSuspended( ControlImpl control ) {
         boolean result = true;
@@ -463,12 +453,10 @@ public class CurrentTransaction {
      * under which the operation was invoked. If there is no such association the
      * null value is returned.
      *
-     * @param
      *
      * @return  The current Control object.
      *
      *
-     * @see
      */
     public static ControlImpl getCurrent()
         throws TRANSACTION_ROLLEDBACK {
@@ -488,7 +476,6 @@ public class CurrentTransaction {
      * Note that this operation can be optimised so that the Coordinator reference is
      * stored along with the Control reference when the thread association is set up.
      *
-     * @param
      *
      * @return  The current Coordinator.
      *
@@ -496,7 +483,6 @@ public class CurrentTransaction {
      *   back.
      * @exception Unavailable  The Coordinator object is not available.
      *
-     * @see
      */
     static Coordinator getCurrentCoordinator()
         throws TRANSACTION_ROLLEDBACK, Unavailable {
@@ -542,7 +528,6 @@ public class CurrentTransaction {
      *
      * @return  The number of active thread associations.
      *
-     * @see
      */
     static int numActive( Long           localTID,
         boolean[/*1*/] outstanding ) {
@@ -587,9 +572,7 @@ public class CurrentTransaction {
      *
      * @param obj  The StaticResource being registered.
      *
-     * @return
      *
-     * @see
      */
     synchronized static void registerStatic( StaticResource obj ) {
 
@@ -607,11 +590,9 @@ public class CurrentTransaction {
     /**Returns all the transactions in the system that are currently suspended
      * in the form of a sequence of Control objects.
      *
-     * @param
      *
      * @return  The list of suspended Control objects.
      *
-     * @see
      */
     static Control[] getSuspendedTransactions() {
 
@@ -641,11 +622,9 @@ public class CurrentTransaction {
     /**Returns all the transactions in the system that are currently running
      * (i.e. not suspended) in the form of a sequence of Control objects.
      *
-     * @param
      *
      * @return  The list of running Control objects.
      *
-     * @see
      */
     static Control[] getRunningTransactions() {
         if(!statsOn){
@@ -674,11 +653,9 @@ public class CurrentTransaction {
     /**Returns all the transactions in the system that are currently running
      * or suspended in the form of a sequence of Control objects.
      *
-     * @param
      *
      * @return  The list of all Control objects.
      *
-     * @see
      */
     static Control[] getAllTransactions() {
 
@@ -718,14 +695,12 @@ public class CurrentTransaction {
      * @param id      The request identifier.
      * @param holder  The completed context object.
      *
-     * @return
      *
      * @exception TRANSACTION_ROLLEDBACK  The current transaction has been rolled
      *   back.  The message should not be sent and TRANSACTION_ROLLEDBACK should
      *   be returned to the caller.
      * @exception TRANSACTION_REQUIRED  There is no current transaction.
      *
-     * @see
      */
     static void sendingRequest( int id,
         PropagationContextHolder holder )
@@ -823,12 +798,10 @@ public class CurrentTransaction {
      * @param context  The PropagationContext from the message.
      * @param ex       The exception on the message.
      *
-     * @return
      *
      * @exception WrongTransaction  The context returned on the reply is for a
      *   different transaction from the current one on the thread.
      *
-     * @see
      */
     static void receivedReply( int id,
         PropagationContext context,
@@ -944,9 +917,7 @@ public class CurrentTransaction {
      * @param id       The request identifier.
      * @param context  The PropagationContext from the message.
      *
-     * @return
      *
-     * @see
      */
     static void receivedRequest( int id,
         PropagationContext context ) {
@@ -1010,7 +981,6 @@ public class CurrentTransaction {
      * @exception TRANSACTION_ROLLEDBACK  The current transaction has already been
      *   rolled back.
      *
-     * @see
      */
     static void sendingReply( int id,
         PropagationContextHolder holder )
@@ -1274,9 +1244,7 @@ public class CurrentTransaction {
      * @param globalTID  The global transaction identifier.
      * @param aborted    Indicates whether the transaction has aborted.
      *
-     * @return
      *
-     * @see
      */
     //not used anywhere
     synchronized static void endAll( GlobalTID globalTID,
@@ -1331,9 +1299,7 @@ public class CurrentTransaction {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     static void shutdown( boolean immediate ) {
 
@@ -1342,11 +1308,8 @@ public class CurrentTransaction {
 
     /**Dumps the static state of the class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static void dump() {
     }
@@ -1356,9 +1319,7 @@ public class CurrentTransaction {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     /*
       static

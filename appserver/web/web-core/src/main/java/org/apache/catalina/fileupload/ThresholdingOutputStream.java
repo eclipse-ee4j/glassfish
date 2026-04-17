@@ -38,7 +38,7 @@ import java.io.OutputStream;
  * is actually reached, since it triggers when a pending write operation would
  * cause the threshold to be exceeded.
  *
- * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
+ * @author Martin Cooper
  *
  * @version $Id: ThresholdingOutputStream.java 540714 2007-05-22 19:39:44Z niallp $
  */

@@ -29,13 +29,13 @@ import java.io.InputStream;
  * received within a <code>multipart/form-data</code> POST request.
  * The items contents are retrieved by calling {@link #openStream()}.</p>
  * <p>Instances of this class are created by accessing the
- * iterator, returned by * {@link RequestItemIterator()}.</p>
+ * iterator, returned by * {@link RequestItemIterator}.</p>
  *
  * Original authors from org.apache.common.fileupload.FileItem:
- * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
- * @author <a href="mailto:sean@informage.net">Sean Legassick</a>
- * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
- * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
+ * @author Rafal Krzewski
+ * @author Sean Legassick
+ * @author Jason van Zyl
+ * @author Martin Cooper
  *
  * Adopted for Glassfish:
  * @author Kin-man Chung
@@ -50,7 +50,6 @@ interface RequestItem {
      * @throws IllegalStateException The method was already invoked on
      * this item. It is not possible to recreate the data stream.
      * @throws IOException An I/O error occurred.
-     * @see ItemSkippedException
      */
     InputStream openStream() throws IOException;
 

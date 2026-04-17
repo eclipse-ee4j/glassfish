@@ -51,23 +51,23 @@ import org.glassfish.main.jdke.props.SystemProperties;
  *
  * <p>with the following replacement contents:
  * <ul>
- * <li><strong>${options}</strong> - Command line options for this Tool wrapper.
+ *   <li><strong>${options}</strong> - Command line options for this Tool wrapper.
  *     The following options are supported:
  *     <ul>
- *     <li><em>-ant</em> : Set the <code>ant.home</code> system property
+ *       <li><em>-ant</em> : Set the <code>ant.home</code> system property
  *         to corresponding to the value of <code>catalina.home</code>
  *         (useful when your command line tool runs Ant).</li>
- *     <li><em>-common</em> : Add <code>common/classes</code> and
- *         <code>common/lib</codE) to the class loader repositories.</li>
- *     <li><em>-debug</em> : Enable debugging messages from this wrapper.</li>
- *     <li><em>-server</em> : Add <code>server/classes</code> and
+ *       <li><em>-common</em> : Add <code>common/classes</code> and
+ *         <code>common/lib</code> to the class loader repositories.</li>
+ *       <li><em>-debug</em> : Enable debugging messages from this wrapper.</li>
+ *       <li><em>-server</em> : Add <code>server/classes</code> and
  *         <code>server/lib</code> to the class loader repositories.</li>
- *     <li><em>-shared</em> : Add <code>shared/classes</code> and
+ *       <li><em>-shared</em> : Add <code>shared/classes</code> and
  *         <code>shared/lib</code> to the class loader repositories.</li>
  *     </ul>
- * <li><strong>${classname}</strong> - Fully qualified Java class name of the
+ *  <li><strong>${classname}</strong> - Fully qualified Java class name of the
  *     application's main class.</li>
- * <li><strong>${arguments}</strong> - Command line arguments to be passed to
+ *  <li><strong>${arguments}</strong> - Command line arguments to be passed to
  *     the application's <code>main()</code> method.</li>
  * </ul>
  *

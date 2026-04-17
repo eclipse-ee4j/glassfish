@@ -49,7 +49,6 @@ import org.omg.CosTransactions.SubtransactionAwareResourceHelper;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 
 //----------------------------------------------------------------------------
@@ -100,11 +99,8 @@ class SuperiorInfo {
     /**
      * Default SuperiorInfo constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     SuperiorInfo() { }
 
@@ -121,9 +117,7 @@ class SuperiorInfo {
      * @param superior   The superior Coordinator reference (may be null).
      * @param log        The CoordinatorLog object (may be null).
      *
-     * @return
      *
-     * @see
      */
     SuperiorInfo(Long localTID, GlobalTID globalTID,
                  Coordinator superior, CoordinatorLog log) {
@@ -153,11 +147,8 @@ class SuperiorInfo {
     /**
      * Cleans up the objects state.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void doFinalize() {
 
@@ -204,9 +195,7 @@ class SuperiorInfo {
      * @param log    The CoordinatorLog object for the transaction.
      * @param coord  The Coordinator object recreated after recovery.
      *
-     * @return
      *
-     * @see
      */
     void reconstruct(CoordinatorLog log, CoordinatorImpl coord) {
 
@@ -361,9 +350,7 @@ class SuperiorInfo {
      *
      * @param rec  The RecoveryCoordinator from the superior.
      *
-     * @return
      *
-     * @see
      */
     void setRecovery(RecoveryCoordinator rec) {
 
@@ -383,9 +370,7 @@ class SuperiorInfo {
      *
      * @param res  The CoordinatorResource registered with the superior.
      *
-     * @return
      *
-     * @see
      */
     void setResource(SubtransactionAwareResource res) {
 
@@ -403,11 +388,9 @@ class SuperiorInfo {
     /**
      * Returns the number of retries so far, and increments the count.
      *
-     * @param
      *
      * @return  The number of retries so far.
      *
-     * @see
      */
     int resyncRetries() {
 

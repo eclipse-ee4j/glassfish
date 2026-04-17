@@ -65,7 +65,6 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -111,9 +110,7 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * @param coord      The Coordinator for the transaction.
      * @param subtran    Subtransaction indicator.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorResourceImpl( GlobalTID       globalTID,
                              CoordinatorImpl coord,
@@ -142,7 +139,6 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * @param aborted          Indicates the transaction aborted.
      * @param heuristicDamage  Indicates heuristic damage occurred.
      *
-     * @return
      *
      * @see CompletionHandler
      */
@@ -164,7 +160,6 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * <p>
      * The result from the Coordinator is returned to the caller.
      *
-     * @param
      *
      * @return  The Coordinators vote.
      *
@@ -258,9 +253,7 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * If the Coordinator does not raise any heuristic exception, the
      * CoordinatorResourceImpl destroys itself.
      *
-     * @param
      *
-     * @return
      *
      * @exception HeuristicRollback  The transaction has already been rolled back.
      * @exception HeuristicMixed  At least one participant in the transaction has
@@ -368,9 +361,7 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * Coordinator did not raise any heuristic exception, the CoordinatorResourceImpl
      * destroys itself.
      *
-     * @param
      *
-     * @return
      *
      * @exception TRANSACTION_ROLLEDBACK  The transaction could not be committed and
      *                                   has been rolled back.
@@ -521,9 +512,7 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * If the Coordinator does not raise any heuristic exception, the
      * CoordinatorResourceImpl destroys itself.
      *
-     * @param
      *
-     * @return
      *
      * @exception HeuristicCommit  The transaction has already been committed.
      * @exception HeuristicMixed  At least one participant in the transaction has
@@ -620,14 +609,11 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * Informs the CoordinatorResourceImpl that it does not need to retain heuristic
      * information any longer.
      *
-     * @param
      *
-     * @return
      *
      * @exception  SystemException  An error occurred.  The minor code indicates
      *                              the reason for the exception.
      *
-     * @see
      */
     public void forget() throws SystemException {
 
@@ -654,14 +640,12 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      *
      * @param parent  The parent Coordinator reference.
      *
-     * @return
      *
      * @exception TRANSACTION_ROLLEDBACK  The transaction could not be committed
      *                                   and some parts may have rolled back.
      * @exception SystemException  An error occurred.  The minor code indicates
      *                             the reason for the exception.
      *
-     * @see
      */
     public void commit_subtransaction( Coordinator parent )
         throws TRANSACTION_ROLLEDBACK, SystemException {
@@ -741,14 +725,11 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      * The result from the SubCoordinator is returned to the caller. The
      * CoordinatorResourceImpl destroys itself.
      *
-     * @param
      *
-     * @return
      *
      * @exception SystemException  An error occurred.  The minor code indicates
      *                             the reason for the exception.
      *
-     * @see
      */
 
     public void rollback_subtransaction() throws SystemException {
@@ -800,9 +781,7 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      *
      * @param key  The key for the object.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorResourceImpl( byte[] key ) {
 
@@ -840,11 +819,9 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
 
     /**Returns the CORBA Object which represents this object.
      *
-     * @param
      *
      * @return  The CORBA object.
      *
-     * @see
      */
     CoordinatorResource object() {
         if( thisRef == null ) {
@@ -896,11 +873,8 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
 
     /**Destroys the CoordinatorResourceImpl object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void destroy() {
 
@@ -938,22 +912,16 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
 
     /**Dumps the state of the object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void dump() {
     }
 
     /**Makes sure this object is set as the Coordinator Terminator
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void makeSureSetAsTerminator() {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,8 +50,8 @@ import java.util.Properties;
  * Currently there is only one version supported.  The lines following
  * the version spec must be in the format of a properties file, with the convention
  * that each property name is (category).(property-within-category)=value
- * The {@link InputReader} returned will return a Map<String,Properties> from
- * its {@link InputReader#settings() } method.  The map will contain one entry for
+ * The {@link InputReader} returned will return a {@code Map<String,Properties>} from
+ * its {@link InputReader#settings()} method. The map will contain one entry for
  * each category in the input, and the associated Properties object will map each
  * property-within-category to its value.
  *

@@ -38,7 +38,6 @@ package com.sun.jts.CosTransactions;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -57,9 +56,7 @@ class LogicErrorException extends Exception {
      *
      * @param reason  The reason identifier.
      *
-     * @return
      *
-     * @see
      */
     LogicErrorException(String reason) {
         super();
@@ -68,11 +65,9 @@ class LogicErrorException extends Exception {
     /**
      * Converts the LogicErrorException to a string.
      *
-     * @param
      *
      * @return  The string representation.
      *
-     * @see
      */
     public String toString() {
         return super.toString() + ", reason("/*#Frozen*/ + reason + ")"/*#Frozen*/;

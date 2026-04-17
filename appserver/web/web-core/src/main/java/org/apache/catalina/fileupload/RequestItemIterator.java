@@ -39,11 +39,11 @@ import org.glassfish.grizzly.utils.Charsets;
  * <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
  *
  * Original authors from org.apache.common.fileupload:
- * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
+ * @author Rafal Krzewski
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
+ * @author Jason van Zyl
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
+ * @author Martin Cooper
  * @author Sean C. Sullivan
  *
  * Adopted for glassfish:

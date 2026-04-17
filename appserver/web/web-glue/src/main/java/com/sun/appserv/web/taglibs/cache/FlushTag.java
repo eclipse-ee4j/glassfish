@@ -34,10 +34,14 @@ import org.glassfish.web.LogFacade;
  * identified by the key.
  *
  * Usage Example:
- * <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %>
- * <ias:flush key="<%= cacheKey %>" />
+ * <pre>
+ * {@code <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %>}
+ * {@code <ias:flush key="<%= cacheKey %>" />}
+ * </pre>
  */
 public class FlushTag extends TagSupport {
+    private static final long serialVersionUID = 1L;
+
     /**
      * The key for the cache entry that needs to be flushed.
      */
@@ -63,6 +67,7 @@ public class FlushTag extends TagSupport {
      * @throws JspException the standard exception thrown
      * @return SKIP_BODY since the tag should be empty
      */
+    @Override
     public int doStartTag()
         throws JspException
     {
@@ -77,14 +82,16 @@ public class FlushTag extends TagSupport {
             // remove the entry for the key
             cache.remove(key);
 
-            if (_logger.isLoggable(Level.FINE))
+            if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, LogFacade.FLUSH_TAG_CLEAR_KEY, key);
+            }
         } else {
             // clear the entire cache
             cache.clear();
 
-            if (_logger.isLoggable(Level.FINE))
+            if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, LogFacade.FLUSH_TAG_CLEAR_CACHE);
+            }
         }
 
         return SKIP_BODY;
@@ -96,6 +103,7 @@ public class FlushTag extends TagSupport {
      * @throws JspException the standard exception thrown
      * @return always returns EVAL_PAGE since we want the entire jsp evaluated
      */
+    @Override
     public int doEndTag()
         throws JspException
     {
@@ -112,8 +120,9 @@ public class FlushTag extends TagSupport {
      * This is set a key for the cache element that needs to be cleared
      */
     public void setKey(String key) {
-        if (key != null && key.length() > 0)
+        if (key != null && key.length() > 0) {
             _key = key;
+        }
     }
 
     /**

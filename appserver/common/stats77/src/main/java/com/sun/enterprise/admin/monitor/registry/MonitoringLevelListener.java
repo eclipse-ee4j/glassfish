@@ -22,7 +22,7 @@ package com.sun.enterprise.admin.monitor.registry;
  * level to a new one. Monitoring levels are defined by the
  * constants class MonitoringLevel and are currently defined as
  * OFF, LOW and HIGH.
- * @author  <href=mailto:shreedhar.ganapathy@sun.com>Shreedhar Ganapathy
+ * @author Shreedhar Ganapathy
  */
 public interface MonitoringLevelListener {
     /**
@@ -31,6 +31,7 @@ public interface MonitoringLevelListener {
      * @param level corresponding to MonitoringLevel OFF, LOW or HIGH
      * @deprecated
      */
+    @Deprecated
     public void setLevel(MonitoringLevel level);
 
     /**
@@ -45,6 +46,7 @@ public interface MonitoringLevelListener {
      * @param handback    the Stats object that was passed to the registry during registration. It
      * is guaranteed that it will be unchanged by monitoring framework.
      */
+    @Deprecated
     public void changeLevel(MonitoringLevel from, MonitoringLevel to,
         org.glassfish.j2ee.statistics.Stats handback);
 

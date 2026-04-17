@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,20 +23,21 @@ import java.lang.reflect.Proxy;
 
 /**
  * Usage:
- * <code>
+ *
+ * <pre>{@code
  * class ExampleDocument extends DomDocument<ConfigBean> {
- *   @Override
- *   public ConfigBean make(final ServiceLocator serviceLocator, XMLStreamReader xmlStreamReader,
- *       ConfigBean dom, ConfigModel configModel) {
- *     ConfigBean configBean = new ConfigBean(habitat,this, dom, configModel, xmlStreamReader);
- *     configBean.addInterceptor(Object.class, new OnDeleteCascade());
- *     return configBean;
- *   }
+ *
+ *     @Override
+ *     public ConfigBean make(final ServiceLocator serviceLocator, XMLStreamReader xmlStreamReader, ConfigBean dom,
+ *         ConfigModel configModel) {
+ *         ConfigBean configBean = new ConfigBean(habitat, this, dom, configModel, xmlStreamReader);
+ *         configBean.addInterceptor(Object.class, new OnDeleteCascade());
+ *         return configBean;
+ *     }
  * }
- * </code>
+ * }</pre>
  *
  * @author Andriy Zhdanov
- *
  */
 public class OnDeleteCascade implements ConfigBeanInterceptor<Object> {
 

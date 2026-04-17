@@ -37,7 +37,7 @@ import java.io.OutputStream;
  * you want to store it in memory (for speed), but if the file is large you want
  * to store it to file (to avoid memory issues).
  *
- * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
+ * @author Martin Cooper
  * @author gaxzerow
  *
  * @version $Id: DeferredFileOutputStream.java 606381 2007-12-22 02:03:16Z ggregory $

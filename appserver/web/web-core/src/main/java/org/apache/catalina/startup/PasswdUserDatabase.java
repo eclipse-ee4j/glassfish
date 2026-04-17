@@ -26,7 +26,7 @@ import java.util.Hashtable;
 
 
 /**
- * Concrete implementation of the <strong>UserDatabase</code> interface
+ * Concrete implementation of the <code>UserDatabase</code> interface
  * that processes the <code>/etc/passwd</code> file on a Unix system.
  *
  * @author Craig R. McClanahan
@@ -77,6 +77,7 @@ public final class PasswdUserDatabase
     /**
      * Return the UserConfig listener with which we are associated.
      */
+    @Override
     public UserConfig getUserConfig() {
 
         return (this.userConfig);
@@ -89,6 +90,7 @@ public final class PasswdUserDatabase
      *
      * @param userConfig The new UserConfig listener
      */
+    @Override
     public void setUserConfig(UserConfig userConfig) {
 
         this.userConfig = userConfig;
@@ -105,6 +107,7 @@ public final class PasswdUserDatabase
      *
      * @param user User for which a home directory should be retrieved
      */
+    @Override
     public String getHome(String user) {
 
         return homes.get(user);
@@ -115,6 +118,7 @@ public final class PasswdUserDatabase
     /**
      * Return an enumeration of the usernames defined on this server.
      */
+    @Override
     public Enumeration<String> getUsers() {
 
         return (homes.keys());
@@ -141,19 +145,22 @@ public final class PasswdUserDatabase
                 StringBuilder buffer = new StringBuilder();
                 while (true) {
                     int ch = reader.read();
-                    if ((ch < 0) || (ch == '\n'))
+                    if ((ch < 0) || (ch == '\n')) {
                         break;
+                    }
                     buffer.append((char) ch);
                 }
                 String line = buffer.toString();
-                if (line.length() < 1)
+                if (line.length() < 1) {
                     break;
+                }
 
                 // Parse the line into constituent elements
                 int n = 0;
                 String tokens[] = new String[7];
-                for (int i = 0; i < tokens.length; i++)
+                for (int i = 0; i < tokens.length; i++) {
                     tokens[i] = null;
+                }
                 while (n < tokens.length) {
                     String token = null;
                     int colon = line.indexOf(':');
@@ -168,8 +175,9 @@ public final class PasswdUserDatabase
                 }
 
                 // Add this user and corresponding directory
-                if ((tokens[0] != null) && (tokens[5] != null))
+                if ((tokens[0] != null) && (tokens[5] != null)) {
                     homes.put(tokens[0], tokens[5]);
+                }
 
             }
 

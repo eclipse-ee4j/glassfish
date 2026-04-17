@@ -66,7 +66,6 @@ import org.omg.CosTransactions.Status;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 
 //----------------------------------------------------------------------------
@@ -149,11 +148,8 @@ public class RecoveryManager {
     /**
      * Initialises the static state of the RecoveryManager class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static void initialise() {
 
@@ -219,7 +215,6 @@ public class RecoveryManager {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     static boolean addCoordinator(GlobalTID globalTID,
         Long localTID, CoordinatorImpl coord, int timeout) {
@@ -259,7 +254,6 @@ public class RecoveryManager {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     static boolean removeCoordinator(GlobalTID globalTID, Long localTID, boolean aborted) {
         boolean result = false;
@@ -345,7 +339,6 @@ public class RecoveryManager {
      *
      * @return  The Coordinator for the transaction.
      *
-     * @see
      */
     static CoordinatorImpl getCoordinator(GlobalTID globalTID) {
 
@@ -406,11 +399,9 @@ public class RecoveryManager {
      * <p>
      * The method returns true if any transactions require resync.
      *
-     * @param
      *
      * @return  Indicates that there are Coordinators requiring resync.
      *
-     * @see
      */
     static boolean recover() {
 
@@ -490,11 +481,8 @@ public class RecoveryManager {
      * Once resync is complete, a keypoint is taken to indicate that the log
      * information is no longer required.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static void resync() {
 
@@ -636,11 +624,9 @@ public class RecoveryManager {
      * @param resynced          Indicates whether any resync was done.
      * @param keypointRequired  Indicates whether the log needs keypointing.
      *
-     * @return
      *
      * @exception LogicErrorException  An internal logic error occurred.
      *
-     * @see
      */
     static void resyncComplete(boolean resynced, boolean keypointRequired) throws LogicErrorException {
         // Inform JTSXA that resync is complete, and trace the fact
@@ -671,7 +657,6 @@ public class RecoveryManager {
      *
      * @return  The Coordinator object.
      *
-     * @see
      */
     static CoordinatorImpl getLocalCoordinator(Long localTID) {
         return (CoordinatorImpl) coordsByLocalTID.get(localTID);
@@ -685,7 +670,6 @@ public class RecoveryManager {
      *
      * @return  Indicates the local transaction identifier is valid.
      *
-     * @see
      */
     static boolean validLocalTID(Long localTID) {
         return coordsByLocalTID.containsKey(localTID);
@@ -702,9 +686,7 @@ public class RecoveryManager {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     static void shutdown(boolean immediate) {
 
@@ -1246,11 +1228,8 @@ public class RecoveryManager {
      * outcomes.  These are registered with appropriate Coordinators or rolled
      * back as appropriate.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     /*
      * DISCARD(Ram J) - this method is not needed anymore. This has been
@@ -1306,11 +1285,9 @@ public class RecoveryManager {
     /**
      * Returns an array of Coordinator objects currently active.
      *
-     * @param
      *
      * @return  The array of Coordinators.
      *
-     * @see
      */
     static CoordinatorImpl[] getCoordinators() {
 
@@ -1336,11 +1313,9 @@ public class RecoveryManager {
     /**
      * Gets the restart data for the process.
      *
-     * @param
      *
      * @return  The restart data.
      *
-     * @see
      */
     public static byte[] getRestart() {
 
@@ -1357,9 +1332,7 @@ public class RecoveryManager {
      *
      * @param bytes  The restart data.
      *
-     * @return
      *
-     * @see
      */
     public static void setRestart(byte[] bytes) {
 
@@ -1375,11 +1348,8 @@ public class RecoveryManager {
     /**
      * Waits for recovery to complete.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public static void waitForRecovery() {
         try {
@@ -1394,9 +1364,7 @@ public class RecoveryManager {
     /**
      * Waits for the resync between the resource and the transaction manager to complete with timeout.
      *
-     * @return
      *
-     * @see
      */
     public static void waitForResyncWithTimeout() {
         final EventSemaphore semaphore = resyncInProgress;
@@ -1416,11 +1384,8 @@ public class RecoveryManager {
     /**
      * Waits for resync to complete.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public static void waitForResync() {
 
@@ -1701,9 +1666,7 @@ public class RecoveryManager {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     /*
     static void report() {
@@ -1807,7 +1770,6 @@ public class RecoveryManager {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -1822,11 +1784,8 @@ class ResyncThread extends Thread  {
     /**
      * ResyncThread constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static Logger _logger = LogDomains.getLogger(ResyncThread.class, LogDomains.TRANSACTION_LOGGER);
 
@@ -1838,11 +1797,8 @@ class ResyncThread extends Thread  {
     /**
      * Performs resync.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     @Override
     public void run() {

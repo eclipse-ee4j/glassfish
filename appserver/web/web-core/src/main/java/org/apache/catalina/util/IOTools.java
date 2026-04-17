@@ -53,7 +53,7 @@ public class IOTools {
     }
 
     /**
-     * @see flow( Reader, Writer, char[] )
+     * @see #flow(Reader, Writer, char[])
      */
     public static void flow( Reader reader, Writer writer )
         throws IOException {
@@ -65,8 +65,8 @@ public class IOTools {
      * Read input from input stream and write it to output stream
      * until there is no more input from input stream.
      *
-     * @param input stream the input stream to read from.
-     * @param output stream the output stream to write to.
+     * @param is stream the input stream to read from.
+     * @param os stream the output stream to write to.
      * @param buf the byte array to use as a buffer
      */
     public static void flow( InputStream is, OutputStream os, byte[] buf )
@@ -78,7 +78,7 @@ public class IOTools {
     }
 
     /**
-     * @see flow( Reader, Writer, byte[] )
+     * @see #flow(Reader, Writer, char[])
      */
     public static void flow( InputStream is, OutputStream os )
         throws IOException {

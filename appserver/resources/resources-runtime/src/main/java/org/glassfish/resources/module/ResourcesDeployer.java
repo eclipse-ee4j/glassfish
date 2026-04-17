@@ -750,7 +750,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
     }
 
     /**
-     * Event listener to listen to </code>application undeploy validation</code> and
+     * Event listener to listen to <code>application undeploy validation</code> and
      * if <i>preserveResources</i> flag is set, cache the &lt;resources&gt;
      * config for persisting it in domain.xml
      */

@@ -70,7 +70,6 @@ import org.omg.PortableServer.ServantActivator;
  * @author Simon Holdsworth, IBM Corporation
  * @author mvatkina
  *
- * @see
 */
 //----------------------------------------------------------------------------// CHANGE HISTORY
 //
@@ -97,11 +96,8 @@ public class DefaultTransactionService implements ProxyChecker {
 
     /**Default constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public DefaultTransactionService() {
         // We do not set up the Current instance until we know the ORB.
@@ -120,11 +116,9 @@ public class DefaultTransactionService implements ProxyChecker {
     /**Obtain the implementation of the Current interface provided
      * by the transaction service implementation.
      *
-     * @param
      *
      * @return An instance of the Current class
      *
-     * @see
      */
     public org.omg.CosTransactions.Current get_current() {
         org.omg.CosTransactions.Current result = null;
@@ -145,9 +139,7 @@ public class DefaultTransactionService implements ProxyChecker {
      *                    Receiver must be registered.
      * @param properties  The Properties with which the ORB was initialised.
      *
-     * @return
      *
-     * @see
      */
     public void identify_ORB(ORB orb,
                              TSIdentification ident,
@@ -296,9 +288,7 @@ public class DefaultTransactionService implements ProxyChecker {
      *
      * @param immediate  Indicates whether to ignore running transactions.
      *
-     * @return
      *
-     * @see
      */
     public static void shutdown( boolean immediate ) {
         // Remove the admin and factory objects from the naming service.
@@ -336,7 +326,6 @@ public class DefaultTransactionService implements ProxyChecker {
      *
      * @return  Indicates whether the object is a proxy.
      *
-     * @see
      */
     public final boolean isProxy( org.omg.CORBA.Object obj ) {
 
@@ -346,13 +335,10 @@ public class DefaultTransactionService implements ProxyChecker {
 
     /**Creates the POA objects which are used for objects within the JTS.
      *
-     * @param
      *
-     * @return
      *
      * @exception Exception  The operation failed.
      *
-     * @see
      */
     final static void createPOAs()
         throws Exception {
@@ -461,7 +447,6 @@ public class DefaultTransactionService implements ProxyChecker {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -497,9 +482,7 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
      *
      * @param  orb  The ORB.
      *
-     * @return
      *
-     * @see
      */
     RecoveryCoordinatorServantActivator(ORB orb) {
         this.orb = orb;
@@ -513,7 +496,6 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
      *
      * @return  The servant.
      *
-     * @see
      */
     public Servant incarnate( byte[] oid, POA adapter )
         throws org.omg.PortableServer.ForwardRequest {
@@ -525,11 +507,8 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
 
     /**Does nothing.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void etherealize( byte[] oid,
                              POA adapter,
@@ -547,7 +526,6 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -583,9 +561,7 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
      *
      * @param  orb  The ORB.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorResourceServantActivator(ORB orb) {
         this.orb = orb;
@@ -599,7 +575,6 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
      *
      * @return  The servant.
      *
-     * @see
      */
     public Servant incarnate( byte[] oid, POA adapter )
         throws org.omg.PortableServer.ForwardRequest {
@@ -609,11 +584,8 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
 
     /**Does nothing.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void etherealize( byte[] oid,
                              POA adapter,

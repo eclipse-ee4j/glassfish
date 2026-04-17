@@ -49,7 +49,6 @@ import org.omg.CosTransactions.Coordinator;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 class NestingInfo {
     CoordinatorImpl[] ancestorSeq = null;
@@ -59,11 +58,8 @@ class NestingInfo {
     /**
      * Default NestingInfo constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     NestingInfo() {}
 
@@ -73,16 +69,14 @@ class NestingInfo {
      *
      * @param ancestors  The ancestors
      *
-     * @return
      *
-     * @see
      */
     NestingInfo(CoordinatorImpl[] ancestors) {
 
         // If the sequence of ancestors is empty, set the removed flag as this
         // NestingInfo is part of a top-level transaction.
 
-        ancestorSeq = (CoordinatorImpl[])ancestors.clone();
+        ancestorSeq = ancestors.clone();
         removed = (ancestors.length == 0);
     }
 
@@ -95,12 +89,13 @@ class NestingInfo {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean addChild(CoordinatorImpl child) {
 
         boolean result = !childSet.contains(child);
-        if( result ) childSet.addElement(child);
+        if( result ) {
+            childSet.addElement(child);
+        }
 
         return result;
     }
@@ -114,7 +109,6 @@ class NestingInfo {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean removeChild(CoordinatorImpl child) {
         boolean result = childSet.removeElement(child);
@@ -124,11 +118,8 @@ class NestingInfo {
     /**
      * Empties the set of children.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void empty() {
         childSet.removeAllElements();
@@ -144,7 +135,6 @@ class NestingInfo {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean removeFromParent(CoordinatorImpl child) {
 
@@ -178,7 +168,6 @@ class NestingInfo {
      *
      * @return  The parent Coordinator.
      *
-     * @see
      */
     CoordinatorImpl getParent(boolean forgetting) {
 
@@ -187,13 +176,16 @@ class NestingInfo {
         // If there are no ancestors, there is no parent,
         // otherwise return the first ancestor.
 
-        if (ancestorSeq.length != 0)
+        if (ancestorSeq.length != 0) {
             result = ancestorSeq[0];
+        }
 
         // If the Coordinator is being cleaned up, then we must not
         // call the parent when the child calls removeFromParent.
 
-        if( forgetting ) removed = true;
+        if( forgetting ) {
+            removed = true;
+        }
 
         return result;
     }
@@ -206,11 +198,9 @@ class NestingInfo {
      * <p>
      * The top-level Coordinator is the last in the sequence of ancestors.
      *
-     * @param
      *
      * @return  The top-level ancestor.
      *
-     * @see
      */
     CoordinatorImpl getTopLevel() {
 
@@ -219,8 +209,9 @@ class NestingInfo {
         // If there are no ancestors, there is no top-level,
         // otherwise return the last ancestor.
 
-        if( ancestorSeq.length != 0 )
+        if( ancestorSeq.length != 0 ) {
             result = ancestorSeq[ancestorSeq.length - 1];
+        }
 
         return result;
     }
@@ -233,11 +224,8 @@ class NestingInfo {
      * <p>
      * The caller is responsible for freeing the sequence storage.
      *
-     *  @param
-     *
      * @return  The sequence of ancestors.
      *
-     * @see
      */
     CoordinatorImpl[] getAncestors() {
 
@@ -247,7 +235,7 @@ class NestingInfo {
         // If we cannot obtain a buffer to copy the sequence, return
         // empty sequence Perhaps an exception should be raised instead ?
 
-        result = (CoordinatorImpl[]) ancestorSeq.clone();
+        result = ancestorSeq.clone();
 
         return result;
     }
@@ -257,11 +245,9 @@ class NestingInfo {
      * <p>
      * If no nesting information has been defined, the operation returns 0.
      *
-     * @param
      *
      * @return  The number of children.
      *
-     * @see
      */
     int numChildren() {
         return childSet.size();
@@ -277,11 +263,9 @@ class NestingInfo {
      * these represent parts of a transaction  that may not be
      * committed or rolled back before the parent completes.
      *
-     * @param
      *
      * @return  Indicates if all is OK.
      *
-     * @see
      */
     boolean replyCheck() {
 
@@ -308,7 +292,6 @@ class NestingInfo {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
     */
     boolean isDescendant(Coordinator other) {
 
@@ -332,11 +315,8 @@ class NestingInfo {
      * Rolls back all children in the set; if there are none the operation does
      * nothing.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void rollbackFamily() {
 

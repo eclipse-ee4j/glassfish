@@ -993,7 +993,7 @@ public class WebModule extends PwcWebModule implements Context {
     }
 
     /**
-     * Configure the <code>WebModule</code< properties.
+     * Configure the <code>WebModule</code> properties.
      */
     protected void configureCatalinaProperties() {
         String propName = null;
@@ -1020,7 +1020,7 @@ public class WebModule extends PwcWebModule implements Context {
     }
 
     /**
-     * Configure the <code>WebModule</code< properties.
+     * Configure the <code>WebModule</code> properties.
      *
      * @param propName the property name
      * @param propValue the property value

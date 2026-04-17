@@ -47,7 +47,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
 
     private static final Logger LOG = System.getLogger(GlassFishContainer.class.getName());
 
-    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish8");
+    private static final Path PATH_DOCKER_GF_ROOT = Path.of("/opt", "glassfish9");
     private static final String DOMAIN_NAME = "domain1";
     private static final String PATH_DOCKER_ASADMIN = PATH_DOCKER_GF_ROOT.resolve(Path.of("bin", "asadmin")).toString();
     private static final Path PATH_DOCKER_GF_DOMAINS = PATH_DOCKER_GF_ROOT.resolve(Path.of("glassfish", "domains"));
@@ -160,7 +160,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         command.append(" && mkdir -p /opt");
         command.append(" && cd /opt");
         command.append(" && jar xf /glassfish.zip");
-        command.append(" && cd glassfish8/bin && chmod +x asadmin startserv stopserv");
+        command.append(" && cd glassfish9/bin && chmod +x asadmin startserv stopserv");
         command.append(" && cd ../glassfish/bin && chmod +x asadmin appclient startserv stopserv");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" start-domain");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-auth-realm")

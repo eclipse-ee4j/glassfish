@@ -49,8 +49,7 @@ import java.util.Map;
 public class MenuBarRenderer extends BaseRenderer {
 
     public static final String URL_PREFIX = "/faces";
-    public final static String FORM_NUMBER_ATTR =
-        "com.sun.faces.FormNumber";
+    public final static String FORM_NUMBER_ATTR = "org.glassfish.mojarra.FormNumber";
 
     private static Log log = LogFactory.getLog(MenuBarRenderer.class);
 

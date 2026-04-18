@@ -640,7 +640,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         if (!isJsfApplication() && !contextListeners.isEmpty()) {
             /*
-             * Remove any JSF related ServletContextListeners from non-JSF apps. This can be done reliably only after all
+             * Remove any Faces related ServletContextListeners from non-JSF apps. This can be done reliably only after all
              * ServletContainerInitializers have been invoked, because system-wide ServletContainerInitializers may be invoked in
              * any order, and it is only after JSF's FacesInitializer has been invoked that isJsfApplication(), which checks for the
              * existence of a mapping to the FacesServlet in the app, may be used reliably because such mapping would have been
@@ -661,7 +661,7 @@ public class WebModule extends PwcWebModule implements Context {
                 /*
                  * TBD: Retrieve listener class name from JSF's TldProvider (narrator: there is no JSF TldProvider anymore)
                  */
-                if ("com.sun.faces.config.ConfigureListener".equals(listenerClassName)) {
+                if ("org.glassfish.mojarra.config.ConfigureListener".equals(listenerClassName)) {
                     contextListeners.remove(listener);
                 }
             }

@@ -16,7 +16,7 @@
 
 package org.glassfish.jdbc.devtests.v3.test;
 
-import com.sun.faces.util.HtmlUtils;
+import org.glassfish.mojarra.util.HtmlUtils;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.HashMap;

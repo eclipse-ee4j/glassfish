@@ -52,7 +52,7 @@ public class ScrollerComponent extends UICommand {
     public static final int ACTION_PREVIOUS = -2;
     public static final int ACTION_NUMBER = -3;
 
-    public static final String FORM_NUMBER_ATTR = "com.sun.faces.FormNumber";
+    public static final String FORM_NUMBER_ATTR = "org.glassfish.mojarra.FormNumber";
 
     /**
      * The component attribute that tells where to put the user supplied

@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 
 public abstract class BaseRenderer extends Renderer {
 
-    public static final String BUNDLE_ATTR = "com.sun.faces.bundle";
+    public static final String BUNDLE_ATTR = "org.glassfish.mojarra.bundle";
 
 
     public String convertClientId(FacesContext context, String clientId) {

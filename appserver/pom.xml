@@ -75,7 +75,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.4.0</helidon-config.version>
+        <helidon-config.version>4.4.1</helidon-config.version>
 
 
         <!-- MicroProfile Health -->
@@ -695,7 +695,7 @@
                         <dependency>
                             <groupId>org.codehaus.plexus</groupId>
                             <artifactId>plexus-utils</artifactId>
-                            <version>4.0.2</version>
+                            <version>4.0.3</version>
                         </dependency>
                     </dependencies>
                 </plugin>

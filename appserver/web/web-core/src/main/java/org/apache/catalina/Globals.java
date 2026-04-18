@@ -174,6 +174,6 @@ public final class Globals {
     public static final String CONSTRAINT_URI = "org.apache.catalina.CONSTRAINT_URI";
     public static final String META_INF_RESOURCES = "META-INF/resources";
     public static final String ISO_8859_1_ENCODING = "ISO-8859-1";
-    public static final String FACES_INITIALIZER = "com.sun.faces.config.FacesInitializer";
+    public static final String FACES_INITIALIZER = "org.glassfish.mojarra.config.FacesInitializer";
     public static final String WEBSOCKET_INITIALIZER = "org.glassfish.tyrus.servlet.TyrusServletContainerInitializer";
 }

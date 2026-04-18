@@ -98,7 +98,7 @@ public class ApplicationContext implements ServletContext {
      */
     public ApplicationContext(StandardContext context) {
         this.context = context;
-        setAttribute("com.sun.faces.useMyFaces", context.isUseMyFaces());
+        setAttribute("org.glassfish.mojarra.useMyFaces", context.isUseMyFaces());
     }
 
 

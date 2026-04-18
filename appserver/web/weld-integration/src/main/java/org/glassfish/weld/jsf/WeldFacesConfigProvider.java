@@ -19,7 +19,6 @@ package org.glassfish.weld.jsf;
 
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.web.WebModule;
-import com.sun.faces.spi.FacesConfigResourceProvider;
 
 import jakarta.servlet.ServletContext;
 
@@ -34,6 +33,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.cdi.CDILoggerInfo;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.mojarra.spi.FacesConfigResourceProvider;
 
 import static java.util.logging.Level.SEVERE;
 import static org.glassfish.cdi.CDILoggerInfo.SEVERE_ERROR_CREATING_URI_FOR_FACES_CONFIG_XML;

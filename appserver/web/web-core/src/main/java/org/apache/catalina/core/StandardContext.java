@@ -2437,7 +2437,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             }
 
             // Always add the Faces listener as the first element, see GlassFish Issue 2563 for details
-            boolean isFirst = "com.sun.faces.config.ConfigureListener".equals(listener.getClass().getName());
+            boolean isFirst = "org.glassfish.mojarra.config.ConfigureListener".equals(listener.getClass().getName());
             if (isFirst) {
                 contextListeners.add(0, proxy);
             } else {

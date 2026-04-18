@@ -159,10 +159,6 @@ final class WebModuleListener implements LifecycleListener {
         Collection<TldProvider> tldProviders = webContainer.getTldProviders();
         Map<URI, List<String>> tldMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
-            // Skip any JSF related TLDs for non-JSF apps
-            if ("jsfTld".equals(tldProvider.getName()) && !webModule.isJsfApplication()) {
-                continue;
-            }
             Map<URI, List<String>> tmap = tldProvider.getTldMap();
             if (tmap != null) {
                 tldMap.putAll(tmap);
@@ -177,10 +173,6 @@ final class WebModuleListener implements LifecycleListener {
          */
         Map<URI, List<String>> tldListenerMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
-            // Skip any Faces related TLDs for non-Faces apps
-            if ("jsfTld".equals(tldProvider.getName()) && !webModule.isJsfApplication()) {
-                continue;
-            }
             Map<URI, List<String>> tmap = tldProvider.getTldListenerMap();
             if (tmap != null) {
                 tldListenerMap.putAll(tmap);
@@ -232,7 +224,7 @@ final class WebModuleListener implements LifecycleListener {
 
         // If the configuration flag usMyFaces is set, remove mojarra.jar
         // from the system class path
-        Boolean useMyFaces = (Boolean) servletContext.getAttribute("com.sun.faces.useMyFaces");
+        Boolean useMyFaces = (Boolean) servletContext.getAttribute("org.glassfish.mojarra.useMyFaces");
         if (useMyFaces != null && useMyFaces) {
             sysClassPath = sysClassPath.replace("mojarra.jar", "$disabled$.raj");
             // jsf-connector.jar manifest has a Class-Path to mojarra.jar

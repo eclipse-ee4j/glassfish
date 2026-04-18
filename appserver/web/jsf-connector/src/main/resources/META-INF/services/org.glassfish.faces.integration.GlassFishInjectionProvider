@@ -19,4 +19,4 @@
 #
 # When HK2 sees the service discovery pattern, it exposes the classes
 # to all the modules in the habitat (AKA class loader punch-in)
-org.glassfish.faces.integration.GlassFishInjectionProvider
+org.glassfish.faces.integration.GlassFishHighAvailabilityEnabler

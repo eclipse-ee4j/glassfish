@@ -86,14 +86,14 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * The info argument is an Object array that consistes of a class to use
      * for the class loader and concreteImpl bean class name.
-     * @see getEJBObject(Object, Object)
-     * @see getEJBLocalObject(Object, Object)
-     * @see getEJBLocalObject(Object, Object, EJBObject)
-     * @see removeByEJBLocalObject(EJBLocalObject, Object)
-     * @see removeByPK(Object, Object)
      * @param info Object with the request information that is application server
      * specific.
      * @return a Container helper instance as an Object.
+     * @see #getEJBObject(Object, Object)
+     * @see #getEJBLocalObject(Object, Object)
+     * @see #getEJBLocalObject(Object, Object, EJBObject)
+     * @see #removeByEJBLocalObject(EJBLocalObject, Object)
+     * @see #removeByPK(Object, Object)
      */
     @Override
     public Object getContainer(Object info) {
@@ -114,7 +114,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Get an EJBObject reference for this primary key and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @return a corresponding EJBObject instance to be used by the client.
@@ -131,7 +131,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Get an EJBLocalObject reference for this primary key and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a helper instance for the request.
      * @return a corresponding EJBLocalObject instance to be used by the client.
@@ -151,7 +151,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * that is part of a cascade-delete remove.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a helper instance for the request.
      * @param context an EJBContext of the calling bean.
@@ -172,7 +172,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Remove a bean for a given EJBLocalObject and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param ejb the EJBLocalObject for the bean to be removed.
      * @param container a Container instance for the request.
      */
@@ -188,7 +188,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Remove a bean for a given primary key and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key for the bean to be removed.
      * @param container a Container instance for the request.
      */
@@ -205,7 +205,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * a given Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param o the instance to be verified.
      * @param container a Container instance for the request.
      */
@@ -218,7 +218,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * a given Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param o the instance to be verified.
      * @param container a Container instance for the request.
      */
@@ -250,7 +250,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request.
      */
     @Override
@@ -263,7 +263,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request.
      */
     @Override
@@ -323,7 +323,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /**
      * Called in CMP environment to get NumericConverter policy referenced
      * by this Container instance.
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request
      * @return a valid NumericConverter policy type
      */

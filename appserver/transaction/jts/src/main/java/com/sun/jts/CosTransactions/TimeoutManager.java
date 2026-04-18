@@ -51,7 +51,6 @@ import org.omg.CosTransactions.Status;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 
 //----------------------------------------------------------------------------
@@ -89,11 +88,8 @@ class TimeoutManager {
     /**
      * Initialises the static state of the TimeoutManager class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized static void initialise() {
 
@@ -138,7 +134,6 @@ class TimeoutManager {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     static boolean setTimeout(Long localTID, int timeoutType, int seconds) {
         boolean result = true;
@@ -218,9 +213,7 @@ class TimeoutManager {
      * @param localTID     The local identifier for the transaction.
      * @param timeoutType  The type of timeout.
      *
-     * @return
      *
-     * @see
      */
     static void timeoutCoordinator(Long localTID, int  timeoutType) {
 
@@ -333,11 +326,9 @@ class TimeoutManager {
      * cause a deadlock when RecoveryManager methods on other threads call
      * setTimeout.
      *
-     * @param
      *
      * @return  The information for transactions which have timed out.
      *
-     * @see
      */
      static Enumeration checkTimeouts() {
         if (!isSetTimeout) {
@@ -460,7 +451,6 @@ class TimeoutManager {
      *          this value will be negative.  If the timeout period has been
      *          exceeded, this value will be zero.
      *
-     * @see
      */
     static long timeLeft(Long localTID) {
 
@@ -489,9 +479,7 @@ class TimeoutManager {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     static void shutdown(boolean immediate) {
 
@@ -524,9 +512,7 @@ class TimeoutManager {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     /*
     static void report() {
@@ -569,7 +555,6 @@ class TimeoutManager {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -593,7 +578,6 @@ class TimeoutInfo extends Object {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -615,9 +599,6 @@ class TimeoutThread extends Thread {
      * This sets the thread name, and sets the thread to be a daemon thread so
      * that it does not prevent the process from terminating.
      *
-     * @param
-     * @return
-     * @see
      */
     TimeoutThread() {
         setName("JTS Timeout Thread"/* #Frozen */);
@@ -640,11 +621,8 @@ class TimeoutThread extends Thread {
     /**
      * Performs timeout checking on a regular basis (every ten seconds or so).
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void run() {
         try {

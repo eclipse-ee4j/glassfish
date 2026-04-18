@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,64 +19,50 @@ package org.glassfish.embeddable;
 
 /**
  * Represents a GlassFish instance and provides the ability to:
- *
  * <ul>
- * <li> perform life cycle operations viz., start, stop and dispose. </li>
- * <li> access {@link Deployer} to deploy/undeploy applications. </li>
- * <li> access {@link CommandRunner} to perform runtime configurations.</li>
- * <li> access to available service(s). </li>
+ * <li>perform life cycle operations viz., start, stop and dispose.</li>
+ * <li>access {@link Deployer} to deploy/undeploy applications.</li>
+ * <li>access {@link CommandRunner} to perform runtime configurations.</li>
+ * <li>access to available service(s).</li>
  * </ul>
+ * <p>
+ * Usage example:
  *
- * <p/> Usage example:
- *
- * <style type="text/css">
-.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
-.s0 { color: rgb(128,128,128); }
-.s1 { }
-.s2 { color: rgb(0,0,255); }
-.s3 { color: rgb(128,128,128); font-weight: bold; }
-.s4 { color: rgb(255,0,255); }
-</style>
- *
- * <pre>
-<span class="s0">
-        /** Create and start GlassFish &#42;&#47;</span><span class="s1">
-        {@link GlassFish} glassfish = {@link GlassFishRuntime}.bootstrap().newGlassFish();
-        glassfish.start();
+ * <pre>{@code
+    // Create and start GlassFish
+    GlassFish glassfish = {@link GlassFishRuntime}.bootstrap().newGlassFish();
+    glassfish.start();
 
-        </span><span class="s0">/** Deploy a web application simple.war with /hello as context root. &#42;&#47;</span><span class="s1">
-        {@link Deployer} deployer = glassfish.getService(Deployer.</span><span class="s2">class</span><span class="s1">);
-        String deployedApp = deployer.deploy(</span><span class="s2">new </span><span class="s1">File(</span><span class="s4">&quot;simple.war&quot;</span><span class="s1">).toURI(),
-                </span><span class="s4">&quot;--contextroot=hello&quot;</span><span class="s1">, </span><span class="s4">&quot;--force=true&quot;</span><span class="s1">);
+    // Deploy a web application simple.war with /hello as context root.
+    Deployer deployer = glassfish.getService(Deployer.class);
+    String deployedApp = deployer.deploy(new File("simple.war").toURI(), "--contextroot=hello", "--force=true");
 
-        </span><span class="s0">/** Run commands (as per your need). Here is an example to create a http listener and dynamically set its thread pool size. &#42;&#47;</span><span class="s1">
-        {@link CommandRunner} commandRunner = glassfish.getService(CommandRunner.</span><span class="s2">class</span><span class="s1">);
+    // Run commands (as per your need). Here is an example to create
+    // a http listener and dynamically set its thread pool size.
+    CommandRunner commandRunner = glassfish.getService(CommandRunner.class);
 
-        <span class="s0">// Run a command create 'my-http-listener' to listen at 9090</span>
-        {@link CommandResult} commandResult = commandRunner.run(
-                </span><span class="s4">&quot;create-http-listener&quot;</span><span class="s1">, </span><span class="s4">&quot;--listenerport=9090&quot;</span><span class="s1">,
-                </span><span class="s4">&quot;--listeneraddress=0.0.0.0&quot;</span><span class="s1">, </span><span class="s4">&quot;--defaultvs=server&quot;</span><span class="s1">,
-                </span><span class="s4">&quot;my-http-listener&quot;</span><span class="s1">);
+    // Run a command create 'my-http-listener' to listen at 9090
+    CommandResult commandResult = commandRunner.run(
+            "create-http-listener", "--listenerport=9090",
+            "--listeneraddress=0.0.0.0", "--defaultvs=server",
+            "my-http-listener");
 
-        </span><span class="s0">// Run a command to create your own thread pool</span><span class="s1">
-        commandResult = commandRunner.run(</span><span class="s4">&quot;create-threadpool&quot;</span><span class="s1">,
-                </span><span class="s4">&quot;--maxthreadpoolsize=200&quot;</span><span class="s1">, </span><span class="s4">&quot;--minthreadpoolsize=200&quot;</span><span class="s1">,
-                </span><span class="s4">&quot;my-thread-pool&quot;</span><span class="s1">);
+    // Run a command to create your own thread pool
+    commandResult = commandRunner.run("create-threadpool",
+            "--maxthreadpoolsize=200", "--minthreadpoolsize=200",
+            "my-thread-pool");
 
-        </span><span class="s0">// Run a command to associate my-thread-pool with my-http-listener</span><span class="s1">
-        commandResult = commandRunner.run(</span><span class="s4">&quot;set&quot;</span><span class="s1">,
-                </span><span class="s4">&quot;server.network-config.network-listeners.network-listener.&quot; </span><span class="s1">+
-                        </span><span class="s4">&quot;my-http-listener.thread-pool=my-thread-pool&quot;</span><span class="s1">);
+    // Run a command to associate my-thread-pool with my-http-listener
+    commandResult = commandRunner.run("set",
+            "server.network-config.network-listeners.network-listener.my-http-listener.thread-pool=my-thread-pool");
 
-        </span><span class="s0">/** Undeploy the application &#42;&#47;</span><span class="s1">
-        deployer.undeploy(deployedApp);
+    // Undeploy the application
+    deployer.undeploy(deployedApp);
 
-        </span><span class="s0">/**Stop GlassFish.&#42;&#47;</span><span class="s1">
-        glassfish.stop();
-
-        </span><span class="s0">/** Dispose GlassFish. &#42;&#47;</span><span class="s1">
-        glassfish.dispose();
- * </pre>
+    /**Stop and dispose GlassFish.
+    glassfish.stop();
+    glassfish.dispose();
+ * }</pre>
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
@@ -85,7 +72,7 @@ public interface GlassFish {
      * When this method is called, all the lifecycle (aka startup) services are started.
      * Calling this method while the server is in {@link Status#STARTED} state is a no-op.
      *
-     * @throws {@link IllegalStateException} if server is already started.
+     * @throws IllegalStateException if server is already started.
      * @throws GlassFishException if server can't be started for some unknown reason.
      */
     void start() throws GlassFishException;
@@ -95,7 +82,7 @@ public interface GlassFish {
      * GlassFish can be started again by calling the start method.
      * Calling this method while the server is in {@link Status#STARTED} state is a no-op.
      *
-     * @throws {@link IllegalStateException} if server is already stopped.
+     * @throws IllegalStateException if server is already stopped.
      * @throws GlassFishException if server can't be started for some unknown reason.
      */
     void stop() throws GlassFishException;
@@ -153,13 +140,13 @@ public interface GlassFish {
     CommandRunner getCommandRunner() throws GlassFishException;
 
     /**
-     * Represents the status of {@link org.glassfish.embeddable.GlassFish}.
+     * Represents the status of {@link GlassFish}.
      */
     enum Status {
         /**
          * Initial state of a newly created GlassFish.
          *
-         * <p/>This will be the state just after {@link org.glassfish.embeddable.GlassFishRuntime#newGlassFish()}
+         * <p/>This will be the state just after {@link GlassFishRuntime#newGlassFish()}
          * before performing any lifecycle operations.
          */
         INIT,
@@ -167,7 +154,7 @@ public interface GlassFish {
         /**
          * GlassFish is being started.
          *
-         * <p/>This will be the state after {@link org.glassfish.embeddable.GlassFish#start()} has been called
+         * <p/>This will be the state after {@link GlassFish#start()} has been called
          * until the GlassFish is fully started.
          */
         STARTING,
@@ -175,7 +162,7 @@ public interface GlassFish {
         /**
          * GlassFish is up and running.
          *
-         * <p/> This will be the state once {@link org.glassfish.embeddable.GlassFish#start()} has fully
+         * <p/> This will be the state once {@link GlassFish#start()} has fully
          * started the GlassFish.
          */
         STARTED,
@@ -183,7 +170,7 @@ public interface GlassFish {
         /**
          * GlassFish is being stopped.
          *
-         * <p/> This will be the state after {@link org.glassfish.embeddable.GlassFish#stop()} has been
+         * <p/> This will be the state after {@link GlassFish#stop()} has been
          * called until the GlassFish is fully stopped.
          */
         STOPPING,
@@ -191,7 +178,7 @@ public interface GlassFish {
         /**
          * GlassFish is stopped.
          *
-         * <p/>This will be the state after {@link org.glassfish.embeddable.GlassFish#stop()} has
+         * <p/>This will be the state after {@link GlassFish#stop()} has
          * fully stopped the GlassFish.
          */
         STOPPED,
@@ -199,8 +186,8 @@ public interface GlassFish {
         /**
          * GlassFish is disposed and ready to be garbage collected.
          *
-         * <p/>This will be the state  after {@link org.glassfish.embeddable.GlassFish#dispose()} or
-         * {@link org.glassfish.embeddable.GlassFishRuntime#shutdown()} has been called.
+         * <p/>This will be the state  after {@link GlassFish#dispose()} or
+         * {@link GlassFishRuntime#shutdown()} has been called.
          */
         DISPOSED
     }

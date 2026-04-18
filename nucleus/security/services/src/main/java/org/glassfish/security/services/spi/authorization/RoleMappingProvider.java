@@ -48,7 +48,7 @@ public interface RoleMappingProvider extends SecurityProvider {
      * @param environment The attributes collection representing the environment.
      * @param attributeResolvers The ordered list of attribute resolvers.
      *
-     * @see {@link org.glassfish.security.services.api.authorization.RoleMappingService#isUserInRole(String, AzSubject, AzResource, String)}
+     * @see RoleMappingService#isUserInRole(String, AzSubject, AzResource, String)
      */
     boolean isUserInRole(String appContext,
         AzSubject subject,
@@ -63,7 +63,7 @@ public interface RoleMappingProvider extends SecurityProvider {
      *
      * @param appContext The application context for which the <code>RoleDeploymentContext</code> is desired.
      *
-     * @see {@link org.glassfish.security.services.api.authorization.RoleMappingService#findOrCreateDeploymentContext(String)}
+     * @see RoleMappingService#findOrCreateDeploymentContext(String)
      */
     RoleMappingService.RoleDeploymentContext findOrCreateDeploymentContext(String appContext);
 }

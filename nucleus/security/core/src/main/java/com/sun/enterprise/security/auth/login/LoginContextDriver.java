@@ -220,7 +220,8 @@ public class LoginContextDriver {
      * RI code makes several assumptions which are retained here:
      * <ul>
      * <li>The PasswordCredential is stored as a private credential of the subject.
-     * <li>There is only one such credential present (actually, only the first one is relevant if more are present). </ui>
+     * <li>There is only one such credential present (actually, only the first one is relevant if more are present).
+     * </ul>
      *
      * @param s Subject to be authenticated.
      * @throws LoginException Thrown if the login fails.

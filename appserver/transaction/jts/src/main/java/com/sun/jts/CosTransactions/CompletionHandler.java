@@ -44,7 +44,6 @@ package com.sun.jts.CosTransactions;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 // CHANGE HISTORY
 //
@@ -66,9 +65,7 @@ interface CompletionHandler {
      * @param aborted          Indicates whether the transaction locally aborted.
      * @param heuristicDamage  Indicates local heuristic damage.
      *
-     * @return
      *
-     * @see
      */
     abstract void setCompleted( boolean aborted,
                                 boolean heuristicDamage );

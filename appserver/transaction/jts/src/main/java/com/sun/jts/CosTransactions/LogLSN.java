@@ -40,7 +40,6 @@ import java.io.Serializable;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -69,11 +68,8 @@ class LogLSN implements Serializable {
 
     /**Default LogLSN constructor
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     LogLSN() {
         offset = 0;
@@ -85,9 +81,7 @@ class LogLSN implements Serializable {
      * @param ext Extent for new LSN.
      * @param off Offset for new LSN.
      *
-     * @return
      *
-     * @see
      */
     LogLSN( int ext,
             int off ) {
@@ -99,9 +93,7 @@ class LogLSN implements Serializable {
      *
      * @param lsn Other LSN to be copied.
      *
-     * @return
      *
-     * @see
      */
     LogLSN( LogLSN lsn ) {
         offset = lsn.offset;
@@ -113,9 +105,7 @@ class LogLSN implements Serializable {
      * @param bytes The array of bytes from which the LogLSN is to be constructed.
      * @param index The index in the array where copy is to start.
      *
-     * @return
      *
-     * @see
      */
     LogLSN( byte[] bytes,
             int  index ) {
@@ -131,11 +121,8 @@ class LogLSN implements Serializable {
 
     /**Determines whether the target LSN is NULL.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     final boolean isNULL() {
         return offset == 0 && extent == 0;
@@ -145,9 +132,7 @@ class LogLSN implements Serializable {
      *
      * @param other The other LogLSN to be compared.
      *
-     * @return
      *
-     * @see
      */
     final boolean equals( LogLSN other ) {
         return offset == other.offset && extent == other.extent;
@@ -157,9 +142,7 @@ class LogLSN implements Serializable {
      *
      * @param other The other LogLSN to be compared.
      *
-     * @return
      *
-     * @see
      */
     final boolean lessThan( LogLSN other ) {
         return ( (offset < other.offset && extent == other.extent) ||
@@ -170,9 +153,7 @@ class LogLSN implements Serializable {
      *
      * @param other The other LogLSN to be compared.
      *
-     * @return
      *
-     * @see
      */
     final boolean greaterThan( LogLSN other ) {
         return ( (offset > other.offset && extent == other.extent) ||
@@ -183,9 +164,7 @@ class LogLSN implements Serializable {
      *
      * @param LogLSN  The LSN to be copied.
      *
-     * @return
      *
-     * @see
      */
     final void copy( LogLSN other ) {
         extent = other.extent;
@@ -199,7 +178,6 @@ class LogLSN implements Serializable {
      *
      * @return  Number of bytes copied.
      *
-     * @see
      */
     final int toBytes( byte[] bytes,
                        int  index ) {
@@ -217,11 +195,9 @@ class LogLSN implements Serializable {
 
     /**This method is called to direct the object to format its state to a String.
      *
-     * @param
      *
      * @return  The formatted representation of the object.
      *
-     * @see
      */
     public final String toString() {
         return "LSN(ext="/*#Frozen*/+extent+",off="/*#Frozen*/+offset+")"/*#Frozen*/;

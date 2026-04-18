@@ -59,7 +59,7 @@ public class EJBHandler extends AbstractResourceHandler {
 
     /**
      * Process a particular annotation which type is the same as the
-     * one returned by @see getAnnotationType(). All information
+     * one returned by {@link AnnotationInfo#getElementType()}. All information
      * pertinent to the annotation and its context is encapsulated
      * in the passed AnnotationInfo instance.
      *
@@ -77,7 +77,7 @@ public class EJBHandler extends AbstractResourceHandler {
 
     /**
      * Process a particular annotation whose type is the same as the
-     * one returned by @see getAnnotationType(). All information
+     * one returned by {@link AnnotationInfo#getElementType()}. All information
      * pertinent to the annotation and its context is encapsulated
      * in the passed AnnotationInfo instance.
      *

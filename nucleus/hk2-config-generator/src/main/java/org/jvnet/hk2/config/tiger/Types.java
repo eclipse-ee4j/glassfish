@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -235,23 +235,19 @@ public class Types {
      * <p>
      * For example, given the following
      *
-     * <pre>
-     * <xmp>
+     * <pre>{@code
      * interface Foo<T> extends List<List<T>> {}
      * interface Bar extends Foo<String> {}
-     * </xmp>
-     * </pre>
+     * }</pre>
      *
      * This method works like this:
      *
-     * <pre>
-     * <xmp>
+     * <pre>{@code
      * getBaseClass( Bar, List ) = List<List<String>
      * getBaseClass( Bar, Foo  ) = Foo<String>
      * getBaseClass( Foo<? extends Number>, Collection ) = Collection<List<? extends Number>>
      * getBaseClass( ArrayList<? extends BigInteger>, List ) = List<? extends BigInteger>
-     * </xmp>
-     * </pre>
+     * }</pre>
      *
      * @param type
      *            The type that derives from {@code baseType}

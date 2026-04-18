@@ -82,7 +82,7 @@ public class ResourceAdapterImpl implements ResourceAdapter {
      *
      * @param mef <code>MessageEndpointFactory</code>
      * @param as <code>ActivationSpec</code>
-     * @throws <code>NotSupportedException</code>
+     * @throws NotSupportedException
      *
      */
     public void endpointActivation(MessageEndpointFactory mef, ActivationSpec as) throws NotSupportedException {
@@ -104,7 +104,7 @@ public class ResourceAdapterImpl implements ResourceAdapter {
      * <code>NotSupportedException</code>
      *
      * @param specs <code>ActivationSpec</code> array
-     * @throws <code>NotSupportedException</code>
+     * @throws NotSupportedException
      *
      */
     public XAResource[] getXAResources(ActivationSpec[] specs) throws NotSupportedException {

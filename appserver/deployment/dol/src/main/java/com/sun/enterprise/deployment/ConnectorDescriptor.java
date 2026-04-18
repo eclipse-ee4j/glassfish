@@ -40,9 +40,11 @@ import org.glassfish.deployment.common.DescriptorVisitor;
 
 /**
  * Deployment Information for connector
- *
+ * <p>
+ * {@code
  * <!ELEMENT connector (display-name?, description?, icon?, vendor-name,
  * spec-version, eis-type, version, license?, resourceadapter)>
+ * }
  *
  * @author Tony Ng
  * @author Qingqing Ouyang

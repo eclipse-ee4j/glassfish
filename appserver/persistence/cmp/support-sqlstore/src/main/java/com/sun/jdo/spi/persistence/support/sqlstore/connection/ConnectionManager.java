@@ -26,7 +26,6 @@ import com.sun.jdo.api.persistence.support.Transaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.utility.StringScanner;
 import com.sun.jdo.spi.persistence.utility.DoubleLinkedList;
-import com.sun.jdo.spi.persistence.utility.Linkable;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.sql.Connection;
@@ -117,14 +116,14 @@ import org.glassfish.persistence.common.I18NHelper;
  * You can also specify a user name, password, and database URL on the
  * getConnection method.
  *
- * <H5>Example of Using ConnectionManager without Pooling</H4>
- * <PRE>
+ * <H5>Example of Using ConnectionManager without Pooling</H5>
+ * <pre>{@code
  * import java.sql.*;
  * import com.sun.jdo.api.persistence.support.*;
  * Connection con = myTransaction.getConnection();
  * Statement stmt = con.createStatement();
  * ResultSet rs = stmt.executeQuery("SELECT * FROM T1");
- * </PRE>
+ * }</pre>
  *
  * <H4>Using a Pool of Database Connections (Application-based Security)</H4>
  * <P>When you create a connection manager using the
@@ -174,7 +173,7 @@ import org.glassfish.persistence.common.I18NHelper;
  * connections on a request-by-request basis.
  *
  * <H5>Example of Using ConnectionManager with Pooling</H5>
- * <PRE>
+ * <pre>{@code
  * import com.sun.jdo.api.persistence.support.*;
  * void getT1Data() {
  *     // The following connection is from the connection pool.
@@ -196,7 +195,7 @@ import org.glassfish.persistence.common.I18NHelper;
  *     .
  *     .
  * }
- * </PRE>
+ * }</pre>
  */
 public class ConnectionManager {
     /**
@@ -1163,10 +1162,10 @@ public class ConnectionManager {
             }
             conn.setPooled(true);
             conn.checkXact();
-            this.busyList.insertAtTail((Linkable) conn);
+            this.busyList.insertAtTail(conn);
         }
         conn.setFreePending(false);
-        return ((Connection) conn);
+        return (conn);
     }
 
     /**
@@ -1249,8 +1248,8 @@ public class ConnectionManager {
         }
         conn.setFreePending(false);
         conn.setPooled(false);
-        this.busyList.insertAtTail((Linkable) conn);
-        return ((Connection) conn);
+        this.busyList.insertAtTail(conn);
+        return (conn);
     }
 
     /**
@@ -1335,8 +1334,8 @@ public class ConnectionManager {
         }
         conn.setFreePending(false);
         conn.setPooled(false);
-        this.busyList.insertAtTail((Linkable) conn);
-        return ((Connection) conn);
+        this.busyList.insertAtTail(conn);
+        return (conn);
     }
 
     /**
@@ -1363,8 +1362,9 @@ public class ConnectionManager {
         */
 
         // Return Connection associated with this transaction - maybe null?
-        if (tran == null)
+        if (tran == null) {
             return null;
+        }
         return (ConnectionImpl) this.xactConnections.get(tran);
     }
 
@@ -1379,7 +1379,9 @@ public class ConnectionManager {
      * @exception  SQLException  if a SQL error is encountered.
      */
     public void startUp() throws ClassNotFoundException, SQLException {
-        if (this.initialized == true) return;
+        if (this.initialized == true) {
+            return;
+        }
 
         this.busyList = new DoubleLinkedList();
         this.xactConnections = new Hashtable();
@@ -1486,6 +1488,7 @@ public class ConnectionManager {
      * or rolledback.
      *
      */
+    @Override
     protected void finalize() {
         try {
             shutDown();
@@ -1946,6 +1949,7 @@ public class ConnectionManager {
      * @return  A <code>String</code> decribing the contents of the current
      * ConnectionManager object.
      */
+    @Override
     public synchronized String toString() {
         /*
         TraceLogger lgr = ThreadContext.lgr();
@@ -2010,8 +2014,9 @@ public class ConnectionManager {
      * @param  conn    The Connection.
      */
     synchronized void associateXact(Transaction tran, ConnectionImpl conn) {
-        if (tran != null)
-            this.xactConnections.put((Object) tran, (Object) conn);
+        if (tran != null) {
+            this.xactConnections.put(tran, conn);
+        }
     }
 
     /**
@@ -2030,13 +2035,14 @@ public class ConnectionManager {
             ) throws SQLException {
         ConnectionImpl xactConn = null;
 
-        if (tran != null)
-            xactConn = (ConnectionImpl) this.xactConnections.remove((Object) tran);
+        if (tran != null) {
+            xactConn = (ConnectionImpl) this.xactConnections.remove(tran);
+        }
 
-        if (tran == null || xactConn.equals((Object) conn)) {
+        if (tran == null || xactConn.equals(conn)) {
             if (free == true) {
                 if (conn.connectionManager.shutDownPending == false) {
-                    this.freeList.insertAtTail((Linkable) conn);
+                    this.freeList.insertAtTail(conn);
                 } else {
                     conn.close();
                 }
@@ -2107,7 +2113,7 @@ public class ConnectionManager {
                                     this
                             );
                     conn.setPooled(true);
-                    this.freeList.insertAtTail((Linkable) conn);
+                    this.freeList.insertAtTail(conn);
                     this.poolSize++;
                 } catch (SQLException e) {
                     throw e;

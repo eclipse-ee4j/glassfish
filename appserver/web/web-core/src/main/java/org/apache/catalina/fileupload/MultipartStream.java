@@ -85,8 +85,8 @@ import org.apache.catalina.LogFacade;
  *
  * </pre>
  *
- * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
- * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
+ * @author Rafal Krzewski
+ * @author Martin Cooper
  * @author Sean C. Sullivan
  *
  * @version $Id: MultipartStream.java 607869 2008-01-01 16:42:17Z jochen $

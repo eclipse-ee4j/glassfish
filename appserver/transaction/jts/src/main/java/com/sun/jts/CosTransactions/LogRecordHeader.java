@@ -67,9 +67,7 @@ class LogRecordHeader implements Serializable {
      *              be constructed.
      * @param index The index in the array where copy is to start.
      *
-     * @return
      *
-     * @see
      */
     LogRecordHeader(byte[] bytes, int index) {
         recordType = (bytes[index++]&255) +
@@ -92,9 +90,7 @@ class LogRecordHeader implements Serializable {
      *
      * @param other  The object to be copied.
      *
-     * @return
      *
-     * @see
      */
     void copy( LogRecordHeader other) {
         recordType  = other.recordType;
@@ -112,7 +108,6 @@ class LogRecordHeader implements Serializable {
      *
      * @return  Number of bytes copied.
      *
-     * @see
      */
     final int toBytes(byte[] bytes, int  index) {
         bytes[index++] = (byte) recordType;
@@ -134,11 +129,9 @@ class LogRecordHeader implements Serializable {
      * This method is called to direct the object to format its state
      * to a String.
      *
-     * @param
      *
      * @return  The formatted representation of the object.
      *
-     * @see
      */
     public final String toString() {
         return "LRH(type="/*#Frozen*/ + recordType + ",curr="/*#Frozen*/ + currentLSN +

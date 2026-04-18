@@ -32,7 +32,7 @@ public abstract class Endpoint {
 
     /**
      * Creates <tt>Endpoint</tt> based on the passed {@link Adapter} descriptor.
-     * @param {@link Adapter}
+     * @param adapter {@link Adapter}
      * @return {@link Endpoint}, which can be registered on {@link NetworkProxy}.
      */
     public static Endpoint createEndpoint(final Adapter adapter) {

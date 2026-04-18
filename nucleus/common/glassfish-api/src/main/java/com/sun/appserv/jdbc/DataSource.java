@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,9 +46,9 @@ public interface DataSource extends javax.sql.DataSource {
      * Retrieves the actual SQLConnection from the Connection wrapper implementation of SunONE application server. If an
      * actual connection is supplied as argument, then it will be just returned.
      *
-     * @param con Connection obtained from <code>Datasource.getConnection()</code>
-     * @return <code>java.sql.Connection</code> implementation of the driver.
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained.
+     * @param con {@link Connection} obtained from <code>Datasource.getConnection()</code>
+     * @return {@link Connection} implementation of the driver.
+     * @throws SQLException If connection cannot be obtained.
      */
     Connection getConnection(Connection con) throws SQLException;
 
@@ -56,8 +57,8 @@ public interface DataSource extends javax.sql.DataSource {
      * on enlisting/delisting each connection got, irrespective of whether its required or not. Note here that this meethod
      * does not fit in the connector contract per se.
      *
-     * @return <code>java.sql.Connection</code>
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
+     * @return {@link Connection}
+     * @throws SQLException If connection cannot be obtained
      */
     Connection getNonTxConnection() throws SQLException;
 
@@ -66,35 +67,36 @@ public interface DataSource extends javax.sql.DataSource {
      * on enlisting/delisting each connection got, irrespective of whether its required or not. Note here that this meethod
      * does not fit in the connector contract per se.
      *
-     * @param user User name for authenticating the connection
+     * @param userName User name for authenticating the connection
      * @param password Password for authenticating the connection
-     * @return <code>java.sql.Connection</code>
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
+     * @return {@link Connection}
+     * @throws SQLException If connection cannot be obtained
      */
     Connection getNonTxConnection(String userName, String password) throws SQLException;
 
     /**
-     * API to mark a connection as bad. If the application can determine that the connection is bad, using this api, it can
-     * notify the resource-adapter which inturn will notify the connection-pool. Connection-pool will drop and create a new
-     * connection. eg:
+     * API to mark a connection as bad. If the application can determine that the connection is bad,
+     * using this api, it can notify the resource-adapter which inturn will notify the
+     * connection-pool. Connection-pool will drop and create a new connection. eg:
      *
-     * <pre>
-        com.sun.appserv.jdbc.DataSource ds=
-           (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
-              Connection con = ds.getConnection();
-              Statement stmt = null;
-              try{
-                      stmt = con.createStatement();
-                      stmt.executeUpdate("Update");
-             }catch(BadConnectionException e){
-                     dataSource.markConnectionAsBad(con) //marking it as bad for removal
-             }finally{
-                     stmt.close();
-                     con.close(); //Connection will be destroyed while close or Tx completion
-        }
-     * </pre>
+     * <pre>{@code
+     * com.sun.appserv.jdbc.DataSource ds = (com.sun.appserv.jdbc.DataSource) context.lookup("dataSource");
+     * Connection con = ds.getConnection();
+     * Statement stmt = null;
+     * try ({
+     *     stmt = con.createStatement();
+     *     stmt.executeUpdate("Update");
+     * } catch (BadConnectionException e) {
+     *     //marking it as bad for removal
+     *     dataSource.markConnectionAsBad(con)
+     * } finally {
+     *     stmt.close();
+     *     //Connection will be destroyed while close or Tx completion
+     *     con.close();
+     * }
+     * }</pre>
      *
-     * @param conn <code>java.sql.Connection</code>
+     * @param conn {@link Connection}
      */
     void markConnectionAsBad(Connection conn);
 

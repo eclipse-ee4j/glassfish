@@ -68,8 +68,10 @@ import static java.util.logging.Level.WARNING;
 
 /**
  * ResourceManager lifecycle listener that listens to resource-manager startup and shutdown
- * and does connector related work. eg: binding connector proxies.</br>
+ * and does connector related work. eg: binding connector proxies.
+ * <br>
  * Also, does ping-connection-pool for application and module scoped resources (if ping=true)
+ *
  * @author Jagadish Ramu
  */
 @Service

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,7 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * The meta annotation representing the Startup RunLevel.
  *
  * @author Jeff Trent
- * @see {@link RunLevelService} in Hk2
+ * @see RunLevel service in Hk2
  */
 @Retention(RUNTIME)
 @Target(TYPE)

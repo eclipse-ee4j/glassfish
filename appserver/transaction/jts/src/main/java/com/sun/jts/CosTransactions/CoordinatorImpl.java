@@ -78,7 +78,6 @@ import org.omg.PortableServer.POA;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY

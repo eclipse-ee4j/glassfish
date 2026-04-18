@@ -89,7 +89,7 @@ final class ApplicationFilterChain implements FilterChain {
     private StandardWrapper wrapper;
 
     /**
-     * Static class array used when the SecurityManager is turned on and <code>doFilter</code is invoked.
+     * Static class array used when the SecurityManager is turned on and <code>doFilter</code> is invoked.
      */
     private static Class<?>[] classType = new Class[] { ServletRequest.class, ServletResponse.class, FilterChain.class };
 
@@ -136,12 +136,14 @@ final class ApplicationFilterChain implements FilterChain {
 
                 support.fireInstanceEvent(AFTER_FILTER_EVENT, filter, request, response);
             } catch (IOException | ServletException | RuntimeException  e) {
-                if (filter != null)
+                if (filter != null) {
                     support.fireInstanceEvent(AFTER_FILTER_EVENT, filter, request, response, e);
+                }
                 throw e;
             } catch (Throwable e) {
-                if (filter != null)
+                if (filter != null) {
                     support.fireInstanceEvent(AFTER_FILTER_EVENT, filter, request, response, e);
+                }
 
                 throw new ServletException(rb.getString(LogFacade.FILTER_EXECUTION_EXCEPTION), e);
             }

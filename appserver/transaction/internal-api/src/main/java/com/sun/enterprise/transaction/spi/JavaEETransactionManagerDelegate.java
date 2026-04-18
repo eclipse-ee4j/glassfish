@@ -158,7 +158,7 @@ public interface JavaEETransactionManagerDelegate {
     public void setTransactionManager(JavaEETransactionManager tm);
 
     /**
-     * Returns <code>true</> if this delegate supports XA resources.
+     * Returns <code>true</code> if this delegate supports XA resources.
      */
     public boolean supportsXAResource();
 

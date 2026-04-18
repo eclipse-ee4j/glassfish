@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,18 +31,15 @@ import org.jvnet.hk2.annotations.Contract;
 public interface ConfigParser {
 
     /**
-     * Parse a Container's configuration defined by it's XML template pointed by configuration URL. <br/>
-     * <br/>
-     * Example:<br/>
-     *
+     * Parse a Container's configuration defined by it's XML template pointed by configuration URL.
+     * <p>
+     * Example:<br>
      * Inside your {@link org.glassfish.api.container.Sniffer}:
-     *
      * <pre>
      *
-     * {@link @Inject}
-     * ConfigParser parser;
-     *
-     * {@link @Inject}
+     * {@code @Inject
+     * ConfigParser parser;}
+     * {@code @Inject
      * JrubyContainer container;
      *
      * public Module[] setup(java.lang.String s, java.util.logging.Logger logger) throws java.io.IOException{
@@ -51,7 +49,7 @@ public interface ConfigParser {
      *         //Now do stuff with config
      *     }
      * }
-     * </pre>
+     * }</pre>
      *
      * @return Confgured container
      * @throws IOException

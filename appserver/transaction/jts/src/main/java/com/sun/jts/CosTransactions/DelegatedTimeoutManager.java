@@ -39,7 +39,6 @@ import org.omg.CosTransactions.Status;
  * @version 0.01
  *
  *
- * @see
  */
 
 class DelegatedTimeoutManager {
@@ -71,11 +70,8 @@ class DelegatedTimeoutManager {
     /**
      * Initialises the static state of the TimeoutManager class.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     /**
      * synchronized static void initialise() {
@@ -128,7 +124,6 @@ class DelegatedTimeoutManager {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean setTimeout(Long localTID, int timeoutType,
     int seconds) {
@@ -203,9 +198,7 @@ class DelegatedTimeoutManager {
      * @param localTID     The local identifier for the transaction.
      * @param timeoutType  The type of timeout.
      *
-     * @return
      *
-     * @see
      */
     void timeoutCoordinator(Long localTID, int  timeoutType) {
 
@@ -318,11 +311,9 @@ class DelegatedTimeoutManager {
      * cause a deadlock when RecoveryManager methods on other threads call
      * setTimeout.
      *
-     * @param
      *
      * @return  The information for transactions which have timed out.
      *
-     * @see
      */
     Enumeration checkTimeouts() {
         if (!isSetTimeout)
@@ -444,7 +435,6 @@ class DelegatedTimeoutManager {
      *          this value will be negative.  If the timeout period has been
      *          exceeded, this value will be zero.
      *
-     * @see
      */
     long timeLeft(Long localTID) {
 
@@ -472,9 +462,7 @@ class DelegatedTimeoutManager {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     void shutdown(boolean immediate) {
 
@@ -510,7 +498,6 @@ class DelegatedTimeoutManager {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -533,7 +520,6 @@ class DelegatedTimeoutInfo extends Object {
  * @version 0.01
  *
  *
- * @see
  */
 
 
@@ -549,11 +535,8 @@ class DelegatedTimeoutThread extends Thread {
      * This sets the thread name, and sets the thread to be a daemon thread so
      * that it does not prevent the process from terminating.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     DelegatedTimeoutThread(DelegatedTimeoutManager timeoutMgr) {
         setName("Delegated JTS Timeout Thread"/*#Frozen*/);
@@ -578,11 +561,8 @@ class DelegatedTimeoutThread extends Thread {
     /**
      * Performs timeout checking on a regular basis (every ten seconds or so).
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void run() {
         try {

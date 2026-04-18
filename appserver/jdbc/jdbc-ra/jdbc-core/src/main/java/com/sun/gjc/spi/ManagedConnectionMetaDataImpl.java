@@ -46,7 +46,7 @@ public class ManagedConnectionMetaDataImpl implements ManagedConnectionMetaData 
      * Constructor for <code>ManagedConnectionMetaDataImpl</code>
      *
      * @param managedConnection <code>ManagedConnection</code>
-     * @throws <code>ResourceException</code> if getting the DatabaseMetaData object
+     * @throws ResourceException if getting the DatabaseMetaData object
      * fails
      */
     public ManagedConnectionMetaDataImpl(ManagedConnectionImpl managedConnection) throws ResourceException {
@@ -64,7 +64,7 @@ public class ManagedConnectionMetaDataImpl implements ManagedConnectionMetaData 
      * ManagedConnection.
      *
      * @return Product name of the EIS instance
-     * @throws <code>ResourceException</code>
+     * @throws ResourceException
      */
     public String getEISProductName() throws ResourceException {
         try {
@@ -80,7 +80,7 @@ public class ManagedConnectionMetaDataImpl implements ManagedConnectionMetaData 
      * ManagedConnection.
      *
      * @return Product version of the EIS instance
-     * @throws <code>ResourceException</code>
+     * @throws ResourceException
      */
     public String getEISProductVersion() throws ResourceException {
         try {
@@ -96,7 +96,7 @@ public class ManagedConnectionMetaDataImpl implements ManagedConnectionMetaData 
      * instance can support across client processes.
      *
      * @return Maximum limit for number of active concurrent connections
-     * @throws <code>ResourceException</code>
+     * @throws ResourceException
      */
     public int getMaxConnections() throws ResourceException {
         try {
@@ -113,7 +113,7 @@ public class ManagedConnectionMetaDataImpl implements ManagedConnectionMetaData 
      * context, a connection to the EIS instance has been established.
      *
      * @return name of the user
-     * @throws <code>ResourceException</code>
+     * @throws ResourceException
      */
     public String getUserName() throws ResourceException {
         PasswordCredential passwordCredential = managedConnection.getPasswordCredential();

@@ -195,11 +195,9 @@ class LogHandle {
      * @param controlFH  The handle of the control file.
      * @param upcall     The log upcall.
      *
-     * @return
      *
      * @exception LogException The creation failed.
      *
-     * @see
      */
     LogHandle( LogControl      control,
                String          logName,
@@ -230,7 +228,6 @@ class LogHandle {
      *
      * @exception LogException The write failed.
      *
-     * @see
      */
     synchronized LogLSN writeRecord( byte[] record,
                                      int    recordType,
@@ -584,7 +581,6 @@ class LogHandle {
      *
      * @exception LogException  The read failed.
      *
-     * @see
      */
     synchronized byte[] readRecord( LogLSN readLSN,
                                     int[/*1*/] type )
@@ -714,11 +710,9 @@ class LogHandle {
      *
      * @param buffer The record to be written.
      *
-     * @return
      *
      * @exception LogException The write failed.
      *
-     * @see
      */
     synchronized void writeRestart( byte[] buffer )
         throws LogException {
@@ -807,13 +801,11 @@ class LogHandle {
 
     /**Reads the restart record.
      *
-     * @param
      *
      * @return  The record read in.
      *
      * @exception LogException The read failed.
      *
-     * @see
      */
     synchronized byte[] readRestart()
         throws LogException {
@@ -900,11 +892,9 @@ class LogHandle {
      *
      * @param deleteFile Indicates whether file should be deleted.
      *
-     * @return
      *
      * @exception LogException The close failed.
      *
-     * @see
      */
     synchronized void closeFile( boolean deleteFile ) throws LogException {
         // Check BlockValid field in Log_FileDescriptor block and
@@ -1013,11 +1003,9 @@ class LogHandle {
      * @param truncLSN  The LSN of the truncation point.
      * @param inclusive Indicates whether truncation includes the LSN.
      *
-     * @return
      *
      * @exception LogException  The operation failed.
      *
-     * @see
      */
     synchronized void truncate( LogLSN truncLSN,
                                 int    inclusive )
@@ -1285,11 +1273,9 @@ class LogHandle {
      *
      * @param chkLSN  The last LSN which must be written.
      *
-     * @return
      *
      * @exception LogException  The operation failed.
      *
-     * @see
      */
     synchronized void checkLSN( LogLSN chkLSN )
         throws LogException {
@@ -1413,7 +1399,6 @@ class LogHandle {
      *
      * @exception LogException The browse was not possible.
      *
-     * @see
      */
     synchronized LogCursor openCursor( LogLSN startLSN,
                                        LogLSN endLSN )
@@ -1457,11 +1442,9 @@ class LogHandle {
      *
      * @param LogCursor The cursor to be closed.
      *
-     * @return
      *
      * @exception LogException The cursor could not be closed.
      *
-     * @see
      */
     synchronized void closeCursor( LogCursor cursor )
         throws LogException {
@@ -1507,7 +1490,6 @@ class LogHandle {
      *
      * @exception LogException The operation failed.
      *
-     * @see
      */
     LogExtent positionFilePointer( LogLSN currentLSN,
                                    int    extra,
@@ -1577,11 +1559,8 @@ class LogHandle {
      * <p>
      * This internal method does not need to be synchronized.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     private void freeCushion() {
         // If the cushion file exists, remove it.
@@ -1600,11 +1579,9 @@ class LogHandle {
      *
      * @param callUpcall  Indicates whether the upcall should be called.
      *
-     * @return
      *
      * @exception LogException The operation failed.
      *
-     * @see
      */
     void restoreCushion( boolean callUpcall )
         throws LogException {
@@ -1677,13 +1654,10 @@ class LogHandle {
     /**Writes the control file.
      * This internal method does not need to be synchronized.
      *
-     * @param
      *
-     * @return
      *
      * @exception LogException The write failed.
      *
-     * @see
      */
     void writeControlFile() throws LogException {
 
@@ -1733,7 +1707,6 @@ class LogHandle {
      *
      * @exception LogException The open failed.
      *
-     * @see
      */
     LogExtent openExtent( int extent ) throws LogException {
 
@@ -1770,11 +1743,9 @@ class LogHandle {
      *
      * @param tailLSN The point from which storage is not required.
      *
-     * @return
      *
      * @exception LogException The operation failed.
      *
-     * @see
      */
     void freeFileStorage( LogLSN tailLSN )
         throws LogException {
@@ -1810,11 +1781,9 @@ class LogHandle {
      * @param restartNumber  The restart number.
      * @param restartInfo    An array which will contain the length and timestamp.
      *
-     * @return
      *
      * @exception LogException The operation failed.
      *
-     * @see
      */
     static void checkRestart( LogFileHandle fileHandle,
                               int           restartNumber,
@@ -1872,13 +1841,10 @@ class LogHandle {
 
     /**Dumps the state of the object.
      *
-     * @param
      *
-     * @return
      *
      * @exception LogException  The operation failed.
      *
-     * @see
      */
     void dump() throws LogException {
 /**
@@ -1910,11 +1876,8 @@ class LogHandle {
     /**Removes all extent information from the log file.
      * This internal method does not need to be synchronized.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void cleanUpExtents() {
 
@@ -1934,7 +1897,6 @@ class LogHandle {
      *
      * @return  The new restart number.
      *
-     * @see
      */
 
     final static int alternateRestart( int restart) {
@@ -1947,7 +1909,6 @@ class LogHandle {
      *
      * @return  The restart position.
      *
-     * @see
      */
     final static int restartPosition( int restart ) {
         return (restart == 1) ? RESTART_OFFSET_1 : RESTART_OFFSET_2;
@@ -1955,11 +1916,9 @@ class LogHandle {
 
     /**Returns the log file name.
      *
-     * @param
      *
      * @return  The log file name.
      *
-     * @see
      */
     final String logFileName() {
         return logFileName;

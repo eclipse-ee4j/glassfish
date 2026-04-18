@@ -82,7 +82,7 @@ public interface EmbeddedDeployer {
     /**
      * Undeploys a previously deployed application
      *
-     * @param name name returned by {@link EmbeddedDeployer#deploy(File, org.glassfish.api.deployment.DeployCommandParameters}
+     * @param name name returned by {@link EmbeddedDeployer#deploy(File, DeployCommandParameters)}
      * @param params the undeployment parameters, can be null for default values
      */
     public void undeploy(String name, UndeployCommandParameters params);

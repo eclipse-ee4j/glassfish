@@ -38,7 +38,6 @@ package com.sun.jts.CosTransactions;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 interface ProxyChecker {
 
@@ -49,7 +48,6 @@ interface ProxyChecker {
      *
      * @return  Indicates whether the object is a proxy.
      *
-     * @see
      */
     boolean isProxy(org.omg.CORBA.Object obj);
 }

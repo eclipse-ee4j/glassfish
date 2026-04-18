@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +26,8 @@ import java.util.Set;
 
 /**
  * Here is the contract:
- * You give me a Map<String,String> object.
- * Then you can call  resolve(List<String>) and/or resolve(String) and/or
- * resolve(Map<String,String>)
+ * You give me a {@code Map<String,String>} object.
+ * Then you can call {@link #resolve(String)}, {@link #resolve(List)}, {@link #resolve(Map)}.
  * I will find and replace the tokens, e.g.,  ${foo} with the value of "foo" in the properties.
  * If the token has no such property -- then I leave the token as is.
  * It purposely does not handle nested tokens.  E.g. if the "foo" property has another

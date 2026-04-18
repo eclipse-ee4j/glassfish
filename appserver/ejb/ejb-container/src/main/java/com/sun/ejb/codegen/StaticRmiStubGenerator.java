@@ -115,12 +115,10 @@ public class StaticRmiStubGenerator {
      * Generates and compiles the necessary impl classes, stubs and skels.
      *
      * <pre>
-     *
      * This method makes the following assumptions:
      *    - the deployment descriptor xmls are registered with Config
      *    - the class paths are registered with Config
      *
-     * @@@
      * In case of re-deployment, the following steps should happen before:
      *    - rename the src dir from previous deployment (ex. /app/pet-old)
      *    - rename the stubs dir from previous deployment (ex. /stub/pet-old)
@@ -130,13 +128,9 @@ public class StaticRmiStubGenerator {
      *
      * After successful completion of this method, the old src and sutbs
      * directories may be deleted.
-     *
      * </pre>
      *
      * @param    deploymentCtx
-     *
-     * @return   array of the client stubs files as zip items or empty array
-     *
      */
     public void ejbc(DeploymentContext deploymentCtx) throws Exception {
 

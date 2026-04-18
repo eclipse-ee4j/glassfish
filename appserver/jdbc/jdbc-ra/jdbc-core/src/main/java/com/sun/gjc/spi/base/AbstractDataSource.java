@@ -145,7 +145,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      *
      * @param con Connection obtained from <code>Datasource.getConnection()</code>
      * @return <code>java.sql.Connection</code> implementation of the driver.
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained.
+     * @throws java.sql.SQLException If connection cannot be obtained.
      */
     @Override
     public Connection getConnection(Connection con) throws SQLException {
@@ -165,7 +165,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * this meethod does not fit in the connector contract per se.
      *
      * @return <code>java.sql.Connection</code>
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
+     * @throws java.sql.SQLException If connection cannot be obtained
      */
     @Override
     public Connection getNonTxConnection() throws SQLException {
@@ -191,7 +191,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @param user User name for authenticating the connection
      * @param password Password for authenticating the connection
      * @return <code>java.sql.Connection</code>
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
+     * @throws java.sql.SQLException If connection cannot be obtained
      */
     @Override
     public Connection getNonTxConnection(String user, String password) throws SQLException {

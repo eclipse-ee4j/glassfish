@@ -45,22 +45,22 @@ import org.jvnet.hk2.annotations.Service;
  * failed to deploy earlier and has remained stable in size for a
  * (configurable) period of time.
  * <p>
- * The main public entry point are the {@link �} method and
- * the {@link reportSuccessfulDeployment},
- * {@link reportFailedDeployment}, {@link reportSuccessfulUndeployment}, and
- * {@link reportUnsuccessfulUndeployment} methods.
+ * The main public entry point are the
+ * the {@link #recordSuccessfulDeployment(File)},
+ * {@link #recordFailedDeployment(File)}, {@link #recordSuccessfulUndeployment(File)}, and
+ * {@link #recordFailedUndeployment(File)} methods.
  * <p>
- * The client should invoke {@link shouldAttemptDeployment} when it has identified
+ * The client should invoke {@link #shouldAttemptDeployment(File)} when it has identified
  * a candidate file for deployment but before trying to deploy that file.  This
  * retry manager will return whether the caller should attempt to deploy the file,
  * at least based on whether there has been a previous unsuccessful attempt to
  * deploy it and, if so, whether the file seems to be stable in size or not.
  * <p>
  * When the caller actually tries to deploy a file, it must invoke
- * {@link reportSuccessfulDeployment} or {@link reportFailedDeployment)
+ * {@link #recordSuccessfulDeployment(File)} or {@link #recordFailedDeployment(File)}
  * so that the retry manager keeps its information about the file up-to-date.
  * Similarly, when the caller tries to undeploy a file it must invoke
- * {@link reportSuccessfulUndeployment} or {@link reportFailedUndeployment}.
+ * {@link #recordSuccessfulUndeployment(File)} or {@link #recordFailedUndeployment(File)}.
  * <P>
  * Internally for each file that has failed to deploy the retry manager records
  * the file's size and the timestamp of the most recent failure and the timestamp at
@@ -70,14 +70,14 @@ import org.jvnet.hk2.annotations.Service;
  * <p>
  * If AutoDeployer previously reported failures to deploy the file and the
  * file's size has been stable for its retry expiration time, then the
- * {@link shouldAttemptDeployment} method returns true to trigger another attempt to
+ * {@link #shouldAttemptDeployment(File)} method returns true to trigger another attempt to
  * deploy the file.  If the autodeployer reports another failed deployment
  * then the retry manager concludes that the file is not simply a slow-copying
  * file but is truly invalid.  In that case
  * it throws an exception.
  * <p>
  * Once the caller reports a successful deployment of a file by invoking
- * {@link reportSuccessfulDeployment} the retry manager discards any record of
+ * {@link #recordSuccessfulDeployment(File)} the retry manager discards any record of
  * that file from its internal data structures.  Similarly the retry manager
  * stops monitoring a file once the autodeployer has made an attempt -
  * successful or unsuccessful - to undeploy it.
@@ -124,6 +124,7 @@ public class AutodeployRetryManager implements PostConstruct {
     @LogMessageInfo(message = "Could not convert configured timeout value of \"{0}\" to a number; using previous value of {1} second{1,choice,0#seconds|1#second|1<seconds", level="WARNING")
     private static final String INVALID_TIMEOUT = "NCLS-DEPLOYMENT-02033";
 
+    @Override
     public void postConstruct() {
         setTimeout();
     }
@@ -135,7 +136,7 @@ public class AutodeployRetryManager implements PostConstruct {
      *null if the file is not recorded as invalid
      */
     Info get(File file) {
-        Info info = (Info) invalidFiles.get(file);
+        Info info = invalidFiles.get(file);
         return info;
     }
 
@@ -151,7 +152,7 @@ public class AutodeployRetryManager implements PostConstruct {
         boolean result = true; // default is true in case the file is not being monitored
         String msg = null;
         boolean loggable = deplLogger.isLoggable(Level.FINE);
-        Info info = (Info) invalidFiles.get(file);
+        Info info = invalidFiles.get(file);
         if (info != null) {
             result = info.shouldOpen();
             if (loggable) {

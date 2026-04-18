@@ -24,10 +24,12 @@ import org.jvnet.hk2.config.Element;
 
 
 /**
- *  <p>        This class is configured via XML (i.e. a console-config.xml file).
- *   This is done via the HK2 <code>ConfigParser</code>.</p>
+ * <p>
+ * This class is configured via XML (i.e. a console-config.xml file).
+ * This is done via the HK2 <code>ConfigParser</code>.
+ * </p>
  *
- *  @author Ken Paulsen        (ken.paulsen@sun.com)
+ * @author Ken Paulsen (ken.paulsen@sun.com)
  */
 @Configured(name="tocitem")
 public class TOCItem {
@@ -87,12 +89,16 @@ public class TOCItem {
         return this.targetPath;
     }
 
+
     /**
-     * <p> Sets the target path.  If the "target" is <code>foo</code>, the
-     *     target path should look something like:
-     *     <code>moduleId/en/help/foo.html</code></p>.  This value is NOT
-     *     automatically set, it must be calculated and set during
-     *     initialization code.</p>
+     * <p>
+     * Sets the target path. If the "target" is <code>foo</code>, the
+     * target path should look something like:
+     * <code>moduleId/en/help/foo.html</code>
+     * </p>
+     * This value is NOT
+     * automatically set, it must be calculated and set during
+     * initialization code.
      */
     public void setTargetPath(String targetPath) {
         this.targetPath = targetPath;

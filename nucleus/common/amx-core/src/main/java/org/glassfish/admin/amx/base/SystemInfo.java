@@ -99,7 +99,7 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility {
      * Even documented items should be used only for informational purposes,
      * such as assessing performance.
      *
-     * @return Map<String,Long>
+     * @return {@code Map<String,Long>}
      */
     @ManagedAttribute
     public Map<String, Long> getPerformanceMillis();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,7 @@ public class ASenvPropertyReader {
      * There are no arguments because the installation directory is calculated
      * relative to the jar file you are calling from.
      * Unlike V2 this class will not set any System Properties.  Instead it will
-     * give you a Map<String,String> containing the properties.
+     * give you a {@code {@code Map<String,String>}} containing the properties.
      * <p>To use the class, create an instance and then call getProps().
      */
     public ASenvPropertyReader() {
@@ -101,14 +101,14 @@ public class ASenvPropertyReader {
 
     /**
      * Returns the properties that were processed from asenv.[bat|conf].
-     * @return A Map<String,String> with all the system properties like properties.
+     * @return A {@code {@code Map<String,String>}} with all the system properties like properties.
      */
     public Map<String, String> getProps() {
         return props;
     }
 
     /**
-     * Returns a string representation of the properties in the Map<String,String>.
+     * Returns a string representation of the properties in the {@code {@code Map<String,String>}}.
      * Format:  name=value\nname2=value2\n etc.
      * @return the string representation.
      */

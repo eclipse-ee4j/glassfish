@@ -52,7 +52,7 @@ over a remote connection which may also involve asynchronous
 Notifications is complicated.  This logging facility makes
 it possible to selectively view specific entities in the
 interactions that are occuring, on a fine-grained level,
-something not possible with the server logging mechanism</li>
+something not possible with the server logging mechanism
 </li>
 <li>
 There is reason and justification for considering debugging

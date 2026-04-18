@@ -31,7 +31,7 @@ public interface ConnectionManager extends jakarta.resource.spi.ConnectionManage
      * in transaction.<br>
      *
      * @param mcf ManagedConnectionFactory
-     * @param cxRequestInfo ConnectionRequestInfo
+     * @param connectionRequestInfo ConnectionRequestInfo
      * @return Connection
      * @throws ResourceException when unable to provide a connection
      */

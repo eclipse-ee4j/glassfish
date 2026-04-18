@@ -136,7 +136,9 @@ public final class ExtensionValidator {
         ManifestResource appManifestResource = null;
         // If the application context is null it does not exist and
         // therefore is not valid
-        if (dirContext == null) return false;
+        if (dirContext == null) {
+            return false;
+        }
         // Find the Manifest for the Web Applicaiton
         InputStream inputStream = null;
         try {
@@ -213,7 +215,7 @@ public final class ExtensionValidator {
      * objects. This method requires an application name (which is the
      * context root of the application at runtime).
      *
-     * <code>false</false> is returned if the extension dependencies
+     * <code>false</code> is returned if the extension dependencies
      * represented by any given <code>ManifestResource</code> objects
      * is not met.
      *

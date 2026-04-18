@@ -88,6 +88,7 @@ public class Digester extends DefaultHandler {
 
     private static class SystemPropertySource
         implements IntrospectionUtils.PropertySource {
+        @Override
         public String getProperty( String key ) {
             return System.getProperty(key);
         }
@@ -213,6 +214,7 @@ public class Digester extends DefaultHandler {
     /**
      * @deprecated This is now managed by {@link ParserFeatureSetterFactory}
      */
+    @Deprecated
     protected String JAXP_SCHEMA_LANGUAGE =
         "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 
@@ -453,6 +455,7 @@ public class Digester extends DefaultHandler {
      * jakarta commons-logging library; see the documentation for that library
      * for more information.
      */
+    @Deprecated
     public int getDebug() {
 
         return (0);
@@ -470,6 +473,7 @@ public class Digester extends DefaultHandler {
      * the apache jakarta comons-logging library; see the documentation
      * for that library for more information.
      */
+    @Deprecated
     public void setDebug(int debug) {
 
         ; // No action is taken
@@ -517,8 +521,8 @@ public class Digester extends DefaultHandler {
     /**
      * Returns a flag indicating whether the requested feature is supported
      * by the underlying implementation of <code>org.xml.sax.XMLReader</code>.
-     * See <a href="http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description"
-     * http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description</a>
+     * See <a href="http://www.saxproject.org/apidoc/overview-summary.html"
+     * >http://www.saxproject.org/apidoc/overview-summary.html</a>
      * for information about the standard SAX2 feature flags.
      *
      * @param feature Name of the feature to inquire about
@@ -542,8 +546,8 @@ public class Digester extends DefaultHandler {
     /**
      * Sets a flag indicating whether the requested feature is supported
      * by the underlying implementation of <code>org.xml.sax.XMLReader</code>.
-     * See <a href="http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description"
-     * http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description</a>
+     * See <a href="http://www.saxproject.org/apidoc/overview-summary.html"
+     * >http://www.saxproject.org/apidoc/overview-summary.html</a>
      * for information about the standard SAX2 feature flags.  In order to be
      * effective, this method must be called <strong>before</strong> the
      * <code>getParser()</code> method is called for the first time, either
@@ -724,8 +728,8 @@ public class Digester extends DefaultHandler {
     /**
      * Return the current value of the specified property for the underlying
      * <code>XMLReader</code> implementation.
-     * See <a href="http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description"
-     * http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description</a>
+     * See <a href="http://www.saxproject.org/apidoc/overview-summary.html"
+     * >http://www.saxproject.org/apidoc/overview-summary.html</a>
      * for information about the standard SAX2 properties.
      *
      * @param property Property name to be retrieved
@@ -746,8 +750,8 @@ public class Digester extends DefaultHandler {
     /**
      * Set the current value of the specified property for the underlying
      * <code>XMLReader</code> implementation.
-     * See <a href="http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description"
-     * http://www.saxproject.org/apidoc/xml/sax/package-summary.html#package-description</a>
+     * See <a href="http://www.saxproject.org/apidoc/overview-summary.html"
+     * >http://www.saxproject.org/apidoc/overview-summary.html</a>
      * for information about the standard SAX2 properties.
      *
      * @param property Property name to be set
@@ -773,6 +777,7 @@ public class Digester extends DefaultHandler {
      * @deprecated Use getXMLReader() instead, which can throw a
      *  SAXException if the reader cannot be instantiated
      */
+    @Deprecated
     public XMLReader getReader() {
 
         try {
@@ -1015,6 +1020,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void characters(char buffer[], int start, int length)
             throws SAXException {
 
@@ -1032,6 +1038,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void endDocument() throws SAXException {
 
         if (saxLog.isLoggable(Level.FINE)) {
@@ -1080,6 +1087,7 @@ public class Digester extends DefaultHandler {
      *   empty string if qualified names are not available.
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void endElement(String namespaceURI, String localName,
                            String qName) throws SAXException {
 
@@ -1176,6 +1184,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void endPrefixMapping(String prefix) throws SAXException {
 
         if (saxLog.isLoggable(Level.FINE)) {
@@ -1189,8 +1198,9 @@ public class Digester extends DefaultHandler {
         }
         try {
             stack.pop();
-            if (stack.empty())
+            if (stack.empty()) {
                 namespaces.remove(prefix);
+            }
         } catch (EmptyStackException e) {
             throw createSAXException("endPrefixMapping popped too many times");
         }
@@ -1208,6 +1218,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void ignorableWhitespace(char buffer[], int start, int len)
             throws SAXException {
 
@@ -1229,6 +1240,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void processingInstruction(String target, String data)
             throws SAXException {
 
@@ -1257,6 +1269,7 @@ public class Digester extends DefaultHandler {
      *
      * @param locator The new locator
      */
+    @Override
     public void setDocumentLocator(Locator locator) {
 
         if (saxLog.isLoggable(Level.FINE)) {
@@ -1275,6 +1288,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void skippedEntity(String name) throws SAXException {
 
         if (saxLog.isLoggable(Level.FINE)) {
@@ -1291,6 +1305,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void startDocument() throws SAXException {
 
         if (saxLog.isLoggable(Level.FINE)) {
@@ -1317,6 +1332,7 @@ public class Digester extends DefaultHandler {
      *   no attributes, it shall be an empty Attributes object.
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void startElement(String namespaceURI, String localName,
                              String qName, Attributes list)
             throws SAXException {
@@ -1391,6 +1407,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing error is to be reported
      */
+    @Override
     public void startPrefixMapping(String prefix, String namespaceURI)
             throws SAXException {
 
@@ -1419,6 +1436,7 @@ public class Digester extends DefaultHandler {
      * @param publicId The public identifier (if any)
      * @param systemId The system identifier (if any)
      */
+    @Override
     public void notationDecl(String name, String publicId, String systemId) {
 
         if (saxLog.isLoggable(Level.FINE)) {
@@ -1437,6 +1455,7 @@ public class Digester extends DefaultHandler {
      * @param systemId The system identifier (if any)
      * @param notation The name of the associated notation
      */
+    @Override
     public void unparsedEntityDecl(String name, String publicId,
                                    String systemId, String notation) {
 
@@ -1478,6 +1497,7 @@ public class Digester extends DefaultHandler {
      * @exception SAXException if a parsing exception occurs
      *
      */
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException {
 
@@ -1485,8 +1505,9 @@ public class Digester extends DefaultHandler {
             saxLog.log(Level.FINE, "resolveEntity('" + publicId + "', '" + systemId + "')");
         }
 
-        if (publicId != null)
+        if (publicId != null) {
             this.publicId = publicId;
+        }
 
         // Has this system identifier been registered?
         String entityURL = null;
@@ -1540,6 +1561,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing exception occurs
      */
+    @Override
     public void error(SAXParseException exception) throws SAXException {
 
         String msg = MessageFormat.format(rb.getString(LogFacade.PARSE_ERROR),
@@ -1561,6 +1583,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing exception occurs
      */
+    @Override
     public void fatalError(SAXParseException exception) throws SAXException {
 
         String msg = MessageFormat.format(rb.getString(LogFacade.PARSE_FATAL_ERROR),
@@ -1583,6 +1606,7 @@ public class Digester extends DefaultHandler {
      *
      * @exception SAXException if a parsing exception occurs
      */
+    @Override
     public void warning(SAXParseException exception) throws SAXException {
          if (errorHandler != null) {
              log.log(Level.WARNING, LogFacade.PARSE_WARNING_ERROR,
@@ -1604,6 +1628,7 @@ public class Digester extends DefaultHandler {
      * @param message The message to be logged
      * @deprecated Call getLogger() and use it's logging methods
      */
+    @Deprecated
     public void log(String message) {
         log.log(Level.INFO, message);
     }
@@ -1615,6 +1640,7 @@ public class Digester extends DefaultHandler {
      * @param message The message to be logged
      * @deprecated Call getLogger() and use it's logging methods
      */
+    @Deprecated
     public void log(String message, Throwable exception) {
 
         log.log(Level.SEVERE, message, exception);

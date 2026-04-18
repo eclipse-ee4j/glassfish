@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,7 +38,8 @@ public final class CollectionUtils {
 
 
     /**
-     * Convert a Properties object, which is a <code>Map&lt;Object,Object></code> into a <code<Map&lt;String,String></code>
+     * Convert a Properties object, which is a {@code Map<Object,Object>} into
+     * a {@code Map<Object,Object>}
      *
      * @param p The Properties object to convert
      * @return The converted Map
@@ -46,13 +47,11 @@ public final class CollectionUtils {
     public static Map<String, String> propertiesToStringMap(Properties p) {
         Map<String, String> map = new HashMap<>();
         Set<Map.Entry<Object, Object>> entries = p.entrySet();
-
         for (Map.Entry<Object, Object> entry : entries) {
             Object name = entry.getKey();
             Object value = entry.getValue();
-
             if (name == null) {
-                continue; // impossible. Ignore if I was wrong...
+                continue;
             }
             if (value == null) {
                 map.put(name.toString(), null);
@@ -60,7 +59,6 @@ public final class CollectionUtils {
                 map.put(name.toString(), value.toString());
             }
         }
-
         return map;
     }
 

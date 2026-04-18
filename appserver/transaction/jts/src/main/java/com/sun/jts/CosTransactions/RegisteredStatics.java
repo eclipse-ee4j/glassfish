@@ -44,7 +44,6 @@ import org.omg.CosTransactions.Unavailable;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //---------------------------------------------------------------------------
@@ -61,11 +60,8 @@ class RegisteredStatics {
     /**
      * Default RegisteredStatics constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     RegisteredStatics() {}
 
@@ -80,9 +76,7 @@ class RegisteredStatics {
      * @param control The transaction whose association has started.
      * @param begin   Indicates if this is a begin rather than a resume.
      *
-     * @return
      *
-     * @see
      */
     void distributeStart(ControlImpl control, boolean begin) {
 
@@ -137,9 +131,7 @@ class RegisteredStatics {
      * @param complete  Indicates that this is a commit/rollback rather than a
      *                  suspend.
      *
-     * @return
      *
-     * @see
      */
     void distributeEnd(ControlImpl control, boolean complete) {
 
@@ -175,9 +167,7 @@ class RegisteredStatics {
      *
      * @param obj  The StaticResource to be added.
      *
-     * @return
      *
-     * @see
      */
 
     void addStatic(StaticResource obj) {
@@ -210,7 +200,6 @@ class RegisteredStatics {
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean removeStatic(StaticResource obj) {
 

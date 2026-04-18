@@ -268,10 +268,10 @@ public class MapInjectionResolver extends InjectionResolver<Param> {
     /**
      * Get the value of the field.  This value is defined in the
      * annotated Param declaration.  For example:
-     * <code>
-     * @Param(optional=true)
-     * String name="server"
-     * </code>
+     * <pre>
+     * {@code @Param(optional=true)
+     * String name="server"}
+     * </pre>
      * The Field, name's value, "server" is returned.
      *
      * @param component command class object

@@ -58,11 +58,8 @@ class LogRecordEnding implements Serializable {
 
     /**Default LogRecordEnding constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     LogRecordEnding() {
     }
@@ -72,9 +69,7 @@ class LogRecordEnding implements Serializable {
      * @param bytes The array of bytes from which the object is to be constructed.
      * @param index The index in the array where copy is to start.
      *
-     * @return
      *
-     * @see
      */
     LogRecordEnding( byte[] bytes,
                      int  index ) {
@@ -88,7 +83,6 @@ class LogRecordEnding implements Serializable {
      *
      * @return  Number of bytes copied.
      *
-     * @see
      */
     final int toBytes( byte[] bytes,
                        int  index ) {
@@ -99,11 +93,9 @@ class LogRecordEnding implements Serializable {
 
     /**This method is called to direct the object to format its state to a String.
      *
-     * @param
      *
      * @return  The formatted representation of the object.
      *
-     * @see
      */
     public final String toString() {
         return "LRE(curr="/*#Frozen*/+currentLSN+")"/*#Frozen*/;

@@ -76,17 +76,17 @@ public interface LogAnalyzer {
      * <p>
      * The timestamp obtained from each Map may be used as the timestamp when
      * calling {@link #getErrorDistribution}. For example:<br>
-     * <code>
-    final Map<String,Number>[] infos = logging.getErrorInfo();<br>
-    for (int i = 0; i < infos.length; ++i) {<br>
-            final Map<String,Object> info = infos[i];<br>
-            final long timestamp = ((Long)info.get( TIMESTAMP_KEY )).longValue();<br>
-            <br>
-            Map<String,Number> counts = getErrorDistribution( timestamp );<br>
-    }
-    </code>
      *
-     * @return Map<String,Number>
+     * <pre>{@code
+final Map<String,Number>[] infos = logging.getErrorInfo();
+for (int i = 0; i < infos.length; ++i) {
+    final Map<String,Object> info = infos[i];
+    final long timestamp = ((Long)info.get( TIMESTAMP_KEY )).longValue();
+    Map<String,Number> counts = getErrorDistribution( timestamp );
+}
+    }</pre>
+     *
+     * @return {@code Map<String,Number>}
      */
     @ManagedAttribute
     Map<String,Number>[] getErrorInfo();
@@ -106,7 +106,7 @@ public interface LogAnalyzer {
      *            returned by {@link #getErrorInfo}. Note that it is a 'long' not a 'Long' and is
      *            required.
      * @param level
-     * @return Map<String,Integer>
+     * @return {@code Map<String,Integer>}
      */
     @ManagedOperation Map<String,Integer>
     getErrorDistribution(

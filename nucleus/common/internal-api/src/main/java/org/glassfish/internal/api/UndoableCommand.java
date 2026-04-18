@@ -59,7 +59,7 @@ import org.glassfish.api.admin.ParameterMap;
  * method is invoked (and any supplemented methods).
  *
  * <p>If the framework is electing that successful commands execution need to be rolled back, it will
- * call the {@link #undo(AdminCommandContext, ParameterMap, List<Server>)} method on the same instance that was used for the
+ * call the {@link #undo(AdminCommandContext, ParameterMap, List)} method on the same instance that was used for the
  * {@link #execute(AdminCommandContext)} invocation, as well as any supplemented commands that implement
  * this interface.
  *
@@ -76,7 +76,7 @@ public interface UndoableCommand extends AdminCommand {
      * servers instances are on-line and can be notified of the change.
      *
      * <p>No changes to the configuration should be made within the implementation of the
-     * prepare method since {@link #undo(AdminCommandContext, ParameterMap, List<Server>)} will not be called if the command
+     * prepare method since {@link #undo(AdminCommandContext, ParameterMap, List)} will not be called if the command
      * execution stops at the prepare phase.
      *
      * <p>Note that if, as part of prepare, remote instances have to be contacted, then it is the responsibility of
@@ -97,7 +97,7 @@ public interface UndoableCommand extends AdminCommand {
      * for undoing the administrative operation should be obtained from either the
      * parameters passed to the command execution or the command instance context.
      * The list of servers indicates to the command implementation on which servers the command succeeded
-     * The command implementation is guaranteed that the  {@link #undo(AdminCommandContext, ParameterMap, List<Server>)}
+     * The command implementation is guaranteed that the  {@link #undo(AdminCommandContext, ParameterMap, List)}
      * is called on DAS if the main command execution failed on one instance but it is the responsiblity of the command
      * implementation to invoke remote instances to do the actual undo if required
      *

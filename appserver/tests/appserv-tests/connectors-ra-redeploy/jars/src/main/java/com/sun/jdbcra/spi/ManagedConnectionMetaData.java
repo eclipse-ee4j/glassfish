@@ -43,8 +43,8 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
     /**
      * Constructor for <code>ManagedConnectionMetaData</code>
      *
-     * @param        mc        <code>ManagedConnection</code>
-     * @throws        <code>ResourceException</code>        if getting the DatabaseMetaData object fails
+     * @param mc <code>ManagedConnection</code>
+     * @throws ResourceException if getting the DatabaseMetaData object fails
      */
     public ManagedConnectionMetaData(ManagedConnection mc) throws ResourceException {
         try {
@@ -61,7 +61,7 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * through the ManagedConnection.
      *
      * @return        Product name of the EIS instance
-     * @throws        <code>ResourceException</code>
+     * @throws        ResourceException
      */
     @Override
     public String getEISProductName() throws ResourceException {
@@ -78,7 +78,7 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * through the ManagedConnection.
      *
      * @return        Product version of the EIS instance
-     * @throws        <code>ResourceException</code>
+     * @throws        ResourceException
      */
     @Override
     public String getEISProductVersion() throws ResourceException {
@@ -95,7 +95,7 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * that an EIS instance can support across client processes.
      *
      * @return        Maximum limit for number of active concurrent connections
-     * @throws        <code>ResourceException</code>
+     * @throws        ResourceException
      */
     @Override
     public int getMaxConnections() throws ResourceException {
@@ -113,7 +113,7 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * to the EIS instance has been established.
      *
      * @return        name of the user
-     * @throws        <code>ResourceException</code>
+     * @throws        ResourceException
      */
     @Override
     public String getUserName() throws ResourceException {

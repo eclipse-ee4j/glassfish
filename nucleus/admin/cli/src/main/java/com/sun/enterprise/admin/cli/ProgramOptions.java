@@ -261,7 +261,7 @@ public class ProgramOptions {
     }
 
     /**
-     * @return the host
+     * @return the host, never null
      */
     public String getHost() {
         String host = options.getOne(HOST);

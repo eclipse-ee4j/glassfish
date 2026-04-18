@@ -3,7 +3,7 @@
 In this example we assume 8.0.1.
 If any step failed, you have to resolve the issue and start from the appropriate step again.
 
-1. Create a release branch RELEASE_8.0.1 and push it to the Eclipse GlassFish Github repository.
+1. Create a release branch RELEASE_8.0.1 and push it to the Eclipse GlassFish GitHub repository.
 2. Open [glassfish-release](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish-release)
 3. Click [Build with parameters](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish-release/build) in menu.
     - `releaseVersion` = `8.0.1`
@@ -23,14 +23,14 @@ If any step failed, you have to resolve the issue and start from the appropriate
 you can deploy to Maven Central Snapshots using [glassfish-deploy-snapshots](https://ci.eclipse.org/glassfish/job/glassfish-deploy-snapshot/)
 and refer zip from the build or from Maven Central Snapshots (same file). As another alternative you can run the TCK on any other
 infrastructure.
-9. Create the release on Github: click ["Draft a new release"](https://github.com/eclipse-ee4j/glassfish/releases)
+9. Create the release on GitHub: click ["Draft a new release"](https://github.com/eclipse-ee4j/glassfish/releases)
 10. Create the release on Eclipse: ["Create a new release"](https://projects.eclipse.org/projects/ee4j.glassfish/create-release)
 11. If it is a version with important feature changes, ask for a release review. Remember that it will take more than week.
 12. Create the release on Glassfish.org. Do a PR for the **main** branch with:
     -  an update for the website in [`docs/website/src/main/resources`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources):
         - in [`download_gf8.md`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources/download_gf7.md),
-          create a section for the new version at the top, based on the previous version. Update the info based on the release notes in github,
-          e.g. https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.1
+          create a section for the new version at the top, based on the previous version.
+          Update the info based on the release notes on [GitHub](https://github.com/eclipse-ee4j/glassfish/releases)
         - in [`download.md`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources/download.md),
           replace information in the "Eclipse GlassFish 8.x" section at the top with info for the new version in `download_gf8.md`
         - check [`README.md`](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/website/src/main/resources/README.md),

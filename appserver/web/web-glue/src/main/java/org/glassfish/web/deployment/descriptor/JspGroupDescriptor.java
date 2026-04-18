@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,8 +21,6 @@ import com.sun.enterprise.deployment.OrderedSet;
 
 import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDescriptor {
@@ -32,9 +30,9 @@ public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDe
     private String isXml;
     private String deferredSyntaxAllowedAsLiteral;
     private String trimDirectiveWhitespaces;
-    private Set<String> urlPatterns;
-    private Set<String> includePreludes;
-    private Set<String> includeCodas;
+    private OrderedSet<String> urlPatterns;
+    private OrderedSet<String> includePreludes;
+    private OrderedSet<String> includeCodas;
     private String pageEncoding;
     private String defaultContentType;
     private String buffer;
@@ -44,7 +42,7 @@ public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDe
      * Return the set of URL pattern aliases for this group.
      */
     @Override
-    public Set<String> getUrlPatterns() {
+    public OrderedSet<String> getUrlPatterns() {
         if (this.urlPatterns == null) {
             this.urlPatterns = new OrderedSet<>();
         }
@@ -71,7 +69,7 @@ public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDe
      * Return an Iterable over the include prelude elements for this group.
      */
     @Override
-    public Set<String> getIncludePreludes() {
+    public OrderedSet<String> getIncludePreludes() {
         if (this.includePreludes == null) {
             this.includePreludes = new OrderedSet<>();
         }
@@ -98,7 +96,7 @@ public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDe
      * Return an Iterable over include coda elements for this group.
      */
     @Override
-    public Set<String> getIncludeCodas() {
+    public OrderedSet<String> getIncludeCodas() {
         if (this.includeCodas == null) {
             this.includeCodas = new OrderedSet<>();
         }

@@ -45,12 +45,15 @@ public interface EjbMessageBeanDescriptor extends EjbDescriptor, MessageDestinat
     // Reflection in EjbNode
     void setResourceAdapterMid(String resourceAdapterMid);
 
+    /**
+     * @return never null, Set of {@link EnvironmentProperty} elements.
+     */
     Set<EnvironmentProperty> getActivationConfigProperties();
 
     String getActivationConfigValue(String name);
 
     /**
-     * @return Set of {@link EnvironmentProperty} elements.
+     * @return never null, Set of {@link EnvironmentProperty} elements.
      */
     Set<EnvironmentProperty> getRuntimeActivationConfigProperties();
 

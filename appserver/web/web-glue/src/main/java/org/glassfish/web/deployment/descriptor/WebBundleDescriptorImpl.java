@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -79,7 +79,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     private AbsoluteOrderingDescriptor absOrdering;
     private SunWebApp sunWebApp;
 
-    private final Set<String> conflictedMimeMappingExtensions = new OrderedSet<>();
+    private final OrderedSet<String> conflictedMimeMappingExtensions = new OrderedSet<>();
 
     /**
      * Construct an empty web app [{0}].
@@ -265,7 +265,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     }
 
 
-    public Set<String> getConflictedMimeMappingExtensions() {
+    public OrderedSet<String> getConflictedMimeMappingExtensions() {
         return conflictedMimeMappingExtensions;
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,6 @@ import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.connectors.ConnectorRegistry;
 import com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils;
-import com.sun.enterprise.connectors.util.RARUtils;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.connectors.util.SetMethodAction;
 import com.sun.enterprise.deployment.BundleDescriptor;
@@ -183,7 +183,7 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
                             }
 
                             // Get the ActivationConfig Properties from the MDB Descriptor
-                            Set<EnvironmentProperty> activationConfigProps = RARUtils
+                            Set<EnvironmentProperty> activationConfigProps = ConnectorsUtil
                                 .getMergedActivationConfigProperties(descriptor);
                             // get message listener type
                             String msgListenerType = descriptor.getMessageListenerType();

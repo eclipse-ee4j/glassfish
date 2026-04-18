@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,10 +43,23 @@ import org.jvnet.hk2.config.TransactionFailure;
  */
 public final class PortManager {
 
+    private static final int MAX_PORT_TRIES = 1100;
+
+    private final String serverName;
+    private final Server newServer;
+    private final boolean isLocal;
+    private final Domain domain;
+    private final String host;
+    private final Set<Integer> allPorts;
+    private final List<Server> allServers;
+    private final List<ServerPorts> serversOnHost;
+    private final ServerPorts newServerPorts;
+
     public PortManager(Cluster cluster, Config config, Domain theDomain, Server theNewServer) throws TransactionFailure {
         try {
-            if (theNewServer == null || theDomain == null)
+            if (theNewServer == null || theDomain == null) {
                 throw new TransactionFailure(Strings.get("internal.error", "null argument in PortManager constructor"));
+            }
 
             newServer = theNewServer;
             domain = theDomain;
@@ -61,10 +74,10 @@ public final class PortManager {
 
             host = new ServerHelper(theNewServer, config).getAdminHost();
 
-            allPorts = new TreeSet<Integer>();
+            allPorts = new TreeSet<>();
             newServerPorts = new ServerPorts(cluster, config, domain, newServer);
 
-            isLocal = NetUtils.isThisHostLocal(host);
+            isLocal = NetUtils.isLocal(host);
 
             allServers = domain.getServers().getServer();
 
@@ -87,8 +100,9 @@ public final class PortManager {
     public String process() throws TransactionFailure {
         try {
             // if there are no port system-property's -- no point in going on!
-            if (newServerPorts.getMap().isEmpty())
+            if (newServerPorts.getMap().isEmpty()) {
                 return null; // all done!
+            }
 
             // make sure user-supplied props are not flaky
             PortUtils.checkInternalConsistency(newServer);
@@ -131,8 +145,9 @@ public final class PortManager {
     public String toString() {
         StringBuilder sb = new StringBuilder("PortManager Dump:");
 
-        for (ServerPorts sp : serversOnHost)
+        for (ServerPorts sp : serversOnHost) {
             sb.append(sp).append('\n');
+        }
 
         sb.append("All Ports in all other servers on same host: " + allPorts);
         return sb.toString();
@@ -156,18 +171,19 @@ public final class PortManager {
     }
 
     private void createServerList() {
-        if (isLocal)
+        if (isLocal) {
             createLocalServerList();
-        else
+        } else {
             createRemoteServerList();
+        }
 
     }
 
     private void createLocalServerList() {
         for (Server server : allServers) {
-            if (server.isDas())
+            if (server.isDas()) {
                 serversOnHost.add(new ServerPorts(domain, server));
-            else if (NetUtils.isThisHostLocal(server.getAdminHost())) {
+            } else if (NetUtils.isLocal(server.getAdminHost())) {
                 serversOnHost.add(new ServerPorts(domain, server));
             }
         }
@@ -176,13 +192,10 @@ public final class PortManager {
     private void createRemoteServerList() {
         for (Server server : allServers) {
             // no DAS!
-            if (server.isInstance() && sameHost(server))
+            if (server.isInstance() && NetUtils.isSameHost(server.getAdminHost(), host)) {
                 serversOnHost.add(new ServerPorts(domain, server));
+            }
         }
-    }
-
-    private boolean sameHost(Server server) {
-        return NetUtils.isSameHost(server.getAdminHost(), host);
     }
 
     private Map<String, Integer> reassignPorts() throws TransactionFailure {
@@ -198,23 +211,23 @@ public final class PortManager {
             Integer num = entry.getValue();
             Integer newNum = reassignPort(num);
 
-            if (!newNum.equals(num))
+            if (!newNum.equals(num)) {
                 changedPortProps.put(name, newNum);
+            }
         }
         return changedPortProps;
     }
 
-    private Integer reassignPort(Integer num) throws TransactionFailure {
+    private Integer reassignPort(int num) throws TransactionFailure {
         int max = num + 100;
-
+        final String hostName = NetUtils.getHostName();
         while (num < max) {
             num = getNextUnassignedPort(num);
-
-            if (isPortFree(num)) {
+            if (NetUtils.isPortFree(hostName, num)) {
                 allPorts.add(num);
                 return num;
-            } else
-                ++num;
+            }
+            ++num;
         }
         throw new TransactionFailure(Strings.get("PortManager.noFreePort"));
     }
@@ -223,8 +236,9 @@ public final class PortManager {
         int max = num + MAX_PORT_TRIES; // to avoid infinite loop
 
         for (int inum = num; inum < max; inum++) {
-            if (!allPorts.contains(inum))
+            if (!allPorts.contains(inum)) {
                 return inum;
+            }
         }
         throw new TransactionFailure(Strings.get("PortManager.noFreePort", num, max));
     }
@@ -243,28 +257,10 @@ public final class PortManager {
         sps.add(sp);
     }
 
-    private boolean isPortFree(int num) {
-        if (isLocal)
-            return NetUtils.isPortFree(num);
-
-        return NetUtils.isPortFree(host, num);
-    }
-
     private void populateAllPorts() {
 
         for (ServerPorts sp : serversOnHost) {
             allPorts.addAll(sp.getMap().values());
         }
     }
-
-    private final String serverName;
-    private final Server newServer;
-    private final boolean isLocal;
-    private final Domain domain;
-    private final String host;
-    private final Set<Integer> allPorts;
-    private final List<Server> allServers;
-    private final List<ServerPorts> serversOnHost;
-    private final ServerPorts newServerPorts;
-    private static final int MAX_PORT_TRIES = 1100;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -222,11 +222,6 @@ public class RemoteAdminCommand {
          * @throws IOException
          */
         void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
-    }
-
-    public RemoteAdminCommand(String name, String host, int port) throws CommandException {
-
-        this(name, host, port, false, "admin", null, Logger.getAnonymousLogger());
     }
 
     public RemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger)
@@ -1342,7 +1337,7 @@ public class RemoteAdminCommand {
             if (ok(upString)) {
                 doUpload = Boolean.parseBoolean(upString);
             } else {
-                doUpload = !isLocal(host) && sawUploadableFile;
+                doUpload = sawUploadableFile && !NetUtils.isLocal(host);
             }
             if (prohibitDirectoryUploads && sawDirectory && doUpload) {
                 // oops, can't upload directories
@@ -1365,27 +1360,6 @@ public class RemoteAdminCommand {
         }
 
         logger.finer("doUpload set to " + doUpload);
-    }
-
-    /**
-     * Does the given hostname represent the local host?
-     */
-    private static boolean isLocal(String hostname) {
-        if (hostname.equalsIgnoreCase("localhost")) { // the common case
-            return true;
-        }
-        try {
-            // let NetUtils do the hard work
-            InetAddress ia = InetAddress.getByName(hostname);
-            return NetUtils.isLocal(ia.getHostAddress());
-        } catch (UnknownHostException ex) {
-            /*
-             * Sometimes people misconfigure their name service and they
-             * can't even look up the name of their own machine.
-             * Too bad.  We just give up and say it's not local.
-             */
-            return false;
-        }
     }
 
     /**

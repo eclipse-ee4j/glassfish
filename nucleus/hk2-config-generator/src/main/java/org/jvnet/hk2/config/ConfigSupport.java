@@ -462,11 +462,14 @@ public class ConfigSupport implements ConfigurationUtilities {
      * a TransactionFailure when the creation or settings of attributes failed.
      *
      * Example creating a new http-listener element under http-service
+     *
+     * {@snippet :
      *      ConfigBean httpService = ... // got it from somwhere.
      *      Map<String, String> attributes = new HashMap<String, String>();
      *      attributes.put("id", "jerome-listener");
      *      attributes.put("enabled", "true");
      *      ConfigSupport.createAndSet(httpService, HttpListener.class, attributes);
+     * }
      *
      * @param parent parent config bean to which the child will be added.
      * @param childType child type
@@ -493,11 +496,14 @@ public class ConfigSupport implements ConfigurationUtilities {
      * a TransactionFailure when the creation or settings of attributes failed.
      *
      * Example creating a new http-listener element under http-service
+     *
+     * {@snippet :
      *      ConfigBean httpService = ... // got it from somwhere.
      *      Map<String, String> attributes = new HashMap<String, String>();
      *      attributes.put("id", "jerome-listener");
      *      attributes.put("enabled", "true");
      *      ConfigSupport.createAndSet(httpService, HttpListener.class, attributes);
+     * }
      *
      * @param parent parent config bean to which the child will be added.
      * @param childType child type
@@ -545,11 +551,14 @@ public class ConfigSupport implements ConfigurationUtilities {
      * a TransactionFailure when the creation or settings of attributes failed.
      *
      * Example creating a new http-listener element under http-service
+     *
+     * {@snippet :
      *      ConfigBean httpService = ... // got it from somwhere.
      *      Map<String, String> attributes = new HashMap<String, String>();
      *      attributes.put("id", "jerome-listener");
      *      attributes.put("enabled", "true");
      *      ConfigSupport.createAndSet(httpService, HttpListener.class, attributes);
+     * }
      *
      * @param parent parent config bean to which the child will be added.
      * @param childType child type

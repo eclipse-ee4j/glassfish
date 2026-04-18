@@ -23,7 +23,7 @@ import java.lang.reflect.Proxy;
 
 /**
  * Usage:
- * <code>
+ * {@snippet :
  * class ExampleDocument extends DomDocument<ConfigBean> {
  *   @Override
  *   public ConfigBean make(final ServiceLocator serviceLocator, XMLStreamReader xmlStreamReader,
@@ -33,7 +33,7 @@ import java.lang.reflect.Proxy;
  *     return configBean;
  *   }
  * }
- * </code>
+ * }
  *
  * @author Andriy Zhdanov
  *

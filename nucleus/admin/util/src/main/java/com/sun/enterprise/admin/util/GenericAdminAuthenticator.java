@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
+import com.sun.enterprise.security.cli.CreateFileUser;
 import com.sun.enterprise.util.net.NetUtils;
 
 import jakarta.inject.Inject;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
+import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.logging.Level;
@@ -56,6 +58,7 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
+import org.glassfish.security.services.commands.LDAPAdminAccessConfigurator;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
@@ -72,8 +75,8 @@ import org.jvnet.hk2.annotations.Service;
  * LDAP, the specific group relationships are enforced.</li>
  * </ul>
  * Note that admin security is tested only with FileRealm and LDAPRealm.
- * @see com.sun.enterprise.security.cli.LDAPAdminAccessConfigurator
- * @see com.sun.enterprise.security.cli.CreateFileUser
+ * @see LDAPAdminAccessConfigurator
+ * @see CreateFileUser
  * @since GlassFish v3
  */
 @Service
@@ -206,12 +209,13 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     private boolean ensureGroupMembership(String user, String realm) {
         try {
             SecurityContext secContext = SecurityContext.getCurrent();
-            Set ps = secContext.getPrincipalSet(); //before generics
-            for (Object principal : ps) {
+            Set<Principal> ps = secContext.getPrincipalSet();
+            for (Principal principal : ps) {
                 if (principal instanceof Group) {
                     Group group = (Group) principal;
-                    if (group.getName().equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME))
+                    if (group.getName().equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME)) {
                         return true;
+                    }
                 }
             }
             ADMSEC_LOGGER.fine("User is not a member of the special admin group");
@@ -226,9 +230,6 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     private Subject authenticate(final Request req, final String alternateHostname) throws IOException, LoginException {
         final AdminCallbackHandler cbh = new AdminCallbackHandler(habitat, req, alternateHostname, getDefaultAdminUser(), localPassword);
         try {
-            /*
-             * Enforce remote access restrictions, if any.
-             */
             rejectRemoteAdminIfDisabled(cbh);
 
             Subject subject = consumeTokenIfPresent(req);
@@ -268,17 +269,19 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         }
     }
 
+    /*
+     * Accept the request if secure admin is enabled or if the request is local.
+     */
     private void rejectRemoteAdminIfDisabled(final String host) throws RemoteAdminAccessException {
-        /*
-         * Accept the request if secure admin is enabled or if the
-         * request is local.
-         */
-        if (SecureAdmin.isEnabled(secureAdmin) || NetUtils.isThisHostLocal(host)) {
-            return;
+        if (!SecureAdmin.isEnabled(secureAdmin) && !NetUtils.isLocal(host)) {
+            throw new RemoteAdminAccessException(
+                "Remote admin access is not allowed when secure admin is disabled. Host=" + host);
         }
-        throw new RemoteAdminAccessException();
     }
 
+    /*
+     * Enforce remote access restrictions, if any.
+     */
     private void rejectRemoteAdminIfDisabled(final AdminCallbackHandler cbh) throws RemoteAdminAccessException {
         /*
          * If the secure admin config is not available then do not try to
@@ -307,12 +310,11 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     }
 
     private Subject consumeTokenIfPresent(final Request req) {
-        Subject result = null;
         final String token = req.getHeader(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
-        if (token != null) {
-            result = authTokenManager.consumeToken(token);
+        if (token == null) {
+            return null;
         }
-        return result;
+        return authTokenManager.consumeToken(token);
     }
 
     /**
@@ -342,8 +344,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         try {
             FileRealm fr = new FileRealm(rf.getAbsolutePath());
             String candidateDefaultAdminUser = null;
-            for (Enumeration users = fr.getUserNames(); users.hasMoreElements();) {
-                String au = (String) users.nextElement();
+            for (Enumeration<String> users = fr.getUserNames(); users.hasMoreElements();) {
+                String au = users.nextElement();
                 FileRealmUser fru = (FileRealmUser) fr.getUser(au);
                 for (String group : fru.getGroups()) {
                     if (group.equals(AdminConstants.DOMAIN_ADMIN_GROUP_NAME)) {
@@ -377,14 +379,14 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new LoginException();
         }
 
-        Subject s;
+        Subject subject;
         try {
             rejectRemoteAdminIfDisabled(host);
-            s = authService.login(user, password, null);
+            subject = authService.login(user, password, null);
             if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
                 ADMSEC_LOGGER.log(Level.FINE, "*** Login worked\n  user={0}\n  host={1}\n", new Object[] { user, host });
             }
-            return s;
+            return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
              * Rethrow RemoteAdminAccessException explicitly to avoid it being
@@ -411,43 +413,43 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     public Subject authenticate(Object credentials) {
         String user = "";
         char[] password = "".toCharArray();
-        String host = null;
+        final String host;
         if (credentials instanceof String[]) {
             // this is supposed to be 2-string array with user name and password
-            String[] up = (String[]) credentials;
-            if (up.length == 1) {
-                user = up[0];
-            } else if (up.length >= 2) {
-                user = up[0];
-                password = up[1] != null ? up[1].toCharArray() : "".toCharArray();
+            String[] credentialsArray = (String[]) credentials;
+            if (credentialsArray.length == 1) {
+                user = credentialsArray[0];
+            } else if (credentialsArray.length >= 2) {
+                user = credentialsArray[0];
+                password = credentialsArray[1] == null ? new char[0] : credentialsArray[1].toCharArray();
             }
-            if (up.length > 2) {
-                host = up[2];
+            if (credentialsArray.length > 2) {
+                host = credentialsArray[2];
             } else {
                 try {
-                    /*
-                     * This method is used for JMX over RMI authentication, so
-                     * we can find out the host from RMI.
-                     */
+                    // This method is used for JMX over RMI authentication, so
+                    // we can find out the host from RMI, however it is not reliable as
+                    // the connection might not be open.
                     host = RemoteServer.getClientHost();
                 } catch (ServerNotActiveException ex) {
                     throw new RuntimeException(ex);
                 }
             }
+        } else {
+            host = NetUtils.getHostName();
         }
 
         String realm = as.getSystemJmxConnector().getAuthRealmName(); //yes, for backward compatibility;
-        if (realm == null)
+        if (realm == null) {
             realm = as.getAuthRealmName();
+        }
 
         try {
             loginAsAdmin(user, new String(password), realm, host);
             return null;
         } catch (LoginException e) {
-            if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
-                ADMSEC_LOGGER.log(Level.FINE, "*** LoginException during JMX auth\n  user={0}\n  host={1}\n  realm={2}",
-                        new Object[] { user, host, realm });
-            }
+            ADMSEC_LOGGER.log(Level.FINE, "LoginException during JMX auth\n  user={0}\n  host={1}\n  realm={2}",
+                new Object[] {user, host, realm});
             throw new SecurityException(e);
         }
     }

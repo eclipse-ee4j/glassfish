@@ -25,6 +25,7 @@ import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.InboundResourceAdapter;
 import com.sun.enterprise.deployment.MessageListener;
+import com.sun.enterprise.deployment.OrderedSet;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
 import com.sun.enterprise.deployment.util.ConnectorVisitor;
 import com.sun.enterprise.deployment.util.DefaultDOLVisitor;
@@ -170,7 +171,7 @@ public class ConnectorValidator extends DefaultDOLVisitor implements ConnectorVi
         if (raClass != null && !raClass.isEmpty()) {
             if (!desc.getConfigPropertyProcessedClasses().contains(raClass)) {
                 Class<?> claz = getClass(desc, raClass);
-                ConfigPropertyHandler.processParent(claz, desc.getConfigProperties());
+                ConfigPropertyHandler.processParent(claz, desc);
             }
         }
         if (desc.getOutBoundDefined()) {
@@ -184,7 +185,7 @@ public class ConnectorValidator extends DefaultDOLVisitor implements ConnectorVi
                 if (connectionFactoryClass != null && !connectionFactoryClass.isEmpty()) {
                     if (!desc.getConfigPropertyProcessedClasses().contains(connectionFactoryClass)) {
                         Class<?> claz = getClass(desc, connectionDef.getManagedConnectionFactoryImpl());
-                        ConfigPropertyHandler.processParent(claz, connectionDef.getConfigProperties());
+                        ConfigPropertyHandler.processParent(claz, connectionDef);
                     }
                 }
             }
@@ -192,7 +193,7 @@ public class ConnectorValidator extends DefaultDOLVisitor implements ConnectorVi
 
         if (desc.getInBoundDefined()) {
             InboundResourceAdapter ira = desc.getInboundResourceAdapter();
-            Set<MessageListener> messageListeners = ira.getMessageListeners();
+            OrderedSet<MessageListener> messageListeners = ira.getMessageListeners();
             Iterator<MessageListener> it = messageListeners.iterator();
             while (it.hasNext()) {
                 MessageListener ml = it.next();
@@ -200,20 +201,18 @@ public class ConnectorValidator extends DefaultDOLVisitor implements ConnectorVi
                 if (activationSpecClass != null && !activationSpecClass.equals("")) {
                     if (!desc.getConfigPropertyProcessedClasses().contains(activationSpecClass)) {
                         Class<?> claz = getClass(desc, activationSpecClass);
-                        ConfigPropertyHandler.processParent(claz, ml.getConfigProperties());
+                        ConfigPropertyHandler.processParent(claz, ml);
                     }
                 }
             }
         }
 
-        Set<AdminObject> adminObjects = desc.getAdminObjects();
-        Iterator<AdminObject> it = adminObjects.iterator();
-        while (it.hasNext()) {
-            AdminObject ao = it.next();
-            String uniqueName = ao.getAdminObjectInterface() + "_" + ao.getAdminObjectClass();
+        OrderedSet<AdminObject> adminObjects = desc.getAdminObjects();
+        for (AdminObject adminObject : adminObjects) {
+            String uniqueName = adminObject.getAdminObjectInterface() + "_" + adminObject.getAdminObjectClass();
             if (!desc.getConfigPropertyProcessedClasses().contains(uniqueName)) {
-                Class<?> claz = getClass(desc, ao.getAdminObjectClass());
-                ConfigPropertyHandler.processParent(claz, ao.getConfigProperties());
+                Class<?> claz = getClass(desc, adminObject.getAdminObjectClass());
+                ConfigPropertyHandler.processParent(claz, adminObject);
             }
         }
     }

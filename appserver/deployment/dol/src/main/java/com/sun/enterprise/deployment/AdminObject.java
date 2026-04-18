@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import java.util.Set;
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -27,12 +25,12 @@ import org.glassfish.deployment.common.Descriptor;
  * @author Qingqing Ouyang
  * @author Sheetal Vartak
  */
-public class AdminObject extends Descriptor {
+public class AdminObject extends Descriptor implements ConnectorConfigPropertySetDescriptor {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private String theInterface;
     private String theClass;
-    private final Set<ConnectorConfigProperty> configProperties;
+    private final OrderedSet<ConnectorConfigProperty> configProperties;
 
     public AdminObject() {
         this.configProperties = new OrderedSet<>();
@@ -69,7 +67,8 @@ public class AdminObject extends Descriptor {
     /**
      * @return Set of EnvironmentProperty
      */
-    public Set<ConnectorConfigProperty> getConfigProperties() {
+    @Override
+    public OrderedSet<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
@@ -77,6 +76,7 @@ public class AdminObject extends Descriptor {
     /**
      * Add a configProperty to the set
      */
+    @Override
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.add(configProperty);
     }
@@ -85,6 +85,7 @@ public class AdminObject extends Descriptor {
     /**
      * Add a configProperty to the set
      */
+    @Override
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
         configProperties.remove(configProperty);
     }

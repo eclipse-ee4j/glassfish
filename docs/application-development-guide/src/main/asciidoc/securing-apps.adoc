@@ -15,7 +15,7 @@ contain components that perform user authentication and access
 authorization for the business logic of Jakarta EE components.
 
 For information about administrative security for the {productName}, see the xref:security-guide.adoc#GSSCG[{productName}
-Security Guide].
+Server Security Guide].
 
 For general information about Jakarta EE security, see
 https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html[Security]
@@ -1092,7 +1092,7 @@ For more information about message security, see the following:
 
 * "https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html[Introduction to
 Security in the Jakarta EE Platform]" in The Jakarta EE Tutorial
-* xref:security-guide.adoc#GSSCG[{productName} Security Guide]
+* xref:security-guide.adoc#GSSCG[{productName} Server Security Guide]
 * http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
 (`http://www.jcp.org/en/jsr/detail?id=196`), Java Authentication Service
 Provider Interface for Containers
@@ -1172,7 +1172,7 @@ files, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
 For information about configuring these providers in the {productName}, see the xref:security-guide.adoc#GSSCG[{productName}
-Security Guide]. For additional information about overriding provider
+Server Security Guide]. For additional information about overriding provider
 settings, see xref:#application-specific-message-protection[Application-Specific Message Protection].
 
 You can create new message security providers in one of the following ways:
@@ -1311,7 +1311,7 @@ are managed with `keytool`. If Network Security Services (NSS) is
 installed, certificates and private keys are stored in an NSS database,
 where they are managed using `certutil`. System administrator tasks are
 discussed in the xref:security-guide.adoc#GSSCG[{productName}
-Security Guide].
+Server Security Guide].
 
 [[application-specific-message-protection]]
 
@@ -1365,7 +1365,7 @@ endpoint in the application's `glassfish-ejb-jar.xml` file. In this
 file, add `request-protection` and `response-protection` elements, which
 are analogous to the `request-policy` and `response-policy` elements
 discussed in the xref:security-guide.adoc#GSSCG[{productName}
-Security Guide]. To apply the same protection mechanisms for all
+Server Security Guide]. To apply the same protection mechanisms for all
 methods, leave the method-name element blank. xref:#configuring-message-protection-for-a-specific-method-based-on-digital-signatures[Configuring
 Message Protection for a Specific Method Based on Digital Signatures]
 discusses listing specific methods or using wildcard characters.
@@ -1428,7 +1428,7 @@ the EJB web service endpoint in the application's
 `glassfish-ejb-jar.xml` file. To this file, add `request-protection` and
 `response-protection` elements, which are analogous to the
 `request-policy` and `response-policy` elements discussed in the
-xref:security-guide.adoc#GSSCG[{productName} Security Guide]. The
+xref:security-guide.adoc#GSSCG[{productName} Server Security Guide]. The
 administration guide includes a table listing the set and order of
 security operations for different request and response policy
 configurations.

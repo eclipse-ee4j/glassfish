@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -96,9 +96,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     void setNodeDir(String nodeDir) throws PropertyVetoException;
 
     /**
-     * Points to a named host.
+     * Points to a node's host.
      *
-     * @return a named host name
+     * @return a host name, mandatory
      */
     @Attribute
     @Pattern(regexp = NAME_REGEX, message = "{nodehost.invalid.name}", payload = Node.class)
@@ -301,7 +301,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
             return false;
         }
 
-        return NetUtils.isThisHostLocal(nodeHost);
+        return NetUtils.isLocal(nodeHost);
     }
 
     /**
@@ -404,8 +404,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
             //only create-node-ssh and update-node-ssh should be changing the type to SSH
             instance.setType(type);
 
-            if (type.equals("CONFIG"))
+            if (type.equals("CONFIG")) {
                 return;
+            }
 
             SshConnector sshC = instance.createChild(SshConnector.class);
 
@@ -449,9 +450,6 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         @Inject
         Servers servers;
 
-        @Inject
-        private ServerEnvironment env;
-
         @Override
         public void decorate(AdminCommandContext context, Nodes parent, Node child) throws PropertyVetoException, TransactionFailure {
             Logger logger = ConfigApiLoggerInfo.getLogger();
@@ -473,8 +471,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
             if (serversOnNode != null && serversOnNode.size() > 0) {
                 StringBuilder sb = new StringBuilder();
                 for (Server server : serversOnNode) {
-                    if (n > 0)
+                    if (n > 0) {
                         sb.append(", ");
+                    }
                     sb.append(server.getName());
                     n++;
                 }

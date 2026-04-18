@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherFactory;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
 import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
@@ -73,8 +72,6 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
 
     @Param(password = true, optional = true)
     private String newpassword;
-
-    private SecureAdmin secureAdmin = null;
 
     /**
      * Require the user to actually type the passwords unless they are in the file specified by the --passwordfile option.
@@ -156,9 +153,9 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             return SUCCESS;
         } catch (CommandException ce) {
             if (ce.getCause() instanceof ConnectException) {
-                //Remote change failure - change password with default values of
+                // Remote change failure - change password with default values of
                 // domaindir and domain name,if the --host option is not provided.
-                if (!isLocalHost(programOpts.getHost())) {
+                if (!NetUtils.isLocal(programOpts.getHost())) {
                     throw ce;
                 }
                 return changeAdminPasswordLocally(getDomainsDir().getPath(), getDomainName());
@@ -169,7 +166,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
 
     private int changeAdminPasswordLocally(String domainDir, String domainName) throws CommandException {
 
-        if (!isLocalHost(programOpts.getHost())) {
+        if (!NetUtils.isLocal(programOpts.getHost())) {
             throw new CommandException(strings.get("CannotExecuteLocally"));
         }
 
@@ -213,12 +210,5 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
         } catch (IOException ex) {
             throw new CommandException(ex);
         }
-    }
-
-    private static boolean isLocalHost(String host) {
-        if (host != null && (NetUtils.isThisHostLocal(host) || NetUtils.isLocal(host))) {
-            return true;
-        }
-        return false;
     }
 }

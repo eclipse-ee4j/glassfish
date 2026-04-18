@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -109,7 +109,7 @@ public abstract class EjbBeanDescriptor extends CommonResourceDescriptor impleme
      */
     private final Map<MethodDescriptor, List<EjbInterceptor>> methodInterceptorsMap = new HashMap<>();
 
-    private final Set<EjbIORConfigurationDescriptor> iorConfigDescriptors = new OrderedSet<>();
+    private final OrderedSet<EjbIORConfigurationDescriptor> iorConfigDescriptors = new OrderedSet<>();
     private final Set<MessageDestinationReferenceDescriptor> messageDestReferences = new HashSet<>();
     private final HashMap<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD = new HashMap<>();
     private final Map<MethodPermission, Set<MethodDescriptor>> permissionedMethodsByPermission = new Hashtable<>();
@@ -625,7 +625,7 @@ public abstract class EjbBeanDescriptor extends CommonResourceDescriptor impleme
 
 
     @Override
-    public Set<EjbIORConfigurationDescriptor> getIORConfigurationDescriptors() {
+    public OrderedSet<EjbIORConfigurationDescriptor> getIORConfigurationDescriptors() {
         return iorConfigDescriptors;
     }
 

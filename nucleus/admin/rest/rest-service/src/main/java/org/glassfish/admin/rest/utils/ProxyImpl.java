@@ -60,8 +60,8 @@ public abstract class ProxyImpl implements Proxy {
             Server forwardInstance = domain.getServerNamed(forwardInstanceName);
             if (forwardInstance != null) {
                 UriBuilder forwardUriBuilder = constructForwardURLPath(sourceUriInfo);
-                URI forwardURI = forwardUriBuilder.scheme("https").host(forwardInstance.getAdminHost()).port(forwardInstance.getAdminPort())
-                        .build(); //Host and Port are replaced to that of forwardInstanceName
+                URI forwardURI = forwardUriBuilder.scheme("https").host(forwardInstance.getAdminHost())
+                    .port(forwardInstance.getAdminPort()).build();
                 client = addAuthenticationInfo(client, forwardInstance, habitat);
                 WebTarget resourceBuilder = client.target(forwardURI);
                 SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);

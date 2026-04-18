@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,7 +92,7 @@ public class GenericCreateCommand extends GenericCrudCommand implements AdminCom
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final Collection<AccessCheck> checks = new ArrayList<AccessCheck>();
-        checks.add(new AccessCheck(parentBean, (Class<? extends ConfigBeanProxy>) targetType, "create"));
+        checks.add(new AccessCheck(parentBean, targetType, "create"));
         return checks;
     }
 
@@ -117,7 +118,7 @@ public class GenericCreateCommand extends GenericCrudCommand implements AdminCom
         if (parentBean == null) {
             String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericCreateCommand.target_object_not_found",
                     "The CrudResolver {0} could not find the configuration object of type {1} where instances of {2} should be added",
-                    resolver.getClass().toString(), parentType, targetType);
+                    resolver.getClass(), parentType, targetType);
             result.failure(logger, msg);
             return;
         }
@@ -177,21 +178,18 @@ public class GenericCreateCommand extends GenericCrudCommand implements AdminCom
                                 create == null ? "null" : create.decorator().toString());
                         result.failure(logger, msg);
                         throw new TransactionFailure(msg);
-                    } else {
-                        // inject the decorator with any parameters from the initial CLI invocation
-                        manager.inject(decorator, paramResolver);
-
-                        // invoke the decorator
-                        decorator.decorate(context, childBean);
                     }
+                    // inject the decorator with any parameters from the initial CLI invocation
+                    manager.inject(decorator, paramResolver);
+
+                    // invoke the decorator
+                    decorator.decorate(context, childBean);
 
                     return childBean;
                 }
             }, parentBean);
         } catch (TransactionFailure e) {
-            String msg = localStrings.getLocalString(GenericCrudCommand.class, "GenericCreateCommand.transaction_exception",
-                    "Exception while adding the new configuration : {0} ", getRootCauseMessage(e));
-            result.failure(logger, msg);
+            result.failure(logger, "Configuration not added. " + getRootCauseMessage(e), e);
         }
     }
 
@@ -206,20 +204,12 @@ public class GenericCreateCommand extends GenericCrudCommand implements AdminCom
      */
     private String getRootCauseMessage(Exception e) {
         String msg = ExceptionUtil.getRootCause(e).getMessage();
-        if (msg != null && msg.length() > 0) {
-            return msg;
-        } else {
-            return e.getMessage();
-        }
+        return msg == null || msg.isEmpty() ? e.getMessage() : msg;
     }
 
     @Override
-    public Class getDecoratorClass() {
-        if (create != null) {
-            return create.decorator();
-        } else {
-            return null;
-        }
+    public Class<?> getDecoratorClass() {
+        return create == null ? null : create.decorator();
     }
 
 }

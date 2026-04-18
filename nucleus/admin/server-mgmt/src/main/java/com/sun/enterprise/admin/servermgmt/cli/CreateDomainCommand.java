@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -342,32 +342,28 @@ public final class CreateDomainCommand extends CLICommand {
             throw new CommandException(strings.get("InvalidPortRange", portNum));
         }
 
-        if (checkPorts == false) {
-            // do NOT make any network calls!
-            logger.log(Level.FINER, "Port ={0}", portToVerify);
+        // do NOT make any network calls!
+        if (!checkPorts) {
+            logger.log(Level.FINER, "Port to verify: {0}", portToVerify);
             return;
         }
 
         NetUtils.PortAvailability avail = NetUtils.checkPort(portToVerify);
 
         switch (avail) {
-        case illegalNumber:
-            throw new CommandException(strings.get("InvalidPortRange", portNum));
-
-        case inUse:
-            throw new CommandException(strings.get("PortInUseError", domainName, portNum));
-
-        case noPermission:
-            throw new CommandException(strings.get("NoPermissionForPortError", portNum, domainName));
-
-        case unknown:
-            throw new CommandException(strings.get("UnknownPortMsg", portNum));
-
-        case OK:
-            logger.log(Level.FINER, "Port ={0}", portToVerify);
-            break;
-        default:
-            break;
+            case illegalNumber:
+                throw new CommandException(strings.get("InvalidPortRange", portNum));
+            case inUse:
+                throw new CommandException(strings.get("PortInUseError", domainName, portNum));
+            case noPermission:
+                throw new CommandException(strings.get("NoPermissionForPortError", portNum, domainName));
+            case unknown:
+                throw new CommandException(strings.get("UnknownPortMsg", portNum));
+            case OK:
+                logger.log(Level.FINER, "Result: port {0} is available.", portToVerify);
+                break;
+            default:
+                break;
         }
     }
 

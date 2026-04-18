@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @TestMethodOrder(OrderAnnotation.class)
 public class ClusterITest {
 
-    private static final Queue<Integer> RANDOM_FREE_PORTS = ServerUtils.getFreePorts(16);
+    private static final Queue<Integer> RANDOM_FREE_PORTS = ServerUtils.getFreePorts(20);
     private static final String TEST_APP_NAME = "testapp";
     private static final int PORT_INSTANCE_1 = RANDOM_FREE_PORTS.remove();
     private static final int PORT_INSTANCE_2 = RANDOM_FREE_PORTS.remove();
@@ -99,7 +99,9 @@ public class ClusterITest {
                         + ":JMX_SYSTEM_CONNECTOR_PORT=" + RANDOM_FREE_PORTS.remove()
                         + ":IIOP_SSL_MUTUALAUTH_PORT=" + RANDOM_FREE_PORTS.remove()
                         + ":JMS_PROVIDER_PORT=" + RANDOM_FREE_PORTS.remove()
-                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove(),
+                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":OSGI_SHELL_TELNET_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JAVA_DEBUGGER_PORT=" + RANDOM_FREE_PORTS.remove(),
                         INSTANCE_NAME_1), asadminOK());
 
         assertThat(
@@ -111,7 +113,9 @@ public class ClusterITest {
                         + ":JMX_SYSTEM_CONNECTOR_PORT=" + RANDOM_FREE_PORTS.remove()
                         + ":IIOP_SSL_MUTUALAUTH_PORT=" + RANDOM_FREE_PORTS.remove()
                         + ":JMS_PROVIDER_PORT=" + RANDOM_FREE_PORTS.remove()
-                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove(),
+                        + ":ASADMIN_LISTENER_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":OSGI_SHELL_TELNET_PORT=" + RANDOM_FREE_PORTS.remove()
+                        + ":JAVA_DEBUGGER_PORT=" + RANDOM_FREE_PORTS.remove(),
                         INSTANCE_NAME_2), asadminOK());
     }
 

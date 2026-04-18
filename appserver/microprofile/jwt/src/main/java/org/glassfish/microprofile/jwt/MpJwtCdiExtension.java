@@ -27,8 +27,8 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticat
 
 import org.eclipse.microprofile.auth.LoginConfig;
 import org.glassfish.api.security.jwt.MicroProfileJwtAuthenticationMechanism;
-import org.omnifaces.jwt.cdi.CdiExtension;
-import org.omnifaces.jwt.eesecurity.JWTAuthenticationMechanism;
+import org.glassfish.soteria.mechanisms.JWTAuthenticationMechanism;
+import org.omnifaces.jwt.mp.cdi.CdiExtension;
 
 /**
  *
@@ -48,7 +48,7 @@ public class MpJwtCdiExtension implements Extension {
                     .alternative(true)
                     .types(Object.class, HttpAuthenticationMechanism.class, JWTAuthenticationMechanism.class)
                     .id("mechanism " + LoginConfig.class)
-                    .createWith(e -> new JWTAuthenticationMechanism());
+                    .createWith(e -> new JWTAuthenticationMechanism(CdiExtension.getJWTConfiguration()));
         }
     }
 }

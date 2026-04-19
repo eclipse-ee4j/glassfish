@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,11 +18,9 @@
 package com.sun.enterprise.iiop.security;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.logging.LogDomains;
 
+import java.lang.System.Logger;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.enterprise.iiop.util.IIOPUtils;
@@ -34,9 +32,11 @@ import org.omg.IOP.Codec;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.PortableInterceptor.IORInterceptor {
 
-    private static final Logger LOG = LogDomains.getLogger(SecIORInterceptor.class, LogDomains.SECURITY_LOGGER, false);
+    private static final Logger LOG = System.getLogger(SecIORInterceptor.class.getName());
 
     private final GMSAdapter gmsAdapter;
     private final GMSAdapterService gmsAdapterService;
@@ -66,55 +66,41 @@ class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.Por
     @Override
     public void establish_components(IORInfo iorInfo) {
         try {
-            LOG.log(Level.FINE, "SecIORInterceptor.establish_components->:");
             addCSIv2Components(iorInfo);
         } catch (Exception e) {
-            LOG.log(Level.WARNING, "Exception in establish_components", e);
-        } finally {
-            LOG.log(Level.FINE, "SecIORInterceptor.establish_components<-:");
+            throw new IllegalStateException("Failed to add CSIv2 components!", e);
         }
     }
 
     private void addCSIv2Components(IORInfo iorInfo) {
-        EjbDescriptor desc = null;
-        try {
-            LOG.log(Level.FINE, ".addCSIv2Components->: {0}", iorInfo);
+        LOG.log(DEBUG, "addCSIv2Components(iorInfo={0})", iorInfo);
+        if (gmsAdapter != null) {
 
-            if (gmsAdapter != null) {
-
-                // If this app server instance is part of a dynamic cluster (that is,
-                // one that supports RMI-IIOP failover and load balancing, DO NOT
-                // create the CSIv2 components here. Instead, handle this in the
-                // ORB's ServerGroupManager, in conjunctions with the
-                // CSIv2SSLTaggedComponentHandler.
-                return;
-            }
-
-            LOG.log(Level.FINE, ".addCSIv2Components ");
-
-            // ORB orb = helper.getORB();
-            int sslMutualAuthPort = getServerPort("SSL_MUTUALAUTH");
-
-            LOG.log(Level.FINE, ".addCSIv2Components: sslMutualAuthPort: {0}", sslMutualAuthPort);
-
-            desc = orbLocator.getEjbDescriptor(iorInfo);
-
-            // Create CSIv2 tagged component
-            int sslport = getServerPort("SSL");
-            LOG.log(Level.FINE, ".addCSIv2Components: sslport: {0}", sslport);
-
-            CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getORB());
-            final TaggedComponent csiv2Comp;
-            if (desc == null) {
-                // this is not an EJB object, must be a non-EJB CORBA object
-                csiv2Comp = ctc.createSecurityTaggedComponent(sslport, orbLocator.getCSIv2Props());
-            } else {
-                csiv2Comp = ctc.createSecurityTaggedComponent(sslport, desc);
-            }
-            iorInfo.add_ior_component(csiv2Comp);
-        } finally {
-            LOG.log(Level.FINE, ".addCSIv2Components<-: {0} {1}", new Object[] {iorInfo, desc});
+            // If this app server instance is part of a dynamic cluster (that is,
+            // one that supports RMI-IIOP failover and load balancing, DO NOT
+            // create the CSIv2 components here. Instead, handle this in the
+            // ORB's ServerGroupManager, in conjunctions with the
+            // CSIv2SSLTaggedComponentHandler.
+            return;
         }
+
+        // ORB orb = helper.getORB();
+        int sslMutualAuthPort = getServerPort("SSL_MUTUALAUTH");
+        LOG.log(DEBUG, "sslMutualAuthPort: {0}", sslMutualAuthPort);
+
+        EjbDescriptor desc = orbLocator.getEjbDescriptor(iorInfo);
+        int sslport = getServerPort("SSL");
+        LOG.log(DEBUG, "sslport: {0}", sslport);
+
+        CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(sslMutualAuthPort, orbLocator.getPartiallyInitializedOrb());
+        final TaggedComponent csiv2Comp;
+        if (desc == null) {
+            // this is not an EJB object, must be a non-EJB CORBA object
+            csiv2Comp = ctc.createSecurityTaggedComponent(sslport, orbLocator.getCSIv2Props());
+        } else {
+            csiv2Comp = ctc.createSecurityTaggedComponent(sslport, desc);
+        }
+        iorInfo.add_ior_component(csiv2Comp);
     }
 
     private int getServerPort(String mech) {

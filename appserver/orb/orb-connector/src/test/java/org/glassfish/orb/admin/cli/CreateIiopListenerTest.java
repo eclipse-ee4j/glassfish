@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 
 package org.glassfish.orb.admin.cli;
 
+import com.sun.enterprise.util.net.NetUtils;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
@@ -52,6 +53,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(OrbJunitExtension.class)
 public class CreateIiopListenerTest {
+
+    private static final String LOCALHOST = NetUtils.getHostName();
 
     @Inject
     private ServiceLocator services;
@@ -116,7 +119,7 @@ public class CreateIiopListenerTest {
      */
     @Test
     public void testExecuteSuccess() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         parameters.set("enabled", "true");
@@ -128,7 +131,7 @@ public class CreateIiopListenerTest {
         List<IiopListener> listenerList = iiopService.getIiopListener();
         for (IiopListener listener : listenerList) {
             if (listener.getId().equals("iiop_1")) {
-                assertEquals("localhost", listener.getAddress());
+                assertEquals(LOCALHOST, listener.getAddress());
                 assertEquals("true", listener.getEnabled());
                 assertEquals("4440", listener.getPort());
                 assertEquals("true", listener.getSecurityEnabled());
@@ -149,7 +152,7 @@ public class CreateIiopListenerTest {
 
     @Test
     public void testExecuteSuccessDefaultValues() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         CreateIiopListener command = services.getService(CreateIiopListener.class);
@@ -159,7 +162,7 @@ public class CreateIiopListenerTest {
         List<IiopListener> listenerList = iiopService.getIiopListener();
         for (IiopListener listener : listenerList) {
             if (listener.getId().equals("iiop_1")) {
-                assertEquals("localhost", listener.getAddress());
+                assertEquals(LOCALHOST, listener.getAddress());
                 assertEquals("4440", listener.getPort());
                 isCreated = true;
                 logger.fine("IIOPListener name iiop_1 is created.");
@@ -180,7 +183,7 @@ public class CreateIiopListenerTest {
      */
     @Test
     public void testExecuteFailDuplicateListener() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         CreateIiopListener command1 = services.getService(CreateIiopListener.class);
@@ -190,7 +193,7 @@ public class CreateIiopListenerTest {
         List<IiopListener> listenerList = iiopService.getIiopListener();
         for (IiopListener listener : listenerList) {
             if (listener.getId().equals("iiop_1")) {
-                assertEquals("localhost", listener.getAddress());
+                assertEquals(LOCALHOST, listener.getAddress());
                 assertEquals("4440", listener.getPort());
                 isCreated = true;
                 logger.fine("IIOPListener name iiop_1 is created.");
@@ -224,7 +227,7 @@ public class CreateIiopListenerTest {
      */
     @Test
     public void testExecuteFailForSamePortAndListenerAddress() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         CreateIiopListener command = services.getService(CreateIiopListener.class);
@@ -234,7 +237,7 @@ public class CreateIiopListenerTest {
         List<IiopListener> listenerList = iiopService.getIiopListener();
         for (IiopListener listener : listenerList) {
             if (listener.getId().equals("iiop_1")) {
-                assertEquals("localhost", listener.getAddress());
+                assertEquals(LOCALHOST, listener.getAddress());
                 assertEquals("4440", listener.getPort());
                 isCreated = true;
                 logger.fine("IIOPListener name iiop_1 is created.");
@@ -247,7 +250,7 @@ public class CreateIiopListenerTest {
         parameters = new ParameterMap();
         parameters.set("listener_id", "iiop_2");
         parameters.set("iiopport", "4440");
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         cr.getCommandInvocation("create-iiop-listener", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         logger.fine("msg: " + context.getActionReport().getMessage());
@@ -261,7 +264,7 @@ public class CreateIiopListenerTest {
      */
     //@Test
     public void testExecuteFailInvalidOptionEnabled() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         parameters.set("enabled", "junk");
@@ -277,7 +280,7 @@ public class CreateIiopListenerTest {
      */
     @Test
     public void testExecuteSuccessNoValueOptionEnabled() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         parameters.set("enabled", "");
@@ -288,7 +291,7 @@ public class CreateIiopListenerTest {
         List<IiopListener> listenerList = iiopService.getIiopListener();
         for (IiopListener listener : listenerList) {
             if (listener.getId().equals("iiop_1")) {
-                assertEquals("localhost", listener.getAddress());
+                assertEquals(LOCALHOST, listener.getAddress());
                 assertEquals("true", listener.getEnabled());
                 assertEquals("4440", listener.getPort());
                 isCreated = true;
@@ -307,7 +310,7 @@ public class CreateIiopListenerTest {
      */
     @Test
     public void testExecuteSuccessNoValueOptionSecurityEnabled() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", LOCALHOST);
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         parameters.set("securityenabled", "");
@@ -318,7 +321,7 @@ public class CreateIiopListenerTest {
         List<IiopListener> listenerList = iiopService.getIiopListener();
         for (IiopListener listener : listenerList) {
             if (listener.getId().equals("iiop_1")) {
-                assertEquals("localhost", listener.getAddress());
+                assertEquals(LOCALHOST, listener.getAddress());
                 assertEquals("true", listener.getSecurityEnabled());
                 assertEquals("4440", listener.getPort());
                 isCreated = true;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ import org.omg.CORBA.ORBPackage.InvalidName;
 import static com.sun.corba.ee.spi.misc.ORBConstants.FOLB_SERVER_GROUP_INFO_SERVICE;
 import static java.lang.System.Logger.Level.DEBUG;
 
-class GlassFishOrbImpl extends ORBImpl implements AutoCloseable {
+public class GlassFishOrbImpl extends ORBImpl implements AutoCloseable {
 
     private static final Logger LOG = System.getLogger(GlassFishOrbImpl.class.getName());
 
@@ -62,12 +62,10 @@ class GlassFishOrbImpl extends ORBImpl implements AutoCloseable {
         }
     }
 
-
     @Override
     public void close() throws Exception {
         destroy();
     }
-
 
     @Override
     public String toString() {

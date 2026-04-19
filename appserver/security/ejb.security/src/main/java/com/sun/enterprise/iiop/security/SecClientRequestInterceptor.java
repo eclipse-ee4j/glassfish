@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -88,7 +88,6 @@ public class SecClientRequestInterceptor extends LocalObject implements ClientRe
     private final String prname;
     /** used for marshalling */
     private final Codec codec;
-    private final SecurityContextUtil secContextUtil;
     private final ORBLocator orbLocator;
 
     public SecClientRequestInterceptor(String name, Codec codec, ORBLocator orbLocator) {
@@ -96,7 +95,6 @@ public class SecClientRequestInterceptor extends LocalObject implements ClientRe
         this.codec = codec;
         this.prname = name + "::";
         this.orbLocator = orbLocator;
-        this.secContextUtil = Lookups.getSecurityContextUtil();
     }
 
     @Override
@@ -241,7 +239,7 @@ public class SecClientRequestInterceptor extends LocalObject implements ClientRe
         org.omg.CORBA.Object effective_target = ri.effective_target();
 
         try {
-            securityContext = secContextUtil.getSecurityContext(effective_target);
+            securityContext = Lookups.getSecurityContextUtil().getSecurityContext(effective_target);
         } catch (InvalidMechanismException | InvalidIdentityTokenException ime ) {
             throw new RuntimeException(ime);
         }

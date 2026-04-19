@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -49,10 +49,10 @@ public class ORBConnectorStartup implements PostConstruct {
     private static final String OMG_ORB_CLASS_PROPERTY = "org.omg.CORBA.ORBClass";
     private static final String OMG_ORB_SINGLETON_CLASS_PROPERTY = "org.omg.CORBA.ORBSingletonClass";
 
-    private static final String ORB_CLASS = "com.sun.corba.ee.impl.orb.ORBImpl";
+    private static final String ORB_CLASS = "org.glassfish.enterprise.iiop.impl.GlassFishOrbImpl";
     private static final String ORB_SINGLETON_CLASS = "com.sun.corba.ee.impl.orb.ORBSingleton";
 
-    private static final String ORB_SE_CLASS = "com.sun.corba.se.impl.orb.ORBImpl";
+    private static final String ORB_SE_CLASS = "org.glassfish.enterprise.iiop.impl.GlassFishOrbImpl";
     private static final String ORB_SE_SINGLETON_CLASS = "com.sun.corba.se.impl.orb.ORBSingleton";
 
     private static final String RMI_UTIL_CLASS = "com.sun.corba.ee.impl.javax.rmi.CORBA.Util";
@@ -66,6 +66,7 @@ public class ORBConnectorStartup implements PostConstruct {
     @Inject
     private GrizzlyService grizzlyService;
 
+    @Override
     public void postConstruct() {
         setORBSystemProperties();
         initializeLazyListener();
@@ -75,8 +76,8 @@ public class ORBConnectorStartup implements PostConstruct {
      * Set ORB-related system properties that are required in case
      * user code in the app server or app client container creates a
      * new ORB instance.  The default result of calling
-     * ORB.init( String[], Properties ) must be a fully usuable, consistent
-     * ORB.  This avoids difficulties with having the ORB class set
+     * ORB.init( String[], Properties ) must be a fully usable, consistent ORB.
+     * This avoids difficulties with having the ORB class set
      * to a different ORB than the RMI-IIOP delegates.
      */
     private void setORBSystemProperties() {

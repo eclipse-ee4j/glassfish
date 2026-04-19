@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,10 +30,9 @@ import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.lang.System.Logger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,11 +73,11 @@ class IiopFolbGmsClient implements CallBack {
     private Map<String, ClusterInstanceInfo> currentMembers;
     private GroupInfoService gis;
 
-    IiopFolbGmsClient(ServiceLocator services) {
-        LOG.log(DEBUG, "IiopFolbGmsClient: constructor: services {0}", services);
-        this.services = services;
+    IiopFolbGmsClient(ServiceLocator serviceLocator) {
+        LOG.log(DEBUG, "IiopFolbGmsClient(services={0})", serviceLocator);
+        this.services = serviceLocator;
 
-        gmsAdapterService = services.getService(GMSAdapterService.class);
+        gmsAdapterService = serviceLocator.getService(GMSAdapterService.class);
 
         try {
             if (gmsAdapterService == null) {
@@ -86,51 +85,51 @@ class IiopFolbGmsClient implements CallBack {
             }
 
             gmsAdapter = gmsAdapterService.getGMSAdapter();
-            LOG.log(DEBUG, "IiopFolbGmsClient: gmsAdapter {0}", gmsAdapter);
+            LOG.log(DEBUG, "gmsAdapter {0}", gmsAdapter);
 
             if (gmsAdapter == null) {
-                LOG.log(DEBUG, "IiopFolbGmsClient: gmsAdapterService is null");
+                LOG.log(DEBUG, "gmsAdapterService is null");
                 gis = new GroupInfoServiceNoGMSImpl();
             } else {
-                domain = services.getService(Domain.class);
-                LOG.log(DEBUG, "IiopFolbGmsClient: domain {0}", domain);
+                domain = serviceLocator.getService(Domain.class);
+                LOG.log(DEBUG, "domain={0}", domain);
 
-                Servers servers = services.getService(Servers.class);
-                LOG.log(DEBUG, "IiopFolbGmsClient: servers {0}", servers);
+                Servers servers = serviceLocator.getService(Servers.class);
+                LOG.log(DEBUG, "servers={0}", servers);
 
-                nodes = services.getService(Nodes.class);
-                LOG.log(DEBUG, "IiopFolbGmsClient: nodes {0}", nodes);
+                nodes = serviceLocator.getService(Nodes.class);
+                LOG.log(DEBUG, "nodes={0}", nodes);
 
                 String instanceName = gmsAdapter.getModule().getInstanceName();
-                LOG.log(DEBUG, "IiopFolbGmsClient: instanceName {0}", instanceName);
+                LOG.log(DEBUG, "instanceName={0}", instanceName);
 
                 myServer = servers.getServer(instanceName);
-                LOG.log(DEBUG, "IiopFolbGmsClient: myServer {0}", myServer);
+                LOG.log(DEBUG, "myServer={0}", myServer);
 
                 gis = new GroupInfoServiceGMSImpl();
-                LOG.log(DEBUG, "IiopFolbGmsClient: IIOP GIS created");
+                LOG.log(DEBUG, "IIOP GIS created");
 
                 currentMembers = getAllClusterInstanceInfo();
-                LOG.log(DEBUG, "IiopFolbGmsClient: currentMembers = ", currentMembers);
+                LOG.log(DEBUG, "currentMembers={0}", currentMembers);
 
-                LOG.log(DEBUG, "iiop instance info = " + getIIOPEndpoints());
+                LOG.log(DEBUG, () -> "iiop instance info = " + getIIOPEndpoints());
 
                 gmsAdapter.registerFailureNotificationListener(this);
                 gmsAdapter.registerJoinedAndReadyNotificationListener(this);
                 gmsAdapter.registerPlannedShutdownListener(this);
 
-                LOG.log(DEBUG, "IiopFolbGmsClient: GMS action factories added");
+                LOG.log(DEBUG, "GMS action factories added");
             }
 
         } catch (Exception e) {
             LOG.log(ERROR, "Initialization failed.", e);
         } finally {
-            LOG.log(DEBUG, "IiopFolbGmsClient: gmsAdapter {0}", gmsAdapter);
+            LOG.log(DEBUG, "gmsAdapter={0}", gmsAdapter);
         }
     }
 
     GroupInfoService getGroupInfoService() {
-        return gis ;
+        return gis;
     }
 
     boolean isGMSAvailable() {
@@ -173,15 +172,10 @@ class IiopFolbGmsClient implements CallBack {
         String instanceName = signal.getMemberToken();
         try {
             LOG.log(DEBUG, "IiopFolbGmsClient.removeMember->: {0}", instanceName);
-
             synchronized (this) {
-                if (currentMembers.get(instanceName) != null) {
-                    currentMembers.remove(instanceName);
-
+                if (currentMembers.remove(instanceName) != null) {
                     LOG.log(DEBUG, "IiopFolbGmsClient.removeMember: {0} removed - notifying listeners", instanceName);
-
                     gis.notifyObservers();
-
                     LOG.log(DEBUG, "IiopFolbGmsClient.removeMember: {0} - notification complete", instanceName);
                 } else {
                     LOG.log(DEBUG, "IiopFolbGmsClient.removeMember: {0} not present: no action", instanceName);
@@ -260,11 +254,7 @@ class IiopFolbGmsClient implements CallBack {
             Node node = nodes.getNode(nodeName);
             if (node != null) {
                 if (node.isLocal()) {
-                    try {
-                        hostName = InetAddress.getLocalHost().getHostName();
-                    } catch (UnknownHostException exc) {
-                        LOG.log(DEBUG, "getClusterInstanceInfo: caught exception for localhost lookup {0}", exc);
-                    }
+                    hostName = NetUtils.getHostName();
                 } else {
                     hostName = node.getNodeHost();
                 }

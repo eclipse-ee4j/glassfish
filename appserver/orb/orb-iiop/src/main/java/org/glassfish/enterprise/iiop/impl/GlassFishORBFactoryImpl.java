@@ -21,9 +21,12 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import jakarta.inject.Inject;
 
 import java.lang.System.Logger;
+import java.nio.channels.SelectableChannel;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
+import org.glassfish.enterprise.iiop.api.OrbInitializationNode;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -111,6 +114,7 @@ public class GlassFishORBFactoryImpl implements GlassFishORBFactory, PostConstru
         return gfORBManager.getIIOPEndpoints();
     }
 
+    @Override
     public EjbDescriptor getEjbDescriptor(IORInfo iorInfo) {
         CSIv2Policy csiv2Policy = null;
         try {
@@ -126,5 +130,10 @@ public class GlassFishORBFactoryImpl implements GlassFishORBFactory, PostConstru
             return csiv2Policy.getEjbDescriptor();
         }
         return null;
+    }
+
+    @Override
+    public void enableLazyAcceptor(Consumer<SelectableChannel> acceptorDelegate) {
+        serviceLocator.getService(OrbInitializationNode.class).setAcceptor(acceptorDelegate);
     }
 }

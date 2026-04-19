@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,18 +18,15 @@ package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.corba.ee.impl.folb.ClientGroupManager;
 import com.sun.corba.ee.impl.folb.ServerGroupManager;
-import com.sun.corba.ee.impl.naming.cosnaming.TransientNameService;
-import com.sun.corba.ee.impl.orb.ORBImpl;
 import com.sun.corba.ee.impl.orb.ORBSingleton;
 import com.sun.corba.ee.impl.osgi.loader.OSGIListener;
 import com.sun.corba.ee.spi.folb.GroupInfoService;
 import com.sun.corba.ee.spi.misc.ORBConstants;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.lang.System.Logger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +38,6 @@ import org.glassfish.external.amx.AMXGlassfish;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.Orb;
 import org.jvnet.hk2.config.types.Property;
-import org.omg.CORBA.ORBPackage.InvalidName;
 
 import static com.sun.corba.ee.spi.misc.ORBConstants.USER_CONFIGURATOR_PREFIX;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -56,9 +52,8 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 final class OrbCreator {
     private static final Logger LOG = System.getLogger(OrbCreator.class.getName());
 
-    // Various pluggable classes defined in the app server that are used
-    // by the ORB.
-    private static final String ORB_CLASS = ORBImpl.class.getName();
+    // Various pluggable classes defined in the app server that are used by the ORB.
+    private static final String ORB_CLASS = GlassFishOrbImpl.class.getName();
     private static final String ORB_SINGLETON_CLASS = ORBSingleton.class.getName();
 
     private static final String PEORB_CONFIG_CLASS = PEORBConfigurator.class.getName();
@@ -84,10 +79,10 @@ final class OrbCreator {
     private static final String DEFAULT_MAX_CONNECTIONS = "1024";
     private static final String GLASSFISH_INITIALIZER = GlassFishORBInitializer.class.getName();
 
-    private static final String SUN_GIOP_DEFAULT_FRAGMENT_SIZE = "1024";
-    private static final String SUN_GIOP_DEFAULT_BUFFER_SIZE = "1024";
+    private static final String SUN_GIOP_DEFAULT_FRAGMENT_SIZE = "8192";
+    private static final String SUN_GIOP_DEFAULT_BUFFER_SIZE = "8192";
 
-    private static final String DEFAULT_ORB_INIT_HOST = "localhost";
+    private static final String DEFAULT_ORB_INIT_HOST = NetUtils.getHostName();
 
     // This will only apply for stand-alone java clients, since
     // in the server the orb port comes from domain.xml, and in an appclient
@@ -173,6 +168,7 @@ final class OrbCreator {
             // any instantiations of org.glassfish.jndi.cosnaming.CNCtxFactory
             // use same port.
             orbInitProperties.setProperty(ORBConstants.INITIAL_PORT_PROPERTY, initialPort);
+            LOG.log(DEBUG, "ORB initial port set to {0}", initialPort);
 
             // Done to initialize the Persistent Server Port, before any
             // POAs are created. This was earlier done in POAEJBORB
@@ -215,14 +211,9 @@ final class OrbCreator {
                 orb.classCodeBaseHandler(OSGIListener.classCodeBaseHandler());
             }
             orb.setRootParentObjectName(AMXGlassfish.DEFAULT.serverMonForDAS());
+            // Invokes also all ORBConfigurator implementations:
+            // ORBConfiguratorImpl, PEORBConfigurator, CSIv2SSLTaggedComponentHandlerImpl
             orb.setParameters(args, orbInitProperties);
-            new TransientNameService(orb);
-            // Done to indicate this is a server and needs to create listen ports.
-            try {
-                orb.resolve_initial_references("RootPOA");
-            } catch (InvalidName e) {
-                throw new IllegalStateException("RootPOA not found", e);
-            }
             return orb;
         } catch (Exception ex) {
             throw new IllegalStateException("ORB initialization failed.", ex);
@@ -285,17 +276,18 @@ final class OrbCreator {
     }
 
     private void checkConnectionSettings(Properties props) {
-        if (orbConfig != null) {
-            String maxConnections = orbConfig.getMaxConnections();
-            try {
-                Integer.parseInt(maxConnections);
-            } catch (NumberFormatException nfe) {
-                LOG.log(WARNING, "The max connections value {0} must be an integer, using default value {1} instead.",
-                    maxConnections, DEFAULT_MAX_CONNECTIONS);
-                maxConnections = DEFAULT_MAX_CONNECTIONS;
-            }
-            props.setProperty(ORBConstants.HIGH_WATER_MARK_PROPERTY, maxConnections);
+        if (orbConfig == null) {
+            return;
         }
+        String maxConnections = orbConfig.getMaxConnections();
+        try {
+            Integer.parseInt(maxConnections);
+        } catch (NumberFormatException nfe) {
+            LOG.log(WARNING, "The max connections value {0} must be an integer, using default value {1} instead.",
+                maxConnections, DEFAULT_MAX_CONNECTIONS);
+            maxConnections = DEFAULT_MAX_CONNECTIONS;
+        }
+        props.setProperty(ORBConstants.HIGH_WATER_MARK_PROPERTY, maxConnections);
     }
 
     private void checkMessageFragmentSize(Properties props) {
@@ -324,14 +316,15 @@ final class OrbCreator {
     }
 
     private void checkForOrbPropertyValues(Properties props) {
-        if (orbConfig != null) {
-            List<Property> orbConfigProps = orbConfig.getProperty();
-            if (orbConfigProps != null) {
-                for (Property orbConfigProp : orbConfigProps) {
-                    props.setProperty(orbConfigProp.getName(),
-                    orbConfigProp.getValue());
-                }
-            }
+        if (orbConfig == null) {
+            return;
+        }
+        final List<Property> orbConfigProps = orbConfig.getProperty();
+        if (orbConfigProps == null) {
+            return;
+        }
+        for (Property orbConfigProp : orbConfigProps) {
+            props.setProperty(orbConfigProp.getName(), orbConfigProp.getValue());
         }
     }
 
@@ -373,14 +366,10 @@ final class OrbCreator {
     }
 
     private static String replaceAnyWithLocalHost(String orbInitialHost) {
-        if (orbInitialHost.equals("0.0.0.0") || orbInitialHost.equals("::")
+        if (orbInitialHost.equals("0.0.0.0")
+            || orbInitialHost.equals("::")
             || orbInitialHost.equals("::ffff:0.0.0.0")) {
-            try {
-                return InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException uhe) {
-                LOG.log(WARNING, "Unknown host exception - Setting host to localhost", uhe);
-                return DEFAULT_ORB_INIT_HOST;
-            }
+            return DEFAULT_ORB_INIT_HOST;
         }
         return orbInitialHost;
     }

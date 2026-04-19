@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +17,18 @@
 
 package com.sun.enterprise.iiop.security;
 
+import com.sun.corba.ee.spi.legacy.interceptor.UnknownType;
 import com.sun.corba.ee.spi.transport.SocketInfo;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.security.ssl.J2EEKeyManager;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.System.Logger;
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
@@ -41,8 +41,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 
 /**
@@ -51,7 +51,7 @@ import static org.glassfish.security.common.SharedSecureRandom.SECURE_RANDOM;
 @Service
 @Singleton
 public class IIOPSSLUtilImpl implements IIOPSSLUtil {
-    private static final Logger LOG = LogDomains.getLogger(IIOPSSLUtilImpl.class, LogDomains.SECURITY_LOGGER, false);
+    private static final Logger LOG = System.getLogger(IIOPSSLUtilImpl.class.getName());
 
     @Inject
     private SSLUtils sslUtils;
@@ -69,7 +69,7 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
             if (alias != null && mgrs != null && mgrs.length > 0) {
                 KeyManager[] newMgrs = new KeyManager[mgrs.length];
                 for (int i = 0; i < mgrs.length; i++) {
-                    LOG.log(FINE, "Setting J2EEKeyManager for alias {0}", alias);
+                    LOG.log(DEBUG, "Setting J2EEKeyManager for alias {0}", alias);
                     newMgrs[i] = new J2EEKeyManager((X509KeyManager) mgrs[i], alias);
                 }
                 mgrs = newMgrs;
@@ -106,16 +106,17 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     @Override
     public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos) {
+        LOG.log(DEBUG, "createSSLTaggedComponent(iorInfo={0}, socketInfos={1})", iorInfo, socketInfos);
         int sslMutualAuthPort = -1;
         try {
             if (iorInfo instanceof com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt extInfo) {
                 sslMutualAuthPort = extInfo.getServerPort("SSL_MUTUALAUTH");
             }
-        } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
-            LOG.log(FINE, "UnknownType exception", ute);
+        } catch (UnknownType ute) {
+            LOG.log(DEBUG, "UnknownType exception", ute);
         }
 
-        LOG.log(FINE, "sslMutualAuthPort: {0}", sslMutualAuthPort);
+        LOG.log(DEBUG, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
         // Cannot be an injected field, leads to a cyclic dependency, makes HK2 angry.
         final GlassFishORBLocator orbLocator = Globals.get(GlassFishORBLocator.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +24,9 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.ResolveError;
 import com.sun.enterprise.util.Utility;
 
+import java.lang.System.Logger;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
@@ -41,6 +40,7 @@ import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 
 import static com.sun.corba.ee.spi.misc.ORBConstants.REFERENCE_FACTORY_MANAGER;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * This class initializes the ORB with a list of (standard) properties
@@ -48,7 +48,7 @@ import static com.sun.corba.ee.spi.misc.ORBConstants.REFERENCE_FACTORY_MANAGER;
  */
 public final class GlassFishORBManager {
 
-    private static final Logger LOG = IIOPImplLogFacade.getLogger(GlassFishORBManager.class);
+    private static final Logger LOG = System.getLogger(GlassFishORBManager.class.getName());
 
     private static final String ORB_SSL_STANDALONE_CLIENT_REQUIRED = "com.sun.CSIV2.ssl.standalone.client.required";
 
@@ -79,13 +79,13 @@ public final class GlassFishORBManager {
      * All external orb/iiop access should go through orb-connector module.
      */
     GlassFishORBManager(ServiceLocator serviceLocator) {
-        LOG.log(Level.CONFIG, "GlassFishORBManager({0})", serviceLocator);
+        LOG.log(DEBUG, "GlassFishORBManager({0})", serviceLocator);
         this.serviceLocator = serviceLocator;
         iiopUtils = serviceLocator.getService(IIOPUtils.class);
         ProcessEnvironment processEnv = serviceLocator.getService(ProcessEnvironment.class);
         processType = processEnv.getProcessType();
 
-        LOG.log(Level.FINEST, "processType: {0}", processType);
+        LOG.log(DEBUG, "processType: {0}", processType);
         gmsClient = processType.isServer() ? new IiopFolbGmsClient(serviceLocator) : null;
 
         if (processType != ProcessType.ACC) {
@@ -160,6 +160,7 @@ public final class GlassFishORBManager {
     }
 
     ORB createOrb(Properties props) {
+        LOG.log(DEBUG, "createOrb(props={0})", props);
         final HK2Module orbOsgiModule = resolveCorbaOrbOsgiModule();
         final GroupInfoService clusterGroupInfo;
         if (processType.isServer() && gmsClient.isGMSAvailable()) {

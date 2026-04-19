@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,8 +26,11 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.lang.System.Logger;
+import java.nio.channels.SelectableChannel;
 import java.rmi.Remote;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.event.EventListener;
@@ -56,6 +59,7 @@ public class GlassFishORBLocator implements ORBLocator {
 
     private static final Logger LOG = System.getLogger(GlassFishORBLocator.class.getName());
     private static final ThreadLocal<ORB> TMP_ORB = new ThreadLocal<>();
+    private static final ThreadLocal<Consumer<SelectableChannel>> TMP_ACCEPTOR_DELEGATE = new ThreadLocal<>();
 
     @Inject
     private ProcessEnvironment environment;
@@ -104,13 +108,34 @@ public class GlassFishORBLocator implements ORBLocator {
         orb = null;
         // FIXME: com.sun.corba.ee.impl.transport.AcceptorImpl.getAcceptedSocket(AcceptorImpl.java:127)
         //        can still be blocked in standalone thread, that would lead to its failure
-        //        and cascade leading sockets open. Restart of the server could fail then.
+        //        and cascade leaving sockets open. Restart of the server could fail then.
         try {
             Thread.sleep(1000L);
         } catch (InterruptedException e) {
             // We don't want to interrupt here.
         }
         destroyedOrb.destroy();
+    }
+
+
+    /**
+     * @return {@link ORB} to be configured.
+     * @deprecated This method is just a temporary access for classes used by the same thread
+     *             initializing the {@link ORB} instance which do not have any other access to it.
+     */
+    @Deprecated
+    public ORB getPartiallyInitializedOrb() {
+        LOG.log(TRACE, "getPartiallyInitializedOrb()", new Exception());
+        if (destroyed) {
+            return null;
+        }
+        if (this.failure != null) {
+            throw new RuntimeException("ORB initialization already failed!", failure);
+        }
+        if (Thread.currentThread() == initializerThread) {
+            return Optional.ofNullable(TMP_ORB.get()).orElseThrow(() -> new IllegalStateException("Too late!"));
+        }
+        return null;
     }
 
     @Override
@@ -123,26 +148,21 @@ public class GlassFishORBLocator implements ORBLocator {
             LOG.log(TRACE, "getORB() the shortest path out");
             return orb;
         }
-
         synchronized (this) {
-            if (Thread.currentThread() == initializerThread) {
-                // Awful design of corba-orb library needs this.
-                LOG.log(DEBUG, "Detected recursion!", new Exception());
-                return TMP_ORB.get();
-            }
             if (this.orb != null || destroyed) {
-                LOG.log(TRACE, "getORB() second shortest path out");
+                // The stacktrace added to see who was waiting locked out.
+                LOG.log(TRACE, "getORB() second shortest path out", new Exception());
                 return orb;
             }
             if (this.failure != null) {
-                throw new RuntimeException("ORB initialization already failed in another thread!", failure);
+                throw new RuntimeException("ORB initialization already failed!", failure);
             }
             // First thread will create the ORB.
             initializerThread = Thread.currentThread();
             try {
                 try {
                     initialize(environment.getProcessType().isServer());
-                    LOG.log(DEBUG, "ORB initialization finished successfuly.");
+                    orbFactory.enableLazyAcceptor(TMP_ACCEPTOR_DELEGATE.get());
                     return orb;
                 } catch (Exception e) {
                     failure = e;
@@ -154,6 +174,7 @@ public class GlassFishORBLocator implements ORBLocator {
                 // Current stacktrace + original cause.
                 throw new RuntimeException("ORB initialization failed!", failure);
             } finally {
+                TMP_ACCEPTOR_DELEGATE.remove();
                 TMP_ORB.remove();
                 initializerThread = null;
             }
@@ -190,7 +211,7 @@ public class GlassFishORBLocator implements ORBLocator {
     }
 
     /**
-     * Get a protocol manager for creating remote references.
+     * @return protocol manager for creating remote references.
      * ProtocolManager is only available in the server.
      * Otherwise, this method returns null.
      */
@@ -259,6 +280,16 @@ public class GlassFishORBLocator implements ORBLocator {
 
     public boolean isEjbCall(ServerRequestInfo sri) {
         return orbFactory.isEjbCall(sri);
+    }
+
+    /**
+     * Due to bad corba-orb design, we need to have a partially initialized {@link ORB} instance
+     * ready for recursive requests.
+     *
+     * @param acceptorDelegate
+     */
+    public static void setThreadLocal(Consumer<SelectableChannel> acceptorDelegate) {
+        TMP_ACCEPTOR_DELEGATE.set(acceptorDelegate);
     }
 
     /**

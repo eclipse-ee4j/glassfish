@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,22 +45,20 @@ import com.sun.corba.ee.spi.ior.iiop.IIOPProfileTemplate;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.util.Utility;
-import com.sun.logging.LogDomains;
 
+import java.lang.System.Logger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.security.common.Role;
 import org.ietf.jgss.GSSException;
 import org.omg.CORBA.ORB;
 
-import static com.sun.logging.LogDomains.SECURITY_LOGGER;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * This is the class that manages the CSIV2 tagged component information in the IORs. Note: For supporting FLOB in a
@@ -76,7 +74,7 @@ final class CSIV2TaggedComponentInfo {
     private static final String DEFAULT_REALM = "default";
     private static final org.omg.IOP.TaggedComponent NULL_TAGGED_COMPONENT = new org.omg.IOP.TaggedComponent(
         TAG_NULL_TAG.value, new byte[] {});
-    private static final Logger LOG = LogDomains.getLogger(CSIV2TaggedComponentInfo.class, SECURITY_LOGGER, false);
+    private static final Logger LOG = System.getLogger(CSIV2TaggedComponentInfo.class.getName());
 
     // Realm name is first picked up from the application object.
     // If the realm is unpopulated here, then we query it from
@@ -105,15 +103,14 @@ final class CSIV2TaggedComponentInfo {
      */
     org.omg.IOP.TaggedComponent createSecurityTaggedComponent(int sslPort, EjbDescriptor desc) {
         try {
-            LOG.log(Level.FINE, "IIOP: Creating a Security Tagged Component");
+            LOG.log(DEBUG, "IIOP: Creating a Security Tagged Component");
 
             // get the realm from the application object.
             // _realm_name = desc.getApplication().getRealm();
             CompoundSecMech[] mechList = createCompoundSecMechs(sslPort, desc);
             return createCompoundSecMechListComponent(mechList);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Creation of a Security Tagged Component failed.", e);
-            return null;
+            throw new IllegalStateException("Creation of a Security Tagged Component failed.", e);
         }
     }
 
@@ -121,27 +118,23 @@ final class CSIV2TaggedComponentInfo {
      * Create the CSIv2 tagged component for a clustered app server.
      */
     org.omg.IOP.TaggedComponent createSecurityTaggedComponent(List<SocketInfo> socketInfos, EjbDescriptor desc) {
-        org.omg.IOP.TaggedComponent tc = null;
-        if (desc != null) {
-            try {
-                LOG.log(Level.FINE, "IIOP: Creating a Security Tagged Component");
-
-                // get the realm from the application object.
-                // _realm_name = desc.getApplication().getRealm();
-                CompoundSecMech[] mechList = createCompoundSecMechs(socketInfos, desc);
-                tc = createCompoundSecMechListComponent(mechList);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to create a Security Tagged Component", e);
-            }
+        if (desc == null) {
+            return null;
         }
+        try {
+            LOG.log(DEBUG, "IIOP: Creating a Security Tagged Component");
 
-        return tc;
+            // get the realm from the application object.
+            // _realm_name = desc.getApplication().getRealm();
+            CompoundSecMech[] mechList = createCompoundSecMechs(socketInfos, desc);
+            return createCompoundSecMechListComponent(mechList);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create a Security Tagged Component", e);
+        }
     }
 
     private boolean getBooleanValue(Properties props, String name) {
-        String val = props.getProperty(name, "false");
-        boolean result = val.equals("true");
-        return result;
+        return "true".equals(props.getProperty(name, "false"));
     }
 
     /**
@@ -165,8 +158,7 @@ final class CSIV2TaggedComponentInfo {
 
             return createCompoundSecMechListComponent(mechList);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to create a Security Tagged Component", e);
-            return null;
+            throw new IllegalStateException("Failed to create a Security Tagged Component", e);
         }
     }
 
@@ -203,7 +195,7 @@ final class CSIV2TaggedComponentInfo {
             // If they are then enable username_password mechanism in as_context
             Set<Role> permissions = desc.getPermissionedRoles();
             if (permissions.size() > 0) {
-                LOG.log(Level.FINE, "IIOP:Application has protected methods");
+                LOG.log(DEBUG, "IIOP:Application has protected methods");
 
                 eDesc.setAuthMethodRequired(true);
                 String realmName = DEFAULT_REALM;
@@ -229,7 +221,7 @@ final class CSIV2TaggedComponentInfo {
      */
     private CompoundSecMech[] createCompoundSecMechs(DescriptorMaker maker, EjbDescriptor desc) throws GSSException {
 
-        LOG.log(Level.FINE, "IIOP: Creating CompoundSecMech");
+        LOG.log(DEBUG, "IIOP: Creating CompoundSecMech");
 
         if (desc == null) {
             return null;
@@ -239,7 +231,7 @@ final class CSIV2TaggedComponentInfo {
 
         CompoundSecMech[] mechList = new CompoundSecMech[iorDescSet.size()];
         Iterator<EjbIORConfigurationDescriptor> itr = iorDescSet.iterator();
-        LOG.log(Level.FINE, "IORDescSet SIZE: {0}", iorDescSet.size());
+        LOG.log(DEBUG, "IORDescSet SIZE: {0}", iorDescSet.size());
         String realmName = DEFAULT_REALM;
 
         for (int i = 0; i < iorDescSet.size(); i++) {
@@ -295,7 +287,7 @@ final class CSIV2TaggedComponentInfo {
         String authMethod = null;
         boolean authMethodRequired = false;
 
-        LOG.log(Level.FINE, "IIOP: Creating AS_Context");
+        LOG.log(DEBUG, "IIOP: Creating AS_Context");
 
         // If AS_ContextSec is not required to be generated in an IOR,
         // then optimize the code by not generating and filling in fields that are
@@ -313,7 +305,7 @@ final class CSIV2TaggedComponentInfo {
             return asContext;
         }
 
-        LOG.log(Level.FINE, "IIOP:AS_Context: Realm Name for login = {0}", realmName);
+        LOG.log(DEBUG, "IIOP:AS_Context: Realm Name for login = {0}", realmName);
 
         if (realmName == null && iorDesc != null) {
             realmName = iorDesc.getRealmName();
@@ -350,7 +342,7 @@ final class CSIV2TaggedComponentInfo {
         String callerPropagation = null;
         byte[][] mechanisms = {};
 
-        LOG.log(Level.FINE, "IIOP: Creating SAS_Context");
+        LOG.log(DEBUG, "IIOP: Creating SAS_Context");
 
         // this shall be non-zero if target_supports is non-zero
         int supported_identity_token_type = 0;
@@ -521,7 +513,7 @@ final class CSIV2TaggedComponentInfo {
         boolean mutualAuthRequired = (iorDesc != null) && ((targetRequires & EstablishTrustInClient.value) == EstablishTrustInClient.value);
         int ssl_port = mutualAuthRequired ? sslMutualAuthPort : sslport;
 
-        LOG.log(Level.FINE, "IIOP: Creating Transport Mechanism for sslport {0}", ssl_port);
+        LOG.log(DEBUG, "IIOP: Creating Transport Mechanism for sslport {0}", ssl_port);
 
         /*
          * if both targetSupports and targetRequires are zero, then the mechanism does not support a transport_mechanism and
@@ -541,7 +533,7 @@ final class CSIV2TaggedComponentInfo {
         int targetSupports = getTargetSupportsDefault(iorDesc);
         int targetRequires = getTargetRequiresDefault(iorDesc, sslRequired);
 
-        LOG.log(Level.FINE, "IIOP: Creating Transport Mechanism for socketInfos {0}", socketInfos);
+        LOG.log(DEBUG, "IIOP: Creating Transport Mechanism for socketInfos {0}", socketInfos);
 
         /*
          * if both targetSupports and targetRequires are zero, then the mechanism does not support a transport_mechanism and
@@ -591,12 +583,12 @@ final class CSIV2TaggedComponentInfo {
         Iterator<TaggedComponent> itr = ptemp.iteratorById(TAG_CSI_SEC_MECH_LIST.value);
 
         if (!itr.hasNext()) {
-            LOG.log(Level.FINE, "IIOP:TAG_CSI_SEC_MECH_LIST tagged component not found");
+            LOG.log(DEBUG, "IIOP:TAG_CSI_SEC_MECH_LIST tagged component not found");
             return null;
         }
 
         TaggedComponent tcomp = itr.next();
-        LOG.log(Level.FINE, "Component: {0}", tcomp);
+        LOG.log(DEBUG, "Component: {0}", tcomp);
 
         if (itr.hasNext()) {
             throw new RuntimeException("More than one TAG_CSI_SEC_MECH_LIST tagged component found.");

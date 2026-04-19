@@ -168,7 +168,6 @@ public final class SecurityMechanismSelector implements PostConstruct {
                 getCorbaIORDescSet().add(iorDesc2);
             }
             getCorbaIORDescSet().add(iorDesc);
-
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "IIOP1005: An exception has occured in the ejb security initialization.", e);
         }
@@ -252,8 +251,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
     }
 
     public synchronized CSIV2TaggedComponentInfo getCtc() {
-        if (ctc == null) {
-            this.ctc = new CSIV2TaggedComponentInfo(orbLocator.getORB());
+        if (this.ctc == null) {
+            this.ctc = new CSIV2TaggedComponentInfo(orbLocator.getPartiallyInitializedOrb());
         }
         return ctc;
     }
@@ -726,9 +725,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
     }
 
     public CompoundSecMech selectSecurityMechanism(IOR ior) throws SecurityMechanismException {
-        CompoundSecMech[] mechList = getCtc().getSecurityMechanisms(ior);
-        CompoundSecMech mech = selectSecurityMechanism(mechList);
-        return mech;
+        return selectSecurityMechanism(getCtc().getSecurityMechanisms(ior));
     }
 
     /**
@@ -741,15 +738,12 @@ public final class SecurityMechanismSelector implements PostConstruct {
         if (mechList == null || mechList.length == 0) {
             return null;
         }
-        CompoundSecMech mech = null;
-        for (CompoundSecMech element : mechList) {
-            mech = element;
-            boolean useMech = useMechanism(mech);
-            if (useMech) {
+        for (CompoundSecMech mech : mechList) {
+            if (useMechanism(mech)) {
                 return mech;
             }
         }
-        throw new SecurityMechanismException("Cannot use any of the " + " target's supported mechanisms");
+        throw new SecurityMechanismException("Cannot use any of the target's supported mechanisms");
     }
 
     private boolean useMechanism(CompoundSecMech mech) {

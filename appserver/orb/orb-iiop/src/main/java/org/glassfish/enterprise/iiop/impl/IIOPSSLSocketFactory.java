@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,9 +24,10 @@ import com.sun.corba.ee.spi.transport.ORBSocketFactory;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.logging.LogDomains;
 
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -41,8 +42,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -62,6 +61,7 @@ import org.glassfish.orb.admin.config.IiopService;
 import org.glassfish.security.common.CipherInfo;
 
 import static com.sun.corba.ee.spi.misc.ORBConstants.SOCKETCHANNEL;
+import static java.lang.System.Logger.Level.DEBUG;
 
 
 /**
@@ -72,7 +72,7 @@ import static com.sun.corba.ee.spi.misc.ORBConstants.SOCKETCHANNEL;
  */
 public class IIOPSSLSocketFactory implements ORBSocketFactory {
 
-    private static final Logger LOG = LogDomains.getLogger(IIOPSSLSocketFactory.class, LogDomains.CORBA_LOGGER, false);
+    private static final Logger LOG = System.getLogger(IIOPSSLSocketFactory.class.getName());
 
     private static final String TLS = "TLS";
     private static final String SSL3 = "SSLv3";
@@ -118,14 +118,14 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 if (processType == ProcessType.ACC) {
                     SSLUtils sslUtil = Globals.getDefaultHabitat().getService(SSLUtils.class);
                     AppClientSSL clientSsl = sslUtil.getAppclientSsl();
-                    if (clientSsl != null) {
+                    if (clientSsl == null) {
+                        // include case keystore, truststore jvm option
+                        clientSslInfo = getDefaultSslInfo();
+                    } else {
                         clientSslInfo = init(clientSsl.getCertNickname(),
                                 clientSsl.getSsl2Enabled(), clientSsl.getSsl2Ciphers(),
                                 clientSsl.getSsl3Enabled(), clientSsl.getSsl3TlsCiphers(),
                                 clientSsl.getTlsEnabled());
-                    } else {
-                        // include case keystore, truststore jvm option
-                        clientSslInfo = getDefaultSslInfo();
                     }
                 } else {
                     clientSslInfo = getDefaultSslInfo();
@@ -281,7 +281,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
      */
     @Override
     public Socket createSocket(String type, InetSocketAddress inetSocketAddress) throws IOException {
-        LOG.log(Level.FINE, () -> "createSocket(" + type + ", " + inetSocketAddress + ")");
+        LOG.log(DEBUG, () -> "createSocket(" + type + ", " + inetSocketAddress + ")");
 
         try {
             int port = inetSocketAddress.getPort();
@@ -289,7 +289,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 String host = inetSocketAddress.getHostName();
                 return createSSLSocket(host, port);
             }
-            LOG.log(Level.FINE, "Creating CLEAR_TEXT socket for: {0}", port);
+            LOG.log(DEBUG, "Creating CLEAR_TEXT socket for: {0}", port);
 
             final Socket socket;
             if (SOCKETCHANNEL.equals(orb.getORBData().connectionSocketType())) {
@@ -309,9 +309,8 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
     }
 
     @Override
-    public void setAcceptedSocketOptions(Acceptor acceptor,
-        ServerSocket serverSocket, Socket socket) {
-        LOG.log(Level.FINE, () -> "setAcceptedSocketOptions: " + acceptor + " " + serverSocket + " " + socket);
+    public void setAcceptedSocketOptions(Acceptor acceptor, ServerSocket serverSocket, Socket socket) {
+        LOG.log(DEBUG, () -> "setAcceptedSocketOptions: " + acceptor + ", " + serverSocket + ", " + socket);
         // Disable Nagle's algorithm (i.e., always send immediately).
         try {
             socket.setTcpNoDelay(true);
@@ -344,7 +343,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             String[] socketCiphers = ssf.getDefaultCipherSuites();
             ciphers = mergeCiphers(socketCiphers, ssl3TlsCiphers, ssl2Ciphers);
         }
-        LOG.log(Level.FINE, () -> "Supported cipher Suites: " + Arrays.toString(ssf.getSupportedCipherSuites()));
+        LOG.log(DEBUG, () -> "Supported cipher Suites: " + Arrays.toString(ssf.getSupportedCipherSuites()));
         final Action<ServerSocket> action = () -> ssf.createServerSocket(port, BACKLOG, inetSocketAddress.getAddress());
         final ServerSocket ss = repeat(action, Duration.ofSeconds(10L));
         if (ciphers != null) {
@@ -352,10 +351,10 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         }
         try {
             if (type.equals(SSL_MUTUALAUTH)) {
-                LOG.log(Level.FINE, "Setting Mutual auth");
+                LOG.log(DEBUG, "Setting Mutual auth");
                 ((SSLServerSocket) ss).setNeedClientAuth(true);
             }
-            LOG.log(Level.FINE, () -> "Created server socket: " + ss);
+            LOG.log(DEBUG, () -> "Created server socket: " + ss);
             return ss;
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
@@ -373,7 +372,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             // get socketfactory+sanity check
             // clientSslInfo is never null
             SSLSocketFactory factory = clientSslInfo.getContext().getSocketFactory();
-            LOG.log(Level.FINE,"Creating SSL Socket for host: " + host + " port: " + port);
+            LOG.log(DEBUG,"Creating SSL Socket for host: " + host + " port: " + port);
             String[] ssl3TlsCiphers = clientSslInfo.getSsl3TlsCiphers();
             String[] ssl2Ciphers = clientSslInfo.getSsl2Ciphers();
             String[] clientCiphers = null;
@@ -450,7 +449,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             return null;
         }
 
-        LOG.log(Level.FINE, "Default socket ciphers: " + Arrays.toString(enableCiphers));
+        LOG.log(DEBUG, () -> "Default socket ciphers: " + Arrays.toString(enableCiphers));
 
         ArrayList<String> cList = new ArrayList<>();
         if (ssl3TlsCiphers != null) {
@@ -478,7 +477,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 }
             }
         }
-        LOG.log(Level.FINE, "Merged socket ciphers: " + cList);
+        LOG.log(DEBUG, () -> "Merged socket ciphers: " + cList);
         return cList.toArray(String[]::new);
     }
 

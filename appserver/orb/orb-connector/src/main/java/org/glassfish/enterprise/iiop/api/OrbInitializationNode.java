@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,14 @@ package org.glassfish.enterprise.iiop.api;
 
 import jakarta.ejb.Singleton;
 
+import java.lang.System.Logger;
 import java.nio.channels.SelectableChannel;
 import java.util.function.Consumer;
 
 import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * This class collects fields which are unsafely visited in ORB initialization.
@@ -36,6 +40,8 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class OrbInitializationNode {
 
+    private static final Logger LOG = System.getLogger(OrbInitializationNode.class.getName());
+
     private Consumer<SelectableChannel> acceptor;
 
     /**
@@ -43,17 +49,18 @@ public class OrbInitializationNode {
      * <ol>
      * <li>Client sends CORBA request
      * <li>Server finds that the ORB service was not initialized yet
-     * <li>ORBLazyServiceInitializer starts the initializeService method
+     * <li>ORBLazyService starts the initializeService method
      * <li>glassfish-corba-orb.jar calls PEORBConfigurator.configure
      * <li>{@link #setAcceptor(Consumer)} is called.
      * <li>Client's request is processed calling {@link #handleRequest(SelectableChannel)}
      * </ol>
-     * Reason why it is not in the ORBLazyServiceInitializer:
-     * HK2 would detect it as a cyclic dependency between ORBLazyServiceInitializer and PEORBConfigurator
+     * Reason why it is not in the ORBLazyService:
+     * HK2 would detect it as a cyclic dependency between ORBLazyService and PEORBConfigurator
      *
      * @param acceptorDelegate
      */
     public void setAcceptor(Consumer<SelectableChannel> acceptorDelegate) {
+        LOG.log(DEBUG, "setAcceptor(acceptorDelegate={0})", acceptorDelegate);
         this.acceptor = acceptorDelegate;
     }
 
@@ -62,18 +69,19 @@ public class OrbInitializationNode {
      * <ol>
      * <li>Client sends CORBA request
      * <li>Server finds that the ORB service was not initialized yet
-     * <li>ORBLazyServiceInitializer starts the initializeService method
+     * <li>ORBLazyService starts the initializeService method
      * <li>glassfish-corba-orb.jar calls PEORBConfigurator.configure
      * <li>{@link #setAcceptor(Consumer)} is called.
      * <li>Client's request is processed calling {@link #handleRequest(SelectableChannel)}
      * </ol>
-     * Reason why it is not in the ORBLazyServiceInitializer:
-     * HK2 would detect it as a cyclic dependency between ORBLazyServiceInitializer and PEORBConfigurator
+     * Reason why it is not in the ORBLazyService:
+     * HK2 would detect it as a cyclic dependency between ORBLazyService and PEORBConfigurator
      *
      * @param channel
      */
     public void handleRequest(SelectableChannel channel) {
-       acceptor.accept(channel);
+        LOG.log(TRACE, "handleRequest(channel={0})", channel);
+        acceptor.accept(channel);
     }
 
     /**

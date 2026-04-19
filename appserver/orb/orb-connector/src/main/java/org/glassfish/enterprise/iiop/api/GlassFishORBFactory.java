@@ -19,7 +19,9 @@ package org.glassfish.enterprise.iiop.api;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
 
+import java.nio.channels.SelectableChannel;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
@@ -57,4 +59,9 @@ public interface GlassFishORBFactory {
     String getIIOPEndpoints();
 
     EjbDescriptor getEjbDescriptor(IORInfo iorInfo);
+
+    /**
+     * @param acceptorDelegate
+     */
+    void enableLazyAcceptor(Consumer<SelectableChannel> acceptorDelegate);
 }

@@ -41,7 +41,7 @@ public class JMailConsolePlugin implements ConsoleProvider {
  *  @return URL of configration file.
  */
     public URL getConfiguration(){
-            return null;
+        return null;
     }
 }
 

@@ -55,6 +55,7 @@
     <!-- Page Title -->
     <sun:title id="propertyContentPage" title="$resource{i18njmail.javaMail.newPageTitle}" helpText="$resource{i18njmail.javaMail.newPageTitleHelp}">
 #include "/common/resourceNode/resourceEditPageButtons.inc"
+#include "/jmail/shared/sendTestEmailButton.inc"
     </sun:title>
 #include "/jmail/mailResourceAttr.inc"
 #include "/common/shared/propertyDescTable.inc"

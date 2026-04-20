@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import jakarta.inject.Named;
 import jakarta.inject.Provider;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.net.HttpURLConnection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,7 +33,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
@@ -73,6 +73,9 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -82,6 +85,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author sanjeeb.sahoo@oracle.com
  */
 public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdapter, PostConstruct {
+
     protected static final String COOKIE_REST_TOKEN = "gfresttoken";
     protected static final String COOKIE_GF_REST_UID = "gfrestuid";
     protected static final String HEADER_ACCEPT = "Accept";
@@ -89,6 +93,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     protected static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
     protected static final String HEADER_AUTHENTICATE = "WWW-Authenticate";
 
+    private static final Logger LOG = System.getLogger(RestAdapter.class.getName());
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RestService.class);
 
     private final CountDownLatch latch = new CountDownLatch(1);
@@ -133,7 +138,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
 
     @Override
     public void service(Request req, Response res) {
-        RestLogging.restLogger.log(Level.FINER, "Received resource request: {0}", req.getRequestURI());
+        LOG.log(DEBUG, "{0}: Received resource request to URI {1}", this, req.getRequestURI());
 
         try {
             res.setCharacterEncoding(UTF_8.name());
@@ -141,7 +146,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
                 if (serverEnvironment.isInstance()) {
                     if (!Method.GET.equals(req.getMethod()) && !getRestResourceProvider().enableModifAccessToInstances()) {
                         reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN, localStrings.getLocalString(
-                                "rest.resource.only.GET.on.instance", "Only GET requests are allowed on an instance that is not DAS."));
+                                "rest.resource.only.GET.on.instance", "Only GET requests are allowed on an instance that is not DAS."), null);
                         return;
                     }
                 }
@@ -151,38 +156,47 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
 
                 String context = getContextRoot();
                 if (context != null && !context.isEmpty() && adapter == null) {
-                    RestLogging.restLogger.log(Level.FINE, "Exposing rest resource context root: {0}", context);
+                    LOG.log(DEBUG, "Exposing rest resource context root: {0}", context);
                     adapter = exposeContext();
-                    RestLogging.restLogger.log(Level.INFO, RestLogging.REST_INTERFACE_INITIALIZED, context);
+                    LOG.log(INFO, "Listening to REST requests at context: {0}/domain.", context);
                 }
                 //delegate to adapter managed by Jersey.
                 adapter.service(req, res);
 
             } else { // !latch.await(...)
                 reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE, localStrings.getLocalString("rest.adapter.server.wait",
-                        "Server cannot process this command at this time, please wait"));
+                        "Server cannot process this command at this time, please wait"), null);
             }
         } catch (InterruptedException e) {
             reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE, localStrings.getLocalString("rest.adapter.server.wait",
-                    "Server cannot process this command at this time, please wait")); //service unavailable
+                    "Server cannot process this command at this time, please wait"), e);
         } catch (IOException e) {
             reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE,
-                    localStrings.getLocalString("rest.adapter.server.ioexception", "REST: IO Exception " + e.getLocalizedMessage())); //service unavailable
+                    localStrings.getLocalString("rest.adapter.server.ioexception", "REST: IO Exception " + e.getLocalizedMessage()), e);
         } catch (RemoteAdminAccessException e) {
             reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN, localStrings.getLocalString("rest.adapter.auth.forbidden",
-                    "Remote access not allowed. If you desire remote access, please turn on secure admin"));
+                    "Remote access not allowed. If you desire remote access, please turn on secure admin"), e);
         } catch (LoginException e) {
             int status = HttpURLConnection.HTTP_UNAUTHORIZED;
             String msg = localStrings.getLocalString("rest.adapter.auth.userpassword", "Invalid user name or password");
             res.setHeader(HEADER_AUTHENTICATE, "BASIC");
-            reportError(req, res, status, msg);
+            reportError(req, res, status, msg, e);
         } catch (Exception e) {
             // TODO: This string is duplicated.  Can we pull this text out of the logging bundle?
             String msg = localStrings.getLocalString("rest.adapter.server.exception",
                     "An error occurred while processing the request. Please see the server logs for details.");
-            RestLogging.restLogger.log(Level.INFO, RestLogging.SERVER_ERROR, e);
-            reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE, msg); //service unavailable
+            LOG.log(INFO, RestLogging.SERVER_ERROR, e);
+            reportError(req, res, HttpURLConnection.HTTP_UNAVAILABLE, msg, e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "["
+            + "name=" + getName()
+            + ", contextRoot=" + getContextRoot()
+            + ", instanceName=" + serverContext.getInstanceName()
+            + "]";
     }
 
     private String getAcceptedMimeType(Request req) {
@@ -280,22 +294,17 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     }
 
     private JerseyContainer getJerseyContainer(ResourceConfig config) {
-        RestLogging.restLogger.log(Level.FINEST,
-            () -> this + ": Creating Jersey container for " + HttpHandler.class + " and " + config);
+        LOG.log(DEBUG, () -> this + ": Creating Jersey container for " + HttpHandler.class + " and " + config);
         final GrizzlyHttpContainer httpHandler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
         final ServiceLocator jerseyLocator = httpHandler.getApplicationHandler().getInjectionManager().getInstance(ServiceLocator.class);
         ExtrasUtilities.enableTopicDistribution(jerseyLocator);
-        return new JerseyContainer() {
-            @Override
-            public void service(Request request, Response response) throws Exception {
-                httpHandler.service(request, response);
-            }
-        };
+        return httpHandler::service;
     }
 
-    private void reportError(Request req, Response res, int statusCode, String msg) {
+    private void reportError(Request req, Response res, int statusCode, String msg, Exception exception) {
+        LOG.log(WARNING, "reportError(req, res, statusCode=" + statusCode + ", msg, e)", exception);
         try {
-            // TODO: There's a lot of arm waving and flailing here.  I'd like this to be cleaner, but I don't
+            // TODO: There's a lot of arm waving and failing here.  I'd like this to be cleaner, but I don't
             // have time at the moment.  jdlee 8/11/10
             RestActionReporter report = new RestActionReporter(); //getClientActionReport(req);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -318,7 +327,9 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
             res.getOutputStream().flush();
             res.finish();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            RuntimeException failure = new RuntimeException(exception);
+            failure.addSuppressed(e);
+            throw failure;
         }
     }
 }

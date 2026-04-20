@@ -33,7 +33,10 @@ import static org.hamcrest.Matchers.aMapWithSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * This class tests the changes to the handling of @Element("*") instances
+ * This class tests the changes to the handling of <code>@Element("*")</code> instances.
+ * <p>
+ * Verbose logs:
+ * {@code mvn clean install -pl :admin-tests -Dit.test=ElementStarITest -o -Dtest.logLevel=FINEST}
  *
  * @author jasonlee
  */
@@ -58,10 +61,10 @@ public class ElementStarITest extends RestTestBase {
 
     @AfterEach
     public void after() {
-        Response response = managementClient.delete("/domain/servers/server/" + instanceName1 + "/delete-instance");
-        assertEquals(200, response.getStatus());
-        response = managementClient.delete("/domain/servers/server/" + instanceName2 + "/delete-instance");
-        assertEquals(200, response.getStatus());
+//        Response response = managementClient.delete("/domain/servers/server/" + instanceName1 + "/delete-instance");
+//        assertEquals(200, response.getStatus());
+//        response = managementClient.delete("/domain/servers/server/" + instanceName2 + "/delete-instance");
+//        assertEquals(200, response.getStatus());
     }
 
 

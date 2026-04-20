@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Ref;
 import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Payload;
@@ -31,12 +30,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -58,14 +57,17 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import static java.util.logging.Level.SEVERE;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
  *
  */
 @Configured
-@RefConstraint(message = "{ref.invalid}", payload = RefValidator.class)
+@RefConstraint(
+    message = "lb-config can contain references to either server-ref or cluster-ref but not both.",
+    payload = RefValidator.class)
 public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
 
     String LAST_APPLIED_PROPERTY = "last-applied";
@@ -80,7 +82,13 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      * @return possible object is {@link String}
      */
     @Attribute(key = true)
-    @Pattern(regexp = NAME_REGEX, message = "{lbconfig.invalid.name}", payload = LbConfig.class)
+    @Pattern(
+        regexp = NAME_REGEX,
+        message = """
+            Invalid lb-config name. The name must start with a letter, number or underscore and may contain only
+            letters, numbers, and these characters: hyphen, period, underscore, hash and semicolon."
+            """,
+        payload = LbConfig.class)
     @NotNull
     String getName();
 
@@ -295,10 +303,10 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
                 propertyProxy.setValue(String.valueOf((new Date()).getTime()));
             }
             transaction.commit();
-        } catch (Exception ex) {
+        } catch (Exception e) {
             transaction.rollback();
-            Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER, false);
-            logger.log(SEVERE, "Unable to set property " + propertyName + " in lbconfig with name " + getName(), ex);
+            System.getLogger(LbConfig.class.getName()).log(ERROR,
+                () -> "Unable to set property '" + propertyName + "' in lbconfig with name '" + getName() + "'", e);
             return false;
         }
         return true;
@@ -307,6 +315,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
     @Service
     @PerLookup
     class Decorator implements CreationDecorator<LbConfig> {
+        private static final Logger LOG = System.getLogger(Decorator.class.getName());
 
         @Param (name = "name", optional = true)
         String config_name;
@@ -347,12 +356,9 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
          */
         @Override
         public void decorate(AdminCommandContext context, final LbConfig instance) throws TransactionFailure, PropertyVetoException {
-            Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER);
-            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);
-
             if (config_name == null && target == null) {
-                String msg = localStrings.getLocalString("RequiredTargetOrConfig", "Neither LB config name nor target specified");
-                throw new TransactionFailure(msg);
+                throw new TransactionFailure(
+                    "Either option --target or operand config_name is required for this command.");
             }
 
             // generate lb config name if not specified
@@ -371,14 +377,13 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
                     transaction.commit();
                 } catch (TransactionFailure | RetryableException ex) {
                     transaction.rollback();
-                    String msg = localStrings.getLocalString("LbConfigsCreationFailed", "Creation of parent element lb-configs failed");
-                    throw new TransactionFailure(msg, ex);
+                    throw new TransactionFailure("Creation of parent element lb-configs failed.", ex);
                 }
             }
 
             if (lbconfigs.getLbConfig(config_name) != null) {
-                String msg = localStrings.getLocalString("LbConfigExists", config_name);
-                throw new TransactionFailure(msg);
+                throw new TransactionFailure("Load balancer configuration '" + config_name
+                    + "' contains server refs or clusters refs. It must be empty in order to be removed.");
             }
 
             instance.setName(config_name);
@@ -399,8 +404,8 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
                     sRef.setRef(target);
                     instance.getClusterRefOrServerRef().add(sRef);
                 } else {
-                    String msg = localStrings.getLocalString("InvalidTarget", target);
-                    throw new TransactionFailure(msg);
+                    throw new TransactionFailure(
+                        "Invalid argument. Target '" + target + "' is not a cluster or stand alone server instance.");
                 }
             }
 
@@ -413,8 +418,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
                     instance.getProperty().add(newprop);
                 }
             }
-            logger.info(localStrings.getLocalString("http_lb_admin.LbConfigCreated",
-                    "Load balancer configuration {0} created.", config_name));
+            LOG.log(INFO, () -> "Load balancer configuration '" + config_name + "' created.");
         }
     }
 
@@ -427,18 +431,16 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
 
         @Override
         public void decorate(AdminCommandContext context, LbConfigs parent, LbConfig child) throws TransactionFailure {
-            Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER);
-            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);
 
             String lbConfigName = child.getName();
             LbConfig lbConfig = domain.getExtensionByType(LbConfigs.class).getLbConfig(lbConfigName);
-
             //Ensure there are no refs
-            if ( (lbConfig.getClusterRefOrServerRef().size() != 0 ) ) {
-                String msg = localStrings.getLocalString("LbConfigNotEmpty", lbConfigName);
-                throw new TransactionFailure(msg);
+            if (!lbConfig.getClusterRefOrServerRef().isEmpty()) {
+                throw new TransactionFailure(
+                    new LocalStringManagerImpl(LbConfig.class).getLocalString("LbConfigNotEmpty", lbConfigName));
             }
-            logger.info(localStrings.getLocalString("http_lb_admin.LbConfigDeleted", lbConfigName));
+            System.getLogger(DeleteDecorator.class.getName()).log(INFO,
+                () -> "Load balancer configuration '" + lbConfigName + "' deleted.");
         }
    }
 }

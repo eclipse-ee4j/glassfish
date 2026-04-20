@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,13 +46,6 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-/**
- *
- */
-
-/* @XmlType(name = "", propOrder = {
-    "property"
-}) */
 
 @Configured
 @HasNoDefaultConfiguration
@@ -189,7 +183,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
                 if (!lb.getName().equals(lbName) &&
                         lb.getLbConfigName().equals(lbConfigName)) {
                     String msg = localStrings.getLocalString("LbConfigIsInUse", lbConfigName);
-                    report.setMessage(msg);
+                    report.setMessage("LB configuration '" + lbConfigName + "' is in use by another load balancer.");
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     throw new TransactionFailure(msg);
                 }
@@ -204,12 +198,8 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
                     configList.remove(lbConfig);
                 }
             } catch (TransactionFailure ex) {
-                logger.log(Level.WARNING,
-                        localStrings.getLocalString("DeleteLbConfigFailed",
-                        "Unable to remove lb config {0}", lbConfigName), ex);
-                String msg = ex.getMessage() != null ? ex.getMessage()
-                        : localStrings.getLocalString("DeleteLbConfigFailed",
-                        "Unable to remove lb config {0}", lbConfigName);
+                String msg = "Unable to remove lb config " + lbConfigName;
+                logger.log(Level.WARNING, msg, ex);
                 report.setMessage(msg);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setFailureCause(ex);

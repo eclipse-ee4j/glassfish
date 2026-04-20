@@ -33,7 +33,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Constraint(validatedBy = RefValidator.class)
 public @interface RefConstraint {
-    String message() default "{ref.invalid}";
+    String message() default "lb-config can contain references to either server-ref or cluster-ref but not both.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

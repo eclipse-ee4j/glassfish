@@ -61,10 +61,10 @@ public class ElementStarITest extends RestTestBase {
 
     @AfterEach
     public void after() {
-//        Response response = managementClient.delete("/domain/servers/server/" + instanceName1 + "/delete-instance");
-//        assertEquals(200, response.getStatus());
-//        response = managementClient.delete("/domain/servers/server/" + instanceName2 + "/delete-instance");
-//        assertEquals(200, response.getStatus());
+        Response response = managementClient.delete("/domain/servers/server/" + instanceName1 + "/delete-instance");
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete("/domain/servers/server/" + instanceName2 + "/delete-instance");
+        assertEquals(200, response.getStatus());
     }
 
 

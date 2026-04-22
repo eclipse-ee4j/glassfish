@@ -284,7 +284,7 @@ access in the following ways:
 relevant configuration. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin set` command. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual]. For
+xref:reference-manual.adoc#set[{productName} Reference Manual]. For
 example, you can set the default principal as follows.
 +
 [source]
@@ -349,7 +349,7 @@ You can configure a realm in one of these ways:
 relevant configuration and go to the Realms page. For details, click the
 Help button in the Administration Console.
 * Use the `asadmin create-auth-realm` command to configure realms on
-local servers. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+local servers. For details, see the xref:reference-manual.adoc#create-auth-realm[{productName} Reference Manual].
 
 [[how-to-set-a-realm-for-an-application-or-module]]
 
@@ -659,7 +659,7 @@ Security component under the relevant configuration, and select the
 Audit Modules component. For details, click the Help button in the
 Administration Console.
 * You can use the `asadmin create-audit-module` command to configure an
-audit module. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+audit module. For details, see the xref:reference-manual.adoc#create-audit-module[{productName} Reference Manual].
 
 [[the-auditmodule-class]]
 
@@ -790,7 +790,7 @@ The following predefined system properties, also called variables, are
 available for use in the `server.policy` file. The system property most
 frequently used in `server.policy` is `${com.sun.aas.instanceRoot}`. For
 more information about system properties, see the
-`asadmin create-system-properties` command in the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+`asadmin create-system-properties` command in the xref:reference-manual.adoc#create-system-properties[{productName} Reference Manual].
 
 [[GSDVG533]]
 
@@ -953,7 +953,7 @@ asadmin create-jvm-options -Djava.security.debug=failure
 ----
 
 For more information about the `asadmin create-jvm-options` command, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jvm-options[{productName} Reference Manual].
 
 You can use the J2SE standard `policytool` or any text editor to edit
 the `server.policy` file. For more information, see
@@ -1007,7 +1007,7 @@ asadmin create-jvm-options -Djava.security.manager
 To disable the security manager, uncheck the Security Manager Enabled
 box or use the corresponding `asadmin delete-jvm-options` command. For
 more information about `create-jvm-options` and `delete-jvm-options`,
-see the xref:reference-manual.adoc#GSRFM[{productName} Reference
+see the xref:reference-manual.adoc#create-jvm-options[{productName} Reference
 Manual].
 
 If the security manager is enabled and you are using the Java
@@ -1138,7 +1138,7 @@ asadmin set
 server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider
 ----
 For more information about the `asadmin set` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 The example described in xref:#understanding-and-running-the-sample-application[Understanding and Running the
 Sample Application] uses the `ClientProvider` and `ServerProvider`
@@ -1183,7 +1183,7 @@ and select the Message Security component. For details, click the Help
 button in the Administration Console.
 * You can use the `asadmin create-message-security-provider` command to
 create a message security provider. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#create-message-security-provider[{productName} Reference Manual].
 
 In addition, you can set a few optional provider properties using the
 `asadmin set` command. For example:
@@ -1870,7 +1870,7 @@ asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-reap-in
 ----
 
 For more information about the `asadmin set` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 [[adding-authentication-mechanisms-to-the-servlet-container]]
 
@@ -2483,7 +2483,7 @@ configure a SAM. Set the following options:
 ** Provider name operand — Specify a unique name for the SAM, for
 example `MySAM`
 +
-For details, see the xref:reference-manual.adoc#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#create-message-security-provider[{productName}
 Reference Manual].
 
 [[binding-a-server-authentication-module-to-your-application]]

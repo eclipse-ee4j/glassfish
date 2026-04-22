@@ -14,7 +14,7 @@ This appendix lists the `asadmin` deployment subcommands that are
 included with this release of the {productName} software. For information on additional `asadmin` subcommands,
 see "xref:administration-guide.adoc#asadmin-subcommands[Subcommands for the `asadmin` Utility]" in
 {productName} Administration Guide or see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc[{productName} Reference Manual].
 
 xref:reference-manual.adoc#add-library[`add-library`]::
   Adds one or more library JAR files to {productName}. You can

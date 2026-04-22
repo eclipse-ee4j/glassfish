@@ -160,7 +160,7 @@ resource adapters. To create a thread pool:
 configuration. For details, click the Help button in the Administration
 Console.
 * Use the `asadmin create-threadpool` command. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#create-threadpool[{productName} Reference Manual].
 
 To associate a connector with a thread pool:
 
@@ -170,7 +170,7 @@ the Thread Pool ID field. For details, click the Help button in the
 Administration Console.
 * Use the `--threadpoolid` option of the
 `asadmin create-resource-adapter-config` command. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#create-resource-adapter-config[{productName} Reference Manual].
 
 If you create a resource adapter configuration for a connector module
 that is already deployed, the connector module deployment is restarted
@@ -193,7 +193,7 @@ Connectors, select Connector Connection Pools, and select the Security
 Maps tab. For details, click the Help button in the Administration
 Console.
 * Use the `asadmin create-connector-security-map` command. For details,
-see the xref:reference-manual.adoc#GSRFM[{productName} Reference
+see the xref:reference-manual.adoc#create-connector-security-map[{productName} Reference
 Manual].
 
 If a security map already exists for a connector connection pool, the
@@ -221,7 +221,7 @@ map either principals or groups, but not both.
 
 To create a work security map, use the
 `asadmin create-connector-work-security-map` command. For details, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-connector-work-security-map[{productName} Reference Manual].
 
 The work security map configuration supports the wildcard asterisk (`*`)
 character to indicate all users or all user groups. When an EIS
@@ -246,7 +246,7 @@ the Administration Console.
 * Use the `asadmin create-resource-adapter-config` command to create a
 configuration for a resource adapter. Use this command's `--property`
 option to specify a name-value pair for a resource adapter property. For
-details, see the xref:reference-manual.adoc#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#create-resource-adapter-config[{productName}
 Reference Manual].
 
 You can specify configuration properties either before or after resource
@@ -274,7 +274,7 @@ pool you want to test. Then select the Ping button in the top right
 corner of the page. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin ping-connection-pool` command. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#ping-connection-pool[{productName} Reference Manual].
 
 Both these commands fail and display an error message unless they
 successfully connect to the connection pool.
@@ -288,7 +288,7 @@ Administration Console. For more information, click the Help button in
 the Administration Console.
 * Specify the `--ping` option in the
 `asadmin create-connector-connection-pool` command. For more
-information, see the xref:reference-manual.adoc#GSRFM[{productName}
+information, see the xref:reference-manual.adoc#create-connector-connection-pool[{productName}
 Reference Manual].
 
 [[flushing-a-connector-connection-pool]]
@@ -310,7 +310,7 @@ pool you want to flush. Then select the Flush button in the top right
 corner of the page. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin flush-connection-pool` command. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#flush-connection-pool[{productName} Reference Manual].
 
 ==== Handling Invalid Connections
 
@@ -353,7 +353,7 @@ asadmin set server.resources.connector-connection-pool.CCP1.is-connection-valida
 asadmin set server.resources.connector-connection-pool.CCP1.property.prefer-validate-over-recreate="true"
 ----
 
-For details, see the xref:reference-manual.adoc#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#set[{productName}
 Reference Manual].
 
 The interface ValidatingManagedConnectionFactory exposes the method
@@ -382,7 +382,7 @@ click the Help button in the Administration Console.
 ----
 asadmin set server.connector-service.shutdown-timeout-in-seconds="num-secs"
 ----
-For details, see the xref:reference-manual.adoc#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#set[{productName}
 Reference Manual].
 
 The {productName} deactivates all message-driven bean deployments
@@ -408,7 +408,7 @@ To configure this setting, use the `asadmin set` command. For example:
 asadmin set server.connector-service.class-loading-policy="global"
 ----
 
-For details, see the xref:reference-manual.adoc#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#set[{productName}
 Reference Manual].
 
 [[using-last-agent-optimization-of-transactions]]
@@ -451,7 +451,7 @@ Administration Console. For more information, click the Help button in
 the Administration Console.
 * Specify the `--pooling` option in the
 `asadmin create-connector-connection-pool` command. For more
-information, see the xref:reference-manual.adoc#GSRFM[{productName}
+information, see the xref:reference-manual.adoc#create-connector-connection-pool[{productName}
 Reference Manual].
 
 [[using-application-scoped-connectors]]

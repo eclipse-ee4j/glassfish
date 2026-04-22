@@ -107,7 +107,7 @@ The following third-party tools might also be useful:
 The `asadmin` command allows you to configure a local or remote server
 and perform both administrative and development tasks at the command
 line. For general information about `asadmin`, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#asadmin[{productName} Reference Manual].
 
 The `asadmin` command is located in the as-install``/bin`` directory. Type
 `asadmin help` for a list of subcommands.

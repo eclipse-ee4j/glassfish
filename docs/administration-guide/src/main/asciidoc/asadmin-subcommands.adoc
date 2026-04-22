@@ -31,9 +31,9 @@ For information and instructions on using the `asadmin` application
 deployment subcommands, see
 the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
-Online help for the `asadmin` subcommands can be invoked on the command
-line, for example, `asadmin create-domain` `help`.
-The xref:reference-manual.adoc#GSRFM[{productName} Reference Manual] also
+Documentation help for the `asadmin` subcommands can be invoked on the command
+line, for example, `asadmin create-domain --help`.
+The xref:reference-manual.adoc[{productName} Reference Manual] also
 provides a collection of these help pages.
 
 

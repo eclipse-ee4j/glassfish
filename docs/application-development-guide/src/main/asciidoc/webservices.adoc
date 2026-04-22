@@ -92,7 +92,7 @@ For more information about deployment, autodeployment, and deployment
 descriptors, see the xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide].
 For more information about the
-`asadmin deploy` command, see the xref:reference-manual.adoc#GSRFM[
+`asadmin deploy` command, see the xref:reference-manual.adoc#deploy[
 {productName} Reference Manual].
 
 [[the-web-service-uri-wsdl-file-and-test-page]]

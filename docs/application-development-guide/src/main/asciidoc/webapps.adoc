@@ -55,10 +55,6 @@ To develop servlets, use the Java Servlet API. For information about
 using the Java Servlet API, see the documentation at
 `https://jakarta.ee/specifications/servlet/`.
 
-The {productName} provides the `wscompile` and `wsdeploy` tools to
-help you implement a web service endpoint as a servlet. For more
-information about these tools, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
-
 This section describes how to create effective servlets to control
 application interactions running on a {productName}, including
 standard-based servlets. In addition, this section describes the
@@ -378,7 +374,7 @@ asadmin set server-config.web-container.property.jspCachingEnabled="true"
 ----
 
 For more information about the `asadmin set` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 To enable JSP caching for a single web application, follow these steps:
 
@@ -588,10 +584,10 @@ files into servlets:
 
 * JSP files are automatically compiled at runtime.
 * The `asadmin deploy` command has a `--precompilejsp` option. For
-details, see the xref:reference-manual.adoc#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#deploy[{productName}
 Reference Manual].
-* The `jspc` command line tool allows you to precompile JSP files at the
-command line. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+* The `jspc` command line tool in `glassfish/bin` allows you to precompile JSP files at the
+command line. For details, run `glassfish/bin/jspc -help`
 
 [[creating-and-managing-sessions]]
 
@@ -667,7 +663,7 @@ become invalid unless you use the `--keepstate=true` option of the
 asadmin redeploy --keepstate=true --name hello.war
 ----
 
-For details, see the xref:reference-manual.adoc#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#redeploy[{productName}
 Reference Manual].
 
 The default for `--keepstate` is false. This option is supported only on
@@ -723,7 +719,7 @@ session persistence type reverts to `memory`. See xref:#the-replicated-persisten
 listed in xref:#fvyem[Table 7-3].
 * The web application must be deployed using the `deploy` or `deploydir`
 command with the `--availabilityenabled` option set to `true`. See the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#deploy[{productName} Reference Manual].
 
 
 [NOTE]
@@ -960,7 +956,7 @@ server-config.availability-service.web-container-availability.persistence-freque
 ----
 
 For more information, see the description of the `asadmin set` command
-in the xref:reference-manual.adoc#GSRFM[{productName} Reference
+in the xref:reference-manual.adoc#set[{productName} Reference
 Manual].
 
 To specify the `replicated` persistence type for a specific web

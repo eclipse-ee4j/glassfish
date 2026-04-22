@@ -229,7 +229,7 @@ Command list-applications executed successfully.
 {productName} provides help information about the syntax, purpose,
 and options of the `asadmin` utility and its subcommands. This help
 information is written in the style of UNIX platform man pages. This
-help information is also available in the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+help information is also available in the xref:reference-manual.adoc[{productName} Reference Manual].
 
 1. If you are displaying help information for a remote subcommand,
 ensure that the server is running.

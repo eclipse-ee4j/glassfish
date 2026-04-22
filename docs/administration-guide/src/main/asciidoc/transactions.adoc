@@ -246,7 +246,7 @@ property to override server names that can cause errors.
 +
 You can use the xref:reference-manual.adoc#get[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
-For details, see the xref:reference-manual.adoc[{productName}
+For details, see the xref:reference-manual.adoc#set[{productName}
 Reference Manual].
 +
 Changing `keypoint-interval`, `retry-timeout-in-seconds`, or
@@ -787,7 +787,7 @@ See Also
 For information about JDBC connection pools and resources, see
 xref:jdbc.adoc#administering-database-connectivity[Administering Database Connectivity]. For more
 information about the `asadmin set` and `asadmin create-jvm-options`
-commands, see the xref:reference-manual.adoc[{productName}
+commands, see the xref:reference-manual.adoc#set[{productName}
 Reference Manual]. For databases with which transaction logging has been
 tested, see the {productName} Release Notes.
 

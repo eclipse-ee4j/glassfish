@@ -643,7 +643,7 @@ in `glassfish-ejb-jar.xml` is used.
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the xref:reference-manual.adoc#deploy[{productName} Reference Manual].
 
 When command line and `glassfish-ejb-jar.xml` options are both
 specified, the `asadmin` options take precedence.
@@ -682,7 +682,7 @@ properly configured CMP resource. See xref:#configuring-the-cmp-resource[Configu
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#capture-schema[{productName} Reference Manual].
 
 The `capture-schema` utility does not modify the schema in any way. Its
 only purpose is to provide the persistence engine with information about

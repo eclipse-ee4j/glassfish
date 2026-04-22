@@ -64,7 +64,7 @@ This guide provides information about developer tools, security, and debugging.
 |xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide]
 |Explains how to optimize the performance of {productName}.
 
-|xref:reference-manual.adoc#GSRFM[Reference Manual]
+|xref:reference-manual.adoc[Reference Manual]
 |Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 |===

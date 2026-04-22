@@ -477,7 +477,7 @@ If not specified, tables are dropped only if the
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the xref:reference-manual.adoc#deploy[{productName} Reference Manual].
 
 When `asadmin` deployment options and `persistence.xml` options are both
 specified, the `asadmin` deployment options take precedence.

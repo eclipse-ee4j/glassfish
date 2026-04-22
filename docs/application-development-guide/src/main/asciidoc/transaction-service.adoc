@@ -81,7 +81,7 @@ Administration Console. For more information, click the Help button in
 the Administration Console.
 * Specify the `--isolationlevel` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `transaction-isolation-level` option in the `asadmin set`
 command. For example:
 +
@@ -89,7 +89,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.transaction-isolation-level=serializable
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 Note that you cannot call `setTransactionIsolation` during a
 transaction.
@@ -135,7 +135,7 @@ Pool or Edit Connection Pool page in the Administration Console. For
 more information, click the Help button in the Administration Console.
 * Specify the `--isisolationguaranteed` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `is-isolation-level-guaranteed` option in the
 `asadmin set` command. For example:
 +
@@ -143,7 +143,7 @@ the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.is-isolation-level-guaranteed=true
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 [[using-non-transactional-connections]]
 
@@ -158,7 +158,7 @@ default is unchecked. For more information, click the Help button in the
 Administration Console.
 * Specify the `--nontransactionalconnections` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `non-transactional-connections` option in the
 `asadmin set` command. For example:
 +
@@ -166,7 +166,7 @@ the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.non-transactional-connections=true
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 * Use the `DataSource` implementation in the {productName}, which
 provides a `getNonTxConnection` method. This method retrieves a JDBC
 connection that is not in the scope of any transaction. There are two

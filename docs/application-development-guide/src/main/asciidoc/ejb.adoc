@@ -300,7 +300,7 @@ in {productName} Administration Guide.
 
 
 For information about the `asadmin list-timers` and
-`asadmin migrate-timers` subcommands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual]. For information about
+`asadmin migrate-timers` subcommands, see the xref:reference-manual.adoc#list-timers[{productName} Reference Manual]. For information about
 migrating EJB timers, see "xref:ha-administration-guide.adoc#migrating-ejb-timers[Migrating EJB Timers]" in
 {productName} High Availability Administration
 Guide.
@@ -322,7 +322,7 @@ the newly redeployed application retrieves the EJB timers that
 correspond to these IDs from the timer database.
 
 For more information about the `asadmin redeploy` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#redeploy[{productName} Reference Manual].
 
 [[to-deploy-an-ejb-timer-to-a-cluster]]
 
@@ -454,10 +454,6 @@ The {productName} specific deployment descriptor file,
 
 For more information about `glassfish-ejb-jar.xml`, see
 "xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
-
-The {productName} provides the `wscompile` and `wsdeploy` tools to
-help you implement a web service endpoint as a stateless session bean.
-For more information about these tools, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[stateful-container]]
 
@@ -693,7 +689,7 @@ saves it in memory. To restore the data, the class loader of the newly
 redeployed application deserializes the data that was previously saved.
 
 For more information about the `asadmin redeploy` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#redeploy[{productName} Reference Manual].
 
 [[using-the---asyncreplication-option]]
 
@@ -710,7 +706,7 @@ availability is guaranteed. States are not buffered but immediately
 transmitted to other instances in the cluster.
 
 For more information about the `asadmin deploy` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#deploy[{productName} Reference Manual].
 
 [[enabling-checkpointing]]
 
@@ -736,7 +732,7 @@ Application and EJB Module Levels
 To enable SFSB checkpointing at the application or EJB module level
 during deployment, use the `asadmin deploy` or `asadmin deploydir`
 command with the `--availabilityenabled` option set to `true`. For
-details, see the xref:reference-manual.adoc#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#deploy[{productName}
 Reference Manual].
 
 [[sfsb-level]]
@@ -1274,7 +1270,7 @@ asadmin set server-config.mdb-container.property.cmt-max-runtime-exceptions="5"
 ----
 
 For more information about the `asadmin set` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 The `cmt-max-runtime-exceptions` property specifies the maximum number
 of runtime exceptions allowed from a message-driven bean's `onMessage`

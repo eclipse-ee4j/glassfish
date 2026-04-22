@@ -188,7 +188,7 @@ To get the client JAR file, use the `--retrieve` option of the `asadmin deploy` 
 To retrieve the stubs and ties generated during deployment, use the
 `asadmin get-client-stubs` command. +
 For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#get-client-stubs[{productName} Reference Manual].
 
 4. Ensure that the client JAR file includes the following files:
 * A Java class to access the bean.
@@ -210,7 +210,7 @@ system files required to launch application clients on remote systems
 using the `package-appclient` script, then retrieve the application
 client itself using the `asadmin get-client-stubs` command. +
 For more information, see xref:#using-the-package-appclient-script[Using the `package-appclient` Script]
-and the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+and the xref:reference-manual.adoc#package-appclient[{productName} Reference Manual].
 
 6. To access EJB components that are residing in a remote system, make
 the following changes to the `sun-acc.xml` file or the `appclient`
@@ -229,7 +229,7 @@ To determine the ORB port on the remote server, use the `asadmin get` command. F
 asadmin --host rmtsrv get server-config.iiop-service.iiop-listener.iiop-listener1.port
 ----
 For more information about the `asadmin get` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#get[{productName} Reference Manual].
 
 7. [[accejb8]]
 To set up load balancing and failover of remote EJB references, define
@@ -305,7 +305,7 @@ using the `package-appclient` script, then retrieve the application
 client itself using the `asadmin get-client-stubs` command.
 +
 For more information, see xref:#using-the-package-appclient-script[Using the `package-appclient`
-Script] and the xref:reference-manual.adoc#GSRFM[{productName}
+Script] and the xref:reference-manual.adoc#appclient[{productName}
 Reference Manual].
 6. Run the application client.
 +
@@ -363,7 +363,7 @@ asadmin set applications.application.module-name.property.java-web-start-enabled
 
 Setting `java-web-start-enabled="true"` re-enables Java Web Start for an
 eligible application client. For more information about the
-`asadmin set` command, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+`asadmin set` command, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 [[downloading-and-launching-an-application-client]]
 
@@ -629,7 +629,7 @@ asadmin deploy --property jar-signing-alias=MyAlias MyApp.ear
 ----
 
 For more information about the `asadmin deploy` command, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#deploy[{productName} Reference Manual].
 
 [[error-handling]]
 
@@ -1152,7 +1152,7 @@ might not support such serial or concurrent reuse.
 To run an application client, you can launch the ACC using the
 `appclient` script, whether or not Java Web Start is enabled. This is
 optional. This script is located in the as-install``/bin`` directory. For
-details, see the xref:reference-manual.adoc#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#appclient[{productName}
 Reference Manual].
 
 [[using-the-package-appclient-script]]
@@ -1163,7 +1163,7 @@ You can package the {productName} system files required to launch
 application clients on remote systems into a single JAR file using the
 `package-appclient` script. This is optional. This script is located in
 the as-install``/bin`` directory. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#package-appclient[{productName} Reference Manual].
 
 [[GSDVG00468]][[the-client.policy-file]]
 
@@ -1369,7 +1369,7 @@ does not apply. In this case, you could write logic to catch an
 exception around the lookup and retry explicitly.
 
 For details about the `appclient` script syntax, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#appclient[{productName} Reference Manual].
 
 [[using-libraries-with-application-clients]]
 

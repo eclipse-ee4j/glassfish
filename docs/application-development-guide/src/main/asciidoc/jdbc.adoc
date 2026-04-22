@@ -67,7 +67,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--initsql` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `init-sql` option in the `asadmin set` command. For
 example:
 +
@@ -75,7 +75,7 @@ example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="sql-string"
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 [[setting-a-statement-timeout]]
 
@@ -97,7 +97,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--statementtimeout` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 
 [[statement-leak-detection-and-leaked-statement-reclamation]]
 
@@ -166,7 +166,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--statementcachesize` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `statement-cache-size` option in the `asadmin set`
 command. For example:
 +
@@ -174,7 +174,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.statement-cache-size=10
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 By default, this attribute is set to zero and the statement caching is
 turned off. To enable statement caching, you can set any positive
@@ -196,7 +196,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--sqltracelisteners` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `sql-trace-listeners` option in the `asadmin set` command.
 For example:
 +
@@ -204,7 +204,7 @@ For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.sql-trace-listeners=listeners
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 The {productName} provides a public interface,
 org.glassfish.api.jdbc.SQLTraceListener , that implements a means of
@@ -325,7 +325,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify the `--pooling` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `pooling` option in the `asadmin set` command. For
 example:
 +
@@ -333,7 +333,7 @@ example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.pooling=false
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 The `pooling` option and the system property
 `com.sun.enterprise.connectors.SwitchoffACCConnectionPooling`, which
@@ -383,7 +383,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--associatewiththread` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `associate-with-thread` option in the `asadmin set`
 command. For example:
 +
@@ -391,7 +391,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.associate-with-thread=true
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 [[custom-connection-validation]]
 
@@ -421,7 +421,7 @@ information, click the Help button in the Administration Console.
 * Specify the `--isconnectionvalidatereq`, `--validationmethod`, and
 `--validationclassname` options in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `is-connection-validation-required`,
 `connection-validation-method`, and `validation-classname` options in
 the `asadmin set` command. For example:
@@ -432,7 +432,7 @@ asadmin set domain1.resources.jdbc-connection-pool.MyPool.is-connection-validati
 asadmin set domain1.resources.jdbc-connection-pool.MyPool.connection-validation-method=custom-validation
 asadmin set domain1.resources.jdbc-connection-pool.MyPool.validation-classname=impl-class
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 
 By default, optimized validation mechanisms are provided for DB2, Apache
 Derby, MSSQL, MySQL, Oracle, PostgreSQL and Sybase databases.
@@ -537,7 +537,7 @@ asadmin set server.resources.jdbc-connection-pool.JCPool1.is-connection-validati
 asadmin set server.resources.jdbc-connection-pool.JCPool1.property.prefer-validate-over-recreate="true"
 ----
 
-For details, see the xref:reference-manual.adoc#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#set[{productName}
 Reference Manual].
 
 The interface ValidatingManagedConnectionFactory exposes the method
@@ -576,7 +576,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--wrapjdbcobjects` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 
 [[obtaining-a-physical-connection-from-a-wrapped-connection]]
 
@@ -640,7 +640,7 @@ Advanced Attributes page in the Administration Console. The default is
 Administration Console.
 * Specify the `--allownoncomponentcallers` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-jdbc-connection-pool[{productName} Reference Manual].
 * Specify the `allow-non-component-callers` option in the `asadmin set`
 command. For example:
 +
@@ -648,7 +648,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.allow-non-component-callers=true
 ----
-For more information, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+For more information, see the xref:reference-manual.adoc#set[{productName} Reference Manual].
 * Create a JDBC resource with a `__pm` suffix.
 
 Accessing a `DataSource` using the `Synchronization.beforeCompletion()`

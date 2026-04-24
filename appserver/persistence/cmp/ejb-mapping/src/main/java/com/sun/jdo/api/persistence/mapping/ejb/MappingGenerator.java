@@ -151,6 +151,7 @@ public class MappingGenerator {
         // create fake schema for partial mapping
         SchemaElement fakeSchema = new SchemaElement(new SchemaElementImpl());
         fakeSchema.setName(DBIdentifier.create(FAKE_NAME));
+        fakeSchema.setDriver(FAKE_NAME);
 
         // add newly created fake schema to SchemaElement cache
         SchemaElement.addToCache(fakeSchema);

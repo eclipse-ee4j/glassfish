@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,23 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ConcurrencyDBNative.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.Transaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.UpdateObjectDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectQueryPlan;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /**
  */
@@ -40,33 +32,37 @@ public class ConcurrencyDBNative implements Concurrency {
 
     SQLStateManager afterImage;
 
-    /** The logger */
-    protected static final Logger logger = LogHelperSQLStore.getLogger();
-
+    @Override
     public void commit(UpdateObjectDesc updateDesc,
                        SQLStateManager beforeImage,
                        SQLStateManager afterImage,
                        int logReason) {
     }
 
+    @Override
     public void configPersistence(ClassDesc config) {
         // RESOLVE:  Need to check field properties so that we get the before
         // images at update time.
     }
 
+    @Override
     public Transaction suspend() {
         return null;
     }
 
+    @Override
     public void resume(Transaction t) {
     }
 
+    @Override
     public void select(SelectQueryPlan plan) {
     }
 
+    @Override
     public void update(UpdateQueryPlan plan) {
     }
 
+    @Override
     public Object clone() {
         return this;
     }

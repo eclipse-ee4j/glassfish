@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * SQLStateManager.java
- *
- * Created on March 3, 2000
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
@@ -42,8 +37,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.state.PersistentNonTransacti
 import com.sun.jdo.spi.persistence.utility.NullSemaphore;
 import com.sun.jdo.spi.persistence.utility.Semaphore;
 import com.sun.jdo.spi.persistence.utility.SemaphoreImpl;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,6 +52,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 
 
 /**
@@ -73,7 +72,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private BitSet fieldMasks;
 
     /** Array of Object. */
-    public ArrayList hiddenValues;
+    public ArrayList<Object> hiddenValues;
 
     private ClassDesc persistenceConfig;
 
@@ -135,7 +134,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private final Semaphore lock;
 
     /** The logger. */
-    private static Logger logger = LogHelperStateManager.getLogger();
+    private static final Logger LOG = System.getLogger(SQLStateManager.class.getName(), RESOURCE_BUNDLE);
 
     /** I18N message handler. */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
@@ -143,14 +142,14 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
     /** Name of the USE_BATCH property. */
     public static final String USE_BATCH_PROPERTY =
-        "com.sun.jdo.spi.persistence.support.sqlstore.USE_BATCH"; // NOI18N
+        "com.sun.jdo.spi.persistence.support.sqlstore.USE_BATCH";
 
     /**
      * Property to swich on/off batching. Note, the default is true, meaning we
      * try to do batching if the property is not specified.
      */
     private static final boolean USE_BATCH = Boolean.valueOf(
-        System.getProperty(USE_BATCH_PROPERTY, "true")).booleanValue(); // NOI18N
+        System.getProperty(USE_BATCH_PROPERTY, "true")).booleanValue();
 
     /**
      * Construct a new SQLStateManager so that it locks or does not lock as
@@ -161,12 +160,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         this.persistenceConfig = persistenceConfig;
 
         if (EJBHelper.isManaged()) {
-            this.lock = new NullSemaphore("SQLStateManager");  // NOI18N
+            this.lock = new NullSemaphore("SQLStateManager");
         } else {
-            this.lock = new SemaphoreImpl("SQLStateManager");  // NOI18N
+            this.lock = new SemaphoreImpl("SQLStateManager");
         }
     }
 
+    @Override
     public synchronized void initialize(boolean persistentInDB) {
         boolean xactActive = persistenceManager.isActiveTransaction();
         boolean optimistic = persistenceManager.isOptimisticTransaction();
@@ -217,16 +217,19 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             persistenceManager.registerInstance(this, getObjectId(), throwDuplicateException, false);
             stateFlags |= ST_REGISTERED;
             if (newlyRegisteredSMs != null) {
-                if (!newlyRegisteredSMs.contains(this))
+                if (!newlyRegisteredSMs.contains(this)) {
                     newlyRegisteredSMs.add(this);
+                }
             }
         }
     }
 
+    @Override
     public void setPersistenceManager(com.sun.jdo.api.persistence.support.PersistenceManager pm) {
         this.persistenceManager = (PersistenceManager) pm;
     }
 
+    @Override
     public void setPersistent(Object pc) {
         this.persistentObject = pc;
     }
@@ -235,10 +238,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         return store;
     }
 
+    @Override
     public Object getPersistent() {
         return persistentObject;
     }
 
+    @Override
     public PersistenceConfig getPersistenceConfig() {
         return persistenceConfig;
     }
@@ -299,6 +304,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         this.fieldMasks = new BitSet(MAX_MASKS * persistenceConfig.maxFields);
     }
 
+    @Override
     public void setPresenceMaskBit(int index) {
         if (fieldMasks == null) {
             newFieldMasks();
@@ -325,6 +331,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
     }
 
+    @Override
     public boolean getPresenceMaskBit(int index) {
         if (fieldMasks == null) {
             newFieldMasks();
@@ -351,11 +358,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
     }
 
+    @Override
     public Object getHiddenValue(int index) {
         // This method expects index to be negative for hidden fields.
         if (index >= 0) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.poshiddenindex", "" + index)); // NOI18N
+                    "core.statemanager.poshiddenindex", "" + index));
         }
 
         int realIndex = -(index + 1);
@@ -367,17 +375,18 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         return null;
     }
 
+    @Override
     public void setHiddenValue(int index, Object value) {
         // This method expects index to be negative for hidden fields.
         if (index >= 0) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.poshiddenindex", "" + index)); // NOI18N
+                    "core.statemanager.poshiddenindex", "" + index));
         }
 
         int realIndex = -(index + 1);
 
         if (hiddenValues == null) {
-            hiddenValues = new ArrayList();
+            hiddenValues = new ArrayList<>();
         }
 
         for (int i = hiddenValues.size(); i <= realIndex; i++) {
@@ -387,29 +396,25 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         hiddenValues.set(realIndex, value);
     }
 
+    @Override
     public synchronized void replaceObjectField(String fieldName, Object o) {
-        boolean debug = logger.isLoggable();
-
-        if (debug) {
-            Object[] items = new Object[] {fieldName, o.getClass().getName()};
-            logger.fine("sqlstore.sqlstatemanager.replaceobjectfield", items); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstatemanager.replaceobjectfield", fieldName, o.getClass().getName());
 
         FieldDesc fieldDesc = persistenceConfig.getField(fieldName);
         Object oldo = prepareSetField(fieldDesc, o);
 
         if ((oldo instanceof SCO) && oldo != o) {
-            if (debug)
-                logger.fine("sqlstore.sqlstatemanager.replaceobjectfield.unsetsco"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.replaceobjectfield.unsetsco");
             ((SCO) oldo).unsetOwner();
         }
     }
 
+    @Override
     public synchronized void makeDirty(String fieldName) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.makedirty", fieldName); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.makedirty", fieldName);
         }
 
         FieldDesc fieldDesc = persistenceConfig.getField(fieldName);
@@ -426,7 +431,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         if ((newo instanceof SCO) && oldo != newo) {
             if (oldo instanceof SCOCollection) {
                 if (debug) {
-                    logger.fine("sqlstore.sqlstatemanager.makedirty.fixscocollection"); // NOI18N
+                    LOG.log(DEBUG, "sqlstore.sqlstatemanager.makedirty.fixscocollection");
                 }
 
                 ((SCOCollection) oldo).clearInternal();
@@ -435,7 +440,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
             else if (oldo instanceof SCODate) {
                 if (debug) {
-                    logger.fine("sqlstore.sqlstatemanager.makedirty.fixscodate"); // NOI18N
+                    LOG.log(DEBUG, "sqlstore.sqlstatemanager.makedirty.fixscodate");
                 }
 
                 long l = ((java.util.Date) newo).getTime();
@@ -463,19 +468,21 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             fieldDesc.setValue(this, oldo);
 
             // disconnect temp SCO instance
-            if (newo instanceof SCO)
+            if (newo instanceof SCO) {
                 ((SCO) newo).unsetOwner();
+            }
         }
     }
 
     /**
      * This method is central to record changes to SCOCollections.
      */
+    @Override
     public void applyUpdates(String fieldName, SCOCollection c) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.applyupdates", fieldName); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.applyupdates", fieldName);
         }
 
         FieldDesc fieldDesc = persistenceConfig.getField(fieldName);
@@ -491,15 +498,16 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         // else it is an ERROR?
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.applyupdates.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.applyupdates.exit");
         }
     }
 
+    @Override
     public void makePresent(String fieldName, Object value) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.makepresent", fieldName); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.makepresent", fieldName);
         }
 
         FieldDesc fieldDesc = persistenceConfig.getField(fieldName);
@@ -507,11 +515,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         setPresenceMaskBit(fieldDesc.absoluteID);
     }
 
+    @Override
     public void setObjectId(Object objectId) {
         // RESOLVE: do we allow to replace existing?
         this.objectId = objectId;
     }
 
+    @Override
     public Object getObjectId() {
         // Note: PM.getObjectId() makes copy of the actual object id.
         if (objectId == null) {
@@ -522,7 +532,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                 oid = oidClass.newInstance();
             } catch (Exception e) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.statemanager.cantnewoid", oidClass.getName()), e); // NOI18N
+                        "core.statemanager.cantnewoid", oidClass.getName()), e);
             }
 
             Field keyFields[] = persistenceConfig.getKeyFields();
@@ -538,7 +548,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
                 } catch (IllegalAccessException e) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.statemanager.cantsetkeyfield", keyField.getName()), e); // NOI18N
+                            "core.statemanager.cantsetkeyfield", keyField.getName()), e);
                 }
             }
             objectId = oid;
@@ -559,12 +569,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * This method is called by PersistenceManager.makePersistent().
      * Thread synchronization is done in the persistence manager.
      */
+    @Override
     public void makePersistent(PersistenceManager pm, Object pc) {
 
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.makepersistence", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.makepersistence",
             persistenceConfig.getPersistenceCapableClass().getName());
         }
 
@@ -608,9 +619,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
             // Make sure all the fields have been marked dirty.
             Object obj = null;
-            ArrayList fields = persistenceConfig.fields;
+            List<FieldDesc> fields = persistenceConfig.fields;
             for (int i = 0; i < fields.size(); i++) {
-                FieldDesc f = (FieldDesc) fields.get(i);
+                FieldDesc f = fields.get(i);
 
                 // In case of makePersistent, we skip all secondary tracked fields
                 // and use the primary to propagate changes. In addition, we take
@@ -625,10 +636,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
                 if (f instanceof ForeignFieldDesc) {
                     ForeignFieldDesc ff = (ForeignFieldDesc) f;
-                    ArrayList trackedFields = null;
+                    List<FieldDesc> trackedFields = null;
 
                     if (debug) {
-                        logger.fine("sqlstore.sqlstatemanager.processforeign", ff.getName()); // NOI18N
+                        LOG.log(DEBUG, "sqlstore.sqlstatemanager.processforeign", ff.getName());
                     }
 
                     if ((ff.sqlProperties & FieldDesc.PROP_PRIMARY_TRACKED_FIELD) > 0) {
@@ -636,7 +647,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                         Object theValue = obj;
 
                         for (int j = 0; j < trackedFields.size(); j++) {
-                            FieldDesc tf = (FieldDesc) trackedFields.get(j);
+                            FieldDesc tf = trackedFields.get(j);
                             Object value = tf.getValue(this);
 
                             if ((theValue != null) && (value != null) && (theValue != value)) {
@@ -648,7 +659,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                                 }
                                 this.release();
                                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                                        "core.statemanager.conflictingvalues", ff.getName(), tf.getName())); // NOI18N
+                                        "core.statemanager.conflictingvalues", ff.getName(), tf.getName()));
                             } else if ((theValue == null) && (value != null)) {
                                 theValue = value;
                             }
@@ -662,9 +673,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
                     if (obj != null) {
                         if (obj instanceof Collection) {
-                            if (((Collection) obj).size() > 0) {
-                                ArrayList removed = null;
-                                ArrayList added = new ArrayList((Collection) obj);
+                            if (((Collection<?>) obj).size() > 0) {
+                                ArrayList<?> removed = null;
+                                ArrayList<?> added = new ArrayList<>((Collection<?>) obj);
                                 processCollectionUpdates(ff, removed, added, null, true, false);
                             }
                         } else {
@@ -688,11 +699,11 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                 } else {
                     // We ignore primitive fields that also tracks relationship field
                     if ((f.sqlProperties & FieldDesc.PROP_TRACK_RELATIONSHIP_FIELD) > 0) {
-                        ArrayList trackedFields = f.getTrackedFields();
+                        List<FieldDesc> trackedFields = f.getTrackedFields();
                         boolean found = false;
 
                         for (int j = trackedFields.size() - 1; j >= 0; j--) {
-                            FieldDesc tf = (FieldDesc) trackedFields.get(j);
+                            FieldDesc tf = trackedFields.get(j);
 
                             if (tf instanceof ForeignFieldDesc) {
                                 if (tf.getValue(this) != null) {
@@ -719,7 +730,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                 }
 
                 if (debug) {
-                    logger.fine("sqlstore.sqlstatemanager.makedirtyfield", f.getName()); // NOI18N
+                    LOG.log(DEBUG, "sqlstore.sqlstatemanager.makedirtyfield", f.getName());
                 }
 
                 setSetMaskBit(f.absoluteID);
@@ -735,12 +746,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * nullifying the relationship fields, the instance transitions to
      * deleted state.
      */
+    @Override
     public void deletePersistent() {
-        if (logger.isLoggable()) {
-             logger.fine("sqlstore.sqlstatemanager.deletepersistence", // NOI18N
-             persistenceConfig.getPersistenceCapableClass().getName());
-
-        }
+         LOG.log(DEBUG, "sqlstore.sqlstatemanager.deletepersistence",
+         persistenceConfig.getPersistenceCapableClass().getName());
 
         // Why try try?  The difference is in whether you try and then
         // acquire/get, or acquire/get and then try.
@@ -780,12 +789,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * fields marked for cascade delete.
      */
     private void deleteRelationships() {
-        ArrayList foreignFields = persistenceConfig.foreignFields;
+        List<ForeignFieldDesc> foreignFields = persistenceConfig.foreignFields;
         int size = foreignFields.size();
         stateFlags |= ST_DELETE_INPROGRESS;
 
         for (int i = 0; i < size; i++) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) foreignFields.get(i);
+            ForeignFieldDesc ff = foreignFields.get(i);
             ForeignFieldDesc irf = ff.getInverseRelationshipField();
 
             // Skip this field if it is secondary.
@@ -801,10 +810,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             prepareUpdateField(ff, null);
 
             if (ff.cardinalityUPB > 1) {
-                Collection c = (Collection) ff.getValue(this);
+                Collection<?> c = (Collection<?>) ff.getValue(this);
 
                 if (c != null) {
-                    ArrayList removed = new ArrayList(c);
+                    ArrayList<?> removed = new ArrayList<>(c);
 
                     // For managed relationship or cascade delete, we need to call
                     // processCollectionUpdates() to set up the dependency. In case of
@@ -880,21 +889,22 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      *
      * @param next Next state manager in the transaction cache.
      */
+    @Override
     public void updatePersistent(StateManager next) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if ((stateFlags & ST_UPDATE_DISABLED) > 0) {
             if (debug) {
                 Object[] items = new Object[] {persistenceConfig.getPersistenceCapableClass().getName(),
                                                persistentObject};
-                logger.fine("sqlstore.sqlstatemanager.updatepersistent.skipped", items); // NOI18N
+                LOG.log(DEBUG, "sqlstore.sqlstatemanager.updatepersistent.skipped", items);
             }
             return;
         }
 
         try {
             if (debug) {
-                 logger.fine("sqlstore.sqlstatemanager.updatepersistent", // NOI18N
+                 LOG.log(DEBUG, "sqlstore.sqlstatemanager.updatepersistent",
                  persistenceConfig.getPersistenceCapableClass().getName());
             }
 
@@ -910,7 +920,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
                 if (debug && immediateFlush) {
                     Object[] items = new Object[] {getPersistent(), (next != null) ? next.getPersistent() : null};
-                    logger.fine("sqlstore.sqlstatemanager.updatepersistent.immediateflush", items); // NOI18N
+                    LOG.log(DEBUG, "sqlstore.sqlstatemanager.updatepersistent.immediateflush", items);
                 }
 
                 store.executeBatch(persistenceManager, updateDesc, immediateFlush);
@@ -921,15 +931,14 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             incrementVersion(actions);
 
             if (debug) {
-                logger.fine("sqlstore.sqlstatemanager.updatepersistent.exit"); // NOI18N
+                LOG.log(DEBUG, "sqlstore.sqlstatemanager.updatepersistent.exit");
             }
         } catch (JDOException e) {
             e.addFailedObject(persistentObject);
             throw e;
         } catch (Exception e) {
-            logger.throwing("sqlstore.SQLStateManager", "updatePersistent", e); // NOI18N
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.generic.unknownexception"), e); // NOI18N
+                    "core.generic.unknownexception"), e);
         }
     }
 
@@ -961,6 +970,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @inheritDoc StateManager#hasVersionConsistency
      */
+    @Override
     public boolean hasVersionConsistency() {
         return persistenceConfig.hasVersionConsistency();
     }
@@ -968,6 +978,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @inheritDoc StateManager#verifyPersistent
      */
+    @Override
     public boolean verifyPersistent() {
         assert persistenceConfig.hasVersionConsistency();
         boolean verified = true;
@@ -1033,6 +1044,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @inheritDoc StateManager#setVerificationFailed
      */
+    @Override
     public void setVerificationFailed() {
         if (hasVersionConsistency()) {
             stateFlags |= ST_VALIDATION_FAILED;
@@ -1042,6 +1054,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @inheritDoc StateManager#getFailed
      */
+    @Override
     public boolean isVerificationFailed() {
         return (stateFlags & ST_VALIDATION_FAILED) > 0;
     }
@@ -1057,26 +1070,31 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private boolean requiresImmediateFlush(SQLStateManager next) {
         // There is no next SM =>
         // flush this sm immediately
-        if (next == null)
+        if (next == null) {
             return true;
+        }
 
         // The next StateManager has a different pc class =>
         // flush this sm immediately
-        if (persistenceConfig != next.persistenceConfig)
+        if (persistenceConfig != next.persistenceConfig) {
             return true;
+        }
 
         // The next StateManager represents a different update operation
         // INSERT/UPDATE/DELETE => flush this sm immediately
-        if (state.getUpdateAction() != next.state.getUpdateAction())
+        if (state.getUpdateAction() != next.state.getUpdateAction()) {
             return true;
+        }
 
         // If the next's flush is disabled, flush this sm
-        if ((next.stateFlags & ST_UPDATE_DISABLED) > 0)
+        if ((next.stateFlags & ST_UPDATE_DISABLED) > 0) {
             return true;
+        }
 
         // If next sm does not use batch update flush this sm
-        if (!next.useBatch())
+        if (!next.useBatch()) {
             return true;
+        }
 
         // For updates, we need to check if the next sm updates the
         // same fields. If not, flush this sm
@@ -1102,11 +1120,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         return updFields.equals(nextUpdFields);
     }
 
+    @Override
     public void refreshPersistent() {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.refreshpersistent", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.refreshpersistent",
             persistenceConfig.getPersistenceCapableClass().getName());
         }
 
@@ -1119,7 +1138,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.refreshpersistent.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.refreshpersistent.exit");
         }
     }
 
@@ -1131,11 +1150,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * PersistenceManager.getObjectById(Object, boolean)} with validate
      * flag set to <code>true</code>
      */
+    @Override
     public void reload() {
-        boolean debug = logger.isLoggable(Logger.FINER);
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.finer("sqlstore.sqlstatemanager.unconditionalreload", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.unconditionalreload",
             persistenceConfig.getPersistenceCapableClass().getName());
         }
 
@@ -1151,7 +1171,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             releaseLock();
 
             if (debug) {
-                logger.finer("sqlstore.sqlstatemanager.unconditionalreload.exit"); // NOI18N
+                LOG.log(DEBUG, "sqlstore.sqlstatemanager.unconditionalreload.exit");
             }
         }
     }
@@ -1162,12 +1182,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @param additionalField Field to be loaded.
      */
     private void reload(FieldDesc additionalField) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
             String fieldName =
                 (additionalField != null) ? additionalField.getName() : null;
-            logger.fine("sqlstore.sqlstatemanager.reload", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.reload",
             persistenceConfig.getPersistenceCapableClass().getName(), fieldName);
         }
 
@@ -1202,7 +1222,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.reload.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.reload.exit");
         }
     }
 
@@ -1235,11 +1255,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Collections. Such process has the side-effect of causing more
      * objects to be registered with the transaction cache.
      */
+    @Override
     public void prepareToUpdatePhaseI() {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.preparetoupdateph1", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.preparetoupdateph1",
             persistenceConfig.getPersistenceCapableClass().getName());
         }
 
@@ -1253,24 +1274,24 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         // Initialize UpdateDesc.
         getUpdateDesc();
 
-        ArrayList newlyRegisteredSMs = new ArrayList();
-        ArrayList foreignFields = persistenceConfig.foreignFields;
+        List<SQLStateManager> newlyRegisteredSMs = new ArrayList<>();
+        List<ForeignFieldDesc> foreignFields = persistenceConfig.foreignFields;
         int size = foreignFields.size();
 
         for (int i = 0; i < size; i++) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) foreignFields.get(i);
+            ForeignFieldDesc ff = foreignFields.get(i);
 
             if ((ff.sqlProperties & FieldDesc.PROP_SECONDARY_TRACKED_FIELD) > 0) {
                 continue;
             }
 
             if ((ff.cardinalityUPB > 1) && (getSetMaskBit(ff.absoluteID) == true)) {
-                Collection v = (Collection) ff.getValue(this);
+                Collection<?> v = (Collection<?>) ff.getValue(this);
 
                 if ((v != null) && (!(v instanceof SCO) || (((SCO) v).getOwner() == null)) &&
                         (v.size() > 0)) {
-                    ArrayList removed = null;
-                    ArrayList added = new ArrayList(v);
+                    ArrayList<?> removed = null;
+                    ArrayList<?> added = new ArrayList<>(v);
 
                     processCollectionUpdates(ff, removed, added, newlyRegisteredSMs, true, false);
                 }
@@ -1280,13 +1301,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         // The newRegisteredSMs should contain a list of all the state managers that
         // are registered as the result of processCollectionUpdates.
         for (int i = 0; i < newlyRegisteredSMs.size(); i++) {
-            SQLStateManager sm = (SQLStateManager) newlyRegisteredSMs.get(i);
+            SQLStateManager sm = newlyRegisteredSMs.get(i);
 
             sm.prepareToUpdatePhaseI();
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.preparetoupdateph1.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.preparetoupdateph1.exit");
         }
     }
 
@@ -1297,11 +1318,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @param phase3sms List containing autopersistent instances that are no longer reachable
      *  from a persistent instance.
      */
+    @Override
     public void prepareToUpdatePhaseII(HashSet phase3sms) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-             logger.fine("sqlstore.sqlstatemanager.preparetoupdateph2", // NOI18N
+             LOG.log(DEBUG, "sqlstore.sqlstatemanager.preparetoupdateph2",
              persistenceConfig.getPersistenceCapableClass().getName());
         }
 
@@ -1324,13 +1346,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             return;
         }
 
-        ArrayList foreignFields = persistenceConfig.foreignFields;
+        List<ForeignFieldDesc> foreignFields = persistenceConfig.foreignFields;
         int size = foreignFields.size();
 
         // Walk the object graph starting from this instance and transition all
         // autopersistent instances to persistent and remove it from phase3sms.
         for (int i = 0; i < size; i++) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) foreignFields.get(i);
+            ForeignFieldDesc ff = foreignFields.get(i);
 
             if (ff.cardinalityUPB <= 1) {
                 if (getPresenceMaskBit(ff.absoluteID)) {
@@ -1356,7 +1378,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.preparetoupdateph2.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.preparetoupdateph2.exit");
         }
     }
 
@@ -1364,11 +1386,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * This is the third phase of commit processing. It sets up the delete dependencies among
      * all the autopersistent instances that have been flushed to the database.
      */
+    @Override
     public void prepareToUpdatePhaseIII() {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.preparetoupdateph3", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.preparetoupdateph3",
             persistenceConfig.getPersistenceCapableClass().getName());
         }
 
@@ -1384,13 +1407,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             return;
         }
 
-        ArrayList foreignFields = persistenceConfig.foreignFields;
+        List<ForeignFieldDesc> foreignFields = persistenceConfig.foreignFields;
         int size = foreignFields.size();
 
         // Sets up dependencies between this instance and all its relationship fields
         // that are autopersistent.
         for (int i = 0; i < size; i++) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) foreignFields.get(i);
+            ForeignFieldDesc ff = foreignFields.get(i);
 
             if (ff.cardinalityUPB <= 1) {
                 if (getPresenceMaskBit(ff.absoluteID)) {
@@ -1415,7 +1438,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.preparetoupdateph3.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.preparetoupdateph3.exit");
         }
     }
 
@@ -1509,6 +1532,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
     }
 
+    @Override
     public void release() {
         if (null != persistenceManager) {
 
@@ -1530,12 +1554,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     }
 
     private void reset(boolean retainValues, boolean wasNew, boolean keepState) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
              Object[] items = new Object[] {Boolean.valueOf(retainValues),
                                             Boolean.valueOf(wasNew), Boolean.valueOf(keepState)};
-             logger.fine("sqlstore.sqlstatemanager.reset", items); // NOI18N
+             LOG.log(DEBUG, "sqlstore.sqlstatemanager.reset", items);
 
         }
 
@@ -1570,9 +1594,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             // is persistentNontransactional
             if (retainValues || (state instanceof PersistentNonTransactional)) {
                 FieldDesc f = null;
-                ArrayList fields = persistenceConfig.fields;
+                List<FieldDesc> fields = persistenceConfig.fields;
                 for (int i = 0; i < fields.size(); i++) {
-                    f = (FieldDesc) fields.get(i);
+                    f = fields.get(i);
                     Object v = f.getValue(this);
 
                     // For new objects mark null references as not set if the field is
@@ -1580,8 +1604,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                     // transaction because a relationship may exist in the database.
                     if (wasNew && (f instanceof ForeignFieldDesc) &&
                             (v == null) && (((ForeignFieldDesc) f).getInverseRelationshipField() == null)) {
-                        if (debug)
-                            logger.fine("sqlstore.sqlstatemanager.unsetmask", f.getName()); // NOI18N
+                        if (debug) {
+                            LOG.log(DEBUG, "sqlstore.sqlstatemanager.unsetmask", f.getName());
+                        }
                         unsetMaskBit(f.absoluteID, PRESENCE_MASK);
                     }
 
@@ -1589,13 +1614,14 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                     // with SCO instances:
                     if ((v instanceof Collection) && !(v instanceof SCOCollection)
                             && !keepState) {
-                        if (debug)
-                            logger.fine("sqlstore.sqlstatemanager.resettingcollection"); // NOI18N
+                        if (debug) {
+                            LOG.log(DEBUG, "sqlstore.sqlstatemanager.resettingcollection");
+                        }
 
                         replaceCollection((ForeignFieldDesc) f, (Collection) v);
 
                         if (debug) {
-                            logger.fine("sqlstore.sqlstatemanager.newtype", (f.getValue(this)).getClass()); // NOI18N
+                            LOG.log(DEBUG, "sqlstore.sqlstatemanager.newtype", (f.getValue(this)).getClass());
                         }
                     } else if (v instanceof SCOCollection) {
                         ((SCOCollection) v).reset();
@@ -1604,13 +1630,14 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                     // TO FIX!!!: this already replaces Date with SCO Date
                     else if ((v instanceof java.util.Date) && !(v instanceof SCODate)
                             && !keepState) {
-                        if (debug)
-                            logger.fine("sqlstore.sqlstatemanager.resettingdate"); // NOI18N
+                        if (debug) {
+                            LOG.log(DEBUG, "sqlstore.sqlstatemanager.resettingdate");
+                        }
 
                         v = f.convertValue(v, this);
                         f.setValue(this, v);
                         if (debug) {
-                            logger.fine("sqlstore.sqlstatemanager.newtype", (f.getValue(this)).getClass()); // NOI18N
+                            LOG.log(DEBUG, "sqlstore.sqlstatemanager.newtype", (f.getValue(this)).getClass());
                         }
                     }
                 }
@@ -1641,10 +1668,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @return true if persistentObject has been flushed to db
      */
+    @Override
     public boolean isProcessed() {
         return (referenceCount == 0);
     }
 
+    @Override
     public void flushed() {
         // reset the current state to the point where we can accept more updates.
         state = state.transitionFlushed();
@@ -1667,12 +1696,14 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
     }
 
+    @Override
     public void commit(boolean retainValues) {
         boolean wasNew = (state.isNew() && !state.isDeleted());
         state = state.transitionCommit(retainValues);
         reset(retainValues, wasNew, false);
     }
 
+    @Override
     public void rollback(boolean retainValues) {
         boolean wasNew = (state.isNew() && !state.isDeleted());
         boolean needsRestore = state.needsRestoreOnRollback(retainValues);
@@ -1694,7 +1725,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     }
 
     private void markKeyFieldsPresent() {
-        ArrayList keyFields = persistenceConfig.getPrimaryTable().getKey().getFields();
+        List<FieldDesc> keyFields = persistenceConfig.getPrimaryTable().getKey().getFields();
 
         for (int i = 0; i < keyFields.size(); i++) {
             LocalFieldDesc fd = (LocalFieldDesc) keyFields.get(i);
@@ -1705,6 +1736,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
     }
 
+    @Override
     public void prepareGetField(int fieldID) {
         FieldDesc fieldDesc = persistenceConfig.getField(fieldID);
 
@@ -1725,10 +1757,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @param fieldDesc Field descriptor for the field to be loaded.
      */
     private void prepareGetField(FieldDesc fieldDesc, boolean internal, boolean acquireShareLock) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
+        boolean debug = LOG.isLoggable(TRACE);
 
         if (debug) {
-            logger.finest("sqlstore.sqlstatemanager.preparegetfield", fieldDesc.getName()); // NOI18N
+            LOG.log(TRACE, "sqlstore.sqlstatemanager.preparegetfield", fieldDesc.getName());
         }
 
         if (acquireShareLock) {
@@ -1760,9 +1792,8 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         } catch (JDOException e) {
             throw e;
         } catch (Exception e) {
-            logger.log(Logger.FINE,"sqlstore.exception.log", e);
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.getfieldfailed"), e); // NOI18N
+                    "core.statemanager.getfieldfailed"), e);
         } finally {
             if (acquireShareLock) {
                 persistenceManager.releaseShareLock();
@@ -1770,7 +1801,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             releaseLock();
 
             if (debug) {
-                logger.finest("sqlstore.sqlstatemanager.preparegetfield.exit"); // NOI18N
+                LOG.log(TRACE, "sqlstore.sqlstatemanager.preparegetfield.exit");
             }
         }
     }
@@ -1787,15 +1818,15 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private void realizeField(FieldDesc fieldDesc) {
         assert fieldDesc != null;
 
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.realizefield", fieldDesc.getName()); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.realizefield", fieldDesc.getName());
         }
 
         if (!persistenceConfig.isNavigable()) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.notnavigable", // NOI18N
+                    "core.statemanager.notnavigable",
                     fieldDesc.getName(), persistentObject.getClass().getName()));
         }
 
@@ -1823,7 +1854,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.realizefield.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.realizefield.exit");
         }
     }
 
@@ -1848,16 +1879,16 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         assert foreignField != null;
 
         boolean isPresent = false;
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.realizeforeignfield", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.realizeforeignfield",
                     foreignField.getName());
         }
 
         // Check and see if all the values we need are present.
         for (int i = 0; i < foreignField.localFields.size(); i++) {
-            LocalFieldDesc lf = (LocalFieldDesc) foreignField.localFields.get(i);
+            LocalFieldDesc lf = foreignField.localFields.get(i);
             isPresent = getPresenceMaskBit(lf.absoluteID);
 
             if (!isPresent) {
@@ -1873,7 +1904,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.realizeforeignfield.exit", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.realizeforeignfield.exit",
                     Boolean.valueOf(isPresent));
         }
 
@@ -1942,9 +1973,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         } else {
             if (queryResult.size() > 1) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.persistencestore.toomanyobjforcard1", // NOI18N
+                        "core.persistencestore.toomanyobjforcard1",
                         persistenceConfig.getName(),
-                        foreignField.getName(), "" + queryResult.size())); // NOI18N
+                        foreignField.getName(), "" + queryResult.size()));
             }
             Object v = queryResult.iterator().next();
             foreignField.setValue(this, v);
@@ -1977,10 +2008,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         assert foreignField != null;
 
         Collection result = null;
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.retrieveforeign", // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.retrieveforeign",
                     foreignField.getName());
         }
 
@@ -1988,7 +2019,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         boolean isValidForeignKey = true;
 
         for (int i = 0; i < foreignField.localFields.size(); i++) {
-            FieldDesc flf = (FieldDesc) foreignField.localFields.get(i);
+            FieldDesc flf = foreignField.localFields.get(i);
 
             if (!getPresenceMaskBit(i)) {
                 // throw exception
@@ -2018,7 +2049,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.retrieveforeign.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.retrieveforeign.exit");
         }
 
         return result;
@@ -2037,11 +2068,11 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @see #retrieveForeign
      */
     private void retrieve(FieldDesc additionalField) {
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
             String fieldName = (additionalField != null) ? additionalField.getName() : null;
-            logger.fine("sqlstore.sqlstatemanager.retrieve", fieldName); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.retrieve", fieldName);
         }
 
         LocalFieldDesc[] keyFields = persistenceConfig.getKeyFieldDescs();
@@ -2055,19 +2086,19 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
         if (result.size() > 1) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.toomanyrows", // NOI18N
+                    "core.statemanager.toomanyrows",
                     persistenceConfig.getPersistenceCapableClass().getName()));
         } else if (result.size() < 1 || result.iterator().next() != persistentObject) {
 
             // If there are no instances fetched, or the fetched instances is not the one
             // we asked for, it means that it is not found and we throw an exception
             throw new JDOObjectNotFoundException(I18NHelper.getMessage(messages,
-                    "core.statemanager.objectnotfound"), // NOI18N
+                    "core.statemanager.objectnotfound"),
                     new Object[]{persistentObject});
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.retrieve.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.retrieve.exit");
         }
     }
 
@@ -2098,10 +2129,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
         // Do not try to get before image if not required
         if (beforeImage == null && isBeforeImageRequired()) {
-            boolean debug = logger.isLoggable();
+            boolean debug = LOG.isLoggable(DEBUG);
 
             if (debug) {
-                logger.fine("sqlstore.sqlstatemanager.getbeforeimage", // NOI18N
+                LOG.log(DEBUG, "sqlstore.sqlstatemanager.getbeforeimage",
                             persistenceConfig.getPersistenceCapableClass().getName());
             }
 
@@ -2115,7 +2146,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
 
             if (debug) {
-                logger.fine("sqlstore.sqlstatemanager.getbeforeimage.exit"); // NOI18N
+                LOG.log(DEBUG, "sqlstore.sqlstatemanager.getbeforeimage.exit");
             }
         }
 
@@ -2134,11 +2165,8 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                 getUpdateDesc().hasChangedRelationships() ||
                 t.getRetainValues() || t.getRestoreValues() ||
                 persistenceConfig.hasModifiedCheckAtCommitConsistency();
-       if (logger.isLoggable(Logger.FINER)) {
-            logger.finer("sqlstore.sqlstatemanager.isbeforeimagerequired", // NOI18N
-                    Boolean.valueOf(isBeforeImageRequired));
-       }
-       return isBeforeImageRequired;
+        LOG.log(DEBUG, "sqlstore.sqlstatemanager.isbeforeimagerequired", Boolean.valueOf(isBeforeImageRequired));
+        return isBeforeImageRequired;
     }
 
     private SQLStateManager copyPersistent() {
@@ -2161,6 +2189,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * not <code>instanceof</code> SQLStateManager, or is not managing the
      * same type of persistent instance as this StateManager.
      */
+    @Override
     public void copyFields(StateManager source) {
         if (!(source instanceof SQLStateManager)) {
             String className =
@@ -2178,7 +2207,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             throw new IllegalArgumentException(
                 I18NHelper.getMessage(
                     messages,
-                    "core.statemanager.copyFields.mismatch", // NOI18N
+                    "core.statemanager.copyFields.mismatch",
                     thisPCClass.getName(),
                     sourcePCClass.getName()));
         }
@@ -2197,7 +2226,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private void copyFields(SQLStateManager source,
                             boolean copyRelationships,
                             boolean clone) {
-        ArrayList fields = null;
+        List<FieldDesc> fields = null;
 
         // Reset the field masks, as the instance will
         // be populated with the state from the source.
@@ -2212,7 +2241,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
 
             for (int j = 0; (fields != null) && (j < fields.size()); j++) {
-                FieldDesc f = (FieldDesc) fields.get(j);
+                FieldDesc f = fields.get(j);
 
                 if (!copyRelationships && f.isRelationshipField()) {
                     continue;
@@ -2246,7 +2275,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                     Class type = source.getClass();
 
                     if (!type.isArray()) {
-                        Method m = type.getMethod("clone", (Class []) null); // NOI18N
+                        Method m = type.getMethod("clone", (Class []) null);
 
                         if (m != null) {
                             return m.invoke(source, (Object []) null);
@@ -2261,13 +2290,8 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                         }
                         return dstArray;
                     }
-                } catch (NoSuchMethodException e) {
-                    if (logger.isLoggable()) {
-                        Object[] items = new Object[] {e, source.getClass().getName()};
-                        logger.fine("sqlstore.sqlstatemanager.nosuchmethodexcep.clone", items); // NOI18N
-                    }
-                } catch (InvocationTargetException e) {
-                } catch (IllegalAccessException e) {
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    LOG.log(DEBUG, "sqlstore.sqlstatemanager.nosuchmethodexcep.clone", e, source.getClass().getName());
                 }
             }
         }
@@ -2300,11 +2324,11 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
         getUpdateDesc().markRelationshipChange(fieldDesc);
 
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
              Object[] items = new Object[] {fieldDesc.getName(),state};
-             logger.fine("sqlstore.sqlstatemanager.prepareupdatefield", items); // NOI18N
+             LOG.log(DEBUG, "sqlstore.sqlstatemanager.prepareupdatefield", items);
         }
 
         boolean optimistic = persistenceManager.isOptimisticTransaction();
@@ -2345,7 +2369,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         recordUpdatedField(fieldDesc);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.prepareupdatefield.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.prepareupdatefield.exit");
         }
     }
 
@@ -2372,11 +2396,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
 
             if (value != null) {
-                if (logger.isLoggable(Logger.FINEST)) {
-                    Object[] items = new Object[] {fieldDesc, value};
-                    logger.finest("sqlstore.sqlstatemanager.updatebeforeimage", items); // NOI18N
-                }
-
+                LOG.log(TRACE, "sqlstore.sqlstatemanager.updatebeforeimage", fieldDesc, value);
                 fieldDesc.setValue(beforeImage, cloneObjectMaybe(value));
                 beforeImage.setPresenceMaskBit(fieldDesc.absoluteID);
             }
@@ -2390,19 +2410,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @param fieldDesc Updated field.
      */
     private void recordUpdatedField(FieldDesc fieldDesc) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         if (!fieldDesc.isRelationshipField() &&
                 (fieldDesc.sqlProperties & FieldDesc.PROP_RECORD_ON_UPDATE) > 0) {
-            if (debug) {
-                logger.finest("sqlstore.sqlstatemanager.recordingfield", fieldDesc); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.sqlstatemanager.recordingfield", fieldDesc);
             getUpdateDesc().recordUpdatedField((LocalFieldDesc) fieldDesc);
         }
 
-        if (debug) {
-            logger.finest("sqlstore.sqlstatemanager.makedirtyfield", fieldDesc); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sqlstatemanager.makedirtyfield", fieldDesc);
         setSetMaskBit(fieldDesc.absoluteID);
     }
 
@@ -2413,12 +2427,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @param sm Second state manager.
      * @see StateManager#addDependency(StateManager sm)
      */
+    @Override
     public void addDependency(StateManager sm) {
 
-        if (logger.isLoggable()) {
-            Object[] items = new Object[] {this, sm};
-            logger.fine("sqlstore.sqlstatemanager.adddependency", items); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstatemanager.adddependency", this, sm);
 
         // The simple solution is to call addUpdatedForeignReference()
         // internally. It might try to reregister both instances again,
@@ -2452,10 +2464,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * This method checks the dependencies for all instances waiting for the
      * current state manager to be flushed to the store.
      */
+    @Override
     public void resolveDependencies() {
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.sqlstatemanager.resolvedependencies", this.getPersistent()); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstatemanager.resolvedependencies", this.getPersistent());
 
         if (updatedForeignReferences != null) {
             Iterator iter = updatedForeignReferences.iterator();
@@ -2531,9 +2542,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
         }
 
-        if (removeDependency && logger.isLoggable()) {
+        if (removeDependency && LOG.isLoggable(DEBUG)) {
             Object[] items = new Object[] {this.getPersistent(), fieldDesc.getName(), pc};
-            logger.fine("sqlstore.sqlstatemanager.resolvedependency", items); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.resolvedependency", items);
         }
         return removeDependency;
     }
@@ -2668,12 +2679,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             sm.stateFlags |= ST_UPDATE_DISABLED;
             sm.referenceCount++;
 
-            if (logger.isLoggable() ) {
-                String fieldName = (fieldDesc != null) ? fieldDesc.getName() : null;
-                Object[] items = new Object[] {this.persistentObject, fieldName,
-                                               sm.persistentObject, new Integer(sm.referenceCount)};
-                logger.fine("sqlstore.sqlstatemanager.addupdate", items); // NOI18N
-            }
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.addupdate", this.persistentObject,
+                fieldDesc == null ? null : fieldDesc.getName(),
+                    sm.persistentObject, sm.referenceCount);
 
             // Register this instance disregarding it's LifeCycle state.
             // Otherwise, its state may never be reset after the transaction commits.
@@ -2703,12 +2711,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         if (updatedForeignReferences.remove(new UpdatedForeignReference(fieldDesc, sm))) {
             sm.referenceCount--;
 
-            if (logger.isLoggable()) {
-                String fieldName = (fieldDesc != null) ? fieldDesc.getName() : null;
-                Object[] items = new Object[] {this.persistentObject, fieldName,
-                                               sm.persistentObject, new Integer(sm.referenceCount)};
-                logger.fine("sqlstore.sqlstatemanager.removeupdate", items); // NOI18N
-            }
+            String fieldName = (fieldDesc != null) ? fieldDesc.getName() : null;
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.removeupdate", this.persistentObject, fieldName,
+                sm.persistentObject, sm.referenceCount);
 
             if (sm.referenceCount == 0) {
                 sm.stateFlags &= ~ST_UPDATE_DISABLED;
@@ -2740,11 +2745,11 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                                       boolean updateInverseRelationshipField,
                                       boolean managedRelationshipInProgress) {
 
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
             Object[] items = new Object[] {fieldDesc.getName(),fieldDesc.getComponentType()};
-            logger.fine("sqlstore.sqlstatemanager.updateobjfield", items); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.updateobjfield", items);
         }
 
         Object removedObject = fieldDesc.getValue(this);
@@ -2759,7 +2764,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             // If the new value is already deleted, we throw an exception.
             if (addedSM != null && addedSM.isDeleted()) {
                 JDOUserException ex = new JDOUserException(I18NHelper.getMessage(messages,
-                        "jdo.lifecycle.deleted.accessField")); // NOI18N
+                        "jdo.lifecycle.deleted.accessField"));
                 ex.addFailedObject(addedObject);
                 throw ex;
             }
@@ -2778,7 +2783,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.updateobjfield.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.updateobjfield.exit");
         }
 
         return true;
@@ -3031,7 +3036,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @return State manager for the added object. The statemanager will
      *   be not null for all persistence capable objects != null.
      */
-    private SQLStateManager getAddedSM(Object addedObject, ArrayList newlyRegisteredSMs) {
+    private SQLStateManager getAddedSM(Object addedObject, List<SQLStateManager> newlyRegisteredSMs) {
         SQLStateManager addedSM = null;
 
         if (addedObject != null) {
@@ -3090,13 +3095,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @see #prepareSetField(FieldDesc,Object,boolean)
      */
     private void processCollectionUpdates(ForeignFieldDesc fieldDesc,
-                                          ArrayList removedList,
-                                          ArrayList addedList,
-                                          ArrayList newlyRegisteredSMs,
+                                          List<?> removedList,
+                                          List<?> addedList,
+                                          List<SQLStateManager> newlyRegisteredSMs,
                                           boolean updateInverseRelationshipField,
                                           boolean managedRelationshipInProgress) {
 
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
         ForeignFieldDesc inverseFieldDesc = fieldDesc.getInverseRelationshipField();
 
         // RESOLVE: What if
@@ -3105,7 +3110,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
         if (debug) {
             Object[] items = new Object[] {removedList,addedList};
-            logger.fine("sqlstore.sqlstatemanager.processcollectionupdate", items); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.processcollectionupdate", items);
         }
 
         // removedList contains the list of objects removed.
@@ -3122,7 +3127,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         }
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.processcollectionupdate.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.processcollectionupdate.exit");
         }
     }
 
@@ -3140,7 +3145,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @see #processCollectionUpdates
      */
     private void removeCollectionRelationship(ForeignFieldDesc fieldDesc,
-                                              ArrayList removedList,
+                                              List<?> removedList,
                                               ForeignFieldDesc inverseFieldDesc,
                                               boolean updateInverseRelationshipField,
                                               boolean managedRelationshipInProgress) {
@@ -3197,13 +3202,13 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             // which can also be retrieved from inverseFieldDesc.
             if (fieldDesc != null) {
                 for (int i = 0; i < fieldDesc.localFields.size(); i++) {
-                    LocalFieldDesc la = (LocalFieldDesc) fieldDesc.localFields.get(i);
+                    LocalFieldDesc la = fieldDesc.localFields.get(i);
 
                     nullifyForeignKey(fieldDesc, la);
                 }
             } else {
                 for (int i = 0; i < inverseFieldDesc.foreignFields.size(); i++) {
-                    LocalFieldDesc la = (LocalFieldDesc) inverseFieldDesc.foreignFields.get(i);
+                    LocalFieldDesc la = inverseFieldDesc.foreignFields.get(i);
 
                     nullifyForeignKey(fieldDesc, la);
                  }
@@ -3311,7 +3316,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
         } else if (fieldDesc == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.cantschedulejointable", // NOI18N
+                    "core.statemanager.cantschedulejointable",
                     this.getPersistenceConfig().getPersistenceCapableClass().getName(),
                     removedSM.getPersistenceConfig().getPersistenceCapableClass().getName()));
         }
@@ -3361,9 +3366,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * @see #processCollectionUpdates
      */
     private void addCollectionRelationship(ForeignFieldDesc fieldDesc,
-                                           ArrayList addedList,
+                                           List<?> addedList,
                                            ForeignFieldDesc inverseFieldDesc,
-                                           ArrayList newlyRegisteredSMs,
+                                           List<SQLStateManager> newlyRegisteredSMs,
                                            boolean updateInverseRelationshipField,
                                            boolean managedRelationshipInProgress) {
 
@@ -3384,7 +3389,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                     if (inverseFieldDesc != null) {
                         if (ex == null) {
                             ex = new JDOUserException(I18NHelper.getMessage(messages,
-                                    "jdo.lifecycle.deleted.accessField")); // NOI18N
+                                    "jdo.lifecycle.deleted.accessField"));
                         }
 
                         ex.addFailedObject(addedObject);
@@ -3438,15 +3443,15 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             // which can also be retrieved from inverseFieldDesc.
             if (fieldDesc != null) {
                 for (int i = 0; i < fieldDesc.localFields.size(); i++) {
-                    LocalFieldDesc la = (LocalFieldDesc) fieldDesc.localFields.get(i);
-                    LocalFieldDesc fa = (LocalFieldDesc) fieldDesc.foreignFields.get(i);
+                    LocalFieldDesc la = fieldDesc.localFields.get(i);
+                    LocalFieldDesc fa = fieldDesc.foreignFields.get(i);
 
                     setForeignKey(fieldDesc, la, fa.getValue(addedSM));
                 }
             } else {
                 for (int i = 0; i < inverseFieldDesc.foreignFields.size(); i++) {
-                    LocalFieldDesc la = (LocalFieldDesc) inverseFieldDesc.foreignFields.get(i);
-                    LocalFieldDesc fa = (LocalFieldDesc) inverseFieldDesc.localFields.get(i);
+                    LocalFieldDesc la = inverseFieldDesc.foreignFields.get(i);
+                    LocalFieldDesc fa = inverseFieldDesc.localFields.get(i);
 
                     setForeignKey(fieldDesc, la, fa.getValue(addedSM));
                 }
@@ -3530,7 +3535,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
         } else if (fieldDesc == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.cantschedulejointable", // NOI18N
+                    "core.statemanager.cantschedulejointable",
                     this.getPersistenceConfig().getPersistenceCapableClass().getName(),
                     addedSM.getPersistenceConfig().getPersistenceCapableClass().getName()));
         }
@@ -3604,16 +3609,16 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                                                         boolean createDeferredCollection) {
         if (fieldDesc.isKeyField()) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "core.statemanager.nopkupdate")); // NOI18N
+                    "core.statemanager.nopkupdate"));
         }
 
         getUpdateDesc().markRelationshipChange(fieldDesc);
 
-        boolean debug = logger.isLoggable();
+        boolean debug = LOG.isLoggable(DEBUG);
 
         if (debug) {
             Object[] items = new Object[] {fieldDesc.getName(),state};
-            logger.fine("sqlstore.sqlstatemanager.prepareupdatefieldspl", items); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.prepareupdatefieldspl", items);
         }
 
         boolean optimistic = persistenceManager.isOptimisticTransaction();
@@ -3678,7 +3683,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         recordUpdatedField(fieldDesc);
 
         if (debug) {
-            logger.fine("sqlstore.sqlstatemanager.prepareupdatefieldspl.exit"); // NOI18N
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.prepareupdatefieldspl.exit");
         }
     }
 
@@ -3708,24 +3713,19 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                                      Object value,
                                      ForeignFieldDesc fieldToIgnore) {
 
-        ArrayList trackedFields = fieldDesc.getTrackedFields();
+        List<FieldDesc> trackedFields = fieldDesc.getTrackedFields();
 
         if (trackedFields == null) {
             return;
         }
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            Object[] items = new Object[] {fieldDesc.getName(), value,
-                                           ((fieldToIgnore != null) ? fieldToIgnore.getName() : null)};
-            logger.finest("sqlstore.sqlstatemanager.updatetrackedfields", items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sqlstatemanager.updatetrackedfields", fieldDesc.getName(), value,
+            (fieldToIgnore != null ? fieldToIgnore.getName() : null));
 
         Object currentValue = fieldDesc.getValue(this);
         int size = trackedFields.size();
 
-        ArrayList fieldsToIgnore = ((fieldToIgnore != null) ? fieldToIgnore.getTrackedFields() : null);
+        List<FieldDesc> fieldsToIgnore = ((fieldToIgnore != null) ? fieldToIgnore.getTrackedFields() : null);
 
         if (fieldDesc instanceof ForeignFieldDesc) {
             // For tracked relationship fields, we simply set the new value.
@@ -3745,7 +3745,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
 
             for (int i = 0; i < size; i++) {
-                FieldDesc tf = (FieldDesc) trackedFields.get(i);
+                FieldDesc tf = trackedFields.get(i);
 
                 if (tf instanceof LocalFieldDesc) {
                     Object convertedValue = null;
@@ -3762,7 +3762,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                         // NOTE: We don't have to revert relationship fields
                         // because they come after all the primitive fields.
                         for (int j = 0; j < i; j++) {
-                            tf = (FieldDesc) trackedFields.get(j);
+                            tf = trackedFields.get(j);
 
                             tf.setValue(this, previousValues[j]);
                         }
@@ -3804,9 +3804,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             }
         }
 
-        if (debug) {
-            logger.finest("sqlstore.sqlstatemanager.updatetrackedfields.exit"); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sqlstatemanager.updatetrackedfields.exit");
     }
 
     /**
@@ -3931,11 +3929,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private Object prepareSetField(FieldDesc fieldDesc, Object value,
                                    boolean managedRelationshipInProgress,
                                    boolean acquireShareLock) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-             logger.finest("sqlstore.sqlstatemanager.preparesetfield", fieldDesc.getName()); // NOI18N
-        }
+         LOG.log(TRACE, "sqlstore.sqlstatemanager.preparesetfield", fieldDesc.getName());
 
         if (acquireShareLock) {
             persistenceManager.acquireShareLock();
@@ -3946,7 +3940,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
             if ((fieldDesc.sqlProperties & FieldDesc.PROP_READ_ONLY) > 0) {
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "core.statemanager.readonly", fieldDesc.getName(), // NOI18N
+                        "core.statemanager.readonly", fieldDesc.getName(),
                         persistentObject.getClass().getName()));
             }
 
@@ -3969,18 +3963,15 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
         } catch (JDOException e) {
             throw e;
         } catch (Exception e) {
-            logger.log(Logger.FINE,"sqlstore.exception.log", e);
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.setfieldfailed"), e); // NOI18N
+                    "core.statemanager.setfieldfailed"), e);
         } finally {
             if (acquireShareLock) {
                 persistenceManager.releaseShareLock();
             }
             releaseLock();
 
-            if (debug) {
-                logger.finest("sqlstore.sqlstatemanager.preparesetfield.exit"); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.sqlstatemanager.preparesetfield.exit");
         }
     }
 
@@ -3996,12 +3987,8 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     private void updateCollectionField(ForeignFieldDesc fieldDesc,
                                        Collection value,
                                        boolean managedRelationshipInProgress) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            Object[] items = new Object[] {value,((value == null)? "NO" : value.getClass().getName())}; // NOI18N
-            logger.finest("sqlstore.sqlstatemanager.processforeignfield", items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sqlstatemanager.processforeignfield", value,
+            (value == null ? "NO" : value.getClass().getName()));
 
         Object currVal = fieldDesc.getValue(this);
 
@@ -4024,7 +4011,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                         !fieldDesc.getName().equals(sco.getFieldName())) {
 
                         throw new JDOUserException(I18NHelper.getMessage(
-                            messages, "core.statemanager.anotherowner"), // NOI18N
+                            messages, "core.statemanager.anotherowner"),
                             new Object[]{owner, sco.getFieldName()});
                 }
                 // SCO should not behave as a JDK collection,
@@ -4034,8 +4021,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
             Object befrVal = fieldDesc.getValue(beforeImage);
             if (currVal != null) {
-                if (debug)
-                    logger.finest("sqlstore.sqlstatemanager.processforeignfield.remove"); // NOI18N
+                LOG.log(TRACE, "sqlstore.sqlstatemanager.processforeignfield.remove");
 
                 // This is a setXXX (i.e. replace) operation, we need to
                 // "remove" elements from the current SCOCollection and mark it as not used
@@ -4045,28 +4031,23 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                 }
 
                 if (currVal instanceof SCOCollection) {
-                    if (debug)
-                        logger.finest("sqlstore.sqlstatemanager.processforeignfield.reset"); // NOI18N
+                    LOG.log(TRACE, "sqlstore.sqlstatemanager.processforeignfield.reset");
                     // SCOCollection: mark it as not used
                     ((SCO) currVal).unsetOwner();
                 }
-            } else if (getSetMaskBit(fieldDesc.absoluteID) == false && befrVal != null)
-            // && value instanceof SCOCollection && owner != null)
-            {
-                if (debug)
-                    logger.finest("sqlstore.sqlstatemanager.processforeignfield.remove_from_bi"); // NOI18N
+            } else if (getSetMaskBit(fieldDesc.absoluteID) == false && befrVal != null) {
+                LOG.log(TRACE, "sqlstore.sqlstatemanager.processforeignfield.remove_from_bi");
                 // Replace with SCOCollection: mark beforeImage as removed
-
-                if (((Collection) befrVal).size() > 0) {
-                    removed = new ArrayList((Collection) befrVal);
+                if (((Collection<?>) befrVal).size() > 0) {
+                    removed = new ArrayList<>((Collection<?>) befrVal);
                 }
             }
 
-            processCollectionUpdates(fieldDesc, removed, added, null, true,
-                managedRelationshipInProgress);
+            processCollectionUpdates(fieldDesc, removed, added, null, true, managedRelationshipInProgress);
         }
     }
 
+    @Override
     public Object clone() {
         SQLStateManager clone = new SQLStateManager(store, persistenceConfig);
         clone.persistenceManager = persistenceManager;
@@ -4075,9 +4056,10 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     }
 
     private void assertNotPK(int fieldNumber) {
-        if (persistenceConfig.isPKField(fieldNumber))
+        if (persistenceConfig.isPKField(fieldNumber)) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "core.statemanager.nopkupdate")); // NOI18N
+                    "core.statemanager.nopkupdate"));
+        }
     }
 
     private void assertPKUpdate(FieldDesc f, Object value) {
@@ -4096,13 +4078,14 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
         if (throwException) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "core.statemanager.nopkupdate")); // NOI18N
+                    "core.statemanager.nopkupdate"));
         }
     }
 
     /**
      * ...
      */
+    @Override
     public com.sun.jdo.api.persistence.support.PersistenceManager getPersistenceManagerInternal() {
         return persistenceManager;
     }
@@ -4110,6 +4093,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * ...
      */
+    @Override
     public com.sun.jdo.api.persistence.support.PersistenceManager getPersistenceManager() {
         return (persistenceManager == null)? null : persistenceManager.getCurrentWrapper();
     }
@@ -4119,6 +4103,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * ...
      */
     // !!! olsen: changed to return byte instead of void (->PC.jdoSetFlags())
+    @Override
     public byte setFlags(byte flags) {
         // RESOLVE: Need to verify that the flags are valid with the current
         // state of the state manager.
@@ -4129,12 +4114,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Triggers the state transition for READ and registers the
      * instance in the transaction cache.
      */
+    @Override
     public void loadForRead() {
-        boolean debug = logger.isLoggable(Logger.FINER);
-
-        if (debug) {
-            logger.finer("sqlstore.sqlstatemanager.loadforread"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstatemanager.loadforread");
 
         persistenceManager.acquireShareLock();
 
@@ -4171,9 +4153,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             persistenceManager.releaseShareLock();
             releaseLock();
 
-            if (debug) {
-                logger.finer("sqlstore.sqlstatemanager.loadforread.exit"); // NOI18N
-            }
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.loadforread.exit");
         }
     }
 
@@ -4181,12 +4161,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Triggers the state transition for WRITE and registers the instance
      * in the transaction cache. Prepares all DFG fields for update.
      */
+    @Override
     public void loadForUpdate() {
-        boolean debug = logger.isLoggable(Logger.FINER);
-
-        if (debug) {
-            logger.finer("sqlstore.sqlstatemanager.loadforupdate"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstatemanager.loadforupdate");
 
         persistenceManager.acquireShareLock();
 
@@ -4203,12 +4180,12 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
             persistenceManager.setFlags(persistentObject, READ_WRITE_OK);
 
-            ArrayList fields = persistenceConfig.fields;
+            List<FieldDesc> fields = persistenceConfig.fields;
 
             try {
                 // Mark all the fields in the dfg dirty.
                 for (int i = 0; i < fields.size(); i++) {
-                    FieldDesc f = (FieldDesc) fields.get(i);
+                    FieldDesc f = fields.get(i);
 
                     if (f.fetchGroup == FieldDesc.GROUP_DEFAULT) {
                         //prepareSetField(f, null);
@@ -4224,9 +4201,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             persistenceManager.releaseShareLock();
             releaseLock();
 
-            if (debug) {
-                logger.finer("sqlstore.sqlstatemanager.loadforupdate.exit"); // NOI18N
-            }
+            LOG.log(DEBUG, "sqlstore.sqlstatemanager.loadforupdate.exit");
         }
     }
 
@@ -4257,7 +4232,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
                 scoCollection.applyDeferredUpdates(c);
 
                 // We need to mark all the tracked fields as present.
-                ArrayList trackedFields = ff.getTrackedFields();
+                List<FieldDesc> trackedFields = ff.getTrackedFields();
                 if (trackedFields != null) {
                     for (int i = 0; i < trackedFields.size(); i++) {
                         ForeignFieldDesc tf = (ForeignFieldDesc) trackedFields.get(i);
@@ -4296,6 +4271,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * ...
      */
+    @Override
     public boolean isDirty() {
         if (state != null) {
             return state.isDirty();
@@ -4307,6 +4283,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * ...
      */
+    @Override
     public boolean isTransactional() {
         if (state != null) {
             return state.isTransactional();
@@ -4318,6 +4295,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * ...
      */
+    @Override
     public boolean isNew() {
         if (state != null) {
             return state.isNew();
@@ -4329,6 +4307,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * ...
      */
+    @Override
     public boolean isDeleted() {
         if (state != null) {
             return state.isDeleted();
@@ -4340,6 +4319,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * ...
      */
+    @Override
     public boolean isPersistent() {
         if (state != null) {
             return state.isPersistent();
@@ -4351,6 +4331,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @inheritDoc
      */
+    @Override
     public boolean needsRegisterWithVersionConsistencyCache() {
         boolean rc = hasVersionConsistency();
         if (rc && state != null) {
@@ -4367,6 +4348,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * @inheritDoc
      */
+    @Override
     public boolean needsUpdateInVersionConsistencyCache() {
         boolean rc = hasVersionConsistency();
         if (rc && state != null) {
@@ -4385,100 +4367,118 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     // serve as the hook for keeping track of changes made to the
     // <code>StateManager</code>.
 
+    @Override
     public boolean setBooleanField(int fieldNumber, boolean value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Boolean(value));
         return value;
     }
 
+    @Override
     public boolean[] setBooleanArrayField(int fieldNumber, boolean[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public byte setByteField(int fieldNumber, byte value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Byte(value));
         return value;
     }
 
+    @Override
     public byte[] setByteArrayField(int fieldNumber, byte[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public short setShortField(int fieldNumber, short value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Short(value));
         return value;
     }
 
+    @Override
     public short[] setShortArrayField(int fieldNumber, short[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public int setIntField(int fieldNumber, int value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Integer(value));
         return value;
     }
 
+    @Override
     public int[] setIntArrayField(int fieldNumber, int[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public long setLongField(int fieldNumber, long value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Long(value));
         return value;
     }
 
+    @Override
     public long[] setLongArrayField(int fieldNumber, long[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public char setCharField(int fieldNumber, char value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Character(value));
         return value;
     }
 
+    @Override
     public char setCharArrayField(int fieldNumber, char value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public float setFloatField(int fieldNumber, float value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Float(value));
         return value;
     }
 
+    @Override
     public float[] setFloatArrayField(int fieldNumber, float[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public double setDoubleField(int fieldNumber, double value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, new Double(value));
         return value;
     }
 
+    @Override
     public double[] setDoubleArrayField(int fieldNumber, double[] value) {
         prepareSetField(fieldNumber, null);
         return value;
     }
 
+    @Override
     public String setStringField(int fieldNumber, String value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, value);
         return value;
     }
 
+    @Override
     public String[] setStringArrayField(int fieldNumber, String[] value) {
         prepareSetField(fieldNumber, null);
         return value;
@@ -4487,28 +4487,33 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * This method sets object fields, e.g. relationship fields.
      */
+    @Override
     public Object setObjectField(int fieldNumber, Object value) {
         assertNotPK(fieldNumber);
         prepareSetField(fieldNumber, value);
         return value;
     }
 
+    @Override
     public Object[] setObjectArrayField(int fieldNumber, Object[] value) {
         prepareSetField(fieldNumber, value);
         return value;
     }
 
 
+    @Override
     public boolean testIsLoaded(int fieldNumber) {
         return getPresenceMaskBit(fieldNumber);
     }
 
+    @Override
     public boolean testIsLoaded(String fieldName) {
         FieldDesc f = persistenceConfig.getField(fieldName);
 
         return testIsLoaded(f.absoluteID);
     }
 
+    @Override
     public boolean testIsAutoPersistent() {
         return state.isAutoPersistent();
     }
@@ -4519,6 +4524,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Used for replacing a deleted instance with the newly persistent with
      * the same object id.
      */
+    @Override
     public void markNotRegistered() {
         needsRegisterAtRollback = true;
     }
@@ -4527,6 +4533,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Marks this instance as needs to be verified at the time it is removed from the
      * global (weak) cache at rollback if it transitions to transient state.
      */
+    @Override
     public void markVerifyAtDeregister() {
         needsVerifyAtDeregister = true;
     }
@@ -4535,6 +4542,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Marks this instance as a replacement for a deleted instance with the same
      * ObjectId.
      */
+    @Override
     public void markReplacement() {
         isReplacementInstance = true;
     }
@@ -4543,6 +4551,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Lock this instance.
      */
     // For consistency's sake, this should be changed to acquireLock.
+    @Override
     public void getLock() {
         lock.acquire();
     }
@@ -4550,6 +4559,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * Release lock.
      */
+    @Override
     public void releaseLock() {
         lock.release();
     }
@@ -4558,6 +4568,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
     /**
      * Return value for valid flag.
      */
+    @Override
     public boolean isValid() {
         return valid;
     }
@@ -4566,6 +4577,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
      * Mark this StateManager as valid. Called before returning from
      * getObjectById.
      */
+    @Override
     public void setValid() {
         try {
             getLock();
@@ -4598,6 +4610,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             return sm;
         }
 
+        @Override
         public boolean equals(Object obj) {
             if (obj != null &&
                 this.getClass().equals(obj.getClass())) {
@@ -4608,6 +4621,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
             return (false);
         }
 
+        @Override
         public int hashCode() {
             int hashCode = sm.hashCode();
             if (fieldDesc != null) {

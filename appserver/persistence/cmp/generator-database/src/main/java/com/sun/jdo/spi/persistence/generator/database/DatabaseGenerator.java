@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * DatabaseGenerator.java
- *
- * Created on Jan 14, 2003
  */
 
 package com.sun.jdo.spi.persistence.generator.database;
@@ -35,9 +30,9 @@ import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,12 +52,16 @@ import org.netbeans.modules.dbschema.SchemaElement;
 import org.netbeans.modules.dbschema.TableElement;
 import org.netbeans.modules.dbschema.UniqueKeyElement;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 
 /**
  * This class generates a database schema and a Map of mapping classes from a
  * set of JDO classes.
  */
 public class DatabaseGenerator {
+    private static final Logger LOG = System.getLogger(DatabaseGenerator.class.getName());
+
     /** @see DatabaseGenerationConstants#DOT */
     private static final char DOT = DatabaseGenerationConstants.DOT;
 
@@ -74,11 +73,11 @@ public class DatabaseGenerator {
 
     /** List of NameTuple objects which holds persistence class name,
      * desired table name and hash class name for database generation. */
-    private final List pcClasses;
+    private final List<NameTuple> pcClasses;
 
     /** Map from persistence-capable class names to MappingClassElement's. */
     // See also DatabaseGenerator.Results.mappingClasses.
-    private final Map mappingClasses = new HashMap();
+    private final Map<String, MappingClassElement> mappingClasses = new HashMap<>();
 
     /** Generated database schema. */
     private final SchemaElement schema;
@@ -89,14 +88,8 @@ public class DatabaseGenerator {
      */
     private final String classSuffix;
 
-    /** The logger */
-    private static final Logger logger =
-        LogHelperDatabaseGenerator.getLogger();
-
     /** I18N message handler */
-    private static final ResourceBundle messages =
-        I18NHelper.loadBundle(DatabaseGenerator.class);
-
+    private static final ResourceBundle messages = I18NHelper.loadBundle(DatabaseGenerator.class);
 
     /**
      * Contains the results of invoking DatabaseGenerator.generate()
@@ -110,11 +103,11 @@ public class DatabaseGenerator {
         // is intentional: DatabaseGenerator.addRelationships needs to get a
         // MappingClassElement for a pc class name, but the clients of the
         // DatabaseGenerator should only need the mapping classes.
-        private final Set mappingClasses;
+        private final Set<MappingClassElement> mappingClasses;
 
-        Results(SchemaElement schema, Map mappingClasses) {
+        Results(SchemaElement schema, Map<String, MappingClassElement> mappingClasses) {
             this.schema = schema;
-            this.mappingClasses = new HashSet(mappingClasses.values());
+            this.mappingClasses = new HashSet<>(mappingClasses.values());
         }
 
         /** @return Generated SchemaElement. */
@@ -123,7 +116,7 @@ public class DatabaseGenerator {
         }
 
         /** @return Generated mapping classes. */
-        public Set getMappingClasses() {
+        public Set<MappingClassElement> getMappingClasses() {
             return mappingClasses;
         }
     }
@@ -203,7 +196,7 @@ public class DatabaseGenerator {
      * creating table names from class names.
      */
     private DatabaseGenerator(
-            Model model, List pcClasses, MappingPolicy mappingPolicy,
+            Model model, List<NameTuple> pcClasses, MappingPolicy mappingPolicy,
             String schemaName, String classSuffix)
             throws DBException {
 
@@ -238,19 +231,14 @@ public class DatabaseGenerator {
      * of generation.
      */
     public static Results generate(
-            Model model, List pcClasses, MappingPolicy mappingPolicy,
+            Model model, List<NameTuple> pcClasses, MappingPolicy mappingPolicy,
             String schemaName, String classSuffix,
             boolean generateMappingClasses)
             throws DBException, IOException, ModelException {
 
-        DatabaseGenerator generator = new DatabaseGenerator(
-                model, pcClasses, mappingPolicy,
-                schemaName, classSuffix);
-
+        DatabaseGenerator generator = new DatabaseGenerator(model, pcClasses, mappingPolicy, schemaName, classSuffix);
         Results rc = generator.generate();
-
         mappingPolicy.resetCounter();
-
         return rc;
     }
 
@@ -264,24 +252,19 @@ public class DatabaseGenerator {
      * of generation.
      */
     private Results generate() throws DBException, ModelException {
-        for (Iterator i = pcClasses.iterator(); i.hasNext();) {
-            NameTuple nameTuple = (NameTuple) i.next();
+        for (Iterator<NameTuple> i = pcClasses.iterator(); i.hasNext();) {
+            NameTuple nameTuple = i.next();
             String pcClassName = nameTuple.getPersistenceClassName();
             String desiredTableName = nameTuple.getDesiredTableName();
 
-            PersistenceClassElement pcClass =
-                    model.getPersistenceClass(pcClassName);
+            PersistenceClassElement pcClass = model.getPersistenceClass(pcClassName);
 
-            String tableName = mappingPolicy.getTableName(
-                    desiredTableName, getShortClassName(nameTuple.getHashClassName()));
-            TableElement table = DBElementFactory.createAndAttachTable(
-                    schema, tableName);
-            UniqueKeyElement pKey = DBElementFactory.createAndAttachPrimaryKey(
-                    table,
-                    mappingPolicy.getPrimaryKeyConstraintName(
-                            table.getName().getName()));
-            MappingClassElement mappingClass = createMappingClass(
-                    pcClass, table);
+            String tableName = mappingPolicy.getTableName(desiredTableName,
+                getShortClassName(nameTuple.getHashClassName()));
+            TableElement table = DBElementFactory.createAndAttachTable(schema, tableName);
+            UniqueKeyElement pKey = DBElementFactory.createAndAttachPrimaryKey(table,
+                mappingPolicy.getPrimaryKeyConstraintName(table.getName().getName()));
+            MappingClassElement mappingClass = createMappingClass(pcClass, table);
 
             PersistenceFieldElement[] fields = pcClass.getFields();
             if (fields != null) {
@@ -289,27 +272,12 @@ public class DatabaseGenerator {
                     PersistenceFieldElement field = fields[j];
                     String fieldName = field.getName();
                     if (!(field instanceof RelationshipElement)) {
-                        String columnName = mappingPolicy.getColumnName(
-                                desiredTableName, fieldName, tableName);
-                        String fieldType = model.getFieldType(
-                                pcClassName, fieldName);
-                        String fullFieldName =
-                                new StringBuffer(desiredTableName)
-                                .append(DOT).append(fieldName).toString();
-                        JDBCInfo columnType =
-                            DBElementFactory.getColumnType(
-                                    fullFieldName,
-                                    fieldType,
-                                    mappingPolicy);
-                        if (logger.isLoggable(Logger.FINEST)) {
-                            logger.fine(
-                                    "DBGenerator.generate: " // NOI18N
-                                    + tableName + "." + columnName + ": " // NOI18N
-                                    + columnType.toString());
-                        }
-                        ColumnElement column =
-                                DBElementFactory.createAndAttachColumn(
-                                        columnName, table, columnType);
+                        String columnName = mappingPolicy.getColumnName(desiredTableName, fieldName, tableName);
+                        String fieldType = model.getFieldType(pcClassName, fieldName);
+                        String fullFieldName = new StringBuilder(desiredTableName).append(DOT).append(fieldName).toString();
+                        JDBCInfo columnType = DBElementFactory.getColumnType(fullFieldName, fieldType, mappingPolicy);
+                        LOG.log(DEBUG, () -> "generate: " + tableName + "." + columnName + ": " + columnType);
+                        ColumnElement column = DBElementFactory.createAndAttachColumn(columnName, table, columnType);
                         createAndAttachMappingField(fieldName, mappingClass, column);
 
                         if (field.isKey()) {
@@ -338,15 +306,14 @@ public class DatabaseGenerator {
     private TableElement getPrimaryTable(MappingClassElement mappingClass)
             throws DBException {
 
-        List tables = mappingClass.getTables();
+        List<MappingTableElement> tables = mappingClass.getTables();
 
-        MappingTableElement tbl = (MappingTableElement) tables.get(0);
-        if (tbl != null) {
-            DBIdentifier tblName = DBIdentifier.create(tbl.getTable());
-            return schema.getTable(tblName);
-        } else {
+        MappingTableElement tbl = tables.get(0);
+        if (tbl == null) {
             return null;
         }
+        DBIdentifier tblName = DBIdentifier.create(tbl.getTable());
+        return schema.getTable(tblName);
     }
 
     /**
@@ -356,16 +323,13 @@ public class DatabaseGenerator {
      * @return MappingClassElement associated with table and PC class
      * @throws ModelException
      */
-    private MappingClassElement createMappingClass(
-            PersistenceClassElement pcClass, TableElement table)
-            throws ModelException {
+    private MappingClassElement createMappingClass(PersistenceClassElement pcClass, TableElement table)
+        throws ModelException {
+        MappingClassElement mappingClass = new MappingClassElementImpl(pcClass);
 
-         MappingClassElement mappingClass =
-             new MappingClassElementImpl(pcClass);
-
-         mappingClass.setDatabaseRoot(schema);
-         mappingClass.addTable(table);
-         return mappingClass;
+        mappingClass.setDatabaseRoot(schema);
+        mappingClass.addTable(table);
+        return mappingClass;
     }
 
     /**
@@ -407,9 +371,8 @@ public class DatabaseGenerator {
             MappingClassElement declaringClass, ForeignKeyElement fkey)
             throws ModelException {
 
-        MappingRelationshipElement impl = new MappingRelationshipElementImpl(
-                relationName, declaringClass);
-        ColumnPairElement [] pairs = fkey.getColumnPairs();
+        MappingRelationshipElement impl = new MappingRelationshipElementImpl(relationName, declaringClass);
+        ColumnPairElement[] pairs = fkey.getColumnPairs();
 
         for (int i = 0; i < pairs.length; i++) {
             ColumnPairElement pair = pairs[i];
@@ -431,14 +394,10 @@ public class DatabaseGenerator {
     private void addAssocMappingRelationship(String relationName,
             MappingClassElement declaringClass, ForeignKeyElement fkeyForeign)
             throws ModelException {
-
-        MappingRelationshipElement impl =
-                (MappingRelationshipElement) declaringClass.getField(
-                        relationName);
+        MappingRelationshipElement impl = (MappingRelationshipElement) declaringClass.getField(relationName);
 
         if (null == impl) {
-            impl = new MappingRelationshipElementImpl(
-                    relationName, declaringClass);
+            impl = new MappingRelationshipElementImpl(relationName, declaringClass);
             declaringClass.addField(impl);
         }
 
@@ -477,8 +436,7 @@ public class DatabaseGenerator {
 
         // for join table, need to add two MappingRelationshipElement
         if (null == impl) {
-            impl = new MappingRelationshipElementImpl(relationName,
-                declaringClass);
+            impl = new MappingRelationshipElementImpl(relationName, declaringClass);
             declaringClass.addField(impl);
         }
 
@@ -524,13 +482,11 @@ public class DatabaseGenerator {
                  srcTable, relTable, relName, mappingPolicy, uniqueId);
 
         if (srcIsJoin) {
-            addInverseMappingRelationship(relName, mappingClass,
-                    fKey, true);
+            addInverseMappingRelationship(relName, mappingClass, fKey, true);
             addAssocMappingRelationship(inverseRelName, relMappingClass, fKey);
         } else {
             addMappingRelationship(relName, mappingClass, fKey);
-            addInverseMappingRelationship(inverseRelName, relMappingClass,
-                    fKey, false);
+            addInverseMappingRelationship(inverseRelName, relMappingClass, fKey, false);
         }
         return fKey;
     }
@@ -541,28 +497,25 @@ public class DatabaseGenerator {
      * @throws DBException
      * @throws ModelExpception
      */
-    private void addRelationships()
-        throws DBException, ModelException {
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("add relationship"); // NOI18N
-        }
+    private void addRelationships() throws DBException, ModelException {
+        LOG.log(DEBUG, "add relationship");
 
-        Map relationFKey = new HashMap();
+        Map<RelationshipElement, ForeignKeyElement> relationFKey = new HashMap<>();
 
         // This is a list of 1-1 relationships that are deferred for
         // processing until all other relationships are processed.  Deferral
         // allows us to concentrate foreign keys on one side of the
         // relationship.
-        List deferredRelationships = new ArrayList();
+        List<DeferredRelationship> deferredRelationships = new ArrayList<>();
 
-        for (Iterator i = mappingClasses.values().iterator(); i.hasNext();) {
-            MappingClassElement mappingClass = (MappingClassElement) i.next();
+        for (Iterator<MappingClassElement> i = mappingClasses.values().iterator(); i.hasNext();) {
+            MappingClassElement mappingClass = i.next();
             String pcClassName = mappingClass.getName();
             PersistenceClassElement pcClass =
                 model.getPersistenceClass(pcClassName);
-            validateModel(pcClass, "pcClass", pcClassName); // NOI18N
+            validateModel(pcClass, "pcClass", pcClassName);
             TableElement sourceTable = getPrimaryTable(mappingClass);
-            validateModel(sourceTable, "sourceTable", pcClassName); // NOI18N
+            validateModel(sourceTable, "sourceTable", pcClassName);
 
             // Create a string that can keep names unique
             String uniqueId = getShortClassName(pcClassName);
@@ -581,49 +534,33 @@ public class DatabaseGenerator {
                     int upperBound = relation.getUpperBound();
 
                     // inverseRelationship
-                    String inverseRelName =
-                            relation.getInverseRelationshipName();
-                    validateModel(inverseRelName,
-                                  "inverseRelName", relationName); // NOI18N
+                    String inverseRelName = relation.getInverseRelationshipName();
+                    validateModel(inverseRelName, "inverseRelName", relationName);
                     String relClassName = model.getRelatedClass(relation);
-                    validateModel(relClassName,
-                                  "relClassName", relationName); // NOI18N
+                    validateModel(relClassName, "relClassName", relationName);
 
                     // get related MappingClass and PersistenceClass
-                    MappingClassElement relMappingClass =
-                        (MappingClassElement) mappingClasses.get(relClassName);
-                    validateModel(relMappingClass,
-                                  "relMappingClass", relClassName); // NOI18N
-                    PersistenceClassElement relClass =
-                            model.getPersistenceClass(relClassName);
-                    validateModel(relClass,
-                                  "relClass", relClassName); // NOI18N
-                    RelationshipElement inverseRelation =
-                            relClass.getRelationship(inverseRelName);
-                    validateModel(inverseRelation,
-                                  "inverseRelation", inverseRelName); // NOI18N
+                    MappingClassElement relMappingClass = mappingClasses.get(relClassName);
+                    validateModel(relMappingClass, "relMappingClass", relClassName);
+                    PersistenceClassElement relClass = model.getPersistenceClass(relClassName);
+                    validateModel(relClass, "relClass", relClassName);
+                    RelationshipElement inverseRelation = relClass.getRelationship(inverseRelName);
+                    validateModel(inverseRelation, "inverseRelation", inverseRelName);
                     TableElement relTable = getPrimaryTable(relMappingClass);
-                    validateModel(relTable,
-                                  "relTable", relClassName); // NOI18N
+                    validateModel(relTable, "relTable", relClassName);
                     int relUpperBound = inverseRelation.getUpperBound();
 
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(
-                                "Before adding relationship:" // NOI18N
-                                + getTblInfo("sourceTable", sourceTable, relationName) // NOI18N
-                                + getTblInfo("relTable", relTable, inverseRelName)); // NOI18N
-                    }
+                    LOG.log(DEBUG,
+                        () -> "Before adding relationship:" + getTblInfo("sourceTable", sourceTable, relationName)
+                            + getTblInfo("relTable", relTable, inverseRelName));
 
                     // XXX Suggest making each block below a separate method.
 
-                    if ((upperBound > 1) && (relUpperBound > 1)) {
+                    if (upperBound > 1 && relUpperBound > 1) {
                         // M-N relationship, create new table
-                        if (logger.isLoggable(Logger.FINE)) {
-                            logger.fine("M-N relationship"); // NOI18N
-                        }
+                        LOG.log(DEBUG, "M-N relationship");
 
-                        ForeignKeyElement fKey = getMappedForeignKey(
-                                relation, inverseRelation, relationFKey);
+                        ForeignKeyElement fKey = getMappedForeignKey(relation, inverseRelation, relationFKey);
                         if (fKey == null) {
                             TableElement joinTable =
                                 DBElementFactory.createAndAttachTable(
@@ -648,24 +585,14 @@ public class DatabaseGenerator {
                         // equal 1 side.  So here, we do nothing: We add
                         // relationships at the 1 side for 1-M relationships,
                         // and the current mapping class is the many side.
-
-                        if (logger.isLoggable(Logger.FINE)) {
-                            logger.fine("M-1 relationship: skip"); // NOI18N
-                        }
-
+                        LOG.log(DEBUG, "M-1 relationship: skip");
                     } else if ((upperBound == 1) && (relUpperBound >1)) {
                         // 1-M relationship, add foreign key at upperBound =
                         // 1 side
-
-                        if (logger.isLoggable(Logger.FINE)) {
-                            logger.fine("1-M relationship"); // NOI18N
-                        }
-
-                        ForeignKeyElement fKey = getMappedForeignKey(relation,
-                            inverseRelation, relationFKey);
+                        LOG.log(DEBUG, "1-M relationship");
+                        ForeignKeyElement fKey = getMappedForeignKey(relation, inverseRelation, relationFKey);
                         if (fKey == null) {
-                            fKey = createRelationship(sourceTable, relTable,
-                                relationName, inverseRelName, mappingClass,
+                            fKey = createRelationship(sourceTable, relTable, relationName, inverseRelName, mappingClass,
                                 relMappingClass, uniqueId, false);
                             relationFKey.put(relation, fKey);
                         }
@@ -682,9 +609,7 @@ public class DatabaseGenerator {
                         if (fKey == null) {
                             if (relation.getDeleteAction() ==
                                 RelationshipElement.CASCADE_ACTION) {
-                                if (logger.isLoggable(Logger.FINE)) {
-                                    logger.fine("1-1 relationship: cascade(this)"); // NOI18N
-                                }
+                                LOG.log(DEBUG, "1-1 relationship: cascade(this)");
                                 fKey = createRelationship(
                                         sourceTable, relTable, relationName,
                                         inverseRelName, mappingClass,
@@ -692,9 +617,7 @@ public class DatabaseGenerator {
                                 relationFKey.put(relation, fKey);
                             } else if (inverseRelation.getDeleteAction() ==
                                        RelationshipElement.CASCADE_ACTION) {
-                                if (logger.isLoggable(Logger.FINE)) {
-                                    logger.fine("1-1 relationship: cascade(inverse)"); // NOI18N
-                                }
+                                LOG.log(DEBUG, "1-1 relationship: cascade(inverse)");
                                 fKey = createRelationship(
                                         relTable, sourceTable,
                                         inverseRelName, relationName,
@@ -702,9 +625,7 @@ public class DatabaseGenerator {
                                         uniqueId, false);
                                 relationFKey.put(inverseRelation, fKey);
                             } else {
-                                if (logger.isLoggable(Logger.FINE)) {
-                                    logger.fine("1-1 relationship: defer"); // NOI18N
-                                }
+                                LOG.log(DEBUG, "1-1 relationship: defer");
                                 deferredRelationships.add(
                                         new DeferredRelationship(
                                                 relation, inverseRelation,
@@ -715,12 +636,10 @@ public class DatabaseGenerator {
                             }
                         }
                     }
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(
-                                "After adding relationship:" // NOI18N
-                                + getTblInfo("sourceTable", sourceTable, relationName) // NOI18N
-                                + getTblInfo("relTable", relTable, inverseRelName)); // NOI18N
-                    }
+                    LOG.log(DEBUG, () ->
+                                "After adding relationship:"
+                                + getTblInfo("sourceTable", sourceTable, relationName)
+                                + getTblInfo("relTable", relTable, inverseRelName));
                 }
             }
         }
@@ -739,11 +658,11 @@ public class DatabaseGenerator {
      * indicating which relationships have already been mapped.
      */
     private void addDeferredRelationships(
-            List deferredRelationships, Map relationFKey)
+            List<DeferredRelationship> deferredRelationships, Map<RelationshipElement, ForeignKeyElement> relationFKey)
             throws DBException, ModelException {
 
-        for (Iterator i = deferredRelationships.iterator(); i.hasNext();) {
-            DeferredRelationship dr = (DeferredRelationship)i.next();
+        for (Iterator<DeferredRelationship> i = deferredRelationships.iterator(); i.hasNext();) {
+            DeferredRelationship dr = i.next();
 
             RelationshipElement relation = dr.getRelation();
             RelationshipElement inverseRelation = dr.getInverseRelation();
@@ -774,24 +693,21 @@ public class DatabaseGenerator {
                             relationName, inverseRelName,
                             mappingClass, relMappingClass,
                             uniqueId, false);
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(
-                                "1-1 deferred relationship (this)" // NOI18N
-                                + getTblInfo("sourceTable", sourceTable, relationName) // NOI18N
-                                + getTblInfo("relTable", relTable, inverseRelName)); // NOI18N
-                    }
+
+                    LOG.log(DEBUG, () -> "1-1 deferred relationship (this)"
+                            + getTblInfo("sourceTable", sourceTable, relationName)
+                            + getTblInfo("relTable", relTable, inverseRelName));
+
                 } else {
                     fKey = createRelationship(
                             relTable, sourceTable,
                             inverseRelName, relationName,
                             relMappingClass, mappingClass,
                             uniqueId, false);
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(
-                                "1-1 deferred relationship (inverse)" // NOI18N
-                                + getTblInfo("sourceTable", sourceTable, relationName) // NOI18N
-                                + getTblInfo("relTable", relTable, inverseRelName)); // NOI18N
-                    }
+                    LOG.log(DEBUG, () -> "1-1 deferred relationship (inverse)"
+                        + getTblInfo("sourceTable", sourceTable, relationName)
+                        + getTblInfo("relTable", relTable, inverseRelName));
+
                 }
                 relationFKey.put(relation, fKey);
             }
@@ -860,18 +776,14 @@ public class DatabaseGenerator {
      * @param relationFKey a map to hold relation and foreign key
      * @return the foreign key element or null
      */
-    private ForeignKeyElement getMappedForeignKey(
-            RelationshipElement relation, RelationshipElement inverseRelation,
-            Map relationFKey) {
-
-        ForeignKeyElement fkey =
-                (ForeignKeyElement) relationFKey.get(relation);
+    private ForeignKeyElement getMappedForeignKey(RelationshipElement relation, RelationshipElement inverseRelation,
+        Map<RelationshipElement, ForeignKeyElement> relationFKey) {
+        ForeignKeyElement fkey = relationFKey.get(relation);
 
         if (fkey == null) {
-            return (ForeignKeyElement) relationFKey.get(inverseRelation);
-        } else {
-            return fkey;
+            return relationFKey.get(inverseRelation);
         }
+        return fkey;
     }
 
     /**
@@ -905,12 +817,7 @@ public class DatabaseGenerator {
                                String failedItem,
                                String accessor) throws ModelException {
         if (null == o) {
-            String msg = I18NHelper.getMessage(
-                    messages,
-                    "EXC_InvalidRelationshipMapping",  // NOI18N
-                    failedItem,
-                    accessor);
-            logger.log(Logger.SEVERE, msg);
+            String msg = I18NHelper.getMessage(messages, "EXC_InvalidRelationshipMapping", failedItem, accessor);
             throw new ModelException(msg);
         }
     }
@@ -929,8 +836,8 @@ public class DatabaseGenerator {
             fk = tbl.getForeignKeys()[0];
         }
         return " " + tblName + "=" + tbl.toString()
-            + ", # keys=" + numFK // NOI18N
-            + ", 1st key=" + fk // NOI18N
-            + "; relationship Name=" + relName; // NOI18N
+            + ", # keys=" + numFK
+            + ", 1st key=" + fk
+            + "; relationship Name=" + relName;
     }
 }

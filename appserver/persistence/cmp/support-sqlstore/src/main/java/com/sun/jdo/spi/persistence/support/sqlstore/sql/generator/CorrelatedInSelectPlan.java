@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,9 +44,9 @@ public class CorrelatedInSelectPlan extends CorrelatedSelectPlan {
      * Add the fields joining the subquery to the list of selected fields.
      * The joined table is added as a side-effect.
      */
+    @Override
     protected void processFields() {
-        List subqueryFieldsToSelect;
-
+        List<LocalFieldDesc> subqueryFieldsToSelect;
         if (parentField.useJoinTable()) {
             subqueryFieldsToSelect = parentField.getAssocLocalFields();
         } else {
@@ -54,7 +55,7 @@ public class CorrelatedInSelectPlan extends CorrelatedSelectPlan {
 
         // Add the columns and tables to be selected in the subquery
         for (int i = 0; i < subqueryFieldsToSelect.size(); i++) {
-            addColumn((LocalFieldDesc) subqueryFieldsToSelect.get(i));
+            addColumn(subqueryFieldsToSelect.get(i));
         }
     }
 
@@ -62,6 +63,7 @@ public class CorrelatedInSelectPlan extends CorrelatedSelectPlan {
      * No-Op. No join condition is added for correlated in selects,
      * as the queries are joined on the selected fields.
      */
+    @Override
     protected void doCorrelatedJoin() {}
 
 }

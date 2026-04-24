@@ -18,7 +18,10 @@ package com.sun.jdo.spi.persistence.generator.database;
 
 
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.lang.System.Logger;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * Represents how a JDBC type (i.e., one defined by java.sql.Types) is
@@ -57,10 +60,6 @@ class JDBCInfo {
 
     /** Flag value which indicates that a JDBCInfo does not have a length. */
     private static final Integer NO_LENGTH = new Integer(-1);
-
-     /** Logger for warning & error messages */
-    private static final Logger logger =
-            LogHelperDatabaseGenerator.getLogger();
 
     /** Value from java.sql.Types. */
     private int jdbcType;
@@ -104,6 +103,7 @@ class JDBCInfo {
     private static final byte MASK_ALL = MASK_JDBC_TYPE | MASK_NULLABLE
         | MASK_PRECISION | MASK_SCALE | MASK_LENGTH;
 
+    private static final Logger LOG = System.getLogger(JDBCInfo.class.getName());
 
     /**
      * Constructor which initializes all fields.
@@ -229,11 +229,9 @@ class JDBCInfo {
     // specifies an invalid override, we should log a warning, warn the user,
     // and use the other.<val>.
     void complete(JDBCInfo other) {
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("Entering JDBCInfo.complete: " // NOI18N
-                          + "\nthis: " + this // NOI18N
-                          + "\nother: " + other); // NOI18N
-        }
+        LOG.log(DEBUG, () -> "Entering JDBCInfo.complete: "
+                          + "\nthis: " + this
+                          + "\nother: " + other);
         if (MASK_ALL != fieldsWithValues) {
             if ((fieldsWithValues & MASK_JDBC_TYPE) == 0) {
                 this.jdbcType = other.jdbcType;
@@ -259,11 +257,9 @@ class JDBCInfo {
 
             fieldsWithValues = MASK_ALL;
         }
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("Leaving JDBCInfo.complete: " // NOI18N
-                          + "\nthis: " + this); // NOI18N
-        }
+        LOG.log(DEBUG, () -> "Leaving JDBCInfo.complete.\nthis: " + this);
     }
+
 
     /**
      * @return <code>true</code> if this instance has been assigned values
@@ -333,14 +329,15 @@ class JDBCInfo {
      * Debugging support.
      * @return A String with the value of each field.
      */
+    @Override
     public String toString() {
-        return "JDBCInfo:" // NOI18N
-            + " jdbcType=" + jdbcType // NOI18N
-            + " nullable=" + nullable // NOI18N
-            + " precision=" + precision // NOI18N
-            + " scale=" + scale // NOI18N
-            + " length=" + length // NOI18N
-            + " fieldsWithValues=0x" + Integer.toHexString(fieldsWithValues); // NOI18N
+        return "JDBCInfo:"
+            + " jdbcType=" + jdbcType
+            + " nullable=" + nullable
+            + " precision=" + precision
+            + " scale=" + scale
+            + " length=" + length
+            + " fieldsWithValues=0x" + Integer.toHexString(fieldsWithValues);
     }
 
     /**

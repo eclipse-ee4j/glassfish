@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,20 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SCOCollection.java
- *
- * created April 3, 2000
- *
- * @author Marina Vatkina
- * @version 1.0
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore;
 import java.util.Collection;
 
-public interface SCOCollection extends java.util.Collection, SCO
-{
+/*
+ * @author Marina Vatkina 2000
+ */
+public interface SCOCollection extends java.util.Collection, SCO {
+
     /**
      * Resets removed and added lists after flush
      */

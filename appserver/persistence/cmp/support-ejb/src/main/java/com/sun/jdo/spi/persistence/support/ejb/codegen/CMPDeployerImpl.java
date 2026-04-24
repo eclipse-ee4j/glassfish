@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,12 +22,12 @@ import com.sun.enterprise.deployment.Application;
 import com.sun.jdo.spi.persistence.support.ejb.ejbc.CMPProcessor;
 import com.sun.jdo.spi.persistence.support.ejb.ejbc.JDOCodeGenerator;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.File;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,6 +51,9 @@ import org.glassfish.persistence.common.I18NHelper;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
+
 /**
  * Generates concrete impls for CMP beans in an archive.
  *
@@ -59,7 +63,12 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class CMPDeployerImpl implements CMPDeployer {
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME) @Optional
+    private static final Logger LOG = System.getLogger(CMPDeployerImpl.class.getName());
+    private static final ResourceBundle messages = I18NHelper.loadBundle(CMPDeployerImpl.class);
+
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Optional
     private JavaConfig javaConfig;
 
     /**
@@ -67,6 +76,7 @@ public class CMPDeployerImpl implements CMPDeployer {
      *
      * @throws DeploymentException if this exception was thrown while generating concrete impls
      */
+    @Override
     public void deploy(DeploymentContext ctx) throws DeploymentException {
 
         // deployment descriptor object representation for the archive
@@ -78,21 +88,16 @@ public class CMPDeployerImpl implements CMPDeployer {
         // ejb name
         String beanName = null;
 
-        // GeneratorException message if any
-        StringBuffer generatorExceptionMsg = null;
-
+        final CmpGeneratorException cause = new CmpGeneratorException();
         try {
             CMPGenerator gen = new JDOCodeGenerator();
 
             // stubs dir for the current deployment (generated/ejb)
-            File stubsDir = ctx.getScratchDir("ejb"); //NOI18N
+            File stubsDir = ctx.getScratchDir("ejb");
 
             application = ctx.getModuleMetaData(Application.class);
 
-            if (_logger.isLoggable(Logger.FINE)) {
-                _logger.fine( "cmpc.processing_cmp",  //NOI18N
-                        application.getRegistrationName());
-            }
+            LOG.log(DEBUG, "Start of CMP section for [{0}]", application.getRegistrationName());
 
             List<File> cmpFiles = new ArrayList<File>();
             final ClassLoader jcl = application.getClassLoader();
@@ -102,44 +107,38 @@ public class CMPDeployerImpl implements CMPDeployer {
             // This gives the dir where application is exploded
             String archiveUri = ctx.getSource().getURI().getSchemeSpecificPart();
 
-            if (_logger.isLoggable(Logger.FINE)) {
-                _logger.fine("[CMPC] Module Dir name is " //NOI18N
-                        + archiveUri);
+            {
+                LOG.log(DEBUG, () -> "[CMPC] Module Dir name is " + archiveUri);
             }
 
             // xml dir for the current deployment (generated/xml)
             String generatedXmlsPath = ctx.getScratchDir("xml").getCanonicalPath();
 
-            if (_logger.isLoggable(Logger.FINE)) {
-                _logger.fine("[CMPC] Generated XML Dir name is " //NOI18N
-                        + generatedXmlsPath);
+            {
+                LOG.log(DEBUG, () -> "[CMPC] Generated XML Dir name is " + generatedXmlsPath);
             }
 
             try {
                 long start = System.currentTimeMillis();
                 gen.init(bundle, ctx, archiveUri, generatedXmlsPath);
 
-                Iterator ejbs=bundle.getEjbs().iterator();
+                Iterator<EjbDescriptor> ejbs=bundle.getEjbs().iterator();
                 while ( ejbs.hasNext() ) {
 
-                    EjbDescriptor desc = (EjbDescriptor) ejbs.next();
+                    EjbDescriptor desc = ejbs.next();
                     beanName = desc.getName();
 
-                    if (_logger.isLoggable(Logger.FINE)) {
-                        _logger.fine("[CMPC] Ejb Class Name: " //NOI18N
-                                           + desc.getEjbClassName());
+                    {
+                        LOG.log(DEBUG, () -> "[CMPC] Ejb Class Name: " + desc.getEjbClassName());
                     }
 
-                    if ( desc instanceof IASEjbCMPEntityDescriptor) {
+                    if (desc instanceof IASEjbCMPEntityDescriptor) {
 
                         // generate concrete CMP class implementation
-                        IASEjbCMPEntityDescriptor entd =
-                                (IASEjbCMPEntityDescriptor)desc;
+                        IASEjbCMPEntityDescriptor entd = (IASEjbCMPEntityDescriptor) desc;
 
-                        if (_logger.isLoggable(Logger.FINE)) {
-                            _logger.fine(
-                                    "[CMPC] Home Object Impl name  is " //NOI18N
-                                    + entd.getLocalHomeImplClassName());
+                        {
+                            LOG.log(DEBUG, () -> "[CMPC] Home Object Impl name  is " + entd.getLocalHomeImplClassName());
                         }
 
                         // The classloader needs to be set else we fail down the road.
@@ -149,105 +148,77 @@ public class CMPDeployerImpl implements CMPDeployer {
                         try {
                             gen.generate(entd, stubsDir, stubsDir);
                         } catch (GeneratorException e) {
-                            String msg = e.getMessage();
-                            _logger.warning(msg);
-                            generatorExceptionMsg = addGeneratorExceptionMessage(
-                                    msg, generatorExceptionMsg);
+                            cause.addSuppressed(e);
                         }  finally {
                             entd.setClassLoader(ocl);
                         }
-
-                    /* WARNING: IASRI 4683195
-                     * JDO Code failed when there was a relationship involved
-                     * because it depends upon the orginal ejbclasname and hence
-                     * this code is shifted to just before the Remote Impl is
-                     * generated.Remote/Home Impl generation depends upon this
-                     * value
-                     */
-
                     }
 
                 } // end while ejbs.hasNext()
                 beanName = null;
-
                 cmpFiles.addAll(gen.cleanup());
-
                 long end = System.currentTimeMillis();
-                _logger.fine("CMP Generation: " + (end - start) + " msec");
+                LOG.log(DEBUG, () -> "CMP Generation: " + (end - start) + " ms");
 
             } catch (GeneratorException e) {
-                String msg = e.getMessage();
-                _logger.warning(msg);
-                generatorExceptionMsg = addGeneratorExceptionMessage(msg,
-                        generatorExceptionMsg);
+                cause.addSuppressed(e);
             }
 
             bundle = null; // Used in exception processing
 
             // Compile the generated classes
-            if (generatorExceptionMsg == null) {
+            if (!cause.hasErrors()) {
 
                 long start = System.currentTimeMillis();
                 compileClasses(ctx, cmpFiles, stubsDir);
-                long end = System.currentTimeMillis();
 
-                _logger.fine("Java Compilation: " + (end - start) + " msec");
+                LOG.log(DEBUG, () -> "Java Compilation: " + (System.currentTimeMillis() - start) + " ms");
 
                  // Do Java2DB if needed
-                start = System.currentTimeMillis();
+                long start2 = System.currentTimeMillis();
 
                 CMPProcessor processor = new CMPProcessor(ctx);
                 processor.process();
 
-                end = System.currentTimeMillis();
-                _logger.fine("Java2DB processing: " + (end - start) + " msec");
-                _logger.fine( "cmpc.done_processing_cmp",
-                        application.getRegistrationName());
+                long end = System.currentTimeMillis();
+                LOG.log(DEBUG, () -> "Java2DB processing: " + (end - start2) + " ms");
+                LOG.log(DEBUG, "JDO83006: End of CMP section for [{0}]", application.getRegistrationName());
             }
 
         } catch (GeneratorException e) {
-            _logger.warning(e.getMessage());
             throw new DeploymentException(e);
-
         } catch (Throwable e) {
+            cause.addSuppressed(e);
             String eType = e.getClass().getName();
             String appName = application.getRegistrationName();
             String exMsg = e.getMessage();
 
-            String msg = null;
+            final String msg;
             if (bundle == null) {
                 // Application or compilation error
-                msg = I18NHelper.getMessage(messages,
-                    "cmpc.cmp_app_error", eType, appName, exMsg);
+                msg = I18NHelper.getMessage(messages, "cmpc.cmp_app_error", eType, appName, exMsg);
             } else {
                 String bundleName = bundle.getModuleDescriptor().getArchiveUri();
                 if (beanName == null) {
                     // Module processing error
-                    msg = I18NHelper.getMessage(messages,
-                        "cmpc.cmp_module_error",
-                        new Object[] {eType, appName, bundleName, exMsg});
+                    msg = I18NHelper.getMessage(messages, "cmpc.cmp_module_error", eType, appName, bundleName, exMsg);
                 } else {
                     // CMP bean generation error
-                    msg = I18NHelper.getMessage(messages,
-                        "cmpc.cmp_bean_error",
-                        new Object[] {eType, beanName, appName, bundleName, exMsg});
+                    msg = I18NHelper.getMessage(messages, "cmpc.cmp_bean_error", eType, beanName, appName, bundleName, exMsg);
                 }
             }
-
-            _logger.log(Logger.SEVERE, msg, e);
-
-            throw new DeploymentException(msg);
+            throw new DeploymentException(msg, cause.fillInStackTrace());
         }
 
-        if (generatorExceptionMsg != null) {
-            // We already logged each separate part.
-            throw new DeploymentException(generatorExceptionMsg.toString());
+        if (cause.hasErrors()) {
+            throw new DeploymentException("Deployment failed.\n" + cause.getMessage(), cause.fillInStackTrace());
         }
     }
 
     /**
      * Integration point for cleanup on undeploy or failed deploy.
      */
+    @Override
     public void clean(DeploymentContext ctx) {
         CMPProcessor processor = new CMPProcessor(ctx);
         processor.clean();
@@ -256,11 +227,12 @@ public class CMPDeployerImpl implements CMPDeployer {
     /**
      * Integration point for application unload
      */
+    @Override
     public void unload(ClassLoader cl) {
         try {
             EJBHelper.notifyApplicationUnloaded(cl);
         } catch (Exception e) {
-            _logger.log(Logger.WARNING, "cmpc.cmp_cleanup_problems", e);
+            LOG.log(WARNING, "CMP cleanup failed.", e);
         }
     }
 
@@ -287,27 +259,26 @@ public class CMPDeployerImpl implements CMPDeployer {
             options.addAll(javaConfig.getJavacOptionsAsList());
         }
 
-        StringBuffer msgBuffer = new StringBuffer();
+        StringBuilder msgBuffer = new StringBuilder();
         boolean compilationResult = false;
         try {
             // add the rest of the javac options
             options.add("-d");
             options.add(destDir.toString());
             options.add("-classpath");
-            options.add(System.getProperty("java.class.path") //TODO do we need to add java.class.path for compilation?
-                         + File.pathSeparator + classPath);
+            // TODO do we need to add java.class.path for compilation?
+            options.add(System.getProperty("java.class.path") + File.pathSeparator + classPath);
 
-            if (_logger.isLoggable(Logger.FINE)) {
+            {
                 for(File file : files) {
-                    _logger.fine(I18NHelper.getMessage(messages,
-                                    "cmpc.compile", file.getPath()));
+                    LOG.log(DEBUG, () -> I18NHelper.getMessage(messages, "cmpc.compile", file));
                 }
 
-                StringBuffer sbuf = new StringBuffer();
-                for ( String s : options) {
+                StringBuilder sbuf = new StringBuilder();
+                for (String s : options) {
                     sbuf.append("\n\t").append(s);
                 }
-                _logger.fine("[CMPC] JAVAC OPTIONS: " + sbuf.toString());
+                LOG.log(DEBUG, () -> "[CMPC] JAVAC OPTIONS: " + sbuf.toString());
             }
 
             // Using Java 6 compiler API to compile the generated .java files
@@ -316,23 +287,21 @@ public class CMPDeployerImpl implements CMPDeployer {
                    new DiagnosticCollector<JavaFileObject>();
             StandardJavaFileManager manager =
                     compiler.getStandardFileManager(diagnostics, null, null);
-            Iterable compilationUnits = manager.getJavaFileObjectsFromFiles(files);
+            Iterable<? extends JavaFileObject> compilationUnits = manager.getJavaFileObjectsFromFiles(files);
 
             long start = System.currentTimeMillis();
-            long end = start;
 
             compilationResult = compiler.getTask(
                     null, manager, diagnostics, options, null, compilationUnits).call();
 
-            end = System.currentTimeMillis();
-            _logger.fine("JAVA compile time (" + files.size()
-                    + " files) = " + (end - start));
+            long end = System.currentTimeMillis();
+            LOG.log(DEBUG, () -> "JAVA compile time (" + files.size() + " files) = " + (end - start));
 
             // Save compilation erros in msgBuffer to be used in case of failure
             for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
                 //Ignore NOTE about generated non safe code
                 if (diagnostic.getKind().equals(Diagnostic.Kind.NOTE)) {
-                    if (_logger.isLoggable(Logger.FINE)) {
+                    {
                         msgBuffer.append("\n").append(diagnostic.getMessage(null));
                     }
                     continue;
@@ -343,10 +312,9 @@ public class CMPDeployerImpl implements CMPDeployer {
             manager.close();
 
         } catch(Exception jce) {
-            _logger.fine("cmpc.cmp_complilation_exception", jce);
-            String msg = I18NHelper.getMessage(messages,
-                    "cmpc.cmp_complilation_exception",
-                    new Object[] {jce.getMessage()} );
+            LOG.log(DEBUG, () -> "cmpc.cmp_complilation_exception", jce);
+            String msg = I18NHelper.getMessage(messages, "cmpc.cmp_complilation_exception",
+                new Object[] {jce.getMessage()});
             GeneratorException ge = new GeneratorException(msg);
             ge.initCause(jce);
             throw ge;
@@ -354,32 +322,23 @@ public class CMPDeployerImpl implements CMPDeployer {
 
         if (!compilationResult) {
             // Log but throw an exception with a shorter message
-            _logger.warning(I18NHelper.getMessage(messages,
-                    "cmpc.cmp_complilation_problems", msgBuffer.toString()));
-            throw new GeneratorException(I18NHelper.getMessage(
-                    messages, "cmpc.cmp_complilation_failed"));
+            LOG.log(WARNING,
+                () -> I18NHelper.getMessage(messages, "cmpc.cmp_complilation_problems", msgBuffer.toString()));
+            throw new GeneratorException(I18NHelper.getMessage(messages, "cmpc.cmp_complilation_failed"));
         }
 
     }
 
-    /** Adds GeneratorException message to the buffer.
-     *
-     * @param    msg     the message text to add to the buffer.
-     * @param    buf    the buffer to use.
-     * @return    the new or updated buffer.
-     */
-    private StringBuffer addGeneratorExceptionMessage(String msg, StringBuffer buf) {
-        StringBuffer rc = buf;
-        if (rc == null)
-            rc = new StringBuffer(msg);
-        else
-            rc.append('\n').append(msg);
 
-        return rc;
+    public static class CmpGeneratorException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * @return true if there was at least one exception added using {@link #addSuppressed(Throwable)}
+         */
+        public boolean hasErrors() {
+            return getSuppressed().length != 0;
+        }
     }
-
-    // ---- VARIABLE(S) - PRIVATE --------------------------------------
-    private static final Logger _logger  = LogHelperCmpCompiler.getLogger();
-    private static final ResourceBundle messages = I18NHelper.loadBundle(CMPDeployerImpl.class);
-
 }

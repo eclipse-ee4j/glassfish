@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,16 +15,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SQLStoreManager.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
-// use internal version: import com.sun.jdo.api.persistence.support.Transaction;
 import com.sun.jdo.api.persistence.support.JDODataStoreException;
 import com.sun.jdo.api.persistence.support.JDOException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
@@ -38,22 +31,27 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.DBStatement;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectQueryPlan;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectStatement;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.Statement;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateStatement;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * <P>This class connects to a persistent store. It supports
@@ -69,19 +67,13 @@ public class SQLStoreManager implements PersistenceStore {
     /** Encapsulates database type. */
     private DBVendorType vendorType;
 
-    /** The logger. */
-    private static Logger logger = LogHelperSQLStore.getLogger();
-
-    /** The sql logger. */
-    private static Logger sqlLogger = LogHelperSQLStore.getSqlLogger();
-
     /** I18N message handler. */
-    private final static ResourceBundle messages = I18NHelper.loadBundle(
-            SQLStoreManager.class);
+    private final static ResourceBundle messages = I18NHelper.loadBundle(SQLStoreManager.class);
+    private static final Logger LOG = System.getLogger(SQLStoreManager.class.getName(), RESOURCE_BUNDLE);
 
     /** Fetch size for query statements. */
     private static int fetchSize =
-      Integer.getInteger("com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager.fetchSize", // NOI18N
+      Integer.getInteger("com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager.fetchSize",
                             -1).intValue(); // -1 not set
 
     /**
@@ -91,17 +83,16 @@ public class SQLStoreManager implements PersistenceStore {
      * a new instance is created, initialized and put into the cache.
      * The access to the model cache is synchronized.
      */
+    @Override
     public PersistenceConfig getPersistenceConfig(Class classType) {
-        if (logger.isLoggable(Logger.FINER)) {
-            logger.finer("sqlstore.sqlstoremanager.getpersistenceconfig",
-                    classType.getName()); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstoremanager.getpersistenceconfig", classType.getName());
         return configCache.getPersistenceConfig(classType);
     }
 
     /**
      * @inheritDoc
      */
+    @Override
     public ConfigCache getConfigCache() {
         return configCache;
     }
@@ -114,6 +105,7 @@ public class SQLStoreManager implements PersistenceStore {
      *         Will be thrown in case of errors or if the affected rows are
      *         less than the minimum rows required.
      */
+    @Override
     public void execute(PersistenceManager pm, Collection actions) {
         Iterator iter = actions.iterator();
 
@@ -135,9 +127,9 @@ public class SQLStoreManager implements PersistenceStore {
                 }
             } else {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                                                    "core.generic.notinstanceof", // NOI18N
+                                                    "core.generic.notinstanceof",
                                                     action.getClass().getName(),
-                                                    "UpdateObjectDescImpl")); // NOI18N
+                                                    "UpdateObjectDescImpl"));
             }
         }
     }
@@ -176,17 +168,11 @@ public class SQLStoreManager implements PersistenceStore {
                                UpdateStatement updateStatement,
                                UpdateObjectDescImpl updateDesc) {
         int affectedRows = 0;
-        boolean debug = logger.isLoggable();
-
-        if (debug) {
-            logger.fine("sqlstore.sqlstoremanager.executeupdate"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdate");
 
         String sqlText = updateStatement.getText();
         if (sqlText.length() > 0) {
-            if (sqlLogger.isLoggable()) {
-                sqlLogger.fine(updateStatement.getFormattedSQLText());
-            }
+            LOG.log(DEBUG, updateStatement.getFormattedSQLText());
 
             Transaction tran = (Transaction) pm.currentTransaction();
             Connection conn = tran.getConnection();
@@ -227,15 +213,13 @@ public class SQLStoreManager implements PersistenceStore {
             }
         }
 
-        if (debug) {
-            logger.fine("sqlstore.sqlstoremanager.executeupdate.exit", // NOI18N
-                    new Integer(affectedRows));
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdate.exit", affectedRows);
     }
 
     /**
      *
      */
+    @Override
     public Class getClassByOidClass(Class oidType) {
         return configCache.getClassByOidClass(oidType);
     }
@@ -243,6 +227,7 @@ public class SQLStoreManager implements PersistenceStore {
     /**
      *
      */
+    @Override
     public StateManager getStateManager(Class classType) {
         ClassDesc c = (ClassDesc) getPersistenceConfig(classType);
 
@@ -259,6 +244,7 @@ public class SQLStoreManager implements PersistenceStore {
      * @param classType Type of the persistence capable class to be queried.
      * @return A new retrieve descriptor for anexternal (user) query.
      */
+    @Override
     public RetrieveDesc getRetrieveDesc(Class classType) {
         return new RetrieveDescImpl(classType, (ClassDesc) getPersistenceConfig(classType));
     }
@@ -272,6 +258,7 @@ public class SQLStoreManager implements PersistenceStore {
      * @param classType Persistence capable class including <code>fieldName</code>.
      * @return A new retrieve descriptor for anexternal (user) query.
      */
+    @Override
     public RetrieveDesc getRetrieveDesc(String fieldName, Class classType) {
         ClassDesc c = (ClassDesc) getPersistenceConfig(classType);
 
@@ -289,6 +276,7 @@ public class SQLStoreManager implements PersistenceStore {
 
     /**
      */
+    @Override
     public UpdateObjectDesc getUpdateObjectDesc(Class classType) {
           return new UpdateObjectDescImpl(classType);
     }
@@ -317,18 +305,14 @@ public class SQLStoreManager implements PersistenceStore {
         try {
             vendorType = new DBVendorType(databaseMetaData, identifier);
 
-            if (logger.isLoggable()) {
-                logger.fine("sqlstore.sqlstoremanager.vendortype",vendorType.getName()); // NOI18N
-
-            }
+            LOG.log(DEBUG, "sqlstore.sqlstoremanager.vendortype",vendorType.getName());
 
         } catch (Exception e) {
             if (e instanceof JDOException) {
                 throw (JDOException) e;
-            } else {
-                throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.configuration.getvendortypefailed"), e); // NOI18N
             }
+            throw new JDOFatalInternalException(
+                I18NHelper.getMessage(messages, "core.configuration.getvendortypefailed"), e);
         }
     }
 
@@ -347,25 +331,26 @@ public class SQLStoreManager implements PersistenceStore {
      * @param parameters
      *     Query parameters.
      */
+    @Override
     public Object retrieve(PersistenceManager pm, RetrieveDesc action, ValueFetcher parameters) {
 
         if (action == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.generic.nullparam", "action")); // NOI18N
+                    "core.generic.nullparam", "action"));
         }
 
         if (!(action instanceof RetrieveDescImpl)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.generic.notinstanceof", // NOI18N
+                    "core.generic.notinstanceof",
                     action.getClass().getName(),
-                    "RetrieveDescImpl")); // NOI18N
+                    "RetrieveDescImpl"));
         }
 
         RetrieveDescImpl retrieveAction = ((RetrieveDescImpl) action);
         ClassDesc config = retrieveAction.getConfig();
         Concurrency concurrency = config.getConcurrency(pm.isOptimisticTransaction());
         SelectQueryPlan plan = retrieveAction.buildQueryPlan(this, concurrency);
-        ArrayList statements = plan.getStatements();
+        List<Statement> statements = plan.getStatements();
         Object result = null;
 
         SelectStatement s = (SelectStatement) statements.get(0);
@@ -416,16 +401,11 @@ public class SQLStoreManager implements PersistenceStore {
                                 ValueFetcher parameters) {
 
         Object result = null;
-        boolean debug = logger.isLoggable();
-        if (debug) {
-            logger.fine("sqlstore.sqlstoremanager.executeQuery");  // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeQuery");
 
         String sqlText = statement.getText();
         if (sqlText.length() > 0) {
-            if (sqlLogger.isLoggable()) {
-                sqlLogger.fine(statement.getFormattedSQLText(parameters));
-            }
+            LOG.log(DEBUG, statement.getFormattedSQLText(parameters));
 
             Transaction tran = null;
             if (concurrency != null) {
@@ -480,9 +460,7 @@ public class SQLStoreManager implements PersistenceStore {
             }
         }
 
-        if (debug) {
-            logger.fine("sqlstore.sqlstoremanager.executeQuery.exit"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeQuery.exit");
 
         return result;
     }
@@ -498,6 +476,7 @@ public class SQLStoreManager implements PersistenceStore {
      * @param request the request corresponding with the current state manager
      * @param forceFlush all in the update query plan must be executed
      */
+    @Override
     public void executeBatch(PersistenceManager pm,
                              UpdateObjectDesc request,
                              boolean forceFlush)
@@ -509,9 +488,9 @@ public class SQLStoreManager implements PersistenceStore {
             objectRequest = (UpdateObjectDescImpl) request;
         } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                "core.generic.notinstanceof", // NOI18N
+                "core.generic.notinstanceof",
                 request.getClass().getName(),
-                "UpdateObjectDescImpl")); // NOI18N
+                "UpdateObjectDescImpl"));
         }
 
         ClassDesc config = objectRequest.getConfig();
@@ -542,8 +521,9 @@ public class SQLStoreManager implements PersistenceStore {
             // keep the DBStatement.
             cleanup = forceFlush;
         } finally {
-            if (cleanup)
+            if (cleanup) {
                 closeDBStatements(plan, tran);
+            }
             closeConnection(tran, conn);
         }
     }
@@ -564,20 +544,16 @@ public class SQLStoreManager implements PersistenceStore {
                                     boolean doFlush)
     {
         int[] affectedRows = null;
-        boolean debug = logger.isLoggable();
-
-        if (debug) {
-            logger.fine("sqlstore.sqlstoremanager.executeupdatebatch"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdatebatch");
 
         String sqlText = updateStatement.getText();
         if (sqlText.length() > 0) {
-            if (sqlLogger.isLoggable()) {
+            if (LOG.isLoggable(DEBUG)) {
                 String formattedText = updateStatement.getFormattedSQLText(updateDesc);
                 if (doFlush) {
-                    sqlLogger.fine("sqlstore.sqlstoremanager.executeupdatebatch.flushbatch", formattedText);
+                    LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdatebatch.flushbatch", formattedText);
                 } else {
-                    sqlLogger.fine("sqlstore.sqlstoremanager.executeupdatebatch.addbatch", formattedText);
+                    LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdatebatch.addbatch", formattedText);
                 }
             }
 
@@ -611,13 +587,11 @@ public class SQLStoreManager implements PersistenceStore {
             }
         }
 
-        if (debug) {
-            if (doFlush) {
-                logger.fine("sqlstore.sqlstoremanager.executeupdatebatch.exit.flush", '[' + // NOI18N
-                        StringHelper.intArrayToSeparatedList(affectedRows, ",") + ']'); //NOI18N
-            } else {
-                logger.fine("sqlstore.sqlstoremanager.executeupdatebatch.exit"); //NOI18N
-            }
+        if (doFlush) {
+            LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdatebatch.exit.flush",
+                '[' + StringHelper.intArrayToSeparatedList(affectedRows, ",") + ']');
+        } else {
+            LOG.log(DEBUG, "sqlstore.sqlstoremanager.executeupdatebatch.exit");
         }
     }
 
@@ -636,7 +610,7 @@ public class SQLStoreManager implements PersistenceStore {
     static private void throwJDOSqlException(SQLException e, String sqlText) {
 
         String exceptionMessage = I18NHelper.getMessage(messages,
-            "core.persistencestore.jdbcerror", sqlText); // NOI18N
+            "core.persistencestore.jdbcerror", sqlText);
 
         throw new JDODataStoreException(exceptionMessage, e);
     }
@@ -648,10 +622,10 @@ public class SQLStoreManager implements PersistenceStore {
      * @param sqlText Executed SQL statement.
      */
     static private void throwJDOConcurrentAccessException(String sqlText) {
-        String operation = sqlText.substring(0, sqlText.indexOf(' ')); // NOI18N
+        String operation = sqlText.substring(0, sqlText.indexOf(' '));
 
         throw new JDODataStoreException(I18NHelper.getMessage(messages,
-                      "core.store.concurrentaccess", operation)); // NOI18N
+                      "core.store.concurrentaccess", operation));
     }
 
     /**
@@ -664,8 +638,8 @@ public class SQLStoreManager implements PersistenceStore {
                 r.close();
             } catch (SQLException ex) {
                 // only log exception
-                logger.finest(I18NHelper.getMessage(messages,
-                        "sqlstore.sqlstoremanager.errorcloseresultset", // NOI18N
+                LOG.log(TRACE, I18NHelper.getMessage(messages,
+                        "sqlstore.sqlstoremanager.errorcloseresultset",
                         ex.getLocalizedMessage()));
             }
         }
@@ -681,8 +655,8 @@ public class SQLStoreManager implements PersistenceStore {
                 s.close();
             } catch (SQLException ex) {
                 // only log exception
-                logger.finest(I18NHelper.getMessage(messages,
-                        "sqlstore.sqlstoremanager.errorclosestatement", // NOI18N
+                LOG.log(TRACE, I18NHelper.getMessage(messages,
+                        "sqlstore.sqlstoremanager.errorclosestatement",
                         ex.getLocalizedMessage()));
             }
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,26 +15,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingClassElement.java
- *
- * Created on March 3, 2000, 1:11 PM
- */
-
 package com.sun.jdo.api.persistence.model.mapping;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.netbeans.modules.dbschema.SchemaElement;
 import org.netbeans.modules.dbschema.TableElement;
 
 /**
- *
- * @author raccah
- * @version %I%
+ * @author raccah 2000
  */
 public interface MappingClassElement extends MappingElement
 {
@@ -183,14 +175,14 @@ public interface MappingClassElement extends MappingElement
      * class.
      * @return the meta data tables for this mapping class
      */
-    public ArrayList getTables ();
+    public List<MappingTableElement> getTables();
 
     /** Scans through this mapping class looking for a table whose
      * name matches the name passed in.
      * @param name name of the table to find.
      * @return the meta data table whose name matches the name parameter
      */
-    public MappingTableElement getTable (String name);
+    public MappingTableElement getTable(String name);
 
     /** Convenience method which accepts a table element and attempts to add
      * it as either a primary or secondary table depending on the existing list
@@ -232,7 +224,7 @@ public interface MappingClassElement extends MappingElement
      * class.  This list includes both local and relationship fields.
      * @return the mapping fields in this mapping class
      */
-    public ArrayList getFields ();
+    public List<MappingFieldElement> getFields ();
 
     /** Scans through this mapping class looking for a field whose
      * name matches the name passed in.
@@ -258,7 +250,7 @@ public interface MappingClassElement extends MappingElement
      * level is {@link #VERSION_CONSISTENCY}.
      * @return the version fields in this mapping class
      */
-    public List getVersionFields ();
+    public List<MappingFieldElement> getVersionFields ();
 
     /** Gets the navigable flag for this mapping class.
      * @return <code>true</code> if lazy initialization will be used,

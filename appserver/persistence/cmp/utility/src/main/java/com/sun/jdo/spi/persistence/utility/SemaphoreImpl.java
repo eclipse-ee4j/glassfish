@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-
+import java.lang.System.Logger;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 
 /** Implements a simple semaphore.
@@ -31,9 +33,8 @@ import org.glassfish.persistence.common.I18NHelper;
 // db13166: I would rather we use Doug Lea's stuff, but don't want to
 // introduce that magnitude of change at this point in time.
 public class SemaphoreImpl implements Semaphore {
-    /** Where to log messages about locking operations
-     */
-    private static final Logger _logger = LogHelperUtility.getLogger();
+
+    private static final Logger LOG = System.getLogger(SemaphoreImpl.class.getName());
 
     /** For logging, indicates on whose behalf locking is done.
      */
@@ -64,13 +65,10 @@ public class SemaphoreImpl implements Semaphore {
 
     /** Acquire a lock.
      */
+    @Override
     public void acquire() {
-        boolean debug = _logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            Object[] items = new Object[] {_owner, Thread.currentThread(),new Integer(_counter)};
-            _logger.finest("utility.semaphoreimpl.acquire",items); // NOI18N
-        }
+        LOG.log(DEBUG, "SemaphoreImpl.acquire() for {0}, thread = {1} with _lockCounter = {2}.", _owner,
+            Thread.currentThread(), _counter);
 
         synchronized (_lock) {
             //
@@ -91,23 +89,18 @@ public class SemaphoreImpl implements Semaphore {
                 _holder = Thread.currentThread();
                 _counter++;
 
-                if (debug) {
-                    Object[] items = new Object[] {_owner, Thread.currentThread(),new Integer(_counter)};
-                    _logger.finest("utility.semaphoreimpl.gotlock",items); // NOI18N
-                }
+                LOG.log(DEBUG, "SemaphoreImpl.acquire() for {0}, got for thread = {1} with _lockCounter = {2}.", _owner,
+                    Thread.currentThread(), _counter);
             }
         }
     }
 
     /** Release a lock.
      */
+    @Override
     public void release() {
-        boolean debug = _logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            Object[] items = new Object[] {_owner, Thread.currentThread(),new Integer(_counter)};
-            _logger.finest("utility.semaphoreimpl.release",items); // NOI18N
-        }
+        LOG.log(DEBUG, "SemaphoreImpl.release() for {0}, thread = {1} with _lockCounter = {2}.", _owner,
+            Thread.currentThread(), _counter);
 
         synchronized (_lock) {
             //
@@ -120,10 +113,8 @@ public class SemaphoreImpl implements Semaphore {
                     _lock.notify();
                 }
             } else {
-                throw new IllegalMonitorStateException(
-                  I18NHelper.getMessage(messages,
-                                        "utility.semaphoreimpl.wrongthread", // NOI18N
-                                        new Object[] {_owner, Thread.currentThread()}));
+                throw new IllegalMonitorStateException("SemaphoreImpl.release() wrong thread for " + _owner
+                    + ", thread = " + Thread.currentThread() + ".");
             }
         }
     }

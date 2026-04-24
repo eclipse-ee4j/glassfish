@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldDesc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements the select plan for Exist-Subqueries.
@@ -46,9 +48,10 @@ public class CorrelatedExistSelectPlan extends CorrelatedSelectPlan {
      * This method just adds the table for the nested select.
      * The statement for nested select is created as a side effect.
      */
+    @Override
     protected void processFields() {
         for (int i = 0; i < parentField.foreignFields.size(); i++) {
-            LocalFieldDesc field = (LocalFieldDesc) parentField.foreignFields.get(i);
+            LocalFieldDesc field = parentField.foreignFields.get(i);
             addTable(field);
         }
     }
@@ -57,9 +60,9 @@ public class CorrelatedExistSelectPlan extends CorrelatedSelectPlan {
      * The correlated constraint joining this subquery with the parent field.
      * The joined table is added as a side-effect.
      */
+    @Override
     protected void doCorrelatedJoin() {
-        ArrayList foreignFields = null;
-
+        List<LocalFieldDesc> foreignFields;
         if (parentField.useJoinTable()) {
             foreignFields = parentField.assocLocalFields;
             // The join table is included in #processJoinTable
@@ -71,7 +74,7 @@ public class CorrelatedExistSelectPlan extends CorrelatedSelectPlan {
         // Add the constraint linking the parent query with the subquery.
         for (int i = 0; i < localFields.size(); i++) {
             LocalFieldDesc la = (LocalFieldDesc) localFields.get(i);
-            LocalFieldDesc fa = (LocalFieldDesc) foreignFields.get(i);
+            LocalFieldDesc fa = foreignFields.get(i);
 
             ConstraintFieldDesc lcfd = new ConstraintFieldDesc(la, parentPlan);
             ConstraintFieldDesc fcfd = new ConstraintFieldDesc(fa, this);
@@ -83,6 +86,7 @@ public class CorrelatedExistSelectPlan extends CorrelatedSelectPlan {
         }
     }
 
+    @Override
     protected Statement newStatement() {
         return new SelectOneStatement(store.getVendorType(), this);
     }

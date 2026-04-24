@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JDOConcreteBean20Generator.java
- *
- * Created on February 24, 2004
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
 import com.sun.jdo.api.persistence.model.Model;
@@ -32,9 +27,9 @@ import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.EJBQLException;
 import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
 import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
@@ -46,12 +41,18 @@ import java.util.Map;
 
 import org.glassfish.persistence.common.I18NHelper;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.WARNING;
+
 /*
  * This is the JDO specific generator for the concrete CMP beans for EJB2.0
  *
  * @author Marina Vatkina
  */
 class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
+
+    private static final Logger LOG = System.getLogger(JDOConcreteBean20Generator.class.getName());
 
     // EJBQLC ejbqlc
     private EJBQLC ejbqlc;
@@ -77,7 +78,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * Signature with CVS keyword substitution for identifying the generated code
      */
     static final String SIGNATURE =
-            "$RCSfile: JDOConcreteBean20Generator.java,v $ $Revision: 1.2 $"; //NOI18N
+            "$RCSfile: JDOConcreteBean20Generator.java,v $ $Revision: 1.2 $";
 
     JDOConcreteBean20Generator(ClassLoader loader,
                              Model model,
@@ -104,6 +105,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * @return a Collection of Exception instances with a separate instance for
      * each failed validation.
      */
+    @Override
     Collection validate(AbstractMethodHelper methodHelper, String beanName) {
         Collection rc = super.validate(methodHelper, beanName);
 
@@ -116,6 +118,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
     /** Add interfaces to the class declarations.
      */
+    @Override
     void addInterfaces() throws IOException {
         super.addInterfaces();
         jdoHelperWriter.addInterface(CMP20TemplateFormatter.helper20Interface_);
@@ -123,12 +126,14 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
     /** Set super class for the helper class.
      */
+    @Override
     void setHelperSuperclass() throws IOException {
         jdoHelperWriter.setSuperclass(CMP20TemplateFormatter.helper20Impl_);
     }
 
     /** Add import statements for for the generated classes.
      */
+    @Override
     void addImportStatements(JavaFileWriter concreteImplFileWriter,
             JavaFileWriter helperFileWriter) throws IOException {
 
@@ -139,6 +144,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
     /** Generate CMP2.0 specific methods.
      */
+    @Override
     void generateTypeSpecificMethods(PersistenceFieldElement[] allFields,
             AbstractMethodHelper methodHelper) throws IOException {
 
@@ -195,8 +201,8 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
                         generateCMRGetSetBodies(fieldInfo, cmrcleanbodyBuf);
 
                     } else {
-                        logger.log(Logger.WARNING, I18NHelper.getMessage(messages,
-                                "CMG.CMRAccessNotAllowed", beanName, fieldInfo.name)); // NOI18N
+                        LOG.log(WARNING, I18NHelper.getMessage(messages,
+                                "CMG.CMRAccessNotAllowed", beanName, fieldInfo.name));
 
                         gbody = CMPROTemplateFormatter.accessNotAllowedTemplate;
                         sbody = CMPROTemplateFormatter.updateNotAllowedTemplate;
@@ -324,15 +330,13 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         String otherPC = model.getRelatedClass(rel);
         boolean manySide = model.isCollection(fieldInfo.type);
 
-        if (logger.isLoggable(Logger.FINE)) {
+        if (LOG.isLoggable(DEBUG)) {
             RelationshipElement otherField = rel.getInverseRelationship(model);
-            String otherFieldName = ((otherField != null) ?
-                    nameMapper.getEjbFieldForPersistenceField(otherPC,
-                            otherField.getName()) :
-                    null);
+            String otherFieldName = otherField != null
+                ? nameMapper.getEjbFieldForPersistenceField(otherPC, otherField.getName())
+                : null;
 
-            logger.fine("manySide: " + manySide); // NOI18N
-            logger.fine("Field: " + otherFieldName); // NOI18N
+            LOG.log(DEBUG, "manySide: " + manySide + ", field: " + otherFieldName);
         }
 
         String otherEJB = nameMapper.getEjbNameForPersistenceClass(otherPC);
@@ -386,8 +390,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
                 // Reset DeleteAction to NONE to suppress it in PM.deletePersistent().
                 rel.setDeleteAction(RelationshipElement.NONE_ACTION);
             } catch (ModelException me) {
-                logger.log(Logger.SEVERE, I18NHelper.getMessage(messages,
-                        "CMG.ModelExceptionOnDeleteAction", me)); //NOI18N
+                LOG.log(ERROR, () -> I18NHelper.getMessage(messages, "CMG.ModelExceptionOnDeleteAction", me));
             }
         }
 
@@ -436,15 +439,14 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * all categorized methods and some other convenience methods for this bean.
      * @return JDOQLElements instance.
      */
+    @Override
     JDOQLElements getJDOQLElements(Method m,
             AbstractMethodHelper methodHelper) throws IOException{
         // Call the EJBQL compiler if there is no known result
         // from validate call.
         JDOQLElements rs  = (JDOQLElements)jdoqlElementsMap.get(m);
         if (rs == null) {
-            if (logger.isLoggable(Logger.FINE)) {
-                logger.fine("JDOQLElements NOT FOUND for: " + m.getName());
-            }
+            LOG.log(DEBUG, () -> "JDOQLElements NOT FOUND for: " + m.getName());
 
             rs = ejbqlc.compile(methodHelper.getQueryString(m), m,
                     methodHelper.getQueryReturnType(m), true, beanName);
@@ -457,24 +459,17 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      */
     private void generateSelectors(AbstractMethodHelper methodHelper) throws IOException{
         List selectors = methodHelper.getSelectors();
-        boolean debug = logger.isLoggable(Logger.FINE);
-        if (debug) {
-            logger.fine("Selectors: " + selectors.size()); // NOI18N
-        }
+        LOG.log(DEBUG, () -> "Selectors: " + selectors.size());
 
         for (int i = 0; i < selectors.size(); i++) {
             Method m = (Method)selectors.get(i);
             String mname = m.getName();
 
-            if (debug) {
-                logger.fine("Selector: " + mname); // NOI18N
-            }
+            LOG.log(DEBUG, () -> "Selector: " + mname);
 
             JDOQLElements rs = (JDOQLElements)jdoqlElementsMap.get(m);
             if (rs == null) {
-                if (debug) {
-                    logger.fine("JDOQLElements NOT FOUND for: " + mname);
-                }
+                LOG.log(DEBUG, () -> "JDOQLElements NOT FOUND for: " + mname);
 
                 // calling EJBQL compiler
                 rs = ejbqlc.compile(methodHelper.getQueryString(m), m,
@@ -497,6 +492,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * parameters to be passed to another method as String.
      * @return method body as String.
      */
+    @Override
     String getEJBCreateMethodBody(String createName,
             String[] exc, String parametersList,
             String parametersListWithSeparator) {
@@ -505,7 +501,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         // to pass the actual name to the formatter - see 'createName' parameter.
         if (!containsException(exc, CMP20TemplateFormatter.CreateException_)) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "EXC_NoCreateException", createName, abstractBean)); // NOI18N
+                    "EXC_NoCreateException", createName, abstractBean));
         }
 
         // For read-only beans it will be the same. For updateable
@@ -538,6 +534,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * parameters to be passed to another method as String.
      * @return method body as String.
      */
+    @Override
     String getEJBPostCreateMethodBody(String postCreateName,
             String parametersList, String parametersListWithSeparator) {
 
@@ -558,6 +555,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
     /** Returns method body for EJBRemove method.
      * @return method body as String.
      */
+    @Override
     String getEJBRemoveMethodBody() {
         // For read-only beans it will throw an exception. For updateable
         // beans it will be generated as required.
@@ -583,6 +581,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * not need formatting but differ between CMP types.
      * CMP20TemplateFormatter.otherPublicMethods_ differ between CMP types.
      */
+    @Override
     void generateKnownMethods(AbstractMethodHelper methodHelper)
                        throws IOException {
 
@@ -617,6 +616,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
     /**
      * Generates helper methods for the helper class.
      */
+    @Override
     void generateHelperClassMethods() throws IOException {
 
         super.generateHelperClassMethods();
@@ -637,6 +637,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * Generates conversion methods from PC to EJBObject and back
      * to the helper class.
      */
+    @Override
     void generateConversions() throws IOException {
 
         super.generateConversions();
@@ -761,7 +762,9 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
         // depending of the kind of returntype a different convertermethodcall
         // is generated
-        if (isSelectorReturningSet(m)) convertToSet = true;
+        if (isSelectorReturningSet(m)) {
+            convertToSet = true;
+        }
 
         int queryReturnType = methodHelper.getQueryReturnType(m);
         if ((queryReturnType == AbstractMethodHelper.NO_RETURN) &&
@@ -947,6 +950,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * @return the codefragment for the checking local/remote parameters
      *         for method if EJB name is known from ejbql.
      */
+    @Override
     String generateFinderSelectorParamCheck(Method m,
             String[] parameterEjbNames) {
         StringBuffer checkBody = new StringBuffer();
@@ -980,6 +984,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * @param finder Methodobject of the finder
      * @return <code>true</code> if the finder returns a Enumeration
      */
+    @Override
     boolean isFinderReturningEnumeration(Method finder) {
         return false;
     }
@@ -1008,6 +1013,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * involved in the codegen.
      * @return The signatures as a string.
      */
+    @Override
     String getSignaturesOfGeneratorClasses()
     {
         StringBuffer signatures = new StringBuffer().

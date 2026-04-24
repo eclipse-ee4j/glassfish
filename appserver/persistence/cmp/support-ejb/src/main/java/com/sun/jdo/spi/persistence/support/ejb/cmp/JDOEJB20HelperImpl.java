@@ -25,16 +25,18 @@ package com.sun.jdo.spi.persistence.support.ejb.cmp;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.CMPHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.JDOEJB20Helper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.ejb.EJBContext;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.EJBLocalObject;
 
+import java.lang.System.Logger;
 import java.util.Collection;
 import java.util.Set;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 
 /*
@@ -45,8 +47,9 @@ import org.glassfish.persistence.common.I18NHelper;
  *
  * @author Marina Vatkina
  */
-abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
-    implements JDOEJB20Helper {
+abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl implements JDOEJB20Helper {
+
+    private static final Logger LOG = System.getLogger(JDOEJB20HelperImpl.class.getName());
 
     /**
      * Converts persistence-capable instance to EJBLocalObject.
@@ -54,16 +57,18 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @param pm the associated instance of PersistenceManager.
      * @return instance of EJBLocalObject.
      */
+    @Override
     public EJBLocalObject convertPCToEJBLocalObject (Object pc, PersistenceManager pm) {
-        if (pc == null) return null;
+        if (pc == null) {
+            return null;
+        }
         Object jdoObjectId = pm.getObjectId(pc);
         Object key = convertObjectIdToPrimaryKey(jdoObjectId);
         try {
             return CMPHelper.getEJBLocalObject(key, getContainer());
         } catch (Exception ex) {
             EJBException e = new EJBException(I18NHelper.getMessage(messages,
-                        "EXC_ConvertPCToEJBLocalObject", key.toString()), ex);// NOI18N
-            logger.throwing("JDOEJB20HelperImpl", "convertPCToEJBLocalObject", e); // NOI18N
+                        "EXC_ConvertPCToEJBLocalObject", key.toString()), ex);
             throw e;
         }
     }
@@ -76,17 +81,19 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @param context the EJBContext of the calling bean.
      * @return instance of EJBLocalObject.
      */
+    @Override
     public EJBLocalObject convertPCToEJBLocalObject (Object pc, PersistenceManager pm,
         EJBContext context) {
-        if (pc == null) return null;
+        if (pc == null) {
+            return null;
+        }
         Object jdoObjectId = pm.getObjectId(pc);
         Object key = convertObjectIdToPrimaryKey(jdoObjectId);
         try {
             return CMPHelper.getEJBLocalObject(key, getContainer(), context);
         } catch (Exception ex) {
             EJBException e = new EJBException(I18NHelper.getMessage(messages,
-                        "EXC_ConvertPCToEJBLocalObjectCtx", key.toString()), ex);// NOI18N
-            logger.throwing("JDOEJB20HelperImpl", "convertPCToEJBLocalObjectCtx", e); // NOI18N
+                        "EXC_ConvertPCToEJBLocalObjectCtx", key.toString()), ex);
             throw e;
         }
     }
@@ -100,14 +107,14 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @throws IllegalArgumentException if validate is true and instance does
      * not exist in the database or is deleted.
      */
+    @Override
     public Object convertEJBLocalObjectToPC(EJBLocalObject o, PersistenceManager pm, boolean validate) {
         Object key = null;
         try {
             key = o.getPrimaryKey();
         } catch (Exception ex) {
             EJBException e = new EJBException(I18NHelper.getMessage(messages,
-                        "EXC_ConvertEJBObjectToPC", o.getClass().getName()), ex);// NOI18N
-            logger.throwing("JDOEJB20HelperImpl", "convertEJBLocalObjectToPC", e); // NOI18N
+                        "EXC_ConvertEJBObjectToPC", o.getClass().getName()), ex);
             throw e;
         }
         return convertPrimaryKeyToPC(key, pm, validate);
@@ -120,16 +127,14 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @param pm the associated instance of PersistenceManager.
      * @return Collection of EJBLocalObjects.
      */
+    @Override
     public Collection convertCollectionPCToEJBLocalObject (Collection pcs, PersistenceManager pm){
         Collection rc = new java.util.ArrayList();
         Object o = null;
 
         for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBLocalObject((Object)it.next(), pm);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB20HelperImpl.convertCollectionPCToEJBLocalObject() adding: " + o);// NOI18N
-            }
+            o = convertPCToEJBLocalObject(it.next(), pm);
+            LOG.log(DEBUG, "convertCollectionPCToEJBLocalObject() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -142,16 +147,14 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @param pm the associated instance of PersistenceManager.
      * @return Set of EJBLocalObjects.
      */
+    @Override
     public Set convertCollectionPCToEJBLocalObjectSet (Collection pcs, PersistenceManager pm) {
         java.util.Set rc = new java.util.HashSet();
         Object o = null;
 
         for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBLocalObject((Object)it.next(), pm);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB20HelperImpl.convertCollectionPCToEJBLocalObjectSet() adding: " + o);// NOI18N
-            }
+            o = convertPCToEJBLocalObject(it.next(), pm);
+            LOG.log(DEBUG, "convertCollectionPCToEJBLocalObjectSet() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -167,6 +170,7 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @throws IllegalArgumentException if validate is true and at least one instance does
      * not exist in the database or is deleted.
      */
+    @Override
     public Collection convertCollectionEJBLocalObjectToPC (Collection coll, PersistenceManager pm,
                                                            boolean validate) {
         Collection rc = new java.util.ArrayList();
@@ -174,10 +178,7 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
 
         for (java.util.Iterator it = coll.iterator(); it.hasNext();) {
             o = convertEJBLocalObjectToPC((EJBLocalObject)it.next(), pm, validate);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB20HelperImpl.convertCollectionEJBLocalObjectToPC() adding: " + o);// NOI18N
-            }
+            LOG.log(DEBUG, "convertCollectionEJBLocalObjectToPC() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -190,6 +191,7 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * @param o the instance to validate.
      * @throws IllegalArgumentException if validation fails.
      */
+    @Override
     abstract public void assertInstanceOfLocalInterfaceImpl(Object o);
 
    /**
@@ -207,18 +209,18 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
 
         // We can't check if null is the correct type or not. So
         // we let it succeed.
-        if (o == null)
+        if (o == null) {
             return;
+        }
 
         try {
             CMPHelper.assertValidLocalObject(o, getContainer());
 
         } catch (EJBException ex) {
-            String msg = I18NHelper.getMessage(messages, "EXC_WrongLocalInstance", // NOI18N
+            String msg = I18NHelper.getMessage(messages, "EXC_WrongLocalInstance",
                 new Object[] {o.getClass().getName(), beanName,
                     ex.getMessage()});
-            logger.log(Logger.WARNING, msg);
-            throw new IllegalArgumentException(msg);
+            throw new IllegalArgumentException(msg, ex);
         }
     }
 

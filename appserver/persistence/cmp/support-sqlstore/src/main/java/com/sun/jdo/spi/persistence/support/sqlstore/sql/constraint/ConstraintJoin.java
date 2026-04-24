@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,27 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ConstraintJoin.java
- *
- * Create on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.QueryPlan;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- */
+import org.netbeans.modules.dbschema.ColumnElement;
+
 public class ConstraintJoin extends ConstraintOperation {
-    public ArrayList fromColumns;
+    public List<ColumnElement> fromColumns;
 
     public QueryPlan fromPlan;
 
-    public ArrayList toColumns;
+    public List<ColumnElement> toColumns;
 
     public QueryPlan toPlan;
 

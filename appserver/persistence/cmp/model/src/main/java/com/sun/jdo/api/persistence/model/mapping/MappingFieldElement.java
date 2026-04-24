@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,24 +15,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingFieldElement.java
- *
- * Created on March 3, 2000, 1:11 PM
- */
-
 package com.sun.jdo.api.persistence.model.mapping;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.DBMemberElement;
 
 /**
- *
- * @author raccah
- * @version %I%
+ * @author raccah 2000
  */
 public interface MappingFieldElement extends MappingMemberElement
 {
@@ -113,7 +106,7 @@ public interface MappingFieldElement extends MappingMemberElement
      * mapped.
      * @return the names of the columns mapped by this mapping field
      */
-    public ArrayList getColumns ();
+    public List<String> getColumns ();
 
     /** Adds a column to the list of columns mapped by this mapping field.
      * @param column column element to be added to the mapping
@@ -127,4 +120,10 @@ public interface MappingFieldElement extends MappingMemberElement
      * @exception ModelException if impossible
      */
     public void removeColumn (String columnName) throws ModelException;
+
+    public boolean isMappedToTable(MappingTableElement table);
+
+    public void stripSchemaName();
+
+    public List<? extends DBMemberElement> getColumnObjects();
 }

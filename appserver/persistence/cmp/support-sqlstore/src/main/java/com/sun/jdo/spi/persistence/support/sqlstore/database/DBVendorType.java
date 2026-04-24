@@ -21,11 +21,10 @@ import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.api.persistence.support.SpecialDBOperation;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -35,6 +34,9 @@ import java.util.ResourceBundle;
 import org.glassfish.persistence.common.I18NHelper;
 import org.glassfish.persistence.common.database.DBVendorTypeHelper;
 import org.glassfish.persistence.common.database.PropertyHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 
 
 
@@ -62,16 +64,6 @@ public class DBVendorType  {
     private String vendorType;
 
     /**
-     * VendorType as returned from {@link DBVendorTypeHelper#getEnumDBType(java.lang.String)}
-     */
-    private int enumVendorType;
-
-    /**
-     * The logger
-     */
-    private final static Logger logger;
-
-    /**
      * I18N message handler
      */
     private final static ResourceBundle messages;
@@ -81,15 +73,15 @@ public class DBVendorType  {
      */
     private static Properties defaultProperties;
 
-    private final static String EXT = ".properties"; // NOI18N
-    private final static String SPACE = " "; // NOI18N
-    private final static String NONE = ""; // NOI18N
+    private final static String EXT = ".properties";
+    private final static String SPACE = " ";
+    private final static String NONE = "";
 
-    private final static String PATH = "com/sun/jdo/spi/persistence/support/sqlstore/database/"; // NOI18N
-    private final static String PROPERTY_OVERRIDE_FILE = ".tpersistence.properties"; // NOI18N
+    private final static String PATH = "com/sun/jdo/spi/persistence/support/sqlstore/database/";
+    private final static String PROPERTY_OVERRIDE_FILE = ".tpersistence.properties";
 
 
-    private final static String FOR_UPDATE = "FOR_UPDATE"; // NOI18N
+    private final static String FOR_UPDATE = "FOR_UPDATE";
     private final static String HOLDLOCK = "HOLDLOCK"; //NOI18N
     private final static String SUPPORTS_UPDATE_LOCK = "SUPPORTS_UPDATE_LOCK"; //NOI18N
     private final static String SUPPORTS_LOCK_COLUMN_LIST = "SUPPORTS_LOCK_COLUMN_LIST"; //NOI18N
@@ -148,13 +140,14 @@ public class DBVendorType  {
             CONCAT_CAST, PARAMETER_CAST, INLINE_NUMERIC, NOT_EQUAL
     };
 
+    private static final Logger LOG = System.getLogger(DBVendorType.class.getName());
+
     /**
      * Initialize static fields.
      */
     static {
-        logger = LogHelperSQLStore.getLogger();
         messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             DBVendorType.class.getClassLoader());
 
         defaultProperties = initializeDefaultProperties();
@@ -171,13 +164,10 @@ public class DBVendorType  {
         String vendorName  = databaseMetaData.getDatabaseProductName();
         String vendorType  = DBVendorTypeHelper.getDBType(vendorName);
 
-        if (logger.isLoggable()) {
-            Object[] items = new Object[] {vendorName,vendorType};
-            logger.fine("sqlstore.database.dbvendor.vendorname", items); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.vendorname", vendorName, vendorType);
 
         this.vendorType     = vendorType;
-        enumVendorType      = DBVendorTypeHelper.getEnumDBType(vendorType);
+        DBVendorTypeHelper.getEnumDBType(vendorType);
         dbMap               = getDBPropertiesMap(vendorType,vendorName);
         specialDBOperation  = newSpecialDBOperationInstance((String)dbMap.get(SPECIAL_DB_OPERATION),
                                 databaseMetaData, identifier);
@@ -207,7 +197,7 @@ public class DBVendorType  {
                 loadFromResource(DBVendorTypeHelper.DEFAULT_DB, defaultProperties);
             } catch (IOException e) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                                "sqlstore.database.dbvendor.cantloadDefaultProperties"), // NOI18N
+                                "sqlstore.database.dbvendor.cantloadDefaultProperties"),
                                  e);
             }
         }
@@ -226,9 +216,7 @@ public class DBVendorType  {
                 loadFromResource(vendorType, dbProperties);
             } catch (IOException e) {
                 // else ignore
-                if (logger.isLoggable()) {
-                    logger.fine("sqlstore.database.dbvendor.init.default", vendorType); // NOI18N
-                }
+                LOG.log(DEBUG, "sqlstore.database.dbvendor.init.default", vendorType);
             }
         }
         overrideProperties(dbProperties, vendorName);
@@ -240,15 +228,11 @@ public class DBVendorType  {
      * by the user
      */
     private static void overrideProperties(Properties dbProperties, String vendorName) {
-        boolean debug = logger.isLoggable();
-
         Properties overridingProperties = new Properties();
         try {
             PropertyHelper.loadFromFile(overridingProperties, PROPERTY_OVERRIDE_FILE);
         } catch (Exception e) {
-            if (debug) {
-                logger.fine("sqlstore.database.dbvendor.overrideproperties"); // NOI18N
-            }
+            LOG.log(DEBUG, "sqlstore.database.dbvendor.overrideproperties");
             return;     // nothing to override
         }
 
@@ -256,15 +240,12 @@ public class DBVendorType  {
         String cleanVendorName = vendorName.toLowerCase().replace(' ', '_');
         cleanVendorName = cleanVendorName.replace('/', '_');
 
-        String propertyPrefix = "database." + cleanVendorName + "."; // prefix // NOI18N
+        String propertyPrefix = "database." + cleanVendorName + "."; // prefix
 
         for (int i = 0; i < props.length; i++) {
             String o = overridingProperties.getProperty(propertyPrefix + props[i]);
             if (o != null) {
-                if (debug) {
-                    Object[] items = new Object[] {props[i],o};
-                    logger.fine("sqlstore.database.dbvendor.overrideproperties.with", items); // NOI18N
-                }
+                LOG.log(DEBUG, "sqlstore.database.dbvendor.overrideproperties.with", props[i], o);
                 dbProperties.setProperty(props[i], o);
             }
         }
@@ -309,10 +290,7 @@ public class DBVendorType  {
                     clz = Class.forName(specialDBOpClassName);
                 }
             } catch (Exception ex) {
-                if (logger.isLoggable()) {
-                    logger.log(Logger.INFO, "core.configuration.cantloadclass",
-                        specialDBOpClassName);
-                }
+                LOG.log(INFO, "core.configuration.cantloadclass", specialDBOpClassName);
                 return null;
             }
 
@@ -323,7 +301,7 @@ public class DBVendorType  {
                 } catch(Exception ex) {
                     throw new JDOFatalUserException(
                         I18NHelper.getMessage(messages,
-                        "sqlstore.database.dbvendor.cantinstantiateclass", // NOI18N
+                        "sqlstore.database.dbvendor.cantinstantiateclass",
                         specialDBOpClassName), ex);
                 }
             }
@@ -341,9 +319,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getleftjoin", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getleftjoin", s);
 
         return SPACE + s;
     }
@@ -356,9 +332,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUPPORTS_UPDATE_LOCK);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.isupdatelocksupported", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.isupdatelocksupported", b);
 
         return b.booleanValue();
     }
@@ -370,9 +344,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUPPORTS_LOCK_COLUMN_LIST);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.islockcolumnlistsupported", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.islockcolumnlistsupported", b);
 
         return b.booleanValue();
     }
@@ -384,9 +356,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUPPORTS_DISTINCT_WITH_UPDATE_LOCK);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.isdistinctupdatelocksupported", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.isdistinctupdatelocksupported", b);
 
         return b.booleanValue();
     }
@@ -402,9 +372,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getholdlock", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getholdlock", s);
 
         return SPACE + s;
     }
@@ -415,11 +383,7 @@ public class DBVendorType  {
     public boolean isNativeOuterJoin() {
         String s = (String)dbMap.get(NATIVE_OUTER_JOIN);
         Boolean b = Boolean.valueOf(s);
-
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.isNativeOuterJoin", b); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.isNativeOuterJoin", b);
         return b.booleanValue();
     }
 
@@ -433,10 +397,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getleftjoinpost", s); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getleftjoinpost", s);
         return SPACE + s;
     }
 
@@ -449,11 +410,7 @@ public class DBVendorType  {
         if (s == null) {
             s = NONE;
         }
-
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getrightjoin", s); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getrightjoin", s);
         return SPACE + s;
     }
 
@@ -467,10 +424,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getrightjoinipre", s); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getrightjoinipre", s);
         return SPACE + s;
     }
 
@@ -484,9 +438,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getisnull", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getisnull", s);
 
         return SPACE + s;
     }
@@ -501,9 +453,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getisnotnull", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getisnotnull", s);
 
         return SPACE + s;
     }
@@ -515,9 +465,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(ANSI_TRIM);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.isAnsiTrim", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.isAnsiTrim", b);
 
         return b.booleanValue();
     }
@@ -532,9 +480,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getrtrim", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getrtrim", s);
 
         return SPACE + s;
     }
@@ -549,9 +495,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getrtrimpost", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getrtrimpost", s);
 
         return SPACE + s;
     }
@@ -566,9 +510,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getcharlength", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getcharlength", s);
 
         return SPACE + s;
     }
@@ -581,13 +523,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SQRT);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "Sqrt"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getsqrt", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getsqrt", s);
 
         return SPACE + s;
     }
@@ -600,13 +540,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(ABS);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "Abs"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getabs", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getabs", s);
 
         return SPACE + s;
     }
@@ -621,9 +559,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getforupdate", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getforupdate", s);
 
         return SPACE + s;
     }
@@ -638,9 +574,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.gettableliststart", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.gettableliststart", s);
 
         return SPACE + s;
     }
@@ -655,9 +589,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.gettablelistend", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.gettablelistend", s);
 
         return SPACE + s;
     }
@@ -672,9 +604,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getstringconcat", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getstringconcat", s);
 
         return SPACE + s + SPACE;
     }
@@ -689,9 +619,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getquotecharstart", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getquotecharstart", s);
 
         return s;
     }
@@ -706,9 +634,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getquotecharend", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getquotecharend", s);
 
         return s;
     }
@@ -721,9 +647,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(QUOTE_SPECIAL_ONLY);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getquotespecialonly", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getquotespecialonly", b);
 
         return b.booleanValue();
     }
@@ -736,13 +660,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUBSTRING);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "substring"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getsubstring", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getsubstring", s);
 
         return SPACE + s;
     }
@@ -755,13 +677,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUBSTRING_FROM);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "from part of substring"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getsubstringfrom", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getsubstringfrom", s);
 
         return SPACE + s + SPACE;
     }
@@ -774,13 +694,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUBSTRING_FOR);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "for part of substring"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getsubstringfor", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getsubstringfor", s);
 
         return SPACE + s + SPACE;
     }
@@ -793,13 +711,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(POSITION);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "position"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getposition", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getposition", s);
 
         return SPACE + s;
     }
@@ -812,13 +728,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(POSITION_SEP);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                "in part of position"));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getpositionin", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getpositionin", s);
 
         return SPACE + s;
     }
@@ -831,9 +745,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(POSITION_SEARCH_SOURCE);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getpositionsrchsrc", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getpositionsrchsrc", b);
 
         return b.booleanValue();
     }
@@ -845,9 +757,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(POSITION_THREE_ARGS);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getposition3args", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getposition3args", b);
 
         return b.booleanValue();
     }
@@ -859,9 +769,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(MAP_EMPTY_STRING_TO_NULL);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.mapemptystrtonull", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.mapemptystrtonull", b);
 
         return b.booleanValue();
     }
@@ -873,9 +781,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(SUPPORTS_LIKE_ESCAPE);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.supportslikeescape", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.supportslikeescape", b);
 
         return b.booleanValue();
     }
@@ -890,9 +796,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getleftlikeescape", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getleftlikeescape", s);
 
         return SPACE + s;
     }
@@ -907,9 +811,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getrightlikeescape", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getrightlikeescape", s);
 
         return SPACE + s;
     }
@@ -924,9 +826,7 @@ public class DBVendorType  {
         } else {
             s = s.trim();
         }
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getNullComparisonFunctionName", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getNullComparisonFunctionName", s);
         return s;
     }
 
@@ -945,13 +845,11 @@ public class DBVendorType  {
         String s = (String)dbMap.get(MOD_FUNCTION_NAME);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
-               "core.constraint.illegalop", // NOI18N
+               "core.constraint.illegalop",
                " % "));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getModFunctionName", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getModFunctionName", s);
 
         return s;
     }
@@ -966,9 +864,7 @@ public class DBVendorType  {
         } else {
             s = s.trim();
         }
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getConcatCast", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getConcatCast", s);
         return s;
     }
 
@@ -979,9 +875,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(PARAMETER_CAST);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.isParameterCast", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.isParameterCast", b);
 
         return b.booleanValue();
     }
@@ -993,9 +887,7 @@ public class DBVendorType  {
         String s = (String)dbMap.get(INLINE_NUMERIC);
         Boolean b = Boolean.valueOf(s);
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.isInlineNumeric", b); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.isInlineNumeric", b);
 
         return b.booleanValue();
     }
@@ -1012,9 +904,7 @@ public class DBVendorType  {
             s = NONE;
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getnotequal", s); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getnotequal", s);
 
         return s;
     }
@@ -1032,10 +922,7 @@ public class DBVendorType  {
      * Returns a SpecialDBOperation object
      */
     public SpecialDBOperation getSpecialDBOperation() {
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.database.dbvendor.getSpecialDBOperation", specialDBOperation); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.database.dbvendor.getSpecialDBOperation", specialDBOperation);
         return specialDBOperation;
     }
 
@@ -1046,11 +933,11 @@ public class DBVendorType  {
      * @return parameter marker for <code>type</code>.
      */
     public String getParameterMarker(int type) {
-        String paramMarker = "?"; // NOI18N
+        String paramMarker = "?";
         if (isParameterCast()) {
             String castType = getCastType(type);
             if (castType != null) {
-                paramMarker = "CAST (? AS " + castType + ")"; // NOI18N
+                paramMarker = "CAST (? AS " + castType + ")";
             }
         }
 

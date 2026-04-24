@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,18 +15,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * PersistenceManagerServiceImpl.java
- *
- * Created on January 24, 2002
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.CMPHelper;
-import com.sun.jdo.spi.persistence.support.sqlstore.ejb.LoggerFactoryiAS;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.SunContainerHelper;
-import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
 
 import org.glassfish.ejb.spi.CMPService;
 import org.jvnet.hk2.annotations.Service;
@@ -39,13 +32,10 @@ public class PersistenceManagerServiceImpl implements CMPService {
 
     // Initialize the appserver loggers.
     static {
-        LogHelper.registerLoggerFactory(new LoggerFactoryiAS());
+        forceInit(SunContainerHelper.class);
     }
 
-    // Reference and force the initialization of the Sun specific
-    // implementation of the TransactionHelper and the ContainerHelper.
-    private static final Class helper = forceInit(SunContainerHelper.class);
-
+    @Override
     public boolean isReady() {
         // Checks that SunContainerHelper regeistered with CMPHelper
         return CMPHelper.isContainerReady();
@@ -63,9 +53,8 @@ public class PersistenceManagerServiceImpl implements CMPService {
         try {
             Class.forName(klass.getName(), true, klass.getClassLoader());
         } catch (ClassNotFoundException e) {
-            throw new AssertionError(e);  // Can't happen
+            throw new AssertionError(e);
         }
         return klass;
     }
-
 }

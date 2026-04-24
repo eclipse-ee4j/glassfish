@@ -33,11 +33,13 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.Constraint;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintFieldName;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.SelectQueryPlan;
+import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.Statement;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.spi.persistence.utility.ParameterInfo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
@@ -173,6 +175,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      * RetrieveDesc describing fields and constraints for a referenced object.
      * @param projection Specifies, if this is a projection.
      */
+    @Override
     public void addResult(String name,
                           RetrieveDesc foreignConstraint,
                           boolean projection) {
@@ -218,6 +221,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      * @param aggregateResultType The object type returned by aggregate queries.
      * @see com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration
      */
+    @Override
     public void addResult(int opCode, int aggregateResultType) {
         switch (opCode) {
             case ActionDesc.OP_DISTINCT:
@@ -271,6 +275,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setPrefetchEnabled(boolean prefetchEnabled) {
         if (!prefetchEnabled) {
             options |= OPT_DISABLE_RELATIONSHIP_PREFETCH;
@@ -289,6 +294,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      * nor a local field connecting to the retrieve descriptor
      * <code>foreignConstraint</code>.
      */
+    @Override
     public void addConstraint(String name,
                               RetrieveDesc foreignConstraint) {
         if (name == null) {
@@ -305,6 +311,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      *   emp.addConstraint("lastName", ActionDesc.OP_EQ, mgr, lastName");
      * compares the employee's lastName field with the lastName field of the related manager.
      */
+    @Override
     public void addConstraint(String name, int operation,
                               RetrieveDesc foreignConstraint, String foreignName) {
         constraint.addField(foreignName, foreignConstraint);
@@ -332,6 +339,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      *     field should be limited, however it is sometimes used to
      *     hold a parameter count as for the OP_IN operation.
      */
+    @Override
     public void addConstraint(String name,
                               int operation,
                               Object value) {
@@ -629,7 +637,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
             plan.build();
 
             // Generate the text for the select statements.
-            ArrayList statements = plan.getStatements();
+            List<Statement> statements = plan.getStatements();
 
             // Sanity check.
             if (statements.size() > 1) {
@@ -756,6 +764,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      * @param navigationalId Tag to discriminate different retrieve
      * descriptors that use the same navigational field.
      */
+    @Override
     public void setNavigationalId(Object navigationalId) {
         this.navigationalId = navigationalId;
     }
@@ -811,6 +820,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
         this.plan = plan;
     }
 
+    @Override
     public Class getPersistenceCapableClass() {
         return pcClass;
     }
@@ -823,6 +833,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
         return fields.iterator();
     }
 
+    @Override
     public Object clone() {
         try {
             RetrieveDescImpl clone = (RetrieveDescImpl) super.clone();

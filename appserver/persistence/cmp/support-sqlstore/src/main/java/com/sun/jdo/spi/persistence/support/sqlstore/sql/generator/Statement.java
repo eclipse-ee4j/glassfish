@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,13 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * Statement.java
- *
- * Created on March 3, 2000
- *
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
@@ -53,7 +47,7 @@ import org.netbeans.modules.dbschema.TableElement;
  */
 public abstract class Statement extends Object implements Cloneable {
 
-    private static final Integer ONE = new Integer(1);
+    private static final Integer ONE = Integer.valueOf(1);
 
     protected static final int OP_PREFIX_MASK =     0x001; // 1
 
@@ -86,7 +80,7 @@ public abstract class Statement extends Object implements Cloneable {
     private String quoteCharEnd;
 
     /** array of ColumnRef */
-    protected ArrayList columns;
+    protected List<ColumnRef> columns;
 
     Constraint constraint;
 
@@ -95,11 +89,11 @@ public abstract class Statement extends Object implements Cloneable {
     int action;
 
     /** array of QueryTable */
-    public ArrayList tableList;
+    public List<QueryTable> tableList;
 
     protected DBVendorType vendorType;
 
-    protected ArrayList secondaryTableStatements;
+    protected List<Statement> secondaryTableStatements;
 
     /**
      * I18N message handler
@@ -112,16 +106,17 @@ public abstract class Statement extends Object implements Cloneable {
     public Statement(DBVendorType vendorType) {
 
         inputDesc = new InputDesc();
-        columns = new ArrayList();
+        columns = new ArrayList<>();
         constraint = new Constraint();
-        tableList = new ArrayList();
+        tableList = new ArrayList<>();
         this.vendorType = vendorType;
 
-        if (vendorType.getQuoteSpecialOnly() == false) {
-            // DO NOT SUPPORT QUOTING OTHERWISE
-            this.quoteCharStart = vendorType.getQuoteCharStart();
-            this.quoteCharEnd = vendorType.getQuoteCharEnd();
+        if (!vendorType.getQuoteSpecialOnly() != false) {
+            return;
         }
+        // DO NOT SUPPORT QUOTING OTHERWISE
+        this.quoteCharStart = vendorType.getQuoteCharStart();
+        this.quoteCharEnd = vendorType.getQuoteCharEnd();
     }
 
     public void addQueryTable(QueryTable table) {
@@ -141,9 +136,11 @@ public abstract class Statement extends Object implements Cloneable {
         int size = columns.size();
 
         for (int i = 0; i < size; i++) {
-            ColumnRef cref = (ColumnRef) columns.get(i);
+            ColumnRef cref = columns.get(i);
 
-            if (cref.getColumnElement() == columnElement) return cref;
+            if (cref.getColumnElement() == columnElement) {
+                return cref;
+            }
         }
 
         return null;
@@ -319,7 +316,7 @@ public abstract class Statement extends Object implements Cloneable {
         // DB2 requires cast for parameter markers involved in numeric expressions.
         result.append(vendorType.getParameterMarker(node.getType()));
         Integer index = node.getIndex();
-        inputDesc.values.add(new InputParamValue(index, getColumnElementForValueNode(node) ));
+        inputDesc.values.add(new InputParamValue(index, getColumnElementForValueNode(node)));
     }
 
     protected void processConstraintValue(ConstraintValue node, StringBuffer result) {
@@ -385,10 +382,10 @@ public abstract class Statement extends Object implements Cloneable {
                                       StringBuffer sb) {
         QueryTable table = null;
         ColumnElement column = null;
-        Iterator iter = desc.getColumnElements();
+        Iterator<ColumnElement> iter = desc.getColumnElements();
 
         while (iter.hasNext() && table == null) {
-            column = (ColumnElement) iter.next();
+            column = iter.next();
 
             // For updates, the member variable tableList is complete
             // at this point and includes only the table being updated.
@@ -428,8 +425,8 @@ public abstract class Statement extends Object implements Cloneable {
     protected QueryTable findQueryTable(TableElement tableElement) {
         QueryTable table = null;
 
-        for (Iterator iter = tableList.iterator(); iter.hasNext() && table == null; ) {
-            QueryTable t = (QueryTable) iter.next();
+        for (Iterator<QueryTable> iter = tableList.iterator(); iter.hasNext() && table == null; ) {
+            QueryTable t = iter.next();
             if (t.getTableDesc().getTableElement() == tableElement) {
             // if (t.getTableDesc().getTableElement().equals(tableElement)) {
                 table = t;
@@ -533,7 +530,7 @@ public abstract class Statement extends Object implements Cloneable {
                 result.append(prefixOperator(opCode));
                 result.append("("); // NOI18N
 
-                Statement sqstmt = (Statement) sqNode.plan.statements.get(0);
+                Statement sqstmt = sqNode.plan.statements.get(0);
 
                 result.append(sqstmt.getText());
 
@@ -848,35 +845,18 @@ public abstract class Statement extends Object implements Cloneable {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                     "core.generic.notinstanceof", // NOI18N
                     currentNode.getClass().getName(), "ConstraintSubquery")); // NOI18N
-        } else {
-
-            ConstraintSubquery sqnode = (ConstraintSubquery) currentNode;
-
-            Statement sqstmt = (Statement) sqnode.plan.statements.get(0);
-            //Append the subquery i.e. "select t1.fld1, t1.fld2, t2.fld3,...where ...."
-            result.append(sqstmt.getText());
-
-            //Close the final bracket
-            result.append(")"); // NOI18N
-
-            //Append the Input values to the InputDesc of current statement
-            inputDesc.values.addAll(sqstmt.inputDesc.values);
         }
+        ConstraintSubquery sqnode = (ConstraintSubquery) currentNode;
 
-        /*
-          //This is old code that takes care of case when we just have a list of values
-          //as the parameter to the IN clause. We might uncomment and enhance this code
-          //when we implement the functionality to have list of values inside IN clause.
-        if (!(stack.get(stack.size() - 1) instanceof ConstraintValue)) {
-            throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.needvalnode")); // NOI18N
-        } else {
-            result.append(((ConstraintValue) stack.get(stack.size() - 1)).value.toString());
-            stack.remove(stack.size() - 1);
-        }
+        Statement sqstmt = sqnode.plan.statements.get(0);
+        //Append the subquery i.e. "select t1.fld1, t1.fld2, t2.fld3,...where ...."
+        result.append(sqstmt.getText());
 
+        //Close the final bracket
         result.append(")"); // NOI18N
-        */
+
+        //Append the Input values to the InputDesc of current statement
+        inputDesc.values.addAll(sqstmt.inputDesc.values);
     }
 
     /**
@@ -1171,23 +1151,26 @@ public abstract class Statement extends Object implements Cloneable {
     }
 
     public void addSecondaryTableStatement(Statement s) {
-        if (s == null) return;
+        if (s == null) {
+            return;
+        }
 
-        if (secondaryTableStatements == null)
-            secondaryTableStatements = new ArrayList();
+        if (secondaryTableStatements == null) {
+            secondaryTableStatements = new ArrayList<>();
+        }
 
         secondaryTableStatements.add(s);
     }
 
-    public ArrayList getSecondaryTableStatements() {
+    public List<Statement> getSecondaryTableStatements() {
         return secondaryTableStatements;
     }
 
-    public ArrayList getQueryTables() {
+    public List<QueryTable> getQueryTables() {
         return tableList;
     }
 
-    public ArrayList getColumnRefs() {
+    public List<ColumnRef> getColumnRefs() {
         return columns;
     }
 
@@ -1199,6 +1182,7 @@ public abstract class Statement extends Object implements Cloneable {
         return action;
     }
 
+    @Override
     public Object clone() {
         try {
             return super.clone();
@@ -1218,7 +1202,7 @@ public abstract class Statement extends Object implements Cloneable {
      */
     public void bindInputValues(DBStatement s) throws SQLException {
         for (int i = 0, size = inputDesc.values.size(); i < size; i++) {
-            InputValue inputVal = (InputValue) inputDesc.values.get(i);
+            InputValue inputVal = inputDesc.values.get(i);
             s.bindInputColumn(i + 1, inputVal.getValue(),
                     inputVal.getColumnElement(), vendorType);
         }
@@ -1232,7 +1216,7 @@ public abstract class Statement extends Object implements Cloneable {
         final int size = inputDesc.values.size();
         Object[] inputValues = new Object[size];
         for (int i = 0; i < size; i++) {
-            InputValue inputValue = (InputValue) inputDesc.values.get(i);
+            InputValue inputValue = inputDesc.values.get(i);
             inputValues[i] = inputValue.getValue();
         }
         return inputValues;

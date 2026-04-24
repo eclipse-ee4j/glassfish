@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,27 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * EJBQLC.java
- *
- * Created on November 12, 2001
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.System.Logger;
 import java.lang.reflect.Method;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 
 import antlr.TokenBuffer;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * This class is the driver of the EJBQL compiler. It controls the compiler
@@ -48,8 +45,8 @@ import antlr.TokenBuffer;
  * finder/selector method. The result is a JDOQLElements instance, that can be
  * used to construct a JDOQL query instance.
  *
- * @author  Michael Bouschen
- * @author  Shing Wai Chan
+ * @author  Michael Bouschen 2001
+ * @author  Shing Wai Chan 2001
  */
 public class EJBQLC
 {
@@ -63,7 +60,7 @@ public class EJBQLC
     protected EJBQLAST ast;
 
     /** The logger */
-    private static Logger logger = LogHelperQueryCompilerEJB.getLogger();
+    private static final Logger LOG = System.getLogger(EJBQLC.class.getName());
 
     /** I18N support. */
     protected final static ResourceBundle msgs = I18NHelper.loadBundle(
@@ -72,7 +69,7 @@ public class EJBQLC
     /**
      * Signature with CVS keyword substitution for identifying the generated code
      */
-    public static final String SIGNATURE = "$RCSfile: EJBQLC.java,v $ $Revision: 1.3 $"; //NOI18N
+    public static final String SIGNATURE = "$RCSfile: EJBQLC.java,v $ $Revision: 1.3 $";
 
     /**
      * Constructor.
@@ -101,68 +98,62 @@ public class EJBQLC
                                  boolean finderNotSelector, String ejbName)
         throws EJBQLException
     {
-        boolean finer = logger.isLoggable(Logger.FINER);
-        boolean finest = logger.isLoggable(Logger.FINEST);
-        if (method == null)
+        if (method == null) {
             ErrorMsg.fatal(I18NHelper.getMessage(msgs,
-                "ERR_MissingMethodInstance")); //NOI18N
-        if ((ejbqlQuery == null) || ejbqlQuery.trim().length() == 0)
+                "ERR_MissingMethodInstance"));
+        }
+        if ((ejbqlQuery == null) || ejbqlQuery.isBlank()) {
             ErrorMsg.error(I18NHelper.getMessage(msgs,
-                "EXC_MissingEjbqlQueryText", ejbName, //NOI18N
+                "EXC_MissingEjbqlQueryText", ejbName,
                 getMethodSignature(method)));
-        if (finer)
-            logger.finer("LOG_EJBQLCCompile", ejbName, //NOI18N
-                         getMethodSignature(method), ejbqlQuery);
+        }
+        LOG.log(DEBUG, "EJBQLC compile query\n"
+            + "Bean:   {0}\n"
+            + "Method: {1}\n"
+            + "EJBQL:  {2}",
+            ejbName, getMethodSignature(method), ejbqlQuery);
 
         JDOQLElements result = null;
         TypeSupport typeSupport = new TypeSupport(model, nameMapper);
         ParameterSupport paramSupport = new ParameterSupport(method);
-        String pass = null;
 
-        try
-        {
-            // syntax analysis
-            pass = "syntax analysis"; //NOI18N
-            if (finer) logger.finer("LOG_EJBQLCStartPass", pass); //NOI18N
+        try {
+            LOG.log(DEBUG, "EJBQLC start syntax analysis");
             EJBQLParser parser = createStringParser(ejbqlQuery);
             parser.query();
-            ast = (EJBQLAST)parser.getAST();
-            if (finest) logger.finest("LOG_EJBQLCDumpTree", ast.getTreeRepr("(AST)")); //NOI18N
+            ast = (EJBQLAST) parser.getAST();
+            LOG.log(DEBUG, "EJBQLC dump tree {0}", ast.getTreeRepr("(AST)"));
 
             // semantic analysis
-            pass = "semantic analysis"; //NOI18N
-            if (finer) logger.finer("LOG_EJBQLCStartPass", pass); //NOI18N
+            LOG.log(DEBUG, "EJBQLC start semantic analysis");
             Semantic semantic = new Semantic();
             semantic.init(typeSupport, paramSupport, method, resultTypeMapping,
                           finderNotSelector, ejbName);
             semantic.setASTFactory(EJBQLASTFactory.getInstance());
             semantic.query(ast);
             ast = (EJBQLAST)semantic.getAST();
-            if (finest) logger.finest("LOG_EJBQLCDumpTree", ast.getTreeRepr("(typed AST)")); //NOI18N
+            LOG.log(DEBUG, "EJBQLC dump tree {0}", ast.getTreeRepr("(typed AST)"));
 
             // JDOQL code generation
-            pass = "code generation"; //NOI18N
-            if (finer) logger.finer("LOG_EJBQLCStartPass", pass); //NOI18N
+            LOG.log(DEBUG, "EJBQLC start code generation");
             JDOQLCodeGeneration codeGen = new JDOQLCodeGeneration();
             codeGen.init(typeSupport, paramSupport);
             codeGen.setASTFactory(EJBQLASTFactory.getInstance());
             codeGen.query(ast);
             result = codeGen.getJDOQLElements();
-            if (finer) logger.finer("LOG_EJBQLCResult", result.toString()); //NOI18N
-        }
-        catch (EJBQLException ex) {
+            LOG.log(DEBUG, "EJBQLC result {0}", result);
+        } catch (EJBQLException ex) {
             // add EJB name, finder/selector, EJBQL to error message.
-            Object[] msgArgs = { ejbName, getMethodSignature(method),
-                                 ejbqlQuery, ex.getMessage() };
-            ErrorMsg.error(I18NHelper.getMessage(msgs,
-                "EXC_InvalidEJBQLQuery", msgArgs)); //NOI18N
-        }
-        catch (Throwable t) {
-            Object[] msgArgs = { ejbName, getMethodSignature(method),
-                                 ejbqlQuery, t.toString() };
-            // log a SEVERE message with nested exception
-            ErrorMsg.log(Logger.SEVERE, I18NHelper.getMessage(msgs,
-                    "EXC_EJBQLQueryInternalError", msgArgs), t); //NOI18N
+            Object[] msgArgs = {ejbName, getMethodSignature(method), ejbqlQuery, ex.getMessage()};
+            ErrorMsg.error(I18NHelper.getMessage(msgs, "EXC_InvalidEJBQLQuery", msgArgs));
+        } catch (Throwable t) {
+            throw new EJBQLException(I18NHelper.getMessage(
+                msgs, "Fatal internal exception while parsing EJBQL:\n"
+                    + "Bean:   {0}\n"
+                    + "Method: {1}\n"
+                    + "EJBQL:  {2}\n"
+                    + "Error:  {3}",
+                ejbName, getMethodSignature(method), ejbqlQuery, t), t);
         }
 
         // return the JDOQLElements instance representing the elements
@@ -191,8 +182,9 @@ public class EJBQLC
      */
     private String getMethodSignature(Method m)
     {
-        if (m == null)
-            return ""; //NOI18N
+        if (m == null) {
+            return "";
+        }
 
         return m.getReturnType().getName() + ' ' + m.getName() +
             JavaClassWriterHelper.parenleft_ +

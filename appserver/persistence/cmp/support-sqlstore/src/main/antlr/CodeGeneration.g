@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,10 +24,11 @@
 header
 {
     package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
-    
-    import java.util.*;
+
+    import java.lang.System.Logger;
     import java.lang.reflect.Field;
     import java.lang.IllegalAccessException;
+    import java.util.*;
 
     import com.sun.jdo.api.persistence.support.JDOFatalUserException;
     import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
@@ -36,7 +38,6 @@ header
 
     import org.glassfish.persistence.common.I18NHelper;
     import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-    import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
     import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.TypeTable;
     import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
@@ -46,6 +47,8 @@ header
     import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.NumericWrapperClassType;
     import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.NumberType;
     import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.StringType;
+
+    import static java.lang.System.Logger.Level.TRACE;
 }
 
 /**
@@ -58,16 +61,16 @@ header
  * @version 0.1
  */
 class CodeGeneration extends TreeParser;
-                             
+
 options
 {
     importVocab = JQL;
-    ASTLabelType = "JQLAST"; //NOI18N
+    ASTLabelType = "JQLAST";
 }
 
 {
     /** Name of the USE_IN property. */
-    public static final String USE_IN_PROPERTY = 
+    public static final String USE_IN_PROPERTY =
         "com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.USE_IN";
 
     /** */
@@ -76,36 +79,44 @@ options
     /**
      * I18N support
      */
-    protected final static ResourceBundle messages = 
-      I18NHelper.loadBundle(CodeGeneration.class);
+    protected final static ResourceBundle messages = I18NHelper.loadBundle(CodeGeneration.class);
+
+    /** The logger */
+    private static final Logger LOG = System.getLogger(CodeGeneration.class.getName());
+
+    /**
+     * Defines the SQL wildcard character to be used in wildcard pattern
+     * (string methods startsWith and endsWith).
+     */
+    protected static final String WILDCARD_PATTERN = "%";
 
     /**
      * The persistence manager the query object is connected to.
      */
     protected PersistenceManager pm;
-    
+
     /**
      * type table
      */
     protected TypeTable typetab;
-    
+
     /**
      * query parameter table
      */
     protected ParameterTable paramtab;
-    
+
     /**
      *
      */
     protected ErrorMsg errorMsg;
-    
+
     /**
      * prefetchEnabled flag for RetrieveDesc.
      */
     protected boolean prefetchEnabled;
-    
+
     /**
-     * The RetrieveDesc for the candidate class. 
+     * The RetrieveDesc for the candidate class.
      * Code gen for the CLASS_DEF AST will initilaized this variable.
      * Code gen for the filter expression will add the constraints.
      */
@@ -113,31 +124,22 @@ options
 
     /**
      * rd2TagMap maps RetrieveDesc to tags. A tag is either the variable name or
-     * the navigation path that used to create a new RetrieveDesc. This info is 
-     * needed to identify whether two different RetrieveDescs denote the same 
+     * the navigation path that used to create a new RetrieveDesc. This info is
+     * needed to identify whether two different RetrieveDescs denote the same
      * variable or relationship.
      */
     protected Map rd2TagMap;
 
-    /** 
-     * Set of RetrieveDescs. CodeGeneration uses this set to prevent multiple 
+    /**
+     * Set of RetrieveDescs. CodeGeneration uses this set to prevent multiple
      * addConstraint calls for the RetrieveDescs denoting a variable.
      */
     protected Set boundRetrieveDescs;
 
-    /** The logger */
-    private static Logger logger = LogHelperQueryCompilerJDO.getLogger();
-
-    /**
-     * Defines the SQL wildcard character to be used in wildcard pattern 
-     * (string methods startsWith and endsWith).
-     */
-    protected static final String WILDCARD_PATTERN = "%"; //NOI18N
-    
     /**
      *
      */
-    public void init(PersistenceManager pm, TypeTable typetab, 
+    public void init(PersistenceManager pm, TypeTable typetab,
                      ParameterTable paramtab, ErrorMsg errorMsg,
                      boolean prefetchEnabled)
     {
@@ -149,21 +151,21 @@ options
         this.rd2TagMap = new HashMap();
         this.boundRetrieveDescs = new HashSet();
     }
-    
+
     /**
      *
      */
     public void reportError(RecognitionException ex) {
-        errorMsg.fatal("CodeGeneration error", ex); //NOI18N
+        errorMsg.fatal("CodeGeneration error", ex);
     }
 
     /**
      *
      */
     public void reportError(String s) {
-        errorMsg.fatal("CodeGeneration error: " + s); //NOI18N
+        errorMsg.fatal("CodeGeneration error: " + s);
     }
-    
+
     /**
      * Returns the RetrieveDesc that represents the current query.
      */
@@ -177,13 +179,13 @@ options
     /**
      * Helper method for checkRetrieveDesc handling operators & and &&.
      */
-    protected void checkAndOpRetrieveDesc(JQLAST op, JQLAST left, 
+    protected void checkAndOpRetrieveDesc(JQLAST op, JQLAST left,
         JQLAST right, Map usedRD) throws RecognitionException
     {
         if ((right.getType() == CONTAINS) || (right.getType() == NOT_CONTAINS))
         {
             // If right is a CONTAINS clause, start analysing the right expr.
-            // This ensures that the lft expression can reuse the RD defined 
+            // This ensures that the lft expression can reuse the RD defined
             // for the variable from the contains clause
             checkRetrieveDesc(right, usedRD);
             checkRetrieveDesc(left, usedRD);
@@ -191,11 +193,11 @@ options
         else
         {
             checkRetrieveDesc(left, usedRD);
-            checkRetrieveDesc(right, usedRD); 
+            checkRetrieveDesc(right, usedRD);
         }
-        op.setRetrieveDesc(getCommonRetrieveDesc(left, right)); 
+        op.setRetrieveDesc(getCommonRetrieveDesc(left, right));
     }
-    
+
     /**
      * Check the attached RetrieveDesc of the specified binary operation and its operands.
      */
@@ -232,11 +234,11 @@ options
             {
                 // case 3b: left and right RetrieveDesc are NOT identical
                 // check navigation:
-                rd = getCommonRetrieveDescHelper(leftRD, findNavigationSource(left), 
+                rd = getCommonRetrieveDescHelper(leftRD, findNavigationSource(left),
                                                  rightRD, findNavigationSource(right));
 
                 // use leftRD as default
-                if (rd == null) 
+                if (rd == null)
                 {
                     rd = leftRD;
                 }
@@ -247,34 +249,34 @@ options
 
     /** Helper method for getCommonRetrieveDesc used to check navigation. */
     protected RetrieveDesc getCommonRetrieveDescHelper(
-        RetrieveDesc leftRD, JQLAST leftNavSrc, 
+        RetrieveDesc leftRD, JQLAST leftNavSrc,
         RetrieveDesc rightRD, JQLAST rightNavSrc)
     {
         RetrieveDesc rd = null;
         String leftPath = (String)rd2TagMap.get(leftRD);
         String rightPath = (String)rd2TagMap.get(rightRD);
-        RetrieveDesc leftNavSrcRD = 
+        RetrieveDesc leftNavSrcRD =
             (leftNavSrc == null) ? null : leftNavSrc.getRetrieveDesc();
-        String leftNavSrcPath = 
+        String leftNavSrcPath =
             (leftNavSrcRD == null ) ? null: (String)rd2TagMap.get(leftNavSrcRD);
-        RetrieveDesc rightNavSrcRD = 
+        RetrieveDesc rightNavSrcRD =
             (rightNavSrc == null) ? null : rightNavSrc.getRetrieveDesc();
-        String rightNavSrcPath = 
+        String rightNavSrcPath =
             (rightNavSrcRD == null) ? null : (String)rd2TagMap.get(rightNavSrcRD);
 
         if ((leftNavSrcPath != null) && leftNavSrcPath.equals(rightPath))
         {
-            // case I: left operand is a navigation and 
+            // case I: left operand is a navigation and
             //         the navigation source is equal to the right operand
             rd = rightRD;
         }
         else if ((rightNavSrcPath != null) && rightNavSrcPath.equals(leftPath))
         {
-            // case II: right operand is a navigation and 
+            // case II: right operand is a navigation and
             //          the navigation source is equal to the left operand
             rd = leftRD;
         }
-        else if ((leftNavSrcPath != null) && (rightNavSrcPath != null) &&  
+        else if ((leftNavSrcPath != null) && (rightNavSrcPath != null) &&
             leftNavSrcPath.equals(rightNavSrcPath))
         {
             // case III: both operands are navigations and have the same source
@@ -287,17 +289,17 @@ options
             JQLAST rightConstraint = findNavigationSourceOfBoundVariable(rightNavSrc);
             if ((leftConstraint != null) && (rightConstraint != null))
             {
-                rd = getCommonRetrieveDescHelper(leftRD, leftConstraint, 
+                rd = getCommonRetrieveDescHelper(leftRD, leftConstraint,
                                                  rightRD, rightConstraint);
             }
             else if ((leftConstraint == null) && (rightConstraint != null))
             {
-                rd = getCommonRetrieveDescHelper(leftRD, leftNavSrc, 
+                rd = getCommonRetrieveDescHelper(leftRD, leftNavSrc,
                                                  rightRD, rightConstraint);
             }
             else if ((leftConstraint != null) && (rightConstraint == null))
             {
-                rd = getCommonRetrieveDescHelper(leftRD, leftConstraint, 
+                rd = getCommonRetrieveDescHelper(leftRD, leftConstraint,
                                                  rightRD, rightNavSrc);
             }
         }
@@ -305,14 +307,14 @@ options
     }
 
     /**
-     * Helper method to support getting the common RetrieveDesc for operands 
+     * Helper method to support getting the common RetrieveDesc for operands
      * taking three arguments such as like with escape, substring, indexOf.
      */
     protected RetrieveDesc getCommonRetrieveDesc(JQLAST arg1, JQLAST arg2, JQLAST arg3)
     {
         RetrieveDesc rd = null;
         if (arg3 == null) {
-            // Just call the regular method for binray ops, 
+            // Just call the regular method for binray ops,
             // if the third argument is not specified.
             rd = getCommonRetrieveDesc(arg1, arg2);
         }
@@ -321,10 +323,10 @@ options
             getCommonRetrieveDesc(arg2, arg3);
             // Now check the first and the second arg.
             rd = getCommonRetrieveDesc(arg1, arg2);
-            // Propagate the common RetrieveDesc to the third arg. 
+            // Propagate the common RetrieveDesc to the third arg.
             // This is important, if arg two and three are literals.
-            // Then the first call checking arg2 and arg3 did not attach any 
-            // RetrieveDesc. The second call checking arg1 and arg2 might have 
+            // Then the first call checking arg2 and arg3 did not attach any
+            // RetrieveDesc. The second call checking arg1 and arg2 might have
             // propagated a rd from arg1 to arg2. So this propagateRetrieveDesc
             // call propagates this rd to arg3, too.
             propagateRetrieveDesc(arg3, rd);
@@ -332,21 +334,21 @@ options
         return rd;
     }
 
-    /** 
-     * Helper method to support getting the common RetrieveDesc for object 
+    /**
+     * Helper method to support getting the common RetrieveDesc for object
      * comparison operators.
      */
     protected RetrieveDesc getObjectComparisonRetrieveDesc(JQLAST left, JQLAST right)
     {
         RetrieveDesc rd = null;
-        if ((left.getType() == NAVIGATION) && 
+        if ((left.getType() == NAVIGATION) &&
             (right.getType() == VALUE) && (right.getValue() == null))
         {
             // case obj.relship == null
             // take the RetrieveDesc from the navigation source
             rd = ((JQLAST)left.getFirstChild()).getRetrieveDesc();
         }
-        else if ((left.getType() == VALUE) && (left.getValue() == null) && 
+        else if ((left.getType() == VALUE) && (left.getValue() == null) &&
             (right.getType() == NAVIGATION))
         {
             // case null == obj.relship
@@ -390,9 +392,9 @@ options
         return null;
     }
 
-    /** 
-     * If the specifid node is a bound variable return the navigation source of 
-     * it's collection. 
+    /**
+     * If the specifid node is a bound variable return the navigation source of
+     * it's collection.
      */
     protected JQLAST findNavigationSourceOfBoundVariable(JQLAST tree)
     {
@@ -400,7 +402,7 @@ options
             return findNavigationSource((JQLAST)tree.getFirstChild());
         return null;
     }
-    
+
     /**
      * Attach the specified RetrieveDesc to all JQLAST node of the ast subtree,
      * that do not have a RetrieveDesc attached.
@@ -411,8 +413,8 @@ options
         {
             ast.setRetrieveDesc(rd);
         }
-        for (JQLAST node = (JQLAST)ast.getFirstChild(); 
-             node != null; 
+        for (JQLAST node = (JQLAST)ast.getFirstChild();
+             node != null;
              node = (JQLAST)node.getNextSibling())
         {
             propagateRetrieveDesc(node, rd);
@@ -424,7 +426,7 @@ options
      */
     protected Object getZeroValue(Type type)
     {
-        return (type instanceof NumberType) ? 
+        return (type instanceof NumberType) ?
                ((NumberType)type).getValue(new Integer(0)) :
                null;
     }
@@ -434,26 +436,26 @@ options
      */
     protected Object getMinusOneValue(Type type)
     {
-        return (type instanceof NumberType) ? 
+        return (type instanceof NumberType) ?
                ((NumberType)type).getValue(new Integer(-1)) :
                null;
     }
-   
+
     /**
-     * Returns -value. 
-     * The method assumes that the passed argument is a numeric wrapper class object. 
-     * If so it negates the wrapped numeric value and wraps the negated value into a 
+     * Returns -value.
+     * The method assumes that the passed argument is a numeric wrapper class object.
+     * If so it negates the wrapped numeric value and wraps the negated value into a
      * numeric wrapper class object.
      */
     protected Object negate(Object value, Type type)
     {
-        return (type instanceof NumberType) ? 
+        return (type instanceof NumberType) ?
                ((NumberType)type).negate((Number)value) :
                null;
     }
 
     /**
-     * Returns the boolean operation of the equivalent relational expression 
+     * Returns the boolean operation of the equivalent relational expression
      * with swapped arguments.
      * expr1 > expr2 <=> expr2 < expr1
      */
@@ -485,18 +487,18 @@ options
     }
 
     /**
-     * Code generation for a comparison of the form field relop value, 
+     * Code generation for a comparison of the form field relop value,
      * where field denotes a non relationship field
-     * This method checks for null values and generates OP_NULL / OP_NOTNULL constraints 
+     * This method checks for null values and generates OP_NULL / OP_NOTNULL constraints
      * in the case of field relop null
      */
-    protected void generateSimpleFieldValueComparison(RetrieveDesc rd, String name, 
+    protected void generateSimpleFieldValueComparison(RetrieveDesc rd, String name,
                                                       int operation, Object value)
     {
         if (value != null)
         {
             rd.addConstraint(name, operation, value);
-        }   
+        }
         else if (operation == RetrieveDesc.OP_EQ)
         {
             rd.addConstraint(name, RetrieveDesc.OP_NULL, null);
@@ -507,20 +509,20 @@ options
         }
         else
         {
-            errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.codegeneration.generatesimplefieldvaluecomparison.invalidvalue")); //NOI18N
+            errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.codegeneration.generatesimplefieldvaluecomparison.invalidvalue"));
         }
     }
 
     /**
-     * Code generation for a comparison of the form 
+     * Code generation for a comparison of the form
      *   dbvalue relop constant
-     * where dbvalue denotes an object in the database such as 
+     * where dbvalue denotes an object in the database such as
      * - this
      * - the result of a relationship navigation
      * - variable access
      * and constant is a constant value at query compile time (e.g. a literal)
      */
-    protected void generateDbValueConstantComparison(RetrieveDesc rd, ClassType objectType, 
+    protected void generateDbValueConstantComparison(RetrieveDesc rd, ClassType objectType,
                                                      int operation, Object value, Type valueType)
     {
         int booleanOp = getKeyFieldsComparisonBooleanOp(operation);
@@ -541,19 +543,19 @@ options
     }
 
     /**
-     * Code generation for a comparison of the form 
+     * Code generation for a comparison of the form
      *   dbvalue relop dbvalue
-     * where dbvalue denotes an object in the database such as 
+     * where dbvalue denotes an object in the database such as
      * - this
      * - the result of a relationship navigation
      * - variable access
      */
-    protected void generateDbValueDbValueComparison(RetrieveDesc leftRD, ClassType leftType, int operation, 
+    protected void generateDbValueDbValueComparison(RetrieveDesc leftRD, ClassType leftType, int operation,
                                                     RetrieveDesc rightRD, ClassType rightType)
     {
         int booleanOp = getKeyFieldsComparisonBooleanOp(operation);
-        
-        // Note, this code assumes that both operands are of class types that have 
+
+        // Note, this code assumes that both operands are of class types that have
         // the same key fields. Thus take the list of key field names of the left side.
         List leftKeyFieldNames = leftType.getKeyFieldNames();
         for (Iterator i = leftKeyFieldNames.iterator(); i.hasNext();)
@@ -566,11 +568,11 @@ options
     }
 
     /**
-     * Code generation for a comparison of the form 
+     * Code generation for a comparison of the form
      *   parameter relop constantValue
      */
     protected void generateParameterValueComparison(RetrieveDesc rd,
-                                                    String paramName, 
+                                                    String paramName,
                                                     int operation, Object value)
     {
         if (value != null)
@@ -579,7 +581,7 @@ options
             rd.addConstraint(null, RetrieveDesc.OP_PARAMETER,
                 paramtab.getParameterInfoForParamName(paramName));
             rd.addConstraint(null, operation, null);
-        }   
+        }
         else if (operation == RetrieveDesc.OP_EQ)
         {
             rd.addConstraint(null, RetrieveDesc.OP_PARAMETER,
@@ -594,7 +596,7 @@ options
         }
         else
         {
-            errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.codegeneration.generateparametervaluecomparison.invalidvalue")); //NOI18N
+            errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.codegeneration.generateparametervaluecomparison.invalidvalue"));
         }
     }
 
@@ -613,7 +615,7 @@ options
             return RetrieveDesc.OP_OR;
         }
         errorMsg.fatal(I18NHelper.getMessage(messages,
-            "jqlc.codegeneration.getkeyfieldscomparisonbooleanop.invalidobj", //NOI18N
+            "jqlc.codegeneration.getkeyfieldscomparisonbooleanop.invalidobj",
             String.valueOf(operation)));
         return 0;
     }
@@ -631,10 +633,10 @@ options
             PersistenceCapable pc = (PersistenceCapable)object;
             int index = fieldInfo.getFieldNumber();
             StateManager stateManager = pc.jdoGetStateManager();
-            
+
             if (stateManager != null)
             {
-                // call stateManager.prepareGetField to allow the stateManager 
+                // call stateManager.prepareGetField to allow the stateManager
                 // to mediate the field access
                 stateManager.prepareGetField(index);
             }
@@ -647,18 +649,18 @@ options
             {
                 value = fieldInfo.getField().get(object);
             }
-            catch (IllegalAccessException e) 
+            catch (IllegalAccessException e)
             {
                 throw new JDOFatalUserException(
-                    I18NHelper.getMessage(messages, "jqlc.codegeneration.fieldaccess.illegal",  //NOI18N
-                        fieldName, (object==null ? "null" : object.toString())), e); //NOI18N
+                    I18NHelper.getMessage(messages, "jqlc.codegeneration.fieldaccess.illegal",
+                        fieldName, (object==null ? "null" : object.toString())), e);
             }
         }
         return value;
     }
-    
+
     /**
-     * This method checks whether the result RetrieveDesc needs a DISTINCT clause or not. 
+     * This method checks whether the result RetrieveDesc needs a DISTINCT clause or not.
      * @param query the query AST
      */
     protected void handleDistinct(JQLAST query, boolean distinct)
@@ -666,15 +668,15 @@ options
         // candidateRD is null in the case of false filter
         if (candidateRD == null)
             return;
-        
+
         if (distinct)
             candidateRD.addResult(RetrieveDesc.OP_DISTINCT, FieldTypeEnumeration.NOT_ENUMERATED);
     }
 
     /**
      * This method returns true if the specified node is an AST that represensts a value.
-     * It returns false for CONTAINS/NOT_CONTAINS nodes and boolean operations that include 
-     * only CONTAINS nodes 
+     * It returns false for CONTAINS/NOT_CONTAINS nodes and boolean operations that include
+     * only CONTAINS nodes
      */
     protected boolean pushesValueOnStack(JQLAST node)
     {
@@ -703,11 +705,10 @@ options
     protected RetrieveDesc createRetrieveDesc(String pathExpr, ClassType classType)
     {
         RetrieveDesc rd = pm.getRetrieveDesc(classType.getJavaClass());
-        if (logger.isLoggable(Logger.FINEST)) 
-        {
+        if (LOG.isLoggable(TRACE)) {
             rd = new DebugRetrieveDesc(rd);
-            logger.finest("LOG_JQLCDumpRD", "create " + JQLAST.getRetrieveDescRepr(rd)); //NOI18N
-        }        
+            LOG.log(TRACE, "createRetrieveDesc " + JQLAST.getRetrieveDescRepr(rd));
+        }
         rd2TagMap.put(rd, pathExpr);
         rd.setNavigationalId(pathExpr);
         return rd;
@@ -724,7 +725,7 @@ options
         {
             this.wrapped = wrapped;
         }
-        
+
         public RetrieveDesc unwrap(RetrieveDesc rd)
         {
             if (rd instanceof DebugRetrieveDesc)
@@ -732,30 +733,25 @@ options
             return rd;
         }
 
-        // methods from RetrieveDesc 
+        // methods from RetrieveDesc
         public void addResult(String name, RetrieveDesc desc, boolean projection)
         {
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                    JQLAST.getRetrieveDescRepr(this) + ".addResult(" +  //NOI18N
-                    name + ", " + JQLAST.getRetrieveDescRepr(desc) + ", " + //NOI18N
-                    projection + ")"); //NOI18N
-            desc = unwrap(desc);
-            wrapped.addResult(name, desc, projection);   
+
+            LOG.log(TRACE, () -> JQLAST.getRetrieveDescRepr(this) + ".addResult(" +
+                    name + ", " + JQLAST.getRetrieveDescRepr(desc) + ", " +
+                    projection + ")");
+            wrapped.addResult(name, unwrap(desc), projection);
         }
-        
+
         public void addResult(int opCode, int resultType)
         {
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                    JQLAST.getRetrieveDescRepr(this) + ".addResult(" +  //NOI18N
-                    opCode + ", " + resultType + ")"); //NOI18N
-            wrapped.addResult(opCode, resultType);   
+            LOG.log(TRACE, () -> JQLAST.getRetrieveDescRepr(this) + ".addResult(" + opCode + ", " + resultType + ")");
+            wrapped.addResult(opCode, resultType);
         }
-        
+
         public void addConstraint(String name, int operation, Object value)
         {
-            String thirdArgRepr = null;
+            final String thirdArgRepr;
             if (value instanceof RetrieveDesc)
             {
                 RetrieveDesc foreignConstraint = (RetrieveDesc)value;
@@ -766,49 +762,38 @@ options
             {
                 thirdArgRepr = (value == null) ? "null" : value.toString();
             }
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                JQLAST.getRetrieveDescRepr(this) + ".addConstraint(" +  //NOI18N
-                name + ", " + operation + ", " + thirdArgRepr + ")"); //NOI18N
+            LOG.log(TRACE, () -> JQLAST.getRetrieveDescRepr(this) + ".addConstraint(" +
+                name + ", " + operation + ", " + thirdArgRepr + ")");
             wrapped.addConstraint(name, operation, value);
         }
 
         public void addConstraint(String name, RetrieveDesc foreignConstraint)
         {
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                    JQLAST.getRetrieveDescRepr(this) + ".addConstraint(" +  //NOI18N
-                    name + ", " + JQLAST.getRetrieveDescRepr(foreignConstraint) + ")"); //NOI18N
-            foreignConstraint = unwrap(foreignConstraint);
-            wrapped.addConstraint(name, foreignConstraint);
+            LOG.log(TRACE, () ->
+                    JQLAST.getRetrieveDescRepr(this) + ".addConstraint(" +
+                    name + ", " + JQLAST.getRetrieveDescRepr(foreignConstraint) + ")");
+            wrapped.addConstraint(name, unwrap(foreignConstraint));
         }
 
         public void addConstraint(String name, int operator, RetrieveDesc foreignConstraint, String foreignFieldName)
         {
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                    JQLAST.getRetrieveDescRepr(this) + ".addConstraint(" +  //NOI18N
-                    name + ", " + operator + ", " + JQLAST.getRetrieveDescRepr(foreignConstraint) + //NOI18N
-                    ", " +  foreignFieldName + ")"); //NOI18N
-            foreignConstraint = unwrap(foreignConstraint);
-            wrapped.addConstraint(name, operator, foreignConstraint, foreignFieldName); 
+            LOG.log(TRACE, () -> JQLAST.getRetrieveDescRepr(this) + ".addConstraint(" +
+                    name + ", " + operator + ", " + JQLAST.getRetrieveDescRepr(foreignConstraint) +
+                    ", " +  foreignFieldName + ")");
+            wrapped.addConstraint(name, operator, unwrap(foreignConstraint), foreignFieldName);
         }
-        
+
         public void setNavigationalId(Object navigationalId)
-        { 
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                    JQLAST.getRetrieveDescRepr(this) + 
-                    ".setNavigationalId(" + navigationalId + ")"); //NOI18N
-            wrapped.setNavigationalId(navigationalId); 
+        {
+            LOG.log(TRACE, () -> JQLAST.getRetrieveDescRepr(this) +
+                    ".setNavigationalId(" + navigationalId + ")");
+            wrapped.setNavigationalId(navigationalId);
         }
 
         public void setPrefetchEnabled(boolean prefetchEnabled)
         {
-            if (logger.isLoggable(Logger.FINEST))
-                logger.finest("LOG_JQLCDumpRD", //NOI18N
-                    JQLAST.getRetrieveDescRepr(this) +
-                    ".setPrefetchEnabled(" + prefetchEnabled + ")"); //NOI18N
+            LOG.log(TRACE, () -> JQLAST.getRetrieveDescRepr(this) +
+                    ".setPrefetchEnabled(" + prefetchEnabled + ")");
             wrapped.setPrefetchEnabled(prefetchEnabled);
         }
 
@@ -825,18 +810,19 @@ query
     :   q:.
         {
             prepareRetrieveDescs(q);
-            if (logger.isLoggable(Logger.FINEST)) 
-                logger.finest("LOG_JQLCDumpTree", q.getTreeRepr("RD annotated AST")); //NOI18N
+            if (LOG.isLoggable(TRACE)) {
+                LOG.log(TRACE, q.getTreeRepr("RD annotated AST"));
+            }
             doCodeGen(q);
         }
     ;
 
 doCodeGen
-{ 
+{
     boolean distinct = false;
 }
     :   #(  q:QUERY
-            candidateClass 
+            candidateClass
             parameters
             variables
             ordering
@@ -853,8 +839,8 @@ doCodeGen
 // ----------------------------------
 
 candidateClass
-{   
-    errorMsg.setContext("setCandidates"); //NOI18N
+{
+    errorMsg.setContext("setCandidates");
 }
     :   c:CLASS_DEF
         // Note, DISTINCT is added by handleDistinct called in the rule query
@@ -864,8 +850,8 @@ candidateClass
 // ----------------------------------
 
 parameters
-{   
-    errorMsg.setContext("declareParameters"); //NOI18N
+{
+    errorMsg.setContext("declareParameters");
 }
     :   ( declareParameter )*
     ;
@@ -878,9 +864,9 @@ declareParameter
 // rules: variable declaration
 // ----------------------------------
 
-variables 
-{ 
-    errorMsg.setContext("declareVariables"); //NOI18N
+variables
+{
+    errorMsg.setContext("declareVariables");
 }
     :   ( declareVariable )*
     ;
@@ -894,8 +880,8 @@ declareVariable
 // ----------------------------------
 
 ordering
-{   
-    errorMsg.setContext("setOrdering"); //NOI18N
+{
+    errorMsg.setContext("setOrdering");
 }
     :   ( orderSpec )*
     ;
@@ -904,7 +890,7 @@ orderSpec
 {
     int op = 0;
 }
-    :   #(  ORDERING_DEF 
+    :   #(  ORDERING_DEF
             (   ASCENDING  { op = RetrieveDesc.OP_ORDERBY; }
             |   DESCENDING { op = RetrieveDesc.OP_ORDERBY_DESC; }
             )
@@ -920,7 +906,7 @@ orderingExpr [int op]
     |   e:.
         {
             errorMsg.unsupported(e.getLine(), e.getColumn(),
-                I18NHelper.getMessage(messages, 
+                I18NHelper.getMessage(messages,
                     "jqlc.codegeneration.generic.unsupportedop", // NOI18N
                     e.getText()));
         }
@@ -931,11 +917,11 @@ orderingExpr [int op]
 // ----------------------------------
 
 result returns [boolean distinct]
-{   
-    errorMsg.setContext("setResult"); //NOI18N
+{
+    errorMsg.setContext("setResult");
     distinct = false;
 }
-    :   #(  RESULT_DEF 
+    :   #(  RESULT_DEF
             distinct = resultExpr[true]
         )
     |   {
@@ -1017,8 +1003,8 @@ resultExpr [boolean outer] returns [boolean distinct]
     ;
 
 collectionExprResult returns [String fieldName]
-{   
-    fieldName = null; 
+{
+    fieldName = null;
     boolean tmp;
 }
     :   #( FIELD_ACCESS tmp = resultExpr[false] name1:IDENT )
@@ -1033,14 +1019,14 @@ collectionExprResult returns [String fieldName]
 // rules: filer expression
 //
 // NOTE: the code generator traverses operands of binary operations in reverse order.
-// The reason is that the RetrieveDesc processes the constriant stack in a LIFO way. 
-// This means, the code generator has to process the right operand first, 
+// The reason is that the RetrieveDesc processes the constriant stack in a LIFO way.
+// This means, the code generator has to process the right operand first,
 // then the left operand and finally the operation.
 // ----------------------------------
 
 filter
-{   
-    errorMsg.setContext("setFilter"); //NOI18N
+{
+    errorMsg.setContext("setFilter");
 }
     :   #( FILTER_DEF expr:. )
         {
@@ -1048,7 +1034,7 @@ filter
             case VALUE:
                 // constant filter
                 Object value = expr.getValue();
-                if (value instanceof Boolean) 
+                if (value instanceof Boolean)
                 {
                     // Note, in the case of a true filter do not add
                     // any constraints to the candidateRD
@@ -1062,14 +1048,14 @@ filter
                 else
                 {
                     errorMsg.fatal(I18NHelper.getMessage(messages,
-                        "jqlc.codegeneration.filter.nonbooleanvalue", //NOI18N
+                        "jqlc.codegeneration.filter.nonbooleanvalue",
                         String.valueOf(value)));
                 }
                 break;
             case FIELD_ACCESS:
                 // The entire filter consists of a boolean field only.
                 // Map this to 'booleanField <> FALSE'. Note, the runtime will
-                // create a JDBC parameter for the literal FALSE and call 
+                // create a JDBC parameter for the literal FALSE and call
                 // setBoolean to bind the value.
                 RetrieveDesc rd = expr.getRetrieveDesc();
                 rd.addConstraint(null, RetrieveDesc.OP_VALUE, Boolean.FALSE);
@@ -1083,7 +1069,7 @@ filter
         }
     ;
 
-expression 
+expression
     :   ( primary )=> primary
     |   bitwiseExpr
     |   conditionalExpr
@@ -1106,82 +1092,82 @@ booleanOperationArgument
       }
     ;
 
-bitwiseExpr 
+bitwiseExpr
     :   #( op1:BAND left1:. right1:booleanOperationArgument )
-        {  
+        {
             booleanOperationArgument(left1);
             // do not generate boolean operation if one of the operands is variable constraint
             if (pushesValueOnStack(left1) && pushesValueOnStack(right1))
-                op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_AND, null); 
+                op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_AND, null);
         }
     |   #( op2:BOR  left2:. right2:booleanOperationArgument )
         {
             booleanOperationArgument(left2);
             // do not generate boolean operation if one of the operands is variable constraint
             if (pushesValueOnStack(left2) && pushesValueOnStack(right2))
-                op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_OR, null); 
+                op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_OR, null);
         }
     |   #( op3:BXOR left3:. right3:booleanOperationArgument )
-        {  
+        {
             booleanOperationArgument(left3);
             errorMsg.unsupported(op3.getLine(), op3.getColumn(),
-                I18NHelper.getMessage(messages, 
+                I18NHelper.getMessage(messages,
                     "jqlc.codegeneration.generic.unsupportedop", // NOI18N
                     op3.getText()));
         }
     ;
 
-conditionalExpr 
+conditionalExpr
     :   #( op1:AND left1:. right1:booleanOperationArgument )
-        {  
+        {
             booleanOperationArgument(left1);
             // do not generate boolean operation if one of the operands is variable constraint
             if (pushesValueOnStack(left1) && pushesValueOnStack(right1))
-                op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_AND, null); 
+                op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_AND, null);
         }
     |   #( op2:OR  left2:. right2:booleanOperationArgument )
-        {    
+        {
             booleanOperationArgument(left2);
             // do not generate boolean operation if one of the operands is variable constraint
             if (pushesValueOnStack(left2) && pushesValueOnStack(right2))
-                op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_OR, null); 
+                op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_OR, null);
         }
     ;
 
-relationalExpr 
+relationalExpr
     :   ( fieldComparison )=> fieldComparison
     |   ( objectComparison )=> objectComparison
     |   ( collectionComparison )=> collectionComparison
     |   ( parameterComparison )=> parameterComparison
     |   #( op1:EQUAL left1:. expression )
-        {  
+        {
             expression(left1);
-            op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_EQ, null); 
+            op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_EQ, null);
         }
     |   #( op2:NOT_EQUAL left2:. expression )
-        {  
+        {
             expression(left2);
-            op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_NE, null); 
+            op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_NE, null);
         }
     |   #( op3:LT left3:. expression )
-        {  
+        {
             expression(left3);
-            op3.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_LT, null); 
+            op3.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_LT, null);
         }
     |   #( op4:GT left4:. expression )
-        {  
+        {
             expression(left4);
-            op4.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_GT, null); 
+            op4.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_GT, null);
         }
     |   #( op5:LE left5:. expression )
-        {  
+        {
             expression(left5);
-            op5.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_LE, null); 
+            op5.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_LE, null);
         }
     |   #( op6:GE left6:. expression )
-        {  
+        {
             expression(left6);
-            op6.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_GE, null); 
+            op6.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_GE, null);
         }
     ;
 
@@ -1195,7 +1181,7 @@ fieldComparison
     ;
 
 fieldComparisonOperands [int operation]
-{   
+{
     String leftName = null;
     String rightName = null;
     Object value = null;
@@ -1203,30 +1189,30 @@ fieldComparisonOperands [int operation]
     :   value = constantValue rightName = f1:fieldAccess
         {
             // case constant relop field
-            generateSimpleFieldValueComparison(f1.getRetrieveDesc(), rightName, 
+            generateSimpleFieldValueComparison(f1.getRetrieveDesc(), rightName,
                                                getSwappedOp(operation), value);
         }
     |   p1:PARAMETER rightName = f2:fieldAccess
         {
             // case parameter relop field
             // Support for fixed-width char pk columns
-            f2.getRetrieveDesc().addConstraint(rightName, RetrieveDesc.OP_FIELD, null); 
+            f2.getRetrieveDesc().addConstraint(rightName, RetrieveDesc.OP_FIELD, null);
             f2.getRetrieveDesc().addConstraint(null,
-                RetrieveDesc.OP_PARAMETER, 
+                RetrieveDesc.OP_PARAMETER,
                 paramtab.getParameterInfoForParamName(p1.getText(), rightName));
             f2.getRetrieveDesc().addConstraint(null, operation, null);
         }
-    |   leftName = f3:fieldAccess 
-        (   value = constantValue 
+    |   leftName = f3:fieldAccess
+        (   value = constantValue
             {
                 // case field relop constant
-                generateSimpleFieldValueComparison(f3.getRetrieveDesc(), leftName, 
+                generateSimpleFieldValueComparison(f3.getRetrieveDesc(), leftName,
                                                    operation, value);
             }
-        |   rightName = f4:fieldAccess 
+        |   rightName = f4:fieldAccess
             {
                 // case field relop field
-                f3.getRetrieveDesc().addConstraint(leftName, operation, 
+                f3.getRetrieveDesc().addConstraint(leftName, operation,
                                                    f4.getRetrieveDesc(), rightName);
             }
         |   p2:PARAMETER
@@ -1234,7 +1220,7 @@ fieldComparisonOperands [int operation]
                 // case field relop parameter
                 // Support for fixed-width char pk columns
                 f3.getRetrieveDesc().addConstraint(null,
-                    RetrieveDesc.OP_PARAMETER, 
+                    RetrieveDesc.OP_PARAMETER,
                     paramtab.getParameterInfoForParamName(p2.getText(), leftName));
                 f3.getRetrieveDesc().addConstraint(leftName, RetrieveDesc.OP_FIELD, null);
                 f3.getRetrieveDesc().addConstraint(null, operation, null);
@@ -1246,12 +1232,12 @@ objectComparison
 {
     Object value = null;
 }
-    :   #( OBJECT_EQUAL objectComparisonOperands[RetrieveDesc.OP_EQ] ) 
+    :   #( OBJECT_EQUAL objectComparisonOperands[RetrieveDesc.OP_EQ] )
     |   #( OBJECT_NOT_EQUAL objectComparisonOperands[RetrieveDesc.OP_NE] )
     ;
 
 objectComparisonOperands [int operation]
-{   
+{
     Object value = null;
 }
     :   value = v1:constantValue d1:dbValue
@@ -1264,18 +1250,18 @@ objectComparisonOperands [int operation]
                 // now handle navigation source
                 expression(expr);
                 // now generate IS NULL constraint
-                generateSimpleFieldValueComparison(expr.getRetrieveDesc(), ident.getText(), 
+                generateSimpleFieldValueComparison(expr.getRetrieveDesc(), ident.getText(),
                                                    getSwappedOp(operation), value);
             }
             else
             {
                 if (d1.getType() == NAVIGATION) navigation(d1);
-                generateDbValueConstantComparison(d1.getRetrieveDesc(), (ClassType)d1.getJQLType(), 
+                generateDbValueConstantComparison(d1.getRetrieveDesc(), (ClassType)d1.getJQLType(),
                                                   getSwappedOp(operation), value, v1.getJQLType());
             }
         }
     |   d2:dbValue
-        (   value = v2:constantValue 
+        (   value = v2:constantValue
             // case dbvalue relop constant
             {
                 if ((value == null) && (d2.getType() == NAVIGATION))
@@ -1285,14 +1271,14 @@ objectComparisonOperands [int operation]
                     // now handle navigation source
                     expression(expr);
                     // now generate IS NULL constraint
-                    generateSimpleFieldValueComparison(expr.getRetrieveDesc(), ident.getText(), 
+                    generateSimpleFieldValueComparison(expr.getRetrieveDesc(), ident.getText(),
                                                        operation, value);
                 }
                 else
                 {
                     if (d2.getType() == NAVIGATION) navigation(d2);
-                    generateDbValueConstantComparison(d2.getRetrieveDesc(), 
-                                                      (ClassType)d2.getJQLType(), 
+                    generateDbValueConstantComparison(d2.getRetrieveDesc(),
+                                                      (ClassType)d2.getJQLType(),
                                                       operation, value, v2.getJQLType());
                 }
             }
@@ -1301,10 +1287,10 @@ objectComparisonOperands [int operation]
             {
                 if (d2.getType() == NAVIGATION) navigation(d2);
                 if (d3.getType() == NAVIGATION) navigation(d3);
-                generateDbValueDbValueComparison(d2.getRetrieveDesc(), 
-                                                 (ClassType)d2.getJQLType(), 
-                                                 operation, 
-                                                 d3.getRetrieveDesc(), 
+                generateDbValueDbValueComparison(d2.getRetrieveDesc(),
+                                                 (ClassType)d2.getJQLType(),
+                                                 operation,
+                                                 d3.getRetrieveDesc(),
                                                  (ClassType)d3.getJQLType());
             }
         )
@@ -1339,9 +1325,9 @@ dbValue
 }
     :   THIS
     |   variableAccess
-    |   #(  NAVIGATION . IDENT )   
-        // do not use non-terminal navigation here, because navigation 
-        // creates a RetrieveDesc for the relationship navigation and 
+    |   #(  NAVIGATION . IDENT )
+        // do not use non-terminal navigation here, because navigation
+        // creates a RetrieveDesc for the relationship navigation and
         // we must not create this in the case of relship == null
     ;
 
@@ -1349,33 +1335,33 @@ collectionComparison
     :   #( eq:COLLECTION_EQUAL . . )
         {
             errorMsg.unsupported(eq.getLine(), eq.getColumn(),
-                I18NHelper.getMessage(messages, 
+                I18NHelper.getMessage(messages,
                     "jqlc.codegeneration.collectioncomparison.nonnull")); // NOI18N
         }
     |   #( ne:COLLECTION_NOT_EQUAL . . )
         {
             errorMsg.unsupported(ne.getLine(), ne.getColumn(),
-                I18NHelper.getMessage(messages, 
+                I18NHelper.getMessage(messages,
                     "jqlc.codegeneration.collectioncomparison.nonnull")); // NOI18N
         }
     ;
 
-binaryArithmeticExpr 
+binaryArithmeticExpr
     :   #( op1:PLUS left1:. right1:. )
         {
-            // Optimize indexOf + <intValue>: 
-            // The SQL database returns an index starting with 1, so we need 
+            // Optimize indexOf + <intValue>:
+            // The SQL database returns an index starting with 1, so we need
             // to decrement the returned index. We can do the derement at compile
             // timeCombine, if the other operand is a constant int value.
-            if ((left1.getType() == INDEXOF) && 
-                (right1.getType() == VALUE) && 
+            if ((left1.getType() == INDEXOF) &&
+                (right1.getType() == VALUE) &&
                 (right1.getValue() instanceof Integer))
             {
                 // case: indexOf() + intValue
                 indexOf(left1, ((Integer)right1.getValue()).intValue());
             }
-            else if ((right1.getType() == INDEXOF) && 
-                (left1.getType() == VALUE) && 
+            else if ((right1.getType() == INDEXOF) &&
+                (left1.getType() == VALUE) &&
                 (left1.getValue() instanceof Integer))
             {
                 // case: intValue + indexOf()
@@ -1385,25 +1371,25 @@ binaryArithmeticExpr
             {
                 expression(right1);
                 expression(left1);
-                op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_ADD, null); 
+                op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_ADD, null);
             }
         }
     |   #( op2:CONCAT left2:. expression )
         {
             expression(left2);
-            op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_CONCAT, null); 
+            op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_CONCAT, null);
         }
     |   #( op3:MINUS left3:. right3:. )
         {
-            // Optimize indexOf + <intValue>: 
-            // The SQL database returns an index starting with 1, so we need 
+            // Optimize indexOf + <intValue>:
+            // The SQL database returns an index starting with 1, so we need
             // to decrement the returned index. We can do the derement at compile
             // timeCombine, if the other operand is a constant int value.
-            if ((left3.getType() == INDEXOF) && 
-                (right3.getType() == VALUE) && 
+            if ((left3.getType() == INDEXOF) &&
+                (right3.getType() == VALUE) &&
                 (right3.getValue() instanceof Integer))
             {
-                // case: indexOf - intValue 
+                // case: indexOf - intValue
                 // treated as indexOf + -intValue
                 indexOf(left3, -((Integer)right3.getValue()).intValue());
             }
@@ -1411,18 +1397,18 @@ binaryArithmeticExpr
             {
                 expression(right3);
                 expression(left3);
-                op3.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_SUB, null); 
+                op3.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_SUB, null);
             }
         }
     |   #( op4:STAR left4:. expression )
         {
             expression(left4);
-            op4.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_MUL, null); 
+            op4.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_MUL, null);
         }
     |   #( op5:DIV left5:. expression )
         {
             expression(left5);
-            op5.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_DIV, null); 
+            op5.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_DIV, null);
         }
     |   #( op6:MOD left6:. expression )
         {
@@ -1431,9 +1417,9 @@ binaryArithmeticExpr
         }
     ;
 
-unaryArithmeticExpr 
-{   
-    Object value = null; 
+unaryArithmeticExpr
+{
+    Object value = null;
 }
     :   #(   UNARY_PLUS expression )
         // no action needed, just ignore the unary plus
@@ -1445,46 +1431,46 @@ unaryArithmeticExpr
                     op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, value);
                 }
             |
-                expression 
-                { 
+                expression
+                {
                     // map -value to 0 - value
-                    op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+                    op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                                                        getZeroValue(op2.getJQLType()));
-                    op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_SUB, null); 
+                    op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_SUB, null);
                 }
             )
         )
     ;
 
-complementExpr 
+complementExpr
     :   #( op1:BNOT expression )
-        { 
+        {
             // map ~value to -1 - value (which is equivalent to (-value)-1)
-            op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+            op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                                                 getMinusOneValue(op1.getJQLType()));
-            op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_SUB, null); 
+            op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_SUB, null);
         }
     |   #(  op2:LNOT expr:. )
         {   if (expr.getType() == FIELD_ACCESS) {
                 // The NOT operand is a boolean field.
                 // Map this to 'booleanField = FALSE'. Note, the runtime will
-                // create a JDBC parameter for the literal FALSE and call 
+                // create a JDBC parameter for the literal FALSE and call
                 // setBoolean to bind the value.
                 RetrieveDesc rd = op2.getRetrieveDesc();
-                rd.addConstraint(null, RetrieveDesc.OP_VALUE, Boolean.FALSE); 
+                rd.addConstraint(null, RetrieveDesc.OP_VALUE, Boolean.FALSE);
                 expression(expr);
                 rd.addConstraint(null, RetrieveDesc.OP_EQ, null);
             }
             else {
                 expression(expr);
-                op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_NOT, null); 
+                op2.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_NOT, null);
             }
         }
     ;
 
-primary 
-{   
-    Object value; 
+primary
+{
+    Object value;
     String name;
 }
     :   #( TYPECAST type expression )
@@ -1493,24 +1479,24 @@ primary
         {
             if (value == null)
             {
-                errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.codegeneration.primary.null")); //NOI18N
+                errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.codegeneration.primary.null"));
             }
             else if (value instanceof Boolean)
             {
                 boolean booleanValue = ((Boolean)value).booleanValue();
                 RetrieveDesc rd = v.getRetrieveDesc();
-                rd.addConstraint(null, RetrieveDesc.OP_VALUE, new Integer(0)); 
-                rd.addConstraint(null, RetrieveDesc.OP_VALUE, new Integer(0)); 
-                rd.addConstraint(null, (booleanValue?RetrieveDesc.OP_EQ:RetrieveDesc.OP_NE), null); 
+                rd.addConstraint(null, RetrieveDesc.OP_VALUE, new Integer(0));
+                rd.addConstraint(null, RetrieveDesc.OP_VALUE, new Integer(0));
+                rd.addConstraint(null, (booleanValue?RetrieveDesc.OP_EQ:RetrieveDesc.OP_NE), null);
             }
             else
             {
-                v.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, value); 
+                v.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, value);
             }
         }
-    |   p:PARAMETER 
+    |   p:PARAMETER
         {
-            p.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_PARAMETER, 
+            p.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_PARAMETER,
                 paramtab.getParameterInfoForParamName(p.getText()));
         }
     |   THIS
@@ -1536,8 +1522,8 @@ primary
     ;
 
 constantValue returns [Object value]
-{   
-    value = null; 
+{
+    value = null;
 }
     :   v:VALUE
         {
@@ -1547,8 +1533,8 @@ constantValue returns [Object value]
 
 
 fieldAccess returns [String fieldName]
-{   
-    fieldName = null; 
+{
+    fieldName = null;
 }
     :   #( FIELD_ACCESS expression name:IDENT )
         {  fieldName = name.getText(); }
@@ -1569,11 +1555,11 @@ variableAccess
 }
     :   #(  var:VARIABLE ( name = col:collectionExpr )? )
         {
-            
+
             RetrieveDesc varRD = var.getRetrieveDesc();
             if (!boundRetrieveDescs.contains(varRD))
             {
-                if (col != null) 
+                if (col != null)
                 {
                     if (col.getType() == NOT_IN)
                         col.getRetrieveDesc().addConstraint(name, RetrieveDesc.OP_NOTIN, varRD);
@@ -1594,8 +1580,8 @@ variableAccess
     ;
 
 collectionExpr returns [String fieldName]
-{   
-    fieldName = null; 
+{
+    fieldName = null;
 }
     :   #( FIELD_ACCESS expression name1:IDENT )
         {  fieldName = name1.getText(); }
@@ -1610,36 +1596,36 @@ startsWith
     Object value = null;
     JQLAST pattern = null;
 }
-    :   #(  op1:STARTS_WITH string:. 
+    :   #(  op1:STARTS_WITH string:.
             {
                 // I need to store a pointer to the second operand of startsWith here.
                 // See second alternative below.
                 pattern = (JQLAST)string.getNextSibling();
             }
-            ( 
+            (
                 ( constantValue )=> value = constantValue
                 {
                     if (string.getType() == FIELD_ACCESS)
                     {
                         // case 1 fieldAccess constantValue
                         String fieldName = fieldAccess(string);
-                        op1.getRetrieveDesc().addConstraint(fieldName, RetrieveDesc.OP_LIKE, 
+                        op1.getRetrieveDesc().addConstraint(fieldName, RetrieveDesc.OP_LIKE,
                             ((String)value) + WILDCARD_PATTERN);
                     }
                     else
                     {
                         // case 2 expression constantValue
-                        op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+                        op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                             ((String)value) + WILDCARD_PATTERN);
                         expression(string);
                         op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_LIKE, null);
                     }
                 }
             |   {
-                    // I have to access the tree matched by rule expression before 
-                    // the rule is entered. Variable pattern points to that tree and 
+                    // I have to access the tree matched by rule expression before
+                    // the rule is entered. Variable pattern points to that tree and
                     // needs to be initilaized before!
-                    pattern.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+                    pattern.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                                                             WILDCARD_PATTERN);
                 }
                 expression
@@ -1657,21 +1643,21 @@ endsWith
 {
     Object value = null;
 }
-    :   #(  op1:ENDS_WITH string:. 
-            ( 
+    :   #(  op1:ENDS_WITH string:.
+            (
                 ( constantValue )=> value = constantValue
                 {
                     if (string.getType() == FIELD_ACCESS)
                     {
                         // case 1 fieldAccess constantValue
                         String fieldName = fieldAccess(string);
-                        op1.getRetrieveDesc().addConstraint(fieldName, RetrieveDesc.OP_LIKE, 
+                        op1.getRetrieveDesc().addConstraint(fieldName, RetrieveDesc.OP_LIKE,
                             WILDCARD_PATTERN + ((String)value));
                     }
                     else
                     {
                         // case 2 expression constantValue
-                        op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+                        op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                             WILDCARD_PATTERN + ((String)value));
                         expression(string);
                         op1.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_LIKE, null);
@@ -1691,7 +1677,7 @@ endsWith
     ;
 
 isEmpty
-{ 
+{
     String name = null;
 }
     :   #(op:IS_EMPTY name = collectionExpr)
@@ -1701,10 +1687,10 @@ isEmpty
     ;
 
 like
-{   
+{
     int opCode = RetrieveDesc.OP_LIKE;
 }
-    :   #( op:LIKE string:. pattern:. opCode = escape ) 
+    :   #( op:LIKE string:. pattern:. opCode = escape )
         {
             expression(pattern);
             expression(string);
@@ -1713,7 +1699,7 @@ like
     ;
 
 escape returns [int opCode]
-{   
+{
     // The default is no ESCAPE definition => OP_LIKE
     opCode = RetrieveDesc.OP_LIKE;
 }
@@ -1727,50 +1713,50 @@ escape returns [int opCode]
 substring
     :   // JDOQL:        string.substring(begin, end) ->
         // RetrieveDesc: SUBSTRING(string, begin + 1, end - begin)
-        #( op:SUBSTRING string:. begin:. end:. ) 
+        #( op:SUBSTRING string:. begin:. end:. )
         {
             RetrieveDesc rd = op.getRetrieveDesc();
             if ((begin.getType() == VALUE) && (end.getType() == VALUE))
             {
                 // Optimization: begin and end are constant values =>
-                // calculate start and length of SQL SUBSTRING function 
+                // calculate start and length of SQL SUBSTRING function
                 // at compile time.
                 // Note, Semantic ensures begin and end are int or Integer values.
-                int beginValue = (begin.getValue() != null) ? 
+                int beginValue = (begin.getValue() != null) ?
                     ((Integer)begin.getValue()).intValue() : 0;
-                int endValue = (end.getValue() != null) ? 
+                int endValue = (end.getValue() != null) ?
                     ((Integer)end.getValue()).intValue() : 0;
-                if (beginValue < 0) 
+                if (beginValue < 0)
                 {
                     errorMsg.error(begin.getLine(), begin.getColumn(),
-                        I18NHelper.getMessage(messages, 
+                        I18NHelper.getMessage(messages,
                             "jqlc.codegeneration.substring.beginnegative", // NOI18N
                             String.valueOf(beginValue)));
                 }
-                else if (endValue < beginValue) 
+                else if (endValue < beginValue)
                 {
                     errorMsg.error(op.getLine(), op.getColumn(),
-                        I18NHelper.getMessage(messages, 
+                        I18NHelper.getMessage(messages,
                             "jqlc.codegeneration.substring.beginlargerend", // NOI18N
                             String.valueOf(beginValue), String.valueOf(endValue)));
                 }
                 // SQL length = end - begin
-                rd.addConstraint(null, RetrieveDesc.OP_VALUE, 
+                rd.addConstraint(null, RetrieveDesc.OP_VALUE,
                     new Integer(endValue-beginValue));
-                // SQL start index = begin + 1 
-                rd.addConstraint(null, RetrieveDesc.OP_VALUE, 
+                // SQL start index = begin + 1
+                rd.addConstraint(null, RetrieveDesc.OP_VALUE,
                     new Integer(beginValue+1));
             }
             else
             {
                 // At least one of begin or end is a non constant value =>
-                // generate the arguments start and length of the SQL SUBSTRING 
+                // generate the arguments start and length of the SQL SUBSTRING
                 // function as binary plus/minus expressions.
                 // The next 3 line denote the SQL length = end - begin
                 expression(begin);
                 expression(end);
                 rd.addConstraint(null, RetrieveDesc.OP_SUB, null);
-                // The next 3 lines denote the SQL start index = begin + 1 
+                // The next 3 lines denote the SQL start index = begin + 1
                 rd.addConstraint(null, RetrieveDesc.OP_VALUE, new Integer(1));
                 expression(begin);
                 rd.addConstraint(null, RetrieveDesc.OP_ADD, null);
@@ -1790,7 +1776,7 @@ indexOf [int incr]
         // RetrieveDesc: POSITION(string, pattern) - 1
         // JDOQL:        string.indexOf(pattern, begin) ->
         // RetrieveDesc: POSITION_START(string, pattern, begin + 1) - 1
-        #( op:INDEXOF string:. pattern:. opCode = fromIndex ) 
+        #( op:INDEXOF string:. pattern:. opCode = fromIndex )
         {
             RetrieveDesc rd = op.getRetrieveDesc();
             // the 3 lines denote the SQL function POSITION OR POSITION_START
@@ -1816,21 +1802,21 @@ fromIndex returns [int opCode]
     :   e:.
         {
             opCode = RetrieveDesc.OP_POSITION_START;
-            // Java indexOf method use indexes starting with 0, 
+            // Java indexOf method use indexes starting with 0,
             // where SQL starts with 1, so we need to add 1
             if (e.getType() == VALUE)
             {
-                // Optimization: calulate index at compile time, 
+                // Optimization: calulate index at compile time,
                 // if start is a constant value.
                 // Note, Semantic ensures begin and end are int or Integer values.
-                int value = (e.getValue() != null) ? 
+                int value = (e.getValue() != null) ?
                     ((Integer)e.getValue()).intValue() : 0;
-                e.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+                e.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                     new Integer(value + 1));
             }
             else
             {
-                e.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE, 
+                e.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_VALUE,
                     new Integer(1));
                 expression(e);
                 e.getRetrieveDesc().addConstraint(null, RetrieveDesc.OP_ADD, null);
@@ -1888,8 +1874,8 @@ prepareRetrieveDescs
             checkRetrieveDesc[usedRD] // candidate class
             ( #( PARAMETER_DEF . . ) )*
             ( #( VARIABLE_DEF . . ) )*
-            ( #( ORDERING_DEF 
-                    ( ASCENDING | DESCENDING ) 
+            ( #( ORDERING_DEF
+                    ( ASCENDING | DESCENDING )
                     ordering:checkRetrieveDesc[usedRD]
                     { propagateRetrieveDesc(ordering, candidateRD); }
                 )
@@ -1898,7 +1884,7 @@ prepareRetrieveDescs
                     { propagateRetrieveDesc(result, candidateRD); }
                 )
             )?
-            #( FILTER_DEF 
+            #( FILTER_DEF
                 filter:checkRetrieveDesc[usedRD]
                 { propagateRetrieveDesc(filter, candidateRD); }
             )
@@ -1910,7 +1896,7 @@ checkRetrieveDesc [Map usedRD]
         {
             // check persistence capable
             ClassType candidateClass = (ClassType)c.getJQLType();
-            candidateRD = createRetrieveDesc("this", candidateClass); //NOI18N
+            candidateRD = createRetrieveDesc("this", candidateClass);
             candidateRD.setPrefetchEnabled(prefetchEnabled);
         }
     |   #( cast:TYPECAST type expr1:checkRetrieveDesc[usedRD] )
@@ -1918,11 +1904,11 @@ checkRetrieveDesc [Map usedRD]
             cast.setRetrieveDesc(expr1.getRetrieveDesc());
         }
 
-    //  constantValue not necessary here, this is covered by the last rule 
+    //  constantValue not necessary here, this is covered by the last rule
 
     |   t:THIS
-        { 
-            t.setRetrieveDesc(candidateRD); 
+        {
+            t.setRetrieveDesc(candidateRD);
         }
     |   #(var:VARIABLE ( checkRetrieveDesc[usedRD] )? )
         {
@@ -1967,17 +1953,17 @@ checkRetrieveDesc [Map usedRD]
         {
             ie.setRetrieveDesc(expr9.getRetrieveDesc());
         }
-    |   #(like:LIKE string10:checkRetrieveDesc[usedRD] 
+    |   #(like:LIKE string10:checkRetrieveDesc[usedRD]
             pattern10:checkRetrieveDesc[usedRD] ( escape10:checkRetrieveDesc[usedRD] )? )
         {
             like.setRetrieveDesc(getCommonRetrieveDesc(string10, pattern10, escape10));
         }
-    |   #(substr:SUBSTRING string11:checkRetrieveDesc[usedRD] 
+    |   #(substr:SUBSTRING string11:checkRetrieveDesc[usedRD]
             lower11:checkRetrieveDesc[usedRD] upper11:checkRetrieveDesc[usedRD] )
         {
             substr.setRetrieveDesc(getCommonRetrieveDesc(string11, lower11, upper11));
         }
-    |   #(indexOf:INDEXOF string12:checkRetrieveDesc[usedRD] 
+    |   #(indexOf:INDEXOF string12:checkRetrieveDesc[usedRD]
             pattern12:checkRetrieveDesc[usedRD] ( start12:checkRetrieveDesc[usedRD] )? )
         {
             indexOf.setRetrieveDesc(getCommonRetrieveDesc(string12, pattern12, start12));
@@ -1999,15 +1985,15 @@ checkRetrieveDesc [Map usedRD]
 
     |   #( op1:BAND      left1:. right1:. )
         {   checkAndOpRetrieveDesc(op1, left1, right1, usedRD); }
-    |   #( op2:BOR       left2:checkRetrieveDesc[new HashMap(usedRD)] 
+    |   #( op2:BOR       left2:checkRetrieveDesc[new HashMap(usedRD)]
                          right2:checkRetrieveDesc[new HashMap(usedRD)] )
         { op2.setRetrieveDesc(getCommonRetrieveDesc(left2, right2)); }
-    |   #( op3:BXOR      left3:checkRetrieveDesc[new HashMap()] 
+    |   #( op3:BXOR      left3:checkRetrieveDesc[new HashMap()]
                          right3:checkRetrieveDesc[new HashMap()] )
         { op3.setRetrieveDesc(getCommonRetrieveDesc(left3, right3)); }
     |   #( op4:AND      left4:. right4:. )
         {   checkAndOpRetrieveDesc(op4, left4, right4, usedRD); }
-    |   #( op5:OR        left5:checkRetrieveDesc[new HashMap(usedRD)] 
+    |   #( op5:OR        left5:checkRetrieveDesc[new HashMap(usedRD)]
                          right5:checkRetrieveDesc[new HashMap(usedRD)] )
         { op5.setRetrieveDesc(getCommonRetrieveDesc(left5, right5)); }
     |   #( op6:EQUAL     left6:checkRetrieveDesc[usedRD] right6:checkRetrieveDesc[usedRD] )
@@ -2066,4 +2052,4 @@ checkRetrieveDesc [Map usedRD]
     |   #( count:COUNT arg10:checkRetrieveDesc[usedRD] )
         {  count.setRetrieveDesc(arg10.getRetrieveDesc()); }
     |   .
-    ; 
+    ;

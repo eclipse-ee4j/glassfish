@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,13 +19,16 @@ package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import java.lang.System.Logger;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * If the application contains cmp 2.x beans process them. Check if
@@ -35,7 +38,7 @@ import org.glassfish.persistence.common.Java2DBProcessorHelper;
  */
 public class CMPProcessor {
 
-    private static Logger logger = LogHelperEJBCompiler.getLogger();
+    private static final Logger LOG = System.getLogger(CMPProcessor.class.getName());
 
     private Java2DBProcessorHelper helper;
 
@@ -76,7 +79,7 @@ public class CMPProcessor {
 
         boolean userDropTables = cmpResource.isDropTablesAtUndeploy();
 
-        logger.fine("ejb.CMPProcessor.createanddroptables", new Object[] {createTables, userDropTables});
+        LOG.log(DEBUG, "Processing event to create tables: {0}, drop tables: {1}.", createTables, userDropTables);
 
         if (!createTables && !userDropTables) {
             // Nothing to do.
@@ -87,11 +90,9 @@ public class CMPProcessor {
         helper.setDropTablesValue(userDropTables, bundle.getName());
 
         constructJdbcFileNames(bundle);
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("ejb.CMPProcessor.createanddropfilenames",
-                helper.getCreateJdbcFileName(bundle.getName()),
-                helper.getDropJdbcFileName(bundle.getName()));
-        }
+        LOG.log(DEBUG,
+            () -> "Names of the files to be used for create is: " + helper.getCreateJdbcFileName(bundle.getName())
+                + ", and for drop is: " + helper.getDropJdbcFileName(bundle.getName()) + ".");
 
         if (createTables) {
             helper.createOrDropTablesInDB(true, "CMP"); // NOI18N

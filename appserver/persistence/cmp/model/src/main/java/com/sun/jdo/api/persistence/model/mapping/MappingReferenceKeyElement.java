@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,17 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingReferenceKeyElement.java
- *
- * Created on March 3, 2000, 1:11 PM
- */
-
 package com.sun.jdo.api.persistence.model.mapping;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.ColumnPairElement;
 import org.netbeans.modules.dbschema.ReferenceKey;
@@ -49,81 +44,99 @@ import org.netbeans.modules.dbschema.ReferenceKey;
  * establishes the primary to secondary relationship via the reference keys,
  * and puts the pair information into the "fake foreign key".
  *
- * @author Mark Munro
- * @author Rochelle Raccah
- * @version %I%
+ * @author Mark Munro 2000
+ * @author Rochelle Raccah 2000
  */
-public interface MappingReferenceKeyElement
-    extends MappingMemberElement, ReferenceKey
-{
-    //======================= table handling ===========================
+public interface MappingReferenceKeyElement extends MappingMemberElement, ReferenceKey {
+    // ======================= table handling ===========================
 
-    /** Returns the mapping table element for this referencing key.
+    /**
+     * Returns the mapping table element for this referencing key.
+     *
      * @return the meta data table for this referencing key
      */
-    public MappingTableElement getTable ();
+    MappingTableElement getTable();
 
-    /** Set the mapping table for this referencing key to the supplied table.
+    /**
+     * Set the mapping table for this referencing key to the supplied table.
+     *
      * @param table mapping table element to be used with this key.
      * @exception ModelException if impossible
      */
-    public void setTable (MappingTableElement table) throws ModelException;
+    void setTable(MappingTableElement table) throws ModelException;
 
-    //======================= column handling ===========================
+    // ======================= column handling ===========================
 
-    /** Returns the list of relative column pair names in this referencing key.
+    /**
+     * Returns the list of relative column pair names in this referencing key.
+     *
      * @return the names of the column pairs in this referencing key
      */
-    public ArrayList getColumnPairNames ();
+    List<String> getColumnPairNames();
 
-    /** Remove a column pair from the holder.  This method can be used to
+    /**
+     * Remove a column pair from the holder. This method can be used to
      * remove a pair by name when it cannot be resolved to an actual pair.
+     *
      * @param pairName the relative name of the column pair to remove
      * @throws ModelException if impossible
      */
-    public void removeColumnPair (String pairName) throws ModelException;
+    void removeColumnPair(String pairName) throws ModelException;
 
-    /** Remove some column pairs from the holder.  This method can be used to
+    /**
+     * Remove some column pairs from the holder. This method can be used to
      * remove pairs by name when they cannot be resolved to actual pairs.
+     *
      * @param pairNames the relative names of the column pairs to remove
      * @throws ModelException if impossible
      */
-    public void removeColumnPairs (ArrayList pairNames) throws ModelException;
+    void removeColumnPairs(List<String> pairNames) throws ModelException;
 
-    //==== redefined from ReferenceKey to narrow Exception->ModelException ===
+    // ==== redefined from ReferenceKey to narrow Exception->ModelException ===
 
-    /** Add a new column pair to the holder.
+    /**
+     * Add a new column pair to the holder.
+     *
      * @param pair the pair to add
      * @throws ModelException if impossible
      */
-    public void addColumnPair (ColumnPairElement pair) throws ModelException;
+    @Override
+    void addColumnPair(ColumnPairElement pair) throws ModelException;
 
-    /** Add some new column pairs to the holder.
+    /**
+     * Add some new column pairs to the holder.
+     *
      * @param pairs the column pairs to add
      * @throws ModelException if impossible
      */
-    public void addColumnPairs (ColumnPairElement[] pairs)
-        throws ModelException;
+    @Override
+    void addColumnPairs(ColumnPairElement[] pairs) throws ModelException;
 
-    /** Remove a column pair from the holder.
+    /**
+     * Remove a column pair from the holder.
+     *
      * @param pair the column pair to remove
      * @throws ModelException if impossible
      */
-    public void removeColumnPair (ColumnPairElement pair)
-        throws ModelException;
+    @Override
+    void removeColumnPair(ColumnPairElement pair) throws ModelException;
 
-    /** Remove some column pairs from the holder.
+    /**
+     * Remove some column pairs from the holder.
+     *
      * @param pairs the column pairs to remove
      * @throws ModelException if impossible
      */
-    public void removeColumnPairs (ColumnPairElement[] pairs)
-        throws ModelException;
+    @Override
+    void removeColumnPairs(ColumnPairElement[] pairs) throws ModelException;
 
-    /** Set the column pairs for this holder.
+    /**
+     * Set the column pairs for this holder.
      * Previous column pairs are removed.
+     *
      * @param pairs the new column pairs
      * @throws ModelException if impossible
      */
-    public void setColumnPairs (ColumnPairElement[] pairs)
-        throws ModelException;
+    @Override
+    void setColumnPairs(ColumnPairElement[] pairs) throws ModelException;
 }

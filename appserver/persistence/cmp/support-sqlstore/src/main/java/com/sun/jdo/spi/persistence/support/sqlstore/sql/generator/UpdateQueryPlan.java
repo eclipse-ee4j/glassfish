@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,13 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * UpdateQueryPlan.java
- *
- * Created on October 3, 2001
- *
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
@@ -91,8 +85,8 @@ public class UpdateQueryPlan extends QueryPlan {
             return;
         }
 
-        for (Iterator iter = fieldDesc.getColumnElements(); iter.hasNext(); ) {
-            ColumnElement columnElement = (ColumnElement) iter.next();
+        for (Iterator<ColumnElement> iter = fieldDesc.getColumnElements(); iter.hasNext(); ) {
+            ColumnElement columnElement = iter.next();
             TableElement tableElement = columnElement.getDeclaringTable();
 
             if (tableElement == null) {
@@ -121,6 +115,7 @@ public class UpdateQueryPlan extends QueryPlan {
         }
     }
 
+    @Override
     public void build() {
         build(false);
     }
@@ -133,7 +128,9 @@ public class UpdateQueryPlan extends QueryPlan {
      */
     public void build(boolean batch) {
 
-        if ((status & ST_BUILT) > 0) return;
+        if ((status & ST_BUILT) > 0) {
+            return;
+        }
 
         this.batch = batch;
 
@@ -159,8 +156,9 @@ public class UpdateQueryPlan extends QueryPlan {
 
                 // Skip join tables
                 if (!t.isJoinTable()) {
-                    if (findQueryTable(t.getTableElement()) == null)
+                    if (findQueryTable(t.getTableElement()) == null) {
                         addStatement(addQueryTable(t));
+                    }
                 }
             }
 
@@ -170,7 +168,7 @@ public class UpdateQueryPlan extends QueryPlan {
                 int j = statements.size() - 1;
 
                 while (i < j) {
-                    Statement s = (Statement) statements.get(i);
+                    Statement s = statements.get(i);
                     statements.set(i, statements.get(j));
                     statements.set(j, s);
                     i++;
@@ -198,24 +196,24 @@ public class UpdateQueryPlan extends QueryPlan {
     }
 
     private void addConstraints(UpdateStatement statement,
-                                ArrayList localFields,
-                                ArrayList foreignFields,
-                                ArrayList columns) {
+                                List<FieldDesc> localFields,
+                                List<FieldDesc> foreignFields,
+                                List<ColumnElement> columns) {
 
         boolean isBeforeImageRequired = updateDesc.isBeforeImageRequired();
         for (int i = 0; i < localFields.size(); i++) {
             LocalFieldDesc lf = (LocalFieldDesc) localFields.get(i);
             LocalFieldDesc ff = (LocalFieldDesc) foreignFields.get(i);
-            ColumnElement ce = (ColumnElement) columns.get(i);
+            ColumnElement ce = columns.get(i);
 
             addConstraint(statement, lf, ff, ce, isBeforeImageRequired);
         }
 
         // Add the constraint on the version field if needed.
         if (getConfig().hasVersionConsistency() && action != ACT_INSERT) {
-            QueryTable table = (QueryTable) statement.getQueryTables().get(0);
+            QueryTable table = statement.getQueryTables().get(0);
             LocalFieldDesc versionField = table.getTableDesc().getVersionField();
-            ColumnElement ce = (ColumnElement) versionField.getColumnElements().next();
+            ColumnElement ce = versionField.getColumnElements().next();
 
             addConstraint(statement, versionField, versionField, ce, false);
         }
@@ -245,28 +243,28 @@ public class UpdateQueryPlan extends QueryPlan {
     }
 
     private void addSecondaryTableConstraint(UpdateStatement statement) {
-        QueryTable table = (QueryTable) statement.getQueryTables().get(0);
+        QueryTable table = statement.getQueryTables().get(0);
         ReferenceKeyDesc key = table.getTableDesc().getPrimaryTableKey();
 
-        ArrayList localFields = key.getReferencingKey().getFields();
-        ArrayList foreignFields = key.getReferencedKey().getFields();
-        ArrayList columns = key.getReferencingKey().getColumns();
+        List<FieldDesc> localFields = key.getReferencingKey().getFields();
+        List<FieldDesc> foreignFields = key.getReferencedKey().getFields();
+        List<ColumnElement> columns = key.getReferencingKey().getColumns();
 
         addConstraints(statement, localFields, foreignFields, columns);
     }
 
     private void addBasetableConstraint(UpdateStatement statement) {
-        QueryTable table = (QueryTable) statement.getQueryTables().get(0);
+        QueryTable table = statement.getQueryTables().get(0);
         KeyDesc key = table.getTableDesc().getKey();
 
-        ArrayList localFields = key.getFields();
-        ArrayList columns = key.getColumns();
+        List<FieldDesc> localFields = key.getFields();
+        List<ColumnElement> columns = key.getColumns();
 
         addConstraints(statement, localFields, localFields, columns);
     }
 
     private void processRelatedStatements(UpdateStatement statement) {
-        ArrayList secondaryTableStatements = statement.getSecondaryTableStatements();
+        List<Statement> secondaryTableStatements = statement.getSecondaryTableStatements();
 
         if (secondaryTableStatements != null) {
             for (int i = 0; i < secondaryTableStatements.size(); i++) {
@@ -281,6 +279,7 @@ public class UpdateQueryPlan extends QueryPlan {
         }
     }
 
+    @Override
     protected void processStatements() {
         int size = statements.size();
 
@@ -290,48 +289,55 @@ public class UpdateQueryPlan extends QueryPlan {
             for (int i = 0; i < size; i++) {
                 UpdateStatement statement = (UpdateStatement) statements.get(i);
 
-                if (!statement.isConstraintAdded())
+                if (!statement.isConstraintAdded()) {
                     processRelatedStatements(statement);
+                }
             }
         }
 
         UpdateStatement masterStatement = null;
 
-        if (size == 1)
+        if (size == 1) {
             masterStatement = (UpdateStatement) statements.get(0);
-        else {
+        } else {
             // Look for the master statement. It should be the one
             // with no constraints added.
             for (int i = 0; i < size; i++) {
                 masterStatement = (UpdateStatement) statements.get(i);
 
-                if (!masterStatement.isConstraintAdded()) break;
+                if (!masterStatement.isConstraintAdded()) {
+                    break;
+                }
             }
         }
 
-        if (action != ACT_INSERT)
+        if (action != ACT_INSERT) {
             addBasetableConstraint(masterStatement);
+        }
 
-        if ((action != ACT_INSERT) && (updateDesc.getConcurrency() != null))
+        if ((action != ACT_INSERT) && (updateDesc.getConcurrency() != null)) {
             updateDesc.getConcurrency().update(this);
+        }
     }
 
     private void processJoinTables() {
         Collection fields = updateDesc.getUpdatedJoinTableFields();
 
-        if (fields == null) return;
+        if (fields == null) {
+            return;
+        }
 
         Iterator fieldIter = fields.iterator();
 
-        ArrayList deleteStatements = new ArrayList();
-        ArrayList insertStatements = new ArrayList();
+        List<UpdateStatement> deleteStatements = new ArrayList<>();
+        List<UpdateStatement> insertStatements = new ArrayList<>();
 
         while (fieldIter.hasNext()) {
             ForeignFieldDesc f = (ForeignFieldDesc) fieldIter.next();
             Collection descs = updateDesc.getUpdateJoinTableDescs(f);
             Iterator descIter = descs.iterator();
 
-            ColumnElement c = (ColumnElement) f.assocLocalColumns.get(0);
+            ColumnElement c = f.assocLocalColumns.get(0);
             QueryTable t = addQueryTable(config.findTableDesc(c.getDeclaringTable()));
 
             while (descIter.hasNext()) {
@@ -362,12 +368,14 @@ public class UpdateQueryPlan extends QueryPlan {
         // All join table delete statements have to go first and all
         // join table insert statements have to go last.
 
-        ArrayList oldStatements = statements;
-        statements = deleteStatements;
+        List<Statement> oldStatements = statements;
+        statements = new ArrayList<>();
+        statements.addAll(deleteStatements);
         statements.addAll(oldStatements);
         statements.addAll(insertStatements);
     }
 
+    @Override
     protected Statement newStatement() {
         return new UpdateStatement(store.getVendorType(), this, batch);
     }
@@ -381,8 +389,9 @@ public class UpdateQueryPlan extends QueryPlan {
     {
         for (int i = 0, size = statements.size(); i < size; i++) {
             UpdateStatement updateStatement = (UpdateStatement) statements.get(i);
-            if (updateStatement.exceedsBatchThreshold(tran))
+            if (updateStatement.exceedsBatchThreshold(tran)) {
                 return true;
+            }
         }
         return false;
     }

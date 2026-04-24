@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,8 @@
 
 package com.sun.jdo.spi.persistence.utility;
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 /** Implements a simple semaphore that does not do <em>any</em>
  * semaphore-ing.  That is, the methods just immediately return.
@@ -26,40 +28,35 @@ import com.sun.jdo.spi.persistence.utility.logging.Logger;
 // db13166: I would rather we use Doug Lea's stuff, but don't want to
 // introduce that magnitude of change at this point in time.
 public class NullSemaphore implements Semaphore {
-    /** Where to log messages about locking operations
-     */
-    private static final Logger _logger = LogHelperUtility.getLogger();
 
-    /** For logging, indicates on whose behalf locking is done.
+    /**
+     * Where to log messages about locking operations
+     */
+    private static final Logger LOG = System.getLogger(NullSemaphore.class.getName());
+
+    /**
+     * For logging, indicates on whose behalf locking is done.
      */
     private final String _owner;
 
     public NullSemaphore(String owner) {
         _owner = owner;
-
-        if (_logger.isLoggable(Logger.FINEST)) {
-            Object[] items = new Object[] {_owner};
-            _logger.finest("utility.nullsemaphore.constructor",items); // NOI18N
-        }
+        LOG.log(Level.DEBUG, "NullSemaphore constructor() for {0}.", _owner);
     }
 
-    /** Does nothing.
+    /**
+     * Does nothing.
      */
+    @Override
     public void acquire() {
-
-        if (_logger.isLoggable(Logger.FINEST)) {
-            Object[] items = new Object[] {_owner};
-            _logger.finest("utility.nullsemaphore.acquire",items); // NOI18N
-        }
+        LOG.log(Level.DEBUG, "NullSemaphore.acquire() for {0}.", _owner);
     }
 
-    /** Does nothing.
+    /**
+     * Does nothing.
      */
+    @Override
     public void release() {
-
-        if (_logger.isLoggable(Logger.FINEST)) {
-            Object[] items = new Object[] {_owner};
-            _logger.finest("utility.nullsemaphore.release",items); // NOI18N
-        }
+        LOG.log(Level.DEBUG, "NullSemaphore.release() for {0}.", _owner);
     }
 }

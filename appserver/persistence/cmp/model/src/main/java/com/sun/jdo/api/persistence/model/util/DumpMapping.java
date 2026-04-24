@@ -27,16 +27,16 @@ import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingReferenceKeyElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingTableElement;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
-import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
-import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingTableElementImpl;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.netbeans.modules.dbschema.ColumnElement;
@@ -57,16 +57,16 @@ public class DumpMapping
      */
     public static void dumpMappingCache (PrintStream stream)
     {
-        stream.println("Mapping cache (class names -> MappingClassElements)"); // NOI18N
+        stream.println("Mapping cache (class names -> MappingClassElements)");
         for (Iterator i = model.getMappingCache().entrySet().iterator();
              i.hasNext();)
         {
             Map.Entry entry = (Map.Entry)i.next();
             String className = (String)entry.getKey();
             MappingClassElement mce =  (MappingClassElement)entry.getValue();
-            String mceRepr = mce.getClass() + "@" + // NOI18N
+            String mceRepr = mce.getClass() + "@" +
                 Integer.toHexString(System.identityHashCode(mce));
-            stream.println("\t" + className + " ->\t" + mceRepr); //NOI18N
+            stream.println("\t" + className + " ->\t" + mceRepr);
         }
     }
 
@@ -75,14 +75,14 @@ public class DumpMapping
      */
     public static void dumpClassLoaderCache (PrintStream stream)
     {
-        stream.println("ClassLoader cache (class names -> ClassLoaders)"); //NOI18N
+        stream.println("ClassLoader cache (class names -> ClassLoaders)");
         for (Iterator i = model.getClassLoaderCache().entrySet().iterator();
              i.hasNext();)
         {
             Map.Entry entry = (Map.Entry)i.next();
             String className = (String)entry.getKey();
             ClassLoader classLoader = (ClassLoader)entry.getValue();
-            stream.println("\t" + className + " ->\t" + classLoader);  //NOI18N
+            stream.println("\t" + className + " ->\t" + classLoader);
         }
     }
 
@@ -91,7 +91,7 @@ public class DumpMapping
         for (int i = 0; i < args.length; i++)
         {
             String className = args[i];
-            println(0, "\nClass " + className + ":");  //NOI18N
+            println(0, "\nClass " + className + ":");
 
             try
             {
@@ -103,12 +103,12 @@ public class DumpMapping
                 }
                 else
                 {
-                    println(0, "Cannot find mapping info for class " + className + " (getMappingClass returns null)");  //NOI18N
+                    println(0, "Cannot find mapping info for class " + className + " (getMappingClass returns null)");
                 }
             }
             catch (Exception e)
             {
-                println(0, "Problems during accessing mapping info for class " + className);  //NOI18N
+                println(0, "Problems during accessing mapping info for class " + className);
                 e.printStackTrace();
             }
         }
@@ -127,16 +127,16 @@ public class DumpMapping
 
     public static void printPersistenceClassElement(PersistenceClassElement pce)
     {
-        println(0, "\n--> PersistenceClassElement ");  //NOI18N
-        println(1, "package  = " + pce.getPackage());  //NOI18N
-        println(1, "name     = " + pce.getName());  //NOI18N
-        println(1, "identity = " + getObjectIdentityTypeRepr(pce.getObjectIdentityType()));  //NOI18N
-        println(1, "keyClass = " + pce.getKeyClass());  //NOI18N
+        println(0, "\n--> PersistenceClassElement ");
+        println(1, "package  = " + pce.getPackage());
+        println(1, "name     = " + pce.getName());
+        println(1, "identity = " + getObjectIdentityTypeRepr(pce.getObjectIdentityType()));
+        println(1, "keyClass = " + pce.getKeyClass());
 
         printPersistenceFieldElements(1, pce.getFields());
         printConcurrencyGroupElements(1, pce.getConcurrencyGroups());
 
-        println(0, "<-- PersistenceClassElement\n ");  //NOI18N
+        println(0, "<-- PersistenceClassElement\n ");
     }
 
 
@@ -144,33 +144,33 @@ public class DumpMapping
     {
         if ((fields != null) && (fields.length > 0))
         {
-            println(tabs, "--> fields ");  //NOI18N
+            println(tabs, "--> fields ");
             for (int i = 0; i < fields.length; i++)
             {
                 PersistenceFieldElement pfe = fields[i];
 
-                println(tabs, "[" + i + "] " + pfe.getClass());  //NOI18N
-                println(tabs+1, "name             = " + pfe.getName());  //NOI18N
-                println(tabs+1, "declaringClass   = " + pfe.getDeclaringClass());  //NOI18N
-                println(tabs+1, "fieldNumber      = " + pfe.getFieldNumber());  //NOI18N
-                println(tabs+1, "persistenceType  = " + getPersistenceTypeRepr(pfe.getPersistenceType()));  //NOI18N
-                println(tabs+1, "read / write     = " + pfe.isReadSensitive() + " / " + pfe.isWriteSensitive());  //NOI18N
-                println(tabs+1, "isKey            = " + pfe.isKey());  //NOI18N
+                println(tabs, "[" + i + "] " + pfe.getClass());
+                println(tabs+1, "name             = " + pfe.getName());
+                println(tabs+1, "declaringClass   = " + pfe.getDeclaringClass());
+                println(tabs+1, "fieldNumber      = " + pfe.getFieldNumber());
+                println(tabs+1, "persistenceType  = " + getPersistenceTypeRepr(pfe.getPersistenceType()));
+                println(tabs+1, "read / write     = " + pfe.isReadSensitive() + " / " + pfe.isWriteSensitive());
+                println(tabs+1, "isKey            = " + pfe.isKey());
 
                 if (pfe instanceof RelationshipElement)
                 {
                     RelationshipElement re = (RelationshipElement) pfe;
 
-                    println(tabs+1, "bounds          = " + re.getLowerBound() + " / " +  re.getUpperBound());  //NOI18N
-                    println(tabs+1, "deleteAction    = " + re.getDeleteAction());  //NOI18N
-                    println(tabs+1, "updateAction    = " + re.getUpdateAction());  //NOI18N
-                    println(tabs+1, "collectionClass = " + re.getCollectionClass());  //NOI18N
-                    println(tabs+1, "elementClass     = " + re.getElementClass());  //NOI18N
-                    println(tabs+1, "isPrefetch      = " + re.isPrefetch());  //NOI18N
+                    println(tabs+1, "bounds          = " + re.getLowerBound() + " / " +  re.getUpperBound());
+                    println(tabs+1, "deleteAction    = " + re.getDeleteAction());
+                    println(tabs+1, "updateAction    = " + re.getUpdateAction());
+                    println(tabs+1, "collectionClass = " + re.getCollectionClass());
+                    println(tabs+1, "elementClass     = " + re.getElementClass());
+                    println(tabs+1, "isPrefetch      = " + re.isPrefetch());
                 }
                 printConcurrencyGroupElements(tabs+1, pfe.getConcurrencyGroups());
             }
-            println(tabs, "<-- fields ");              //NOI18N
+            println(tabs, "<-- fields ");
         }
     }
 
@@ -178,15 +178,15 @@ public class DumpMapping
     {
         if ((groups != null) && (groups.length > 0))
         {
-            println(tabs, "--> concurrency groups");  //NOI18N
+            println(tabs, "--> concurrency groups");
             for (int i = 0; i < groups.length; i++)
             {
                 ConcurrencyGroupElement cg = groups[i];
-                println(tabs, "[" + i + "] " + cg.getClass());  //NOI18N
-                println(tabs+1, "name           = " + cg.getName());  //NOI18N
-                println(tabs+1, "declaringClass = " + cg.getDeclaringClass());  //NOI18N
+                println(tabs, "[" + i + "] " + cg.getClass());
+                println(tabs+1, "name           = " + cg.getName());
+                println(tabs+1, "declaringClass = " + cg.getDeclaringClass());
             }
-            println(tabs, "<-- concurrency groups");  //NOI18N
+            println(tabs, "<-- concurrency groups");
         }
     }
 
@@ -194,118 +194,102 @@ public class DumpMapping
 
     public static void printMappingClassElement(MappingClassElement mce)
     {
-        println(0, "\n--> MappingClassElement");  //NOI18N
+        println(0, "\n--> MappingClassElement");
 
-        println(1, "databaseRoot = " + mce.getDatabaseRoot());  //NOI18N
+        println(1, "databaseRoot = " + mce.getDatabaseRoot());
         printMappingTableElements(1, mce.getTables());
         printMappingFieldElements(1, mce.getFields());
 
-        println(0, "<-- MappingClassElement");  //NOI18N
+        println(0, "<-- MappingClassElement");
     }
 
-    public static void printMappingTableElements(int tabs, ArrayList tables)
+    public static void printMappingTableElements(int tabs, List<MappingTableElement> tables)
     {
         final int count = ((tables != null) ? tables.size() : 0);
 
         if (count > 0)
         {
-            println(tabs, "--> tables ");  //NOI18N
+            println(tabs, "--> tables ");
             for (int i = 0; i < count; i++)
             {
                 MappingTableElementImpl mte = (MappingTableElementImpl) tables.get(i);
 
-                println(tabs, "[" + i + "] " + mte.getClass());  //NOI18N
+                println(tabs, "[" + i + "] " + mte.getClass());
 
-                println(tabs+1, "table           = " + mte.getTable());  //NOI18N
-                println(tabs+1, "tableObject     = " + mte.getTableObject());  //NOI18N
-                println(tabs+1, "key             = " + mte.getKey());  //NOI18N
-                println(tabs+1, "keyObjects      = " + mte.getKeyObjects());  //NOI18N
+                println(tabs+1, "table           = " + mte.getTable());
+                println(tabs+1, "tableObject     = " + mte.getTableObject());
+                println(tabs+1, "key             = " + mte.getKey());
+                println(tabs+1, "keyObjects      = " + mte.getKeyObjects());
                 printMappingRefKeyElements(tabs+1, mte.getReferencingKeys());
             }
-            println(tabs, "<-- tables ");  //NOI18N
+            println(tabs, "<-- tables ");
         }
      }
 
-    public static void printMappingRefKeyElements(int tabs, ArrayList refKeys)
-    {
-        final int count = ((refKeys != null) ? refKeys.size() : 0);
 
-        if (count > 0)
-        {
-            println(tabs, "--> tables ");  //NOI18N
-            for (int i = 0; i < count; i++)
-            {
-                MappingReferenceKeyElement mrke = (MappingReferenceKeyElement)refKeys.get(i);
+     public static void printMappingRefKeyElements(int tabs, List<MappingReferenceKeyElement> refKeys) {
+         final int count = ((refKeys != null) ? refKeys.size() : 0);
 
-                println(tabs, "[" + i + "] " + mrke.getClass());  //NOI18N
+         if (count > 0) {
+             println(tabs, "--> tables ");
+             for (int i = 0; i < count; i++) {
+                 MappingReferenceKeyElement mrke = refKeys.get(i);
 
-                println(tabs+1, "table           = " + mrke.getDeclaringTable());  //NOI18N
-                println(tabs+1, "pairs           = " + mrke.getColumnPairNames());  //NOI18N
-            }
-            println(tabs, "<-- tables ");  //NOI18N
-        }
+                 println(tabs, "[" + i + "] " + mrke.getClass());
+
+                 println(tabs + 1, "table           = " + mrke.getDeclaringTable());
+                 println(tabs + 1, "pairs           = " + mrke.getColumnPairNames());
+             }
+             println(tabs, "<-- tables ");
+         }
      }
 
-     public static void printMappingFieldElements(int tabs, ArrayList fields)
-    {
-        final int count = ((fields != null) ? fields.size() : 0);
+     public static void printMappingFieldElements(int tabs, List<MappingFieldElement> fields) {
+         final int count = fields == null ? 0 : fields.size();
+         if (count == 0) {
+             return;
+         }
+         println(tabs, "--> fields ");
+         for (int i = 0; i < count; i++) {
+             MappingFieldElement mfe = fields.get(i);
 
-        if (count > 0)
-        {
-            println(tabs, "--> fields ");  //NOI18N
-            for (int i = 0; i < count; i++)
-            {
-                MappingFieldElementImpl mfe = (MappingFieldElementImpl) fields.get(i);
+             println(tabs, "[" + i + "] " + mfe.getClass());
+             println(tabs + 1, "name            = " + mfe.getName());
+             println(tabs + 1, "fetchGroup      = " + mfe.getFetchGroup());
+             println(tabs + 1, "columns         = " + mfe.getColumns());
 
-                println(tabs, "[" + i + "] " + mfe.getClass());  //NOI18N
-                println(tabs+1, "name            = " + mfe.getName());  //NOI18N
-                println(tabs+1, "fetchGroup      = " + mfe.getFetchGroup());  //NOI18N
-                println(tabs+1, "columns         = " + mfe.getColumns());  //NOI18N
+             if (!(mfe instanceof MappingRelationshipElement)) {
+                 println(tabs + 1, "columnObjects     = " + mfe.getColumnObjects());
+             } else {
+                 MappingRelationshipElement mre = (MappingRelationshipElement) mfe;
+                 List<ColumnPairElement> columnObjects = mre.getColumnObjects();
+                 int colCount = columnObjects == null ? 0 : columnObjects.size();
+                 if (colCount > 0) {
+                     println(tabs + 1, "--> columnsObjects ");
+                     for (int j = 0; j < colCount; j++) {
+                         ColumnPairElement fce = columnObjects.get(j);
+                         ColumnElement rce = fce == null ? null : fce.getReferencedColumn();
+                         println(tabs + 1, "[" + j + "] " + fce + " -> " + rce);
+                     }
+                     println(tabs + 1, "<-- columnsObjects ");
+                 }
 
-                if (!(mfe instanceof MappingRelationshipElement))
-                {
-                    println(tabs+1, "columnObjects     = " + mfe.getColumnObjects());  //NOI18N
-                }
-                else
-                {
-                    MappingRelationshipElementImpl mre = (MappingRelationshipElementImpl) mfe;
+                 println(tabs + 1, "associatedColumns = " + mre.getAssociatedColumns());
 
-                    ArrayList columnObjects = mre.getColumnObjects();
-                    int colCount =
-                        ((columnObjects != null) ? columnObjects.size() : 0);
-                    if (colCount > 0)
-                    {
-                        println(tabs+1, "--> columnsObjects ");  //NOI18N
-                        for (int j = 0; j < colCount; j++)
-                        {
-                            ColumnPairElement fce = (ColumnPairElement) columnObjects.get(j);
-                            ColumnElement rce = (fce!=null)?fce.getReferencedColumn():null;
-                            println(tabs+1, "[" + j + "] " + fce + " -> " + rce);  //NOI18N
-                        }
-                        println(tabs+1, "<-- columnsObjects ");  //NOI18N
-                    }
-
-                    println(tabs+1, "associatedColumns = " + mre.getAssociatedColumns());  //NOI18N
-
-                    ArrayList associatedColumnObjects = mre.getAssociatedColumnObjects();
-                    colCount = ((associatedColumnObjects != null) ?
-                        associatedColumnObjects.size() : 0);
-                    if (colCount > 0)
-                    {
-                        println(tabs+1, "--> associatedColumnObjects ");  //NOI18N
-                        for (int j = 0; j < colCount; j++)
-                        {
-                            ColumnPairElement fce = (ColumnPairElement) associatedColumnObjects.get(j);
-                            ColumnElement rce = (fce!=null)?fce.getReferencedColumn():null;
-                            println(tabs+1, "[" + j + "] " + fce + " -> " + rce);  //NOI18N
-                        }
-                        println(tabs+1, "<-- associatedColumnObjects ");  //NOI18N
-                    }
-                }
-            }
-            println(tabs, "<-- fields ");  //NOI18N
-        }
-
+                 List<ColumnPairElement> associatedColumnObjects = mre.getAssociatedColumnObjects();
+                 colCount = associatedColumnObjects == null ? 0 : associatedColumnObjects.size();
+                 if (colCount > 0) {
+                     println(tabs + 1, "--> associatedColumnObjects ");
+                     for (int j = 0; j < colCount; j++) {
+                         ColumnPairElement fce = associatedColumnObjects.get(j);
+                         ColumnElement rce = (fce != null) ? fce.getReferencedColumn() : null;
+                         println(tabs + 1, "[" + j + "] " + fce + " -> " + rce);
+                     }
+                     println(tabs + 1, "<-- associatedColumnObjects ");
+                 }
+             }
+         }
+         println(tabs, "<-- fields ");
     }
 
    // ----- helper methods -----
@@ -315,13 +299,13 @@ public class DumpMapping
         switch (objectIdentityType)
         {
         case PersistenceClassElement.APPLICATION_IDENTITY:
-            return "APPLICATION_IDENTITY";  //NOI18N
+            return "APPLICATION_IDENTITY";
         case PersistenceClassElement.DATABASE_IDENTITY:
-            return "DATABASE_IDENTITY_IDENTITY";  //NOI18N
+            return "DATABASE_IDENTITY_IDENTITY";
         case PersistenceClassElement.UNMANAGED_IDENTITY:
-            return "UNMANAGED_IDENTITY";  //NOI18N
+            return "UNMANAGED_IDENTITY";
         default:
-            return "UNKNOWN";  //NOI18N
+            return "UNKNOWN";
         }
     }
 
@@ -330,13 +314,13 @@ public class DumpMapping
         switch (persistenceType)
         {
         case PersistenceFieldElement.PERSISTENT:
-            return "PERSISTENT";  //NOI18N
+            return "PERSISTENT";
         case PersistenceFieldElement.DERIVED:
-            return "DERIVED";  //NOI18N
+            return "DERIVED";
         case PersistenceFieldElement.TRANSIENT:
-            return "TRANSIENT";  //NOI18N
+            return "TRANSIENT";
         default:
-            return "UNKNOWN";  //NOI18N
+            return "UNKNOWN";
         }
     }
 
@@ -344,7 +328,7 @@ public class DumpMapping
     {
         for (int i = 0; i < indent; i++)
         {
-            System.out.print("\t");  //NOI18N
+            System.out.print("\t");
         }
 
         System.out.println(text);

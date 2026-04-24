@@ -27,17 +27,20 @@ import com.sun.jdo.spi.persistence.support.sqlstore.SCODate;
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTimestamp;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.ColumnElement;
+
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  *
@@ -126,7 +129,7 @@ public abstract class FieldDesc implements java.io.Serializable {
 
     private Field field;
 
-    private Class fieldType;
+    private Class<?> fieldType;
 
     /**
      * Contains a translation from the field type class to int constants.
@@ -136,22 +139,22 @@ public abstract class FieldDesc implements java.io.Serializable {
 
     private String fieldName;
 
-    private Class declaringClass;
+    private Class<?> declaringClass;
 
     // Should be moved to ForeignFieldDesc.
-    private Class componentType;
+    private Class<?> componentType;
 
-    private ArrayList trackedFields;
+    private List<FieldDesc> trackedFields;
 
     /** Back pointer to declaring class descriptor. */
     protected final ClassDesc classDesc;
 
     /** The logger. */
-    protected final static Logger logger = LogHelperSQLStore.getLogger();
+    private static final Logger LOG = System.getLogger(FieldDesc.class.getName(), LogHelperSQLStore.RESOURCE_BUNDLE);
 
     /** I18N message handler. */
     protected final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             FieldDesc.class.getClassLoader());
 
     FieldDesc(ClassDesc classDesc) {
@@ -167,8 +170,9 @@ public abstract class FieldDesc implements java.io.Serializable {
         this.classDesc = classDesc;
     }
 
+    @Override
     public String toString() {
-        return classDesc.getName() + "." + getName(); // NOI18N
+        return classDesc.getName() + "." + getName();
     }
 
     public Class getComponentType() {
@@ -180,7 +184,9 @@ public abstract class FieldDesc implements java.io.Serializable {
     }
 
     public Class getType() {
-        if (fieldType != null) return fieldType;
+        if (fieldType != null) {
+            return fieldType;
+        }
 
         return Object.class;
     }
@@ -190,14 +196,17 @@ public abstract class FieldDesc implements java.io.Serializable {
     }
 
     public String getName() {
-        if (fieldName == null)
-            fieldName = "hidden" + -absoluteID; // NOI18N
+        if (fieldName == null) {
+            fieldName = "hidden" + -absoluteID;
+        }
 
         return fieldName;
     }
 
     public Object getValue(StateManager sm) {
-        if (sm == null) return null;
+        if (sm == null) {
+            return null;
+        }
 
         if (absoluteID >= 0) {
             return ((PersistenceCapable) sm.getPersistent()).jdoGetField(absoluteID);
@@ -207,9 +216,11 @@ public abstract class FieldDesc implements java.io.Serializable {
     }
 
     public void setValue(StateManager sm, Object value) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
+        boolean debug = LOG.isLoggable(TRACE);
 
-        if (sm == null) return;
+        if (sm == null) {
+            return;
+        }
 
         if (absoluteID >= 0) {
             if (debug) {
@@ -217,10 +228,10 @@ public abstract class FieldDesc implements java.io.Serializable {
                         ((value instanceof com.sun.jdo.api.persistence.support.PersistenceCapable) ||
                         (value instanceof java.util.Collection))) {
                     Object[] items = new Object[] {field.getName(),value.getClass()};
-                    logger.finest("sqlstore.model.fielddesc.fieldname",items); // NOI18N
+                    LOG.log(TRACE, "sqlstore.model.fielddesc.fieldname",items);
                 } else {
                     Object[] items = new Object[] {field.getName(),value};
-                    logger.finest("sqlstore.model.fielddesc.fieldname",items); // NOI18N
+                    LOG.log(TRACE, "sqlstore.model.fielddesc.fieldname",items);
                 }
             }
 
@@ -258,14 +269,14 @@ public abstract class FieldDesc implements java.io.Serializable {
         } else {
             if (debug) {
                 Object[] items = new Object[] {getName(),value};
-                logger.finest("sqlstore.model.fielddesc.fieldname",items); // NOI18N
+                LOG.log(TRACE, "sqlstore.model.fielddesc.fieldname",items);
             }
 
             sm.setHiddenValue(absoluteID, value);
         }
     }
 
-    public ArrayList getTrackedFields() {
+    public List<FieldDesc> getTrackedFields() {
         return trackedFields;
     }
 
@@ -291,23 +302,25 @@ public abstract class FieldDesc implements java.io.Serializable {
     }
 
     public Object convertValue(Object value, StateManager sm) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
+        boolean debug = LOG.isLoggable(TRACE);
         if (value == null) {
-            if (debug)
-                logger.finest("sqlstore.model.fielddesc.convertvalue"); // NOI18N
+            if (debug) {
+                LOG.log(TRACE, "sqlstore.model.fielddesc.convertvalue");
+            }
             return value;
         }
 
         if (absoluteID < 0) {
             // Hidden field nothing to convert
-            if (debug)
-                logger.finest("sqlstore.model.fielddesc.convertvalue.hidden",new Integer(absoluteID)); // NOI18N
+            if (debug) {
+                LOG.log(TRACE, "sqlstore.model.fielddesc.convertvalue.hidden",new Integer(absoluteID));
+            }
             return value;
         }
 
         if (debug) {
             Object[] items = new Object[] {value,value.getClass().getName(),fieldType};
-            logger.finest("sqlstore.model.fielddesc.convertvalue.from_to",items); // NOI18N
+            LOG.log(TRACE, "sqlstore.model.fielddesc.convertvalue.from_to",items);
         }
 
         // Here, we'll try our best to convert the given value to the
@@ -360,35 +373,39 @@ public abstract class FieldDesc implements java.io.Serializable {
                     break;
                 case FieldTypeEnumeration.FLOAT_PRIMITIVE:
                 case FieldTypeEnumeration.FLOAT:
-                    if (!(value instanceof Float))
+                    if (!(value instanceof Float)) {
                         value = new Float(number.floatValue());
+                    }
                     break;
                 case FieldTypeEnumeration.DOUBLE_PRIMITIVE:
                 case FieldTypeEnumeration.DOUBLE:
                     if (!(value instanceof Double)) {
                         // FIX FOR CONVERT FROM FLOAT.
-                        if (value instanceof Float)
+                        if (value instanceof Float) {
                             value = new Double(number.toString());
-                        else
+                        } else {
                             value = new Double(number.doubleValue());
+                        }
                     }
                     break;
                 case FieldTypeEnumeration.BIGDECIMAL:
                     if (!(value instanceof BigDecimal)) {
-                        if (value instanceof Double)
+                        if (value instanceof Double) {
                             value = new BigDecimal(number.doubleValue());
-                        else if (value instanceof BigInteger)
+                        } else if (value instanceof BigInteger) {
                             value = new BigDecimal((java.math.BigInteger) value);
-                        else
+                        } else {
                             value = new BigDecimal(number.toString());
+                        }
                     }
                     break;
                 case FieldTypeEnumeration.BIGINTEGER:
                     if (!(value instanceof BigInteger)) {
-                        if (value instanceof BigDecimal)
+                        if (value instanceof BigDecimal) {
                             value = ((BigDecimal) value).toBigInteger();
-                        else
+                        } else {
                             value = new BigInteger(number.toString());
+                        }
                     }
                     break;
             }
@@ -426,8 +443,9 @@ public abstract class FieldDesc implements java.io.Serializable {
                     // using its string value.
                     if (!(value instanceof Boolean)) {
                         if ((value instanceof String) &&
-                                (value).equals("1")) // NOI18N
-                            value = "true"; // NOI18N
+                                (value).equals("1")) {
+                            value = "true";
+                        }
 
                         value = new Boolean(value.toString());
                     }
@@ -589,14 +607,16 @@ public abstract class FieldDesc implements java.io.Serializable {
 
     private void assertIsValid(Number number, double min_value, double max_value) {
         double x = number.doubleValue();
-        if (x < min_value)
+        if (x < min_value) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "core.fielddesc.minvalue", // NOI18N
+                    "core.fielddesc.minvalue",
                     new Object[]{number, String.valueOf(min_value), fieldType.getName()}));
-        if (x > max_value)
+        }
+        if (x > max_value) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "core.fielddesc.maxvalue", // NOI18N
+                    "core.fielddesc.maxvalue",
                     new Object[]{number, String.valueOf(max_value), fieldType.getName()}));
+        }
     }
 
     private void assertIsValidLong(Number number) {
@@ -608,13 +628,13 @@ public abstract class FieldDesc implements java.io.Serializable {
         }
         if (bd.compareTo(LONG_MIN_VALUE) < 0) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "core.fielddesc.minvalue", // NOI18N
+                    "core.fielddesc.minvalue",
                     new Object[]{number, String.valueOf(Long.MIN_VALUE),
                         fieldType.getName()}));
 
         } else if (bd.compareTo(LONG_MAX_VALUE) > 0) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "core.fielddesc.maxvalue", // NOI18N
+                    "core.fielddesc.maxvalue",
                     new Object[]{number, String.valueOf(Long.MAX_VALUE),
                         fieldType.getName()}));
         }
@@ -630,7 +650,7 @@ public abstract class FieldDesc implements java.io.Serializable {
             field = classType.getDeclaredField(name);
         } catch (NoSuchFieldException e) {
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                "core.configuration.loadfailed.field", // NOI18N
+                "core.configuration.loadfailed.field",
                 name, classType.getName()), e);
         }
 
@@ -645,40 +665,60 @@ public abstract class FieldDesc implements java.io.Serializable {
         fieldType = field.getType();
         enumFieldType = translateToEnumType(fieldType);
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            Object[] items= new Object[] {fieldName,fieldType};
-            logger.finest("sqlstore.model.fielddesc.setupdesc",items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.model.fielddesc.setupdesc", fieldName,fieldType);
     }
 
     private static int translateToEnumType(Class fldType) {
 
         int retVal = FieldTypeEnumeration.NOT_ENUMERATED;
 
-        if(fldType == Boolean.TYPE         ) retVal = FieldTypeEnumeration.BOOLEAN_PRIMITIVE;
-        else if(fldType == Character.TYPE  ) retVal = FieldTypeEnumeration.CHARACTER_PRIMITIVE;
-        else if(fldType == Byte.TYPE       ) retVal = FieldTypeEnumeration.BYTE_PRIMITIVE;
-        else if(fldType == Short.TYPE      ) retVal = FieldTypeEnumeration.SHORT_PRIMITIVE;
-        else if(fldType == Integer.TYPE    ) retVal = FieldTypeEnumeration.INTEGER_PRIMITIVE;
-        else if(fldType == Long.TYPE       ) retVal = FieldTypeEnumeration.LONG_PRIMITIVE    ;
-        else if(fldType == Float.TYPE      ) retVal = FieldTypeEnumeration.FLOAT_PRIMITIVE;
-        else if(fldType == Double.TYPE     ) retVal = FieldTypeEnumeration.DOUBLE_PRIMITIVE;
-        else if(fldType == Boolean.class   ) retVal = FieldTypeEnumeration.BOOLEAN;
-        else if(fldType == Character.class ) retVal = FieldTypeEnumeration.CHARACTER;
-        else if(fldType == Byte.class      ) retVal = FieldTypeEnumeration.BYTE;
-        else if(fldType == Short.class     ) retVal = FieldTypeEnumeration.SHORT;
-        else if(fldType == Integer.class   ) retVal = FieldTypeEnumeration.INTEGER;
-        else if(fldType == Long.class      ) retVal = FieldTypeEnumeration.LONG;
-        else if(fldType == Float.class     ) retVal = FieldTypeEnumeration.FLOAT;
-        else if(fldType == Double.class    ) retVal = FieldTypeEnumeration.DOUBLE;
-        else if(fldType == java.math.BigDecimal.class) retVal = FieldTypeEnumeration.BIGDECIMAL;
-        else if(fldType == java.math.BigInteger.class) retVal = FieldTypeEnumeration.BIGINTEGER;
-        else if(fldType == String.class              ) retVal = FieldTypeEnumeration.STRING;
-        else if(fldType == java.util.Date.class      ) retVal = FieldTypeEnumeration.UTIL_DATE;
-        else if(fldType == java.sql.Date.class       ) retVal = FieldTypeEnumeration.SQL_DATE;
-        else if(fldType == java.sql.Time.class       ) retVal = FieldTypeEnumeration.SQL_TIME;
-        else if(fldType == java.sql.Timestamp.class  ) retVal = FieldTypeEnumeration.SQL_TIMESTAMP;
-        else if(fldType.isArray()) {
+        if(fldType == Boolean.TYPE         ) {
+            retVal = FieldTypeEnumeration.BOOLEAN_PRIMITIVE;
+        } else if(fldType == Character.TYPE  ) {
+            retVal = FieldTypeEnumeration.CHARACTER_PRIMITIVE;
+        } else if(fldType == Byte.TYPE       ) {
+            retVal = FieldTypeEnumeration.BYTE_PRIMITIVE;
+        } else if(fldType == Short.TYPE      ) {
+            retVal = FieldTypeEnumeration.SHORT_PRIMITIVE;
+        } else if(fldType == Integer.TYPE    ) {
+            retVal = FieldTypeEnumeration.INTEGER_PRIMITIVE;
+        } else if(fldType == Long.TYPE       ) {
+            retVal = FieldTypeEnumeration.LONG_PRIMITIVE    ;
+        } else if(fldType == Float.TYPE      ) {
+            retVal = FieldTypeEnumeration.FLOAT_PRIMITIVE;
+        } else if(fldType == Double.TYPE     ) {
+            retVal = FieldTypeEnumeration.DOUBLE_PRIMITIVE;
+        } else if(fldType == Boolean.class   ) {
+            retVal = FieldTypeEnumeration.BOOLEAN;
+        } else if(fldType == Character.class ) {
+            retVal = FieldTypeEnumeration.CHARACTER;
+        } else if(fldType == Byte.class      ) {
+            retVal = FieldTypeEnumeration.BYTE;
+        } else if(fldType == Short.class     ) {
+            retVal = FieldTypeEnumeration.SHORT;
+        } else if(fldType == Integer.class   ) {
+            retVal = FieldTypeEnumeration.INTEGER;
+        } else if(fldType == Long.class      ) {
+            retVal = FieldTypeEnumeration.LONG;
+        } else if(fldType == Float.class     ) {
+            retVal = FieldTypeEnumeration.FLOAT;
+        } else if(fldType == Double.class    ) {
+            retVal = FieldTypeEnumeration.DOUBLE;
+        } else if(fldType == java.math.BigDecimal.class) {
+            retVal = FieldTypeEnumeration.BIGDECIMAL;
+        } else if(fldType == java.math.BigInteger.class) {
+            retVal = FieldTypeEnumeration.BIGINTEGER;
+        } else if(fldType == String.class              ) {
+            retVal = FieldTypeEnumeration.STRING;
+        } else if(fldType == java.util.Date.class      ) {
+            retVal = FieldTypeEnumeration.UTIL_DATE;
+        } else if(fldType == java.sql.Date.class       ) {
+            retVal = FieldTypeEnumeration.SQL_DATE;
+        } else if(fldType == java.sql.Time.class       ) {
+            retVal = FieldTypeEnumeration.SQL_TIME;
+        } else if(fldType == java.sql.Timestamp.class  ) {
+            retVal = FieldTypeEnumeration.SQL_TIMESTAMP;
+        } else if(fldType.isArray()) {
             if(fldType.getComponentType() == Byte.TYPE) {
                 retVal = FieldTypeEnumeration.ARRAY_BYTE_PRIMITIVE;
             }
@@ -692,13 +732,11 @@ public abstract class FieldDesc implements java.io.Serializable {
     }
 
     protected void addTrackedField(FieldDesc f) {
-        if (trackedFields == null)
-            trackedFields = new ArrayList();
-
-        if (logger.isLoggable(Logger.FINEST)) {
-            Object[] items = new Object[] {f.getName(),getName()};
-            logger.finest("sqlstore.model.fielddesc.addingfield",items); // NOI18N
+        if (trackedFields == null) {
+            trackedFields = new ArrayList<>();
         }
+
+        LOG.log(TRACE, "sqlstore.model.fielddesc.addingfield", f.getName(), getName());
 
         trackedFields.add(f);
     }
@@ -713,10 +751,10 @@ public abstract class FieldDesc implements java.io.Serializable {
      * @return <code>true</code> if there is a match, <code>false</code>, otherwise.
      */
     static boolean compareColumns(FieldDesc f1, FieldDesc f2) {
-        ArrayList columnList1 = null;
-        ArrayList columnList2 = null;
-        ArrayList columnList3 = null;
-        ArrayList columnList4 = null;
+        List<ColumnElement> columnList1 = null;
+        List<ColumnElement> columnList2 = null;
+        List<ColumnElement> columnList3 = null;
+        List<ColumnElement> columnList4 = null;
         boolean exactMatch = false;
 
         // For LocalFieldDesc, we use columnDescs for comparison.
@@ -739,26 +777,25 @@ public abstract class FieldDesc implements java.io.Serializable {
         } else {
             if (f2 instanceof LocalFieldDesc) {
                 return false;
-            } else {
-                ForeignFieldDesc ff1 = (ForeignFieldDesc) f1;
-                ForeignFieldDesc ff2 = (ForeignFieldDesc) f2;
-
-                if (ff1.useJoinTable() && ff2.useJoinTable()) {
-                    columnList1 = ff1.assocLocalColumns;
-                    columnList2 = ff2.assocLocalColumns;
-                    columnList3 = ff1.assocForeignColumns;
-                    columnList4 = ff2.assocForeignColumns;
-                } else if (!ff1.useJoinTable() && !ff2.useJoinTable()) {
-                    columnList1 = ff1.localColumns;
-                    columnList2 = ff2.localColumns;
-                    columnList3 = ff1.foreignColumns;
-                    columnList4 = ff2.foreignColumns;
-                } else {
-                    return false;
-                }
-
-                exactMatch = true;
             }
+            ForeignFieldDesc ff1 = (ForeignFieldDesc) f1;
+            ForeignFieldDesc ff2 = (ForeignFieldDesc) f2;
+
+            if (ff1.useJoinTable() && ff2.useJoinTable()) {
+                columnList1 = ff1.assocLocalColumns;
+                columnList2 = ff2.assocLocalColumns;
+                columnList3 = ff1.assocForeignColumns;
+                columnList4 = ff2.assocForeignColumns;
+            } else if (!ff1.useJoinTable() && !ff2.useJoinTable()) {
+                columnList1 = ff1.localColumns;
+                columnList2 = ff2.localColumns;
+                columnList3 = ff1.foreignColumns;
+                columnList4 = ff2.foreignColumns;
+            } else {
+                return false;
+            }
+
+            exactMatch = true;
         }
 
         boolean found = false;
@@ -783,11 +820,11 @@ public abstract class FieldDesc implements java.io.Serializable {
             for (int i = 0; i < size1; i++) {
                 found = false;
 
-                ColumnElement c1 = (ColumnElement) columnList1.get(i);
+                ColumnElement c1 = columnList1.get(i);
 
                 // Find if any column of columnList2 matches with c1.
                 for (int j = 0; j < size2; j++) {
-                    ColumnElement c2 = (ColumnElement) columnList2.get(j);
+                    ColumnElement c2 = columnList2.get(j);
 
                     if (c1.getName().getFullName().equals(c2.getName().getFullName())) {
                         found = true;

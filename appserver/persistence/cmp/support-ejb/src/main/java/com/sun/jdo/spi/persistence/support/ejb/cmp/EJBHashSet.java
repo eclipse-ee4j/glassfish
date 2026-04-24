@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,31 +15,26 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * EJBHashSet.java
- *
- * Created on December 10, 2001
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.cmp;
 
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.Transaction;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.JDOEJB20Helper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.ejb.EJBLocalObject;
 
+import java.lang.System.Logger;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import static java.lang.System.Logger.Level.TRACE;
 /*
  * This is the implementation of the java.util.Set interface for the CMP
  * fields of the Collection type. Represents many side of the relationships.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2001
  */
 public class EJBHashSet extends HashSet {
     // Reference to the PersistenceManager and Transaction that were active
@@ -47,7 +43,7 @@ public class EJBHashSet extends HashSet {
     private Transaction tx = null;
 
     // HashSet of the persistence-capable instances associated with this Set.
-    private HashSet pcSet = null;
+    private HashSet<Object> pcSet = null;
 
     // Helper instance for conversion of the persistence-capable instances
     // to the EJBLocalObject type and back.
@@ -56,8 +52,7 @@ public class EJBHashSet extends HashSet {
     // Flag that indicates invalid state of this Set.
     private boolean valid = false;
 
-    //The logger
-    private static Logger logger = LogHelperSQLStore.getLogger();
+    private static final Logger LOG = System.getLogger(EJBHashSet.class.getName());
 
     /**
      * Creates new instance of <code>EJBHashSet</code> for this parameters.
@@ -87,8 +82,9 @@ public class EJBHashSet extends HashSet {
      * element.
      * @see java.util.HashSet
      */
+    @Override
     public boolean add(Object o) {
-        logger.finest("---EJBHashSet.add---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.add---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         helper.assertInstanceOfLocalInterfaceImpl(o);
@@ -109,8 +105,9 @@ public class EJBHashSet extends HashSet {
      * @see java.util.AbstractCollection
      * @see java.util.HashSet
      */
+    @Override
     public boolean addAll(Collection c) {
-        logger.finest("---EJBHashSet.addAll---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.addAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         assertInstancesOfLocalInterfaceImpl(c);
@@ -124,8 +121,9 @@ public class EJBHashSet extends HashSet {
      * @return <tt>true</tt> if the set contained the specified element.
      * @see java.util.HashSet
      */
+    @Override
     public boolean remove(Object o) {
-        logger.finest("---EJBHashSet.remove---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.remove---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         helper.assertInstanceOfLocalInterfaceImpl(o);
@@ -149,8 +147,9 @@ public class EJBHashSet extends HashSet {
      * @see java.util.HashSet
      * @see java.util.AbstractCollection
      */
+    @Override
     public boolean removeAll(Collection c) {
-        logger.finest("---EJBHashSet.removeAll---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.removeAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         assertInstancesOfLocalInterfaceImpl(c);
@@ -170,8 +169,9 @@ public class EJBHashSet extends HashSet {
      * @see java.util.HashSet
      * @see java.util.AbstractCollection
      */
+    @Override
     public boolean retainAll(Collection c) {
-        logger.finest("---EJBHashSet.retainAll---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.retainAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         assertInstancesOfLocalInterfaceImpl(c);
@@ -183,8 +183,9 @@ public class EJBHashSet extends HashSet {
      * Removes all of the elements from this set.
      * @see java.util.HashSet
      */
+    @Override
     public void clear() {
-        logger.finest("---EJBHashSet.clear---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.clear---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         pcSet.clear();
@@ -195,8 +196,9 @@ public class EJBHashSet extends HashSet {
      *
      * @return the number of elements in this set (its cardinality).
      */
+    @Override
     public int size() {
-        logger.finest("---EJBHashSet.size---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.size---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         return pcSet.size();
@@ -207,8 +209,9 @@ public class EJBHashSet extends HashSet {
      *
      * @return <tt>true</tt> if this set contains no elements.
      */
+    @Override
     public boolean isEmpty() {
-        logger.finest("---EJBHashSet.isEmpty---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.isEmpty---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         return pcSet.isEmpty();
@@ -220,8 +223,9 @@ public class EJBHashSet extends HashSet {
      * @param o element whose presence in this set is to be tested.
      * @return <tt>true</tt> if this set contains the specified element.
      */
+    @Override
     public boolean contains(Object o) {
-        logger.finest("---EJBHashSet.contains---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.contains---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         helper.assertInstanceOfLocalInterfaceImpl(o);
@@ -244,8 +248,9 @@ public class EJBHashSet extends HashSet {
      *
      * @see #contains(Object)
      */
+    @Override
     public boolean containsAll(Collection c) {
-        logger.finest("---EJBHashSet.containsAll---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.containsAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
         assertInstancesOfLocalInterfaceImpl(c);
@@ -258,8 +263,9 @@ public class EJBHashSet extends HashSet {
      *
      * @return a shallow copy of this set.
      */
+    @Override
     public Object clone() {
-        logger.finest("---EJBHashSet.clone---"); // NOI18N
+        LOG.log(TRACE, "---EJBHashSet.clone---"); // NOI18N
         EJBHashSet newSet = (EJBHashSet)super.clone();
         newSet.pcSet = (HashSet)pcSet.clone();
         return newSet;
@@ -283,10 +289,11 @@ public class EJBHashSet extends HashSet {
      * in this case.
      */
     public void setSCOHashSet(Collection coll) {
-        if (coll instanceof java.util.HashSet)
+        if (coll instanceof java.util.HashSet) {
             pcSet = (java.util.HashSet)coll;
-        else
+        } else {
             pcSet = new java.util.HashSet(coll);
+        }
     }
 
     /**
@@ -296,6 +303,7 @@ public class EJBHashSet extends HashSet {
      * @return an Iterator over the elements in this set.
      * @see ConcurrentModificationException
      */
+    @Override
     public Iterator iterator() {
         assertIsValid();
         assertInTransaction();
@@ -310,12 +318,14 @@ public class EJBHashSet extends HashSet {
             _iterator = pcSet.iterator();
         }
 
+        @Override
         public boolean hasNext() {
             assertIsValid();
             assertInTransaction();
             return _iterator.hasNext();
         }
 
+        @Override
         public Object next() {
             assertIsValid();
             assertInTransaction();
@@ -330,6 +340,7 @@ public class EJBHashSet extends HashSet {
             return  helper.convertPCToEJBLocalObject(lastReturned, pm);
         }
 
+        @Override
         public void remove() {
             assertIsValid();
             assertInTransaction();
@@ -349,8 +360,9 @@ public class EJBHashSet extends HashSet {
      * @throw IllegalStateException of validation fails.
      */
     private void assertIsValid() {
-        if (!valid)
+        if (!valid) {
             throw new IllegalStateException(); // RESOLVE Exception text.
+        }
     }
 
     /**
@@ -371,8 +383,9 @@ public class EJBHashSet extends HashSet {
      * @throw EJBException of validation fails.
      */
     private void assertInstancesOfLocalInterfaceImpl(Collection c) {
-        for (Iterator it = c.iterator(); it.hasNext();)
+        for (Iterator it = c.iterator(); it.hasNext();) {
             helper.assertInstanceOfLocalInterfaceImpl(it.next());
+        }
     }
 
     /**

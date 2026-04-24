@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,13 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * SelectStatement.java
- *
- * Created on October 3, 2001
- *
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
@@ -74,9 +68,8 @@ public class SelectStatement extends Statement {
     public ColumnRef addColumn(ColumnElement columnElement,
                           QueryTable queryTable) {
 
-        ColumnRef columnRef = null;
-
-        if ((columnRef = getColumnRef(columnElement)) == null) {
+        ColumnRef columnRef = getColumnRef(columnElement);
+        if (columnRef == null) {
             columnRef = new ColumnRef(columnElement, queryTable);
             addColumnRef(columnRef);
         }
@@ -85,13 +78,11 @@ public class SelectStatement extends Statement {
     }
 
     public void copyColumns(SelectStatement sourceStatement) {
-        ArrayList columnRefs = sourceStatement.getColumnRefs();
-
+        List<ColumnRef> columnRefs = sourceStatement.getColumnRefs();
         int index = columns.size() + 1;
-
         for (int i = 0; i < columnRefs.size(); i++) {
             //addColumnRef((ColumnRef) columnRefs.get(i));
-            ColumnRef cref = (ColumnRef) columnRefs.get(i);
+            ColumnRef cref = columnRefs.get(i);
             cref.setIndex(index + i);
             columns.add(cref);
         }
@@ -102,6 +93,7 @@ public class SelectStatement extends Statement {
                 && table.getTableDesc().isUpdateLockRequired();
     }
 
+    @Override
     public void appendTableText(StringBuffer text, QueryTable table) {
         super.appendTableText(text, table);
 
@@ -132,6 +124,7 @@ public class SelectStatement extends Statement {
      }
 
     /** @inheritDoc */
+    @Override
     public QueryPlan getQueryPlan() {
         return plan;
     }
@@ -139,6 +132,7 @@ public class SelectStatement extends Statement {
     /**
      * @inheritDoc
      */
+    @Override
     protected void generateStatementText() {
         // Because join conditions for ANSI outer joins end up in the
         // from clause, the constraint stack has to be processed before we
@@ -181,7 +175,7 @@ public class SelectStatement extends Statement {
         StringBuffer columnText = generateColumnText();
         String tableListText = generateTableListText();
         String aggregateText = getAggregateText();
-        String aggregateEnd = (aggregateText.length() > 0) ? ")" : ""; // NOI18N
+        String aggregateEnd = (aggregateText.length() > 0) ? ")" : "";
 
         if (orderClause.length() > 0) {
             orderClause.insert(0, " order by ");
@@ -192,9 +186,9 @@ public class SelectStatement extends Statement {
         String distinctText = getDistinctText(updateLockRequired);
 
         // Create the query filling in the column list, table name, etc.
-        statementText.append("select "). // NOI18N
+        statementText.append("select ").
                 append(aggregateText).append(distinctText).append(columnText).append(aggregateEnd).
-                append(" from ").append(tableListText). // NOI18N
+                append(" from ").append(tableListText).
                 append(whereClause).append(orderClause).append(forUpdateClause);
     }
 
@@ -279,9 +273,9 @@ public class SelectStatement extends Statement {
         String tableListText = generateTableListText();
 
         // Create the query with the previous generated parts.
-        statementText.append("select count(*) from "). // NOI18N
+        statementText.append("select count(*) from ").
                 append(primaryTableText).
-                append(" where exists (select * from "). // NOI18N
+                append(" where exists (select * from ").
                 append(tableListText).append(whereClause).append(")"). //NOI18N
                 append(forUpdateClause);
     }
@@ -295,7 +289,7 @@ public class SelectStatement extends Statement {
     private QueryTable generatePrimaryTableText(StringBuffer primaryTableText) {
         // Get the primary table from the first selected column.
         // TODO: Is the first column always mapped to the primary table?
-        QueryTable primaryTable = ((ColumnRef)columns.get(0)).getQueryTable();
+        QueryTable primaryTable = columns.get(0).getQueryTable();
 
         // Generate the table text.
         appendTableText(primaryTableText, primaryTable);
@@ -307,11 +301,11 @@ public class SelectStatement extends Statement {
         StringBuffer columnText = new StringBuffer();
 
         for (int i = 0; i < columns.size(); i++) {
-            ColumnRef cr = (ColumnRef) columns.get(i);
+            ColumnRef cr = columns.get(i);
 
-            columnText.append("t").append(cr.getQueryTable().getTableIndex()).append("."); // NOI18N
+            columnText.append("t").append(cr.getQueryTable().getTableIndex()).append(".");
             appendQuotedText(columnText, cr.getName());
-            columnText.append(", "); // NOI18N
+            columnText.append(", ");
         }
         columnText.delete(columnText.length() - 2, columnText.length());
         return columnText;
@@ -322,18 +316,18 @@ public class SelectStatement extends Statement {
 
         switch (aggregateOption) {
             case RetrieveDescImpl.OPT_AVG:
-                return "AVG( "; // NOI18N
+                return "AVG( ";
             case RetrieveDescImpl.OPT_MIN:
-                return "MIN("; // NOI18N
+                return "MIN(";
             case RetrieveDescImpl.OPT_MAX:
-                return "MAX("; // NOI18N
+                return "MAX(";
             case RetrieveDescImpl.OPT_SUM:
-                return "SUM("; // NOI18N
+                return "SUM(";
             case RetrieveDescImpl.OPT_COUNT:
             case RetrieveDescImpl.OPT_COUNT_PC:
-                return "COUNT("; // NOI18N
+                return "COUNT(";
             default:
-                return ""; // NOI18N
+                return "";
         }
     }
 
@@ -346,7 +340,7 @@ public class SelectStatement extends Statement {
                 // Throw an exception user wanted to have update lock
                 // But vendor is not supporting it. Do not allow user to proceed
                 throw new JDOFatalDataStoreException(I18NHelper.getMessage(messages,
-                        "sqlstore.selectstatement.noupdatelocksupport"));// NOI18N
+                        "sqlstore.selectstatement.noupdatelocksupport"));
             }
 
             // generating the ForUpdate Clause
@@ -358,14 +352,14 @@ public class SelectStatement extends Statement {
 
                 if (vendorType.isLockColumnListSupported()) {
                     for (int i = 0; i < tableList.size(); i++) {
-                        QueryTable queryTable = (QueryTable) tableList.get(i);
+                        QueryTable queryTable = tableList.get(i);
                         if (isUpdateLockRequired(queryTable)) {
                             TableDesc tableDesc = queryTable.getTableDesc();
                             //Get the first column of primary key
-                            ColumnElement ce = (ColumnElement) tableDesc.getKey().getColumns().get(0);
-                            forUpdateClause.append("t").append(i).append("."); // NOI18N
+                            ColumnElement ce = tableDesc.getKey().getColumns().get(0);
+                            forUpdateClause.append("t").append(i).append(".");
                             appendQuotedText(forUpdateClause, ce.getName().getName());
-                            forUpdateClause.append(", "); // NOI18N
+                            forUpdateClause.append(", ");
                         }
                     }
                     // Remove trailing ", "
@@ -378,7 +372,7 @@ public class SelectStatement extends Statement {
     }
 
     private String getDistinctText(boolean updateLockRequired) {
-        String distinctText = ""; // NOI18N
+        String distinctText = "";
 
         if ((plan.options & RetrieveDescImpl.OPT_DISTINCT) > 0) {
             if( !updateLockRequired || vendorType.isDistinctSupportedWithUpdateLock()) {
@@ -389,7 +383,7 @@ public class SelectStatement extends Statement {
                 //For the case where update lock is required and vendor does not support DISTINCT/
                 //with update lock, we would do DISTINCT in our code after retrieving the data
                 //see SQLStoreManger::retrieve()
-                distinctText = "distinct "; // NOI18N
+                distinctText = "distinct ";
             }
         }
         return distinctText;
@@ -406,7 +400,7 @@ public class SelectStatement extends Statement {
 
         // TODO: We can optimize this by storing the value in a member variable
         for (int i = 0; i < tableList.size() && !updateLockRequired; i++) {
-            QueryTable queryTable = (QueryTable) tableList.get(i);
+            QueryTable queryTable = tableList.get(i);
             updateLockRequired = isUpdateLockRequired(queryTable);
         }
 
@@ -417,6 +411,7 @@ public class SelectStatement extends Statement {
      * Processes Order By constraints and calls the super class
      * method for all other constrains.
      */
+    @Override
     protected void processRootConstraint(ConstraintOperation opNode,
                                          List stack,
                                          StringBuffer whereText) {
@@ -427,18 +422,19 @@ public class SelectStatement extends Statement {
             stack.remove(stack.size() - 1);
             ConstraintNode node = (ConstraintNode) stack.get(stack.size() - 1);
 
-            if (!(node instanceof ConstraintField)) {
-                throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.needfieldnode")); // NOI18N
-            } else {
+            if (node instanceof ConstraintField) {
                 processOrderByField((ConstraintFieldDesc) node, op);
                 stack.remove(stack.size() - 1);
+            } else {
+                throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
+                        "core.constraint.needfieldnode"));
             }
         } else {
             super.processRootConstraint(opNode, stack, whereText);
         }
     }
 
+    @Override
     protected void processIrregularOperation(ConstraintOperation opNode,
                                              int opCode,
                                              List stack,
@@ -516,8 +512,8 @@ public class SelectStatement extends Statement {
                               int opCode) {
 
         for (int i = 0; i < jnode.fromColumns.size(); i++) {
-            ColumnElement fromColumn = (ColumnElement)jnode.fromColumns.get(i);
-            ColumnElement toColumn = (ColumnElement)jnode.toColumns.get(i);
+            ColumnElement fromColumn = jnode.fromColumns.get(i);
+            ColumnElement toColumn = jnode.toColumns.get(i);
             QueryTable fromTable = findQueryTable(jnode.fromPlan, fromColumn);
             QueryTable toTable = findQueryTable(jnode.toPlan, toColumn);
 
@@ -550,8 +546,8 @@ public class SelectStatement extends Statement {
     private void generateAnsiJoin(ConstraintJoin jnode, int opCode) {
 
         for (int i = 0; i < jnode.fromColumns.size(); i++) {
-            ColumnElement fromColumn = (ColumnElement)jnode.fromColumns.get(i);
-            ColumnElement toColumn = (ColumnElement)jnode.toColumns.get(i);
+            ColumnElement fromColumn = jnode.fromColumns.get(i);
+            ColumnElement toColumn = jnode.toColumns.get(i);
             QueryTable fromTable = findQueryTable(jnode.fromPlan, fromColumn);
             QueryTable toTable = findQueryTable(jnode.toPlan, toColumn);
 
@@ -626,10 +622,10 @@ public class SelectStatement extends Statement {
             result.append(" and ");
         }
 
-        result.append("t").append(fromTable.getTableIndex()).append("."); // NOI18N
+        result.append("t").append(fromTable.getTableIndex()).append(".");
         appendQuotedText(result, fromColumn.getName().getName());
-        result.append(" ").append(joinOp). // NOI18N
-           append(" t").append(toTable.getTableIndex()).append("."); // NOI18N
+        result.append(" ").append(joinOp).
+           append(" t").append(toTable.getTableIndex()).append(".");
         appendQuotedText(result, toColumn.getName().getName());
     }
 
@@ -645,7 +641,7 @@ public class SelectStatement extends Statement {
 
         switch (operation) {
             case ActionDesc.OP_EQUIJOIN:
-                result = " = "; // NOI18N
+                result = " = ";
                 break;
             case ActionDesc.OP_LEFTJOIN:
                 result = vendorType.getLeftJoin();
@@ -656,7 +652,7 @@ public class SelectStatement extends Statement {
             default:
                 throw new JDOFatalInternalException(
                         I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", operation)); // NOI18N
+                        "core.constraint.illegalop", operation));
         }
         return result;
     }
@@ -675,11 +671,11 @@ public class SelectStatement extends Statement {
         StringBuffer str = new StringBuffer();
 
         for (int i = 0; i < tableList.size(); i++) {
-            QueryTable t = (QueryTable) tableList.get(i);
+            QueryTable t = tableList.get(i);
 
             if (t.prevTable == null && t.nextTable == null) {
                 appendTableText(str, t);
-                str.append(", "); // NOI18N
+                str.append(", ");
             } else {
                 // Table is part of an outer join list.
 
@@ -716,7 +712,7 @@ public class SelectStatement extends Statement {
         str.append(vendorType.getTableListStart());
         appendAnsiJoinTableText(str, t);
         str.append(vendorType.getTableListEnd());
-        str.append(", "); // NOI18N
+        str.append(", ");
     }
 
     /**
@@ -739,12 +735,12 @@ public class SelectStatement extends Statement {
 
         for (int i = 0; i < table.nextTable.size(); i++) {
             QueryTable toTable = (QueryTable) table.nextTable.get(i);
-            text.append(getJoinOperator(table.joinOp)).append(" "); // NOI18N
+            text.append(getJoinOperator(table.joinOp)).append(" ");
 
             appendTableText(text, toTable);
 
             if (toTable.onClause != null) {
-                text.append(" on "); // NOI18N
+                text.append(" on ");
                 text.append(toTable.onClause);
             }
 
@@ -775,11 +771,11 @@ public class SelectStatement extends Statement {
         generateColumnText(fieldNode.desc, thePlan, orderText);
 
         if (op == ActionDesc.OP_ORDERBY_DESC) {
-            orderText.append(" desc"); // NOI18N
+            orderText.append(" desc");
         }
 
         if (orderClause.length() > 0) {
-            orderText.append(", "); // NOI18N
+            orderText.append(", ");
             orderText.append(orderClause);
         }
         orderClause = orderText;
@@ -796,7 +792,7 @@ public class SelectStatement extends Statement {
     public void bindInputValues(DBStatement s, ValueFetcher parameters)
             throws SQLException {
         for (int i = 0, size = inputDesc.values.size(); i < size; i++) {
-            InputValue inputVal = (InputValue) inputDesc.values.get(i);
+            InputValue inputVal = inputDesc.values.get(i);
             s.bindInputColumn(i + 1, getInputValue(inputVal, parameters),
                     inputVal.getColumnElement(), vendorType);
         }
@@ -812,7 +808,7 @@ public class SelectStatement extends Statement {
         final int size = inputDesc.values.size();
         Object[] inputValues = new Object[size];
         for (int i = 0; i < size; i++) {
-            InputValue inputValue = (InputValue) inputDesc.values.get(i);
+            InputValue inputValue = inputDesc.values.get(i);
             inputValues[i] = getInputValue(inputValue, parameters);
         }
         return inputValues;
@@ -838,8 +834,7 @@ public class SelectStatement extends Statement {
      * @param parameters The parameters.
      * @return Appropriate value as described above.
      */
-    private static Object getInputValue(InputValue inputVal,
-            ValueFetcher parameters) {
+    private static Object getInputValue(InputValue inputVal, ValueFetcher parameters) {
         Object val;
         if (inputVal instanceof InputParamValue) {
             int paramIndex = ((InputParamValue) inputVal).getParamIndex().intValue();

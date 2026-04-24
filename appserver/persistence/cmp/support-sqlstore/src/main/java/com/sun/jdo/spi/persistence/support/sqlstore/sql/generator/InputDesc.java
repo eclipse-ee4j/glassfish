@@ -24,6 +24,7 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
@@ -31,10 +32,9 @@ public class InputDesc extends Object {
     //
     // array of InputValue
     //
-    public ArrayList values;
+    public List<InputValue> values;
 
     public InputDesc() {
-        super();
-        values = new ArrayList();
+        values = new ArrayList<>();
     }
 }

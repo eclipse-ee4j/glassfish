@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * TransactionImpl.java
- *
- * Create on March 3, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 
 import com.sun.jdo.api.persistence.support.ConnectionFactory;
@@ -28,17 +23,16 @@ import com.sun.jdo.api.persistence.support.JDOException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperTransaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManagerFactory;
 import com.sun.jdo.spi.persistence.support.sqlstore.connection.ConnectionImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.transaction.Status;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.TransactionManager;
 
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +41,9 @@ import java.util.ResourceBundle;
 import javax.sql.DataSource;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  *
@@ -80,27 +77,31 @@ import org.glassfish.persistence.common.I18NHelper;
  */
 public class TransactionImpl
     implements com.sun.jdo.spi.persistence.support.sqlstore.Transaction {
-    /**
-     * Trace level for sh:6.
-     *
-     * This is public to this transaction package and referenced:
-     *         if (TransactionImpl.tracing)
-     * This is reset by calling TransactionImpl.setTrace().
-     */
-    static boolean  tracing;
     private static final int    TRACE_THREADS            = 0x01;
     private static final int    TRACE_RESOURCES            = 0x02;
     private static final int    TRACE_SYNCHRONIZATIONS    = 0x04;
     private static final int    TRACE_ONE_PHASE            = 0x08;
 
+    private static final int INTERNAL_ERROR = 1;
+    private static final int INTERNAL_OK = 0;
+
+
     /**
-     * Package-visible lock for static attributes.
-     *
+     * I18N message handler
+     */
+    private final static ResourceBundle messages = I18NHelper.loadBundle(TransactionImpl.class);
+
+    /**
+     * The logger
+     */
+    private static final Logger LOG = System.getLogger(TransactionImpl.class.getName(), messages);
+
+    /**
      * Note that globalLock can be a higher-level lock, in that it may be
      * locked before other lower-level objects are locked (i.e. the
      * transaction object).  It may NOT be locked the other way round.
      */
-    static String    globalLock = "TranGlobalLock"; // NOI18N
+    private static String globalLock = "TranGlobalLock";
 
     /**
      * Transaction status (from jakarta.transaction.Status).
@@ -226,18 +227,6 @@ public class TransactionImpl
     private int txType = -1;
 
     /**
-     * The logger
-     */
-    private static Logger logger = LogHelperTransaction.getLogger();
-
-
-    /**
-     * I18N message handler
-     */
-    private final static ResourceBundle messages = I18NHelper.loadBundle(
-            TransactionImpl.class);
-
-    /**
      * Constructor
      */
     public TransactionImpl(PersistenceManager pm, String username, char[] password, int seconds) {
@@ -274,24 +263,28 @@ public class TransactionImpl
     /**
      * Returns PersistenceManager associated with this transaction
      */
+    @Override
     public com.sun.jdo.api.persistence.support.PersistenceManager getPersistenceManager() {
         return persistenceManager.getCurrentWrapper();
     }
 
+    @Override
     public boolean isActive() {
         return (this.status == Status.STATUS_ACTIVE ||
             this.status == Status.STATUS_MARKED_ROLLBACK);
     }
 
+    @Override
     public void setRetainValues(boolean flag) {
         //
         // First do a quick check to make sure the transaction is active.
         // This allows us to throw an exception immediately.
         // Cannot change flag to true inside an active pessimistic tx
         //
-        if (isActive() && !optimistic && flag)
+        if (isActive() && !optimistic && flag) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                "transaction.transactionimpl.setoptimistic.notallowed"));
+        }
 
         //
         // Now get an exclusive lock so we can modify the retainValues flag.
@@ -300,9 +293,10 @@ public class TransactionImpl
 
         try {
             // Cannot change flag to true inside an active pessimistic tx
-            if (isActive() && !optimistic && flag)
+            if (isActive() && !optimistic && flag) {
                 throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                    "transaction.transactionimpl.setoptimistic.notallowed"));
+            }
 
             this.retainValues = flag;
 
@@ -316,19 +310,22 @@ public class TransactionImpl
         }
     }
 
+    @Override
     public boolean getRetainValues() {
         return retainValues;
     }
 
+    @Override
     public void setRestoreValues(boolean flag) {
         //
         // First do a quick check to make sure the transaction is active.
         // This allows us to throw an exception immediately.
         // Cannot change flag to true inside an active tx
         //
-        if (isActive())
+        if (isActive()) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                "transaction.transactionimpl.setoptimistic.notallowed"));
+        }
 
         //
         // Now get an exclusive lock so we can modify the restoreValues flag.
@@ -337,9 +334,10 @@ public class TransactionImpl
 
         try {
             // Cannot change flag to true inside an active  tx
-            if (isActive())
+            if (isActive()) {
                 throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                    "transaction.transactionimpl.setoptimistic.notallowed"));
+            }
 
             this.restoreValues = flag;
 
@@ -348,20 +346,23 @@ public class TransactionImpl
         }
     }
 
+    @Override
     public boolean getRestoreValues() {
         return restoreValues;
     }
 
 
+    @Override
     public void setNontransactionalRead (boolean flag) {
         //
         // First do a quick check to make sure the transaction is active.
         // This allows us to throw an exception immediately.
         // Cannot change flag to false inside an active optimistic tx
         //
-        if (isActive() && optimistic && !flag)
+        if (isActive() && optimistic && !flag) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                "transaction.transactionimpl.setoptimistic.notallowed"));
+        }
 
         //
         // Now get an exclusive lock so we can modify the nontransactionalRead flag.
@@ -370,9 +371,10 @@ public class TransactionImpl
 
         try {
             // Cannot change flag to false inside an active optimistic tx
-            if (isActive() && optimistic && !flag)
+            if (isActive() && optimistic && !flag) {
                 throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                    "transaction.transactionimpl.setoptimistic.notallowed"));
+            }
 
             this.nontransactionalRead = flag;
             persistenceManager.notifyNontransactionalRead(flag);
@@ -390,6 +392,7 @@ public class TransactionImpl
         }
     }
 
+    @Override
     public boolean getNontransactionalRead() {
         return nontransactionalRead;
     }
@@ -399,6 +402,7 @@ public class TransactionImpl
      * to execute in the datastore associated with this  Transaction instance
      * @param timeout          new timout value in seconds; zero means unlimited
      */
+    @Override
     public void setQueryTimeout(int timeout) {
         queryTimeout = timeout;
     }
@@ -408,6 +412,7 @@ public class TransactionImpl
      * to execute in the datastore associated with this  Transaction instance
      * @return      timout value in seconds; zero means unlimited
      */
+    @Override
     public int getQueryTimeout() {
         return queryTimeout;
     }
@@ -417,6 +422,7 @@ public class TransactionImpl
      * to execute in the datastore associated with this  Transaction instance
      * @param timeout          new timout value in seconds; zero means unlimited
      */
+    @Override
     public void setUpdateTimeout(int timeout) {
         updateTimeout = timeout;
     }
@@ -426,10 +432,12 @@ public class TransactionImpl
      * to execute in the datastore associated with this  Transaction instance
      * @return      timout value in seconds; zero means unlimited
      */
+    @Override
     public int getUpdateTimeout() {
         return updateTimeout;
     }
 
+    @Override
     public void setOptimistic(boolean flag) {
         //
         // First do a quick check to make sure the transaction is active.
@@ -437,7 +445,7 @@ public class TransactionImpl
         //
         if (!isTerminated()) {
             throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                  "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                  "transaction.transactionimpl.setoptimistic.notallowed"));
         }
 
         //
@@ -456,7 +464,7 @@ public class TransactionImpl
                 }
             } else {
                 throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                      "transaction.transactionimpl.setoptimistic.notallowed")); // NOI18N
+                      "transaction.transactionimpl.setoptimistic.notallowed"));
             }
 
             // Notify PM about Tx type change
@@ -466,29 +474,24 @@ public class TransactionImpl
         }
     }
 
+    @Override
     public boolean getOptimistic() {
         return optimistic;
     }
 
+    @Override
     public void setSynchronization(Synchronization sync) {
-        if (this.tracing)
-        this.traceCall("setSynchronization"); // NOI18N
-
+        traceCall("setSynchronization");
         persistenceManager.acquireExclusiveLock();
-
         try {
             synchronization = sync;
-
-            if (this.tracing) {
-                this.traceCallInfo("setSynchronization", // NOI18N
-                    TRACE_SYNCHRONIZATIONS, null);
-            }
-
+            traceCallInfo("setSynchronization", TRACE_SYNCHRONIZATIONS, null);
         } finally {
             persistenceManager.releaseExclusiveLock();
         }
     }
 
+    @Override
     public Synchronization getSynchronization() {
         persistenceManager.acquireShareLock();
 
@@ -527,6 +530,7 @@ public class TransactionImpl
     /**
      * Begin a transaction.
      */
+    @Override
     public void begin() {
 
         persistenceManager.acquireExclusiveLock();
@@ -552,7 +556,7 @@ public class TransactionImpl
 
                 } catch (Exception e) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(
-                        messages, "transaction.transactionimpl.begin.failedlocaltx"), e); // NOI18N
+                        messages, "transaction.transactionimpl.begin.failedlocaltx"), e);
                 }
             } else {
                 txType = NON_MGD;
@@ -566,16 +570,12 @@ public class TransactionImpl
      * Status change and validation
      */
     private void beginInternal() {
-        this.setTrace();
-
-        if (this.tracing)
-            this.traceCall("begin");  // NOI18N
-
+        traceCall("begin");
         // RESOLVE: need to reset to NO_TX
         if (this.isActive()) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.begin.notnew",  // NOI18N
-                this.statusString(this.status)));
+                "transaction.transactionimpl.begin.notnew",
+                statusString(this.status)));
 
         }
         this.setStatus(Status.STATUS_ACTIVE);
@@ -585,6 +585,7 @@ public class TransactionImpl
     /**
      * Begin a transaction in managed environment
      */
+    @Override
     public void begin(jakarta.transaction.Transaction t) {
 
         persistenceManager.acquireExclusiveLock();
@@ -596,7 +597,7 @@ public class TransactionImpl
                 EJBHelper.registerSynchronization(jta, this);
             } catch (Exception e) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(
-                    messages, "transaction.transactionimpl.begin.registersynchfailed"), e); // NOI18N
+                    messages, "transaction.transactionimpl.begin.registersynchfailed"), e);
             }
 
             txType = CMT;
@@ -609,6 +610,7 @@ public class TransactionImpl
      * Commit the transaction represented by this Transaction object
      *
      */
+    @Override
     public void commit() {
 
         persistenceManager.acquireExclusiveLock();
@@ -617,26 +619,22 @@ public class TransactionImpl
             if (txType == CMT || txType == BMT_UT) {
                 // Error - should not be called
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                     "transaction.transactionimpl.mgd", "commit")); //NOI18N
+                     "transaction.transactionimpl.mgd", "commit"));
             } else if (txType == BMT_JDO) {
                 // Send request to the container:
                 try {
                     EJBHelper.getLocalTransactionManager().commit();
                     return;
                 } catch (Exception e) {
-                    throw new JDOException("", e); // NOI18N
+                    throw new JDOException("", e);
                 }
             }
 
-            this.setTrace();
-
-            if (this.tracing)
-                this.traceCall("commit"); // NOI18N
-
-            this.commitBefore();
-            this.commitPrepare();
-            this.commitComplete();
-            this.notifyAfterCompletion();
+            traceCall("commit");
+            commitBefore();
+            commitPrepare();
+            commitComplete();
+            notifyAfterCompletion();
         } finally {
             persistenceManager.releaseExclusiveLock();
         }
@@ -645,12 +643,13 @@ public class TransactionImpl
     /**
      * Called in the managed environment only for transaction completion
      */
+    @Override
     public void beforeCompletion() {
 
         if (txType == NON_MGD) {
             // Error - should not be called
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.nonmgd", "beforeCompletion")); //NOI18N
+                "transaction.transactionimpl.nonmgd", "beforeCompletion"));
         }
 
         Object o = null;
@@ -669,18 +668,16 @@ public class TransactionImpl
     /**
      * Called in the managed environment only for transaction completion
      */
+    @Override
     public void afterCompletion(int st) {
 
         if (txType == NON_MGD) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "transaction.transactionimpl.nonmgd", "afterCompletion")); //NOI18N
+                        "transaction.transactionimpl.nonmgd", "afterCompletion"));
         }
         st = EJBHelper.translateStatus(st); // translate Status
 
-        if (this.tracing) {
-            this.traceCallInfo("afterCompletion", TRACE_SYNCHRONIZATIONS, //NOI18N
-            this.statusString(st));
-        }
+        traceCallInfo("afterCompletion", TRACE_SYNCHRONIZATIONS, st);
 
         if (st == Status.STATUS_ROLLEDBACK) {
             this.setStatus(Status.STATUS_ROLLING_BACK);
@@ -693,10 +690,7 @@ public class TransactionImpl
                 try {
                     synchronization.afterCompletion(st);
                 } catch (Exception ex) {
-                    logger.log(Logger.WARNING, I18NHelper.getMessage(
-                           messages,
-                           "transaction.transactionimpl.syncmanager.aftercompletion", // NOI18N
-                           ex.getMessage()));
+                    LOG.log(WARNING, "Problems during afterCompletion call to the SynchronizationManager.", ex);
                 }
             }
 
@@ -704,9 +698,8 @@ public class TransactionImpl
             persistenceManager.forceClose();
 
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.commitprepare.wrongstatus", // NOI18N
-                "afterCompletion", this.statusString(this.status),  // NOI18N
-                this.statusString(st)));
+                "transaction.transactionimpl.commitprepare.wrongstatus",
+                "afterCompletion", statusString(this.status), statusString(st)));
         }
 
         this.notifyAfterCompletion();
@@ -728,36 +721,32 @@ public class TransactionImpl
      * For exceptions see commit() method.
      */
     private void commitBefore() {
-        boolean        rollbackOnly = false; //marked for rollback
-        boolean        notified = false;
+        boolean rollbackOnly = false; // marked for rollback
+        boolean notified = false;
 
-        if (this.tracing)
-            this.traceCall("commitBefore"); // NOI18N
-        //
-        // Validate transaction state before we commit
-        //
+        traceCall("commitBefore");
 
         if ((this.status == Status.STATUS_ROLLING_BACK)
             ||    (this.status == Status.STATUS_ROLLEDBACK)) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.rolledback", // NOI18N
-                "commit", // NOI18N
-                this.statusString(this.status)));
+                "transaction.transactionimpl.rolledback",
+                "commit",
+                statusString(this.status)));
         }
 
         if (this.status == Status.STATUS_MARKED_ROLLBACK) {
             rollbackOnly = true;
         } else if (this.status != Status.STATUS_ACTIVE) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.commit_rollback.notactive", // NOI18N
-                "commit", // NOI18N
-                this.statusString(this.status)));
+                "transaction.transactionimpl.commit_rollback.notactive",
+                "commit",
+                statusString(this.status)));
         }
 
         if (this.startedCommit) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.commitbefore.incommit", // NOI18N
-                "commit")); // NOI18N
+                "transaction.transactionimpl.commitbefore.incommit",
+                "commit"));
         }
         this.startedCommit = true;
 
@@ -775,7 +764,7 @@ public class TransactionImpl
                 rollbackOnly = true;
             } else {    // Must have been concurrently rolled back
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.commitbefore.rolledback")); // NOI18N
+                    "transaction.transactionimpl.commitbefore.rolledback"));
             }
         }
         if (rollbackOnly && txType == NON_MGD) {
@@ -783,8 +772,8 @@ public class TransactionImpl
 
             throw new JDOUserException(I18NHelper.getMessage(messages,
                 notified ?
-                   "transaction.transactionimpl.commitbefore.rollbackonly_insync" : // NOI18N
-                   "transaction.transactionimpl.commitbefore.rollbackonly")); // NOI18N
+                   "transaction.transactionimpl.commitbefore.rollbackonly_insync" :
+                   "transaction.transactionimpl.commitbefore.rollbackonly"));
         }
     }
 
@@ -800,8 +789,7 @@ public class TransactionImpl
      * For exceptions see commit() method.
      */
     private void commitPrepare() {
-        if (this.tracing)
-            this.traceCall("commitPrepare"); // NOI18N
+        this.traceCall("commitPrepare");
         //
         // Once we've reached the Status.STATUS_PREPARING state we do not need
         // to check for concurrent state changes.  All user-level methods
@@ -814,17 +802,18 @@ public class TransactionImpl
         //
         if (this.status != Status.STATUS_PREPARING) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-               "transaction.transactionimpl.commitprepare.wrongstatus", // NOI18N
-                "commitPrepare",  // NOI18N
-                "STATUS_PREPARING", // NOI18N
-                this.statusString(this.status)));
+               "transaction.transactionimpl.commitprepare.wrongstatus",
+                "commitPrepare",
+                "STATUS_PREPARING",
+                statusString(this.status)));
         }
 
         //
         // If there is at most one resource then we can do this in 1-phase.
         //
-        if (this.resources.size() <= 1)
+        if (this.resources.size() <= 1) {
             this.onePhase = true;
+        }
 
         /*
         //
@@ -860,8 +849,7 @@ public class TransactionImpl
      * For exceptions see commit() method.
      */
     private void commitComplete() {
-        if (this.tracing)
-            this.traceCallInfo("commitComplete", TRACE_ONE_PHASE, null); // NOI18N
+        traceCallInfo("commitComplete", TRACE_ONE_PHASE, null);
 
         //
         // Validate initial state
@@ -874,9 +862,9 @@ public class TransactionImpl
             internalCommit();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.commitprepare.wrongstatus", // NOI18N
-                "commitComplete",  // NOI18N
-                "STATUS_PREPARED", // NOI18N
+                "transaction.transactionimpl.commitprepare.wrongstatus",
+                "commitComplete",
+                "STATUS_PREPARED",
                 this.statusString(this.status)));
         }
     }
@@ -909,8 +897,8 @@ public class TransactionImpl
             if (error != INTERNAL_OK) {
                 this.forceRollback();
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.commitcomplete.error", // NOI18N
-                    "Connection Error")); // NOI18N
+                    "transaction.transactionimpl.commitcomplete.error",
+                    "Connection Error"));
             }
             this.closeConnection();
         }
@@ -921,6 +909,7 @@ public class TransactionImpl
      * Rollback the transaction represented by this transaction object.
      *
      */
+    @Override
     public void rollback() {
 
         persistenceManager.acquireExclusiveLock();
@@ -929,13 +918,10 @@ public class TransactionImpl
             if (txType == CMT || txType == BMT_UT) {
                 // Error - should not be called
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                     "transaction.transactionimpl.mgd", "rollback")); //NOI18N
+                     "transaction.transactionimpl.mgd", "rollback"));
             }
 
-            this.setTrace();
-
-            if (this.tracing)
-                this.traceCall("rollback"); // NOI18N
+            traceCall("rollback");
 
             if ((this.status != Status.STATUS_ACTIVE)
                 &&    (this.status != Status.STATUS_MARKED_ROLLBACK)) {
@@ -947,8 +933,8 @@ public class TransactionImpl
                 //
 
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.commit_rollback.notactive", // NOI18N
-                    "rollback", // NOI18N
+                    "transaction.transactionimpl.commit_rollback.notactive",
+                    "rollback",
                     this.statusString(this.status)));
             }
 
@@ -962,7 +948,7 @@ public class TransactionImpl
                 try {
                     EJBHelper.getLocalTransactionManager().rollback();
                 } catch (Exception e) {
-                    throw new JDOException("", e); // NOI18N
+                    throw new JDOException("", e);
                 }
             } else { //NON_MGD
                 //This has effect of rolling back changes also
@@ -985,8 +971,7 @@ public class TransactionImpl
      *
      */
     private void internalRollback() {
-        if (this.tracing)
-            this.traceCall("internalRollback"); // NOI18N
+        traceCall("internalRollback");
 
         if (this.status == Status.STATUS_ROLLEDBACK) {
             return;
@@ -994,10 +979,10 @@ public class TransactionImpl
 
         if (this.status != Status.STATUS_ROLLING_BACK) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                "transaction.transactionimpl.commitprepare.wrongstatus", // NOI18N
-                "internalRollback",  // NOI18N
-                "STATUS_ROLLING_BACK", // NOI18N
-                this.statusString(this.status)));
+                "transaction.transactionimpl.commitprepare.wrongstatus",
+                "internalRollback",
+                "STATUS_ROLLING_BACK",
+                statusString(this.status)));
         }
 
         if (txType == NON_MGD) {
@@ -1021,8 +1006,7 @@ public class TransactionImpl
      * See internalRollback() for exceptions
      */
     int forceRollback() {
-        if (this.tracing)
-            this.traceCall("forceRollback"); // NOI18N
+        traceCall("forceRollback");
 
         if ((this.status == Status.STATUS_ROLLING_BACK)        // Already
             ||    (this.status == Status.STATUS_ROLLEDBACK)        // Done
@@ -1042,9 +1026,9 @@ public class TransactionImpl
      * the transaction is to roll back.
      *
      */
+    @Override
     public void setRollbackOnly() {
-        if (this.tracing)
-            this.traceCall("setRollbackOnly"); // NOI18N
+        traceCall("setRollbackOnly");
 
         if ((this.status == Status.STATUS_ROLLING_BACK)
                 ||    (this.status == Status.STATUS_ROLLEDBACK)
@@ -1059,7 +1043,7 @@ public class TransactionImpl
             try {
                 jta.setRollbackOnly();
             } catch (Exception e) {
-                throw new JDOException("", e); // NOI18N
+                throw new JDOException("", e);
             }
         } else {
             this.setStatus(Status.STATUS_MARKED_ROLLBACK);
@@ -1079,7 +1063,7 @@ public class TransactionImpl
         // (i.e. beforeCompletion, xaRes.prepare) the lock is released, and
         // that other threads can access this object.  See note at top of file.
         //
-        synchronized (this.globalLock) {
+        synchronized (globalLock) {
             return this.status;
         }
     }
@@ -1095,7 +1079,7 @@ public class TransactionImpl
      * @return True if transaction is completed.
      */
     boolean isTerminated() {
-        synchronized (this.globalLock) {
+        synchronized (globalLock) {
             return ((this.status == Status.STATUS_COMMITTED)
                 ||    (this.status == Status.STATUS_ROLLEDBACK)
                 ||    (this.status == Status.STATUS_NO_TRANSACTION));
@@ -1142,11 +1126,8 @@ public class TransactionImpl
             if (synchronization != null) {
                 try {
                     synchronization.afterCompletion(this.status);
-                } catch (Exception ex) {
-                    logger.log(Logger.WARNING, I18NHelper.getMessage(
-                         messages,
-                         "transaction.transactionimpl.syncmanager.aftercompletion", // NOI18N
-                         ex.getMessage()));
+                } catch (Exception e) {
+                    LOG.log(WARNING, "The afterCompletion failed.", e);
                 }
             }
         }
@@ -1165,12 +1146,9 @@ public class TransactionImpl
     //        created (ncg)
     //
     private void setStatus(int status) {
-        synchronized(this.globalLock) {
-            if (this.tracing) {
-                Object[] items= new Object[] {Thread.currentThread(),this.toString(),
-                    this.statusString(this.status), this.statusString(status), persistenceManager};
-                logger.finest("sqlstore.transactionimpl.status",items); // NOI18N
-            }
+        synchronized(globalLock) {
+            LOG.log(TRACE, "{0} Tx[ {1} ].setStatus: {2} => {3} for {4}.", Thread.currentThread(), this,
+                statusString(this.status), statusString(status), persistenceManager);
             this.status = status;
             persistenceManager.notifyStatusChange(isActive());
         }
@@ -1180,8 +1158,7 @@ public class TransactionImpl
      * Forget this transaction
      */
     private void forget() {
-        if (this.tracing)
-            this.traceCall("forget"); // NOI18N
+        traceCall("forget");
 
         //
         // Do not clear:
@@ -1201,7 +1178,7 @@ public class TransactionImpl
                     closeConnection();
                     throw new JDOFatalInternalException(I18NHelper.getMessage(
                         messages,
-                        "transaction.transactionimpl.forget.connectionnotclosed")); // NOI18N
+                        "transaction.transactionimpl.forget.connectionnotclosed"));
                 }
             } catch (Exception e) {
             }
@@ -1219,28 +1196,14 @@ public class TransactionImpl
 
         jta = null;
         txType = NON_MGD;       // Restore the flag
-
-        this.setTrace();
-    }
-
-    //
-    // ----- Debugging utilities -----
-    //
-
-    /**
-     * Set the global transaction tracing.
-     */
-    static void setTrace() {
-        TransactionImpl.tracing = logger.isLoggable(Logger.FINEST);
     }
 
     /**
      * Trace method call.
      */
     private void traceCall(String call) {
-        Object[] items = new Object[]{Thread.currentThread(),this.toString(),call,
-             this.statusString(this.status),txTypeString(), persistenceManager};
-        logger.finest("sqlstore.transactionimpl.call",items); // NOI18N
+        LOG.log(TRACE, "{0} Tx[ {1} ].{2}:status = {3}, txType: {4} for  {5}.", Thread.currentThread(), this, call,
+            statusString(status), txTypeString(), persistenceManager);
     }
 
     /**
@@ -1251,34 +1214,40 @@ public class TransactionImpl
     //     11-jan-1999
     //        created (ncg)
     //
-    private void traceCallInfo(String call, int info, String s) {
+    private void traceCallInfo(String call, int info, Integer txStatus) {
+        if (!LOG.isLoggable(TRACE) ) {
+            return;
+        }
+        StringBuilder logMessage = new StringBuilder();
+        logMessage.append("Thread.currentThread()").append("Tx[")
+            .append(this).append("].").append(call)
+            .append(": status = ").append(statusString(this.status));
 
-        //TODO : Optimize this when converting to resource budles
-        StringBuffer logMessage = new StringBuffer();
-        logMessage.append("Thread.currentThread()").append("Tran[") // NOI18N
-            .append(this.toString()).append("].").append(call) // NOI18N
-            .append(": status = ").append(this.statusString(this.status)); // NOI18N
+        if ((info & TRACE_THREADS) != 0) {
+            logMessage.append(", threads = " + this.threads);
+        }
+        if ((info & TRACE_SYNCHRONIZATIONS) != 0) {
+            logMessage.append(", sync = " + this.synchronization);
+        }
+        if ((info & TRACE_RESOURCES) != 0) {
+            logMessage.append(", resources = " + this.resources.size());
+        }
+        if ((info & TRACE_ONE_PHASE) != 0 && this.onePhase) {
+            logMessage.append(", onePhase = true");
+        }
+        if (txStatus != null) {
+            logMessage.append(", " + statusString(txStatus) + " for " + persistenceManager);
+        }
 
-        if ((info & TRACE_THREADS) != 0)
-            logMessage.append(", threads = " + this.threads); // NOI18N
-        if ((info & TRACE_SYNCHRONIZATIONS) != 0)
-            logMessage.append(", sync = " + this.synchronization); // NOI18N
-        if ((info & TRACE_RESOURCES) != 0)
-            logMessage.append(", resources = " + this.resources.size()); // NOI18N
-        if ((info & TRACE_ONE_PHASE) != 0 && this.onePhase)
-            logMessage.append(", onePhase = true"); // NOI18N
-        if (s != null)
-            logMessage.append(", " + s + " for " + persistenceManager); // NOI18N
-
-        logger.finest("sqlstore.transactionimpl.general",logMessage.toString()); // NOI18N
+        LOG.log(TRACE, logMessage.toString());
     }
 
     /**
      * Trace method call with extra string.
      */
     private void traceCallString(String call, String info) {
-      Object[] items = new Object[] {Thread.currentThread(),this.toString(),call,info,persistenceManager};
-      logger.finest("sqlstore.transactionimpl.call.info",items); // NOI18N
+        LOG.log(TRACE, "{0} Tx[ {1} ].{2}: {3} for  {4}.", Thread.currentThread(), this, call, info,
+            persistenceManager);
     }
 
     /**
@@ -1288,13 +1257,13 @@ public class TransactionImpl
      */
     private String txTypeString() {
         switch (txType) {
-            case NON_MGD:                   return "NON_MGD"; // NOI18N
-            case CMT:                       return "CMT"; // NOI18N
-            case BMT_UT:                    return "BMT_UT"; // NOI18N
-            case BMT_JDO:                   return "BMT_JDO"; // NOI18N
+            case NON_MGD:                   return "NON_MGD";
+            case CMT:                       return "CMT";
+            case BMT_UT:                    return "BMT_UT";
+            case BMT_JDO:                   return "BMT_JDO";
             default:                        break;
         }
-        return "UNKNOWN"; // NOI18N
+        return "UNKNOWN";
     }
 
     /**
@@ -1305,33 +1274,32 @@ public class TransactionImpl
      */
     public static String statusString(int status) {
         switch (status) {
-            case Status.STATUS_ACTIVE:            return "STATUS_ACTIVE"; // NOI18N
-            case Status.STATUS_MARKED_ROLLBACK:   return "STATUS_MARKED_ROLLBACK"; // NOI18N
-            case Status.STATUS_PREPARED:          return "STATUS_PREPARED"; // NOI18N
-            case Status.STATUS_COMMITTED:         return "STATUS_COMMITTED"; // NOI18N
-            case Status.STATUS_ROLLEDBACK:        return "STATUS_ROLLEDBACK"; // NOI18N
-            case Status.STATUS_UNKNOWN:           return "STATUS_UNKNOWN"; // NOI18N
-            case Status.STATUS_NO_TRANSACTION:    return "STATUS_NO_TRANSACTION"; // NOI18N
-            case Status.STATUS_PREPARING:         return "STATUS_PREPARING"; // NOI18N
-            case Status.STATUS_COMMITTING:        return "STATUS_COMMITTING"; // NOI18N
-            case Status.STATUS_ROLLING_BACK:      return "STATUS_ROLLING_BACK"; // NOI18N
+            case Status.STATUS_ACTIVE:            return "STATUS_ACTIVE";
+            case Status.STATUS_MARKED_ROLLBACK:   return "STATUS_MARKED_ROLLBACK";
+            case Status.STATUS_PREPARED:          return "STATUS_PREPARED";
+            case Status.STATUS_COMMITTED:         return "STATUS_COMMITTED";
+            case Status.STATUS_ROLLEDBACK:        return "STATUS_ROLLEDBACK";
+            case Status.STATUS_UNKNOWN:           return "STATUS_UNKNOWN";
+            case Status.STATUS_NO_TRANSACTION:    return "STATUS_NO_TRANSACTION";
+            case Status.STATUS_PREPARING:         return "STATUS_PREPARING";
+            case Status.STATUS_COMMITTING:        return "STATUS_COMMITTING";
+            case Status.STATUS_ROLLING_BACK:      return "STATUS_ROLLING_BACK";
             default:                              break;
         }
-        return "STATUS_Invalid[" + status + "]"; // NOI18N
+        return "STATUS_Invalid[" + status + "]";
     }
 
     /**
      * Returns a Connection. If there is no existing one, asks
      * ConnectionFactory for a new Connection
      */
+    @Override
     public synchronized Connection getConnection() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         if (_connection == null) {
             // find a new connection
             if (connectionFactory == null) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "transaction.transactionimpl.getconnection.nullcf")); // NOI18N
+                    "transaction.transactionimpl.getconnection.nullcf"));
             }
 
             _connection = this.getConnectionInternal();
@@ -1339,11 +1307,8 @@ public class TransactionImpl
 
         _connectionReferenceCount++;
 
-        if (debug) {
-            Object[] items = new Object[] {_connection, Boolean.valueOf(optimistic),
-                new Integer(_connectionReferenceCount) , persistenceManager};
-            logger.finest("sqlstore.transactionimpl.getconnection",items); // NOI18N
-        }
+        LOG.log(TRACE, "getConnection(): {0} TX optimistic: {1} referenceCount = {2} for {3}.", _connection, optimistic,
+            _connectionReferenceCount, persistenceManager);
 
         // We cannot depend on NON_MGD flag here as this method can be called
         // outside of an active transaction.
@@ -1364,7 +1329,7 @@ public class TransactionImpl
                     _connection.setAutoCommit(true);
                 }
             } catch (java.sql.SQLException e) {
-                logger.log(Logger.WARNING,"sqlstore.exception.log",e);  // NOI18N
+                LOG.log(WARNING, "Cannot work with autocommit!", e);
             }
         }
 
@@ -1375,6 +1340,7 @@ public class TransactionImpl
      * Replace a connection. Used in a managed environment only.
      * In a J2EE RI Connection need to be replaced at the beforeCompletion.
      */
+    @Override
     public void replaceConnection() {
         if (EJBHelper.isManaged()) {
             this.releaseConnection();
@@ -1388,19 +1354,14 @@ public class TransactionImpl
      * Connection cannot be closed if it is part of the commit/rollback
      * operation or inside a pessimistic transaction
      */
+    @Override
     public synchronized void releaseConnection() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         if (_connectionReferenceCount > 0) {
             _connectionReferenceCount--;
         }
 
-        if (debug) {
-            Object[] items = new Object[] {Boolean.valueOf(optimistic),
-                Boolean.valueOf(startedCommit),
-                new Integer(_connectionReferenceCount) , persistenceManager};
-            logger.finest("sqlstore.transactionimpl.releaseconnection",items); // NOI18N
-        }
+        LOG.log(TRACE, "releaseConnection(): TX optimistic: {0} Inside Commit: {1} referenceCount: {2} for {3}.",
+            optimistic, startedCommit, _connectionReferenceCount, persistenceManager);
 
         // Fix for bug 4479807: Do not keep connection in the managed environment.
         if ( (!EJBHelper.isManaged() && optimistic == false) || startedCommit ) {
@@ -1418,42 +1379,32 @@ public class TransactionImpl
     }
 
     private Connection getConnectionInternal() {
-        if (isDataSource) {
-            try {
-                if (EJBHelper.isManaged()) {
-                    // Delegate to the EJBHelper for details.
-                    if (isActive()) {
-                        return EJBHelper.getConnection(connectionFactory,
-                            username, password);
-                    } else {
-                        return EJBHelper.getNonTransactionalConnection(
-                            connectionFactory, username, password);
-                    }
-                } else if (username != null) {
-                    return ((DataSource)connectionFactory).getConnection(
-                        username, new String(password));
-                } else {
-                     return ((DataSource)connectionFactory).getConnection();
+        if (!isDataSource) {
+            return ((ConnectionFactory) connectionFactory).getConnection();
+        }
+        try {
+            if (EJBHelper.isManaged()) {
+                // Delegate to the EJBHelper for details.
+                if (isActive()) {
+                    return EJBHelper.getConnection(connectionFactory, username, password);
                 }
-
-            } catch (java.sql.SQLException e) {
-                String sqlState = e.getSQLState();
-                int  errorCode = e.getErrorCode();
-
-                if (sqlState == null) {
-                    throw new JDODataStoreException(
-                        I18NHelper.getMessage(messages,
-                            "connectionefactoryimpl.sqlexception", // NOI18N
-                            "null", "" + errorCode), e); // NOI18N
-                } else {
-                    throw new JDODataStoreException(
-                        I18NHelper.getMessage(messages,
-                            "connectionefactoryimpl.sqlexception", // NOI18N
-                            sqlState, "" + errorCode), e); // NOI18N
-                }
+                return EJBHelper.getNonTransactionalConnection(connectionFactory, username, password);
+            } else if (username != null) {
+                return ((DataSource) connectionFactory).getConnection(username, new String(password));
+            } else {
+                return ((DataSource) connectionFactory).getConnection();
             }
-        } else {
-            return ((ConnectionFactory)connectionFactory).getConnection();
+
+        } catch (java.sql.SQLException e) {
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+
+            if (sqlState == null) {
+                throw new JDODataStoreException(
+                    I18NHelper.getMessage(messages, "connectionefactoryimpl.sqlexception", "null", "" + errorCode), e);
+            }
+            throw new JDODataStoreException(
+                I18NHelper.getMessage(messages, "connectionefactoryimpl.sqlexception", sqlState, "" + errorCode), e);
         }
     }
 
@@ -1461,11 +1412,7 @@ public class TransactionImpl
      * Always Close a connection
      */
     private void closeConnection() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {_connection , persistenceManager};
-            logger.finest("sqlstore.transactionimpl.closeconnection",items); // NOI18N
-        }
+        LOG.log(TRACE, "Closing connection {0} for {1}", _connection, persistenceManager);
         try {
             if (_connection != null) {
                 _connection.close();
@@ -1480,24 +1427,19 @@ public class TransactionImpl
      * replaces rollbackResources() in ForteTran
      */
     private void rollbackConnection() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {_connection , persistenceManager};
-            logger.finest("sqlstore.transactionimpl.rollbackconnection",items); // NOI18N
-        }
+        LOG.log(TRACE, "rollbackConnection(): {0} for {1}.", _connection, persistenceManager);
         if (_connection != null) {
             try {
-                if (isDataSource)
+                if (isDataSource) {
                     _connection.rollback();
-                else
+                } else {
                     ((ConnectionImpl)_connection).internalRollback();
+                }
             } catch (Exception e) {
                 //Recover?
             }
         }
     }
-    private int INTERNAL_ERROR = 1;
-    private int INTERNAL_OK = 0;
 
     /**
      * replaces commitResources() in ForteTran
@@ -1505,10 +1447,11 @@ public class TransactionImpl
     private int commitConnection() {
         if (_connection != null) {
             try {
-                if (isDataSource)
+                if (isDataSource) {
                     _connection.commit();
-                else
+                } else {
                     ((ConnectionImpl)_connection).internalCommit();
+                }
             } catch (Exception e) {
                 return INTERNAL_ERROR;
             }
@@ -1522,23 +1465,27 @@ public class TransactionImpl
      *
      * @return  String describing contents of this Transaction object.
      */
+    @Override
     public String toString() {
-        String    s = "  Transaction: \n   status        = " + this.statusString(this.status)+ "\n" // NOI18N
-                  +    "   Transaction Object       = Transaction@" + this.hashCode() + "\n" // NOI18N
-                  +    "   threads       = " + this.threads + "\n"; // NOI18N
+        String    s = "  Transaction: \n   status        = " + this.statusString(this.status)+ "\n"
+                  +    "   Transaction Object       = Transaction@" + this.hashCode() + "\n"
+                  +    "   threads       = " + this.threads + "\n";
 
-        if (this.timeout != 0)
-            s = s + "   timeout       = " + this.timeout + "\n"; // NOI18N
-        if (this.startedCommit)
-            s = s +    "   startedCommit = true\n"; // NOI18N
-        if (this.onePhase)
-            s = s +    "   onePhase      = true\n"; // NOI18N
+        if (this.timeout != 0) {
+            s = s + "   timeout       = " + this.timeout + "\n";
+        }
+        if (this.startedCommit) {
+            s = s +    "   startedCommit = true\n";
+        }
+        if (this.onePhase) {
+            s = s +    "   onePhase      = true\n";
+        }
 
         if (synchronization != null) {
-            s = s + "sync:     " + synchronization + "\n"; // NOI18N
+            s = s + "sync:     " + synchronization + "\n";
         }
         if (!this.resources.isEmpty()) {
-            s = s +    "   # resources   = " + this.resources.size() + "\n"; // NOI18N
+            s = s +    "   # resources   = " + this.resources.size() + "\n";
             /*
             for (i = 0; i < this.resources.size(); i++) {
                 XAResource        res = (XAResource)this.resources.get(i);
@@ -1547,8 +1494,8 @@ public class TransactionImpl
                 // Bug 48325: avoid recursive toString() calls
                 //
                 if (res != null) {
-                    s = s + "    [" + i + "] " + // NOI18N
-                        res.getClass().getName() + "\n"; // NOI18N
+                    s = s + "    [" + i + "] " +
+                        res.getClass().getName() + "\n";
                 }
             }
             */

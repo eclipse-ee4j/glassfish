@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,22 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * DBStatement.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.DBVendorType;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
+import java.lang.System.Logger;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
@@ -44,6 +37,8 @@ import java.sql.Types;
 
 import org.netbeans.modules.dbschema.ColumnElement;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 /**
  */
 public class DBStatement extends Object {
@@ -56,8 +51,9 @@ public class DBStatement extends Object {
      * Batch threshold. Set the value from the system property named by
      * this class followed by "BATCH_THRESHOLD". Default is 100.
      */
-    private static final int BATCH_THRESHOLD =
-        Integer.getInteger(BATCH_THRESHOLD_PROPERTY, 100).intValue();
+    private static final int BATCH_THRESHOLD = Integer.getInteger(BATCH_THRESHOLD_PROPERTY, 100).intValue();
+
+    private static final Logger LOG = System.getLogger(DBStatement.class.getName());
 
     /** The wrapped PreparedStatement. */
     private PreparedStatement preparedStmt;
@@ -67,9 +63,6 @@ public class DBStatement extends Object {
 
     /** The SQL text. */
     private String statementText;
-
-    /** The logger */
-    private static Logger logger = LogHelperSQLStore.getLogger();
 
     /**
      * This constructor is used for batched updates.
@@ -121,10 +114,7 @@ public class DBStatement extends Object {
         throws SQLException
     {
         batchCounter++;
-        if (logger.isLoggable(Logger.FINER)) {
-            logger.finer("sqlstore.sql.generator.dbstatement.addbatch", // NOI18N
-                         new Integer(batchCounter));
-        }
+        LOG.log(DEBUG, "sqlstore.sql.generator.dbstatement.addbatch", batchCounter);
         preparedStmt.addBatch();
     }
 
@@ -132,13 +122,8 @@ public class DBStatement extends Object {
      * Delegates the executeBatch call to the PreparedStatement wrapped by
      * this DBStatement and resets the batch counter.
      */
-    public int[] executeBatch()
-        throws SQLException
-    {
-        if (logger.isLoggable(Logger.FINER)) {
-            logger.finer("sqlstore.sql.generator.dbstatement.executebatch", // NOI18N
-                         new Integer(batchCounter));
-        }
+    public int[] executeBatch() throws SQLException {
+        LOG.log(DEBUG, "sqlstore.sql.generator.dbstatement.executebatch", batchCounter);
         batchCounter = 0;
         return preparedStmt.executeBatch();
     }
@@ -195,10 +180,7 @@ public class DBStatement extends Object {
         throws SQLException
     {
         int sqlType = getSqlType(columnElement);
-        if (logger.isLoggable(Logger.FINER)) {
-            Object[] items = {new Integer(index),val,new Integer(sqlType)};
-            logger.finer("sqlstore.sql.generator.dbstatement.bindinputcolumn", items); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sql.generator.dbstatement.bindinputcolumn", Integer.valueOf(index), val, sqlType);
 
         if (val == null) {
             //setNull is called only for insert and update statement to set a column

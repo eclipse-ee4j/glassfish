@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ClassDesc.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
 import com.sun.jdo.api.persistence.model.Model;
@@ -30,10 +24,11 @@ import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingReferenceKeyElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingRelationshipElement;
+import com.sun.jdo.api.persistence.model.mapping.MappingTableElement;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
-import com.sun.jdo.api.persistence.model.mapping.impl.MappingReferenceKeyElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingTableElementImpl;
 import com.sun.jdo.api.persistence.support.JDOException;
@@ -42,7 +37,6 @@ import com.sun.jdo.api.persistence.support.JDOFatalUserException;
 import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.ConfigCache;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
@@ -57,8 +51,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.ConcurrencyD
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.ConcurrencyOptVerify;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -73,7 +67,13 @@ import java.util.ResourceBundle;
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.ColumnPairElement;
+import org.netbeans.modules.dbschema.DBMemberElement;
 import org.netbeans.modules.dbschema.TableElement;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  *
@@ -81,7 +81,7 @@ import org.netbeans.modules.dbschema.TableElement;
 public class ClassDesc
         implements com.sun.jdo.spi.persistence.support.sqlstore.PersistenceConfig {
 
-    private ArrayList fetchGroups;
+    private List<List<FieldDesc>> fetchGroups;
 
     private int maxHierarchicalGroupID;
 
@@ -92,13 +92,13 @@ public class ClassDesc
     private boolean hasLocalNonDFGField;
 
     /** Contains all local and foreign fields. */
-    public ArrayList fields;
+    public List<FieldDesc> fields;
 
     /** Contains all hidden fields. */
-    public ArrayList hiddenFields;
+    public List<FieldDesc> hiddenFields;
 
     /** Contains all relationship fields. */
-    public ArrayList foreignFields;
+    public List<ForeignFieldDesc> foreignFields;
 
     /** Contains the fields used for version consistency validation. */
     private LocalFieldDesc[] versionFields;
@@ -138,7 +138,7 @@ public class ClassDesc
     private LocalFieldDesc[] keyFieldDescs;
 
     /** The logger. */
-    private static Logger logger = LogHelperSQLStore.getLogger();
+    private static final Logger LOG = System.getLogger(ClassDesc.class.getName(), RESOURCE_BUNDLE);
 
     /** RetrieveDescriptor cache for navigation and reloading. */
     private final Map retrieveDescCache = new HashMap();
@@ -167,7 +167,7 @@ public class ClassDesc
 
     /** I18N message handler. */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             ClassDesc.class.getClassLoader());
 
     /** PC Constructor signature. */
@@ -185,7 +185,7 @@ public class ClassDesc
         } catch (Exception e) {
             // Persistence capable classes must provide this constructor
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.assertpersistencecapable.error", // NOI18N
+                    "jdo.persistencemanagerimpl.assertpersistencecapable.error",
                     pcClass.getName()), e);
         }
 
@@ -225,10 +225,10 @@ public class ClassDesc
             throw e;
         } catch (IllegalArgumentException e) {
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                "core.configuration.loadfailed.class", className), e); // NOI18N
+                "core.configuration.loadfailed.class", className), e);
         } catch (Exception e) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                "core.configuration.loadfailed.class", className), e); // NOI18N
+                "core.configuration.loadfailed.class", className), e);
         }
 
         return rc;
@@ -259,22 +259,19 @@ public class ClassDesc
                 Exception ex = (Exception) iter.next();
                 String validationMsg = ex.getLocalizedMessage();
 
-                logger.fine(I18NHelper.getMessage(messages,
-                    "core.configuration.validationproblem", // NOI18N
+                LOG.log(DEBUG, () -> I18NHelper.getMessage(messages,
+                    "core.configuration.validationproblem",
                     className, validationMsg));
-                validationMsgs.append(validationMsg).append('\n'); // NOI18N
+                validationMsgs.append(validationMsg).append('\n');
             }
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                "core.configuration.validationfailed", // NOI18N
+                "core.configuration.validationfailed",
                 className, validationMsgs.toString()));
         }
     }
 
     public void initialize(ConfigCache cache) {
-        boolean debug = logger.isLoggable();
-        if (debug) {
-            logger.fine("sqlstore.model.classdesc.persistconfiginit", mdConfig); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.model.classdesc.persistconfiginit", mdConfig);
 
         loadOidClass();
         initializeFields();
@@ -300,9 +297,7 @@ public class ClassDesc
         }
         maxFields = maxVisibleFields + maxHiddenFields;
 
-        if (debug) {
-            logger.fine("sqlstore.model.classdesc.persistconfiginit.exit"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.model.classdesc.persistconfiginit.exit");
     }
 
     private void loadOidClass() {
@@ -317,7 +312,7 @@ public class ClassDesc
         // First check whether the key class name ends with ".oid".
         // If so, we need to convert it '.' to '$' because is it
         // an inner class.
-        if (suffix.compareToIgnoreCase(".oid") == 0) { // NOI18N
+        if (suffix.compareToIgnoreCase(".oid") == 0) {
             StringBuffer buf = new StringBuffer(keyClassName);
 
             buf.setCharAt(buf.length() - 4, '$');
@@ -328,12 +323,10 @@ public class ClassDesc
             oidClass = Class.forName(keyClassName, true, classLoader);
         } catch (Throwable e) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.configuration.cantloadclass", keyClassName)); // NOI18N
+                    "core.configuration.cantloadclass", keyClassName));
         }
 
-        if (logger.isLoggable()) {
-            logger.fine("sqlstore.model.classdesc.loadedclass", oidClass); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.model.classdesc.loadedclass", oidClass);
     }
 
     /**
@@ -350,7 +343,7 @@ public class ClassDesc
 
             if (mdf == null) {
                 throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                        "core.configuration.fieldnotmapped", // NOI18N
+                        "core.configuration.fieldnotmapped",
                         pcf.getName(), pcElement.getName()));
             }
 
@@ -374,7 +367,7 @@ public class ClassDesc
                 throw e;
             } catch (Exception e) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                "core.configuration.loadfailed.field", // NOI18N
+                "core.configuration.loadfailed.field",
                 pcf.getName(), pcElement.getName()), e);
             }
 
@@ -382,10 +375,7 @@ public class ClassDesc
 
             addField(f);
 
-            if (logger.isLoggable(Logger.FINEST)) {
-                Object[] items = new Object[] {f.getName(),new Integer(f.absoluteID)};
-                logger.finest("sqlstore.model.classdesc.fieldinfo", items); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.model.classdesc.fieldinfo", f.getName(),f.absoluteID);
         }
 
         this.maxVisibleFields = fields.size();
@@ -397,15 +387,16 @@ public class ClassDesc
      * @param mdf Input <code>MappingFieldElementImpl</code>
      */
     private LocalFieldDesc createLocalField(MappingFieldElementImpl mdf) {
-        ArrayList columnDesc = mdf.getColumnObjects();
-
+        List<? extends DBMemberElement> columnDesc = mdf.getColumnObjects();
         // Make sure this field is properly mapped.
-        if ((columnDesc == null) || (columnDesc.size() == 0)) {
+        if (columnDesc == null || columnDesc.isEmpty()) {
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                    "core.configuration.fieldnotmapped", // NOI18N
+                    "core.configuration.fieldnotmapped",
                     mdf.getName(), pcElement.getName()));
         }
-        return new LocalFieldDesc(this, columnDesc);
+        List<ColumnElement> columns = new ArrayList<>();
+        columns.addAll(mdf.getColumnObjects().stream().map(ColumnElement.class::cast).toList());
+        return new LocalFieldDesc(this, columns);
     }
 
     /**
@@ -417,22 +408,20 @@ public class ClassDesc
      * @return New instance of <code>LocalFieldDesc</code>
      */
     private LocalFieldDesc createLocalHiddenField(ColumnElement column) {
-        ArrayList columnDesc = new ArrayList();
+        List<ColumnElement> columnDesc = new ArrayList<>();
         columnDesc.add(column);
         LocalFieldDesc lf = new LocalFieldDesc(this, columnDesc);
 
         if (hiddenFields == null) {
-            hiddenFields = new ArrayList();
+            hiddenFields = new ArrayList<>();
         }
         hiddenFields.add(lf);
 
         // AbsouluteID for hidden fields must be < 0.
         lf.absoluteID = -hiddenFields.size();
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            Object[] items = new Object[] {pcClass,lf.getName(),column.getName().getFullName()};
-            logger.finest("sqlstore.model.classdesc.getlocalfielddesc", items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.model.classdesc.getlocalfielddesc", pcClass, lf.getName(),
+            column.getName().getFullName());
 
         return lf;
     }
@@ -461,7 +450,7 @@ public class ClassDesc
             try {
                 ff.setComponentType(Class.forName(fpcf.getElementClass(), true, classLoader));
             } catch (Throwable e) {
-              logger.log(Logger.WARNING, "sqlstore.exception.log", e);
+              LOG.log(WARNING, "setComponentType failed.", e);
             }
         }
 
@@ -469,15 +458,15 @@ public class ClassDesc
     }
 
     private void initializeColumnLists(ForeignFieldDesc ff, MappingRelationshipElementImpl fmdf) {
-        ArrayList assocPairs = fmdf.getAssociatedColumnObjects();
-        ArrayList pairs = fmdf.getColumnObjects();
-        ArrayList localColumns = new ArrayList();
-        ArrayList foreignColumns = new ArrayList();
+        List<ColumnPairElement> assocPairs = fmdf.getAssociatedColumnObjects();
+        List<ColumnPairElement> pairs = fmdf.getColumnObjects();
+        List<ColumnElement> localColumns = new ArrayList<>();
+        List<ColumnElement> foreignColumns = new ArrayList<>();
 
         // We need to go through each local column and extract the foreign column.
         if ((assocPairs == null) || (assocPairs.size() == 0)) {
             for (int i = 0; i < pairs.size(); i++) {
-                ColumnPairElement fce = (ColumnPairElement) pairs.get(i);
+                ColumnPairElement fce = pairs.get(i);
                 localColumns.add(fce.getLocalColumn());
                 foreignColumns.add(fce.getReferencedColumn());
             }
@@ -485,17 +474,17 @@ public class ClassDesc
             ff.localColumns = localColumns;
             ff.foreignColumns = foreignColumns;
         } else {
-            ArrayList assocLocalColumns = new ArrayList();
-            ArrayList assocForeignColumns = new ArrayList();
+            List<ColumnElement> assocLocalColumns = new ArrayList<>();
+            List<ColumnElement> assocForeignColumns = new ArrayList<>();
 
             for (int i = 0; i < pairs.size(); i++) {
-                ColumnPairElement alc = (ColumnPairElement) pairs.get(i);
+                ColumnPairElement alc = pairs.get(i);
                 localColumns.add(alc.getLocalColumn());
                 assocLocalColumns.add(alc.getReferencedColumn());
             }
 
             for (int i = 0; i < assocPairs.size(); i++) {
-                ColumnPairElement afc = (ColumnPairElement) assocPairs.get(i);
+                ColumnPairElement afc = assocPairs.get(i);
                 assocForeignColumns.add(afc.getLocalColumn());
                 foreignColumns.add(afc.getReferencedColumn());
             }
@@ -510,7 +499,7 @@ public class ClassDesc
     private void initializeFetchAndConcurrencyGroup(FieldDesc f,
                                                     PersistenceFieldElement pcf,
                                                     MappingFieldElementImpl mdf,
-                                                    ArrayList concurrencyGroups) {
+                                                    List<ConcurrencyGroupElement> concurrencyGroups) {
         f.fetchGroup = mdf.getFetchGroup();
 
         // RESOLVE: For now, we can only handle one concurrency group per field
@@ -538,12 +527,12 @@ public class ClassDesc
         }
     }
 
-    private void createSecondaryTableKey(TableDesc table, MappingReferenceKeyElementImpl mappingSecondaryKey) {
+    private void createSecondaryTableKey(TableDesc table, MappingReferenceKeyElement mappingSecondaryKey) {
 
-        ColumnPairElement pairs[] = mappingSecondaryKey.getColumnPairs();
+        ColumnPairElement[] pairs = mappingSecondaryKey.getColumnPairs();
         KeyDesc referencingKey = new KeyDesc();
         KeyDesc referencedKey = new KeyDesc();
-        TableDesc secondaryTable = findTableDesc(((MappingTableElementImpl) mappingSecondaryKey.getTable()).getTableObject());
+        TableDesc secondaryTable = findTableDesc(mappingSecondaryKey.getTable().getTableObject());
 
         for (int i = 0; i < pairs.length; i++) {
             ColumnPairElement pair = pairs[i];
@@ -574,24 +563,24 @@ public class ClassDesc
      * This method maps all the tables.
      */
     private void initializeTables() {
-        ArrayList mdTables = mdConfig.getTables();
+        List<MappingTableElement> mdTables = mdConfig.getTables();
 
         createTables(mdTables);
         processSecondaryTables(mdTables);
     }
 
-    private void createTables(ArrayList mdTables) {
+    private void createTables(List<MappingTableElement> mdTables) {
         for (int i = 0; i < mdTables.size(); i++) {
             MappingTableElementImpl mdt = (MappingTableElementImpl) mdTables.get(i);
             TableDesc t = new TableDesc(mdt.getTableObject());
 
-            ArrayList keys = mdt.getKeyObjects();
+            List<ColumnElement> keys = mdt.getKeyObjects();
             KeyDesc key = new KeyDesc();
             t.setKey(key);
             key.addColumns(keys);
 
             for (int j = 0; j < keys.size(); j++) {
-                ColumnElement c = (ColumnElement) keys.get(j);
+                ColumnElement c = keys.get(j);
 
                 if (c != null) {
                     key.addField(getLocalFieldDesc(c));
@@ -610,15 +599,15 @@ public class ClassDesc
      * NOTE: This method assumes that the entries of <code>mdTables</code>
      * and <code>tables</code> are sorted in the same order.
      */
-    private void processSecondaryTables(ArrayList mdTables) {
+    private void processSecondaryTables(List<MappingTableElement> mdTables) {
 
         for (int i = 0; i < tables.size(); i++) {
             MappingTableElementImpl mdt = (MappingTableElementImpl) mdTables.get(i);
             TableDesc t = (TableDesc) tables.get(i);
-            ArrayList secondaryKeys = mdt.getReferencingKeys();
+            List<MappingReferenceKeyElement> secondaryKeys = mdt.getReferencingKeys();
 
             for (int j = 0; j < secondaryKeys.size(); j++) {
-                MappingReferenceKeyElementImpl mappingSecondaryKey = (MappingReferenceKeyElementImpl) secondaryKeys.get(j);
+                MappingReferenceKeyElement mappingSecondaryKey = secondaryKeys.get(j);
                 createSecondaryTableKey(t, mappingSecondaryKey);
             }
         }
@@ -631,7 +620,7 @@ public class ClassDesc
             ForeignFieldDesc ff = (ForeignFieldDesc) iter.next();
 
             if (ff.useJoinTable()) {
-                TableElement joinTable = ((ColumnElement) ff.assocLocalColumns.get(0)).getDeclaringTable();
+                TableElement joinTable = ff.assocLocalColumns.get(0).getDeclaringTable();
                 TableDesc joinTableDesc = findTableDesc(joinTable);
 
                 if (joinTableDesc == null) {
@@ -653,7 +642,7 @@ public class ClassDesc
      *  for <code>FieldDesc.GROUP_NONE</code> is empty.
      * @see #initializeFetchGroups
      */
-    public ArrayList getFetchGroup(int groupID) {
+    public List<FieldDesc> getFetchGroup(int groupID) {
         int index = 0;
 
         if (groupID >= FieldDesc.GROUP_NONE) {
@@ -666,10 +655,10 @@ public class ClassDesc
             fetchGroups.add(null);
         }
 
-        ArrayList group = (ArrayList) fetchGroups.get(index);
+        List<FieldDesc> group = fetchGroups.get(index);
 
         if (group == null) {
-            group = new ArrayList();
+            group = new ArrayList<>();
             fetchGroups.set(index, group);
         }
 
@@ -696,7 +685,7 @@ public class ClassDesc
     private void initializeFetchGroups() {
 
         for (int i = 0; i < 2; i++) {
-            ArrayList theFields = null;
+            List<FieldDesc> theFields = null;
 
             if (i == 0) {
                 theFields = fields;
@@ -708,7 +697,7 @@ public class ClassDesc
             }
 
             for (int j = 0; j < theFields.size(); j++) {
-                FieldDesc f = (FieldDesc) theFields.get(j);
+                FieldDesc f = theFields.get(j);
 
                 // Do not add the field to the fetch group for GROUP_NONE.
                 if (f.fetchGroup > FieldDesc.GROUP_NONE) {
@@ -726,7 +715,7 @@ public class ClassDesc
         this.maxHierarchicalGroupID = fetchGroups.size() - 1;
 
         for (int i = 0; i < fields.size(); i++) {
-            FieldDesc f = (FieldDesc) fields.get(i);
+            FieldDesc f = fields.get(i);
 
             // Do not add the field to the fetch group for GROUP_NONE.
             if (f.fetchGroup < FieldDesc.GROUP_NONE) {
@@ -747,7 +736,6 @@ public class ClassDesc
     }
 
     private void initializeKeyFields() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
         if (oidClass == null) {
             return;
         }
@@ -756,25 +744,21 @@ public class ClassDesc
         keyFieldNames = new String[keyFields.length];
         keyFieldDescs = new LocalFieldDesc[keyFields.length];
 
-        if (debug) {
-            logger.finest("sqlstore.model.classdesc.createsqldesc", oidClass); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.model.classdesc.createsqldesc", oidClass);
 
         for (int i = 0; i < keyFields.length; i++) {
             Field kf = keyFields[i];
             String name = kf.getName();
             keyFieldNames[i] = name;
 
-            if (name.equals("serialVersionUID")) { // NOI18N
+            if (name.equals("serialVersionUID")) {
                 continue;
             }
 
             LocalFieldDesc f = getLocalFieldDesc(name);
 
             if (f != null) {
-                if (debug) {
-                    logger.finest("sqlstore.model.classdesc.pkfield", f.getName()); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.model.classdesc.pkfield", f.getName());
 
                 // The fetch group for pk fields should always be DFG.
                 f.fetchGroup = FieldDesc.GROUP_DEFAULT;
@@ -785,7 +769,7 @@ public class ClassDesc
                 keyFieldDescs[i] = f;
             } else {
                 throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                        "core.configuration.noneexistentpkfield", // NOI18N
+                        "core.configuration.noneexistentpkfield",
                         name, oidClass.getName(), pcClass.getName()));
             }
         }
@@ -806,9 +790,7 @@ public class ClassDesc
             LocalFieldDesc f = (LocalFieldDesc) getField(mdField.getName());
 
             if (f != null) {
-                if (logger.isLoggable()) {
-                    logger.finest("sqlstore.model.classdesc.vcfield", f.getName()); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.model.classdesc.vcfield", f.getName());
 
                 versionFields[i] = f;
                 registerVersionFieldWithTable(f);
@@ -819,7 +801,7 @@ public class ClassDesc
                 f.sqlProperties |= FieldDesc.PROP_VERSION_FIELD;
             } else {
                 throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                        "core.configuration.noneexistentvcfield", // NOI18N
+                        "core.configuration.noneexistentvcfield",
                         mdField.getName(), pcClass.getName()));
             }
         }
@@ -833,7 +815,7 @@ public class ClassDesc
      */
     private void registerVersionFieldWithTable(LocalFieldDesc versionField) {
         // Version field must be mapped to exactly one column.
-        ColumnElement ce =  (ColumnElement) versionField.getColumnElements().next();
+        ColumnElement ce =  versionField.getColumnElements().next();
         Iterator iter = tables.iterator();
 
         while (iter.hasNext()) {
@@ -858,7 +840,7 @@ public class ClassDesc
     private void computeTrackedPrimitiveFields() {
         // Compute the list of primitive fields to track for each primitive field.
         for (int i = 0; i < fields.size(); i++) {
-            FieldDesc f = (FieldDesc) fields.get(i);
+            FieldDesc f = fields.get(i);
 
             if (!f.isRelationshipField()) {
                 LocalFieldDesc lf = (LocalFieldDesc) f;
@@ -891,7 +873,7 @@ public class ClassDesc
     private void computeTrackedRelationshipFields() {
         // Compute the list of fields to track for each field.
         for (int i = 0; i < 2; i++) {
-            ArrayList theFields = null;
+            List<FieldDesc> theFields = null;
 
             // We first check all the visible fields and then the hidden fields.
             if (i == 0) {
@@ -903,7 +885,7 @@ public class ClassDesc
             }
 
             for (int j = 0; j < theFields.size(); j++) {
-                FieldDesc f = (FieldDesc) theFields.get(j);
+                FieldDesc f = theFields.get(j);
 
                 f.computeTrackedRelationshipFields();
             }
@@ -916,7 +898,7 @@ public class ClassDesc
     private void cleanupTrackedFields() {
 
         for (int i = 0; i < fields.size(); i++) {
-            FieldDesc f = (FieldDesc) fields.get(i);
+            FieldDesc f = fields.get(i);
 
             if (f instanceof LocalFieldDesc) {
                 ((LocalFieldDesc) f).cleanupTrackedFields();
@@ -933,7 +915,7 @@ public class ClassDesc
     private void fixupForeignReferences(ConfigCache cache) {
 
         for (int i = 0; i < foreignFields.size(); i++) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) foreignFields.get(i);
+            ForeignFieldDesc ff = foreignFields.get(i);
             Class classType = null;
 
             if ((classType = ff.getComponentType()) == null) {
@@ -961,7 +943,7 @@ public class ClassDesc
     private void fixupFieldProperties() {
 
         for (int i = 0; i < foreignFields.size(); i++) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) foreignFields.get(i);
+            ForeignFieldDesc ff = foreignFields.get(i);
             ff.fixupFieldProperties();
         }
     }
@@ -970,7 +952,7 @@ public class ClassDesc
         LocalFieldDesc result;
 
         for (int i = 0; i < 2; i++) {
-            ArrayList theFields = null;
+            List<FieldDesc> theFields = null;
 
             if (i == 0) {
                 theFields = fields;
@@ -980,13 +962,13 @@ public class ClassDesc
 
             if (theFields != null) {
                 for (int j = 0; j < theFields.size(); j++) {
-                    FieldDesc f = (FieldDesc) theFields.get(j);
+                    FieldDesc f = theFields.get(j);
 
                     if (f instanceof LocalFieldDesc) {
                         result = (LocalFieldDesc) f;
 
                         for (int k = 0; k < result.columnDescs.size(); k++) {
-                            ColumnElement c = (ColumnElement) result.columnDescs.get(k);
+                            ColumnElement c = result.columnDescs.get(k);
 
                             // if (c.equals(column))
                             if (c.getName().getFullName().compareTo(column.getName().getFullName()) == 0) {
@@ -1024,14 +1006,14 @@ public class ClassDesc
 
         if (desc == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.generic.unknownfield", // NOI18N
+                        "core.generic.unknownfield",
                         name, getName()));
         }
 
         if (!(desc instanceof LocalFieldDesc)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.generic.notinstanceof", // NOI18N
-                        desc.getClass().getName(), "LocalFieldDesc")); // NOI18N
+                        "core.generic.notinstanceof",
+                        desc.getClass().getName(), "LocalFieldDesc"));
         }
 
         return ((LocalFieldDesc) desc);
@@ -1065,7 +1047,7 @@ public class ClassDesc
 
     public FieldDesc getField(String name) {
         for (int i = 0; i < fields.size(); i++) {
-            FieldDesc f = (FieldDesc) fields.get(i);
+            FieldDesc f = fields.get(i);
 
             if ((f != null) && (f.getName().compareTo(name) == 0)) {
                 return f;
@@ -1074,7 +1056,7 @@ public class ClassDesc
 
         if (hiddenFields != null) {
             for (int i = 0; i < hiddenFields.size(); i++) {
-                FieldDesc f = (FieldDesc) hiddenFields.get(i);
+                FieldDesc f = hiddenFields.get(i);
 
                 if (f.getName().compareTo(name) == 0) {
                     return f;
@@ -1087,9 +1069,9 @@ public class ClassDesc
 
     public FieldDesc getField(int index) {
         if (index >= 0) {
-            return (FieldDesc) fields.get(index);
+            return fields.get(index);
         } else {
-            return (FieldDesc) hiddenFields.get(-(index + 1));
+            return hiddenFields.get(-(index + 1));
         }
     }
 
@@ -1186,7 +1168,7 @@ public class ClassDesc
             // consistency level
             default :
                 throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                    "core.configuration.unsupportedconsistencylevel", pcClass));// NOI18N
+                    "core.configuration.unsupportedconsistencylevel", pcClass));
             }
         }
 
@@ -1389,7 +1371,7 @@ public class ClassDesc
      */
     private void addFKConstraints(RetrieveDescImpl rd, ForeignFieldDesc foreignField) {
         for (int i = 0; i < foreignField.foreignFields.size(); i++) {
-            LocalFieldDesc fff = (LocalFieldDesc) foreignField.foreignFields.get(i);
+            LocalFieldDesc fff = foreignField.foreignFields.get(i);
             rd.addParameterConstraint(fff, i);
         }
     }

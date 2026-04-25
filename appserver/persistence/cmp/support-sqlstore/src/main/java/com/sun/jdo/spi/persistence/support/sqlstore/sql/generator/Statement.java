@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,13 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * Statement.java
- *
- * Created on March 3, 2000
- *
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
@@ -38,6 +32,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintPar
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintSubquery;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintValue;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,12 +44,15 @@ import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.TableElement;
 
+import static java.lang.System.Logger.Level.TRACE;
+
 /**
  * This class is used to represent a SQL statement.
  */
 public abstract class Statement extends Object implements Cloneable {
 
-    private static final Integer ONE = new Integer(1);
+    private static final Logger LOG = System.getLogger(Statement.class.getName());
+    private static final Integer ONE = Integer.valueOf(1);
 
     protected static final int OP_PREFIX_MASK =     0x001; // 1
 
@@ -86,7 +85,7 @@ public abstract class Statement extends Object implements Cloneable {
     private String quoteCharEnd;
 
     /** array of ColumnRef */
-    protected ArrayList columns;
+    protected List<ColumnRef> columns;
 
     Constraint constraint;
 
@@ -95,33 +94,34 @@ public abstract class Statement extends Object implements Cloneable {
     int action;
 
     /** array of QueryTable */
-    public ArrayList tableList;
+    public List<QueryTable> tableList;
 
     protected DBVendorType vendorType;
 
-    protected ArrayList secondaryTableStatements;
+    protected List<Statement> secondaryTableStatements;
 
     /**
      * I18N message handler
      */
     protected final static ResourceBundle messages = I18NHelper.loadBundle(
-           "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+           "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             Statement.class.getClassLoader());
 
 
     public Statement(DBVendorType vendorType) {
 
         inputDesc = new InputDesc();
-        columns = new ArrayList();
+        columns = new ArrayList<>();
         constraint = new Constraint();
-        tableList = new ArrayList();
+        tableList = new ArrayList<>();
         this.vendorType = vendorType;
 
-        if (vendorType.getQuoteSpecialOnly() == false) {
-            // DO NOT SUPPORT QUOTING OTHERWISE
-            this.quoteCharStart = vendorType.getQuoteCharStart();
-            this.quoteCharEnd = vendorType.getQuoteCharEnd();
+        if (vendorType.getQuoteSpecialOnly()) {
+            return;
         }
+        // DO NOT SUPPORT QUOTING OTHERWISE
+        this.quoteCharStart = vendorType.getQuoteCharStart();
+        this.quoteCharEnd = vendorType.getQuoteCharEnd();
     }
 
     public void addQueryTable(QueryTable table) {
@@ -141,15 +141,18 @@ public abstract class Statement extends Object implements Cloneable {
         int size = columns.size();
 
         for (int i = 0; i < size; i++) {
-            ColumnRef cref = (ColumnRef) columns.get(i);
+            ColumnRef cref = columns.get(i);
 
-            if (cref.getColumnElement() == columnElement) return cref;
+            if (cref.getColumnElement() == columnElement) {
+                return cref;
+            }
         }
 
         return null;
     }
 
     protected void addColumnRef(ColumnRef columnRef) {
+        LOG.log(Level.DEBUG, "addColumnRef(columnRef={0})", columnRef);
         columnRef.setIndex(columns.size()+1);
         columns.add(columnRef);
     }
@@ -185,7 +188,7 @@ public abstract class Statement extends Object implements Cloneable {
 
     public void appendTableText(StringBuffer text, QueryTable table) {
         appendQuotedText(text, table.getTableDesc().getName());
-        text.append(" t"); // NOI18N
+        text.append(" t");
         text.append(table.getTableIndex());
     }
 
@@ -195,6 +198,7 @@ public abstract class Statement extends Object implements Cloneable {
      * @param text The given text
      */
     protected void appendQuotedText(StringBuffer buffer, String text) {
+        LOG.log(TRACE, () -> "Adding quoted text: " + text);
         buffer.append(quoteCharStart);
         buffer.append(text);
         buffer.append(quoteCharEnd);
@@ -206,12 +210,9 @@ public abstract class Statement extends Object implements Cloneable {
      * @return The text of the SQL query described by this object.
      */
     public String getText() {
-
         if (statementText == null) {
             generateStatementText();
         }
-
-
         return statementText.toString();
     }
 
@@ -236,8 +237,8 @@ public abstract class Statement extends Object implements Cloneable {
 
             if (!(node instanceof ConstraintOperation)) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.generic.notinstanceof", // NOI18N
-                        node.getClass().getName(), "ConstraintOperation")); // NOI18N
+                        "core.generic.notinstanceof",
+                        node.getClass().getName(), "ConstraintOperation"));
             }
 
             processRootConstraint((ConstraintOperation) node, stack, whereText);
@@ -262,7 +263,7 @@ public abstract class Statement extends Object implements Cloneable {
             whereText.append(constraint);
         } else {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "sqlstore.sql.generator.statement.unexpectedconstraint", op)); // NOI18N
+                        "sqlstore.sql.generator.statement.unexpectedconstraint", op));
         }
     }
 
@@ -290,7 +291,7 @@ public abstract class Statement extends Object implements Cloneable {
 
         if (stack.size() == 0) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.stackempty")); // NOI18N
+                    "core.constraint.stackempty"));
         }
 
         node = (ConstraintNode) stack.get(stack.size() - 1);
@@ -308,7 +309,7 @@ public abstract class Statement extends Object implements Cloneable {
             processConstraintOperation((ConstraintOperation) node, stack, result);
         } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.illegalnode", // NOI18N
+                    "core.constraint.illegalnode",
                     node.getClass().getName()));
         }
 
@@ -319,12 +320,12 @@ public abstract class Statement extends Object implements Cloneable {
         // DB2 requires cast for parameter markers involved in numeric expressions.
         result.append(vendorType.getParameterMarker(node.getType()));
         Integer index = node.getIndex();
-        inputDesc.values.add(new InputParamValue(index, getColumnElementForValueNode(node) ));
+        inputDesc.values.add(new InputParamValue(index, getColumnElementForValueNode(node)));
     }
 
     protected void processConstraintValue(ConstraintValue node, StringBuffer result) {
         boolean generateValueInSQLStatement = false;
-        String strToAppend = "?"; // NOI18N
+        String strToAppend = "?";
 
         // DB2 requires cast for parameter markers involved in numeric expressions.
         // For DB2, do not generate parameter markers, but inline values in generated SQL.
@@ -363,9 +364,9 @@ public abstract class Statement extends Object implements Cloneable {
             desc = thePlan.config.getLocalFieldDesc(((ConstraintFieldName) fieldNode).name);
         } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.generic.notinstanceof", // NOI18N
+                    "core.generic.notinstanceof",
                     fieldNode.getClass().getName(),
-                    "ConstraintFieldDesc/ConstraintFieldName")); // NOI18N
+                    "ConstraintFieldDesc/ConstraintFieldName"));
         }
         generateColumnText(desc, thePlan, result);
     }
@@ -385,10 +386,10 @@ public abstract class Statement extends Object implements Cloneable {
                                       StringBuffer sb) {
         QueryTable table = null;
         ColumnElement column = null;
-        Iterator iter = desc.getColumnElements();
+        Iterator<ColumnElement> iter = desc.getColumnElements();
 
         while (iter.hasNext() && table == null) {
-            column = (ColumnElement) iter.next();
+            column = iter.next();
 
             // For updates, the member variable tableList is complete
             // at this point and includes only the table being updated.
@@ -404,14 +405,14 @@ public abstract class Statement extends Object implements Cloneable {
 
         if (table == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.configuration.fieldnotable", // NOI18N
+                    "core.configuration.fieldnotable",
                     desc.getName()));
         }
 
         // Select statements might include columns from several tables.
         // Qualify the column with the table index.
         if (action == QueryPlan.ACT_SELECT) {
-            sb.append("t").append(table.getTableIndex()).append("."); // NOI18N
+            sb.append("t").append(table.getTableIndex()).append(".");
         }
 
         appendQuotedText(sb, column.getName().getName());
@@ -428,8 +429,8 @@ public abstract class Statement extends Object implements Cloneable {
     protected QueryTable findQueryTable(TableElement tableElement) {
         QueryTable table = null;
 
-        for (Iterator iter = tableList.iterator(); iter.hasNext() && table == null; ) {
-            QueryTable t = (QueryTable) iter.next();
+        for (Iterator<QueryTable> iter = tableList.iterator(); iter.hasNext() && table == null; ) {
+            QueryTable t = iter.next();
             if (t.getTableDesc().getTableElement() == tableElement) {
             // if (t.getTableDesc().getTableElement().equals(tableElement)) {
                 table = t;
@@ -463,7 +464,7 @@ public abstract class Statement extends Object implements Cloneable {
 
         if ((format & OP_PCOUNT_MASK) > 0) {
             if ((format & OP_PAREN_MASK) > 0) {
-                result.append("("); // NOI18N
+                result.append("(");
             }
 
             result.append(getWhereText(stack));
@@ -474,14 +475,14 @@ public abstract class Statement extends Object implements Cloneable {
                     result.append(infixOperator(opCode, i - 1));
                 } else {
                     // opCode for which OP_FUNC_MASK is set
-                    result.append(", "); // NOI18N
+                    result.append(", ");
                 }
 
                 result.append(getWhereText(stack));
             }
 
             if ((format & OP_PAREN_MASK) > 0) {
-                result.append(")"); // NOI18N
+                result.append(")");
             }
         }
 
@@ -502,15 +503,15 @@ public abstract class Statement extends Object implements Cloneable {
            case ActionDesc.OP_BETWEEN:
                 if (stack.size() < 3) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.stackempty")); // NOI18N
+                            "core.constraint.stackempty"));
                 }
 
                 if (!(stack.get(stack.size() - 1) instanceof ConstraintField)) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.needfieldnode")); // NOI18N
+                            "core.constraint.needfieldnode"));
                 } else {
                     result.append(getWhereText(stack));
-                    result.append(" between "); // NOI18N
+                    result.append(" between ");
                 }
                 result.append(getWhereText(stack));
                 result.append(" and ");
@@ -524,38 +525,38 @@ public abstract class Statement extends Object implements Cloneable {
             case ActionDesc.OP_EXISTS:
                 if (!(opNode instanceof ConstraintSubquery)) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.generic.notinstanceof", // NOI18N
-                            opNode.getClass().getName(), "ConstraintSubquery")); // NOI18N
+                            "core.generic.notinstanceof",
+                            opNode.getClass().getName(), "ConstraintSubquery"));
                 }
 
                 ConstraintSubquery sqNode = (ConstraintSubquery) opNode;
 
                 result.append(prefixOperator(opCode));
-                result.append("("); // NOI18N
+                result.append("(");
 
-                Statement sqstmt = (Statement) sqNode.plan.statements.get(0);
+                Statement sqstmt = sqNode.plan.statements.get(0);
 
                 result.append(sqstmt.getText());
 
-                result.append(")"); // NOI18N
+                result.append(")");
                 break;
             case ActionDesc.OP_LIKE_ESCAPE:
                 if (stack.size() < 3) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.stackempty")); // NOI18N
+                            "core.constraint.stackempty"));
                 }
 
                 if (vendorType.supportsLikeEscape()) {
                     if (!(stack.get(stack.size() - 1) instanceof ConstraintField)) {
                         throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                                "core.constraint.needfieldnode")); // NOI18N
+                                "core.constraint.needfieldnode"));
                     } else {
                         result.append(getWhereText(stack));
-                        result.append(" LIKE "); // NOI18N
+                        result.append(" LIKE ");
                     }
                     result.append(getWhereText(stack));
                     result.append(vendorType.getLeftLikeEscape());
-                    result.append(" ESCAPE "); // NOI18N
+                    result.append(" ESCAPE ");
                     result.append(getWhereText(stack));
                     result.append(vendorType.getRightLikeEscape());
                 } else {
@@ -568,26 +569,26 @@ public abstract class Statement extends Object implements Cloneable {
             case ActionDesc.OP_SUBSTRING:
                 if (stack.size() < 3) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.stackempty")); // NOI18N
+                            "core.constraint.stackempty"));
                 }
 
                 result.append(vendorType.getSubstring());
-                result.append("("); // NOI18N
+                result.append("(");
                 result.append(getWhereText(stack));
                 result.append(vendorType.getSubstringFrom());
                 result.append(getWhereText(stack));
                 result.append(vendorType.getSubstringFor());
                 result.append(getWhereText(stack));
-                result.append(")"); // NOI18N
+                result.append(")");
                 break;
             case ActionDesc.OP_POSITION:
                 if (stack.size() < 2) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.stackempty")); // NOI18N
+                            "core.constraint.stackempty"));
                 }
 
                 result.append(vendorType.getPosition());
-                result.append("("); // NOI18N
+                result.append("(");
                 boolean swap = vendorType.isPositionSearchSource();
                 if (swap) {
                     ConstraintNode expr =
@@ -600,13 +601,13 @@ public abstract class Statement extends Object implements Cloneable {
 
                 result.append(getWhereText(stack));
                 result.append(vendorType.getPositionSep());
-                result.append(" ").append(getWhereText(stack)); // NOI18N
-                result.append(")"); // NOI18N
+                result.append(" ").append(getWhereText(stack));
+                result.append(")");
                 break;
             case ActionDesc.OP_POSITION_START:
                 if (stack.size() < 3) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.stackempty")); // NOI18N
+                            "core.constraint.stackempty"));
                 }
 
                 boolean swapArgs = vendorType.isPositionSearchSource();
@@ -622,13 +623,13 @@ public abstract class Statement extends Object implements Cloneable {
                         stack.add(pattern);
                     }
                     result.append(vendorType.getPosition());
-                    result.append("("); // NOI18N
+                    result.append("(");
                     result.append(getWhereText(stack));
                     result.append(vendorType.getPositionSep());
-                    result.append(" ").append(getWhereText(stack)); // NOI18N
+                    result.append(" ").append(getWhereText(stack));
                     result.append(vendorType.getPositionSep());
-                    result.append(" ").append(getWhereText(stack)); // NOI18N
-                    result.append(")"); // NOI18N
+                    result.append(" ").append(getWhereText(stack));
+                    result.append(")");
                 } else { //twoArgs
                     ConstraintValue valueNode =
                             (ConstraintValue)stack.remove(stack.size() - 3);
@@ -638,7 +639,7 @@ public abstract class Statement extends Object implements Cloneable {
                     } else {
                         throw new JDOFatalInternalException(
                                 I18NHelper.getMessage(messages,
-                                        "sqlstore.sql.generator.statement.positionthreeargsnotsupported")); // NOI18N
+                                        "sqlstore.sql.generator.statement.positionthreeargsnotsupported"));
                     }
                 }
                 break;
@@ -648,14 +649,14 @@ public abstract class Statement extends Object implements Cloneable {
             case ActionDesc.OP_MOD:
                 if (stack.size() < 2) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.constraint.stackempty")); // NOI18N
+                            "core.constraint.stackempty"));
                 }
                 result.append(prefixOperator(opCode));
-                result.append("("); // NOI18N
+                result.append("(");
                 result.append(getWhereText(stack));
-                result.append(", "); // NOI18N
+                result.append(", ");
                 result.append(getWhereText(stack));
-                result.append(")"); // NOI18N
+                result.append(")");
                 break;
             case ActionDesc.OP_CONCAT:
                 processConcatOperation(opCode, stack, result);
@@ -663,8 +664,8 @@ public abstract class Statement extends Object implements Cloneable {
 
             default:
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", // NOI18N
-                        "" + opCode)); // NOI18N
+                        "core.constraint.illegalop",
+                        "" + opCode));
         }
     }
 
@@ -673,27 +674,27 @@ public abstract class Statement extends Object implements Cloneable {
 
         if (stack.size() < 2) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.stackempty")); // NOI18N
+                    "core.constraint.stackempty"));
         }
         String concatCast = vendorType.getConcatCast();
         if (concatCast.length() != 0) {
             result.append(concatCast);
             //Opening brace for concat cast
-            result.append("( "); // NOI18N
+            result.append("( ");
         }
         // Concat is a binary infix operator. Process it manually here.
         // Resolve: Why should CONCAT operation be inside braces.
         // Opening brace around CONCAT operation
-        result.append("( "); // NOI18N
+        result.append("( ");
         result.append(getWhereText(stack));
         result.append(infixOperator(opCode, 0));
         result.append(getWhereText(stack));
         // Closing brace around CONCAT operation
-        result.append(" ) "); // NOI18N
+        result.append(" ) ");
 
         if (concatCast.length() != 0) {
             // Closing brace for concat cast
-            result.append(" ) "); // NOI18N
+            result.append(" ) ");
         }
     }
 
@@ -703,12 +704,12 @@ public abstract class Statement extends Object implements Cloneable {
 
         if (stack.size() < 2) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.stackempty")); // NOI18N
+                    "core.constraint.stackempty"));
         }
 
         if (!(stack.get(stack.size() - 1) instanceof ConstraintField)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.needfieldnode")); // NOI18N
+                    "core.constraint.needfieldnode"));
         } else {
             fieldNode = (ConstraintField) stack.get(stack.size() - 1);
             stack.remove(stack.size() - 1);
@@ -716,7 +717,7 @@ public abstract class Statement extends Object implements Cloneable {
 
         if (!(stack.get(stack.size() - 1) instanceof ConstraintValue)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.needvalnode")); // NOI18N
+                    "core.constraint.needvalnode"));
         } else {
             valueNode = (ConstraintValue) stack.get(stack.size() - 1);
             stack.remove(stack.size() - 1);
@@ -799,7 +800,7 @@ public abstract class Statement extends Object implements Cloneable {
                 }
             } else {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.stackempty")); // NOI18N
+                    "core.constraint.stackempty"));
            }
         }
         result.append (getWhereText(stack));
@@ -816,15 +817,15 @@ public abstract class Statement extends Object implements Cloneable {
 
         if (stack.size() < 2) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.stackempty")); // NOI18N
+                    "core.constraint.stackempty"));
         }
 
         //Append the first bracket "(" to the result
-        result.append("("); // NOI18N
+        result.append("(");
 
         if (!(stack.get(stack.size() - 1) instanceof ConstraintField)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.needfieldnode")); // NOI18N
+                    "core.constraint.needfieldnode"));
         } else {
             //append "t0.field1" to c
             c.append(getWhereText(stack));
@@ -832,51 +833,34 @@ public abstract class Statement extends Object implements Cloneable {
 
         //Append ", t0.field2, t0fld3,...."
         while (stack.size() > 1 && (stack.get(stack.size() - 1) instanceof ConstraintField)) {
-            c.replace(0, 0, ", "); // NOI18N
+            c.replace(0, 0, ", ");
             c.replace(0, 0, getWhereText(stack));
         }
         result.append(c.toString());
-        result.append(") "); // NOI18N
+        result.append(") ");
         if (opCode == ActionDesc.OP_NOTIN) {
-            result.append("not "); // NOI18N
+            result.append("not ");
         }
-        result.append("in ("); // NOI18N
+        result.append("in (");
 
 
         ConstraintNode currentNode = (ConstraintNode)stack.remove(stack.size() - 1);
         if ( ! ( currentNode instanceof ConstraintSubquery)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.generic.notinstanceof", // NOI18N
-                    currentNode.getClass().getName(), "ConstraintSubquery")); // NOI18N
-        } else {
-
-            ConstraintSubquery sqnode = (ConstraintSubquery) currentNode;
-
-            Statement sqstmt = (Statement) sqnode.plan.statements.get(0);
-            //Append the subquery i.e. "select t1.fld1, t1.fld2, t2.fld3,...where ...."
-            result.append(sqstmt.getText());
-
-            //Close the final bracket
-            result.append(")"); // NOI18N
-
-            //Append the Input values to the InputDesc of current statement
-            inputDesc.values.addAll(sqstmt.inputDesc.values);
+                    "core.generic.notinstanceof",
+                    currentNode.getClass().getName(), "ConstraintSubquery"));
         }
+        ConstraintSubquery sqnode = (ConstraintSubquery) currentNode;
 
-        /*
-          //This is old code that takes care of case when we just have a list of values
-          //as the parameter to the IN clause. We might uncomment and enhance this code
-          //when we implement the functionality to have list of values inside IN clause.
-        if (!(stack.get(stack.size() - 1) instanceof ConstraintValue)) {
-            throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.needvalnode")); // NOI18N
-        } else {
-            result.append(((ConstraintValue) stack.get(stack.size() - 1)).value.toString());
-            stack.remove(stack.size() - 1);
-        }
+        Statement sqstmt = sqnode.plan.statements.get(0);
+        //Append the subquery i.e. "select t1.fld1, t1.fld2, t2.fld3,...where ...."
+        result.append(sqstmt.getText());
 
-        result.append(")"); // NOI18N
-        */
+        //Close the final bracket
+        result.append(")");
+
+        //Append the Input values to the InputDesc of current statement
+        inputDesc.values.addAll(sqstmt.inputDesc.values);
     }
 
     /**
@@ -922,28 +906,28 @@ public abstract class Statement extends Object implements Cloneable {
 
         switch (operation) {
             case ActionDesc.OP_ADD:
-                result.append(" + "); // NOI18N
+                result.append(" + ");
                 break;
             case ActionDesc.OP_AND:
                 result.append(" and ");
                 break;
             case ActionDesc.OP_DIV:
-                result.append(" / "); // NOI18N
+                result.append(" / ");
                 break;
             case ActionDesc.OP_EQ:
-                result.append(" = "); // NOI18N
+                result.append(" = ");
                 break;
             case ActionDesc.OP_GE:
-                result.append(" >= "); // NOI18N
+                result.append(" >= ");
                 break;
             case ActionDesc.OP_GT:
-                result.append(" > "); // NOI18N
+                result.append(" > ");
                 break;
             case ActionDesc.OP_LE:
-                result.append(" <= "); // NOI18N
+                result.append(" <= ");
                 break;
             case ActionDesc.OP_LT:
-                result.append(" < "); // NOI18N
+                result.append(" < ");
                 break;
             case ActionDesc.OP_NE:
                 result.append(" ");
@@ -951,13 +935,13 @@ public abstract class Statement extends Object implements Cloneable {
                 result.append(" ");
                 break;
             case ActionDesc.OP_OR:
-                result.append(" or "); // NOI18N
+                result.append(" or ");
                 break;
             case ActionDesc.OP_LIKE:
-                result.append(" like "); // NOI18N
+                result.append(" like ");
                 break;
             case ActionDesc.OP_MUL:
-                result.append(" * "); // NOI18N
+                result.append(" * ");
                 break;
             case ActionDesc.OP_SUB:
                 result.append(" - "); // NOI1N8
@@ -967,7 +951,7 @@ public abstract class Statement extends Object implements Cloneable {
                 break;
             case ActionDesc.OP_BETWEEN:
                 if (position == 1) {
-                    result.append(" between "); // NOI18N
+                    result.append(" between ");
                 } else {
                     result.append(" and ");
                 }
@@ -977,8 +961,8 @@ public abstract class Statement extends Object implements Cloneable {
                 break;
             default:
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", // NOI18N
-                        "" + operation)); // NOI18N
+                        "core.constraint.illegalop",
+                        "" + operation));
         }
 
         return result.toString();
@@ -1080,8 +1064,8 @@ public abstract class Statement extends Object implements Cloneable {
 
             default:
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", // NOI18N
-                        "" + operation)); // NOI18N
+                        "core.constraint.illegalop",
+                        "" + operation));
         }
 
         return format;
@@ -1111,8 +1095,8 @@ public abstract class Statement extends Object implements Cloneable {
                 break;
             default:
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", // NOI18N
-                        "" + operation)); // NOI18N
+                        "core.constraint.illegalop",
+                        "" + operation));
         }
 
         return result.toString();
@@ -1132,10 +1116,10 @@ public abstract class Statement extends Object implements Cloneable {
 
         switch (operation) {
             case ActionDesc.OP_ABS:
-                result.append(vendorType.getAbs()); // NOI18N
+                result.append(vendorType.getAbs());
                 break;
             case ActionDesc.OP_LENGTH:
-                result.append(vendorType.getCharLength()); // NOI18N
+                result.append(vendorType.getCharLength());
                 break;
             case ActionDesc.OP_RTRIM:
                 result.append(vendorType.getRtrim());
@@ -1144,50 +1128,53 @@ public abstract class Statement extends Object implements Cloneable {
                 result.append(prefixOperator(ActionDesc.OP_RTRIM));
                 break;
             case ActionDesc.OP_NOT:
-                result.append("not "); // NOI18N
+                result.append("not ");
                 break;
             case ActionDesc.OP_SQRT:
                 result.append(vendorType.getSqrt());
                 break;
             case ActionDesc.OP_NOTEXISTS:
-                result.append("not exists "); // NOI18N
+                result.append("not exists ");
                 break;
             case ActionDesc.OP_EXISTS:
-                result.append("exists "); // NOI18N
+                result.append("exists ");
                 break;
             case ActionDesc.OP_NULL_COMPARISION_FUNCTION:
                 result.append(vendorType.getNullComparisonFunctionName());
                 break;
             case ActionDesc.OP_MOD:
-                result.append(vendorType.getModFunctionName()); // NOI18N
+                result.append(vendorType.getModFunctionName());
                 break;
 
             default:
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", "" + operation)); // NOI18N
+                        "core.constraint.illegalop", "" + operation));
         }
 
         return result.toString();
     }
 
     public void addSecondaryTableStatement(Statement s) {
-        if (s == null) return;
+        if (s == null) {
+            return;
+        }
 
-        if (secondaryTableStatements == null)
-            secondaryTableStatements = new ArrayList();
+        if (secondaryTableStatements == null) {
+            secondaryTableStatements = new ArrayList<>();
+        }
 
         secondaryTableStatements.add(s);
     }
 
-    public ArrayList getSecondaryTableStatements() {
+    public List<Statement> getSecondaryTableStatements() {
         return secondaryTableStatements;
     }
 
-    public ArrayList getQueryTables() {
+    public List<QueryTable> getQueryTables() {
         return tableList;
     }
 
-    public ArrayList getColumnRefs() {
+    public List<ColumnRef> getColumnRefs() {
         return columns;
     }
 
@@ -1199,6 +1186,7 @@ public abstract class Statement extends Object implements Cloneable {
         return action;
     }
 
+    @Override
     public Object clone() {
         try {
             return super.clone();
@@ -1218,7 +1206,7 @@ public abstract class Statement extends Object implements Cloneable {
      */
     public void bindInputValues(DBStatement s) throws SQLException {
         for (int i = 0, size = inputDesc.values.size(); i < size; i++) {
-            InputValue inputVal = (InputValue) inputDesc.values.get(i);
+            InputValue inputVal = inputDesc.values.get(i);
             s.bindInputColumn(i + 1, inputVal.getValue(),
                     inputVal.getColumnElement(), vendorType);
         }
@@ -1232,7 +1220,7 @@ public abstract class Statement extends Object implements Cloneable {
         final int size = inputDesc.values.size();
         Object[] inputValues = new Object[size];
         for (int i = 0; i < size; i++) {
-            InputValue inputValue = (InputValue) inputDesc.values.get(i);
+            InputValue inputValue = inputDesc.values.get(i);
             inputValues[i] = inputValue.getValue();
         }
         return inputValues;
@@ -1261,27 +1249,27 @@ public abstract class Statement extends Object implements Cloneable {
 
         str.append(I18NHelper.getMessage(messages,
                 "sqlstore.sql.generator.statement.sqlStatement") );   //NOI18N
-        str.append("<").append(sqlText).append("> "); // NOI18N
+        str.append("<").append(sqlText).append("> ");
 
         if (input != null && input.length > 0) {
             str.append(I18NHelper.getMessage(messages,
-            "sqlstore.sql.generator.statement.withinputvalues")); // NOI18N
+            "sqlstore.sql.generator.statement.withinputvalues"));
             for (int i = 0; i < input.length; i++) {
                 if (i > 0) {
-                    str.append(", "); // NOI18N
+                    str.append(", ");
                 }
                 Object inputValue = input[i];
                 if (inputValue == null) {
-                    str.append("<null>"); // NOI18N
+                    str.append("<null>");
                 } else {
                     str.append(inputValue.getClass().getName());
-                    str.append(":"); // NOI18N
+                    str.append(":");
                     str.append(inputValue.toString());
                 }
             }
         } else {
             str.append(I18NHelper.getMessage(messages,
-            "sqlstore.sql.generator.statement.withnoinputvalues")); // NOI18N
+            "sqlstore.sql.generator.statement.withnoinputvalues"));
        }
 
         return str.toString();

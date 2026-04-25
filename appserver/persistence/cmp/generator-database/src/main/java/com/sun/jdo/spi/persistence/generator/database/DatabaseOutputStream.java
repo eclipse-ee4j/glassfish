@@ -23,12 +23,13 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 
 /*
@@ -37,9 +38,8 @@ import java.sql.SQLException;
  * @author Jie Leng
  */
 public class DatabaseOutputStream extends OutputStream {
-     /** The logger */
-    private static final Logger logger =
-            LogHelperDatabaseGenerator.getLogger();
+    private static final Logger LOG = System.getLogger(DatabaseOutputStream.class.getName());
+
 
     /** Connection to the database. */
     // XXX FIXME S/b final; make it so if we can get rid of setConnection.
@@ -60,6 +60,7 @@ public class DatabaseOutputStream extends OutputStream {
     /**
      * Closes the database connection.
      */
+    @Override
     public void close() {
         try {
             // XXX test is not necessary once we assert not null in constructor
@@ -70,14 +71,14 @@ public class DatabaseOutputStream extends OutputStream {
             }
 
         } catch (SQLException e) {
-        if (logger.isLoggable(Logger.FINE))
-            logger.fine("Exception in cleanup", e); // NOI18N
+            LOG.log(DEBUG, "Exception in close", e);
         }
     }
 
     /**
      * Commits the database connection.
      */
+    @Override
     public void flush() {
         try {
             // XXX test is not necessary once we assert not null in constructor
@@ -85,8 +86,7 @@ public class DatabaseOutputStream extends OutputStream {
                 conn_.commit();
             }
         } catch (SQLException e) {
-            if (logger.isLoggable(Logger.FINE))
-               logger.fine("Exception in cleanup", e); // NOI18N
+            LOG.log(DEBUG, "Exception in commit", e);
         }
     }
 
@@ -96,6 +96,7 @@ public class DatabaseOutputStream extends OutputStream {
      * always throws UnsupportedOperationException.
      * @throws UnsupportedOperationException
      */
+    @Override
     public void write(int b) {
         throw new UnsupportedOperationException();
     }

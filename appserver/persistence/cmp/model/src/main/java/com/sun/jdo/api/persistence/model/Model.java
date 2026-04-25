@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * Model.java
- *
- * Created on March 9, 2000, 6:19 PM
- */
-
 package com.sun.jdo.api.persistence.model;
 
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
@@ -31,13 +26,11 @@ import com.sun.jdo.api.persistence.model.jdo.impl.RelationshipElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
-import com.sun.jdo.api.persistence.model.util.LogHelperModel;
 import com.sun.jdo.api.persistence.model.util.ModelValidator;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.WeakHashSet;
 import com.sun.jdo.spi.persistence.utility.WeakValueHashMap;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -45,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +55,8 @@ import org.netbeans.modules.dbschema.SchemaElement;
 import org.netbeans.modules.dbschema.migration.archiver.XMLInputStream;
 import org.netbeans.modules.dbschema.migration.archiver.XMLOutputStream;
 
+import static java.lang.System.Logger.Level.WARNING;
+
 /* TODO:
     1. think about moving illegal lists of static info out to a properties file
     2. think about throwing an exception or setting the declaring class/table
@@ -75,12 +71,11 @@ import org.netbeans.modules.dbschema.migration.archiver.XMLOutputStream;
  */
 
 /**
- *
- * @author raccah
- * @version %I%
+ * @author raccah 2000
  */
-public abstract class Model
-{
+public abstract class Model {
+    private static final Logger LOG = System.getLogger(Model.class.getName());
+
     /** Default instance of the model for use at runtime. */
     public static final Model RUNTIME;
 
@@ -95,35 +90,36 @@ public abstract class Model
     /** Map of mapping class elements which have been loaded.  Keys are fully
      * qualified class names.
      */
-    private final Map _classes = new WeakValueHashMap();
+    @SuppressWarnings("unchecked")
+    private final Map<String, MappingClassElement> _classes = new WeakValueHashMap();
 
     /** Set of fully qualified names of classes known to be
      * non persistence-capable.
      */
-    private final Set _nonPCClasses = new WeakHashSet();
+    private final Set<String> _nonPCClasses = new WeakHashSet();
 
     /** List of illegal package name prefixes for superclasses of
      * persistence capable classes.
      */
-    private static List _illegalPrefixes;
+    private static List<String> _illegalPrefixes;
 
     /** List of illegal class names for superclasses of persistence capable
      * classes.
      */
-    private static List _illegalClasses;
+    private static List<String> _illegalClasses;
 
     /** List of class names for second class objects. */
-    private static List _scoClasses;
+    private static List<String> _scoClasses;
 
     /** List of class names for mutable second class objects. */
-    private static List _mutableScoClasses;
+    private static List<String> _mutableScoClasses;
 
     /** List of class names for collections. */
-    private static List _collectionClasses;
+    private static List<String> _collectionClasses;
 
     /** I18N message base */
     public static final String messageBase =
-        "com.sun.jdo.api.persistence.model.Bundle"; // NOI18N
+        "com.sun.jdo.api.persistence.model.Bundle";
 
     /** I18N message handler */
     private static final ResourceBundle _messages = I18NHelper.loadBundle(
@@ -132,42 +128,42 @@ public abstract class Model
     static
     {
         String prefixes[] =
-            {"java.awt", "java.applet", "javax.swing", "jakarta.ejb"};// NOI18N
-        String classes[] = {"java.lang.Throwable"};                    // NOI18N
-        String collectionClasses[] = { "java.util.Collection",        // NOI18N
-            "java.util.AbstractCollection",                         // NOI18N
-            //"java.util.List", "java.util.AbstractList",            // NOI18N
-            "java.util.Set", "java.util.AbstractSet",                 // NOI18N
-            //"java.util.ArrayList", "java.util.Vector",             // NOI18N
-            "java.util.HashSet",                                     // NOI18N
-            //"com.sun.jdo.spi.persistence.support.sqlstore.sco.ArrayList",    // NOI18N
-            //"com.sun.jdo.spi.persistence.support.sqlstore.sco.Vector", // NOI18N
-            "com.sun.jdo.spi.persistence.support.sqlstore.sco.HashSet"}; // NOI18N
-        String mutableScoClasses[] = {"java.util.Date",             // NOI18N
-            "com.sun.jdo.spi.persistence.support.sqlstore.sco.Date", "java.sql.Date",// NOI18N
-            "com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlDate", // NOI18N
-            "java.sql.Time", "com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTime", // NOI18N
-            "java.sql.Timestamp",                                     // NOI18N
-            "com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTimestamp"};        // NOI18N
-        String scoClasses[] = {"java.lang.String",                     // NOI18N
-            "java.lang.Character", "java.lang.Boolean",             // NOI18N
-            "java.lang.Long", "java.lang.Number", "java.lang.Byte", // NOI18N
-            "java.lang.Short", "java.lang.Integer", "java.lang.Float", // NOI18N
-            "java.lang.Double", "java.math.BigDecimal",                // NOI18N
-            "java.math.BigInteger"};                                // NOI18N
+            {"java.awt", "java.applet", "javax.swing", "jakarta.ejb"};
+        String classes[] = {"java.lang.Throwable"};
+        String collectionClasses[] = { "java.util.Collection",
+            "java.util.AbstractCollection",
+            //"java.util.List", "java.util.AbstractList",
+            "java.util.Set", "java.util.AbstractSet",
+            //"java.util.ArrayList", "java.util.Vector",
+            "java.util.HashSet",
+            //"com.sun.jdo.spi.persistence.support.sqlstore.sco.ArrayList",
+            //"com.sun.jdo.spi.persistence.support.sqlstore.sco.Vector",
+            "com.sun.jdo.spi.persistence.support.sqlstore.sco.HashSet"};
+        String mutableScoClasses[] = {"java.util.Date",
+            "com.sun.jdo.spi.persistence.support.sqlstore.sco.Date", "java.sql.Date",
+            "com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlDate",
+            "java.sql.Time", "com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTime",
+            "java.sql.Timestamp",
+            "com.sun.jdo.spi.persistence.support.sqlstore.sco.SqlTimestamp"};
+        String scoClasses[] = {"java.lang.String",
+            "java.lang.Character", "java.lang.Boolean",
+            "java.lang.Long", "java.lang.Number", "java.lang.Byte",
+            "java.lang.Short", "java.lang.Integer", "java.lang.Float",
+            "java.lang.Double", "java.math.BigDecimal",
+            "java.math.BigInteger"};
 
         _illegalPrefixes = Arrays.asList(prefixes);
         _illegalClasses = Arrays.asList(classes);
         _collectionClasses = Arrays.asList(collectionClasses);
-        _mutableScoClasses = new ArrayList(Arrays.asList(mutableScoClasses));
+        _mutableScoClasses = new ArrayList<>(Arrays.asList(mutableScoClasses));
         _mutableScoClasses.addAll(_collectionClasses);
-        _scoClasses = new ArrayList(Arrays.asList(scoClasses));
+        _scoClasses = new ArrayList<>(Arrays.asList(scoClasses));
         _scoClasses.addAll(_mutableScoClasses);
 
         // always load the runtime model
-        RUNTIME = NewModel(null, "com.sun.jdo.api.persistence.model.RuntimeModel"); //NOI18N
+        RUNTIME = NewModel(null, "com.sun.jdo.api.persistence.model.RuntimeModel");
         // always load the enhancer model
-        ENHANCER = NewModel(null, "com.sun.jdo.api.persistence.model.EnhancerModel"); //NOI18N
+        ENHANCER = NewModel(null, "com.sun.jdo.api.persistence.model.EnhancerModel");
     }
 
         /** Create a new Model of the requested type.  If the class definition
@@ -184,12 +180,14 @@ public abstract class Model
             Class DynamicClass = null;
             Model model = null;
             try {
-                if (testName != null)
+                if (testName != null) {
                     // try this class as a precondition to the real class to load
                     Class.forName (testName);
+                }
                 DynamicClass = Class.forName (modelName);
-                if (DynamicClass != null)
+                if (DynamicClass != null) {
                     model = (Model) DynamicClass.newInstance();
+                }
             }
             catch (Exception e) {
                 // this is expected in the environment
@@ -232,8 +230,9 @@ public abstract class Model
     {
         while ((className = getSuperclass(className)) != null)
         {
-            if (isPersistent(className))
+            if (isPersistent(className)) {
                 return true;
+            }
         }
 
         return false;
@@ -321,9 +320,7 @@ public abstract class Model
      * <code>null</code> if an error occurs or none exists
      * @see MappingClassElementImpl#forName
      */
-    public MappingClassElement getMappingClass (String className,
-       ClassLoader classLoader)
-    {
+    public MappingClassElement getMappingClass(String className, ClassLoader classLoader) {
         // This method synchronizes the access of the _classes cache,
         // rather than using a synchronized map. This is for optimization only.
         // Otherwise two parallel calls would read the mapping file twice,
@@ -331,34 +328,27 @@ public abstract class Model
         // the first in the cache.
         // Any other access of _classes potentially needs to be synchronized
         // using the same variable _classes (e.g. updateKeyForClass).
-        synchronized (this._classes)
-        {
-            MappingClassElement mappingClass =
-                (MappingClassElement)_classes.get(className);
+        synchronized (this._classes) {
+            MappingClassElement mappingClass = _classes.get(className);
 
-            if (mappingClass == null)
-            {
+            if (mappingClass == null) {
                 // check whether the class is known to be non PC
-                if (_nonPCClasses.contains(className))
+                if (_nonPCClasses.contains(className)) {
                     return null;
+                }
 
-                try
-                {
-                    InputStream stream = getInputStreamForResource(className,
-                        classLoader, getResourceNameWithExtension(className));
+                try {
+                    InputStream stream = getInputStreamForResource(className, classLoader,
+                        getResourceNameWithExtension(className));
 
-                    if (stream != null)
-                    {
+                    if (stream != null) {
                         // if the file is empty, the archiver prints an
                         // exception, so protect against that case and
                         // return null without updating either cache
-                        if (stream.available() > 0)
-                        {
-                            XMLInputStream xmlInput = new XMLInputStream(stream,
-                                getClass().getClassLoader());
+                        if (stream.available() > 0) {
+                            XMLInputStream xmlInput = new XMLInputStream(stream, getClass().getClassLoader());
 
-                            mappingClass =
-                                (MappingClassElement)xmlInput.readObject();
+                            mappingClass = (MappingClassElement) xmlInput.readObject();
                             xmlInput.close();
 
                             // postUnarchive performs version number checking
@@ -374,32 +364,22 @@ public abstract class Model
                             // persistence classes since the xml archiver uses
                             // all the set methods
                             mappingClass.setModified(false);
-                            getPersistenceClass(mappingClass).
-                                setModified(false);
+                            getPersistenceClass(mappingClass).setModified(false);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // stream is null, mapping file does not exist =>
                         // class is not PC, so store the class name in the
                         // set of classes known to be non PC
                         _nonPCClasses.add(className);
                     }
-                }
-                catch (ModelException e)
-                {
+                } catch (ModelException e) {
                     // MBO: print reason to logger
-                    LogHelperModel.getLogger().log(Logger.WARNING,
-                        e.getMessage());
+                    LOG.log(WARNING, "Cannot read mapping file for class " + className, e);
                     return null;
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     // MBO: print reason to logger
-                    LogHelperModel.getLogger().log(Logger.WARNING,
-                        I18NHelper.getMessage(getMessages(),
-                        "file.cannot_read", className, e.toString())); //NOI18N
-                }    // will return null
+                    LOG.log(WARNING, "Cannot read mapping file for class " + className, e);
+                } // will return null
             }
 
             return mappingClass;
@@ -446,8 +426,9 @@ public abstract class Model
      */
     protected void removeResourcesFromCaches (Collection classNames)
     {
-        if (classNames == null)
+        if (classNames == null) {
             return;
+        }
 
         synchronized (this._classes)
         {
@@ -455,13 +436,14 @@ public abstract class Model
             {
                 String className = (String)i.next();
                 MappingClassElement mapping =
-                    (MappingClassElement)_classes.get(className);
+                    _classes.get(className);
 
                 // If the cache has a MappingClassElement with the specified
                 // className, get its databaseRoot and remove the corresonding
                 // SchemaElement from the SchemaElement cache.
-                if (mapping != null)
+                if (mapping != null) {
                     SchemaElement.removeFromCache(mapping.getDatabaseRoot());
+                }
 
                 // remove the corresponding MappingClassElement from cache
                 _classes.remove(className);
@@ -493,67 +475,56 @@ public abstract class Model
      * @exception IOException if there is some error saving the class
      * @see #createFile
      */
-    public void storeMappingClass (MappingClassElement mappingClass)
-        throws IOException
-    {
-        if (mappingClass != null)
-        {
+    public void storeMappingClass(MappingClassElement mappingClass) throws IOException {
+        if (mappingClass != null) {
             String className = mappingClass.getName();
-            OutputStream stream = ((className == null) ? null :
-                createFile(className, getFileName(className),
-                MappingClassElement.MAPPING_EXTENSION));
+            OutputStream stream = ((className == null) ? null
+                : createFile(className, getFileName(className), MappingClassElement.MAPPING_EXTENSION));
 
             storeMappingClass(mappingClass, stream);
         }
     }
 
-    /** Stores the supplied MappingClassElement to an xml file in the
-     * specified output stream.  The caller is responsible for updating
+
+    /**
+     * Stores the supplied MappingClassElement to an xml file in the
+     * specified output stream. The caller is responsible for updating
      * the cache by calling updateKeyForClass, if necessary.
+     *
      * @param mappingClass the mapping class to be saved
      * @param stream the output stream
      * @exception IOException if there is some error saving the class
      * @see #createFile
      */
-    public void storeMappingClass (MappingClassElement mappingClass,
-        OutputStream stream) throws IOException
-    {
-        if (mappingClass != null)
-        {
+    public void storeMappingClass(MappingClassElement mappingClass, OutputStream stream) throws IOException {
+        if (mappingClass != null) {
             String className = mappingClass.getName();
 
-            if (stream != null)
-            {
+            if (stream != null) {
                 XMLOutputStream xmlOutput = new XMLOutputStream(stream);
 
-                try
-                {
-                    mappingClass.preArchive();        // call pre archive hook
+                try {
+                    mappingClass.preArchive(); // call pre archive hook
                     xmlOutput.writeObject(mappingClass);
 
                     // update modified flags for the mapping and persistence
                     // classes after save
                     mappingClass.setModified(false);
                     getPersistenceClass(mappingClass).setModified(false);
-                }
-                catch (ModelException e)
-                {
+                } catch (ModelException e) {
                     // MBO: print reason to logger
-                    LogHelperModel.getLogger().log(Logger.WARNING,
-                        e.getMessage());
-                }
-                finally
-                {
-                    if (xmlOutput != null)
+                    LOG.log(WARNING, "Failed to store mapping class " + mappingClass, e);
+                } finally {
+                    if (xmlOutput != null) {
                         xmlOutput.close();
+                    }
 
                     unlockFile(stream, className);
                 }
                 return;
             }
 
-            throw new IOException(I18NHelper.getMessage(getMessages(),
-                "file.cannot_save", className));                // NOI18N
+            throw new IOException(I18NHelper.getMessage(getMessages(), "file.cannot_save", className));
         }
     }
 
@@ -562,8 +533,9 @@ public abstract class Model
     {
         unlockFile(className);
 
-        if (stream != null)
+        if (stream != null) {
             stream.close();
+        }
     }
 
     // overridden in DevelopmentModel
@@ -585,7 +557,7 @@ public abstract class Model
 
         synchronized (this._classes)
         {
-            mappingClass = (MappingClassElement)_classes.get(className);
+            mappingClass = _classes.get(className);
         }
         storeMappingClass(mappingClass);
     }
@@ -606,8 +578,9 @@ public abstract class Model
         synchronized (this._classes)
         {
             // remove the old key from the cache
-            if (oldName != null)
+            if (oldName != null) {
                 _classes.remove(oldName);
+            }
 
             // store the class under the new key in the cache
             if (mappingClass != null)
@@ -677,8 +650,9 @@ public abstract class Model
             {
                 String nextPrefix = iterator.next().toString();
 
-                if (highestSuperclassName.startsWith(nextPrefix))
+                if (highestSuperclassName.startsWith(nextPrefix)) {
                     return false;
+                }
             }
 
             iterator = _illegalClasses.iterator();
@@ -686,8 +660,9 @@ public abstract class Model
             {
                 String nextClass = iterator.next().toString();
 
-                if (highestSuperclassName.equals(nextClass))
+                if (highestSuperclassName.equals(nextClass)) {
                     return false;
+                }
             }
 
             return true;
@@ -705,7 +680,7 @@ public abstract class Model
      */
     protected String getResourceNameWithExtension (String className)
     {
-        return getResourceName(className) + "." +                     // NOI18N
+        return getResourceName(className) + "." +
             MappingClassElement.MAPPING_EXTENSION;
     }
 
@@ -731,7 +706,7 @@ public abstract class Model
      */
     protected String getFileNameWithExtension (String className)
     {
-        return getFileName(className) + "." +                         // NOI18N
+        return getFileName(className) + "." +
             MappingClassElement.MAPPING_EXTENSION;
     }
 
@@ -795,17 +770,19 @@ public abstract class Model
             }
             catch (Exception e)    // rethrow if not a problem during unconvert
             {
-                if (conversionException == null)
+                if (conversionException == null) {
                     conversionException = e;
+                }
             }
         }
 
         if (conversionException != null)        // rethrow the exception
         {
-            if (conversionException instanceof RuntimeException)
+            if (conversionException instanceof RuntimeException) {
                 throw (RuntimeException)conversionException;
-            else if (conversionException instanceof IOException)
+            } else if (conversionException instanceof IOException) {
                 throw (IOException)conversionException;
+            }
         }
     }
 
@@ -921,9 +898,9 @@ public abstract class Model
                 {
                     relationship.setCollectionClass(
                         getDefaultCollectionClass(fieldType));
-                }
-                else    // set upper bound = 1 (jdo model should really do this)
+                } else { // set upper bound = 1 (jdo model should really do this)
                     relationship.setUpperBound(1);
+                }
 
                 element.addField(relationship);
             }
@@ -1003,22 +980,22 @@ public abstract class Model
      */
     public ArrayList getSupportedCollectionClasses (String className)
     {
-        String supportedSet = "java.util.HashSet";        // NOI18N
-    //    String supportedList = "java.util.ArrayList";    // NOI18N
-    //    String supportedVector = "java.util.Vector";    // NOI18N
+        String supportedSet = "java.util.HashSet";
+    //    String supportedList = "java.util.ArrayList";
+    //    String supportedVector = "java.util.Vector";
         ArrayList returnList = new ArrayList();
 
         // for dogwood, only support sets
         returnList.add(supportedSet);
-    /*    if (className.indexOf("Collection") != -1)    // NOI18N
+    /*    if (className.indexOf("Collection") != -1)
         {
             returnList.add(supportedSet);
             returnList.add(supportedList);
             returnList.add(supportedVector);
         }
-        else if (className.indexOf("List") != -1)    // NOI18N
+        else if (className.indexOf("List") != -1)
             returnList.add(supportedList);
-        else if (className.indexOf("Set") != -1)    // NOI18N
+        else if (className.indexOf("Set") != -1)
             returnList.add(supportedSet);
         else if (supportedVector.equals(className))
             returnList.add(supportedVector);
@@ -1037,12 +1014,12 @@ public abstract class Model
      */
     public String getDefaultCollectionClass (String className)
     {
-        String collectionClass = "java.util.HashSet";    // NOI18N
+        String collectionClass = "java.util.HashSet";
 
         // for dogwood, only support sets
-    /*    if (className.indexOf("List") != -1)            // NOI18N
-            collectionClass = "java.util.ArrayList";    // NOI18N
-        else if ("java.util.Vector".equals(className))    // NOI18N
+    /*    if (className.indexOf("List") != -1)
+            collectionClass = "java.util.ArrayList";
+        else if ("java.util.Vector".equals(className))
             collectionClass = className;
     */
         return collectionClass;
@@ -1351,7 +1328,7 @@ public abstract class Model
      */
     protected boolean isByteArray (String className)
     {
-        return ("byte[]".equals(className));        // NOI18N
+        return ("byte[]".equals(className));
     }
 
     /** Determines if the class name represents a collection.
@@ -1610,8 +1587,9 @@ public abstract class Model
             {
                 String keyClass = classElement.getKeyClass();
 
-                if (keyClass != null)
+                if (keyClass != null) {
                     return hasField(keyClass, fieldName);
+                }
             }
         }
 
@@ -1632,8 +1610,9 @@ public abstract class Model
     {
         String fieldType = getFieldType(className, fieldName);
 
-        if (fieldType == null)
+        if (fieldType == null) {
             fieldType = getType(getInheritedField(className, fieldName));
+        }
 
         return (isPrimitive(fieldType) ||
             (isSecondClassObject(fieldType) && !isCollection(fieldType)));
@@ -1714,21 +1693,21 @@ public abstract class Model
      */
     public static String[] getReadObjectArgs() {
         // Creating and returning a new array every time to prevent returning a mutable array
-        return new String[] {"java.io.ObjectInputStream"}; //NOI18N
+        return new String[] {"java.io.ObjectInputStream"};
     }
 
     /** Standard set of arguments for comparison with equals method.
      */
     public static String[] getEqualsArgs() {
         // Creating and returning a new array every time to prevent returning a mutable array
-        return new String[] {"java.lang.Object"}; //NOI18N
+        return new String[] {"java.lang.Object"};
     }
 
     /** Standard set of arguments for comparison with writeObject method.
      */
     public static String[] getWriteObjectArgs() {
         // Creating and returning a new array every time to prevent returning a mutable array
-        return new String[] {"java.io.ObjectOutputStream"}; //NOI18N
+        return new String[] {"java.io.ObjectOutputStream"};
     }
 
 }

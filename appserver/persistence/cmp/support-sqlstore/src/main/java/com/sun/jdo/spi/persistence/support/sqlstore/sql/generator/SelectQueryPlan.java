@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,19 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SelectQueryPlan.java
- *
- * Created on October 3, 2001
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
@@ -50,8 +43,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintOpe
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintSubquery;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint.ConstraintValue;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -63,6 +56,9 @@ import java.util.Map;
 
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.ColumnElement;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.TRACE;
 
 
 /**
@@ -141,19 +137,18 @@ public class SelectQueryPlan extends QueryPlan {
     // See navigation033 for an example
     private boolean appendAndOp;
 
-    /** The logger. */
-    private final static Logger logger = LogHelperSQLStore.getLogger();
+    private static final Logger LOG = System.getLogger(SelectQueryPlan.class.getName(), RESOURCE_BUNDLE);
 
     /** Name of the MULTILEVEL_PREFETCH property. */
     public static final String MULTILEVEL_PREFETCH_PROPERTY =
-        "com.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH"; // NOI18N
+        "com.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH";
 
     /**
      * Property to switch on multilevel prefetch. Note, that the default
      * is false, meaning that multilevel prefetch is disabled by default.
      */
     private static final boolean MULTILEVEL_PREFETCH = Boolean.valueOf(
-        System.getProperty(MULTILEVEL_PREFETCH_PROPERTY, "false")).booleanValue(); // NOI18N
+        System.getProperty(MULTILEVEL_PREFETCH_PROPERTY, "false")).booleanValue();
 
     /**
      * Creates a new instance of SelectQueryPlan depending on the retrieve
@@ -213,7 +208,7 @@ public class SelectQueryPlan extends QueryPlan {
             aggregateResultType = retrieveDesc.getAggregateResultType();
         } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                "core.generic.notinstanceof", desc.getClass().getName(), "RetrieveDescImpl")); // NOI18N
+                "core.generic.notinstanceof", desc.getClass().getName(), "RetrieveDescImpl"));
         }
     }
 
@@ -276,17 +271,19 @@ public class SelectQueryPlan extends QueryPlan {
         // request as a column to the found statement. If none of the tables
         // are being used in this query plan then we create a new statement.
         //
-        for (Iterator iter = fieldDesc.getColumnElements(); iter.hasNext(); ) {
-            ColumnElement columnElement = (ColumnElement) iter.next();
+        for (Iterator<ColumnElement> iter = fieldDesc.getColumnElements(); iter.hasNext(); ) {
+            ColumnElement columnElement = iter.next();
             QueryTable table = findQueryTable(columnElement.getDeclaringTable());
 
-            if (table == null)
+            if (table == null) {
                 table = addQueryTable(columnElement.getDeclaringTable(), null);
+            }
 
             SelectStatement statement = (SelectStatement) getStatement(table);
 
-            if (statement == null)
+            if (statement == null) {
                 statement = (SelectStatement) addStatement(table);
+            }
 
             if (add) {
                 ColumnRef columnRef = statement.addColumn(columnElement, table);
@@ -315,12 +312,8 @@ public class SelectQueryPlan extends QueryPlan {
             return;
         }
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            logger.finest("sqlstore.sql.generator.selectqueryplan.processforeignfield", // NOI18N
-                          config.getPersistenceCapableClass().getName());
-        }
+        LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processforeignfield",
+                      config.getPersistenceCapableClass().getName());
 
         foreignPlans = new ArrayList();
 
@@ -328,9 +321,7 @@ public class SelectQueryPlan extends QueryPlan {
             processForeignField((ConstraintFieldName) foreignFields.get(i), localFields);
         }
 
-        if (debug) {
-            logger.finest("sqlstore.sql.generator.selectqueryplan.processforeignfield.exit"); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processforeignfield.exit");
     }
 
     /**
@@ -361,7 +352,7 @@ public class SelectQueryPlan extends QueryPlan {
         // For external (user) queries, we just make sure we include the
         // corresponding table into the table list.
         for (int i = 0; i < fp.parentField.localFields.size(); i++) {
-            LocalFieldDesc la = (LocalFieldDesc) fp.parentField.localFields.get(i);
+            LocalFieldDesc la = fp.parentField.localFields.get(i);
 
             if (!getFieldMask(la.absoluteID)) {
                 if ((options & RetrieveDescImpl.OPT_ADD_FETCHGROUPS) > 0) {
@@ -379,19 +370,21 @@ public class SelectQueryPlan extends QueryPlan {
     }
 
     private boolean getGroupMask(int groupID) {
-        if (groupID >= FieldDesc.GROUP_DEFAULT)
+        if (groupID >= FieldDesc.GROUP_DEFAULT) {
             return hierarchicalGroupMask.get(groupID);
-        else if (groupID < FieldDesc.GROUP_NONE)
+        } else if (groupID < FieldDesc.GROUP_NONE) {
             return independentGroupMask.get(-(groupID + 1));
+        }
 
         return true;
     }
 
     private void setGroupMask(int groupID) {
-        if (groupID >= FieldDesc.GROUP_DEFAULT)
+        if (groupID >= FieldDesc.GROUP_DEFAULT) {
             hierarchicalGroupMask.set(groupID);
-        else if (groupID < FieldDesc.GROUP_NONE)
+        } else if (groupID < FieldDesc.GROUP_NONE) {
             independentGroupMask.set(-(groupID + 1));
+        }
     }
 
     /**
@@ -417,12 +410,12 @@ public class SelectQueryPlan extends QueryPlan {
         // We should enter this method only if OPT_ADD_FETCHGROUPS is set.
         assert (options & RetrieveDescImpl.OPT_ADD_FETCHGROUPS) > 0;
 
-        ArrayList group = config.getFetchGroup(groupID);
+        List<FieldDesc> group = config.getFetchGroup(groupID);
         setGroupMask(groupID);
 
         if (group != null) {
             for (int i = 0; i < group.size() ; i++) {
-                FieldDesc f = (FieldDesc) group.get(i);
+                FieldDesc f = group.get(i);
 
                 if (!getFieldMask(f.absoluteID)) {
                     final boolean isLocalField = f instanceof LocalFieldDesc;
@@ -552,28 +545,22 @@ public class SelectQueryPlan extends QueryPlan {
      * @param projectionField The projected field.
      */
     private void processLocalFields(ArrayList localFields, LocalFieldDesc projectionField) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            logger.finest("sqlstore.sql.generator.selectqueryplan.processlocalfield", // NOI18N
-                          config.getPersistenceCapableClass().getName());
-        }
+        LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processlocalfield",
+            config.getPersistenceCapableClass().getName());
 
         for (int i = 0; i < localFields.size(); i++) {
             LocalFieldDesc lf = (LocalFieldDesc) localFields.get(i);
             addColumn(lf, true, (projectionField == lf));
         }
 
-        if (debug) {
-            logger.finest("sqlstore.sql.generator.selectqueryplan.processlocalfield.exit"); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processlocalfield.exit");
     }
 
     private void joinSecondaryTableStatement(SelectStatement statement,
                                              SelectStatement secondaryTableStatement) {
         statement.copyColumns(secondaryTableStatement);
 
-        QueryTable secondaryTable = (QueryTable) secondaryTableStatement.getQueryTables().get(0);
+        QueryTable secondaryTable = secondaryTableStatement.getQueryTables().get(0);
         ReferenceKeyDesc key = secondaryTable.getTableDesc().getPrimaryTableKey();
 
         addJoinConstraint(this, this,
@@ -584,7 +571,7 @@ public class SelectQueryPlan extends QueryPlan {
     }
 
     private void processRelatedStatements(SelectStatement statement) {
-        ArrayList secondaryTableStatements = statement.getSecondaryTableStatements();
+        List<Statement> secondaryTableStatements = statement.getSecondaryTableStatements();
 
         if (secondaryTableStatements != null) {
             for (int i = 0; i < secondaryTableStatements.size(); i++) {
@@ -600,14 +587,10 @@ public class SelectQueryPlan extends QueryPlan {
         }
     }
 
+    @Override
     protected void processStatements() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-             Object[] items = new Object[] {config.getPersistenceCapableClass().getName(),
-                                            new Integer(statements.size())};
-             logger.finest("sqlstore.sql.generator.selectqueryplan.processstmts",items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processstmts",
+            config.getPersistenceCapableClass().getName(), statements.size());
 
         if (concurrency != null) {
             concurrency.select(this);
@@ -621,8 +604,9 @@ public class SelectQueryPlan extends QueryPlan {
             for (int i = 0; i < size; i++) {
                 SelectStatement s = (SelectStatement) statements.get(i);
 
-                if (!s.isJoined())
+                if (!s.isJoined()) {
                     processRelatedStatements(s);
+                }
             }
 
             // Remove all the statements that have been joined.
@@ -637,9 +621,7 @@ public class SelectQueryPlan extends QueryPlan {
             }
         }
 
-        if (debug) {
-            logger.finest("sqlstore.sql.generator.selectqueryplan.processstmts.exit"); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processstmts.exit");
     }
 
 
@@ -812,7 +794,7 @@ public class SelectQueryPlan extends QueryPlan {
 
         if (rd == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "sqlstore.constraint.noretrievedesc", // NOI18N
+                    "sqlstore.constraint.noretrievedesc",
                     node.name, config.getPersistenceCapableClass().getName()));
         }
 
@@ -959,7 +941,7 @@ public class SelectQueryPlan extends QueryPlan {
 
             if (ff.getComponentType() != rd.getPersistenceCapableClass() ) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.unknownfield", // NOI18N
+                        "core.constraint.unknownfield",
                         node.fieldName, rd.getPersistenceCapableClass().getName()));
             }
 
@@ -983,7 +965,7 @@ public class SelectQueryPlan extends QueryPlan {
             // We didn't get a ForeignFieldDesc from config,
             // or the field is not present in the config.
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.unknownfield", // NOI18N
+                    "core.constraint.unknownfield",
                     node.fieldName, rd.getPersistenceCapableClass().getName()));
         }
     }
@@ -1056,7 +1038,7 @@ public class SelectQueryPlan extends QueryPlan {
 
             if (f == null || !(f instanceof ForeignFieldDesc)) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.unknownfield", // NOI18N
+                        "core.constraint.unknownfield",
                         fieldName, parentConfig.getPersistenceCapableClass().getName()));
             }
             parentField = (ForeignFieldDesc) f;
@@ -1068,7 +1050,7 @@ public class SelectQueryPlan extends QueryPlan {
                 // See collection38
                 //
                 for (int i = 0; i < parentField.assocLocalColumns.size(); i++) {
-                    ColumnElement col = (ColumnElement) parentField.assocLocalColumns.get(i);
+                    ColumnElement col = parentField.assocLocalColumns.get(i);
                     addQueryTable(col.getDeclaringTable(), config);
                 }
             }
@@ -1077,7 +1059,7 @@ public class SelectQueryPlan extends QueryPlan {
             // This is required for cases where no fields from this plan are selected
             // The side-effect for this is to create statements with no columns.
             for (int i = 0; i < parentField.foreignColumns.size(); i++) {
-                ColumnElement col = (ColumnElement) parentField.foreignColumns.get(i);
+                ColumnElement col = parentField.foreignColumns.get(i);
                 addQueryTable(col.getDeclaringTable(), config);
             }
         }
@@ -1087,6 +1069,7 @@ public class SelectQueryPlan extends QueryPlan {
      * Builds the query plan for a select type
      * {@link ActionDesc} (i.e. a {@link RetrieveDesc}).
      */
+    @Override
     public void build() {
         // Plan must be build only once.
         if ((status & ST_BUILT) > 0) {
@@ -1145,7 +1128,7 @@ public class SelectQueryPlan extends QueryPlan {
 
             if (f == null) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.unknownfield", // NOI18N
+                        "core.constraint.unknownfield",
                         cfn.name, config.getPersistenceCapableClass().getName()));
             }
 
@@ -1314,22 +1297,22 @@ public class SelectQueryPlan extends QueryPlan {
      *
      * @param fromPlan The plan for fromColumns
      * @param toPlan The plan for toColumns
-     * @param fromColumns List of local columns.
-     * @param toColumns List of foreign columns.
+     * @param localColumns List of local columns.
+     * @param assocLocalColumns List of foreign columns.
      * @param joinOp Join operation. This operation is never a non relationship join.
      */
     protected void addJoinConstraint(SelectQueryPlan fromPlan,
                                      SelectQueryPlan toPlan,
-                                     ArrayList fromColumns,
-                                     ArrayList toColumns,
+                                     List<ColumnElement> localColumns,
+                                     List<ColumnElement> assocLocalColumns,
                                      int joinOp) {
 
         ConstraintJoin join = new ConstraintJoin();
 
         join.operation = joinOp;
-        join.fromColumns = fromColumns;
+        join.fromColumns = localColumns;
         join.fromPlan = fromPlan;
-        join.toColumns = toColumns;
+        join.toColumns = assocLocalColumns;
         join.toPlan = toPlan;
 
         constraint.addJoinConstraint(join);
@@ -1373,7 +1356,7 @@ public class SelectQueryPlan extends QueryPlan {
         if (foreignPlans != null && foreignPlans.size() > 0) {
 
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "sqlstore.sql.generator.selectqueryplan.plansnotjoined")); // NOI18N
+                    "sqlstore.sql.generator.selectqueryplan.plansnotjoined"));
         } else {
             foreignPlans = null;
         }
@@ -1505,9 +1488,9 @@ public class SelectQueryPlan extends QueryPlan {
 
                         if (!(fieldDesc instanceof LocalFieldDesc)) {
                             throw new JDOUserException(I18NHelper.getMessage(messages,
-                                    "core.generic.notinstanceof", // NOI18N
+                                    "core.generic.notinstanceof",
                                     fieldDesc.getClass().getName(),
-                                    "LocalFieldDesc")); // NOI18N
+                                    "LocalFieldDesc"));
                         }
 
                         consFieldDesc = new ConstraintFieldDesc((LocalFieldDesc) fieldDesc,
@@ -1516,9 +1499,9 @@ public class SelectQueryPlan extends QueryPlan {
                         consFieldDesc = (ConstraintFieldDesc) fieldNode;
                     } else {
                         throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "core.generic.notinstanceof", // NOI18N
+                                "core.generic.notinstanceof",
                                 fieldNode.getClass().getName(),
-                                "ConstraintFieldName/ConstraintFieldDesc")); // NOI18N
+                                "ConstraintFieldName/ConstraintFieldDesc"));
                     }
 
                     if (((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY_DESC) {
@@ -1560,6 +1543,7 @@ public class SelectQueryPlan extends QueryPlan {
         status |= ST_OC_BUILT;
     }
 
+    @Override
     protected Statement newStatement() {
         return new SelectStatement(store.getVendorType(), this);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,9 +16,6 @@
  */
 
 package com.sun.jdo.spi.persistence.support.ejb.cmp;
-
-import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /**
  *
@@ -37,11 +35,5 @@ public class LogHelperEntityLifecycle {
     /** The bundle name for this component
      */
     protected static final String bundleName = "com.sun.jdo.spi.persistence.support.ejb.cmp.Bundle"; //NOI18N
-
-    /** Return the logger for the entity lifecycle component
-     */
-    public static Logger getLogger() {
-        return LogHelper.getLogger (componentName, bundleName, loader);
-    }
 
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,17 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingTableElement.java
- *
- * Created on March 3, 2000, 1:11 PM
- */
-
 package com.sun.jdo.api.persistence.model.mapping;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.TableElement;
@@ -53,80 +48,98 @@ import org.netbeans.modules.dbschema.TableElement;
  * the setup is automatically part of the pair definition which makes up the
  * reference key.
  *
- * @author Mark Munro
- * @author Rochelle Raccah
- * @version %I%
+ * @author Mark Munro 2000
+ * @author Rochelle Raccah 2000
  */
-public interface MappingTableElement extends MappingMemberElement
-{
-    //======================= table handling ===========================
+public interface MappingTableElement extends MappingMemberElement {
+    // ======================= table handling ===========================
 
-    /** Returns the name of the table element used by this mapping table.
+    /**
+     * Returns the name of the table element used by this mapping table.
+     *
      * @return the table name for this mapping table
      */
-    public String getTable ();
+    String getTable();
 
-    /** Set the table element for this mapping table to the supplied table.
+    /**
+     * Set the table element for this mapping table to the supplied table.
+     *
      * @param table table element to be used by the mapping table.
      * @exception ModelException if impossible
      */
-    public void setTable (TableElement table) throws ModelException;
+    void setTable(TableElement table) throws ModelException;
 
-    /** Returns true if the table element used by this mapping table is equal
+    /**
+     * Returns true if the table element used by this mapping table is equal
      * to the supplied table.
+     *
      * @return <code>true</code> if table elements are equal,
-     * <code>false</code> otherwise.
+     *         <code>false</code> otherwise.
      */
-    public boolean isEqual (TableElement table);
+    boolean isEqual(TableElement table);
 
-    //===================== primary key handling ===========================
+    // ===================== primary key handling ===========================
 
-    /** Returns the list of column names in the primary key for this
+    /**
+     * Returns the list of column names in the primary key for this
      * mapping table.
+     *
      * @return the names of the columns in the primary key for this
-     * mapping table
+     *         mapping table
      */
-    public ArrayList getKey ();
+    List<String> getKey();
 
-    /** Adds a column to the primary key of columns in this mapping table.
+    /**
+     * Adds a column to the primary key of columns in this mapping table.
      * This method should only be used to manipulate the key columns of the
-     * primary table.  The secondary table key columns should be manipulated
+     * primary table. The secondary table key columns should be manipulated
      * using MappingReferenceKeyElement methods for pairs.
+     *
      * @param column column element to be added
      * @exception ModelException if impossible
      */
-    public void addKeyColumn (ColumnElement column) throws ModelException;
+    void addKeyColumn(ColumnElement column) throws ModelException;
 
-    /** Removes a column from the primary key of columns in this mapping table.
+    /**
+     * Removes a column from the primary key of columns in this mapping table.
      * This method should only be used to manipulate the key columns of the
-     * primary table.  The secondary table key columns should be manipulated
+     * primary table. The secondary table key columns should be manipulated
      * using MappingReferenceKeyElement methods for pairs.
+     *
      * @param columnName the relative name of the column to be removed
      * @exception ModelException if impossible
      */
-    public void removeKeyColumn (String columnName) throws ModelException;
+    void removeKeyColumn(String columnName) throws ModelException;
 
-    //===================== reference key handling ===========================
+    // ===================== reference key handling ===========================
 
-    /** Returns the list of keys (MappingReferenceKeyElements) for this
+    /**
+     * Returns the list of keys (MappingReferenceKeyElements) for this
      * mapping table. There will be keys for foreign keys and "fake" foreign
      * keys.
+     *
      * @return the reference key elements for this mapping table
      */
-    public ArrayList getReferencingKeys ();
+    List<MappingReferenceKeyElement> getReferencingKeys();
 
-    /** Adds a referencing key to the list of keys in this mapping table.
+    /**
+     * Adds a referencing key to the list of keys in this mapping table.
+     *
      * @param referencingKey referencing key element to be added
      * @exception ModelException if impossible
      */
-    public void addReferencingKey (MappingReferenceKeyElement referencingKey)
-        throws ModelException;
+    void addReferencingKey(MappingReferenceKeyElement referencingKey) throws ModelException;
 
-    /** Removes the referencing key for the supplied table element from list
+    /**
+     * Removes the referencing key for the supplied table element from list
      * of keys in this mapping table.
+     *
      * @param table mapping table element for which to remove referencing keys
      * @exception ModelException if impossible
      */
-    public void removeReference (MappingTableElement table)
-        throws ModelException;
+    void removeReference(MappingTableElement table) throws ModelException;
+
+    void stripSchemaName();
+
+    TableElement getTableObject();
 }

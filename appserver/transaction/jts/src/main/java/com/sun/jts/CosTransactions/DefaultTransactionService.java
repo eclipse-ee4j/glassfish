@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
  *
@@ -15,35 +16,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-//----------------------------------------------------------------------------
-//
-// Module:      DefaultTransactionService.java
-//
-// Description: The JTS TransactionService class.
-//
-// Product:     com.sun.jts.CosTransactions
-//
-// Author:      Simon Holdsworth
-//
-// Date:        June, 1997
-//----------------------------------------------------------------------------
-
 package com.sun.jts.CosTransactions;
 
 import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
-import com.sun.logging.LogDomains;
+import com.sun.enterprise.util.net.NetUtils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.lang.System.Logger;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.omg.CORBA.CompletionStatus;
 import org.omg.CORBA.INTERNAL;
 import org.omg.CORBA.LocalObject;
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CORBA.Policy;
 import org.omg.CORBA.TSIdentification;
 import org.omg.CosNaming.NameComponent;
@@ -51,47 +35,37 @@ import org.omg.CosNaming.NamingContext;
 import org.omg.CosNaming.NamingContextHelper;
 import org.omg.CosTransactions.TransactionFactory;
 import org.omg.CosTransactions.TransactionFactoryHelper;
-import org.omg.PortableServer.AdapterActivator;
 import org.omg.PortableServer.LifespanPolicyValue;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.RequestProcessingPolicyValue;
 import org.omg.PortableServer.Servant;
 import org.omg.PortableServer.ServantActivator;
 
-/**The DefaultTransactionService is our implemention of the
- * com.sun.CosTransactions.TransactionService class.
- * <p>
- * The TransactionService abstract class describes the packaging of a
- * Java Transaction Service implementation. Each implementation should be
- * packaged as a subclass of the TransactionService class.
- *
- * @version 0.01
- *
- * @author Simon Holdsworth, IBM Corporation
- * @author mvatkina
- *
-*/
-//----------------------------------------------------------------------------// CHANGE HISTORY
-//
-// Version By     Change Description
-//   0.01  SAJH   Initial implementation.
-//-----------------------------------------------------------------------------
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
+/**
+ * The DefaultTransactionService is our implementation of Jakarta Transaction Service.
+ *
+ * @author Simon Holdsworth, IBM Corporation 1997
+ * @author mvatkina
+*/
 public class DefaultTransactionService implements ProxyChecker {
+
+    public static final String JTS_SERVER_ID = "com.sun.jts.persistentServerId"; /* FROZEN */
+    public static final String JTS_XA_SERVER_NAME = "com.sun.jts.xa-servername";
+
+    private static final Logger LOG = System.getLogger(DefaultTransactionService.class.getName());
+
     private static CurrentImpl currentInstance = null;
     private static TransactionFactoryImpl factoryInstance = null;
     //private static AdministrationImpl adminInstance = null;
     private static NamingContext namingContext = null;
-    private static ORB orb = null;
     private static boolean recoverable = false;
     private static boolean poasCreated = false;
     private static boolean active = false;
-    /*
-        Logger to log transaction messages
-    */
-    static Logger _logger = LogDomains.getLogger(DefaultTransactionService.class, LogDomains.TRANSACTION_LOGGER);
-    public static final String JTS_SERVER_ID = "com.sun.jts.persistentServerId"; /* FROZEN */
-    public static final String JTS_XA_SERVER_NAME = "com.sun.jts.xa-servername";
+    private static boolean orbEnabled;
 
 
     /**Default constructor.
@@ -123,7 +97,7 @@ public class DefaultTransactionService implements ProxyChecker {
     public org.omg.CosTransactions.Current get_current() {
         org.omg.CosTransactions.Current result = null;
 
-        result = (org.omg.CosTransactions.Current)currentInstance;
+        result = currentInstance;
 
         return result;
     }
@@ -144,8 +118,8 @@ public class DefaultTransactionService implements ProxyChecker {
     public void identify_ORB(ORB orb,
                              TSIdentification ident,
                              Properties properties) {
-        if( this.orb == null ) {
-            this.orb = orb;
+        if (!orbEnabled) {
+            orbEnabled = orb != null;
             Configuration.setORB(orb);
             Configuration.setProperties(properties);
             Configuration.setProxyChecker(this);
@@ -162,60 +136,54 @@ public class DefaultTransactionService implements ProxyChecker {
             // Set up the POA objects for transient and persistent references.
 
             try {
-                if (orb != null)
-                    createPOAs();
-            } catch( Exception exc ) {
-                _logger.log(Level.WARNING,"jts.unexpected_error_when_creating_poa",exc);
-                throw new INTERNAL(MinorCode.TSCreateFailed,CompletionStatus.COMPLETED_NO);
+                if (orb != null) {
+                    createPOAs(orb);
+                }
+            } catch (Exception exc) {
+                throw new INTERNAL(MinorCode.TSCreateFailed, CompletionStatus.COMPLETED_NO);
             }
         }
 
         // Set up the instance of the Current object now that we know the ORB.
 
-        if( currentInstance == null )
-           try {
-                currentInstance = new CurrentImpl();
-            } catch( Exception exc ) {
-                _logger.log(Level.WARNING,"jts.unexpected_error_when_creating_current",exc);
-                throw new INTERNAL(MinorCode.TSCreateFailed,CompletionStatus.COMPLETED_NO);
-            }
+        if( currentInstance == null ) {
+            try {
+                    currentInstance = new CurrentImpl();
+                } catch( Exception exc ) {
+                    throw new INTERNAL(MinorCode.TSCreateFailed,CompletionStatus.COMPLETED_NO);
+                }
+        }
 
         // Identify Sender and Receiver objects to the Comm Manager.
 
-        if (ident != null)
+        if (ident != null) {
             SenderReceiver.identify(ident);
+        }
 
         // If the server is recoverable, create a NamingContext with which to
         // register the factory and admin objects.
 
-        if( recoverable && namingContext == null )
+        if( recoverable && namingContext == null ) {
             try {
                 namingContext = NamingContextHelper.narrow(orb.resolve_initial_references("NameService"/*#Frozen*/));
-            } catch( InvalidName inexc ) {
-                // _logger.log(Level.WARNING,"jts.orb_not_running");
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE,"jts.orb_not_running");
-                }
-            } catch( Exception exc ) {
-                // _logger.log(Level.WARNING,"jts.orb_not_running");
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE,"jts.orb_not_running");
-                }
+            } catch( Exception e ) {
+                LOG.log(DEBUG,"The ORB daemon, ORBD, is not running.", e);
             }
+        }
 
         // Create a TransactionFactory object and register it with the naming service
         // if recoverable.
 
-        if( factoryInstance == null )
+        if( factoryInstance == null ) {
+            boolean localFactory = true;
+            TransactionFactory factory = null;
+            factoryInstance = new TransactionFactoryImpl();
+            if (localFactory) {
+                factory = factoryInstance;
+            } else {
+                factory = factoryInstance.object();
+            }
             try {
-                boolean localFactory = true;
-                TransactionFactory factory = null;
-                factoryInstance = new TransactionFactoryImpl();
-                if (localFactory) {
-                    factory = (TransactionFactory) factoryInstance;
-                } else {
-                    factory = factoryInstance.object();
-                }
 
                 // Since we are instantiating the TransactionFactory object
                 // locally, we have a local transaction factory.
@@ -230,10 +198,11 @@ public class DefaultTransactionService implements ProxyChecker {
 
                 // Commented out by TN
                 //if( !recoverable )
-                //_logger.log(Level.WARNING,"jts.non_persistent_server");
-            } catch( Exception exc ) {
-                _logger.log(Level.WARNING,"jts.cannot_register_with_orb","TransactionFactory");
+                //LOG.log(Level.WARNING,"jts.non_persistent_server");
+            } catch( Exception e ) {
+                LOG.log(WARNING, "Cannot register [" + factory + "] instance with the ORB.", e);
             }
+        }
 
             active = true; // transaction manager is alive and available
     }
@@ -245,41 +214,30 @@ public class DefaultTransactionService implements ProxyChecker {
             //String serverId = properties.getProperty("com.sun.corba.ee.internal.POA.ORBServerId"/*#Frozen*/);
             String serverId = properties.getProperty(JTS_SERVER_ID);
             if (serverId == null) {
-                serverId =
-                    properties.getProperty("com.sun.CORBA.POA.ORBServerId"/*#Frozen*/);
+                serverId = properties.getProperty("com.sun.CORBA.POA.ORBServerId"/* #Frozen */);
             }
             if (serverId != null) {
-                    _logger.log(Level.INFO,"jts.startup_msg",serverId);
+                LOG.log(INFO,"Recoverable JTS instance, serverId = [{0}]",serverId);
             }
             String serverName = "UnknownHost"/*#Frozen*/;
-            if(properties.getProperty(JTS_XA_SERVER_NAME) != null) {
-                 serverName = properties.getProperty(JTS_XA_SERVER_NAME);
-                 if (_logger.isLoggable(Level.FINE))
-                     _logger.log(Level.FINE,"DTR: Got serverName from JTS_XA_SERVER_NAME");
-
+            if (properties.getProperty(JTS_XA_SERVER_NAME) == null) {
+                serverName = NetUtils.getHostName();
             } else {
-                try {
-                    serverName = InetAddress.getLocalHost().getHostName();
-                    if (_logger.isLoggable(Level.FINE))
-                        _logger.log(Level.FINE,"DTR: Got serverName from InetAddress.getLocalHost().getHostName()");
-
-                } catch (UnknownHostException ex) {
-                }
+                serverName = properties.getProperty(JTS_XA_SERVER_NAME);
+                LOG.log(DEBUG, "DTR: Got serverName from JTS_XA_SERVER_NAME");
             }
-            if( serverId != null ) {
-                Configuration.setServerName(getAdjustedServerName(serverName + "," +
-                        Configuration.getPropertyValue(Configuration.INSTANCE_NAME) +
-                        ",P" + serverId/*#Frozen*/), true);
-                if (_logger.isLoggable(Level.FINE))
-                    _logger.log(Level.FINE,"DTR: Recoverable Server");
-
+            if (serverId != null) {
+                Configuration.setServerName(
+                    getAdjustedServerName(serverName + "," + Configuration.getPropertyValue(Configuration.INSTANCE_NAME)
+                        + ",P" + serverId/* #Frozen */),
+                    true);
+                LOG.log(DEBUG, "DTR: Recoverable Server");
                 recoverable = true;
             } else {
                 long timestamp = System.currentTimeMillis();
-                Configuration.setServerName(getAdjustedServerName(serverName +
-                         ",T" + String.valueOf(timestamp)/*#Frozen*/), false);
-                if (_logger.isLoggable(Level.FINE))
-                    _logger.log(Level.FINE,"DTR: Non-Recoverable Server");
+                Configuration.setServerName(
+                    getAdjustedServerName(serverName + ",T" + String.valueOf(timestamp)/* #Frozen */), false);
+                LOG.log(DEBUG,"DTR: Non-Recoverable Server");
             }
         }
     }
@@ -293,14 +251,14 @@ public class DefaultTransactionService implements ProxyChecker {
     public static void shutdown( boolean immediate ) {
         // Remove the admin and factory objects from the naming service.
 
-        if( namingContext != null )
+        if( namingContext != null ) {
             try {
                 NameComponent nc = new NameComponent(TransactionFactoryHelper.id(),"");
                 NameComponent path[] = {nc};
                 namingContext.unbind(path);
-
                 namingContext = null;
             } catch( Exception exc ) {}
+        }
 
         // Inform the local TransactionFactory and CurrentImpl classes that no more
         // transactional activity may occur.
@@ -327,21 +285,20 @@ public class DefaultTransactionService implements ProxyChecker {
      * @return  Indicates whether the object is a proxy.
      *
      */
+    @Override
     public final boolean isProxy( org.omg.CORBA.Object obj ) {
 
         // TN  POA changes
         return !( StubAdapter.isStub(obj) && StubAdapter.isLocal(obj) );
     }
 
-    /**Creates the POA objects which are used for objects within the JTS.
+    /**
+     * Creates the POA objects which are used for objects within the JTS.
      *
-     *
-     *
-     * @exception Exception  The operation failed.
-     *
+     * @param orb
+     * @throws Exception The operation failed.
      */
-    final static void createPOAs()
-        throws Exception {
+    static final void createPOAs(ORB orb) throws Exception {
 
         POA rootPOA = (POA)orb.resolve_initial_references("RootPOA"/*#Frozen*/);
 
@@ -361,12 +318,9 @@ public class DefaultTransactionService implements ProxyChecker {
 
             CoordinatorResourceServantActivator crsa = new CoordinatorResourceServantActivator(orb);
             CRpoa.set_servant_manager(crsa);
-        }
-
-        // If the process is not recoverable, then we do not create a persistent POA.
-
-        else
+        } else { // If the process is not recoverable, then we do not create a persistent POA.
             CRpoa = rootPOA;
+        }
 
         Configuration.setPOA("CoordinatorResource"/*#Frozen*/,CRpoa);
 
@@ -386,12 +340,9 @@ public class DefaultTransactionService implements ProxyChecker {
 
             RecoveryCoordinatorServantActivator rcsa = new RecoveryCoordinatorServantActivator(orb);
             RCpoa.set_servant_manager(rcsa);
-        }
-
-        // If the process is not recoverable, then we do not create a persistent POA.
-
-        else
+        } else { // If the process is not recoverable, then we do not create a persistent POA.
             RCpoa = rootPOA;
+        }
 
         Configuration.setPOA("RecoveryCoordinator"/*#Frozen*/,RCpoa);
 
@@ -405,7 +356,6 @@ public class DefaultTransactionService implements ProxyChecker {
 
         Configuration.setPOA("transient"/*#Frozen*/,rootPOA);
 
-        //  rootPOA.the_activator(new JTSAdapterActivator(orb));
         CRpoa.the_POAManager().activate();
         RCpoa.the_POAManager().activate();
         Cpoa.the_POAManager().activate();
@@ -416,13 +366,13 @@ public class DefaultTransactionService implements ProxyChecker {
     }
 
     public static boolean isORBAvailable() {
-        return (orb != null);
+        return orbEnabled;
     }
 
     private static String getAdjustedServerName(String originalName) {
-        String tempServerName = originalName;
-        if (tempServerName.length() > 56) {
-            int hc = tempServerName.hashCode();
+        final String tempServerName;
+        if (originalName.length() > 56) {
+            int hc = originalName.hashCode();
             String newString = Integer.toString(hc);
 
             if (hc < 0) {
@@ -430,10 +380,11 @@ public class DefaultTransactionService implements ProxyChecker {
             }
 
             int hcLength = (56 - newString.length());
-            tempServerName = tempServerName.substring(0, hcLength) + newString;
+            tempServerName = originalName.substring(0, hcLength) + newString;
+        } else {
+            tempServerName = originalName;
         }
-        if (_logger.isLoggable(Level.FINE))
-            _logger.log(Level.FINE,"DTR: Adjusted serverName " + originalName + " to: " + tempServerName );
+        LOG.log(DEBUG,() -> "DTR: Adjusted serverName " + originalName + " to: " + tempServerName );
 
         return tempServerName;
     }
@@ -497,6 +448,7 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
      * @return  The servant.
      *
      */
+    @Override
     public Servant incarnate( byte[] oid, POA adapter )
         throws org.omg.PortableServer.ForwardRequest {
 
@@ -510,6 +462,7 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
      *
      *
      */
+    @Override
     public void etherealize( byte[] oid,
                              POA adapter,
                              Servant servant,
@@ -576,6 +529,7 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
      * @return  The servant.
      *
      */
+    @Override
     public Servant incarnate( byte[] oid, POA adapter )
         throws org.omg.PortableServer.ForwardRequest {
         Servant servant = new CoordinatorResourceImpl(oid);
@@ -587,6 +541,7 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
      *
      *
      */
+    @Override
     public void etherealize( byte[] oid,
                              POA adapter,
                              Servant servant,
@@ -595,39 +550,3 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
     }
 }
 
-class JTSAdapterActivator extends LocalObject implements AdapterActivator {
-    private ORB orb;
-
-    /*
-     * COMMENT(Ram J) The _ids() method needs to be removed/modified
-     * (along with LocalObjectImpl) once OMG standardizes the local
-     * object interfaces.
-     *
-     * TN - removed ids after switching to LocalObject
-     */
-
-    /*
-    // Type-specific CORBA::Object operations
-    private static String[] __ids = {
-        "IDL:omg.org/PortableServer/AdapterActivator:1.0"
-    };
-
-    public String[] _ids() {
-        return __ids;
-    }
-    */
-
-    JTSAdapterActivator(ORB orb) {
-        this.orb = orb;
-    }
-
-    public boolean unknown_adapter(POA parent, String name) {
-
-        try {
-            DefaultTransactionService.createPOAs();
-        } catch( Exception exc ) {
-        }
-
-        return true;
-    }
-}

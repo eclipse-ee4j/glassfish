@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,8 @@ import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.embeddable.client.UserError;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+
+import static org.glassfish.internal.api.ORBLocator.DEFAULT_ORB_INIT_PORT;
 
 /**
  * Encapsulates the logic for deciding what TargetServer objects to use for
@@ -34,7 +36,7 @@ import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
  */
 public class TargetServerHelper {
 
-    private static int DEFAULT_ENDPOINT_PORT = Integer.parseInt(GlassFishORBHelper.DEFAULT_ORB_INIT_PORT);
+    private static int DEFAULT_ENDPOINT_PORT = Integer.parseInt(DEFAULT_ORB_INIT_PORT);
     private static final String SSL_PROPERTY_NAME = "ssl";
 
 

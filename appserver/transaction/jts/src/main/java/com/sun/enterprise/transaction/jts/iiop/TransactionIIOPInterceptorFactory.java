@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,18 +20,17 @@ package com.sun.enterprise.transaction.jts.iiop;
 import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
 import com.sun.corba.ee.spi.legacy.interceptor.ORBInitInfoExt;
 import com.sun.corba.ee.spi.logging.POASystemException;
-import com.sun.corba.ee.spi.misc.ORBConstants;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.DefaultTransactionService;
 import com.sun.jts.jta.TransactionServiceProperties;
 import com.sun.jts.pi.InterceptorImpl;
-import com.sun.logging.LogDomains;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
 
+import java.lang.System.Logger;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
@@ -47,32 +46,47 @@ import org.omg.PortableInterceptor.Current;
 import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
+import static com.sun.corba.ee.spi.misc.ORBConstants.ORB_SERVER_ID_PROPERTY;
+import static com.sun.corba.ee.spi.misc.ORBConstants.TRANSACTION_CURRENT_NAME;
+import static java.lang.System.Logger.Level.DEBUG;
+
 /**
  *
  * @author mvatkina
  */
 @Service(name = "TransactionIIOPInterceptorFactory")
+@Singleton
 public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
-    // The log message bundle is in com.sun.jts package
-    private static Logger _logger = LogDomains.getLogger(InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
+    private static final Logger LOG = System.getLogger(TransactionIIOPInterceptorFactory.class.getName());
 
-    private static Properties jtsProperties = new Properties();
-    private static TSIdentificationImpl tsIdent = new TSIdentificationImpl();
-    private static boolean txServiceInitialized = false;
-    private InterceptorImpl interceptor = null;
+    private final TSIdentificationImpl tsIdent = new TSIdentificationImpl();
+    private Properties jtsProperties = new Properties();
+    private boolean txServiceInitialized;
+    private InterceptorImpl interceptor;
 
     @Inject
     private ServiceLocator serviceLocator;
     @Inject
     private ProcessEnvironment processEnv;
 
+    @PostConstruct
+    private void initJTSProperties() {
+        if (processEnv.getProcessType().isServer()) {
+            SystemProperties.setProperty(InterceptorImpl.CLIENT_POLICY_CHECKING, Boolean.FALSE.toString(), true);
+            jtsProperties = TransactionServiceProperties.getJTSProperties(serviceLocator, true);
+            Configuration.setProperties(jtsProperties);
+        } else {
+            jtsProperties = TransactionServiceProperties.getJTSProperties(serviceLocator, true);
+        }
+        LOG.log(DEBUG, () -> "Server id: " + jtsProperties.getProperty(ORB_SERVER_ID_PROPERTY));
+    }
+
     @Override
     public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (!txServiceInitialized) {
             createInterceptor(info, codec);
         }
-
         return interceptor;
     }
 
@@ -81,22 +95,10 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
         if (!txServiceInitialized) {
             createInterceptor(info, codec);
         }
-
         return interceptor;
     }
 
     private void createInterceptor(ORBInitInfo info, Codec codec) {
-        if (processEnv.getProcessType().isServer()) {
-            try {
-                SystemProperties.setProperty(InterceptorImpl.CLIENT_POLICY_CHECKING, Boolean.FALSE.toString(), true);
-            } catch (Exception ex) {
-                _logger.log(Level.WARNING, "iiop.readproperty_exception", ex);
-            }
-
-            initJTSProperties(true);
-        } else {
-            initJTSProperties(false);
-        }
 
         try {
             // register JTS interceptors
@@ -120,11 +122,10 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
                 jts.identify_ORB(theORB, tsIdent, jtsProperties);
                 interceptor.setTSIdentification(tsIdent);
 
-                // V2-XXX should jts.get_current() be called everytime
                 // resolve_initial_references is called ??
                 org.omg.CosTransactions.Current transactionCurrent = jts.get_current();
 
-                theORB.getLocalResolver().register(ORBConstants.TRANSACTION_CURRENT_NAME,
+                theORB.getLocalResolver().register(TRANSACTION_CURRENT_NAME,
                         NullaryFunction.Factory.makeConstant((org.omg.CORBA.Object) transactionCurrent));
 
                 // the JTS PI use this to call the proprietary hooks
@@ -140,20 +141,7 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
             info.add_ior_interceptor(iorInterceptor);
 
         } catch (Exception e) {
-            _logger.log(Level.FINE, "Exception registering JTS interceptors", e);
             throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private void initJTSProperties(boolean isServer) {
-        if (serviceLocator != null) {
-            jtsProperties = TransactionServiceProperties.getJTSProperties(serviceLocator, true);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "++++ Server id: " + jtsProperties.getProperty(ORBConstants.ORB_SERVER_ID_PROPERTY));
-            }
-            if (isServer) {
-                Configuration.setProperties(jtsProperties);
-            }
         }
     }
 }

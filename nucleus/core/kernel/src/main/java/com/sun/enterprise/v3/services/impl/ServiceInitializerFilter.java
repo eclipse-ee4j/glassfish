@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,26 +44,22 @@ import org.glassfish.internal.grizzly.LazyServiceInitializer;
  */
 public class ServiceInitializerFilter extends BaseFilter {
     private final ServiceLocator locator;
-    private volatile LazyServiceInitializer targetInitializer = null;
     private final List<ActiveDescriptor<?>> initializerImplList;
-
-    protected final Logger logger;
-
+    private final Logger logger;
     private final ServiceInitializerListener listener;
+    private final Object lock = new Object();
 
-    private final Object LOCK_OBJ = new Object();
-//    private long timeout = 60000;
+    private volatile LazyServiceInitializer targetInitializer;
 
     public ServiceInitializerFilter(final ServiceInitializerListener listener,
-            final ServiceLocator habitat, final Logger logger) {
-        this.locator = habitat;
+            final ServiceLocator locator, final Logger logger) {
+        this.locator = locator;
 
-        initializerImplList =
-                habitat.getDescriptors(BuilderHelper.createContractFilter(LazyServiceInitializer.class.getName()));
+        initializerImplList = locator
+            .getDescriptors(BuilderHelper.createContractFilter(LazyServiceInitializer.class.getName()));
 
         if (initializerImplList.isEmpty()) {
-            throw new IllegalStateException("NO Lazy Initializer was found for port = " +
-                    listener.getPort());
+            throw new IllegalStateException("NO Lazy Initializer was found for port = " + listener.getPort());
         }
 
         this.logger = logger;
@@ -80,34 +77,30 @@ public class ServiceInitializerFilter extends BaseFilter {
         final String protocolName = listener.getNetworkListener().getProtocol();
 
         if (targetInitializer == null) {
-            synchronized (LOCK_OBJ) {
+            synchronized (lock) {
                 if (targetInitializer == null) {
                     LazyServiceInitializer targetInitializerLocal = null;
                     for (final ActiveDescriptor<?> initializer : initializerImplList) {
                         String serviceName = initializer.getName();
-
-
-                        if (serviceName != null &&
-                                (listenerName.equalsIgnoreCase(serviceName) ||
-                                protocolName.equalsIgnoreCase(serviceName))) {
-                            targetInitializerLocal = (LazyServiceInitializer) locator.getServiceHandle(initializer).getService();
+                        if (serviceName != null
+                            && (listenerName.equalsIgnoreCase(serviceName)
+                              || protocolName.equalsIgnoreCase(serviceName))) {
+                            targetInitializerLocal = (LazyServiceInitializer) locator.getServiceHandle(initializer)
+                                .getService();
                             break;
                         }
                     }
 
                     if (targetInitializerLocal == null) {
-                        logger.log(Level.SEVERE, "NO Lazy Initialiser implementation was found for port = {0}",
+                        logger.log(Level.SEVERE, "NO Lazy Initialiser implementation was found for port={0}",
                                 String.valueOf(listener.getPort()));
                         nioConnection.close();
-
                         return ctx.getStopAction();
                     }
                     if (!targetInitializerLocal.initializeService()) {
-                        logger.log(Level.SEVERE, "Lazy Service initialization failed for port = {0}",
+                        logger.log(Level.SEVERE, "Lazy Service initialization failed for port={0}",
                                 String.valueOf(listener.getPort()));
-
                         nioConnection.close();
-
                         return ctx.getStopAction();
                     }
 
@@ -121,8 +114,7 @@ public class ServiceInitializerFilter extends BaseFilter {
 
         // Deregister channel
         final SelectorRunner runner = nioConnection.getSelectorRunner();
-        final SelectorHandler selectorHandler =
-                ((NIOTransport) nioConnection.getTransport()).getSelectorHandler();
+        final SelectorHandler selectorHandler = ((NIOTransport) nioConnection.getTransport()).getSelectorHandler();
 
         selectorHandler.deregisterChannel(runner, channel);
 

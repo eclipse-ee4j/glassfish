@@ -49,7 +49,7 @@
                         });
                 setPageSessionAttribute(key="editResUrls" value={
                         "/jdbc/jdbcResourceEdit.jsf",
-                        "/full/mailResourceEdit.jsf",
+                        "/jmail/mailResourceEdit.jsf",
                         "/full/customResourceEdit.jsf",
                         "/full/externalResourceEdit.jsf",
                         "/jca/connectorResourceEdit.jsf",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.customvalidators.FileRealmPropertyC
 import com.sun.enterprise.config.serverbeans.customvalidators.JDBCRealmPropertyCheck;
 import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 import com.sun.enterprise.config.serverbeans.customvalidators.LDAPRealmPropertyCheck;
-import com.sun.enterprise.config.serverbeans.customvalidators.SolarisRealmPropertyCheck;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -55,10 +54,9 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
 @FileRealmPropertyCheck
 @LDAPRealmPropertyCheck
 @JDBCRealmPropertyCheck
-@SolarisRealmPropertyCheck
 @RestRedirects({
-        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-auth-realm"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-auth-realm")
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-auth-realm"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-auth-realm")
 })
 public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
 

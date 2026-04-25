@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package org.glassfish.main.admin.test.rest;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
-import com.sun.enterprise.security.auth.realm.solaris.SolarisRealm;
 import com.sun.enterprise.security.ee.authentication.glassfish.jdbc.JDBCRealm;
 import com.sun.enterprise.security.ee.authentication.glassfish.pam.PamRealm;
 
@@ -113,16 +112,15 @@ public class AuthRealmITest extends RestTestBase {
     @Test
     public void testListAuthRealmClassNames() {
         List<String> classNameList = getCommandResults(managementClient.get(URL_AUTH_REALM_CLASS_NAMES));
-        assertThat(classNameList.toString(), classNameList, hasSize(6));
+        assertThat(classNameList.toString(), classNameList, hasSize(5));
 
         String[] realms = Stream.of(
-                JDBCRealm.class,
-                PamRealm.class,
-                CertificateRealm.class,
-                FileRealm.class,
-                LDAPRealm.class,
-                SolarisRealm.class).map(Class::getName)
-                                   .toArray(String[]::new);
+            JDBCRealm.class,
+            PamRealm.class,
+            CertificateRealm.class,
+            FileRealm.class,
+            LDAPRealm.class
+        ).map(Class::getName).toArray(String[]::new);
 
         assertThat(classNameList, containsInAnyOrder(realms));
     }

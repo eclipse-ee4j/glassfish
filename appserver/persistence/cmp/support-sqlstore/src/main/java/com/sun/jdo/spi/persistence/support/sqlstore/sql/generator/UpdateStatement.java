@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * UpdateStatement.java
- *
- * Created on October 3, 2001
-  *
- */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
@@ -48,7 +43,7 @@ public class UpdateStatement extends Statement implements Cloneable {
 
     public int minAffectedRows;
 
-    private Map dbStatementCache = new HashMap();
+    private Map<Transaction, DBStatement> dbStatementCache = new HashMap<>();
 
     /** The UpdateQueryplan */
     UpdateQueryPlan plan;
@@ -70,7 +65,7 @@ public class UpdateStatement extends Statement implements Cloneable {
 
     /** Name of the USE_BATCH property. */
     public static final String UPDATE_VERSION_COL_PROPERTY =
-        "com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UPDATE_VERSION_COL"; // NOI18N
+        "com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UPDATE_VERSION_COL";
 
     /**
      * Property to swich on/off updating of version col.
@@ -78,7 +73,7 @@ public class UpdateStatement extends Statement implements Cloneable {
      * property is not specified.
      */
     private static final boolean UPDATE_VERSION_COL = Boolean.valueOf(
-        System.getProperty(UPDATE_VERSION_COL_PROPERTY, "true")).booleanValue(); // NOI18N
+        System.getProperty(UPDATE_VERSION_COL_PROPERTY, "true")).booleanValue();
 
 
     public UpdateStatement(DBVendorType vendorType, UpdateQueryPlan plan, boolean batch) {
@@ -124,6 +119,7 @@ public class UpdateStatement extends Statement implements Cloneable {
     }
 
     /** @inheritDoc */
+    @Override
     public QueryPlan getQueryPlan() {
          return plan;
     }
@@ -131,33 +127,34 @@ public class UpdateStatement extends Statement implements Cloneable {
     /**
      * @inheritDoc
      */
+    @Override
     protected void generateStatementText() {
 
         statementText = new StringBuffer();
 
         StringBuffer columnList = generateColumnText();
         StringBuffer constraint = processConstraints();
-        String tableName = ((QueryTable) tableList.get(0)).getTableDesc().getName();
+        String tableName = tableList.get(0).getTableDesc().getName();
 
         // Create the query filling in the column list, table name, etc.
         switch (action) {
             case QueryPlan.ACT_UPDATE:
-                statementText.append("update ");// NOI18N
+                statementText.append("update ");
                 appendQuotedText(statementText, tableName);
-                statementText.append(" set ").append(columnList).append(" where ").append(constraint); // NOI18N
+                statementText.append(" set ").append(columnList).append(" where ").append(constraint);
                 break;
 
             case QueryPlan.ACT_DELETE:
-                statementText.append("delete from ");// NOI18N
+                statementText.append("delete from ");
                 appendQuotedText(statementText, tableName);
-                statementText.append(" where ").append(constraint); // NOI18N
+                statementText.append(" where ").append(constraint);
                 break;
 
             case QueryPlan.ACT_INSERT:
-                statementText.append("insert into ");// NOI18N
+                statementText.append("insert into ");
                 appendQuotedText(statementText, tableName);
-                statementText.append("(").append(columnList).// NOI18N
-                        append(") values ").append("(").append(values).append(")"); // NOI18N
+                statementText.append("(").append(columnList).
+                        append(") values ").append("(").append(values).append(")");
                 break;
         }
 
@@ -169,23 +166,23 @@ public class UpdateStatement extends Statement implements Cloneable {
         int numValues = -1;
 
         for (int i = 0; i < columns.size(); i++) {
-            ColumnRef c = (ColumnRef) columns.get(i);
+            ColumnRef c = columns.get(i);
 
             if (columnList.length() > 0) {
-                columnList.append(", "); // NOI18N
+                columnList.append(", ");
             }
             switch (action) {
                 case QueryPlan.ACT_UPDATE:
                     appendQuotedText(columnList, c.getName());
-                    columnList.append("= ?"); // NOI18N
+                    columnList.append("= ?");
                     break;
 
                 case QueryPlan.ACT_INSERT:
                     appendQuotedText(columnList, c.getName());
                     if (i == 0) {
-                        values = new StringBuffer().append(" ?"); // NOI18N
+                        values = new StringBuffer().append(" ?");
                     } else {
-                        values.append(", ?"); // NOI18N
+                        values.append(", ?");
                     }
                     break;
             }
@@ -196,8 +193,7 @@ public class UpdateStatement extends Statement implements Cloneable {
                 ((action == QueryPlan.ACT_UPDATE) ||
                     (action == QueryPlan.ACT_INSERT))) {
                 numValues = numValues + 1;
-                InputValue val = new InputValue(c.getValue(), c.getColumnElement());
-                inputDesc.values.add(numValues, val);
+                inputDesc.values.add(numValues, new InputValue(c.getValue(), c.getColumnElement()));
             }
         }
 
@@ -233,16 +229,16 @@ public class UpdateStatement extends Statement implements Cloneable {
 
     public void addLocalConstraints(int action, ForeignFieldDesc f, SQLStateManager sm) {
         for (int i = 0; i < f.localFields.size(); i++) {
-            LocalFieldDesc lf = (LocalFieldDesc) f.localFields.get(i);
+            LocalFieldDesc lf = f.localFields.get(i);
 
             if (action == QueryPlan.ACT_INSERT) {
                 // For inserts into the join table, we get the values we are inserting
                 // for the parent object and the added object.
-                ColumnElement lc = (ColumnElement) f.assocLocalColumns.get(i);
+                ColumnElement lc = f.assocLocalColumns.get(i);
 
                 addColumn(lc, lf.getValue(sm));
             } else if (action == QueryPlan.ACT_DELETE) {
-                LocalFieldDesc alf = (LocalFieldDesc) f.assocLocalFields.get(i);
+                LocalFieldDesc alf = f.assocLocalFields.get(i);
 
                 // For deletes from the join table, we get the constraint values
                 // from the parent object and the remove object.
@@ -253,16 +249,16 @@ public class UpdateStatement extends Statement implements Cloneable {
 
     public void addForeignConstraints(int action, ForeignFieldDesc f, SQLStateManager sm) {
         for (int i = 0; i < f.foreignFields.size(); i++) {
-            LocalFieldDesc ff = (LocalFieldDesc) f.foreignFields.get(i);
+            LocalFieldDesc ff = f.foreignFields.get(i);
 
             if (action == QueryPlan.ACT_INSERT) {
                 // For inserts into the join table, we get the values we are inserting
                 // for the parent object and the added object.
-                ColumnElement fc = (ColumnElement) f.assocForeignColumns.get(i);
+                ColumnElement fc = f.assocForeignColumns.get(i);
 
                 addColumn(fc, ff.getValue(sm));
             } else if (action == QueryPlan.ACT_DELETE) {
-                LocalFieldDesc aff = (LocalFieldDesc) f.assocForeignFields.get(i);
+                LocalFieldDesc aff = f.assocForeignFields.get(i);
 
                 // For deletes from the join table, we get the constraint values
                 // from the parent object and the remove object.
@@ -275,10 +271,12 @@ public class UpdateStatement extends Statement implements Cloneable {
      * Redefines processConstraintValue in order to skip the creation of
      * an InputValue in the case of batch.
      */
+    @Override
     protected void processConstraintValue(ConstraintValue node, StringBuffer result) {
-        result.append("?"); // NOI18N
-        if (!batch)
+        result.append("?");
+        if (!batch) {
             generateInputValueForConstraintValueNode(node);
+        }
     }
 
     /**
@@ -297,7 +295,7 @@ public class UpdateStatement extends Statement implements Cloneable {
         synchronized (dbStatementCache)
         {
             // dbStatement cachelookup
-            dbStatement = (DBStatement)dbStatementCache.get(tran);
+            dbStatement = dbStatementCache.get(tran);
 
             if (dbStatement == null) {
                 dbStatement = new DBStatement(conn, getText(),
@@ -315,7 +313,7 @@ public class UpdateStatement extends Statement implements Cloneable {
     {
         synchronized (dbStatementCache)
         {
-            DBStatement dbStatement = (DBStatement)dbStatementCache.get(tran);
+            DBStatement dbStatement = dbStatementCache.get(tran);
             return (dbStatement != null) && dbStatement.exceedsBatchThreshold();
         }
     }
@@ -329,7 +327,7 @@ public class UpdateStatement extends Statement implements Cloneable {
     {
         synchronized (dbStatementCache)
         {
-            DBStatement s = (DBStatement)dbStatementCache.remove(tran);
+            DBStatement s = dbStatementCache.remove(tran);
             return s;
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,6 +38,7 @@ import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.message.MessageProperties;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -51,10 +53,6 @@ import org.glassfish.jersey.server.filter.UriConnegFilter;
  * @author sanjeeb.sahoo@oracle.com
  */
 public class RestCommandResourceProvider extends AbstractRestResourceProvider {
-
-    public RestCommandResourceProvider() {
-        super();
-    }
 
     @Override
     public boolean enableModifAccessToInstances() {
@@ -94,8 +92,6 @@ public class RestCommandResourceProvider extends AbstractRestResourceProvider {
         //ProgressStatus
         r.add(ProgressStatusJsonProvider.class);
         r.add(ProgressStatusEventJsonProvider.class);
-        //        //Debuging filters
-        //        r.add(LoggingFilter.class);
         return r;
     }
 
@@ -125,6 +121,7 @@ public class RestCommandResourceProvider extends AbstractRestResourceProvider {
         rc.property(ServerProperties.WADL_FEATURE_DISABLE, true);
         rc.property(ServerProperties.BV_FEATURE_DISABLE, true);
         rc.property(ServerProperties.RESOURCE_VALIDATION_DISABLE, true);
+        rc.register(LoggingFeature.class);
         return rc;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +21,12 @@ import com.sun.enterprise.config.serverbeans.Domain;
 
 import jakarta.ws.rs.core.Feature;
 
+import java.lang.System.Logger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.glassfish.admin.rest.JavadocWadlGeneratorConfig;
-import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.RestResource;
 import org.glassfish.admin.rest.generator.ASMResourcesGenerator;
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
@@ -46,16 +45,19 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.jvnet.hk2.config.Dom;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+
 /**
  * Responsible for providing ReST resources for management operations.
  */
 public class RestManagementResourceProvider extends AbstractRestResourceProvider {
+    private static final Logger LOG = System.getLogger(RestManagementResourceProvider.class.getName());
 
     @Override
     public Feature getJsonFeature() {
-        RestLogging.restLogger.log(Level.SEVERE, "Hey, you... FIX ME!!! {0}", RestManagementResourceProvider.class.getName());
+        LOG.log(ERROR, "Hey, you... FIX ME!!! {0}", RestManagementResourceProvider.class.getName());
         return super.getJsonFeature();
-        //        return new JacksonFeature();
     }
 
     @Override
@@ -68,7 +70,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
         final ServiceLocator serviceLocator, final Set<? extends Binder> additionalBinders)
         throws EndpointRegistrationException {
         ResourceConfig rc = super.getResourceConfig(classes, serverContext, serviceLocator, additionalBinders);
-        RestLogging.restLogger.log(Level.FINEST, () -> "Extending binding configuration with " + this);
+        LOG.log(DEBUG, () -> "Extending binding configuration with " + this);
 
         registerExtendedWadlConfig(classes, rc, serviceLocator);
         rc.register(ExceptionFilter.class);
@@ -78,6 +80,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
 
     @Override
     public Set<Class<?>> getResourceClasses(ServiceLocator serviceLocator) {
+        LOG.log(DEBUG, "getResourceClasses(serviceLocator={0})", serviceLocator);
         //         return getLazyJersey().getResourcesConfigForManagement(locatorBridge);
 
         generateASM(serviceLocator);
@@ -85,7 +88,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
         try {
             domainResourceClass = Class.forName("org.glassfish.admin.rest.resources.generatedASM.DomainResource");
         } catch (ClassNotFoundException ex) {
-            RestLogging.restLogger.log(Level.SEVERE, null, ex);
+            LOG.log(ERROR, "Failed to load DomainResource class!", ex);
         }
 
         final Set<Class<?>> r = new HashSet<>();
@@ -177,7 +180,7 @@ public class RestManagementResourceProvider extends AbstractRestResourceProvider
             resourcesGenerator.generateSingle(dom.document.getRoot().model, dom.document);
             resourcesGenerator.endGeneration();
         } catch (Exception ex) {
-            RestLogging.restLogger.log(Level.SEVERE, null, ex);
+            LOG.log(ERROR, "Failed resource generation.", ex);
         }
     }
 

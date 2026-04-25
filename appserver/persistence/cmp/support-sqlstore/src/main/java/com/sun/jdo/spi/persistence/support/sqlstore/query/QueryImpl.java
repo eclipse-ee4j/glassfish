@@ -22,7 +22,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query;
 
-import com.sun.jdo.api.persistence.support.JDOException;
 import com.sun.jdo.api.persistence.support.JDOQueryException;
 import com.sun.jdo.api.persistence.support.Query;
 import com.sun.jdo.api.persistence.support.Transaction;
@@ -30,14 +29,18 @@ import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.JQLC;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.ParameterTable;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  *
@@ -125,19 +128,16 @@ public class QueryImpl
     /**
      * I18N support
      */
-    protected final static ResourceBundle messages =
-        I18NHelper.loadBundle(QueryImpl.class);
+    protected final static ResourceBundle messages = I18NHelper.loadBundle(QueryImpl.class);
 
     /** The logger */
-    private static Logger logger = LogHelperQueryExecute.getLogger();
+    private static final Logger LOG = System.getLogger(QueryImpl.class.getName(), messages);
 
     /**
      * Create an empty query instance with no elements.
      */
-    public QueryImpl(PersistenceManager pm)
-    {
-        if (logger.isLoggable(Logger.FINER))
-            logger.finer("LOG_CreateNewQuery", identity()); //NOI18N
+    public QueryImpl(PersistenceManager pm) {
+        LOG.log(DEBUG, "LOG_CreateNewQuery", identity());
         this.pm = pm;
         this.paramtab = new ParameterTable();
         this.ignoreCache = pm.getPersistenceManagerFactory().getIgnoreCache();
@@ -149,29 +149,21 @@ public class QueryImpl
      * in a different PersistenceManager or might have been serialized and restored.
      * @param compiled another Query from the same JDO implementation
      */
-    public QueryImpl (PersistenceManager pm, Object compiled)
-    {
-        if (logger.isLoggable(Logger.FINER))
-            logger.finer("LOG_CreateNewQueryFromCompiled", identity(), compiled); //NOI18N
+    public QueryImpl(PersistenceManager pm, Object compiled) {
+        {
+            LOG.log(DEBUG, "LOG_CreateNewQueryFromCompiled", identity(), compiled);
+        }
         this.pm = pm;
-        if (compiled == null)
-        {
-            JDOException ex = new JDOQueryException(I18NHelper.getMessage(
-                messages, "query.queryimpl.init.compiledquery.isnull")); //NOI18N
-            logger.throwing("query.QueryImpl", "<init>", ex); //NOI18N
-            throw ex;
+        if (compiled == null) {
+            throw new JDOQueryException(I18NHelper.getMessage(messages, "query.queryimpl.init.compiledquery.isnull"));
         }
 
-        if (!(compiled instanceof QueryImpl))
-        {
-            JDOException ex = new JDOQueryException(I18NHelper.getMessage(
-                messages, "query.queryimpl.init.compiledquery.invalidtype", //NOI18N
-                compiled.getClass().getName()));
-            logger.throwing("query.QueryImpl", "<init>", ex); //NOI18N
-            throw ex;
+        if (!(compiled instanceof QueryImpl)) {
+            throw new JDOQueryException(I18NHelper.getMessage(messages,
+                "query.queryimpl.init.compiledquery.invalidtype", compiled.getClass().getName()));
         }
 
-        QueryImpl other = (QueryImpl)compiled;
+        QueryImpl other = (QueryImpl) compiled;
         this.candidateClass = other.candidateClass;
         this.filterExpression = other.filterExpression;
         this.importDeclarations = other.importDeclarations;
@@ -184,14 +176,11 @@ public class QueryImpl
         this.candidateCollection = null;
 
         // initialize paramtab, jqlc and compiled
-        if (other.paramtab != null)
-        {
+        if (other.paramtab != null) {
             this.jqlc = other.jqlc;
             this.paramtab = new ParameterTable(other.paramtab);
             this.compiled = other.compiled;
-        }
-        else
-        {
+        } else {
             // other.paramtab == null means deserialized query =>
             // - parameter table
             // - set compiled = false
@@ -205,8 +194,7 @@ public class QueryImpl
      * Create a query instance with the candidate class specified.
      * @param candidateClass the Class of the candidate instances.
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass)
-    {
+    public QueryImpl(PersistenceManager pm, Class candidateClass) {
         this(pm);
         setClass(candidateClass);
     }
@@ -217,8 +205,7 @@ public class QueryImpl
      * @param candidateClass the Class of the candidate instances.
      * @param candidateCollection the Collection of candidate instances.
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass, Collection candidateCollection)
-    {
+    public QueryImpl(PersistenceManager pm, Class candidateClass, Collection candidateCollection) {
         this(pm);
         setClass(candidateClass);
         setCandidates(candidateCollection);
@@ -230,22 +217,22 @@ public class QueryImpl
      * @param candidateClass the Class of the candidate instances.
      * @param filter the Filter for candidate instances.
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass, String filter)
-    {
+    public QueryImpl(PersistenceManager pm, Class candidateClass, String filter) {
         this(pm);
         setClass(candidateClass);
         setFilter(filter);
     }
 
+
     /**
      * Create a query instance with the candidate class,
      * the candidate collection, and filter specified.
+     *
      * @param candidateClass the Class of the candidate instances.
      * @param candidateCollection the Collection of candidate instances.
      * @param filter the Filter for candidate instances
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass, Collection candidateCollection, String filter)
-    {
+    public QueryImpl(PersistenceManager pm, Class candidateClass, Collection candidateCollection, String filter) {
         this(pm);
         setClass(candidateClass);
         setCandidates(candidateCollection);
@@ -260,10 +247,9 @@ public class QueryImpl
      *
      * @param candidateClass the Class of the candidate instances.
      */
-    public void setClass(Class candidateClass)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setClass(Class candidateClass) {
+        synchronized (this.paramtab) {
             this.candidateClass = candidateClass;
             this.compiled = false;
         }
@@ -274,10 +260,9 @@ public class QueryImpl
      *
      * @param candidateCollection the Candidate collection.
      */
-    public void setCandidates(Collection candidateCollection)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setCandidates(Collection candidateCollection) {
+        synchronized (this.paramtab) {
             this.candidateCollection = candidateCollection;
             // candidateCollection is not part of query compilation =>
             // do not change compiled flag
@@ -292,10 +277,9 @@ public class QueryImpl
      *
      * @param filter the query filter.
      */
-    public void setFilter(String filter)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setFilter(String filter) {
+        synchronized (this.paramtab) {
             this.filterExpression = filter;
             this.compiled = false;
         }
@@ -313,10 +297,9 @@ public class QueryImpl
      *
      * @param imports import statements separated by semicolons.
      */
-    public void declareImports(String imports)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void declareImports(String imports) {
+        synchronized (this.paramtab) {
             this.importDeclarations = imports;
             this.compiled = false;
         }
@@ -335,10 +318,9 @@ public class QueryImpl
      *
      * @param parameters the list of parameters separated by commas.
      */
-    public void declareParameters(String parameters)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void declareParameters(String parameters) {
+        synchronized (this.paramtab) {
             this.parameterDeclarations = parameters;
             this.compiled = false;
         }
@@ -356,10 +338,9 @@ public class QueryImpl
      *
      * @param variables the variables separated by semicolons.
      */
-    public void declareVariables(String variables)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void declareVariables(String variables) {
+        synchronized (this.paramtab) {
             this.variableDeclarations = variables;
             this.compiled = false;
         }
@@ -371,10 +352,9 @@ public class QueryImpl
      * The ordering specification includes a list of expressions
      * with the ascending/descending indicator.
      */
-    public void setOrdering(String ordering)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setOrdering(String ordering) {
+        synchronized (this.paramtab) {
             this.orderingSpecification = ordering;
             this.compiled = false;
         }
@@ -389,10 +369,9 @@ public class QueryImpl
      * which has the effect of returning the elements of the candidates
      * that match the filter.
      */
-    public void setResult(String result)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setResult(String result) {
+        synchronized (this.paramtab) {
             this.resultExpression = result;
             this.compiled = false;
         }
@@ -405,10 +384,9 @@ public class QueryImpl
      * entirely in the back end, instead of in the cache.
      * @param ignoreCache the setting of the ignoreCache option.
      */
-    public void setIgnoreCache(boolean ignoreCache)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setIgnoreCache(boolean ignoreCache) {
+        synchronized (this.paramtab) {
             this.ignoreCache = ignoreCache;
         }
     }
@@ -418,8 +396,8 @@ public class QueryImpl
      * @return the ignoreCache option setting.
      * @see #setIgnoreCache
      */
-    public boolean getIgnoreCache()
-    {
+    @Override
+    public boolean getIgnoreCache() {
         return ignoreCache;
     }
 
@@ -433,10 +411,9 @@ public class QueryImpl
      *
      * @param prefetchEnabled the setting of the prefetchEnabled option.
      */
-    public void setPrefetchEnabled(boolean prefetchEnabled)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public void setPrefetchEnabled(boolean prefetchEnabled) {
+        synchronized (this.paramtab) {
             this.prefetchEnabled = prefetchEnabled;
             this.compiled = false;
         }
@@ -446,30 +423,28 @@ public class QueryImpl
      * Verify the elements of the query and provide a hint to the query to
      * prepare and optimize an execution plan.
      */
-    public void compile()
-    {
-        synchronized (this.paramtab)
-        {
-            if (!this.compiled)
-            {
-                if (logger.isLoggable(Logger.FINER))
-                    logger.finer("LOG_CompileQuery", this); //NOI18N
-                // create new query compiler instance
-                jqlc = new JQLC();
-                // define the query parts including syntax checks
-                jqlc.setClass(candidateClass);
-                jqlc.declareImports(importDeclarations);
-                jqlc.declareParameters(parameterDeclarations);
-                jqlc.declareVariables(variableDeclarations);
-                jqlc.setOrdering(orderingSpecification);
-                jqlc.setResult(resultExpression);
-                jqlc.setFilter(filterExpression);
-                jqlc.setPrefetchEnabled(prefetchEnabled);
-
-                // semantic analysis
-                jqlc.semanticCheck(paramtab);
-                this.compiled = true;
+    @Override
+    public void compile() {
+        synchronized (this.paramtab) {
+            if (this.compiled) {
+                return;
             }
+            LOG.log(DEBUG, "LOG_CompileQuery", this);
+            // create new query compiler instance
+            jqlc = new JQLC();
+            // define the query parts including syntax checks
+            jqlc.setClass(candidateClass);
+            jqlc.declareImports(importDeclarations);
+            jqlc.declareParameters(parameterDeclarations);
+            jqlc.declareVariables(variableDeclarations);
+            jqlc.setOrdering(orderingSpecification);
+            jqlc.setResult(resultExpression);
+            jqlc.setFilter(filterExpression);
+            jqlc.setPrefetchEnabled(prefetchEnabled);
+
+            // semantic analysis
+            jqlc.semanticCheck(paramtab);
+            this.compiled = true;
         }
     }
 
@@ -478,10 +453,9 @@ public class QueryImpl
      * @return the filtered Collection.
      * @see #executeWithArray (Object[] parameters)
      */
-    public Object execute()
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public Object execute() {
+        synchronized (this.paramtab) {
             compile();
             ParameterTable params = new ParameterTable(paramtab);
             params.initValueHandling();
@@ -496,9 +470,9 @@ public class QueryImpl
      * @see #executeWithArray (Object[] parameters)
      * @param p1 the value of the first parameter declared.
      */
-    public Object execute(Object p1)
-    {
-        Object [] params = new Object[1];
+    @Override
+    public Object execute(Object p1) {
+        Object[] params = new Object[1];
         params[0] = p1;
         return executeWithArray(params);
     }
@@ -510,9 +484,9 @@ public class QueryImpl
      * @param p1 the value of the first parameter declared.
      * @param p2 the value of the second parameter declared.
      */
-    public Object execute(Object p1, Object p2)
-    {
-        Object [] params = new Object[2];
+    @Override
+    public Object execute(Object p1, Object p2) {
+        Object[] params = new Object[2];
         params[0] = p1;
         params[1] = p2;
         return executeWithArray(params);
@@ -526,9 +500,9 @@ public class QueryImpl
      * @param p2 the value of the second parameter declared.
      * @param p3 the value of the third parameter declared.
      */
-    public Object execute(Object p1, Object p2, Object p3)
-    {
-        Object [] params = new Object[3];
+    @Override
+    public Object execute(Object p1, Object p2, Object p3) {
+        Object[] params = new Object[3];
         params[0] = p1;
         params[1] = p2;
         params[2] = p3;
@@ -541,10 +515,9 @@ public class QueryImpl
      * @see #executeWithArray (Object[] parameters)
      * @param parameters the Map containing all of the parameters.
      */
-    public Object executeWithMap (Map parameters)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public Object executeWithMap(Map parameters) {
+        synchronized (this.paramtab) {
             compile();
             ParameterTable params = new ParameterTable(paramtab);
             params.initValueHandling();
@@ -574,10 +547,9 @@ public class QueryImpl
      * @return the filtered Collection.
      * @param parameters the Object array with all of the parameters.
      */
-    public Object executeWithArray (Object[] parameters)
-    {
-        synchronized (this.paramtab)
-        {
+    @Override
+    public Object executeWithArray(Object[] parameters) {
+        synchronized (this.paramtab) {
             compile();
             ParameterTable params = new ParameterTable(paramtab);
             params.initValueHandling();
@@ -594,8 +566,8 @@ public class QueryImpl
      * <P>If this Query has no PersistenceManager return null.
      * @return the PersistenceManager associated with this Query.
      */
-    public com.sun.jdo.api.persistence.support.PersistenceManager getPersistenceManager()
-    {
+    @Override
+    public com.sun.jdo.api.persistence.support.PersistenceManager getPersistenceManager() {
         return (pm == null)? null : pm.getCurrentWrapper();
     }
 
@@ -608,8 +580,7 @@ public class QueryImpl
      * This method effectively disconnects the PersistenceManager allowing it to be
      * garbage collected.
      */
-    public void clearPersistenceManager()
-    {
+    public void clearPersistenceManager() {
         this.pm = null;
         this.candidateCollection = null;
     }
@@ -621,13 +592,11 @@ public class QueryImpl
      * - executes the RetrieveDesc returned by the code generation
      * - resets the compiler
      */
-    private Object doExecute(ParameterTable params)
-    {
+    private Object doExecute(ParameterTable params) {
         Object result = null;
         RetrieveDesc rd = null;
 
-        try
-        {
+        try {
             // We need to make sure that no parallel thread closes the pm =>
             // try to get a shared lock for the pm. Today, the pm impl does
             // not allow to promote a shared lock into a exclusive lock. Thus
@@ -640,35 +609,28 @@ public class QueryImpl
             // pm and then get the lock, because the pm might be closed in
             // parallel. Then subsequent uses of pm in doexecute would fail.
             pm.acquireExclusiveLock();
-        }
-        catch (NullPointerException npe)
-        {
+        } catch (NullPointerException npe) {
             // NPE means pm is closed or query instance was serialized.
-            String key = (createdBySerialization ?
-                          "query.queryimpl.doexecute.notboundtopm" : //NOI18N
-                          "query.queryimpl.doexecute.pmclosed"); //NOI18N
-            JDOException ex = new JDOQueryException(
-                I18NHelper.getMessage(messages, key));
-            logger.throwing("query.QueryImpl", "compile", ex); //NOI18N
-            throw ex;
+            String key = (createdBySerialization
+                ? "query.queryimpl.doexecute.notboundtopm"
+                : "query.queryimpl.doexecute.pmclosed");
+            throw new JDOQueryException(I18NHelper.getMessage(messages, key));
         }
 
-        try
-        {
+        try {
             checkCandidates();
             // call the code generation
             rd = jqlc.codeGen(pm, params);
             // flush changes (inserts, updates, deletes) to the datastore
             flush();
-            if (logger.isLoggable(Logger.FINER))
-                logger.finer("LOG_ExecuteQuery", this, params.getValues()); //NOI18N
+            {
+                LOG.log(DEBUG, "LOG_ExecuteQuery", this, params.getValues());
+            }
             // Note, the RetrieveDesc returned by the code generation is null
             // in the case of a query having a false filter =>
             // do not go to the datastore, but return an emtpy collection
-            result = (rd != null) ?  pm.retrieve(rd, params.getValueFetcher()) : new ArrayList();
-        }
-        finally
-        {
+            result = (rd == null) ? new ArrayList<>() : pm.retrieve(rd, params.getValueFetcher());
+        } finally {
             // Note, the following stmt needs to be replaced by
             // pm.releaseSharedLock, as soon as the pm supports promoting a
             // shared lock into an exclusive lock.
@@ -681,17 +643,14 @@ public class QueryImpl
     /**
      * This method checks a valid candidates setting for this query.
      */
-    private void checkCandidates()
-    {
-        if ((candidateCollection == null) && (candidateClass != null))
-        {
+    private void checkCandidates() {
+        if ((candidateCollection == null) && (candidateClass != null)) {
             // Set candidateCollection to the extent of the candidate class, if
             // candidateCollection is not specified. Note, the JDO spec defines
             // subclasses=true as the default, but since this is not supported
             // right now, I set it to subclasses=false.
             candidateCollection = pm.getExtent(candidateClass, false);
-        }
-        else {
+        } else {
             jqlc.checkCandidates(candidateClass, candidateCollection);
         }
     }
@@ -699,63 +658,59 @@ public class QueryImpl
     /**
      *
      */
-    private void flush()
-    {
+    private void flush() {
         Transaction tx = pm.currentTransaction();
         // flush updates to the database,
         // - if the is a transaction active and
         // - if transaction is not optimistic
         // - if ignoreCache is false
-        if ((tx != null) && tx.isActive() &&
-            !tx.getOptimistic() && !this.ignoreCache)
-        {
+        if ((tx != null) && tx.isActive() && !tx.getOptimistic() && !this.ignoreCache) {
             pm.internalFlush();
         }
     }
 
     /**  Returns a string representation of the object. */
-    public String toString()
-    {
+    @Override
+    public String toString() {
         StringBuffer repr = new StringBuffer();
-        repr.append("QueryImpl("); //NOI18N
-        repr.append("candidateClass: "); //NOI18N
+        repr.append("QueryImpl(");
+        repr.append("candidateClass: ");
         repr.append(candidateClass);
         if (importDeclarations != null) {
-            repr.append(", imports: "); //NOI18N
+            repr.append(", imports: ");
             repr.append(importDeclarations);
         }
         if (parameterDeclarations != null) {
-            repr.append(", parameters: "); //NOI18N
+            repr.append(", parameters: ");
             repr.append(parameterDeclarations);
         }
         if (variableDeclarations != null) {
-            repr.append(", variables: "); //NOI18N
+            repr.append(", variables: ");
             repr.append(variableDeclarations);
         }
         if (filterExpression != null) {
-            repr.append(", filter: "); //NOI18N
+            repr.append(", filter: ");
             repr.append(filterExpression);
         }
         if (orderingSpecification != null) {
-            repr.append(", ordering: "); //NOI18N
+            repr.append(", ordering: ");
             repr.append(orderingSpecification);
         }
         if (resultExpression != null) {
-            repr.append(", result: "); //NOI18N
+            repr.append(", result: ");
             repr.append(resultExpression);
         }
-        repr.append(", prefetchEnabled: "); //NOI18N
+        repr.append(", prefetchEnabled: ");
         repr.append(prefetchEnabled);
-        repr.append(", identity: "); //NOI18N
+        repr.append(", identity: ");
         repr.append(identity());
-        repr.append(")"); //NOI18N
+        repr.append(")");
         return repr.toString();
     }
 
     /** */
-    private String identity()
-    {
-        return "QueryImpl@" + System.identityHashCode(this); //NOI18N
+    private String identity() {
+        return "QueryImpl@" + System.identityHashCode(this);
     }
 
 
@@ -763,9 +718,7 @@ public class QueryImpl
      * Define readObject to initialize the transient field paramtab after deserialization.
      * This object is used for synchronization, thus it cannot be null.
      */
-    private void readObject(java.io.ObjectInputStream in)
-        throws java.io.IOException, ClassNotFoundException
-    {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         this.paramtab = new ParameterTable();
         this.createdBySerialization = true;

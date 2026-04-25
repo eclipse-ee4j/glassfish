@@ -32,7 +32,6 @@ import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.api.persistence.support.Query;
 import com.sun.jdo.api.persistence.support.Transaction;
 import com.sun.jdo.spi.persistence.support.sqlstore.ExtentCollection;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceConfig;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
@@ -49,12 +48,12 @@ import com.sun.jdo.spi.persistence.support.sqlstore.query.QueryImpl;
 import com.sun.jdo.spi.persistence.utility.NullSemaphore;
 import com.sun.jdo.spi.persistence.utility.Semaphore;
 import com.sun.jdo.spi.persistence.utility.SemaphoreImpl;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.transaction.Status;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.System.Logger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -71,6 +70,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
 
 public class PersistenceManagerImpl implements PersistenceManager {
     /**
@@ -141,7 +144,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * 20.
      */
     private static final int _txCacheInitialCapacity = Integer.getInteger(
-      "com.sun.jdo.api.persistence.support.PersistenceManager.dirtyCache.initialCapacity", // NOI18N
+      "com.sun.jdo.api.persistence.support.PersistenceManager.dirtyCache.initialCapacity",
       20).intValue();
 
     /**
@@ -150,7 +153,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * uses 20.
      */
     private static final int _flushedCacheInitialCapacity = Integer.getInteger(
-      "com.sun.jdo.api.persistence.support.PersistenceManager.transactionalCache.initialCapacity", // NOI18N
+      "com.sun.jdo.api.persistence.support.PersistenceManager.transactionalCache.initialCapacity",
       20).intValue();
 
     /**
@@ -166,8 +169,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
             f =
                 Float.valueOf(
                   System.getProperty(
-                    "com.sun.jdo.api.persistence.support.PersistenceManager.transactionalCache.loadFactor", // NOI18N
-                    "0.75")).floatValue(); // NOI18N
+                    "com.sun.jdo.api.persistence.support.PersistenceManager.transactionalCache.loadFactor",
+                    "0.75")).floatValue();
         } finally {
             _flushedCacheLoadFactor = f;
         }
@@ -179,7 +182,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * uses 20.
      */
     private static final int _weakCacheInitialCapacity = Integer.getInteger(
-      "com.sun.jdo.api.persistence.support.PersistenceManager.globalCache.initialCapacity", // NOI18N
+      "com.sun.jdo.api.persistence.support.PersistenceManager.globalCache.initialCapacity",
       20).intValue();
 
     /**
@@ -195,8 +198,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
             f =
                 Float.valueOf(
                   System.getProperty(
-                    "com.sun.jdo.api.persistence.support.PersistenceManager.globalCache.loadFactor", // NOI18N
-                    "0.75")).floatValue(); // NOI18N
+                    "com.sun.jdo.api.persistence.support.PersistenceManager.globalCache.loadFactor",
+                    "0.75")).floatValue();
         } finally {
             _weakCacheLoadFactor = f;
         }
@@ -258,8 +261,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Pattern for OID class names
      */
-    private static final String oidName_OID = "OID";// NOI18N
-    private static final String oidName_KEY = "KEY";// NOI18N
+    private static final String oidName_OID = "OID";
+    private static final String oidName_KEY = "KEY";
 
     /**
      * Properies object
@@ -308,13 +311,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * The logger
      */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
+    private static final Logger LOG = System.getLogger(PersistenceManagerImpl.class.getName(), RESOURCE_BUNDLE);
 
     /**
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",  // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             PersistenceManagerImpl.class.getClassLoader());
 
     /**
@@ -325,14 +328,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
         persistenceManagerFactory = pmf;
 
         // Initialize caches as per property values.
-        if (logger.isLoggable(Logger.FINEST)) {
-            Object[] items = new Object[] { new Integer(_txCacheInitialCapacity),
-                                            new Integer(_flushedCacheInitialCapacity),
-                                            new Float(_flushedCacheLoadFactor),
-                                            new Integer(_weakCacheInitialCapacity),
-                                            new Float(_weakCacheLoadFactor) };
-            logger.finest("sqlstore.persistencemgr.cacheproperties", items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.persistencemgr.cacheproperties", _txCacheInitialCapacity, _flushedCacheInitialCapacity,
+            _flushedCacheLoadFactor, _weakCacheInitialCapacity, _weakCacheLoadFactor);
         _txCache = new ArrayList(_txCacheInitialCapacity);
         _flushedCache = new LinkedHashSet(_flushedCacheInitialCapacity, _flushedCacheLoadFactor);
         _weakCache = new HashMap(_weakCacheInitialCapacity, _weakCacheLoadFactor);
@@ -356,21 +353,21 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         if (_multithreaded) {
             _cacheLock =
-                new SemaphoreImpl("PersistenceManagerImpl.cacheLock"); // NOI18N
+                new SemaphoreImpl("PersistenceManagerImpl.cacheLock");
             _fieldUpdateLock =
-                new SemaphoreImpl("PersistenceManagerImpl.fieldUpdateLock"); // NOI18N
+                new SemaphoreImpl("PersistenceManagerImpl.fieldUpdateLock");
         } else {
             if (_jta == null) {
                 // Non-transactional PersistenceManager can be used in a multithreaded
                 // environment.
                 _cacheLock =
-                    new SemaphoreImpl("PersistenceManagerImpl.cacheLock"); // NOI18N
+                    new SemaphoreImpl("PersistenceManagerImpl.cacheLock");
             } else {
                 _cacheLock =
-                    new NullSemaphore("PersistenceManagerImpl.cacheLock"); // NOI18N
+                    new NullSemaphore("PersistenceManagerImpl.cacheLock");
             }
             _fieldUpdateLock =
-                new NullSemaphore("PersistenceManagerImpl.fieldUpdateLock"); // NOI18N
+                new NullSemaphore("PersistenceManagerImpl.fieldUpdateLock");
         }
     }
 
@@ -405,6 +402,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      *
      */
+    @Override
     public boolean isClosed() {
         return _isClosed;
     }
@@ -414,6 +412,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * TransactionImpl.afterCompletion in case of the CMT transaction
      * and the status value passed to the method cannot be resolved.
      */
+    @Override
     public void forceClose() {
 
         // Return to pool - TBD if we use pooling of free PMs.
@@ -464,6 +463,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * close the persistence manager
      */
+    @Override
     public void close() {
 
         acquireExclusiveLock();
@@ -487,7 +487,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
             if (_activeTransaction || _flushedCache.size() > 0) {
                 throw new JDOException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerimpl.close.activetransaction"));// NOI18N
+                        "jdo.persistencemanagerimpl.close.activetransaction"));
             }
 
             forceClose();
@@ -502,6 +502,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Returns transaction associated with this persistence manager
      * @return transaction    current transaction
      */
+    @Override
     public Transaction currentTransaction() {
         assertIsOpen();
         return _transaction;
@@ -511,6 +512,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /** Create a new Query with no elements.
      * @return a new Query instance with no elements.
      */
+    @Override
     public Query newQuery() {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this);
@@ -525,6 +527,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the new Query
      * @param compiled another Query from the same JDO implementation
      */
+    @Override
     public Query newQuery(Object compiled) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, compiled);
@@ -536,6 +539,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param cls the Class of the results
      * @return the new Query
      */
+    @Override
     public Query newQuery(Class cls) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls);
@@ -549,6 +553,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param cln the Collection of candidate instances
      * @return the new Query
      */
+    @Override
     public Query newQuery(Class cls, Collection cln) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls, cln);
@@ -562,6 +567,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param filter the Filter for candidate instances
      * @return the new Query
      */
+    @Override
     public Query newQuery(Class cls, String filter) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls, filter);
@@ -576,6 +582,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param filter the Filter for candidate instances
      * @return the new Query
      */
+    @Override
     public Query newQuery(Class cls, Collection cln, String filter) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls, cln, filter);
@@ -592,6 +599,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return a Collection of instances
      * @see #newQuery
      */
+    @Override
     public Collection getExtent(Class persistenceCapableClass,
                                 boolean subclasses) {
         assertIsOpen();
@@ -611,6 +619,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the PersistenceCapable instance with the specified
      * ObjectId
      */
+    @Override
     public Object getObjectById(Object oid) {
         return getObjectById(oid, false);
     }
@@ -636,21 +645,18 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param oid an ObjectId
      * @param validate if the existence of the instance is to be validated
      */
+    @Override
     public Object getObjectById(Object oid, boolean validate) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         assertIsOpen();
         assertActiveTransaction(true);
 
         Object rc = null;
 
-        if (debug) {
-            Object[] items = new Object[] {oid, this,_jta};
-            logger.finest("sqlstore.persistencemgr.getbyobjid", items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.persistencemgr.getbyobjid", oid, this,_jta);
 
-        if (oid == null)
+        if (oid == null) {
             return null;
+        }
 
         StateManager sm = lookupObjectById(oid, null);
         rc = sm.getPersistent();
@@ -676,7 +682,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     throw e;
                 } catch (Exception e) {
                     throw new JDOUserException(I18NHelper.getMessage(messages,
-                       "jdo.persistencemanagerimpl.fetchinstance.none"), e);// NOI18N
+                       "jdo.persistencemanagerimpl.fetchinstance.none"), e);
                 }
             }
         }
@@ -693,6 +699,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param pcClass the Class type of the PersistenceCapable instance to be associated
      * with this StateManager.
      */
+    @Override
     public StateManager findOrCreateStateManager(Object oid, Class pcClass) {
         return lookupObjectById(oid, pcClass);
     }
@@ -719,7 +726,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     if (classType == null) {
                         // Class not found, report an error
                         throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "jdo.persistencemanagerimpl.getobjectbyid.nometadata"), // NOI18N
+                                "jdo.persistencemanagerimpl.getobjectbyid.nometadata"),
                                 new Object[]{oid});
                     }
                     external = true;
@@ -746,7 +753,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     throw e;
                 } catch (Exception e) {
                     throw new JDOUserException(I18NHelper.getMessage(messages,
-                            "jdo.persistencemanagerimpl.fetchinstance.none"), e);// NOI18N
+                            "jdo.persistencemanagerimpl.fetchinstance.none"), e);
                 }
             }
         } finally {
@@ -775,25 +782,17 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param pc the PersistenceCapable instance
      * @return the ObjectId of the instance
      */
+    @Override
     public Object getObjectId(Object pc) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         assertIsOpen();
         assertActiveTransaction(true);
 
-        if (debug) {
-            Object[] items = new Object[] {Thread.currentThread(),pc, this, _jta};
-            logger.finest("sqlstore.persistencemgr.getobjid",items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.persistencemgr.getobjid", Thread.currentThread(), pc, this, _jta);
 
         try {
             assertPersistenceCapable(pc);
         } catch (Exception e) {
-            if (debug) {
-                Object[] items = new Object[] {pc, this};
-                logger.finest("sqlstore.persistencemgr.getobjid.notpc",items); // NOI18N
-            }
-
+            LOG.log(TRACE, "sqlstore.persistencemgr.getobjid.notpc", pc, this);
             return null;
         }
 
@@ -803,11 +802,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             return null;
 
         } else if (sm.getPersistenceManagerInternal() != this) {
-            if (debug) {
-                Object[] items = new Object[] {pc, this, _jta};
-                logger.finest("sqlstore.persistencemgr.getobjid.notpm",items); // NOI18N
-            }
-
+            LOG.log(TRACE, "sqlstore.persistencemgr.getobjid.notpm", pc, this, _jta);
             return null;
         }
 
@@ -821,6 +816,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the PersistenceCapable instance representing the
      * same data store object
      */
+    @Override
     public Object getTransactionalInstance(Object pc) {
         assertIsOpen();
         assertActiveTransaction(false);
@@ -850,17 +846,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param pc a transient instance of a Class that implements
      * PersistenceCapable
      */
+    @Override
     public void makePersistent(Object pc) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
+        LOG.log(TRACE, "sqlstore.persistencemgr.makepersistent", Thread.currentThread(), pc, this, _jta);
 
-        if (debug)
-            {
-            Object[] items = new Object[] {Thread.currentThread(), pc, this, _jta};
-            logger.finest("sqlstore.persistencemgr.makepersistent",items); // NOI18N
-            }
-
-        if (pc == null)
+        if (pc == null) {
             return;        // ignore
+        }
 
         acquireShareLock();
         try {
@@ -868,12 +860,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             assertActiveTransaction(false);
             assertPersistenceCapable(pc);
             internalMakePersistent((PersistenceCapable) pc);
-            if (debug)
-                {
-                 Object[] items = new Object[] {pc, this, _jta};
-                 logger.finest("sqlstore.persistencemgr.makepersistent.done",items); // NOI18N
-                }
-
+            LOG.log(TRACE, "sqlstore.persistencemgr.makepersistent.done", pc, this, _jta);
         } finally {
             releaseShareLock();
         }
@@ -883,25 +870,31 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param pcs an array of transient instances
      * @see #makePersistent(Object pc)
      */
+    @Override
     public void makePersistent(Object[] pcs) {
-        if (pcs == null)
+        if (pcs == null) {
             return;        // ignore
+        }
 
         for (int i = 0; i < pcs.length; i++) {
             makePersistent(pcs[i]);
         }
     }
 
+    @Override
     public void makePersistent(Collection pcs) {
-        if (pcs == null)
+        if (pcs == null) {
             return;        // ignore
+        }
 
         makePersistent(pcs.toArray());
     }
 
+    @Override
     public void deletePersistent(Object pc) {
-        if (pc == null)
+        if (pc == null) {
             return;        // ignore
+        }
 
         acquireShareLock();
 
@@ -915,18 +908,22 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
     }
 
+    @Override
     public void deletePersistent(Object[] pcs) {
-        if (pcs == null)
+        if (pcs == null) {
             return;        // ignore
+        }
 
         for (int i = 0; i < pcs.length; i++) {
             deletePersistent(pcs[i]);
         }
     }
 
+    @Override
     public void deletePersistent(Collection pcs) {
-        if (pcs == null)
+        if (pcs == null) {
             return;        // ignore
+        }
 
         deletePersistent(pcs.toArray());
     }
@@ -938,13 +935,15 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the PersistenceManagerFactory that created
      * this PersistenceManager
      */
+    @Override
     public com.sun.jdo.api.persistence.support.PersistenceManagerFactory getPersistenceManagerFactory() {
         return persistenceManagerFactory;
     }
 
     void setPersistenceManagerFactory(PersistenceManagerFactory pmf) {
-        if (persistenceManagerFactory == null)
+        if (persistenceManagerFactory == null) {
             persistenceManagerFactory = pmf;
+        }
     }
 
     /** The application can manage the PersistenceManager instances
@@ -953,6 +952,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param o the user instance to be remembered by the PersistenceManager
      * @see #getUserObject
      */
+    @Override
     public void setUserObject(Object o) {
         this._userObject = o;
     }
@@ -963,6 +963,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the user object associated with this PersistenceManager
      * @see #setUserObject
      */
+    @Override
     public Object getUserObject() {
         return _userObject;
     }
@@ -975,10 +976,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * <li>VersionNumber</li>
      * @return the Properties of this PersistenceManager
      */
+    @Override
     public Properties getProperties() {
         if (_properties == null) {
             _properties = RuntimeVersion.getVendorProperties(
-                    "/com/sun/jdo/spi/persistence/support/sqlstore/sys.properties");// NOI18N
+                    "/com/sun/jdo/spi/persistence/support/sqlstore/sys.properties");
         }
         return _properties;
     }
@@ -990,6 +992,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Object Id.
      * @return      boolean supersedeDeletedInstance flag
      */
+    @Override
     public boolean getSupersedeDeletedInstance () {
         return _supersedeDeletedInstance;
     }
@@ -999,6 +1002,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Sets the supersedeDeletedInstance flag for this PersistenceManager.
      * @param flag          boolean supersedeDeletedInstance flag
      */
+    @Override
     public void setSupersedeDeletedInstance (boolean flag) {
         // RESOLVE: synchronization
         _supersedeDeletedInstance = flag;
@@ -1014,6 +1018,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @see PersistenceManager#getObjectById(Object oid)
      * @return      boolean requireCopyObjectId flag
      */
+    @Override
     public boolean getRequireCopyObjectId() {
         return _requireCopyObjectId;
     }
@@ -1029,6 +1034,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @see PersistenceManager#getObjectById(Object oid)
      * @param flag          boolean requireCopyObjectId flag
      */
+    @Override
     public void setRequireCopyObjectId (boolean flag) {
         // RESOLVE: synchronization
         _requireCopyObjectId = flag;
@@ -1043,6 +1049,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      *
      * @return      boolean requireTrackedSCO flag
      */
+    @Override
     public boolean getRequireTrackedSCO() {
         return _requireTrackedSCO;
     }
@@ -1055,6 +1062,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      *
      * @param flag          boolean requireTrackedSCO flag
      */
+    @Override
     public void setRequireTrackedSCO (boolean flag) {
         // RESOLVE: synchronization
         _requireTrackedSCO = flag;
@@ -1065,6 +1073,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param cls the PersistenceCapable Class
      * @return the Class of the ObjectId of the parameter
      */
+    @Override
     public Class getObjectIdClass(Class cls) {
         PersistenceConfig config = loadPersistenceConfig(cls);
         return config.getOidClass();
@@ -1076,6 +1085,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param     sm    StateManager
      * @return    new instance of the object
      */
+    @Override
     public Object newInstance(StateManager sm) {
         Object o = null;
 
@@ -1083,7 +1093,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         if (config == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.newinstance.badsm"));// NOI18N
+                    "jdo.persistencemanagerimpl.newinstance.badsm"));
         }
 
         Constructor constr = config.getConstructor();
@@ -1097,7 +1107,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             }
         } catch (Exception e) {
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.assertpersistencecapable.error", // NOI18N
+                    "jdo.persistencemanagerimpl.assertpersistencecapable.error",
                     config.getPersistenceCapableClass().getName()), e);
         }
 
@@ -1118,6 +1128,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return A collection of (persistent) objects unless
      * an aggregate query was specified.
      */
+    @Override
     public Object retrieve(RetrieveDesc action, ValueFetcher parameters)
     {
         acquireShareLock();
@@ -1143,6 +1154,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return A collection of (persistent) objects unless
      * an aggregate query was specified.
      */
+    @Override
     public Object retrieve(RetrieveDesc action) {
         return retrieve(action, null);
     }
@@ -1150,6 +1162,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Return a RetrieveDesc given a Class object.
      */
+    @Override
     public RetrieveDesc getRetrieveDesc(Class classType) {
         acquireShareLock();
 
@@ -1165,6 +1178,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Return a RetrieveDesc for a foreign field (relationship) given the
      * Class object for the parent class.
      */
+    @Override
     public RetrieveDesc getRetrieveDesc(String fieldName, Class classType) {
         acquireShareLock();
 
@@ -1182,18 +1196,12 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * at the rollback if it was replaced during transaction execution with another
      * instance with the same object Id.
      */
+    @Override
     public void registerInstance(StateManager sm, Object oid) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug)
-            {
-            Object[] items = new Object[] {Thread.currentThread(), oid, this, _jta};
-            logger.finest("sqlstore.persistencemgr.registerinstance",items); // NOI18N
-            }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.registerinstance", Thread.currentThread(), oid, this, _jta);
         try {
             acquireCacheLock();
-            if (debug)
-                logger.finest("sqlstore.persistencemgr.registerinstancein_wkc"); // NOI18N
+            LOG.log(TRACE, "sqlstore.persistencemgr.registerinstancein_wkc");
 
             _weakCache.put(oid, sm);
 
@@ -1208,6 +1216,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Register instance in the transactional cache
      */
+    @Override
     public void registerInstance(StateManager sm, Object oid,
                 boolean throwDuplicateException,
                 boolean forceRegister) {
@@ -1215,11 +1224,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             oid = sm.getObjectId();
         }
 
-        boolean debug = logger.isLoggable();
-        if (debug) {
-            Object[] items = new Object[] {Thread.currentThread(), oid, sm, this, _jta};
-            logger.finest("sqlstore.persistencemgr.registerinstance",items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.persistencemgr.registerinstance", Thread.currentThread(), oid, sm, this, _jta);
 
         //
         // register in all caches
@@ -1230,17 +1235,14 @@ public class PersistenceManagerImpl implements PersistenceManager {
         try {
             acquireCacheLock();
             if (!_weakCache.containsKey(oid)) {
-                if (debug)
-                    logger.finest("sqlstore.persistencemgr.registerinstancein_wkc"); // NOI18N
-
+                LOG.log(TRACE, "sqlstore.persistencemgr.registerinstancein_wkc");
                 _weakCache.put(oid, sm);
             } else if (throwDuplicateException) {
                 StateManager old = (StateManager)_weakCache.get(oid);
                 if (_supersedeDeletedInstance && old.isDeleted()) {
 
-                if (debug)
-                    logger.finer(I18NHelper.getMessage(messages,
-                        "sqlstore.persistencemgr.replacingdeletedinstance", oid)); // NOI18N
+                    LOG.log(DEBUG,
+                        I18NHelper.getMessage(messages, "sqlstore.persistencemgr.replacingdeletedinstance", oid));
 
                     old.markNotRegistered();
                     old.markVerifyAtDeregister();
@@ -1261,16 +1263,14 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
                 } else {
                     throw new JDODuplicateObjectIdException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerimpl.internalmakepersistent.dups"), // NOI18N
+                        "jdo.persistencemanagerimpl.internalmakepersistent.dups"),
                         new Object[]{sm.getPersistent()});
                 }
             }
 
             if (_activeTransaction && (sm.isTransactional() || forceRegister)) {
-                if (debug) {
-                    Object[] items = new Object[] {oid,sm.getPersistent(),this, _jta};
-                    logger.finest("sqlstore.persistencemgr.registerinstancein_txc",items); // NOI18N
-                }
+                Object[] items = new Object[] {oid, sm.getPersistent(), this, _jta};
+                LOG.log(TRACE, "sqlstore.persistencemgr.registerinstancein_txc", items);
 
                 // Need to be carefull not to request registerInstance twice
                 // for a dirty instance.
@@ -1291,13 +1291,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
     }
 
+    @Override
     public void deregisterInstance(Object oid) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {oid,this,_jta};
-            logger.finest("sqlstore.persistencemgr.deregisterinstance",items); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.deregisterinstance", oid, this, _jta);
         if (oid != null) {
             try {
                 acquireCacheLock();
@@ -1309,21 +1305,16 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
     }
 
+    @Override
     public void deregisterInstance(Object oid, StateManager sm) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {oid,this,_jta};
-            logger.finest("sqlstore.persistencemgr.deregisterinstance.verify",items); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.deregisterinstance.verify", oid, this, _jta);
         try {
             acquireCacheLock();
             Object known = _weakCache.get(oid);
             if (known == sm) {
                 //deregister the instance from weak cache only if it is registered.
                  _weakCache.remove(oid);
-                if (debug)
-                    logger.finest("sqlstore.persistencemgr.deregisterinstance.verified"); // NOI18N
+                LOG.log(TRACE, "sqlstore.persistencemgr.deregisterinstance.verified");
             }
 
             removeFromCaches(sm);
@@ -1354,10 +1345,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Clean instances registered for Version Consistency are verified with
      * the store.
      */
+    @Override
     public void beforeCompletion() {
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("sqlstore.persistencemgr.beforecompletion"); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.persistencemgr.beforecompletion");
 
         assertIsOpen();
         assertActiveTransaction(false);
@@ -1447,7 +1437,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         if (err != null && err.size() > 0) {
             _transaction.setRollbackOnly();
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.notprocessed"), // NOI18N
+                    "jdo.persistencemanagerimpl.notprocessed"),
                     toPCArray(err));
         }
     }
@@ -1474,7 +1464,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 // The instance failed the verification with the data store.
                 sm.setVerificationFailed();
                 throw new JDODataStoreException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerimpl.verificationfailed"), items);  // NOI18N
+                        "jdo.persistencemanagerimpl.verificationfailed"), items);
             }
         }
     }
@@ -1548,24 +1538,20 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * cleans up transactional cache
      * @param    status        jakarta.transaction.Status
      */
+    @Override
     public void afterCompletion(int status) {
         assertIsOpen();
         _insideCommit = true;
         boolean abort = ((status == Status.STATUS_ROLLEDBACK) ||
                 (status == Status.STATUS_ROLLING_BACK) ||
                 (status == Status.STATUS_MARKED_ROLLBACK));
-        boolean debug = false;
-        debug = logger.isLoggable(Logger.FINEST);
-        if (debug)
-            logger.finest("sqlstore.persistencemgr.aftercompletion",new Boolean(abort)); // NOI18N
+        LOG.log(TRACE, "sqlstore.persistencemgr.aftercompletion", abort);
 
         boolean retainValues = _transaction.getRetainValues();
 
         for (Iterator iter = _flushedCache.iterator(); iter.hasNext(); ) {
             StateManager sm = (StateManager)iter.next();
-            if (debug)
-                logger.finest("sqlstore.persistencemgr.aftercompletion.process",sm.getObjectId()); // NOI18N
-
+            LOG.log(TRACE, "sqlstore.persistencemgr.aftercompletion.process",sm.getObjectId());
             if (abort) {
                 rollback(sm, retainValues);
             } else {
@@ -1670,6 +1656,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean initializeFromVersionConsistencyCache(StateManager sm) {
         boolean rc = false;
         StateManager nonTxSM = lookupFromVersionConsistencyCache(sm);
@@ -1708,6 +1695,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         return rc;
     }
 
+    @Override
     public void setStateManager(Object pc, StateManager sm) {
         if (pc instanceof PersistenceCapable) {
             ((PersistenceCapable) pc).jdoSetStateManager(sm);
@@ -1717,6 +1705,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
 
+    @Override
     public void setFlags(Object pc, byte flags) {
         if (pc instanceof PersistenceCapable) {
             ((PersistenceCapable) pc).jdoSetFlags(flags);
@@ -1725,6 +1714,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         //RESOLVE: Otherwise, should throw an exception.
     }
 
+    @Override
     public byte getFlags(Object pc) {
         if (pc instanceof PersistenceCapable) {
             return ((PersistenceCapable) pc).jdoGetFlags();
@@ -1734,6 +1724,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         //RESOLVE: Otherwise, should throw an exception.
     }
 
+    @Override
     public StateManager getStateManager(Object pc) {
         if (pc instanceof PersistenceCapable) {
             return ((PersistenceCapable) pc).jdoGetStateManager();
@@ -1744,6 +1735,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
 
+    @Override
     public void setField(Object o, int fieldNumber, Object value) {
         if (o instanceof PersistenceCapable) {
             PersistenceCapable pc = (PersistenceCapable) o;
@@ -1753,6 +1745,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         //RESOLVE: Otherwise, should throw an exception.
     }
 
+    @Override
     public Object getField(Object pc, int fieldNumber) {
         if (pc instanceof PersistenceCapable) {
             return ((PersistenceCapable) pc).jdoGetField(fieldNumber);
@@ -1762,6 +1755,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         return null;
     }
 
+    @Override
     public void clearFields(Object pc) {
         if (pc instanceof PersistenceCapable) {
             ((PersistenceCapable) pc).jdoClear();
@@ -1779,6 +1773,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param fieldName the field to notify upon changes
      * @return the object of the class type
      */
+    @Override
     public Object newSCOInstance(Class type, Object owner, String fieldName) {
         Object obj = null;
 
@@ -1806,6 +1801,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param fieldName the field to notify upon changes
      * @return the object of the class type
      */
+    @Override
     public Object newSCOInstanceInternal(Class type, Object owner, String fieldName) {
 
         Object obj = null;
@@ -1828,7 +1824,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.newscoinstance.wrongclass", // NOI18N
+                    "jdo.persistencemanagerimpl.newscoinstance.wrongclass",
                     type.getName()));
         }
 
@@ -1854,6 +1850,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param initialSize initial size of the Collection
      * @return the object of the class type
      */
+    @Override
     public Object newCollectionInstance(Class type, Object owner, String fieldName,
                                         Class elementType, boolean allowNulls, int initialSize) {
         Object obj = newCollectionInstanceInternal(type, owner, fieldName,
@@ -1878,6 +1875,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param initialSize initial size of the Collection
      * @return the object of the class type
      */
+    @Override
     public Object newCollectionInstanceInternal(Class type, Object owner, String fieldName,
                                                 Class elementType, boolean allowNulls, int initialSize) {
         Object obj = null;
@@ -1886,8 +1884,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
         // narrow to wide:
         if (type == HashSet.class
                 || type == com.sun.jdo.spi.persistence.support.sqlstore.sco.HashSet.class) {
-            if (initialSize == 0)
+            if (initialSize == 0) {
                 initialSize = 101;
+            }
             obj = new com.sun.jdo.spi.persistence.support.sqlstore.sco.HashSet(
                 owner, fieldName, elementType, allowNulls, initialSize);
 /*
@@ -1901,28 +1900,27 @@ public class PersistenceManagerImpl implements PersistenceManager {
             newType = com.sun.jdo.spi.persistence.support.sqlstore.sco.Vector.class;
 */
         } else if (Set.class.isAssignableFrom(type)) {
-            if (initialSize == 0)
+            if (initialSize == 0) {
                 initialSize = 101;
+            }
             obj = new com.sun.jdo.spi.persistence.support.sqlstore.sco.HashSet(
                 owner, fieldName, elementType, allowNulls, initialSize);
 
         } else if (Collection.class.isAssignableFrom(type)) {
             // We choose to use HashSet as a default collection
             // because we do not support duplicate objects in DB
-            if (initialSize == 0)
+            if (initialSize == 0) {
                 initialSize = 101;
+            }
             obj = new com.sun.jdo.spi.persistence.support.sqlstore.sco.HashSet(
                 owner, fieldName, elementType, allowNulls, initialSize);
 
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.newscoinstance.wrongclass", // NOI18N
+                    "jdo.persistencemanagerimpl.newscoinstance.wrongclass",
                     type.getName()));
         }
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug)
-            logger.finest("sqlstore.persistencemgr.newcollection",obj.getClass()); // NOI18N
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.newcollection",obj.getClass());
         return obj;
     }
 
@@ -1932,6 +1930,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * flush
      * @see #beforeCompletion()
      */
+    @Override
     public void internalFlush() {
         acquireExclusiveLock();
 
@@ -1977,6 +1976,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * For Transaction to notify PersistenceManager that
      * status is changed
      */
+    @Override
     public synchronized void notifyStatusChange(boolean isActive) {
         _activeTransaction = isActive;
     }
@@ -1985,6 +1985,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * For Transaction to notify PersistenceManager that
      * optimistic flag is changed
      */
+    @Override
     public synchronized void notifyOptimistic(boolean optimistic) {
         this._optimistic = optimistic;
     }
@@ -1992,11 +1993,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Returns true if associated transaction is optimistic
      */
+    @Override
     public boolean isOptimisticTransaction() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug)
-            logger.finest("sqlstore.persistencemgr.isoptimistic", new Boolean(_optimistic)); // NOI18N
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.isoptimistic", _optimistic);
         return _optimistic;
     }
 
@@ -2005,6 +2004,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * For Transaction to notify PersistenceManager that
      * nontransactionalRead flag is changed
      */
+    @Override
     public synchronized void notifyNontransactionalRead(boolean nontransactionalRead) {
         this._nontransactionalRead = nontransactionalRead;
     }
@@ -2012,12 +2012,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Returns true if associated transaction is optimistic
      */
+    @Override
     public boolean isNontransactionalRead() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            logger.finest("sqlstore.persistencemgr.isnontxread",new Boolean(_nontransactionalRead)); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.isnontxread", _nontransactionalRead);
         return _nontransactionalRead;
     }
 
@@ -2025,21 +2022,16 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Returns true if associated transaction is active
      */
+    @Override
     public boolean isActiveTransaction() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug)
-             logger.finest("sqlstore.persistencemgr.isactivetx",new Boolean(_activeTransaction)); // NOI18N
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.isactivetx", _activeTransaction);
         return _activeTransaction;
     }
 
     // Returns current wrapper
+    @Override
     public PersistenceManagerWrapper getCurrentWrapper() {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            logger.finest("sqlstore.persistencemgr.getcurrentwrapper",current); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.getcurrentwrapper", current);
         return current;
     }
 
@@ -2049,23 +2041,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     // Remember the current wrapper
     protected void pushCurrentWrapper(PersistenceManagerWrapper pmw) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {current,pmw};
-            logger.finest("sqlstore.persistencemgr.pushcurrentwrapper",items); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.pushcurrentwrapper", current, pmw);
         current = pmw;
     }
 
     // Replace current wrapper with the previous
     protected void popCurrentWrapper(PersistenceManagerWrapper prev) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {current,prev};
-            logger.finest("sqlstore.persistencemgr.popcurrentwrapper",items); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.popcurrentwrapper", current, prev);
         current = prev;
         if (!_isClosed && _jta == null && current == null) {
             this.close();
@@ -2080,7 +2062,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         if (this._jta != null) {
             Object[] items = new Object[] {this._jta, t};
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.setjtatransaction.notnulljta", // NOI18N
+                    "jdo.persistencemanagerimpl.setjtatransaction.notnulljta",
                     items));
         }
         this._jta = t;
@@ -2173,7 +2155,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
                     if (this != pc.jdoGetStateManager().getPersistenceManagerInternal()) {
                         throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "jdo.persistencemanagerimpl.another_pm"), // NOI18N
+                                "jdo.persistencemanagerimpl.another_pm"),
                                 new Object[]{pc});
                     }
                 } else {
@@ -2192,7 +2174,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private void internalDeletePersistent(PersistenceCapable pc) {
         if (!(pc.jdoIsPersistent())) {
             throw new JDOException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.internaldeletepersistent.transient"), // NOI18N
+                    "jdo.persistencemanagerimpl.internaldeletepersistent.transient"),
                     new Object[]{pc});
         }
 
@@ -2201,7 +2183,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         if (this != pm) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.another_pm"), // NOI18N
+                    "jdo.persistencemanagerimpl.another_pm"),
                     new Object[]{pc});
         }
 
@@ -2258,11 +2240,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             return;
         }
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug)
-            logger.finest("sqlstore.persistencemgr.loadingclass",s); // NOI18N
-
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.loadingclass", s);
         Class oidClass = null;
 
         try {
@@ -2274,7 +2252,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         } catch (Exception e) {
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.loadclassforoid.wrongoidclass"), e);// NOI18N
+                    "jdo.persistencemanagerimpl.loadclassforoid.wrongoidclass"), e);
         }
 
         loadPersistenceConfig(oidClass);
@@ -2285,12 +2263,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
      */
     private void assertIsOpen() {
         if (_isClosed) {
-            boolean debug = logger.isLoggable(Logger.FINEST);
-            if (debug) {
-                logger.finest("sqlstore.persistencemgr.assertisopen",this); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.persistencemgr.assertisopen", this);
             throw new JDOFatalUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.assertclosed.closed"));// NOI18N
+                    "jdo.persistencemanagerimpl.assertclosed.closed"));
         }
     }
 
@@ -2298,23 +2273,15 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * assert that the associated Transaction is active but allows to do commit processing.
      */
     private void assertActiveTransaction(boolean insideQuery) {
-        boolean debug = false;
-
-        debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            logger.finest("sqlstore.persistencemgr.assertactivetx",_transaction); // NOI18N
+        LOG.log(TRACE, "sqlstore.persistencemgr.assertactivetx",_transaction);
+        if (_insideCommit || (insideQuery && _transaction.getNontransactionalRead())) {
+            return;
         }
 
-        if (_insideCommit || (insideQuery && _transaction.getNontransactionalRead()))
-            return;
-
         if (!_activeTransaction) {
-            if (debug) {
-                logger.finest("sqlstore.persistencemgr.assertactivetx.closed",this); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.persistencemgr.assertactivetx.closed", this);
             throw new JDOException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.assertactivetransaction.error"));// NOI18N
+                    "jdo.persistencemanagerimpl.assertactivetransaction.error"));
         }
     }
 
@@ -2324,7 +2291,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private void assertPersistenceCapable(Object pc) {
         if (!(pc instanceof PersistenceCapable)) {
             throw new JDOException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerimpl.assertpersistencecapable.error", // NOI18N
+                    "jdo.persistencemanagerimpl.assertpersistencecapable.error",
                     pc.getClass().getName()), new Object[]{pc});
         }
     }
@@ -2336,8 +2303,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
      */
     private void setKeyFields(StateManager sm) {
         Object o = sm.getPersistent();
-        if (o == null)
+        if (o == null) {
             return;
+        }
 
         Object oid = sm.getObjectId();
         try {
@@ -2351,10 +2319,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             }
 
         } catch (Exception e) {
-            //e.printStackTrace();
-            boolean debug = logger.isLoggable(Logger.FINEST);
-            if (debug)
-                logger.finest("sqlstore.persistencemgr.setkeyfields",e); // NOI18N
+            LOG.log(TRACE, "sqlstore.persistencemgr.setkeyfields", e);
         }
     }
 
@@ -2369,19 +2334,18 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return     object     local copy
      */
     private Object internalCloneOid(Object oid, StateManager sm) {
-        if (oid == null)
+        if (oid == null) {
             return null;
+        }
 
         if (!_requireCopyObjectId) {
             return oid;
         }
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         Object newoid = null;
         try {
             Class oidClass = oid.getClass();
-            newoid = oidClass.newInstance();
+            newoid = oidClass.getDeclaredConstructor().newInstance();
             PersistenceConfig config = sm.getPersistenceConfig();
             Field keyFields[] = config.getKeyFields();
 
@@ -2392,18 +2356,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
             }
 
         } catch (Exception e) {
-            //e.printStackTrace();
-            if (debug)
-                logger.finest("sqlstore.persistencemgr.internalcloneoid",e); // NOI18N
+            LOG.log(TRACE, "sqlstore.persistencemgr.internalcloneoid",e);
             newoid = null;
         }
 
-        if (debug)
-            {
-            Object[] items = new Object[] {oid , newoid, new Boolean((oid == newoid))};
-            logger.finest("sqlstore.persistencemgr.internalcloneoid.old",items); // NOI18N
-            }
-
+        LOG.log(TRACE, "sqlstore.persistencemgr.internalcloneoid.old", oid, newoid, oid == newoid);
         return newoid;
     }
 
@@ -2412,12 +2369,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Acquires a share lock from the persistence manager. This method will
      * put the calling thread to sleep if another thread is holding the exclusive lock.
      */
+    @Override
     public void acquireShareLock() {
         if ( ! _multithreaded) {
             return;
         }
-
-        boolean debug = logger.isLoggable(Logger.FINEST);
 
         synchronized (_readWriteLock) {
             //
@@ -2439,14 +2395,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 _waiterCount++;
 
                 try {
-                    if (debug) {
-                        logger.finest("sqlstore.persistencemgr.acquiresharedlock",Thread.currentThread()); // NOI18N
-                    }
-
+                    LOG.log(TRACE, "sqlstore.persistencemgr.acquiresharedlock",Thread.currentThread());
                     _readWriteLock.wait();
                 } catch (InterruptedException e) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "jdo.persistencemanagerimpl.acquiresharelock.interrupted"), e);// NOI18N
+                            "jdo.persistencemanagerimpl.acquiresharelock.interrupted"), e);
                 } finally {
                     _waiterCount--;
                 }
@@ -2471,14 +2424,12 @@ public class PersistenceManagerImpl implements PersistenceManager {
            }
 
             _readWriteCount++;
-            if (debug) {
-              logger.finest("sqlstore.persistencemgr.acquiresharedlock.rdwrcount", // NOI18N
-                   Thread.currentThread(),new Long(_readWriteCount));
-            }
+            LOG.log(TRACE, "sqlstore.persistencemgr.acquiresharedlock.rdwrcount", Thread.currentThread(),
+                _readWriteCount);
 
             if (_readWriteCount <= 0) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerimpl.acquiresharelock.failed"));// NOI18N
+                        "jdo.persistencemanagerimpl.acquiresharelock.failed"));
             }
         }
     }
@@ -2487,13 +2438,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Releases the share lock and notify any thread waiting to get an exclusive lock.
      * Note that every releaseShareLock() call needs to be preceeded by an acquireShareLock() call.
      */
+    @Override
     public void releaseShareLock() {
         if ( ! _multithreaded) {
             return;
         }
-
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
 
         synchronized (_readWriteLock) {
             //
@@ -2509,7 +2458,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             try {
                 if (_readWriteCount == 0) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "jdo.persistencemanagerimpl.releasesharelock.failed"));// NOI18N
+                            "jdo.persistencemanagerimpl.releasesharelock.failed"));
                 }
 
                 _readWriteCount--;
@@ -2523,10 +2472,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     _readWriteLock.notify();
                 }
 
-                if (debug) {
-                    Object[] items = new Object[] {Thread.currentThread(),new Long(_readWriteCount)};
-                    logger.finest("sqlstore.persistencemgr.releasesharedlock",items); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.persistencemgr.releasesharedlock", Thread.currentThread(), _readWriteCount);
             }
         }
     }
@@ -2539,12 +2485,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * attempts to acquire an exclusive lock. It is up to the callers to make sure
      * this does not happen.
      */
+    @Override
     public void acquireExclusiveLock() {
         if ( ! _multithreaded) {
             return;
         }
-
-        boolean debug = logger.isLoggable(Logger.FINEST);
 
         synchronized (_readWriteLock) {
             Thread currentThread = Thread.currentThread();
@@ -2566,15 +2511,11 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     _waiterCount++;
 
                     try {
-
-                        if (debug) {
-                             logger.finest("sqlstore.persistencemgr.acquireexclusivelock",currentThread); // NOI18N
-                        }
-
+                        LOG.log(TRACE, "sqlstore.persistencemgr.acquireexclusivelock", currentThread);
                         _readWriteLock.wait();
                     } catch (InterruptedException e) {
                         throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                                "jdo.persistencemanagerimpl.acquireexclusivelock.interrupted"), e);// NOI18N
+                                "jdo.persistencemanagerimpl.acquireexclusivelock.interrupted"), e);
                     } finally {
                         _waiterCount--;
                     }
@@ -2600,11 +2541,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 _readWriteCount = -1;
                 _exclusiveLockHolder = currentThread;
 
-                if (debug) {
-                    Object[] items = new Object[] {currentThread,new Long(_readWriteCount)};
-                    logger.fine("sqlstore.persistencemgr.acquireexclusivelock.count",items); // NOI18N
-                }
-
+                LOG.log(DEBUG, "sqlstore.persistencemgr.acquireexclusivelock.count", currentThread, _readWriteCount);
             }
         }
     }
@@ -2614,27 +2551,22 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * share lock. Note that every releaseShareLock() call needs to be preceeded by
      * an acquireExclusiveLock() call.
      */
+    @Override
     public void releaseExclusiveLock() {
         if ( ! _multithreaded) {
             return;
         }
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-
         synchronized (_readWriteLock) {
             try {
                 if (_readWriteCount >= 0) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "jdo.persistencemanagerimpl.releaseexclusivelock.failed"));// NOI18N
+                            "jdo.persistencemanagerimpl.releaseexclusivelock.failed"));
                 }
 
                 _readWriteCount++;
             } finally {
-                if (debug) {
-                    Object[] items = new Object[] {Thread.currentThread(),new Long(_readWriteCount)};
-                    logger.finest("sqlstore.persistencemgr.releaseexclusivelock",items); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.persistencemgr.releaseexclusivelock", Thread.currentThread(), _readWriteCount);
 
                 //
                 // If _readWriteCount is 0 and _waiterCount is greater than 0,
@@ -2654,6 +2586,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Acquire lock for synchronizing field updates.
      */
+    @Override
     public void acquireFieldUpdateLock() {
         _fieldUpdateLock.acquire();
     }
@@ -2661,6 +2594,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Release lock for synchronizing field updates.
      */
+    @Override
     public void releaseFieldUpdateLock() {
         _fieldUpdateLock.release();
     }
@@ -2668,12 +2602,14 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Lock cache for getObjectById and result processing synchronization.
      */
+    @Override
     public void acquireCacheLock() {
         _cacheLock.acquire();
     }
 
     /** Release cache lock.
      */
+    @Override
     public void releaseCacheLock() {
         _cacheLock.release();
     }
@@ -2697,6 +2633,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
          * @param name    the name of the file
          * @return true if the name should be included in the file list
          */
+        @Override
         public boolean accept(File dir, String name) {
             return name.endsWith(ext);
         }

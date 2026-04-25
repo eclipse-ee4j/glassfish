@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingReferenceKeyElementImpl.java
- *
- * Created on March 3, 2000, 1:11 PM
- */
-
 package com.sun.jdo.api.persistence.model.mapping.impl;
 
 import com.sun.jdo.api.persistence.model.ModelException;
@@ -29,6 +24,7 @@ import com.sun.jdo.api.persistence.model.mapping.MappingTableElement;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.glassfish.persistence.common.I18NHelper;
@@ -39,106 +35,121 @@ import org.netbeans.modules.dbschema.TableElement;
 import org.netbeans.modules.dbschema.util.NameUtil;
 
 /**
- *
- * @author Mark Munro
- * @author Rochelle Raccah
- * @version %I%
+ * @author Mark Munro 2000
+ * @author Rochelle Raccah 2000
  */
-public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
-    implements MappingReferenceKeyElement
-{
-    private ArrayList _referencingKey;    // array of column names
+public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl implements MappingReferenceKeyElement {
+
+    // array of column names
+    private List<String> _referencingKey;
     private MappingTableElement _table;
 
-    /** Create new MappingReferenceKeyElementImpl with no corresponding name.
+    /**
+     * Create new MappingReferenceKeyElementImpl with no corresponding name.
      * This constructor should only be used for cloning and archiving.
      */
-    public MappingReferenceKeyElementImpl ()
-    {
-        this((String)null);
+    public MappingReferenceKeyElementImpl() {
+        this((String) null);
     }
 
-    /** Creates new MappingReferenceKeyElementImpl with the corresponding name
+
+    /**
+     * Creates new MappingReferenceKeyElementImpl with the corresponding name
+     *
      * @param name the name of the element
      */
-    public MappingReferenceKeyElementImpl (String name)
-    {
+    public MappingReferenceKeyElementImpl(String name) {
         super(name, null);
     }
 
-    /** Creates new MappingReferenceKeyElementImpl with a corresponding
+
+    /**
+     * Creates new MappingReferenceKeyElementImpl with a corresponding
      * mapping table.
+     *
      * @param table mapping table element to be used with this key.
      */
-    public MappingReferenceKeyElementImpl (MappingTableElement table)
-        throws ModelException
-    {
+    public MappingReferenceKeyElementImpl(MappingTableElement table) throws ModelException {
         super(table.getName(), table.getDeclaringClass());
         setTableInternal(table);
     }
 
-    /** Get the name of this element.
+
+    /**
+     * Get the name of this element.
+     *
      * @return the name
      */
-    public String getKeyName () { return getName(); }
+    @Override
+    public String getKeyName() {
+        return getName();
+    }
 
-    /** Set the name of this element.
+
+    /**
+     * Set the name of this element.
+     *
      * @param name the name
      * @throws ModelException if impossible
      */
-    public void setKeyName (String name) throws ModelException
-    {
+    @Override
+    public void setKeyName(String name) throws ModelException {
         setName(name.toString());
     }
 
     //======================= table handling ===========================
 
-    /** Returns the mapping table element for this referencing key.
+
+    /**
+     * Returns the mapping table element for this referencing key.
+     *
      * @return the meta data table for this referencing key
      */
-    public MappingTableElement getTable () { return _table; }
+    @Override
+    public MappingTableElement getTable() {
+        return _table;
+    }
 
-    /** Set the mapping table for this referencing key to the supplied table.
+
+    /**
+     * Set the mapping table for this referencing key to the supplied table.
+     *
      * @param table mapping table element to be used with this key.
      * @exception ModelException if impossible
      */
-    public void setTable (MappingTableElement table) throws ModelException
-    {
+    @Override
+    public void setTable(MappingTableElement table) throws ModelException {
         MappingTableElement old = getTable();
 
-        try
-        {
+        try {
             fireVetoableChange(PROP_TABLE, old, table);
             setTableInternal(table);
             firePropertyChange(PROP_TABLE, old, table);
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
+
 
     /** Set the mapping table for this referencing key to the supplied table
      * without firing any property change events.
      * @param table mapping table element to be used with this key.
      * @exception ModelException if impossible
      */
-    private void setTableInternal (MappingTableElement table)
-        throws ModelException
-    {
-        if (table == null)
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.element.null_argument"));                    // NOI18N
+    private void setTableInternal(MappingTableElement table) throws ModelException {
+        if (table == null) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.element.null_argument"));
         }
 
         _table = table;
 
-        if (null == getDeclaringClass())
+        if (null == getDeclaringClass()) {
             _declaringClass = table.getDeclaringClass();
+        }
 
-        if (null == getName())
+        if (null == getName()) {
             _name = table.getName();
+        }
     }
 
     /** Get the declaring table.  This method is provided as part of
@@ -147,21 +158,16 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @return the table that owns this reference key element, or
      * <code>null</code> if the element is not attached to any table
      */
-    public TableElement getDeclaringTable ()
-    {
-        ArrayList locals = getReferencingKey();
-
-        if ((locals != null) && (locals.size() > 0))
-        {
-            String absoluteName = NameUtil.getAbsoluteMemberName(
-                getDeclaringClass().getDatabaseRoot(),
-                locals.get(0).toString());
-
-            return TableElement.forName(NameUtil.getTableName(absoluteName));
+    @Override
+    public TableElement getDeclaringTable() {
+        List<String> locals = getReferencingKey();
+        if (locals == null || locals.isEmpty()) {
+            return null;
         }
-
-        return null;
+        String absoluteName = NameUtil.getAbsoluteMemberName(getDeclaringClass().getDatabaseRoot(), locals.get(0));
+        return TableElement.forName(NameUtil.getTableName(absoluteName));
     }
+
 
     /** Set the mapping table for this referencing key to the mapping table
      * based on the name of the supplied table.  This method is provided as
@@ -169,8 +175,8 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * only be used when a ReferenceKey object is used or by the runtime.
      * @param tableElement mapping table element to be used with this key.
      */
-    public void setDeclaringTable (TableElement tableElement)
-    {
+    @Override
+    public void setDeclaringTable(TableElement tableElement) {
         throw new UnsupportedOperationException();
     }
 
@@ -180,12 +186,13 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * the runtime.
      * @return the referenced table
      */
-    public TableElement getReferencedTable ()
-    {
+    @Override
+    public TableElement getReferencedTable() {
         ColumnPairElement[] columnPairs = getColumnPairs();
 
-        if ((columnPairs != null) && (columnPairs.length > 0))
+        if ((columnPairs != null) && (columnPairs.length > 0)) {
             return columnPairs[0].getReferencedColumn().getDeclaringTable();
+        }
 
         return null;
     }
@@ -197,26 +204,30 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * <code>getColumnPairNames</code> method.
      * @return the names of the columns in this referencing key
      */
-    private ArrayList getReferencingKey ()
-    {
-        if (_referencingKey == null)
-            _referencingKey = new ArrayList();
+    private List<String> getReferencingKey() {
+        if (_referencingKey == null) {
+            _referencingKey = new ArrayList<>();
+        }
 
         return _referencingKey;
     }
 
-    /** Returns the list of relative column pair names in this referencing key.
+
+    /**
+     * Returns the list of relative column pair names in this referencing key.
+     *
      * @return the names of the column pairs in this referencing key
      */
-    public ArrayList getColumnPairNames ()
-    {
-        ArrayList locals = getReferencingKey();
-        ArrayList foreigns = getTable().getKey();
+    @Override
+    public List<String> getColumnPairNames() {
+        List<String> locals = getReferencingKey();
+        List<String> foreigns = getTable().getKey();
         int i, count = ((locals != null) ? locals.size() : 0);
-        ArrayList pairs = new ArrayList();
+        List<String> pairs = new ArrayList<>();
 
-        for (i = 0; i < count; i++)
-            pairs.add(locals.get(i) + ";" + foreigns.get(i));    // NOI18N
+        for (i = 0; i < count; i++) {
+            pairs.add(locals.get(i) + ";" + foreigns.get(i));
+        }
 
         return pairs;
     }
@@ -226,45 +237,40 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * which to look
      * @return the index of the column pair or -1 if not found
      */
-    private int getIndexOfColumnPair (String searchPairName)
-    {
-        ArrayList myPairs = getColumnPairNames();
-        int count = ((myPairs != null) ? myPairs.size() : 0);
-
-        if (count > 0)
-        {
+    private int getIndexOfColumnPair(String searchPairName) {
+        List<String> myPairs = getColumnPairNames();
+        int count = myPairs == null ? 0 : myPairs.size();
+        if (count > 0) {
             int i;
 
-            for (i = 0; i < count; i++)
-            {
-                if (myPairs.get(i).equals(searchPairName))
+            for (i = 0; i < count; i++) {
+                if (myPairs.get(i).equals(searchPairName)) {
                     return i;
+                }
             }
         }
 
         return -1;
     }
 
-    /** Adds a column to the list of key columns in this referencing key.
+
+    /**
+     * Adds a column to the list of key columns in this referencing key.
      * This method is only called privately from addColumnPairs and assumes
      * that the column is not <code>null</code>.
+     *
      * @param column column element to be added
      * @exception ModelException if impossible
      */
-    private void addKeyColumn (ColumnElement column) throws ModelException
-    {
-        ArrayList referencingKey = getReferencingKey();
-        String columnName = NameUtil.getRelativeMemberName(
-            column.getName().getFullName());
+    private void addKeyColumn(ColumnElement column) throws ModelException {
+        List<String> referencingKey = getReferencingKey();
+        String columnName = NameUtil.getRelativeMemberName(column.getName().getFullName());
 
-        try
-        {
+        try {
             fireVetoableChange(PROP_KEY_COLUMNS, null, null);
             referencingKey.add(columnName);
             firePropertyChange(PROP_KEY_COLUMNS, null, null);
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
@@ -275,15 +281,14 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * the runtime.
      * @return the columns
      */
-    public ColumnElement[] getLocalColumns ()
-    {
+    @Override
+    public ColumnElement[] getLocalColumns() {
         ColumnPairElement[] columnPairs = getColumnPairs();
-        int i, count = ((columnPairs != null) ? columnPairs.length : 0);
+        int i, count = columnPairs == null ? 0 : columnPairs.length;
         ColumnElement[] columns = new ColumnElement[count];
-
-        for (i = 0; i < count ; i++)
+        for (i = 0; i < count; i++) {
             columns[i] = columnPairs[i].getLocalColumn();
-
+        }
         return columns;
     }
 
@@ -293,14 +298,16 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * the runtime.
      * @return the columns
      */
+    @Override
     public ColumnElement[] getReferencedColumns ()
     {
         ColumnPairElement[] columnPairs = getColumnPairs();
         int i, count = ((columnPairs != null) ? columnPairs.length : 0);
         ColumnElement[] columns = new ColumnElement[count];
 
-        for (i = 0; i < count ; i++)
+        for (i = 0; i < count ; i++) {
             columns[i] = columnPairs[i].getReferencedColumn();
+        }
 
         return columns;
     }
@@ -310,10 +317,9 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pairName the relative name of the column pair to remove
      * @throws ModelException if impossible
      */
-    public void removeColumnPair (String pairName) throws ModelException
-    {
-        ArrayList pairNames = new ArrayList(1);
-
+    @Override
+    public void removeColumnPair(String pairName) throws ModelException {
+        List<String> pairNames = new ArrayList<>(1);
         pairNames.add(pairName);
         removeColumnPairs(pairNames);
     }
@@ -323,46 +329,40 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pairNames the relative names of the column pairs to remove
      * @throws ModelException if impossible
      */
-    public void removeColumnPairs (ArrayList pairNames) throws ModelException
-    {
-        ArrayList refKey = getReferencingKey();
-        ArrayList key = getTable().getKey();
+    @Override
+    public void removeColumnPairs(List<String> pairNames) throws ModelException {
+        List<String> refKey = getReferencingKey();
+        List<String> key = getTable().getKey();
         int i, count = ((pairNames != null) ? pairNames.size() : 0);
 
-        for (i = 0; i < count ; i++)
-        {
-            String pairName = (String)pairNames.get(i);
+        for (i = 0; i < count; i++) {
+            String pairName = pairNames.get(i);
             int index = getIndexOfColumnPair(pairName);
 
-            if (pairName != null)
-            {
-                try
-                {
-                    Object remove1 = null, remove2 = null;
+            if (pairName != null) {
+                try {
+                    String remove1 = null;
+                    String remove2 = null;
 
                     fireVetoableChange(PROP_KEY_COLUMNS, null, null);
 
                     remove1 = key.remove(index);
                     remove2 = refKey.remove(index);
 
-                    if ((remove1 == null) || (remove2 == null))
-                    {
+                    if ((remove1 == null) || (remove2 == null)) {
                         // if only 1 failed, put the other one back
-                        if (remove1 != null)
+                        if (remove1 != null) {
                             key.add(index, remove1);
-                        else if (remove2 != null)
+                        } else if (remove2 != null) {
                             refKey.add(index, remove2);
+                        }
 
-                        throw new ModelException(I18NHelper.getMessage(
-                            getMessages(),
-                            "mapping.element.element_not_removed",         // NOI18N
-                            pairName));
+                        throw new ModelException(
+                            I18NHelper.getMessage(getMessages(), "mapping.element.element_not_removed", pairName));
                     }
 
                     firePropertyChange(PROP_KEY_COLUMNS, null, null);
-                }
-                catch (PropertyVetoException e)
-                {
+                } catch (PropertyVetoException e) {
                     throw new ModelVetoException(e);
                 }
             }
@@ -375,6 +375,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pair the pair to add
      * @throws ModelException if impossible
      */
+    @Override
     public void addColumnPair (ColumnPairElement pair) throws ModelException
     {
         addColumnPairs(new ColumnPairElement[]{pair});
@@ -384,6 +385,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pairs the column pairs to add
      * @throws ModelException if impossible
      */
+    @Override
     public void addColumnPairs (ColumnPairElement[] pairs) throws ModelException
     {
         MappingTableElementImpl table = (MappingTableElementImpl)getTable();
@@ -391,7 +393,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
 
         for (i = 0; i < count; i++)
         {
-            ColumnPairElement pair = (ColumnPairElement)pairs[i];
+            ColumnPairElement pair = pairs[i];
 
             if (pair != null)
             {
@@ -411,7 +413,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
             else
             {
                 throw new ModelException(I18NHelper.getMessage(getMessages(),
-                    "mapping.element.null_argument"));                // NOI18N
+                    "mapping.element.null_argument"));
             }
         }
     }
@@ -420,6 +422,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pair the column pair to remove
      * @throws ModelException if impossible
      */
+    @Override
     public void removeColumnPair (ColumnPairElement pair) throws ModelException
     {
         removeColumnPairs(new ColumnPairElement[]{pair});
@@ -429,6 +432,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pairs the column pairs to remove
      * @throws ModelException if impossible
      */
+    @Override
     public void removeColumnPairs (ColumnPairElement[] pairs)
         throws ModelException
     {
@@ -437,7 +441,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
 
         for (i = 0; i < count ; i++)
         {
-            ColumnPairElement pair = (ColumnPairElement)pairs[i];
+            ColumnPairElement pair = pairs[i];
 
             pairNames.add(NameUtil.getRelativeMemberName(
                 pair.getName().getFullName()));
@@ -451,30 +455,28 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param pairs the new column pairs
      * @throws ModelException if impossible
      */
-    public void setColumnPairs (ColumnPairElement[] pairs) throws ModelException
-    {
-        removeColumnPairs(getColumnPairNames());    // remove the old ones
-        addColumnPairs(pairs);                        // add the new ones
+    @Override
+    public void setColumnPairs(ColumnPairElement[] pairs) throws ModelException {
+        // remove the old ones
+        removeColumnPairs(getColumnPairNames());
+        // add the new ones
+        addColumnPairs(pairs);
     }
 
     /** Get all column pairs in this holder.
      * @return the column pairs
      */
-    public ColumnPairElement[] getColumnPairs ()
-    {
-        ArrayList pairNames = getColumnPairNames();
+    @Override
+    public ColumnPairElement[] getColumnPairs() {
+        List<String> pairNames = getColumnPairNames();
         TableElement table = getDeclaringTable();
         int i, count = ((pairNames != null) ? pairNames.size() : 0);
         ColumnPairElement[] pairs = new ColumnPairElement[count];
         String databaseRoot = getDeclaringClass().getDatabaseRoot();
 
-        for (i = 0; i < count; i++)
-        {
-            String absoluteName = NameUtil.getAbsoluteMemberName(
-                databaseRoot, (String)pairNames.get(i));
-
-            pairs[i] = (ColumnPairElement)table.getMember(
-                DBIdentifier.create(absoluteName));
+        for (i = 0; i < count; i++) {
+            String absoluteName = NameUtil.getAbsoluteMemberName(databaseRoot, pairNames.get(i));
+            pairs[i] = (ColumnPairElement) table.getMember(DBIdentifier.create(absoluteName));
         }
 
         return pairs;
@@ -484,24 +486,21 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param name the name of the column pair for which to look
      * @return the column pair or <code>null</code> if not found
      */
-    public ColumnPairElement getColumnPair (DBIdentifier name)
-    {
+    @Override
+    public ColumnPairElement getColumnPair(DBIdentifier name) {
         ColumnPairElement[] myPairs = getColumnPairs();
         int count = ((myPairs != null) ? myPairs.length : 0);
         String databaseRoot = getDeclaringClass().getDatabaseRoot();
 
-        if (count > 0)
-        {
-            String absoluteTableName = NameUtil.getAbsoluteTableName(
-                databaseRoot, getTable().getName());
-            ColumnPairElement searchPair = (ColumnPairElement)
-                TableElement.forName(absoluteTableName).getMember(name);
+        if (count > 0) {
+            String absoluteTableName = NameUtil.getAbsoluteTableName(databaseRoot, getTable().getName());
+            ColumnPairElement searchPair = (ColumnPairElement) TableElement.forName(absoluteTableName).getMember(name);
             int i;
 
-            for (i = 0; i < count; i++)
-            {
-                if (myPairs[i].equals(searchPair))
+            for (i = 0; i < count; i++) {
+                if (myPairs[i].equals(searchPair)) {
                     return searchPair;
+                }
             }
         }
 
@@ -515,33 +514,33 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl
      * @param referencingKey the list of names of the columns in this
      * referencing key
      */
-    public void setReferencingKey (ArrayList referencingKey)
-    {
+    public void setReferencingKey(ArrayList referencingKey) {
         _referencingKey = referencingKey;
     }
 
     //============== extra methods for Boston -> Pilsen conversion ============
 
-    /** Boston to Pilsen conversion.
+
+    /**
+     * Boston to Pilsen conversion.
      * This method converts the name of this MappingReferenceKeyElement and
      * the absolute column names stored in _referencingKey to relative names.
      */
-    protected void stripSchemaName ()
-    {
+    protected void stripSchemaName() {
         // handle _name (use getRelativeTableName since the name is derived
         // from the name of the participating table)
         _name = NameUtil.getRelativeTableName(_name);
 
         // handle _referencingKey
-        if (_referencingKey != null)
-        {
+        if (_referencingKey != null) {
             // Use ListIterator here, because I want to replace the value
-            // stored in the ArrayList.  The ListIterator returned by
+            // stored in the ArrayList. The ListIterator returned by
             // ArrayList.listIterator() supports the set method.
             ListIterator i = _referencingKey.listIterator();
 
-            while (i.hasNext())
-                i.set(NameUtil.getRelativeMemberName((String)i.next()));
+            while (i.hasNext()) {
+                i.set(NameUtil.getRelativeMemberName((String) i.next()));
+            }
         }
     }
 }

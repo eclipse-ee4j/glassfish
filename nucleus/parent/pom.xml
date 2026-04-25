@@ -236,8 +236,9 @@
         <antlr2.version>2.7.7</antlr2.version>
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
+        <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
         <ant.version>1.10.17</ant.version>
-        <ant.external.version>1.10.2</ant.external.version>
+        <ant-osgi.version>1.10.17-SNAPSHOT</ant-osgi.version>
         <jackson.version>2.21.2</jackson.version>
         <jackson-annotations.version>2.21</jackson-annotations.version>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
@@ -913,13 +914,8 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
-                <artifactId>ant</artifactId>
-                <version>${ant.external.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.ant</groupId>
-                <artifactId>ant-launcher</artifactId>
-                <version>${ant.version}</version>
+                <artifactId>ant-osgi</artifactId>
+                <version>${ant-osgi.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.mwiede</groupId>
@@ -981,6 +977,13 @@
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>3.2.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.glassfish.external</groupId>
+                            <artifactId>ant-osgi</artifactId>
+                            <version>${ant-osgi.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -1462,20 +1465,6 @@
                                             </ignoreVersions>
                                         </rule>
                                         <rule>
-                                            <groupId>org.glassfish.external</groupId>
-                                            <artifactId>ant</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>3.2-b..</version>
-                                                </ignoreVersion>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>10.0-b..</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-                                        <rule>
                                             <groupId>org.glassfish.hk2</groupId>
                                             <artifactId>osgi-resource-locator</artifactId>
                                             <ignoreVersions>
@@ -1486,16 +1475,6 @@
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>2.4.0</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-                                        <rule>
-                                            <groupId>org.glassfish.external</groupId>
-                                            <artifactId>ant</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[2,)</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>

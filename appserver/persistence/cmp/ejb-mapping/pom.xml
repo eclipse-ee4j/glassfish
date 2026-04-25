@@ -57,7 +57,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>
-            <artifactId>schema2beans</artifactId>
+            <artifactId>schema2beans-osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>dbschema-osgi</artifactId>
         </dependency>
     </dependencies>
 

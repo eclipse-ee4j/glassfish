@@ -17,16 +17,20 @@
 
 package org.glassfish.admin.rest.generator;
 
+import java.lang.System.Logger;
+
 import org.glassfish.hk2.api.ServiceLocator;
+
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * @author Ludovic Champenois
  */
 public class ASMResourcesGenerator extends ResourcesGeneratorBase {
+    private static final Logger LOG = System.getLogger(ASMResourcesGenerator.class.getName());
 
-    protected final static String GENERATED_PATH = "org/glassfish/admin/rest/resources/generatedASM/";
-
-    protected final static String GENERATED_PACKAGE = GENERATED_PATH.replace("/", ".");
+    private final static String GENERATED_PATH = "org/glassfish/admin/rest/resources/generatedASM/";
+    private final static String GENERATED_PACKAGE = GENERATED_PATH.replace("/", ".");
 
     public ASMResourcesGenerator(ServiceLocator habitat) {
         super(habitat);
@@ -34,8 +38,10 @@ public class ASMResourcesGenerator extends ResourcesGeneratorBase {
 
     @Override
     public ClassWriter getClassWriter(String className, String baseClassName, String resourcePath) {
+        String fullClassName = GENERATED_PACKAGE + className;
         try {
-            Class.forName(GENERATED_PACKAGE + className);
+            Class.forName(fullClassName);
+            LOG.log(TRACE, () -> "Class already exists, no need to regenerate it: " + fullClassName);
             return null;
         } catch (ClassNotFoundException ex) {
             return new ASMClassWriter(habitat, GENERATED_PATH, className, baseClassName, resourcePath);
@@ -44,6 +50,6 @@ public class ASMResourcesGenerator extends ResourcesGeneratorBase {
 
     @Override
     public String endGeneration() {
-        return "Code Generation done at  ";
+        return "Code Generation done at ";
     }
 }

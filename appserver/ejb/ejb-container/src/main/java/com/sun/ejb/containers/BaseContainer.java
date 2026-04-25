@@ -740,8 +740,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             initEjbInterceptors();
         } catch (Exception ex) {
-            _logger.log(FINE, "Exception creating BaseContainer : [{0}]", containerInfo);
-            _logger.log(FINE, "", ex);
+            _logger.log(FINE, "Exception creating BaseContainer [" + containerInfo + "]", ex);
             throw ex;
         }
         _logger.log(FINE, "Successfuly initialized: {0}", debugDescription);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,11 @@ package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 import com.sun.appserv.util.cache.Cache;
 import com.sun.appserv.util.cache.CacheListener;
 import com.sun.appserv.util.cache.LruCache;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.VersionConsistencyCache;
 import com.sun.jdo.spi.persistence.utility.BucketizedHashtable;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +33,10 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 
 /**
@@ -50,31 +54,23 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     // Not final, so that we can create different kinds of caches for testing.
     private static CacheFactory cacheFactory;
 
-    private final static ResourceBundle messages =
-        I18NHelper.loadBundle(VersionConsistencyCacheImpl.class);
+    private final static ResourceBundle messages = I18NHelper.loadBundle(VersionConsistencyCacheImpl.class);
 
     /** Use the PersistenceManager's logger. */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
+    private static final Logger LOG = System.getLogger(VersionConsistencyCacheImpl.class.getName(), messages);
 
     /** Name of implementation class of LRU cache. */
-    private static final String LRU_CACHE_CLASSNAME =
-      "com.sun.appserv.util.cache.LruCache"; // NOI18aN
-
+    private static final String LRU_CACHE_CLASSNAME = "com.sun.appserv.util.cache.LruCache";
 
     //
     // Cache configuration controls
     //
 
     /** Prefix of each property name of configuration item. */
-    private static final String PROPERTY_PREFIX =
-        "com.sun.jdo.spi.persistence.support.sqlstore.impl.VersionConsistency."; // NOI18N
-
-
-    /** Determines whether to use LruCache or the default. */
-    private static boolean lruCache = false;
+    private static final String PROPERTY_PREFIX = "com.sun.jdo.spi.persistence.support.sqlstore.impl.VersionConsistency.";
 
     /** Name of property to choose LRU or basic cache. */
-    private static final String LRU_CACHE_PROPERTY = PROPERTY_PREFIX + "LruCache"; // NOI18N
+    private static final String LRU_CACHE_PROPERTY = PROPERTY_PREFIX + "LruCache";
 
 
     /** For both LruCache and BucketizedHashtable. */
@@ -82,7 +78,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
     /** Name of property for specifying loadFactor. */
     private static final String LOAD_FACTOR_PROPERTY =
-        PROPERTY_PREFIX + "loadFactor"; // NOI18N
+        PROPERTY_PREFIX + "loadFactor";
 
 
     /** For BucketizedHashtable only. */
@@ -90,7 +86,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
     /** Name of property for specifying bucketSize. */
     private static final String BUCKET_SIZE_PROPERTY =
-        PROPERTY_PREFIX + "bucketSize"; // NOI18N
+        PROPERTY_PREFIX + "bucketSize";
 
 
     /** For BucketizedHashtable only. */
@@ -98,7 +94,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
     /** Name of property for specifying initialCapacity. */
     private static final String INITIAL_CAPACITY_PROPERTY =
-        PROPERTY_PREFIX + "initialCapacity"; // NOI18N
+        PROPERTY_PREFIX + "initialCapacity";
 
 
     /** For LruCache only. */
@@ -106,7 +102,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
     /** Name of property for specifying maxEntries. */
     private static final String MAX_ENTRIES_PROPERTY =
-        PROPERTY_PREFIX + "maxEntries"; // NOI18N
+        PROPERTY_PREFIX + "maxEntries";
 
 
      /** LruCache only, 10 minute timeout */
@@ -114,7 +110,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
     /** Name of property for specifying timeout. */
     private static final String TIMEOUT_PROPERTY =
-        PROPERTY_PREFIX + "timeout"; // NOI18N
+        PROPERTY_PREFIX + "timeout";
 
     // Create the cache factory
     static {
@@ -185,10 +181,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
                     try {
                         Class.forName(LRU_CACHE_CLASSNAME);
                     } catch (Exception ex) {
-                        logger.warning(
-                            I18NHelper.getMessage(
-                                messages,
-                                "jdo.versionconsistencycacheimpl.lrucachenotfound")); // NOI18N
+                        LOG.log(WARNING, "jdo.versionconsistencycacheimpl.lrucachenotfound");
                         lruCache = false;
                     }
                 }
@@ -207,10 +200,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
             // This probably should not happen, but fallback to the
             // default cache just in case.
             lruCache = false;
-            logger.warning(
-                I18NHelper.getMessage(
-                    messages,
-                    "jdo.versionconsistencycacheimpl.unexpectedduringcreate", ex));// NOI18N
+            LOG.log(WARNING, "jdo.versionconsistencycacheimpl.unexpectedduringcreate", ex);
         }
 
         if (lruCache) {
@@ -219,20 +209,11 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
             rc = new BasicCacheFactory();
         }
 
-        if (logger.isLoggable(Logger.FINER)) {
-            String values =
-                "\nloadFactor= " + loadFactor // NOI18N
-                + "\nbucketSize= " + bucketSize // NOI18N
-                + "\ninitialCapacity=" + initialCapacity // NOI18N
-                + "\nmaxEntries=" + maxEntries // NOI18N
-                + "\ntimeout=" + timeout // NOI18N
-                + "\nlruCache=" + lruCache; // NOI18N
-            logger.finer(
-                I18NHelper.getMessage(
-                    messages,
-                    "jdo.versionconsistencycacheimpl.created",
-                    values)); // NOI18N
-        }
+        boolean cache = lruCache;
+        LOG.log(DEBUG,
+            () -> "created with: " + "\nloadFactor= " + loadFactor + "\nbucketSize= " + bucketSize
+                + "\ninitialCapacity=" + initialCapacity + "\nmaxEntries=" + maxEntries + "\ntimeout=" + timeout
+                + "\nlruCache=" + cache);
 
         return rc;
     }
@@ -306,26 +287,15 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * @param valString Value of property as a String.
      */
     private static void logBadConfigValue(String propName, String valString) {
-        logger.warning(
-            I18NHelper.getMessage(
-                messages,
-                "jdo.versionconsistencycacheimpl.badconfigvalue", // NOI18N
-                propName, valString));
+        LOG.log(WARNING, "jdo.versionconsistencycacheimpl.badconfigvalue", propName, valString);
     }
 
     /**
      * @see VersionConsistencyCache#put
      */
+    @Override
     public StateManager put(Class pcType, Object oid, StateManager sm) {
-        boolean logAtFinest = logger.isLoggable(Logger.FINEST);
-
-        if (logAtFinest) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.put.entering", // NOI18N
-                            new Object[] {pcType, oid, sm}));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.put.entering", pcType, oid, sm);
 
         StateManager rc = null;
         VCCache oid2sm = null;
@@ -340,30 +310,16 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
         rc = oid2sm.put(oid, sm);
 
-        if (logAtFinest) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.put.returning", // NOI18N
-                            rc));
-        }
-
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.put.returning", rc);
         return rc;
     }
 
     /**
      * @see VersionConsistencyCache#get
      */
+    @Override
     public StateManager get(Class pcType, Object oid) {
-        boolean logAtFinest = logger.isLoggable(Logger.FINEST);
-
-        if (logAtFinest) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.get.entering", // NOI18N
-                            new Object[] {pcType, oid}));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.get.entering", pcType, oid);
         StateManager rc = null;
 
         VCCache oid2sm = null;
@@ -375,13 +331,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
             rc = oid2sm.get(oid);
         }
 
-        if (logAtFinest) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.get.returning", // NOI18N
-                            rc));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.get.returning", rc);
         return rc;
     }
 
@@ -389,36 +339,23 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     /**
      * @see VersionConsistencyCache#remove
      */
+    @Override
     public StateManager remove(Class pcType, Object oid) {
-        boolean logAtFinest = logger.isLoggable(Logger.FINEST);
-
-        if (logAtFinest) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.remove.entering", // NOI18N
-                            new Object[] {pcType, oid}));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.remove.entering", pcType, oid);
 
         StateManager rc = null;
         synchronized (pcTypeMap) {
             VCCache oid2sm = (VCCache) pcTypeMap.get(pcType);
 
             if (null != oid2sm) {
-                rc = (StateManager) oid2sm.remove(oid);
+                rc = oid2sm.remove(oid);
                 if (oid2sm.isEmpty()) {
                     pcTypeMap.remove(pcType);
                 }
             }
         }
 
-        if (logAtFinest) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.remove.returning", // NOI18N
-                            rc));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.remove.returning", rc);
         return rc;
     }
 
@@ -426,28 +363,18 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * This implementation does nothing.  Instead, we create buckets for each
      * pcType as-needed; see {@link #put}
      */
+    @Override
     public void addPCType(Class pcType) {
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.addpctype", // NOI18N
-                            pcType));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.addpctype", pcType);
         // Intentionally empty
     }
 
     /**
      * @see VersionConsistencyCache#removePCType
      */
+    @Override
     public void removePCType(Class pcType) {
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest(
-                    I18NHelper.getMessage(
-                            messages,
-                            "jdo.versionconsistencycacheimpl.removepctype", // NOI18N
-                            pcType));
-        }
+        LOG.log(TRACE, "jdo.versionconsistencycacheimpl.removepctype", pcType);
 
         synchronized (pcTypeMap) {
             VCCache oid2sm = (VCCache) pcTypeMap.get(pcType);
@@ -513,48 +440,42 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         private final Map cache;
 
         BasicVCCache() {
-            if (logger.isLoggable(Logger.FINER)) {
-                logger.finer(
-                        I18NHelper.getMessage(
-                                messages,
-                                "jdo.versionconsistencycacheimpl.usinghashmap", // NOI18N
-                                new Object[] {
-                                    new Integer(bucketSize),
-                                    new Long(initialCapacity),
-                                    new Float(loadFactor)}));
-            }
-
-            cache = Collections.synchronizedMap(
-                    new BucketizedHashtable(
-                            bucketSize, initialCapacity, loadFactor));
+            LOG.log(DEBUG, "jdo.versionconsistencycacheimpl.usinghashmap", bucketSize, initialCapacity, loadFactor);
+            cache = Collections.synchronizedMap(new BucketizedHashtable(bucketSize, initialCapacity, loadFactor));
         }
 
         /** @see Map#put */
+        @Override
         public StateManager put(Object key, StateManager value) {
             return (StateManager) cache.put(key, value);
         }
 
         /** @see Map#get */
+        @Override
         public StateManager get(Object key) {
             return (StateManager) cache.get(key);
         }
 
         /** @see Map#remove */
+        @Override
         public StateManager remove(Object key) {
             return (StateManager) cache.remove(key);
         }
 
         /** @see Map#clear */
+        @Override
         public void clear() {
             cache.clear();
         }
 
         /** @see Map#isEmpty */
+        @Override
         public boolean isEmpty() {
             return cache.isEmpty();
         }
 
         /** @see Map#size */
+        @Override
         public int size() {
             return cache.size();
         }
@@ -577,60 +498,53 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
          * @param timeout to be used to trim the expired entries
          */
         LruVCCache(int maxEntries, long timeout, float loadFactor) {
-            if (logger.isLoggable(Logger.FINER)) {
-                logger.finer(
-                        I18NHelper.getMessage(
-                                messages,
-                                "jdo.versionconsistencycacheimpl.usinglrucache", // NOI18N
-                                new Object[] {
-                                    new Integer(maxEntries),
-                                    new Long(timeout),
-                                    new Float(loadFactor)}));
-            }
+            LOG.log(DEBUG, "jdo.versionconsistencycacheimpl.usinglrucache", maxEntries, timeout, loadFactor);
 
             LruCache c = new LruCache();
             c.init(maxEntries, timeout, loadFactor, (Properties) null);
-            c.addCacheListener(
-                    new CacheListener() {
-                        public void trimEvent(Object key, Object value) {
-                            cache.remove(key);
-                            if (logger.isLoggable(Logger.FINER)) {
-                                logger.finer(
-                                        I18NHelper.getMessage(
-                                                messages,
-                                                "jdo.versionconsistencycacheimpl.trimevent")); // NOI18N
-                            }
-                        }
-                    });
+            c.addCacheListener(new CacheListener() {
+
+                @Override
+                public void trimEvent(Object key, Object value) {
+                    cache.remove(key);
+                    LOG.log(DEBUG, "jdo.versionconsistencycacheimpl.trimevent");
+                }
+            });
             cache = c;
         }
 
         /** @see Map#put */
+        @Override
         public StateManager put(Object key, StateManager value) {
             return (StateManager) cache.put(key, value);
         }
 
         /** @see Map#get */
+        @Override
         public StateManager get(Object key) {
             return (StateManager) cache.get(key);
         }
 
         /** @see Map#remove */
+        @Override
         public StateManager remove(Object key) {
             return (StateManager) cache.remove(key);
         }
 
         /** @see Map#clear */
+        @Override
         public void clear() {
             cache.clear();
         }
 
         /** @see Map#isEmpty */
+        @Override
         public boolean isEmpty() {
             return cache.isEmpty();
         }
 
         /** @see Map#size */
+        @Override
         public int size() {
             return cache.getEntryCount();
         }
@@ -650,6 +564,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     static class BasicCacheFactory implements CacheFactory {
 
         /** @return an instance of a BasicVCCache. */
+        @Override
         public VCCache create() {
             return new BasicVCCache();
         }
@@ -659,6 +574,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     static class LruCacheFactory implements CacheFactory {
 
         /** @return an instance of a LruVCCache. */
+        @Override
         public VCCache create() {
             return new LruVCCache(maxEntries, timeout, loadFactor);
         }

@@ -25,7 +25,6 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.sql;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.SCOCollection;
@@ -38,13 +37,13 @@ import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.ColumnRef;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,6 +59,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 
 /**
@@ -97,15 +99,12 @@ public class ResultDesc {
     /** Result type for aggregate queries. */
     private int aggregateResultType = FieldTypeEnumeration.NOT_ENUMERATED;
 
-    /** The logger. */
-    private static Logger logger = LogHelperSQLStore.getLogger();
-
     /** I18N message handler. */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             ResultDesc.class.getClassLoader());
 
-    private boolean debug;
+    private static final Logger LOG = System.getLogger(ResultDesc.class.getName(), messages);
 
     public ResultDesc(ClassDesc config, int aggregateResultType) {
         fields = new ArrayList();
@@ -188,11 +187,10 @@ public class ResultDesc {
                 // Get the generic object and let FieldDesc::convertValue() deal with it.
                 // This will return an SCO as needed.
                 retVal = fieldDesc.convertValue(resultData.getObject(columnRef.getIndex()), sm);
-            }
-            catch (Exception e) {
-                //Resolve : The original code was returning null and not throwing any
+            } catch (Exception e) {
+                // Resolve : The original code was returning null and not throwing any
                 //exception in this case. Should we also do that????
-                logger.log(Logger.WARNING,"sqlstore.exception.log",e);
+                LOG.log(WARNING, "convertValue failed.", e);
             }
         }
 
@@ -254,50 +252,58 @@ public class ResultDesc {
                 case FieldTypeEnumeration.BOOLEAN_PRIMITIVE :
                 case FieldTypeEnumeration.BOOLEAN  :
                         boolean booleanValue = resultData.getBoolean(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Boolean(booleanValue);
+                        }
                         break;
                 case FieldTypeEnumeration.CHARACTER_PRIMITIVE :
                 case FieldTypeEnumeration.CHARACTER  :
                         String strValue = resultData.getString(index);
-                        if(strValue != null)
+                        if(strValue != null) {
                             retVal =  FieldDesc.getCharFromString(strValue);
+                        }
                         break;
                 case FieldTypeEnumeration.BYTE_PRIMITIVE :
                 case FieldTypeEnumeration.BYTE  :
                         byte byteValue = resultData.getByte(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Byte(byteValue);
+                        }
                         break;
                 case FieldTypeEnumeration.SHORT_PRIMITIVE :
                 case FieldTypeEnumeration.SHORT  :
                         short shortValue = resultData.getShort(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Short(shortValue);
+                        }
                         break;
                 case FieldTypeEnumeration.INTEGER_PRIMITIVE :
                 case FieldTypeEnumeration.INTEGER  :
                         int intValue = resultData.getInt(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Integer(intValue);
+                        }
                         break;
                 case FieldTypeEnumeration.LONG_PRIMITIVE :
                 case FieldTypeEnumeration.LONG  :
                         long longValue = resultData.getLong(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Long(longValue);
+                        }
                         break;
                 case FieldTypeEnumeration.FLOAT_PRIMITIVE :
                 case FieldTypeEnumeration.FLOAT  :
                         float floatValue = resultData.getFloat(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Float(floatValue);
+                        }
                         break;
                 case FieldTypeEnumeration.DOUBLE_PRIMITIVE :
                 case FieldTypeEnumeration.DOUBLE  :
                         double doubleValue = resultData.getDouble(index);
-                        if(!resultData.wasNull() )
+                        if(!resultData.wasNull() ) {
                             retVal = new Double(doubleValue);
+                        }
                         break;
                 case FieldTypeEnumeration.BIGDECIMAL :
                 case FieldTypeEnumeration.BIGINTEGER :
@@ -353,11 +359,9 @@ public class ResultDesc {
                             "sqlstore.resultdesc.unknownfieldtype",resultType) );
             }   //switch
         } catch (SQLException e) {
-            if(logger.isLoggable(Logger.WARNING) ) {
-                Object items[] =
-                    { new Integer(index), new Integer(resultType), new Integer(columnType), e};
-                logger.log(Logger.WARNING,"sqlstore.resultdesc.errorgettingvalefromresulset",items);
-            }
+            LOG.log(WARNING,
+                "Error while getting value from resultset at index {0} as resultType {1}. columnSqlType {2}. Exception: {3}",
+                index, resultType, columnType);
             throw e;
         }
 
@@ -432,7 +436,7 @@ public class ResultDesc {
                 // log the exception and don't return any value
                 // Eating the exception here. As the caller also does not
                 // know how to deal with this exception.
-                logger.log(Logger.WARNING,"sqlstore.exception.log",e);
+                LOG.log(WARNING,"Reading from an input stream failed.",e);
             }
         }
         return byteArray;
@@ -456,10 +460,10 @@ public class ResultDesc {
                     buff.append( (char)charRead );
                 }
             } catch (IOException e) {
-                    // log the exception and don't return any value
-                    // Eating the exception here. As the caller also does not
-                    // know how to deal with this exception.
-                    logger.log(Logger.WARNING,"sqlstore.exception.log",e);
+                // log the exception and don't return any value
+                // Eating the exception here. As the caller also does not
+                // know how to deal with this exception.
+                LOG.log(WARNING,"Reading from the reader failed.",e);
             }
             retVal = buff.toString();
         }
@@ -477,8 +481,6 @@ public class ResultDesc {
      */
     public Object getResult(PersistenceManager pm, ResultSet resultData) throws SQLException {
         Object result = null;
-
-        debug = logger.isLoggable(Logger.FINEST);
 
         if (!isAggregate()) {
             Collection resultCollection = new ArrayList();
@@ -597,9 +599,7 @@ public class ResultDesc {
         //Field projection can never be null if this method gets called.
         FieldDesc f = fieldProjection.getFieldDesc();
 
-        if (debug) {
-            logger.finest("sqlstore.resultdesc.returning_field", f.getName()); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.resultdesc.returning_field", f.getName());
         return getConvertedObject(resultData, fieldProjection.getColumnRef(), f, null);
     }
 
@@ -636,9 +636,7 @@ public class ResultDesc {
                         if (!sm.getPresenceMaskBit(f.absoluteID)) {
                             Object value = getConvertedObject(resultData, rfd.getColumnRef(), f, sm);
 
-                            if (debug) {
-                                logger.finest("sqlstore.resultdesc.marking_field", f.getName()); // NOI18N
-                            }
+                            LOG.log(TRACE, "sqlstore.resultdesc.marking_field", f.getName());
 
                             // Set the field value and presence mask bit.
                             setFieldValue(sm, f, value);
@@ -662,10 +660,7 @@ public class ResultDesc {
                                 setFieldValue(sm, parentField, fobj);
                             }
                         }
-                        if (debug) {
-                            logger.finest("sqlstore.resultdesc.marking_foreign_field", // NOI18N
-                                    parentField.getName());
-                        }
+                        LOG.log(TRACE, "sqlstore.resultdesc.marking_foreign_field", parentField.getName());
                     }
                 }
 
@@ -745,7 +740,7 @@ public class ResultDesc {
                                                   PersistenceManager pm) {
         try {
             Class oidClass = config.getOidClass();
-            Object oid = oidClass.newInstance();
+            Object oid = oidClass.getDeclaredConstructor().newInstance();
 
             // Copy key field values
             Field keyFields[] = config.getKeyFields();
@@ -760,9 +755,7 @@ public class ResultDesc {
 
                 Object v = getConvertedObject(resultData, rfd.getColumnRef(), fd, null);
 
-                if (debug) {
-                    logger.finest("sqlstore.resultdesc.marking_key_field",keyName); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.resultdesc.marking_key_field",keyName);
 
                 if (v == null ) {
                     return null;

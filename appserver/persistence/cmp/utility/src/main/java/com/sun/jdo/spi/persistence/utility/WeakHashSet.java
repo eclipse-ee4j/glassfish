@@ -25,7 +25,7 @@ import java.util.Iterator;
  * A weak HashSet. An element stored in the WeakHashSet might be garbage collected,
  * if there is no strong reference to this element.
  */
-public class WeakHashSet
+public class WeakHashSet<T>
     extends HashSet
 {
     /**
@@ -39,6 +39,7 @@ public class WeakHashSet
      *
      * @return an Iterator over the elements in this set.
      */
+    @Override
     public Iterator iterator ()
     {
         // remove garbage collected elements
@@ -48,17 +49,20 @@ public class WeakHashSet
         final Iterator i = super.iterator();
 
         return new Iterator () {
+            @Override
             public boolean hasNext ()
             {
                 return i.hasNext();
             }
 
+            @Override
             public Object next ()
             {
                 // unwrap the element
                 return getReferenceObject((WeakReference)i.next());
             }
 
+            @Override
             public void remove ()
             {
                 // remove the element from the HashSet
@@ -73,6 +77,7 @@ public class WeakHashSet
      * @param o element whose presence in this set is to be tested.
      * @return <code>true</code> if this set contains the specified element.
      */
+    @Override
     public boolean contains (Object o)
     {
         return super.contains(WeakElement.create(o));
@@ -86,6 +91,7 @@ public class WeakHashSet
      * @return <code>true</code> if the set did not already contain the specified
      * element.
      */
+    @Override
     public boolean add (Object o)
     {
         processQueue();
@@ -98,6 +104,7 @@ public class WeakHashSet
      * @param o object to be removed from this set, if present.
      * @return <code>true</code> if the set contained the specified element.
      */
+    @Override
     public boolean remove (Object o)
     {
         boolean ret = super.remove(WeakElement.create(o));
@@ -166,21 +173,27 @@ public class WeakHashSet
 
         /* A WeakElement is equal to another WeakElement iff they both refer to objects
                that are, in turn, equal according to their own equals methods */
+        @Override
         public boolean equals (Object o)
         {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (!(o instanceof WeakElement))
+            }
+            if (!(o instanceof WeakElement)) {
                 return false;
+            }
             Object t = this.get();
             Object u = ((WeakElement)o).get();
-            if ((t == null) || (u == null))
+            if ((t == null) || (u == null)) {
                 return false;
-            if (t == u)
+            }
+            if (t == u) {
                 return true;
+            }
             return t.equals(u);
         }
 
+        @Override
         public int hashCode ()
         {
             return hash;

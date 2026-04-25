@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,26 +15,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * LogHelperDBGenerator.java
- *
- * Created on Jan 14, 2003
- */
-
-
 package com.sun.jdo.spi.persistence.generator.database;
-
-import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 /**
  *
- * @author Jie Leng
+ * @author Jie Leng 2003
  */
 class LogHelperDatabaseGenerator {
 
     /** The component name for this component */
-    private static final String componentName = "databaseGenerator"; // NOI18N
+    private static final String componentName = "databaseGenerator";
 
     /** The class loader for this component */
     private static final ClassLoader loader =
@@ -41,12 +32,6 @@ class LogHelperDatabaseGenerator {
 
     /** The bundle name for this component */
     private static final String bundleName =
-            "com.sun.jdo.spi.persistence.generator.database.Bundle"; // NOI18N
+            "com.sun.jdo.spi.persistence.generator.database.Bundle";
 
-    /**
-     * @return The logger for the database generator component.
-     */
-    static Logger getLogger() {
-        return LogHelper.getLogger(componentName, bundleName, loader);
-    }
 }

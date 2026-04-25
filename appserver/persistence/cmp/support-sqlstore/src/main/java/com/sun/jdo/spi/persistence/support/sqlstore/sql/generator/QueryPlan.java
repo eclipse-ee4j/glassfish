@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * QueryPlan.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.generator;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
@@ -31,6 +25,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.model.ReferenceKeyDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.TableDesc;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
@@ -54,7 +49,7 @@ public abstract class QueryPlan {
     protected static final int ST_BUILT = 0x1;
 
     /** Array of Statement. */
-    public ArrayList statements;
+    public List<Statement> statements;
 
     protected ClassDesc config;
 
@@ -70,7 +65,7 @@ public abstract class QueryPlan {
     protected SQLStoreManager store;
 
     /** Array of QueryTable. */
-    protected ArrayList tables;
+    protected List<QueryTable> tables;
 
     /** I18N message handler. */
     protected final static ResourceBundle messages = I18NHelper.loadBundle(
@@ -106,22 +101,21 @@ public abstract class QueryPlan {
     public QueryTable addQueryTable(TableElement tableElement,
                                     ClassDesc persistenceConfig) {
 
-        ClassDesc _config = (persistenceConfig == null) ? this.config : persistenceConfig;
+        ClassDesc _config = persistenceConfig == null ? this.config : persistenceConfig;
         TableDesc tableDesc = _config.findTableDesc(tableElement);
 
         if (tableDesc == null) {
 
-            if (tableElement != null) {
-               throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.configuration.classnotmappedtotable", // NOI18N
-                        _config.getPersistenceCapableClass().getName(),
-                        tableElement.getName().getName()));
-            } else {
+            if (tableElement == null) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                          "core.configuration.classnotmapped", // NOI18N
                          _config.getPersistenceCapableClass().getName()));
 
             }
+            throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
+                        "core.configuration.classnotmappedtotable", // NOI18N
+                        _config.getPersistenceCapableClass().getName(),
+                        tableElement.getName().getName()));
         }
 
         return addQueryTable(tableDesc);
@@ -134,11 +128,10 @@ public abstract class QueryPlan {
      *
      * @param queryTables Query tables from the foreign plan to be added.
      */
-    public void addQueryTables(ArrayList queryTables) {
+    public void addQueryTables(List<QueryTable> queryTables) {
 
         for (int i = 0; i < queryTables.size(); i++) {
-            QueryTable t = (QueryTable) queryTables.get(i);
-
+            QueryTable t = queryTables.get(i);
             if (tables.indexOf(t) == -1) {
                 tables.add(t);
                 t.getTableIndex().setValue(tables.size() - 1);
@@ -152,7 +145,7 @@ public abstract class QueryPlan {
      */
     public QueryTable findQueryTable(TableElement tableElement) {
         for (int i = 0; i < tables.size(); i++) {
-            QueryTable t = (QueryTable) tables.get(i);
+            QueryTable t = tables.get(i);
 
             if (t.getTableDesc().getTableElement() == tableElement) {
             //if (t.getTableDesc().getTableElement().equals(tableElement)) {
@@ -169,17 +162,19 @@ public abstract class QueryPlan {
      */
     public QueryTable findQueryTable(TableDesc tableDesc) {
         for (int i = 0; i < tables.size(); i++) {
-            QueryTable t = (QueryTable) tables.get(i);
+            QueryTable t = tables.get(i);
 
-            if (t.getTableDesc() == tableDesc) return t;
+            if (t.getTableDesc() == tableDesc) {
+                return t;
+            }
         }
 
         return null;
     }
 
-    public ArrayList getStatements() {
+    public List<Statement> getStatements() {
         for (int i = 0; i < statements.size(); i++) {
-            Statement s = (Statement) statements.get(i);
+            Statement s = statements.get(i);
             //Initialize sql text of the statement
             s.getText();
         }
@@ -206,13 +201,16 @@ public abstract class QueryPlan {
     }
 
     protected Statement getStatement(QueryTable t) {
-        if (t == null) return null;
+        if (t == null) {
+            return null;
+        }
 
         for (int i = 0; i < statements.size(); i++) {
-            Statement s = (Statement) statements.get(i);
+            Statement s = statements.get(i);
 
-            if (s.tableList.indexOf(t) != -1)
+            if (s.tableList.indexOf(t) != -1) {
                 return s;
+            }
         }
 
         return null;
@@ -226,15 +224,15 @@ public abstract class QueryPlan {
      */
     protected void processStatements() {
         for (int i = 0; i < statements.size(); i++) {
-            Statement s = (Statement) statements.get(i);
+            Statement s = statements.get(i);
 
-            QueryTable qt = (QueryTable) s.getQueryTables().get(0);
+            QueryTable qt = s.getQueryTables().get(0);
 
-            ArrayList secondaryTableKeys = qt.getTableDesc().getSecondaryTableKeys();
+            List<ReferenceKeyDesc> secondaryTableKeys = qt.getTableDesc().getSecondaryTableKeys();
 
             if (secondaryTableKeys != null) {
                 for (int j = 0; j < secondaryTableKeys.size(); j++) {
-                    ReferenceKeyDesc secondaryTableKey = (ReferenceKeyDesc) secondaryTableKeys.get(j);
+                    ReferenceKeyDesc secondaryTableKey = secondaryTableKeys.get(j);
                     s.addSecondaryTableStatement(getStatement(findQueryTable(secondaryTableKey.getTableDesc())));
                 }
             }
@@ -250,8 +248,3 @@ public abstract class QueryPlan {
     }
 
 }
-
-
-
-
-

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,10 +28,9 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
@@ -51,6 +51,10 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This is a remote command that creates health-checker config for cluster or
@@ -78,6 +82,7 @@ import org.jvnet.hk2.config.TransactionFailure;
         })
 })
 public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
+    private static final Logger LOG = System.getLogger(CreateHTTPHealthCheckerCommand.class.getName());
 
     @Param(optional=true, defaultValue="10")
     String timeout;
@@ -100,9 +105,6 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
     @Inject
     Target tgt;
 
-    @Inject
-    Logger logger;
-
     private ActionReport report;
 
     final private static LocalStringManagerImpl localStrings =
@@ -117,22 +119,28 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
 
         LbConfigs lbconfigs = domain.getExtensionByType(LbConfigs.class);
         if (lbconfigs == null) {
-            String msg = localStrings.getLocalString("NoLbConfigsElement",
-                    "Empty lb-configs");
+            String msg = localStrings.getLocalString("NoLbConfigsElement", "Empty lb-configs");
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(msg);
             return;
         }
 
+        if (config == null) {
+            String msg = localStrings.getLocalString("InvalidLbConfigName", "Invalid LB configuration.");
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setMessage(msg);
+            return;
+        }
+
+
         if (config != null) {
             LbConfig lbConfig = lbconfigs.getLbConfig(config);
-            createHealthCheckerInternal(url,interval,timeout,lbConfig,
-            config ,target);
+            createHealthCheckerInternal(url, interval, timeout, lbConfig, target);
         } else {
             List<LbConfig> lbConfigs = lbconfigs.getLbConfig();
             if (lbConfigs.size() == 0) {
                 String msg = localStrings.getLocalString("NoLbConfigsElement", "No LB configs defined");
-                logger.warning(msg);
+                LOG.log(WARNING, msg);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(msg);
                 return;
@@ -144,18 +152,16 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
 
             if ( (match == null) || (match.size() == 0) ) {
                 String msg = localStrings.getLocalString("UnassociatedTarget", "No LB config references target {0}", target);
-                logger.warning(msg);
+                LOG.log(WARNING, msg);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(msg);
                 return;
             }
 
             for (LbConfig lc:match){
-                createHealthCheckerInternal(url,interval,timeout,
-                    lc, lc.getName(), target);
+                createHealthCheckerInternal(url, interval, timeout, lc, target);
             }
         }
-
     }
 
     /**
@@ -183,25 +189,11 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
      *
      * @throws CommandException   If the operation is failed
      */
-    private void createHealthCheckerInternal(String url, String interval,
-            String timeout, LbConfig lbConfig, String lbConfigName, String target)
-    {
-        // invalid lb config name
-        if (lbConfigName == null) {
-            String msg = localStrings.getLocalString("InvalidLbConfigName", "Invalid LB configuration.");
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setMessage(msg);
-            return;
-        }
-
-        lbConfigName = lbConfig.getName();
-        // print diagnostics msg
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("[LB-ADMIN] createHealthChecker called - URL "
-                + url + ", Interval " + interval + ", Time out "
-                + timeout + ", LB Config  " + lbConfigName
-                + ", Target " + target);
-        }
+    private void createHealthCheckerInternal(String url, String interval, String timeout, LbConfig lbConfig,
+        String target) {
+        String lbConfigName = lbConfig.getName();
+        LOG.log(DEBUG, () -> "createHealthChecker called - URL " + url + ", Interval " + interval
+            + " s, Time out " + timeout + " s, LB Config  " + lbConfigName + ", Target " + target);
 
         // null target
         if (target == null) {
@@ -235,8 +227,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
                     report.setFailureCause(ex);
                     return;
                 }
-                logger.info(localStrings.getLocalString("http_lb_admin.HealthCheckerCreated",
-                        "Health checker created for target {0}", target));
+                LOG.log(INFO, "Health checker created for target {0}", target);
             } else {
                 String msg = localStrings.getLocalString("HealthCheckerExists",
                         "Health checker server/cluster [{0}] already exists.", target);
@@ -268,8 +259,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
                     report.setFailureCause(ex);
                     return;
                 }
-                logger.info(localStrings.getLocalString("http_lb_admin.HealthCheckerCreated",
-                        "Health checker created for target {0}", target));
+                LOG.log(INFO, "Health checker created for target {0}", target);
             } else {
                 String msg = localStrings.getLocalString("HealthCheckerExists",
                         "Health checker server/cluster [{0}] already exists.", target);
@@ -338,7 +328,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
         // bad target
         if (target == null) {
             String msg = localStrings.getLocalString("Nulltarget", "Null target");
-            logger.warning(msg);
+            LOG.log(WARNING, msg);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(msg);
             return null;

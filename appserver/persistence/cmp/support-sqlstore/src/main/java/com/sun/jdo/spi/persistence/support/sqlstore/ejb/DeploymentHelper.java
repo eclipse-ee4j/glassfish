@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +19,9 @@ package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -37,6 +36,9 @@ import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.I18NHelper;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+
 /**
  * This class is used for static method invocations to avoid unnecessary
  * registration requirements to use EJBHelper and/or CMPHelper from
@@ -46,12 +48,10 @@ public class DeploymentHelper {
 
     /** I18N message handler */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-        "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+        "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
         DeploymentHelper.class.getClassLoader());
 
-    /** The logger */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
-
+    private static final Logger LOG = System.getLogger(DeploymentHelper.class.getName());
     /**
      * Returns name prefix for DDL files extracted from the info instance by the
      * Sun-specific code.
@@ -74,12 +74,9 @@ public class DeploymentHelper {
     public static boolean isJavaToDatabase(Properties prop) {
         if (prop != null) {
             String value = prop.getProperty(DatabaseConstants.JAVA_TO_DB_FLAG);
-            if (! StringHelper.isEmpty(value)) {
-                 if (logger.isLoggable(Logger.FINE))
-                 {
-                    logger.fine(DatabaseConstants.JAVA_TO_DB_FLAG + " property is set."); // NOI18N
-                }
-                 return Boolean.valueOf(value).booleanValue();
+            if (!StringHelper.isEmpty(value)) {
+                LOG.log(DEBUG, DatabaseConstants.JAVA_TO_DB_FLAG + " property is set.");
+                return Boolean.valueOf(value).booleanValue();
             }
         }
         return false;
@@ -98,11 +95,7 @@ public class DeploymentHelper {
      * @throws SQLException if can not get a Connection.
      */
     public static Connection getConnection(SimpleJndiName name) throws SQLException {
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("ejb.DeploymentHelper.getconnection", name); //NOI18N
-        }
-
-        // TODO - pass Habitat or ConnectorRuntime as an argument.
+        LOG.log(DEBUG, "getConnection(name={0})", name);
 
         ServiceLocator habitat = Globals.getDefaultHabitat();
         DataSource ds = null;
@@ -127,7 +120,7 @@ public class DeploymentHelper {
     private static void handleUnexpectedInstance(String name, Object value) throws JDOFatalUserException {
         RuntimeException e = new JDOFatalUserException(
             I18NHelper.getMessage(messages, "ejb.jndi.unexpectedinstance", name, value.getClass().getName()));
-        logger.severe(e.toString());
+        LOG.log(ERROR, e.getMessage(), e);
 
         throw e;
 

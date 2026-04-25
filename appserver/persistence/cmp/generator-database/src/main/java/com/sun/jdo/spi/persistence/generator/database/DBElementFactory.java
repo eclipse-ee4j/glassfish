@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,13 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
-/*
- * DBElementFactory.java
- *
- * Created on Jan 14, 2003
- */
-
 
 package com.sun.jdo.spi.persistence.generator.database;
 
@@ -36,7 +30,6 @@ import org.netbeans.modules.dbschema.jdbcimpl.ColumnElementImpl;
 import org.netbeans.modules.dbschema.jdbcimpl.ColumnPairElementImpl;
 import org.netbeans.modules.dbschema.jdbcimpl.ForeignKeyElementImpl;
 import org.netbeans.modules.dbschema.jdbcimpl.IndexElementImpl;
-import org.netbeans.modules.dbschema.jdbcimpl.SchemaElementImpl;
 import org.netbeans.modules.dbschema.jdbcimpl.TableElementImpl;
 import org.netbeans.modules.dbschema.jdbcimpl.UniqueKeyElementImpl;
 import org.netbeans.modules.dbschema.util.NameUtil;
@@ -49,21 +42,19 @@ class DBElementFactory {
     /**
      * String which indicates that schema was generated.
      */
-    private final static String TAGLINE =
-        "generated schema version "; //NOI18N
+    private final static String TAGLINE = "generated schema version ";
 
     /**
-     * Signature which identifies version of database generator.  Updated
+     * Signature which identifies version of database generator. Updated
      * each time the file is checked in to CVS.
      */
-    private static final String SIGNATURE =
-        "$RCSfile: DBElementFactory.java,v $ $Revision: 1.3 $"; //NOI18N
+    private static final String SIGNATURE = "$RCSfile: DBElementFactory.java,v $ $Revision: 1.3 $";
 
     /** Field type used if null is given in getColumnType. */
-    private static final String UNKNOWN_FIELD_TYPE = "java.lang.Long"; // NOI18N
+    private static final String UNKNOWN_FIELD_TYPE = "java.lang.Long";
 
     /** Field type used for user-defined types in getColumnType. */
-    private static final String DEFAULT_FIELD_TYPE = "java.lang.Object"; // NOI18N
+    private static final String DEFAULT_FIELD_TYPE = "java.lang.Object";
 
     /**
      * Disallow outside construction.
@@ -78,9 +69,10 @@ class DBElementFactory {
      * @throws DBException
      */
     static SchemaElement createSchema(String schemaName) throws DBException {
-        SchemaElementImpl schemaImpl = new SchemaElementImpl();
-        SchemaElement schema = new SchemaElement(schemaImpl);
-        schema.setName(DBIdentifier.create(schemaName));
+        SchemaElement schema = new SchemaElement();
+        DBIdentifier schemaId = DBIdentifier.create(schemaName);
+        schemaId.setFullName(schemaName);
+        schema.setName(schemaId);
         schema.setDatabaseProductVersion(TAGLINE + SIGNATURE);
         return schema;
     }
@@ -92,15 +84,13 @@ class DBElementFactory {
      * @return TableElement for this table name
      * @throws DBException
      */
-    static TableElement createAndAttachTable(SchemaElement schema,
-            String tableName) throws DBException {
-
-        String fullName = NameUtil.getAbsoluteTableName(
-                schema.getName().getName(), tableName);
-
+    static TableElement createAndAttachTable(SchemaElement schema, String tableName) throws DBException {
+        String fullName = NameUtil.getAbsoluteTableName(schema.getName().getName(), tableName);
         TableElementImpl tableImpl = new TableElementImpl(tableName);
         TableElement table = new TableElement(tableImpl, schema);
-        table.setName(DBIdentifier.create(fullName));
+        DBIdentifier tableId = DBIdentifier.create(fullName);
+//        tableId.setFullName(fullName);
+        table.setName(tableId);
         table.setTableOrView(true);
         schema.addTable(table);
         return table;
@@ -113,13 +103,10 @@ class DBElementFactory {
      * @return ColumnElement that represents the newly-added column.
      * @throws DBException
      */
-    static ColumnElement createAndAttachColumn(String columnName,
-            TableElement table, JDBCInfo ji) throws DBException {
-
-        // Create column id
-        String fullName = NameUtil.getAbsoluteMemberName(
-                table.getName().getName(), columnName);
-        DBIdentifier columnId = DBIdentifier.create(columnName);
+    static ColumnElement createAndAttachColumn(String columnName, TableElement table, JDBCInfo ji) throws DBException {
+        String fullName = NameUtil.getAbsoluteMemberName(table.getName().getName(), columnName);
+        DBIdentifier columnId = DBIdentifier.create(fullName);
+//        columnId.setFullName(fullName);
 
         ColumnElementImpl columnImpl = new ColumnElementImpl();
         ColumnElement column = new ColumnElement(columnImpl, table);
@@ -266,7 +253,7 @@ class DBElementFactory {
         // Object.
         if (null == rc) {
             // Treat as user-defined object type.
-            rc = mappingPolicy.getJDBCInfo(null, DEFAULT_FIELD_TYPE); // NOI18N
+            rc = mappingPolicy.getJDBCInfo(null, DEFAULT_FIELD_TYPE);
         }
         return rc;
     }

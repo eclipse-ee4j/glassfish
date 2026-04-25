@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +34,6 @@ import com.sun.jdo.spi.persistence.generator.database.DatabaseGenerator;
 import com.sun.jdo.spi.persistence.support.ejb.codegen.GeneratorException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -43,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -73,6 +73,9 @@ import org.netbeans.modules.dbschema.util.NameUtil;
 import org.netbeans.modules.schema2beans.Schema2BeansException;
 import org.netbeans.modules.schema2beans.ValidateException;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
+
 /*
  * This class will generate mapping classes from sun-cmp-mappings.xml
  * and dbschema if they are available in the jar, or it will generate mapping
@@ -88,11 +91,11 @@ public class MappingGenerator extends
     // DatabaseConstants.JAVA_TO_DB_FLAG directly.
     public static final String JAVA_TO_DB_FLAG = DatabaseConstants.JAVA_TO_DB_FLAG;
 
-    private static final String DBSCHEMA_EXTENSION = ".dbschema"; // NOI18N
-    private static final char DOT = '.'; // NOI18N
+    private static final String DBSCHEMA_EXTENSION = ".dbschema";
+    private static final char DOT = '.';
 
      /** The logger */
-    private static final Logger logger = LogHelperEJBCompiler.getLogger();
+    private static final Logger LOG = System.getLogger(MappingGenerator.class.getName());
 
     private final EjbBundleDescriptorImpl bundle;
 
@@ -154,24 +157,19 @@ public class MappingGenerator extends
             return null;
         }
         File cmpMappingFile = getSunCmpMappingFile(inputFilesPath);
-        boolean mappedBeans = !ignoreSunDeploymentDescriptors
-                && cmpMappingFile.exists();
-        ResourceReferenceDescriptor cmpResource = checkOrCreateCMPResource(
-                mappedBeans);
+        boolean mappedBeans = !ignoreSunDeploymentDescriptors && cmpMappingFile.exists();
+        ResourceReferenceDescriptor cmpResource = checkOrCreateCMPResource(mappedBeans);
 
         // Remember whether or not this mapping was created by Java2DB.
-        isJavaToDatabaseFlag = DeploymentHelper.isJavaToDatabase(
-                cmpResource.getSchemaGeneratorProperties());
+        isJavaToDatabaseFlag = DeploymentHelper.isJavaToDatabase(cmpResource.getSchemaGeneratorProperties());
 
         // We *must* get a vendor name if either the beans are not mapped, or
         // they are mapped and the javaToDatabase flag is set.
-        boolean mustHaveDBVendorName =
-            !mappedBeans || (mappedBeans && isJavaToDatabaseFlag);
+        boolean mustHaveDBVendorName = !mappedBeans || (mappedBeans && isJavaToDatabaseFlag);
 
         // Read deployment settings from the deployment descriptor
         // and CLI options.
-        Results deploymentArguments = getDeploymentArguments(
-                ctx, cmpResource, mustHaveDBVendorName);
+        Results deploymentArguments = getDeploymentArguments(ctx, cmpResource, mustHaveDBVendorName);
         dbVendorName = deploymentArguments.getDatabaseVendorName();
         SchemaElement schema = null;
         if (mappedBeans) {
@@ -191,10 +189,9 @@ public class MappingGenerator extends
                         warning =
                             I18NHelper.getMessage(
                                 messages,
-                                "EXC_DisallowJava2DBUniqueTableNames", //NOI18N
+                                "EXC_DisallowJava2DBUniqueTableNames",
                                 bundle.getApplication().getRegistrationName(),
                                 JDOCodeGeneratorHelper.getModuleName(bundle));
-                        logger.warning(warning);
                     }
                 } else if (deploymentArguments.hasJavaToDatabaseArgs()) {
 
@@ -204,13 +201,13 @@ public class MappingGenerator extends
                     warning =
                         I18NHelper.getMessage(
                             messages,
-                            "EXC_DisallowJava2DBCLIOverrides", //NOI18N
+                            "EXC_DisallowJava2DBCLIOverrides",
                             bundle.getApplication().getRegistrationName(),
                             JDOCodeGeneratorHelper.getModuleName(bundle));
-                    logger.warning(warning);
                 }
 
                 if (warning != null) {
+                    LOG.log(WARNING, warning);
                     ActionReport subActionReport = ctx.getActionReport().addSubActionsReport();
                     // Propagte warning to client side so that the deployer can see the warning.
                     Java2DBProcessorHelper.warnUser(subActionReport, warning);
@@ -225,7 +222,7 @@ public class MappingGenerator extends
                 classout);
 
             // load real mapping model and jdo model in memory
-            Map mappingClasses = loadMappingClasses(sunCmpMappings, getClassLoader());
+            Map<String, MappingClassElement> mappingClasses = loadMappingClasses(sunCmpMappings, getClassLoader());
 
             // Get schema from one of the mapping classes.
             // The mapping class element may be null if there is inconsistency
@@ -234,20 +231,18 @@ public class MappingGenerator extends
             // no definition in the ejb-jar.xml.
             // So iterate over the mappings until the 1st non-null is found.
             MappingClassElement mc = null;
-            Iterator iter = mappingClasses.values().iterator();
+            Iterator<MappingClassElement> iter = mappingClasses.values().iterator();
             while (iter.hasNext()) {
-                mc = (MappingClassElement)iter.next();
+                mc = iter.next();
                 if (mc != null) {
                     schema = SchemaElement.forName(mc.getDatabaseRoot());
                     break;
                 }
             }
 
-            if (logger.isLoggable(Logger.FINE)){
-                logger.fine("Loaded mapped beans for " // NOI18N
+            LOG.log(DEBUG, () -> "Loaded mapped beans for "
                             + cmpResource.getJndiName()
-                            + ", isJavaToDatabase=" + isJavaToDatabaseFlag); // NOI18N
-            }
+                            + ", isJavaToDatabase=" + isJavaToDatabaseFlag);
         } else {
             // Generate mapping file and dbschema, since either
             // sun-cmp-mappings.xml does not exist (e.g. user didn't yet map)
@@ -260,14 +255,10 @@ public class MappingGenerator extends
             if (!isVerifyFlag) {
                 // save SunCmpMapping to sun-cmp-mappings.xml
                 // in generated XML dir
-                writeSunCmpMappingFile(results.getMappingClasses(),
-                    getSunCmpMappingFile(generatedXmlsPath));
-
+                writeSunCmpMappingFile(results.getMappingClasses(), getSunCmpMappingFile(generatedXmlsPath));
                 schema = results.getSchema();
-
                 // save schema to dbschema file in generated XML dir
                 writeSchemaFile(schema, classout);
-
                 setJavaToDatabase(cmpResource, true);
             }
         }
@@ -292,22 +283,16 @@ public class MappingGenerator extends
      * @param cmpResource a ResourceReferenceDescriptor
      * @param value a string containing true or false
      */
-    private void setJavaToDatabase(ResourceReferenceDescriptor
-            cmpResource, boolean value) {
+    private void setJavaToDatabase(ResourceReferenceDescriptor cmpResource, boolean value) {
+        LOG.log(DEBUG, () -> "set javatodb flag to " + value + " in cmpResource");
 
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("set javatodb flag to " + value + " in cmpResource"); // NOI18N
-        }
-
-        Properties schemaGeneratorProperties = cmpResource.
-                getSchemaGeneratorProperties();
+        Properties schemaGeneratorProperties = cmpResource.getSchemaGeneratorProperties();
         if (schemaGeneratorProperties == null) {
             schemaGeneratorProperties = new Properties();
             cmpResource.setSchemaGeneratorProperties(schemaGeneratorProperties);
         }
 
-        schemaGeneratorProperties.setProperty(DatabaseConstants.JAVA_TO_DB_FLAG,
-                String.valueOf(value));
+        schemaGeneratorProperties.setProperty(DatabaseConstants.JAVA_TO_DB_FLAG, String.valueOf(value));
 
         isJavaToDatabaseFlag = value;
     }
@@ -327,7 +312,7 @@ public class MappingGenerator extends
 
         if (cmpMappingFile.length() == 0) {
             throw JDOCodeGeneratorHelper.createGeneratorException(
-                    "CMG.BeansFileSizeIsZero", bundle); // NOI18N
+                    "CMG.BeansFileSizeIsZero", bundle);
         }
 
         try {
@@ -341,18 +326,14 @@ public class MappingGenerator extends
                 try {
                     is.close();
                 } catch(Exception ex) {
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(ex.toString());
-                    }
+                    LOG.log(DEBUG, "Close failed.", ex);
                 }
             }
             if (iasMapping != null) {
                 try {
                     iasMapping.close();
                 } catch(Exception ex) {
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(ex.toString());
-                    }
+                    LOG.log(DEBUG, "Close failed.", ex);
                 }
             }
         }
@@ -361,7 +342,7 @@ public class MappingGenerator extends
             sunCmpMapping.validate();
         } catch (ValidateException ex) {
             throw JDOCodeGeneratorHelper.createGeneratorException(
-                    "CMG.InvalidSunCmpMappingsFile", bundle, ex); // NOI18N
+                    "CMG.InvalidSunCmpMappingsFile", bundle, ex);
         }
 
         return sunCmpMapping;
@@ -373,15 +354,12 @@ public class MappingGenerator extends
      * @return a file of sun-cmp-mappings.xml
      */
     private static File getSunCmpMappingFile(String filesPath) {
-        String cmpMappingFile = (new StringBuffer(filesPath).
-                append(File.separator).
-                append(MappingFile.DEFAULT_LOCATION_IN_EJB_JAR)).toString();
+        String cmpMappingFile = filesPath + File.separator + MappingFile.DEFAULT_LOCATION_IN_EJB_JAR;
 
         // if the file contains directory structure, we need
         // to create those directories if they do not exist.
         if (cmpMappingFile.lastIndexOf(File.separatorChar) != -1) {
-            String dirs = cmpMappingFile.substring(
-                0, cmpMappingFile.lastIndexOf(File.separatorChar));
+            String dirs = cmpMappingFile.substring(0, cmpMappingFile.lastIndexOf(File.separatorChar));
             File fileDirs = new File(dirs);
             if (!fileDirs.exists()) {
                 fileDirs.mkdirs();
@@ -400,28 +378,25 @@ public class MappingGenerator extends
      * @throws ConversionException
      * @throws Schema2BeansException
      */
-    private void writeSunCmpMappingFile(Set mappingClasses, File cmpMappingFile)
+    private void writeSunCmpMappingFile(Set<MappingClassElement> mappingClasses, File cmpMappingFile)
         throws IOException, ConversionException, Schema2BeansException {
         // Construct the input to MappingFile.fromMappingClasses(): a Map
         // object containing ejbName and MappingClassElement.  Use the
         // elements of iteration and NameMapper to create the input for
         // MappingFile.
-        Map mappingMap = new HashMap();
+        Map<String, MappingClassElement> mappingMap = new HashMap<>();
         AbstractNameMapper nameMapper = getNameMapper();
-        Iterator iter = mappingClasses.iterator();
+        Iterator<MappingClassElement> iter = mappingClasses.iterator();
         while (iter.hasNext()) {
-            MappingClassElement mappingClass = (MappingClassElement)iter.next();
-            String ejbName = nameMapper.getEjbNameForPersistenceClass(
-                    mappingClass.getName());
+            MappingClassElement mappingClass = iter.next();
+            String ejbName = nameMapper.getEjbNameForPersistenceClass(mappingClass.getName());
             mappingMap.put(ejbName, mappingClass);
         }
         MappingFile mf = new MappingFile();
         OutputStream sunCmpMapping = null;
         try {
-            sunCmpMapping = new FileOutputStream(
-                cmpMappingFile);
-            mf.fromMappingClasses(sunCmpMapping, mappingMap,
-                getConversionHelper());
+            sunCmpMapping = new FileOutputStream(cmpMappingFile);
+            mf.fromMappingClasses(sunCmpMapping, mappingMap, getConversionHelper());
         } catch (IOException ex) {
             throw ex;
         } finally {
@@ -430,9 +405,7 @@ public class MappingGenerator extends
                     sunCmpMapping.close();
                 }
             } catch (IOException ex) {
-                if (logger.isLoggable(Logger.FINE)) {
-                    logger.fine(ex.toString());
-                }
+                LOG.log(DEBUG, "Close failed.", ex);
             }
         }
     }
@@ -443,25 +416,21 @@ public class MappingGenerator extends
      * @param filePath a directory where *.dbschema is located
      * @throws IOException
      */
-    private static void writeSchemaFile(SchemaElement schema, File filePath)
-            throws IOException {
+    private static void writeSchemaFile(SchemaElement schema, File filePath) throws IOException {
         OutputStream schemaStream = null;
         try {
             schemaStream = new FileOutputStream(
-                new File(filePath, NameUtil.getSchemaResourceName(
-                schema.getName().getName())));
+                new File(filePath, NameUtil.getSchemaResourceName(schema.getName().getName())));
             schema.save(schemaStream);
         } catch (IOException ex) {
-           throw ex;
+            throw ex;
         } finally {
             try {
                 if (schemaStream != null) {
                     schemaStream.close();
                 }
             } catch (IOException ex) {
-               if (logger.isLoggable(Logger.FINE)) {
-                logger.fine(ex.toString());
-            }
+                LOG.log(DEBUG, "Close failed.", ex);
             }
         }
     }
@@ -598,6 +567,7 @@ public class MappingGenerator extends
         return new Results(useUniqueTableNames, dbVendorName, userPolicy, javaToDatabaseArgs);
     }
 
+
     /**
      * Check if cmp resource is specified in the deployment descriptor.
      * If the beans are mapped (sun-cmp-mapping.xml is present), the cmp
@@ -607,19 +577,15 @@ public class MappingGenerator extends
      *
      * @param mappedBeans true if beans are mapped in this module.
      * @throws GeneratorException if beans are mapped but cmp resource is not
-     * specified.
+     *             specified.
      */
-    private ResourceReferenceDescriptor checkOrCreateCMPResource(
-            boolean mappedBeans)
-            throws GeneratorException {
-        ResourceReferenceDescriptor cmpResource =
-                bundle.getCMPResourceReference();
+    private ResourceReferenceDescriptor checkOrCreateCMPResource(boolean mappedBeans) throws GeneratorException {
+        ResourceReferenceDescriptor cmpResource = bundle.getCMPResourceReference();
         if (mappedBeans) {
             if (cmpResource == null) {
                 // If mapping exists, the cmpResource must specify a
                 // database or a PMF JNDI name.
-                throw JDOCodeGeneratorHelper.createGeneratorException(
-                        "EXC_MissingCMPResource", bundle); //NOI18N
+                throw JDOCodeGeneratorHelper.createGeneratorException("EXC_MissingCMPResource", bundle);
             }
         } else {
             if (cmpResource == null) {
@@ -689,7 +655,7 @@ public class MappingGenerator extends
                        && dbschemaFile.canRead())) {
                     throw new GeneratorException(
                             I18NHelper.getMessage(
-                            messages, "CMG.MissingDBSchema", // NOI18N
+                            messages, "CMG.MissingDBSchema",
                             bundle.getApplication().getRegistrationName(),
                             JDOCodeGeneratorHelper.getModuleName(bundle),
                             schemaName));
@@ -737,7 +703,7 @@ public class MappingGenerator extends
             } catch (IOException ex) {
                 // Catch FileNotFound, etc.
                 throw JDOCodeGeneratorHelper.createGeneratorException(
-                        "CMG.CannotSaveDBSchema", bundle, ex); // NOI18N
+                        "CMG.CannotSaveDBSchema", bundle, ex);
             } finally {
                 cp.closeConnection();
                 try {
@@ -745,9 +711,7 @@ public class MappingGenerator extends
                         outstream.close();
                     }
                 } catch (IOException ex) {
-                    if (logger.isLoggable(Logger.FINE)) {
-                        logger.fine(ex.toString());
-                    }
+                    LOG.log(DEBUG, "Close failed.", ex);
                 }
             }
         }
@@ -799,12 +763,9 @@ public class MappingGenerator extends
      * @param name the table name to add if it's a valid name.
      * @param tables the Set to update.
      */
-    private void addTableName(String name, Set tables) {
+    private void addTableName(String name, Set<String> tables) {
         if (!StringHelper.isEmpty(name)) {
-            if (logger.isLoggable(Logger.FINE)){
-                logger.fine("Adding Table to Capture Set: " + name); // NOI18N
-            }
-
+            LOG.log(DEBUG, "Adding Table to Capture Set: " + name);
             tables.add(name);
         }
     }

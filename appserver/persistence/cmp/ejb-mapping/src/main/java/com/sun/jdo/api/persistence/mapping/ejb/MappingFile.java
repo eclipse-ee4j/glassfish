@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * MappingFile.java
- *
- * Created on February 1, 2002, 9:47 PM
  */
 
 package com.sun.jdo.api.persistence.mapping.ejb;
@@ -48,14 +43,13 @@ import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,45 +67,44 @@ import org.netbeans.modules.dbschema.TableElement;
 import org.netbeans.modules.dbschema.UniqueKeyElement;
 import org.netbeans.modules.schema2beans.Schema2BeansException;
 
-/** This class supports the conversion between the iAS mapping file
+import static com.sun.jdo.api.persistence.mapping.ejb.ConversionHelper.MANY;
+import static com.sun.jdo.api.persistence.mapping.ejb.ConversionHelper.ONE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+
+/**
+ * This class supports the conversion between the iAS mapping file
  * format and the object used to represent that mapping to support
  * the iAS EJBC process and iAS CMP run-time.
  *
- * @author vbk
- * @version 1.0
+ * @author vbk 2002
  */
 public class MappingFile {
 
-    private static final String JAVA_TYPE_SET = "java.util.Set"; //NOI18N
-    private static final String JAVA_TYPE_COLLECTION = "java.util.Collection"; //NOI18N
-    private static final List types = new ArrayList();
+    private static final String JAVA_TYPE_SET = "java.util.Set";
+    private static final String JAVA_TYPE_COLLECTION = "java.util.Collection";
+    private static final List<String> TYPES = new ArrayList<>();
 
     /** Definitive location for a  mapping file in an ejb-jar file. */
     public static final String DEFAULT_LOCATION_IN_EJB_JAR;
 
-    /** The logger */
-    private static final Logger logger =
-        LogHelperMappingConversion.getLogger();
-
     /**
      * I18N message handler
      */
-    private final static ResourceBundle messages = I18NHelper.loadBundle(
-            MappingFile.class);
+    private final static ResourceBundle messages = I18NHelper.loadBundle(MappingFile.class);
+    private static final Logger LOG = System.getLogger(MappingFile.class.getName(), messages);
 
     static {
-        types.add(JAVA_TYPE_SET);
-        types.add(JAVA_TYPE_COLLECTION);
+        TYPES.add(JAVA_TYPE_SET);
+        TYPES.add(JAVA_TYPE_COLLECTION);
 
-        DEFAULT_LOCATION_IN_EJB_JAR = new StringBuffer(I18NHelper.getMessage(
-            messages, "CONST_IAS_MAPPING_FILE_LOC")). //NOI18N
-            append(File.separator).
-            append(I18NHelper.getMessage(
-            messages, "CONST_IAS_MAPPING_FILE")).toString(); //NOI18N
+        DEFAULT_LOCATION_IN_EJB_JAR = I18NHelper.getMessage(messages, "CONST_IAS_MAPPING_FILE_LOC") + File.separator
+            + I18NHelper.getMessage(messages, "CONST_IAS_MAPPING_FILE");
     }
 
-    private Map inverseRelationships = null;
-    private Map namedGroups = null;
+    private Map<String, RelationshipElement> inverseRelationships;
+    private Map<String, Integer> namedGroups;
     private int groupCount = MappingFieldElement.GROUP_INDEPENDENT;
 
     private ClassLoader classLoader = null;
@@ -125,16 +118,15 @@ public class MappingFile {
      */
     private ConversionHelper helper = null;
 
-    private HashMap loadedSchema = new HashMap();
+    private HashMap<String, String> loadedSchema = new HashMap<>();
 
     /** Creates new MappingFile */
-    public  MappingFile() {
+    public MappingFile() {
         classLoader = null;
     }
 
     /** Creates new MappingFile */
-    public  MappingFile(ClassLoader cl) {
-        this();
+    public MappingFile(ClassLoader cl) {
         classLoader = cl;
     }
 
@@ -150,17 +142,16 @@ public class MappingFile {
      * @throws ModelException
      * @throws ConversionException
      */
-    public Map intoMappingClasses(SunCmpMappings content,
-        ConversionHelper helper)
+    public Map<String, MappingClassElement> intoMappingClasses(SunCmpMappings content, ConversionHelper helper)
         throws DBException, ModelException, ConversionException {
-        Map mces = new java.util.HashMap();
+        Map<String, MappingClassElement> mces = new HashMap<>();
         this.helper = helper;
         boolean ensureValidation = helper.ensureValidation();
 
         for (int i = 0; i < content.sizeSunCmpMapping(); i++) {
             SunCmpMapping beanSet = content.getSunCmpMapping(i);
-            inverseRelationships = new HashMap();
-            namedGroups = new HashMap();
+            inverseRelationships = new HashMap<>();
+            namedGroups = new HashMap<>();
             String schema = beanSet.getSchema();
 
             if (helper.generateFields()) {
@@ -175,18 +166,11 @@ public class MappingFile {
                 MappingClassElement aTpMapping = null;
                 if (ensureValidation) {
                     aTpMapping = mapFieldsOfBean(beanMapping, schema);
-                }
-                else {
+                } else {
                     try {
                         aTpMapping = mapFieldsOfBean(beanMapping, schema);
-                    }
-                    catch (ConversionException t) {
-                        if (logger.isLoggable(Logger.FINE))
-                            logger.fine(
-                                I18NHelper.getMessage(
-                                messages,
-                                "MESSAGE_CONV_EXC", //NOI18N
-                                t.toString()));
+                    } catch (ConversionException t) {
+                        LOG.log(DEBUG, "MESSAGE_CONV_EXC", t);
                     }
                 }
 
@@ -208,18 +192,15 @@ public class MappingFile {
      * @throws ModelException
      * @throws ConversionException
      */
-    public Map intoMappingClasses(InputStream content, ConversionHelper helper)
+    public Map<String, MappingClassElement> intoMappingClasses(InputStream content, ConversionHelper helper)
         throws DBException, ModelException, ConversionException {
         SunCmpMappings foo = null;
         try {
             foo = SunCmpMappings.createGraph(content);
-        }
-        catch (Schema2BeansException t) {
+        } catch (Schema2BeansException t) {
             if (helper.ensureValidation()) {
                 throw new ConversionException(
-                    I18NHelper.getMessage(messages,
-                    "XML_ERROR_IN_MAPPING_FILE", //NOI18N
-                    DEFAULT_LOCATION_IN_EJB_JAR));
+                    I18NHelper.getMessage(messages, "XML_ERROR_IN_MAPPING_FILE", DEFAULT_LOCATION_IN_EJB_JAR));
             }
             foo = SunCmpMappings.createGraph();
         }
@@ -238,9 +219,8 @@ public class MappingFile {
      * sending the data out on <CODE>dest</CODE>.
      * @throws Schema2BeansException
      */
-    public void fromMappingClasses(OutputStream dest, Map mappingClasses,
-        ConversionHelper helper)
-        throws IOException, Schema2BeansException {
+    public void fromMappingClasses(OutputStream dest, Map<String, MappingClassElement> mappingClasses,
+        ConversionHelper helper) throws IOException, Schema2BeansException {
         SunCmpMappings tmp = fromMappingClasses(mappingClasses, helper);
         tmp.write(dest);
     }
@@ -253,87 +233,68 @@ public class MappingFile {
      * generation.
      * @return The SunCmpMapping object that is equivelent to the
      * collection of MappingClassElements.
-     * throws Schema2BeansException
+     * @throws Schema2BeansException
      */
-    public SunCmpMappings fromMappingClasses(Map mappingClasses,
-        ConversionHelper helper) throws Schema2BeansException {
-        Iterator keyIter = mappingClasses.keySet().iterator();
-        Map mapOfMapping = new java.util.HashMap();
+    public SunCmpMappings fromMappingClasses(Map<String, MappingClassElement> mappingClasses, ConversionHelper helper)
+        throws Schema2BeansException {
+        Iterator<String> keyIter = mappingClasses.keySet().iterator();
+        Map<String, SunCmpMapping> mapOfMapping = new HashMap<>();
         while (keyIter.hasNext()) {
-            String ejbName = (String) keyIter.next();
-            MappingClassElement mce = (MappingClassElement)
-                mappingClasses.get(ejbName);
+            String ejbName = keyIter.next();
+            MappingClassElement mce = mappingClasses.get(ejbName);
             EntityMapping beanMapping = new EntityMapping();
 
-            if (null != mce) {
+            if (mce != null) {
                 setConsistency(mce, beanMapping);
 
                 String schemaName = mce.getDatabaseRoot();
-                SunCmpMapping aMapping = (SunCmpMapping) mapOfMapping.get(
-                    schemaName);
+                SunCmpMapping aMapping = mapOfMapping.get(schemaName);
                 if (null == aMapping) {
                     aMapping = new SunCmpMapping();
                     aMapping.setSchema(schemaName);
                     mapOfMapping.put(schemaName, aMapping);
                 }
-                List tables = mce.getTables();
-                MappingTableElement primary = null;
-                if (tables.size() > 0) {
-                    primary = (MappingTableElement) tables.get(0);
+                List<MappingTableElement> tables = mce.getTables();
+                final MappingTableElement primary;
+                if (tables.isEmpty()) {
+                    primary = null;
+                } else {
+                    primary = tables.get(0);
                     beanMapping.setTableName(primary.getName());
                 }
                 beanMapping.setEjbName(ejbName);
-                if (null != primary) {
-                    List refKeys = primary.getReferencingKeys();
+                if (primary != null) {
+                    List<MappingReferenceKeyElement> refKeys = primary.getReferencingKeys();
                     for (int i = 0; refKeys != null && i < refKeys.size(); i++) {
                         SecondaryTable sT = new SecondaryTable();
-                        MappingReferenceKeyElement mrke =
-                            (MappingReferenceKeyElement) refKeys.get(i);
+                        MappingReferenceKeyElement mrke = refKeys.get(i);
                         MappingTableElement mte = mrke.getTable();
-                        if (null != mte) {
+                        if (mte != null) {
                             sT.setTableName(mte.getName());
-                            List cpnames = mrke.getColumnPairNames();
+                            List<String> cpnames = mrke.getColumnPairNames();
                             boolean hasPairs = false;
-                            for (int j = 0; cpnames != null &&
-                                j < cpnames.size(); j++) {
-                                List token =
-                                    StringHelper.separatedListToArray((String)cpnames.get(j),";"); //NOI18N
+                            for (int j = 0; cpnames != null && j < cpnames.size(); j++) {
+                                List<String> token = StringHelper.separatedListToArray(cpnames.get(j), ";");
                                 ColumnPair cp = new ColumnPair();
-                                Iterator iter = token.iterator();
+                                Iterator<String> iter = token.iterator();
                                 while (iter.hasNext()) {
-                                    String columnName = (String)iter.next();
+                                    String columnName = iter.next();
                                     cp.addColumnName(columnName);
                                 }
                                 sT.addColumnPair(cp);
                                 hasPairs = true;
                             }
-                            if (hasPairs)
+                            if (hasPairs) {
                                 beanMapping.addSecondaryTable(sT);
-                            else
-                                if (logger.isLoggable(Logger.FINE))
-                                    logger.fine(
-                                        I18NHelper.getMessage(
-                                        messages,
-                                        "WARN_ILLEGAL_PAIR", //NOI18N
-                                        new Object [] {ejbName, mte.getName(), cpnames}));
-                        }
-                        else {
-                            if (logger.isLoggable(Logger.FINE))
-                                logger.fine(
-                                    I18NHelper.getMessage(
-                                    messages,
-                                    "WARN_MISSING_TABLE", //NOI18N
-                                    new Object [] {ejbName, primary.getName()}));
+                            } else {
+                                LOG.log(DEBUG, "WARN_ILLEGAL_PAIR", ejbName, mte.getName(), cpnames);
+                            }
+                        } else {
+                            LOG.log(DEBUG, "WARN_MISSING_TABLE", ejbName, primary.getName());
                         }
                     }
-                }
-                else {
-                    if (logger.isLoggable(Logger.FINE))
-                        logger.fine(
-                            I18NHelper.getMessage(
-                            messages,
-                            "WARN_NO_PRIMARY", //NOI18N
-                            ejbName));
+                } else {
+                    LOG.log(DEBUG, "WARN_NO_PRIMARY", ejbName);
                 }
 
                 // transform the field mappings
@@ -346,8 +307,9 @@ public class MappingFile {
                     pfields = pce.getFields();
                 }
                 int len = 0;
-                if (null != pfields)
+                if (pfields != null) {
                     len = pfields.length;
+                }
                 for (int i = 0; i < len; i++) {
                     PersistenceFieldElement pfield = pfields[i];
                     String fieldName = pfield.getName();
@@ -355,29 +317,29 @@ public class MappingFile {
                         continue;
                     }
                     if (pfield instanceof RelationshipElement) {
-                        MappingRelationshipElement mre =
-                            (MappingRelationshipElement) mce.getField(fieldName);
+                        MappingRelationshipElement mre = (MappingRelationshipElement) mce.getField(fieldName);
                         MappingFieldElement mfe = mre;
                         CmrFieldMapping cfm = new CmrFieldMapping();
                         cfm.setCmrFieldName(fieldName);
-                        List cols = null;
-                        if (null != mfe) {
+                        List<String> cols = null;
+                        if (mfe != null) {
                             cols = mfe.getColumns();
                             int fgVal = mfe.getFetchGroup();
                             setFetchedWith(cfm, fgVal);
                         }
                         for (int j = 0; null != cols && j < cols.size(); j++) {
-                            String cpstring = (String) cols.get(j);
+                            String cpstring = cols.get(j);
                             int slen = cpstring.indexOf(';');
                             ColumnPair cp = new ColumnPair();
                             cp.addColumnName(cpstring.substring(0,slen));
                             cp.addColumnName(cpstring.substring(slen+1));
                             cfm.addColumnPair(cp);
                         }
-                        if (null != mre)
+                        if (mre != null) {
                             cols = mre.getAssociatedColumns();
+                        }
                         for (int j = 0; null != cols && j < cols.size(); j++) {
-                            String cpstring = (String) cols.get(j);
+                            String cpstring = cols.get(j);
                             int slen = cpstring.indexOf(';');
                             ColumnPair cp = new ColumnPair();
                             cp.addColumnName(cpstring.substring(0,slen));
@@ -385,17 +347,16 @@ public class MappingFile {
                             cfm.addColumnPair(cp);
                         }
                         beanMapping.addCmrFieldMapping(cfm);
-                    }
-                    else {
+                    } else {
                         MappingFieldElement mfe = mce.getField(fieldName);
                         CmpFieldMapping cfm = new CmpFieldMapping();
                         cfm.setFieldName(fieldName);
-                        List cols = null;
-                        if (null != mfe) {
+                        List<String> cols = null;
+                        if (mfe != null) {
                             cols = mfe.getColumns();
                             for (int j = 0; null != cols &&
                                 j < cols.size(); j++) {
-                                cfm.addColumnName((String)cols.get(j));
+                                cfm.addColumnName(cols.get(j));
                             }
                             int fgVal = mfe.getFetchGroup();
                             setFetchedWith(cfm,fgVal);
@@ -408,9 +369,9 @@ public class MappingFile {
         }
         SunCmpMappings retVal = null;
         retVal = new SunCmpMappings();
-        Iterator mapOfMappingIter = mapOfMapping.values().iterator();
+        Iterator<SunCmpMapping> mapOfMappingIter = mapOfMapping.values().iterator();
         while (mapOfMappingIter.hasNext()) {
-            SunCmpMapping aVal = (SunCmpMapping) mapOfMappingIter.next();
+            SunCmpMapping aVal = mapOfMappingIter.next();
             retVal.addSunCmpMapping(aVal);
         }
         return retVal;
@@ -424,7 +385,7 @@ public class MappingFile {
     private void setFetchedWith(HasFetchedWith cfm, int fgVal) {
         FetchedWith fw = new FetchedWith();
         if (fgVal <= MappingFieldElement.GROUP_INDEPENDENT) {
-            String key = "IndependentFetchGroup"+fgVal; //NOI18N
+            String key = "IndependentFetchGroup"+fgVal;
             fw.setNamedGroup(key);
         }
         else if (fgVal == MappingFieldElement.GROUP_DEFAULT) {
@@ -460,77 +421,49 @@ public class MappingFile {
      * @throws ModelException
      * @throws ConversionException
      */
-    private MappingClassElement mapFieldsOfBean(EntityMapping mapping,
-                                                String schemaArg)
+    private MappingClassElement mapFieldsOfBean(EntityMapping mapping, String schemaArg)
         throws DBException, ModelException, ConversionException {
-
         String beanName = mapping.getEjbName();
-        MappingClassElement mce = null;
-        List tablesOfBean = new ArrayList();
-        Map knownTables = new HashMap();
+        List<String> tablesOfBean = new ArrayList<>();
+        Map<String, TableElement> knownTables = new HashMap<>();
 
-        if (logger.isLoggable(Logger.FINE))
-            logger.fine(
-                I18NHelper.getMessage(
-                messages,
-                "MESSAGE_START_BEAN", //NOI18N
-                beanName));
+        LOG.log(DEBUG, "MESSAGE_START_BEAN", beanName);
 
         String jdoClassName = helper.getMappedClassName(beanName);
-        if (logger.isLoggable(Logger.FINE))
-            logger.fine(
-                I18NHelper.getMessage(
-                messages,
-                "MESSAGE_JDOCLASS_NAME", //NOI18N
-                beanName, jdoClassName));
+        LOG.log(DEBUG, "MESSAGE_JDOCLASS_NAME", beanName, jdoClassName);
 
-        if (null == jdoClassName) {
-            throw new ConversionException(
-                I18NHelper.getMessage(
-                messages,
-                "ERR_INVALID_CLASS", //NOI18N
-                beanName));
+        if (jdoClassName == null) {
+            throw new ConversionException(I18NHelper.getMessage(messages, "ERR_INVALID_CLASS", beanName));
         }
 
         // create the mapping class element and its children
-        PersistenceClassElementImpl persistElImpl =
-            new PersistenceClassElementImpl(jdoClassName);
-        persistElImpl.setKeyClass(jdoClassName+".Oid"); //NOI18N
-        mce = new MappingClassElementImpl(
-            new PersistenceClassElement(persistElImpl));
-
-        SchemaElement schema = null;
-
-        // Assign the schema
-        if (!StringHelper.isEmpty(schemaArg))
-            schema = setDatabaseRoot(mce, schemaArg,
-                helper.ensureValidation());
+        final PersistenceClassElementImpl persistElImpl = new PersistenceClassElementImpl(jdoClassName);
+        persistElImpl.setKeyClass(jdoClassName + ".Oid");
+        MappingClassElement mce = new MappingClassElementImpl(new PersistenceClassElement(persistElImpl));
+        final SchemaElement schema;
+        if (StringHelper.isEmpty(schemaArg)) {
+            schema = null;
+        } else {
+            schema = setDatabaseRoot(mce, schemaArg, helper.ensureValidation());
+        }
+        LOG.log(TRACE, () -> "schema=" + schema);
 
         // Map the table information
         // Ensure the bean is mapped to a primary table.
         if (!StringHelper.isEmpty(mapping.getTableName())) {
-
-            mapPrimaryTable(mapping, mce,
-                schema, knownTables, tablesOfBean);
-            mapSecondaryTables(mapping, mce,
-                schema, knownTables, tablesOfBean);
+            mapPrimaryTable(mapping, mce, schema, knownTables, tablesOfBean);
+            mapSecondaryTables(mapping, mce, schema, knownTables, tablesOfBean);
         }
 
-        ColumnElement candidatePK = null;
+        ColumnElement candidatePK = mapNonRelationshipFields(mapping, mce, beanName, schema, knownTables);
 
         // map the simple fields.
-        candidatePK = mapNonRelationshipFields(mapping, mce,
-            beanName, schema, knownTables);
+        createMappingForUnknownPKClass(mapping, mce, beanName, candidatePK);
 
-        createMappingForUnknownPKClass(mapping, mce,
-            beanName, candidatePK);
-
-        createMappingForConsistency(mapping, mce,
-            beanName, knownTables);
+        createMappingForConsistency(mapping, mce, beanName, knownTables);
 
         // map the relationship fields.
-        mapRelationshipFields(mapping, mce,
-            beanName, schema, knownTables, tablesOfBean);
+        mapRelationshipFields(mapping, mce, beanName, schema, knownTables, tablesOfBean);
 
         // map any unmapped fields.
         mapUnmappedFields(mce, beanName);
@@ -557,7 +490,7 @@ public class MappingFile {
 
         if (helper.generateFields()
             && helper.applyDefaultUnknownPKClassStrategy(beanName)) {
-            if (null != candidatePK) {
+            if (candidatePK != null) {
                 String fieldName = helper.getGeneratedPKFieldName();
 
                 // Fix later. Since mapping and persistence classes in the
@@ -565,19 +498,13 @@ public class MappingFile {
                 // put pce in a map at pce creation time for persistence
                 // class look up later to avoid a cast
                 // to MappingClassElementImpl.
-                PersistenceFieldElement pfe = createPersistenceField(mce,
-                    fieldName);
+                PersistenceFieldElement pfe = createPersistenceField(mce, fieldName);
                 pfe.setKey(true);
                 createMappingField(mce, fieldName, candidatePK);
-            }
-            else {
+            } else {
                 // There is no column which meets primary key criteria.
                 // Report error.
-                throw new ConversionException(
-                    I18NHelper.getMessage(
-                    messages,
-                    "WARN_NO_PKCOLUMN", //NOI18N
-                    primaryTableName));
+                throw new ConversionException(I18NHelper.getMessage(messages, "WARN_NO_PKCOLUMN", primaryTableName));
             }
         }
     }
@@ -597,11 +524,11 @@ public class MappingFile {
     private void createMappingForConsistency(EntityMapping mapping,
                                              MappingClassElement mce,
                                              String beanName,
-                                             Map knownTables)
+                                             Map<String, TableElement> knownTables)
         throws ModelException, DBException, ConversionException {
 
         // load the consistency information
-        List versionColumns = loadConsistency(mapping, mce);
+        List<String> versionColumns = loadConsistency(mapping, mce);
 
         // If the consistency level is version consistency, the version field
         // is always created, independent of the ConversionHelper's value for
@@ -616,12 +543,11 @@ public class MappingFile {
                 throw new ConversionException(
                     I18NHelper.getMessage(
                     messages,
-                    "ERR_INVALID_VERSION_COLUMNS")); //NOI18N
+                    "ERR_INVALID_VERSION_COLUMNS"));
             }
-            String versionColumn = (String)versionColumns.get(0);
+            String versionColumn = versionColumns.get(0);
 
-            String sourceTableName = getTableName(versionColumn,
-                    primaryTableName);
+            String sourceTableName = getTableName(versionColumn, primaryTableName);
 
             // we do not support version column from secondary table
             // in 8.1 release
@@ -629,33 +555,29 @@ public class MappingFile {
                 throw new ConversionException(
                     I18NHelper.getMessage(
                     messages,
-                    "WARN_VERSION_COLUMN_INVALID_TABLE", //NOI18N
+                    "WARN_VERSION_COLUMN_INVALID_TABLE",
                     primaryTableName, beanName, versionColumn));
             }
 
-            TableElement sourceTableEl = (TableElement) knownTables.get(
-                    sourceTableName);
+            TableElement sourceTableEl = knownTables.get(sourceTableName);
             String versionColumnName = getColumnName(versionColumn);
-            ColumnElement versionCol = getColumnElement(sourceTableEl,
-                    DBIdentifier.create(versionColumnName), helper);
+            ColumnElement versionCol = getColumnElement(sourceTableEl, DBIdentifier.create(versionColumnName), helper);
 
-            if (null != versionCol) {
+            if (versionCol != null) {
 
                 // Since 8.1 release only support one version column per bean,
                 // use prefix as the version  field name
                 String fieldName = helper.getGeneratedVersionFieldNamePrefix();
                 createPersistenceField(mce, fieldName);
-                MappingFieldElement mfe = createMappingField(mce, fieldName,
-                    versionCol);
+                MappingFieldElement mfe = createMappingField(mce, fieldName, versionCol);
                 mfe.setVersion(true);
-            }
-            else {
+            } else {
                 // There is no version column.
                 // Report error.
                 throw new ConversionException(
                     I18NHelper.getMessage(
                     messages,
-                    "WARN_VERSION_COLUMN_MISSING", //NOI18N
+                    "WARN_VERSION_COLUMN_MISSING",
                     primaryTableName, beanName));
             }
         }
@@ -679,7 +601,7 @@ public class MappingFile {
                                                    MappingClassElement mce,
                                                    String beanName,
                                                    SchemaElement schema,
-                                                   Map knownTables)
+                                                   Map<String, TableElement> knownTables)
         throws DBException, ModelException, ConversionException {
 
         CmpFieldMapping [] mapOfFields = mapping.getCmpFieldMapping();
@@ -687,9 +609,7 @@ public class MappingFile {
         ColumnElement candidatePK = null;
 
         // get candidate column only used for unknown primary key
-        if (helper.generateFields()
-            && helper.applyDefaultUnknownPKClassStrategy(beanName)) {
-
+        if (helper.generateFields() && helper.applyDefaultUnknownPKClassStrategy(beanName)) {
             candidatePK = getCandidatePK(schema, primaryTableName);
         }
 
@@ -697,46 +617,27 @@ public class MappingFile {
             CmpFieldMapping mapForOneField = mapOfFields[i];
 
             String fieldName = mapForOneField.getFieldName();
-            if (!validateField(mce, beanName, fieldName,
-                helper.ensureValidation())) {
-                if (logger.isLoggable(Logger.FINE))
-                    logger.fine(
-                        I18NHelper.getMessage(
-                        messages,
-                        "WARN_INVALID_FIELD", //NOI18N
-                        beanName, fieldName));
-
+            if (!validateField(mce, beanName, fieldName, helper.ensureValidation())) {
+                LOG.log(DEBUG, "WARN_INVALID_FIELD", beanName, fieldName);
                 continue;
             }
 
             String columnNames[] = mapForOneField.getColumnName();
-            MappingFieldElement mfe = createUnmappedField(mce, beanName,
-                fieldName);
+            MappingFieldElement mfe = createUnmappedField(mce, beanName, fieldName);
             boolean fieldMappedToABlob = false;
 
             for (int j = 0; j < columnNames.length; j++) {
-                String sourceTableName = getTableName(columnNames[j],
-                    primaryTableName);
+                String sourceTableName = getTableName(columnNames[j], primaryTableName);
                 if (null == sourceTableName) {
-                    throw new ConversionException(
-                        I18NHelper.getMessage(
-                        messages,
-                        "ERR_UNDEFINED_TABLE")); //NOI18N
+                    throw new ConversionException(I18NHelper.getMessage(messages, "ERR_UNDEFINED_TABLE"));
                 }
 
                 String sourceColumnName = getColumnName(columnNames[j]);
 
                 // get the table element
-                TableElement sourceTableEl = getTableElement(sourceTableName,
-                    knownTables, schema);
-                ColumnElement aCol = getColumnElement(sourceTableEl,
-                    DBIdentifier.create(sourceColumnName), helper);
-                if (logger.isLoggable(Logger.FINE))
-                    logger.fine(
-                        I18NHelper.getMessage(
-                        messages,
-                        "MESSAGE_ADD_COLUMN", //NOI18N
-                        new Object [] {aCol, fieldName}));
+                TableElement sourceTableEl = getTableElement(sourceTableName, knownTables, schema);
+                ColumnElement aCol = getColumnElement(sourceTableEl, DBIdentifier.create(sourceColumnName), helper);
+                LOG.log(DEBUG, "MESSAGE_ADD_COLUMN", aCol, fieldName);
 
                 // If candidatePK is mapped to a field, then it can not
                 // treated as a primary key for unknown primary key
@@ -779,40 +680,32 @@ public class MappingFile {
                                        MappingClassElement mce,
                                        String beanName,
                                        SchemaElement schema,
-                                       Map knownTables,
-                                       List tablesOfBean)
+                                       Map<String, TableElement> knownTables,
+                                       List<String> tablesOfBean)
         throws ModelException, DBException, ConversionException {
 
         String primaryTableName = mapping.getTableName();
         CmrFieldMapping mapOfRelations[] = mapping.getCmrFieldMapping();
         PersistenceClassElement pce = ((MappingClassElementImpl)mce).getPersistenceElement();
 
-        for (int i = 0; mapOfRelations != null && i < mapOfRelations.length;
-                i++) {
+        for (int i = 0; mapOfRelations != null && i < mapOfRelations.length; i++) {
             CmrFieldMapping aRelation = mapOfRelations[i];
             String fieldName = aRelation.getCmrFieldName();
 
             if (!validateField(mce, beanName, fieldName, helper.ensureValidation())) {
-                if (logger.isLoggable(Logger.FINE))
-                    logger.fine(
-                        I18NHelper.getMessage(
-                        messages,
-                        "WARN_INVALID_CMRFIELD", //NOI18N
-                        beanName, fieldName));
+                LOG.log(DEBUG, "WARN_INVALID_CMRFIELD", beanName, fieldName);
                 continue;
             }
 
-            RelationshipElement rel = new RelationshipElement(
-                new RelationshipElementImpl(fieldName), pce);
-            MappingRelationshipElement mre =
-                new MappingRelationshipElementImpl(fieldName, mce);
+            RelationshipElement rel = new RelationshipElement(new RelationshipElementImpl(fieldName), pce);
+            MappingRelationshipElement mre = new MappingRelationshipElementImpl(fieldName, mce);
 
             // Register the inverse RelationshipElement
             registerInverseRelationshipElement(rel, beanName, fieldName);
 
             final ColumnPair pairs[] = aRelation.getColumnPair();
-            final String relationId = mapping.getEjbName() + "_Relationship_" + i; //NOI18N
-            Collection primaryTableColumns = convertToColumnPairElements(
+            final String relationId = mapping.getEjbName() + "_Relationship_" + i;
+            List<ColumnElement> primaryTableColumns = convertToColumnPairElements(
                     pairs,
                     primaryTableName, schema, knownTables, tablesOfBean,
                     relationId,
@@ -870,25 +763,29 @@ public class MappingFile {
                 c.setLockWhenModified(true);
                 c.setCheckAllAtCommit(true);
             }
-            if (MappingClassElement.LOCK_WHEN_MODIFIED_CONSISTENCY == consistency)
+            if (MappingClassElement.LOCK_WHEN_MODIFIED_CONSISTENCY == consistency) {
                 c.setLockWhenModified(true);
-            if (MappingClassElement.CHECK_ALL_AT_COMMIT_CONSISTENCY == consistency)
+            }
+            if (MappingClassElement.CHECK_ALL_AT_COMMIT_CONSISTENCY == consistency) {
                 c.setCheckAllAtCommit(true);
-            if (MappingClassElement.LOCK_WHEN_LOADED_CONSISTENCY  == consistency)
+            }
+            if (MappingClassElement.LOCK_WHEN_LOADED_CONSISTENCY  == consistency) {
                 c.setLockWhenLoaded(true);
-            if (MappingClassElement.CHECK_MODIFIED_AT_COMMIT_CONSISTENCY == consistency)
+            }
+            if (MappingClassElement.CHECK_MODIFIED_AT_COMMIT_CONSISTENCY == consistency) {
                 c.setCheckModifiedAtCommit(true);
+            }
             if (MappingClassElement.VERSION_CONSISTENCY == consistency) {
                 CheckVersionOfAccessedInstances versionIns =
                     new CheckVersionOfAccessedInstances();
-                Iterator iter = mce.getVersionFields().iterator();
+                Iterator<MappingFieldElement> iter = mce.getVersionFields().iterator();
                 while (iter.hasNext()) {
-                    List columnNames = ((MappingFieldElement)iter.next()).
-                        getColumns();
+                    List<String> columnNames = iter.next().getColumns();
 
                     // vesion field only allow to map to one column
-                    if (columnNames != null && columnNames.size() > 0)
-                        versionIns.addColumnName((String)columnNames.get(0));
+                    if (columnNames != null && columnNames.size() > 0) {
+                        versionIns.addColumnName(columnNames.get(0));
+                    }
                 }
                 c.setCheckVersionOfAccessedInstances(versionIns);
             }
@@ -905,7 +802,7 @@ public class MappingFile {
      * @throws ModelException
      * @throws ConversionException
      */
-    private List loadConsistency(EntityMapping mapping, MappingClassElement mce)
+    private List<String> loadConsistency(EntityMapping mapping, MappingClassElement mce)
         throws ModelException, ConversionException {
         Consistency c = mapping.getConsistency();
         if (null == c) {
@@ -913,39 +810,32 @@ public class MappingFile {
         }
         else {
             CheckVersionOfAccessedInstances versionIns =
-                (CheckVersionOfAccessedInstances)
                 c.getCheckVersionOfAccessedInstances();
 
-            if (c.isCheckModifiedAtCommit())
-                mce.setConsistencyLevel(
-                    MappingClassElement.CHECK_MODIFIED_AT_COMMIT_CONSISTENCY);
-            else if(c.isLockWhenLoaded())
-                mce.setConsistencyLevel(
-                    MappingClassElement.LOCK_WHEN_LOADED_CONSISTENCY);
-            else if(c.isCheckAllAtCommit())
-                mce.setConsistencyLevel(
-                    MappingClassElement.CHECK_ALL_AT_COMMIT_CONSISTENCY);
-            else if(c.isLockWhenModified())
-                mce.setConsistencyLevel(
-                    MappingClassElement.LOCK_WHEN_MODIFIED_CONSISTENCY);
-            else if(c.isLockWhenModified() && c.isCheckAllAtCommit())
-                mce.setConsistencyLevel(MappingClassElement.
-                    LOCK_WHEN_MODIFIED_CHECK_ALL_AT_COMMIT_CONSISTENCY);
-            else if(c.isNone())
+            if (c.isCheckModifiedAtCommit()) {
+                mce.setConsistencyLevel(MappingClassElement.CHECK_MODIFIED_AT_COMMIT_CONSISTENCY);
+            } else if (c.isLockWhenLoaded()) {
+                mce.setConsistencyLevel(MappingClassElement.LOCK_WHEN_LOADED_CONSISTENCY);
+            } else if (c.isCheckAllAtCommit()) {
+                mce.setConsistencyLevel(MappingClassElement.CHECK_ALL_AT_COMMIT_CONSISTENCY);
+            } else if (c.isLockWhenModified()) {
+                mce.setConsistencyLevel(MappingClassElement.LOCK_WHEN_MODIFIED_CONSISTENCY);
+            } else if (c.isLockWhenModified() && c.isCheckAllAtCommit()) {
+                mce.setConsistencyLevel(MappingClassElement.LOCK_WHEN_MODIFIED_CHECK_ALL_AT_COMMIT_CONSISTENCY);
+            } else if (c.isNone()) {
                 mce.setConsistencyLevel(MappingClassElement.NONE_CONSISTENCY);
-            else if (versionIns != null) {
+            } else if (versionIns != null) {
                 mce.setConsistencyLevel(MappingClassElement.VERSION_CONSISTENCY);
-                List versionColumns = new ArrayList();
+                List<String> versionColumns = new ArrayList<>();
                 for (int i = 0; i < versionIns.sizeColumnName(); i++) {
                     versionColumns.add(versionIns.getColumnName(i));
                 }
                 return versionColumns;
-            }
-            else {
+            } else {
                 throw new ConversionException(
                     I18NHelper.getMessage(
                     messages,
-                    "ERR_INVALID_CONSISTENCY_VALUE", mce)); //NOI18N
+                    "ERR_INVALID_CONSISTENCY_VALUE", mce));
             }
         }
         return null;
@@ -967,14 +857,12 @@ public class MappingFile {
     private void mapPrimaryTable(EntityMapping mapping,
                                   MappingClassElement mce,
                                   SchemaElement schema,
-                                  Map knownTables,
-                                  List tablesOfBean)
+                                  Map<String, TableElement> knownTables,
+                                  List<String> tablesOfBean)
         throws DBException, ModelException, ConversionException {
 
         String primaryTableName = mapping.getTableName();
-        TableElement primTabEl = getTableElement(primaryTableName, knownTables, schema);
-
-        mce.addTable(primTabEl);
+        mce.addTable(getTableElement(primaryTableName, knownTables, schema));
         tablesOfBean.add(primaryTableName);
     }
 
@@ -986,33 +874,25 @@ public class MappingFile {
      * @throws DBException
      * @throws ConversionException
      */
-    private ColumnElement getCandidatePK(SchemaElement schema,
-                                         String primaryTableName)
+    private ColumnElement getCandidatePK(SchemaElement schema, String primaryTableName)
         throws DBException, ConversionException {
-        ColumnElement candidatePK = null;
 
-        TableElement primTabEl = getTableElement(schema,
-            DBIdentifier.create(primaryTableName), helper);
+        TableElement primTabEl = getTableElement(schema, DBIdentifier.create(primaryTableName));
         // Check if the candidatePK is really satisfying primary key
         // criteria. It will be used only for unknown primary key.
         UniqueKeyElement uke = primTabEl.getPrimaryKey();
-
-        if (null != uke) {
+        ColumnElement candidatePK = null;
+        if (uke != null) {
             ColumnElement cols[] = uke.getColumns();
             if (null != cols && 1 == cols.length) {
                 candidatePK = cols[0];
-                if (logger.isLoggable(Logger.FINE))
-                    logger.fine(
-                        I18NHelper.getMessage(
-                        messages,
-                        "MESSAGE_CANDIDATE_PK", //NOI18N
-                        candidatePK.getName()));
-
+                DBIdentifier name = candidatePK.getName();
+                LOG.log(DEBUG, "MESSAGE_CANDIDATE_PK", name);
                 Integer pre = candidatePK.getPrecision();
-                if (null != candidatePK && !candidatePK.isNumericType()) {
+                if (!candidatePK.isNumericType()) {
                     candidatePK = null;
                 }
-                if (null != candidatePK && (null != pre) && pre.intValue() < MINIMUM_PRECISION) {
+                if (candidatePK != null && (null != pre) && pre.intValue() < MINIMUM_PRECISION) {
                     candidatePK = null;
                 }
             }
@@ -1040,16 +920,16 @@ public class MappingFile {
      * @throws ModelException
      * @throws ConversionException
      */
-    private Collection convertToColumnPairElements(ColumnPair pairs[],
+    private List<ColumnElement> convertToColumnPairElements(ColumnPair pairs[],
                                                    String primaryTableName,
                                                    SchemaElement schema,
-                                                   Map knownTables,
-                                                   List tablesOfBean,
+                                                   Map<String, TableElement> knownTables,
+                                                   List<String> tablesOfBean,
                                                    String relationId,
                                                    MappingRelationshipElement mre)
             throws DBException, ModelException, ConversionException {
 
-        Collection primaryTableColumns = new ArrayList();
+        List<ColumnElement> primaryTableColumns = new ArrayList<>();
         boolean isJoin = false;
 
         for (int i = 0; null != pairs && i < pairs.length; i++) {
@@ -1057,17 +937,14 @@ public class MappingFile {
             ColumnPairElement cpe = new ColumnPairElement();
             boolean localSet = false;
 
-            cpe.setName(DBIdentifier.create(relationId + "_ColumnPair_" + i)); //NOI18N
+            cpe.setName(DBIdentifier.create(relationId + "_ColumnPair_" + i));
 
             for (int j = 0; j < 2; j++) {
                 String columnName = pair.getColumnName(j);
-                String sourceTableName = getTableName(columnName,
-                    primaryTableName);
+                String sourceTableName = getTableName(columnName, primaryTableName);
                 String sourceColumnName = getColumnName(columnName);
-                TableElement sourceTableEl = getTableElement(sourceTableName,
-                    knownTables, schema);
-                ColumnElement ce = getColumnElement(sourceTableEl,
-                    DBIdentifier.create(sourceColumnName), helper);
+                TableElement sourceTableEl = getTableElement(sourceTableName, knownTables, schema);
+                ColumnElement ce = getColumnElement(sourceTableEl, DBIdentifier.create(sourceColumnName), helper);
                 ce.toString();
 
                 // tablesOfBean stores the primary table and the secondary
@@ -1082,8 +959,7 @@ public class MappingFile {
 
                         // Remember local columns for lower bound determination.
                         primaryTableColumns.add(ce);
-                    }
-                    else {
+                    } else {
 
                         // join table
                         isJoin = true;
@@ -1093,8 +969,7 @@ public class MappingFile {
 
                 if (cpe.getLocalColumn() == null) {
                     cpe.setLocalColumn(ce);
-                }
-                else {
+                } else {
                     cpe.setReferencedColumn(ce);
                 }
             }
@@ -1102,12 +977,10 @@ public class MappingFile {
             if (localSet) {
                 if (!isJoin) {
                     mre.addColumn(cpe);
-                }
-                else {
+                } else {
                     mre.addLocalColumn(cpe);
                 }
-            }
-            else if (isJoin) {
+            } else if (isJoin) {
                 mre.addAssociatedColumn(cpe);
             }
         }
@@ -1121,7 +994,6 @@ public class MappingFile {
      * be set to 1. To set the lower bound, we have to determine the
      * dependent side of the relationship. We set the lower bound to 1
      * based on the following rules:
-     *
      * <ul>
      * <li>If the non-nullable column is not part of the primary key.</li>
      * <li>If the local side has got a foreign key.</li>
@@ -1130,11 +1002,11 @@ public class MappingFile {
      * </ul>
      *
      * @param rel JDO relationship information being constructed.
-     * @param primaryTableColumns  Collection of all columns from the
-     * current cmr definition that are part of the primary table.
+     * @param primaryTableColumns Collection of all columns from the
+     *            current cmr definition that are part of the primary table.
      * @param primaryTableName Name of the bean's primary table.
      * @param knownTables A Map which contains primary and secondary tables
-     * for beans in the set. Keys: table names Values: TableElement objects
+     *            for beans in the set. Keys: table names Values: TableElement objects
      * @param schema dbschema information for all beans.
      * @param beanName Bean name.
      * @param fieldName Relationship field name.
@@ -1143,22 +1015,17 @@ public class MappingFile {
      * @throws ConversionException
      */
     private void setLowerBound(RelationshipElement rel,
-                               Collection primaryTableColumns,
+                               List<ColumnElement> primaryTableColumns,
                                String primaryTableName,
                                SchemaElement schema,
-                               Map knownTables,
+                               Map<String, TableElement> knownTables,
                                String beanName,
                                String fieldName)
                                throws ModelException, DBException,
                                ConversionException {
 
         rel.setLowerBound(0);
-        if (logger.isLoggable(Logger.FINE))
-            logger.fine(
-                I18NHelper.getMessage(
-                messages,
-                "MESSAGE_LWB_NULL", //NOI18N
-                beanName, fieldName));
+        LOG.log(DEBUG, "MESSAGE_LWB_NULL", beanName, fieldName);
 
         if (1 == rel.getUpperBound() && null != primaryTableName) {
 
@@ -1167,10 +1034,10 @@ public class MappingFile {
                 knownTables, schema);
             UniqueKeyElement pk = primaryTable.getPrimaryKey();
             ForeignKeyElement fks[] = primaryTable.getForeignKeys();
-            Iterator iter = primaryTableColumns.iterator();
+            Iterator<ColumnElement> iter = primaryTableColumns.iterator();
 
             while (iter.hasNext() && 0 == rel.getLowerBound()) {
-                ColumnElement ce = (ColumnElement) iter.next();
+                ColumnElement ce = iter.next();
                 if (!ce.isNullable()) {
                     isPartOfPrimaryKey |= isPartOfPrimaryKey(ce, pk);
 
@@ -1179,59 +1046,31 @@ public class MappingFile {
                         // If the non-nullable column is not part of the primary key,
                         // this is the dependent side.
                         rel.setLowerBound(1);
-                        if (logger.isLoggable(Logger.FINE))
-                            logger.fine(
-                                I18NHelper.getMessage(
-                                messages,
-                                "MESSAGE_LWB_NOPK", //NOI18N
-                                beanName, fieldName));
-                    }
-                    // Check the foreign key constraint
-                    else if (isPartOfForeignKey(ce, fks)) {
+                        LOG.log(DEBUG, "MESSAGE_LWB_NOPK", beanName, fieldName);
+                    } else if (isPartOfForeignKey(ce, fks)) {
+                        // Check the foreign key constraint
                         // If the non-nullable column is part of the foreign key,
                         // this is the dependent side.
                         rel.setLowerBound(1);
-                        if (logger.isLoggable(Logger.FINE))
-                            logger.fine(
-                                I18NHelper.getMessage(
-                                messages,
-                                "MESSAGE_LWB_FK", //NOI18N
-                                beanName, fieldName));
+                        LOG.log(DEBUG, "MESSAGE_LWB_FK", beanName, fieldName);
                     }
                 }
             }
 
-            if (0 == rel.getLowerBound() && isPartOfPrimaryKey) {
+            if (rel.getLowerBound() == 0 && isPartOfPrimaryKey) {
                 // The lower bound is still unset and all local columns
                 // are part of the primary key.
                 if (primaryTableColumns.size() < pk.getColumns().length) {
                     // The local columns are a real subset of the primary key.
                     // ==> This must be the dependent side.
                     rel.setLowerBound(1);
-                    if (logger.isLoggable(Logger.FINE))
-                        logger.fine(
-                            I18NHelper.getMessage(
-                            messages,
-                            "MESSAGE_LWB_PKSUBSET", //NOI18N
-                            beanName, fieldName));
-                }
-                else if (isCascadeDelete(beanName, fieldName)) {
+                    LOG.log(DEBUG, "MESSAGE_LWB_PKSUBSET", beanName, fieldName);
+                } else if (isCascadeDelete(beanName, fieldName)) {
                     // This relationship side is marked as dependent side by the user.
                     rel.setLowerBound(1);
-                    if (logger.isLoggable(Logger.FINE))
-                        logger.fine(
-                            I18NHelper.getMessage(
-                            messages,
-                            "MESSAGE_LWB_CASCADE", //NOI18N
-                            beanName, fieldName));
-                }
-                else {
-                    if (logger.isLoggable(Logger.FINE))
-                        logger.fine(
-                            I18NHelper.getMessage(
-                            messages,
-                            "MESSAGE_LWB_NODEPENDENT", //NOI18N
-                            beanName, fieldName));
+                    LOG.log(DEBUG, "MESSAGE_LWB_CASCADE", beanName, fieldName);
+                } else {
+                    LOG.log(DEBUG, "MESSAGE_LWB_NODEPENDENT", beanName, fieldName);
                 }
             }
         }
@@ -1251,20 +1090,16 @@ public class MappingFile {
      * @exception DBException
      * @exception ConversionException
      */
-    private TableElement getTableElement(String tableName,
-                                         Map knownTables,
-                                         SchemaElement schema)
+    private TableElement getTableElement(String tableName, Map<String, TableElement> knownTables, SchemaElement schema)
         throws DBException, ConversionException {
-
-        TableElement te = (TableElement) knownTables.get(tableName);
-
-        if (null == te) {
-            te = getTableElement(schema, DBIdentifier.create(tableName),
-                helper);
-            knownTables.put(tableName, te);
+        final TableElement te = knownTables.get(tableName);
+        if (te != null) {
+            return te;
         }
-
-        return te;
+        final TableElement tableElement = getTableElement(schema, DBIdentifier.create(tableName));
+        LOG.log(DEBUG, () -> "Registering " + tableElement);
+        knownTables.put(tableName, tableElement);
+        return tableElement;
     }
 
     /**
@@ -1355,8 +1190,8 @@ public class MappingFile {
         RelationshipElement rel, String beanName, String fieldName)
         throws ModelException {
 
-        String key = beanName + "." + fieldName; //NOI18N
-        RelationshipElement inverse = (RelationshipElement) inverseRelationships.get(key);
+        String key = beanName + "." + fieldName;
+        RelationshipElement inverse = inverseRelationships.get(key);
 
         if (null == inverse) {
             final String beanInField = helper.getRelationshipFieldContent(
@@ -1365,7 +1200,7 @@ public class MappingFile {
                 fieldName);
 
             if (null != beanInField && null != inverseField) {
-                key = beanInField + "." + inverseField; //NOI18N
+                key = beanInField + "." + inverseField;
                 inverseRelationships.put(key, rel);
             }
         }
@@ -1389,35 +1224,25 @@ public class MappingFile {
      * @throws ModelException
      * @throws ConversionException
      */
-    private void setUpperBound(RelationshipElement rel,
-                               String beanName, String fieldName)
+    private void setUpperBound(RelationshipElement rel, String beanName, String fieldName)
         throws ModelException, ConversionException {
 
-        String beanInField = helper.getRelationshipFieldContent(beanName,
-            fieldName);
+        String beanInField = helper.getRelationshipFieldContent(beanName, fieldName);
         String classInJdoField = helper.getMappedClassName(beanInField);
         String multiplicity = helper.getMultiplicity(beanName, fieldName);
 
         // Set the upper bound.
-        if (multiplicity.equals(helper.MANY)) {
+        if (multiplicity.equals(MANY)) {
             rel.setUpperBound(Integer.MAX_VALUE);
             rel.setElementClass(classInJdoField);
-            String collectionClass = helper.getRelationshipFieldType(beanName,
-                fieldName);
-            if (types.contains(collectionClass)) {
+            String collectionClass = helper.getRelationshipFieldType(beanName, fieldName);
+            if (TYPES.contains(collectionClass)) {
                 rel.setCollectionClass(collectionClass);
-            }
-            else {
+            } else {
                 rel.setCollectionClass(null);
-                if (logger.isLoggable(Logger.WARNING))
-                    logger.warning(
-                        I18NHelper.getMessage(
-                        messages,
-                        "WARN_INVALID_RELATIONSHIP_FIELDTYPE", //NOI18N
-                        beanName, fieldName, collectionClass));
+                LOG.log(WARNING, "WARN_INVALID_RELATIONSHIP_FIELDTYPE", beanName, fieldName, collectionClass);
             }
-        }
-        else if (multiplicity.equals(helper.ONE)) {
+        } else if (multiplicity.equals(ONE)) {
             rel.setUpperBound(1);
             // Fix later. This code should be removed because in one side
             // setElementClass should not be called.
@@ -1426,13 +1251,9 @@ public class MappingFile {
             // in the plugin which depends on the element class being set
             // for a one side relationship.
             rel.setElementClass(classInJdoField);
-        }
-        else {
+        } else {
             throw new ConversionException(
-                I18NHelper.getMessage(
-                messages,
-                "ERR_BAD_MULTIPLICTY", //NOI18N
-                multiplicity, rel.getName()));
+                I18NHelper.getMessage(messages, "ERR_BAD_MULTIPLICTY", multiplicity, rel.getName()));
         }
     }
 
@@ -1454,40 +1275,33 @@ public class MappingFile {
             throws ModelException {
 
         if (helper.relatedObjectsAreDeleted(beanName, fieldName)) {
-            if (logger.isLoggable(Logger.FINE))
-                logger.fine(
-                    I18NHelper.getMessage(
-                    messages,
-                    "MESSAGE_REL_OBJ_DEL", //NOI18N
-                    beanName, fieldName));
+            LOG.log(DEBUG, "MESSAGE_REL_OBJ_DEL", beanName, fieldName);
             rel.setDeleteAction(RelationshipElement.CASCADE_ACTION);
         }
     }
 
-    private SchemaElement setDatabaseRoot(MappingClassElement foo,
-        String schemaElementValue, boolean strict)
+
+    private SchemaElement setDatabaseRoot(MappingClassElement mappingClassElement, String schemaElementValue, boolean strict)
         throws ModelException, DBException, ConversionException {
+        LOG.log(DEBUG, () -> "Setting the database root: mappingClassElement=" + mappingClassElement
+            + ", schemaElementValue=" + schemaElementValue + ", strict=" + strict);
         SchemaElement bar = null;
         if (null != classLoader) {
-            if (loadedSchema.get(schemaElementValue) == null) {
+            if (!loadedSchema.containsKey(schemaElementValue)) {
                 SchemaElement.removeFromCache(schemaElementValue);
                 loadedSchema.put(schemaElementValue, schemaElementValue);
             }
-            bar = SchemaElement.forName(schemaElementValue,classLoader);
-        }
-        else
+            bar = SchemaElement.forName(schemaElementValue, classLoader);
+        } else {
             bar = SchemaElement.forName(schemaElementValue);
+        }
         if (strict) {
             if (bar == null) {
                 // Prepare for a schema related error
-                throw new ConversionException(
-                    I18NHelper.getMessage(
-                    messages,
-                    "ERR_CANNOT_FIND_SCHEMA", //NOI18N
-                    new Object [] {schemaElementValue, classLoader}));
+                throw new ConversionException(I18NHelper.getMessage(messages, "ERR_CANNOT_FIND_SCHEMA",
+                    new Object[] {schemaElementValue, classLoader}));
             }
-        }
-        else {
+        } else {
             if (null == bar) {
                 // conjure up a schema element and set its name...
                 // need to create a dummy for invalid mappings because the
@@ -1499,23 +1313,26 @@ public class MappingFile {
                 bar.setName(n);
             }
         }
-        foo.setDatabaseRoot(bar);
+        mappingClassElement.setDatabaseRoot(bar);
         return bar;
     }
+
 
     private String getTableName(String columnName, String defaultName) {
         String retVal = defaultName;
         int len = columnName.lastIndexOf('.');
-        if (len > 0)
+        if (len > 0) {
             retVal = columnName.substring(0,len);
+        }
         return retVal;
     }
 
     private String getColumnName(String columnName) {
         String retVal = columnName;
         int len = columnName.lastIndexOf('.');
-        if (len > 0)
+        if (len > 0) {
             retVal = columnName.substring(len+1);
+        }
         return retVal;
     }
 
@@ -1535,106 +1352,92 @@ public class MappingFile {
     private void mapSecondaryTables(EntityMapping mapping,
                                     MappingClassElement mce,
                                     SchemaElement schema,
-                                    Map knownTables,
-                                    List tablesOfBean)
+                                    Map<String, TableElement> knownTables,
+                                    List<String> tablesOfBean)
         throws ModelException, DBException, ConversionException {
 
         SecondaryTable [] tableList = mapping.getSecondaryTable();
-        List tl = mce.getTables();
+        List<MappingTableElement> tl = mce.getTables();
 
         if (null != tl && tl.size() > 0 && null != tl.get(0)) {
-            MappingTableElement primary = (MappingTableElement) tl.get(0);
+            MappingTableElement primary = tl.get(0);
 
             for (int i = 0; null != tableList && i < tableList.length; i++) {
                 String tn = tableList[i].getTableName();
-                if (StringHelper.isEmpty(tn))
+                if (StringHelper.isEmpty(tn)) {
                     continue;
-                TableElement te = getTableElement(schema,
-                    DBIdentifier.create(tn.trim()), helper);
+                }
+                TableElement te = getTableElement(schema, DBIdentifier.create(tn.trim()));
                 ColumnPair pairs[] = tableList[i].getColumnPair();
                 int len = 0;
-                if (null != pairs)
+                if (null != pairs) {
                     len = pairs.length;
+                }
                 if (0 == len) {
-                    if (logger.isLoggable(Logger.WARNING))
-                        logger.warning(
-                            I18NHelper.getMessage(
-                            messages,
-                            "WARN_NO_PAIRS", //NOI18N
-                            new Object [] {mce, tn}));
+                    LOG.log(WARNING, "WARN_NO_PAIRS", mce, tn);
                     continue;
                 }
                 MappingReferenceKeyElement mrke = mce.addSecondaryTable(
                     primary,te);
                 for (int j = 0; null != pairs && j < pairs.length; j++) {
                     ColumnPairElement cpe = new ColumnPairElement();
-                    DBIdentifier dbId = DBIdentifier.create("SecondaryTable"+j); //NOI18N
+                    DBIdentifier dbId = DBIdentifier.create("SecondaryTable"+j);
                     cpe.setName(dbId);
                     ColumnPair pair = pairs[j];
                     for (int k = 0; k < 2; k++) {
                         String nameOne = pair.getColumnName(k);
-                        String sourceTableName = getTableName(
-                            nameOne.trim(),
-                            primary.getName().toString());
+                        String sourceTableName = getTableName(nameOne.trim(), primary.getName().toString());
                         String sourceColumnName = getColumnName(nameOne);
                         dbId = DBIdentifier.create(sourceTableName);
-                        TableElement sourceTableEl = getTableElement(schema,
-                            dbId, helper);
+                        TableElement sourceTableEl = getTableElement(schema, dbId);
                         dbId = DBIdentifier.create(sourceColumnName);
-                        ColumnElement ce = getColumnElement(sourceTableEl,
-                            dbId, helper);
-                        if (k == 0)
+                        ColumnElement ce = getColumnElement(sourceTableEl, dbId, helper);
+                        if (k == 0) {
                             cpe.setLocalColumn(ce);
-                        else
+                        } else {
                             cpe.setReferencedColumn(ce);
+                        }
                     }
                     mrke.addColumnPair(cpe);
                 }
                 knownTables.put(tn,te);
                 tablesOfBean.add(tn);
             }
+        } else {
+            throw new ConversionException(I18NHelper.getMessage(messages, "WARN_NOT_MAPPED_TO_PRIMARY", mce.getName()));
         }
-        else
-            throw new ConversionException(
-                    I18NHelper.getMessage(
-                    messages,
-                    "WARN_NOT_MAPPED_TO_PRIMARY", //NOI18N
-                    mce.getName()));
     }
 
     private boolean validateField(MappingClassElement mce, String beanName,
         String fieldName, boolean throwEx) throws ConversionException {
         MappingFieldElement mfe = mce.getField(fieldName);
-        if (null != mfe) {
-            if (throwEx)
+        if (mfe != null) {
+            if (throwEx) {
                 throw new ConversionException(
-                    I18NHelper.getMessage(
-                    messages,
-                    "ERR_FIELD_MAPPED_TWICE", //NOI18N
-                    beanName, fieldName));
-            else
+                    I18NHelper.getMessage(messages, "ERR_FIELD_MAPPED_TWICE", beanName, fieldName));
+            } else {
                 return false;
+            }
         }
-        if (!helper.hasField(beanName,fieldName)) {
-            if (throwEx)
+        if (!helper.hasField(beanName, fieldName)) {
+            if (throwEx) {
                 throw new ConversionException(
-                I18NHelper.getMessage(
-                messages,
-                "ERR_INVALID_FIELD", //NOI18N
-                beanName, fieldName));
-            else
+                    I18NHelper.getMessage(messages, "ERR_INVALID_FIELD", beanName, fieldName));
+            } else {
                 return false;
+            }
         }
         return true;
     }
 
     // loop through the mappings to create a hash from bean name to em objects
-    private Map getBean2EntityMappingMap(SunCmpMapping beanSet) {
-        Map retVal = new HashMap();
-        EntityMapping [] entityMappingsInSet = beanSet.getEntityMapping();
+    private Map<String, EntityMapping> getBean2EntityMappingMap(SunCmpMapping beanSet) {
+        Map<String, EntityMapping> retVal = new HashMap<>();
+        EntityMapping[] entityMappingsInSet = beanSet.getEntityMapping();
         int len = 0;
-        if (null != entityMappingsInSet)
+        if (entityMappingsInSet != null) {
             len = entityMappingsInSet.length;
+        }
         for (int k = 0; k < len; k++) {
             EntityMapping anEntityMapping = entityMappingsInSet[k];
             String beanName = anEntityMapping.getEjbName();
@@ -1651,54 +1454,44 @@ public class MappingFile {
         throws ConversionException {
 
         // loop through the mappings to create a hash from bean name to em objects
-        Map beanName2EntityMapping = getBean2EntityMappingMap(beanSet);
-        Iterator emIter = beanName2EntityMapping.values().iterator();
+        Map<String, EntityMapping> beanName2EntityMapping = getBean2EntityMappingMap(beanSet);
+        Iterator<EntityMapping> emIter = beanName2EntityMapping.values().iterator();
         boolean retVal = false;
-        String errorMsg = I18NHelper.getMessage(
-            messages,
-            "ERR_BAD_CONVERSION_HELPER"); //NOI18N
+        String errorMsg = I18NHelper.getMessage(messages, "ERR_BAD_CONVERSION_HELPER");
 
         while (emIter.hasNext()) {
-            EntityMapping anEM = (EntityMapping) emIter.next();
+            EntityMapping anEM = emIter.next();
             String beanName = anEM.getEjbName();
             String pt = anEM.getTableName();
             CmrFieldMapping[]  cmrsInEM = anEM.getCmrFieldMapping();
             int len = 0;
-            if (null != cmrsInEM && !StringHelper.isEmpty(beanName))
+            if (null != cmrsInEM && !StringHelper.isEmpty(beanName)) {
                 len = cmrsInEM.length;
+            }
             for (int i = 0; i < len; i++) {
                 String fieldName = cmrsInEM[i].getCmrFieldName();
                 if (!helper.hasField(beanName, fieldName)) {
-                    throw new ConversionException(I18NHelper.getMessage(
-                        messages,
-                        "WARN_INVALID_CMRFIELD", //NOI18N
-                        beanName, fieldName));
+                    throw new ConversionException(
+                        I18NHelper.getMessage(messages, "WARN_INVALID_CMRFIELD", beanName, fieldName));
                 }
                 fieldName.trim().charAt(0);
-                String otherField = helper.getInverseFieldName(beanName,
-                    fieldName);
+                String otherField = helper.getInverseFieldName(beanName, fieldName);
                 if (otherField == null) {
                     throw new ConversionException(errorMsg);
                 }
-                String otherBean = helper.getRelationshipFieldContent(beanName,
-                    fieldName);
+                String otherBean = helper.getRelationshipFieldContent(beanName, fieldName);
                 if (otherBean == null) {
                     throw new ConversionException(errorMsg);
                 }
 
-                if (helper.isGeneratedRelationship(otherBean,otherField)) {
+                if (helper.isGeneratedRelationship(otherBean, otherField)) {
                     retVal = true;
-                    String otherBeanName = helper.getRelationshipFieldContent(
-                        beanName, fieldName);
+                    String otherBeanName = helper.getRelationshipFieldContent(beanName, fieldName);
                     otherBeanName.trim().charAt(0);
-                    EntityMapping otherEM =
-                        (EntityMapping) beanName2EntityMapping.get(
-                            otherBeanName);
+                    EntityMapping otherEM = beanName2EntityMapping.get(otherBeanName);
                     CmrFieldMapping inverseMapping = new CmrFieldMapping();
                     inverseMapping.setCmrFieldName(otherField);
-                    inverseMapping.setColumnPair(
-                        reverseCPArray(cmrsInEM[i].getColumnPair(), pt,
-                            beanName, fieldName));
+                    inverseMapping.setColumnPair(reverseCPArray(cmrsInEM[i].getColumnPair(), pt, beanName, fieldName));
                     otherEM.addCmrFieldMapping(inverseMapping);
                 }
             }
@@ -1712,18 +1505,13 @@ public class MappingFile {
         int len = (cpa == null) ? 0 : cpa.length;
         if (len == 0) {
             throw new ConversionException(
-                I18NHelper.getMessage(
-                messages,
-                "ERR_COLUMN_PAIR_MISSING", //NOI18N
-                beanName, fieldName));
+                I18NHelper.getMessage(messages, "ERR_COLUMN_PAIR_MISSING", beanName, fieldName));
         }
-        ColumnPair [] retVal = new ColumnPair[len];
+        ColumnPair[] retVal = new ColumnPair[len];
         for (int index = 0; index < len; index++) {
             retVal[index] = new ColumnPair();
-            retVal[index].addColumnName(
-                qualify(primeTable,cpa[index].getColumnName(1)));
-            retVal[index].addColumnName(
-                qualify(primeTable,cpa[index].getColumnName(0)));
+            retVal[index].addColumnName(qualify(primeTable, cpa[index].getColumnName(1)));
+            retVal[index].addColumnName(qualify(primeTable, cpa[index].getColumnName(0)));
         }
         return retVal;
     }
@@ -1731,49 +1519,44 @@ public class MappingFile {
     private String qualify(String tn, String cn) {
         int tmp = cn.indexOf('.');
         String retVal = cn;
-        if (-1 == tmp)
+        if (-1 == tmp) {
             retVal = tn + "." + cn; // NOI18N
+        }
         return retVal;
     }
 
-    private TableElement getTableElement(SchemaElement schema,
-        DBIdentifier dbId, ConversionHelper helper)
+
+    private TableElement getTableElement(SchemaElement schema, DBIdentifier dbId)
         throws DBException, ConversionException {
-
-        TableElement retVal = ((schema != null) ?
-            schema.getTable(dbId) : null);
-
-        if (null == retVal && !helper.ensureValidation()) {
+        TableElement table = schema == null ? null : schema.getTable(dbId);
+        if (table == null && !helper.ensureValidation()) {
             // Need to create a dummy for invalid mappings because
             // the mapping model setter methods don't accept
             // strings even though that is what they store.
             // Create the table and add it to the knownTables list
             // for later
 
-            retVal = new TableElement();
-            retVal.setName(dbId);
-            retVal.setDeclaringSchema(schema);
+            table = new TableElement();
+            table.setName(dbId);
+            table.setDeclaringSchema(schema);
             org.netbeans.modules.dbschema.UniqueKeyElement tkey =
                 new org.netbeans.modules.dbschema.UniqueKeyElement();
             ColumnElement fakeKeyCol = new ColumnElement();
-            fakeKeyCol.setName(DBIdentifier.create(retVal.getName().getName()+ "."+"fookeyng")); //NOI18N
+            fakeKeyCol.setName(DBIdentifier.create(table.getName().getName()+ "."+"fookeyng"));
 
             // Type numeric=2
             fakeKeyCol.setType(2);
-            fakeKeyCol.setPrecision(new Integer(MINIMUM_PRECISION));
+            fakeKeyCol.setPrecision(MINIMUM_PRECISION);
             tkey.setPrimaryKey(true);
             tkey.addColumn(fakeKeyCol);
-            retVal.addColumn(fakeKeyCol);
-            retVal.addKey(tkey);
+            table.addColumn(fakeKeyCol);
+            table.addKey(tkey);
         }
-        if (retVal == null) {
+        if (table == null) {
             throw new ConversionException(
-                I18NHelper.getMessage(
-                messages,
-                "ERR_INVALID_TABLE", //NOI18N
-                new Object [] {dbId.getName(), schema}));
+                I18NHelper.getMessage(messages, "ERR_INVALID_TABLE", new Object[] {dbId.getName(), schema}));
         }
-        return retVal;
+        return table;
     }
 
     private ColumnElement getColumnElement(TableElement sourceTableEl,
@@ -1791,27 +1574,21 @@ public class MappingFile {
             throw new ConversionException(
                 I18NHelper.getMessage(
                 messages,
-                "ERR_INVALID_COLUMN", //NOI18N
+                "ERR_INVALID_COLUMN",
                 new Object [] {sourceColumnName, sourceTableEl}));
         }
         return aCol;
     }
 
     private MappingFieldElement createUnmappedField(MappingClassElement mce,
-        String beanName, String fieldName)
-        throws ModelException {
+        String beanName, String fieldName) throws ModelException {
+        PersistenceClassElement pce = ((MappingClassElementImpl) mce).getPersistenceElement();
+        PersistenceFieldElementImpl pfei = new PersistenceFieldElementImpl(fieldName);
+        PersistenceFieldElement pfe = new PersistenceFieldElement(pfei, pce);
 
-        PersistenceClassElement pce = ((MappingClassElementImpl)mce).
-            getPersistenceElement();
-        PersistenceFieldElementImpl pfei =
-            new PersistenceFieldElementImpl(fieldName);
-        PersistenceFieldElement pfe =
-            new PersistenceFieldElement(pfei, pce);
-
-        pfe.setKey(helper.isKey(beanName,fieldName,false));
+        pfe.setKey(helper.isKey(beanName, fieldName, false));
         pce.addField(pfe);
-        MappingFieldElement mfe = new MappingFieldElementImpl(fieldName, mce);
-        return mfe;
+        return new MappingFieldElementImpl(fieldName, mce);
     }
 
     /**
@@ -1850,56 +1627,55 @@ public class MappingFile {
                     throw new ConversionException(
                         I18NHelper.getMessage(
                         messages,
-                        "ERR_INVALID_FG_LEVEL", //NOI18N
-                        beanName, mfe.getName(), ""+level)); //NOI18N
+                        "ERR_INVALID_FG_LEVEL",
+                        beanName, mfe.getName(), ""+level));
                 }
                 mfe.setFetchGroup(level+1);
             }
             String ig = fw.getNamedGroup();
             if (null != ig) {
-                Integer fgval = (Integer) namedGroups.get(ig);
+                Integer fgval = namedGroups.get(ig);
                 if (null == fgval) {
-                    fgval = new Integer(groupCount--);
-                    namedGroups.put(ig,fgval);
+                    fgval = Integer.valueOf(groupCount--);
+                    namedGroups.put(ig, fgval);
                 }
                 mfe.setFetchGroup(fgval.intValue());
             }
-            if (fw.isNone())
+            if (fw.isNone()) {
                 mfe.setFetchGroup(MappingFieldElement.GROUP_NONE);
-            if (fw.isDefault())
+            }
+            if (fw.isDefault()) {
                 mfe.setFetchGroup(MappingFieldElement.GROUP_DEFAULT);
-        }
-        else {
-            if (mfe instanceof MappingRelationshipElement)
+            }
+        } else {
+            if (mfe instanceof MappingRelationshipElement) {
                 mfe.setFetchGroup(MappingFieldElement.GROUP_NONE);
-            else {
-                if (fieldMappedToABlob)
+            } else {
+                if (fieldMappedToABlob) {
                     mfe.setFetchGroup(MappingFieldElement.GROUP_NONE);
-                else
+                } else {
                     mfe.setFetchGroup(MappingFieldElement.GROUP_DEFAULT);
+                }
             }
         }
     }
 
     private PersistenceFieldElement createPersistenceField(
         MappingClassElement mce, String fieldName) throws ModelException {
-        PersistenceClassElement pce =
-            ((MappingClassElementImpl)mce).getPersistenceElement();
-        PersistenceFieldElementImpl pfei =
-            new PersistenceFieldElementImpl(fieldName);
-        PersistenceFieldElement pfe =
-            new PersistenceFieldElement(pfei, pce);
+        PersistenceClassElement pce = ((MappingClassElementImpl) mce).getPersistenceElement();
+        PersistenceFieldElementImpl pfei = new PersistenceFieldElementImpl(fieldName);
+        PersistenceFieldElement pfe = new PersistenceFieldElement(pfei, pce);
         pce.addField(pfe);
         return pfe;
     }
 
-    private MappingFieldElement createMappingField(MappingClassElement mce,
-        String fieldName, ColumnElement col) throws ModelException {
-        MappingFieldElement mfe =
-            new MappingFieldElementImpl(fieldName, mce);
+    private MappingFieldElement createMappingField(MappingClassElement mce, String fieldName, ColumnElement col)
+        throws ModelException {
+        MappingFieldElement mfe = new MappingFieldElementImpl(fieldName, mce);
         mce.addField(mfe);
-        if (col != null)
+        if (col != null) {
             mfe.addColumn(col);
+        }
         return mfe;
     }
 }

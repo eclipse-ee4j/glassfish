@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -98,18 +99,6 @@
         </sun:property> 
         <sun:property id="asgroup" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.realm.asgroup}" helpText="$resource{i18nc.realm.asgroupHelp}" >
             <sun:textField id="asgroup" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.realm.asgroup']}" text="#{attrMap.ldapAsGroups}"  />
-        </sun:property> 
-    </sun:propertySheetSection>
-
-    <sun:propertySheetSection id="solarisSection" visible="#{false}" label="$resource{i18nc.realm.specificProps}">
-        <!afterCreate
-            getClientId(component="$this{component}" clientId=>$page{solarisSectionId});
-        />  
-        <sun:property id="jaax" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.realm.jaax}" helpText="$resource{i18nc.realm.jaaxHelp}" >
-            <sun:textField id="jaax" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.realm.jaax']}" text="#{attrMap.solarisJaax}" required="#{true}" />
-        </sun:property> 
-        <sun:property id="asgroup" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.realm.asgroup}" helpText="$resource{i18nc.realm.asgroupHelp}" >
-            <sun:textField id="asgroup" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.realm.asgroup']}" text="#{attrMap.solarisAsGroups}"  />
         </sun:property> 
     </sun:propertySheetSection>
 

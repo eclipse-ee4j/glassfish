@@ -87,6 +87,7 @@
         <module>concurrent</module>
         <module>cluster</module>
         <module>commandrecorder</module>
+        <module>hello-world</module>
         <module>community-theme</module>
         <module>web</module>
         <module>gf-admingui-connector</module>
@@ -99,6 +100,7 @@
         <module>corba</module>
         <module>full</module>
         <module>war</module>
+        <module>modernized-admingui</module>
     </modules>
 
     <dependencies>

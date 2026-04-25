@@ -39,7 +39,6 @@
     <name>Distribution Fragments for various OSGi platforms</name>
 
     <modules>
-        <module>felix</module>
         <module>osgi-cli-remote</module>
         <module>osgi-cli-interactive</module>
         <module>osgi-container</module>

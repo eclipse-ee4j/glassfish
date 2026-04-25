@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,22 +17,12 @@
 
 package com.sun.enterprise.glassfish.bootstrap.cp;
 
-import com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform;
-import com.sun.enterprise.glassfish.bootstrap.cfg.ServerFiles;
+import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
 import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfg;
-import com.sun.enterprise.glassfish.bootstrap.cfg.StartupContextCfgFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.ASADMIN_ARGS;
-import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
-import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +39,7 @@ class ClassLoaderBuilderIT {
 
     @Test
     void createLauncher_Felix() throws Exception {
-        StartupContextCfg cfg = createStartupContextCfg();
+        StartupContextCfg cfg = StartupContextUtil.createStartupContextCfg();
         assertEquals("-something", cfg.getProperty(ASADMIN_ARGS),
             ASADMIN_ARGS + " wasn't written through to startup context cfg.");
         ClassLoader loader = ClassLoaderBuilder.createOSGiFrameworkLauncherCL(cfg, ClassLoader.getPlatformClassLoader());
@@ -69,50 +59,4 @@ class ClassLoaderBuilderIT {
         );
     }
 
-
-    private StartupContextCfg createStartupContextCfg() throws IOException {
-        Path installRoot = Files.createTempDirectory("FakeGFInstallRoot");
-        Path instanceRoot = Files.createTempDirectory("FakeGFInstanceRoot");
-        ServerFiles files = new ServerFiles(installRoot, instanceRoot);
-
-        Path felixBin = installRoot.resolve(Path.of("osgi", "felix", "bin"));
-        Files.createDirectories(felixBin);
-        Path modulesDir = installRoot.resolve("modules");
-        Files.createDirectories(modulesDir);
-        Path bootstrapDir = installRoot.resolve(Path.of("lib", "bootstrap"));
-        Files.createDirectories(bootstrapDir);
-
-        Path jarFilesDir = detectBasedir().toPath().resolve(Path.of("target", "test-osgi"));
-        Files.copy(jarFilesDir.resolve("glassfish-jul-extension.jar"), bootstrapDir.resolve("glassfish-jul-extension.jar"));
-        Files.copy(jarFilesDir.resolve("org.apache.felix.main.jar"), felixBin.resolve("felix.jar"));
-        Files.copy(jarFilesDir.resolve("simple-glassfish-api.jar"), bootstrapDir.resolve("simple-glassfish-api.jar"));
-        Files.copy(jarFilesDir.resolve(Path.of("..", "glassfish.jar")), bootstrapDir.resolve("glassfish.jar"));
-
-        Properties args = new Properties();
-        Path cfgDir = Files.createDirectories(installRoot.resolve(Path.of("config")));
-        Files.createFile(cfgDir.resolve("osgi.properties"));
-        args.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.toFile().getAbsolutePath());
-        args.setProperty(INSTANCE_ROOT.getPropertyName(), instanceRoot.toFile().getAbsolutePath());
-        args.setProperty(ASADMIN_ARGS, "-something");
-
-        return StartupContextCfgFactory.createStartupContextCfg(OsgiPlatform.Felix, files, args);
-    }
-
-
-    /**
-     * Useful for a heuristic inside Eclipse and other environments.
-     *
-     * @return Absolute path to the glassfish directory.
-     */
-    private static File detectBasedir() {
-        final String basedir = System.getProperty("basedir");
-        if (basedir != null) {
-            return new File(basedir);
-        }
-        final File target = new File("target");
-        if (target.exists()) {
-            return target.getAbsoluteFile().getParentFile();
-        }
-        return new File(".").getAbsoluteFile().getParentFile();
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,9 +20,11 @@ package com.sun.enterprise.naming.impl;
 import com.sun.enterprise.naming.impl.test.ServerExtension;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 
+import java.applet.Applet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -38,7 +40,21 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.omg.CORBA.Any;
+import org.omg.CORBA.ContextList;
+import org.omg.CORBA.Environment;
+import org.omg.CORBA.ExceptionList;
+import org.omg.CORBA.NVList;
+import org.omg.CORBA.NamedValue;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CORBA.Request;
+import org.omg.CORBA.StructMember;
+import org.omg.CORBA.TCKind;
+import org.omg.CORBA.TypeCode;
+import org.omg.CORBA.UnionMember;
+import org.omg.CORBA.WrongTransaction;
+import org.omg.CORBA.portable.OutputStream;
 import org.omg.CosNaming.NamingContext;
 
 import static org.easymock.EasyMock.anyObject;
@@ -170,14 +186,183 @@ public class GlassfishNamingManagerImplTest {
 
     @Test
     public void initializeRemoteNamingSupport() throws Exception {
-        ORB orb = createMock(ORB.class);
+
+        interface ORBEasyMock {
+
+            public org.omg.CORBA.Object resolve_initial_references(String string);
+
+        }
+
+
+        class ORBMock extends ORB {
+
+            ORBEasyMock delegate;
+
+            public ORBMock(ORBEasyMock delegate) {
+                this.delegate = delegate;
+            }
+
+            @Override
+            protected void set_parameters(String[] strings, Properties prprts) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            protected void set_parameters(Applet applet, Properties prprts) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public String[] list_initial_services() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public org.omg.CORBA.Object resolve_initial_references(String string) throws InvalidName {
+                return delegate.resolve_initial_references(string);
+            }
+
+            @Override
+            public String object_to_string(org.omg.CORBA.Object o) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public org.omg.CORBA.Object string_to_object(String string) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public NVList create_list(int i) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public NamedValue create_named_value(String string, Any any, int i) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public ExceptionList create_exception_list() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public ContextList create_context_list() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public org.omg.CORBA.Context get_default_context() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public Environment create_environment() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public OutputStream create_output_stream() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public void send_multiple_requests_oneway(Request[] rqsts) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public void send_multiple_requests_deferred(Request[] rqsts) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public boolean poll_next_response() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public Request get_next_response() throws WrongTransaction {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode get_primitive_tc(TCKind tckind) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_struct_tc(String string, String string1, StructMember[] sms) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_union_tc(String string, String string1, TypeCode tc, UnionMember[] ums) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_enum_tc(String string, String string1, String[] strings) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_alias_tc(String string, String string1, TypeCode tc) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_exception_tc(String string, String string1, StructMember[] sms) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_interface_tc(String string, String string1) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_string_tc(int i) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_wstring_tc(int i) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_sequence_tc(int i, TypeCode tc) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_recursive_sequence_tc(int i, int i1) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public TypeCode create_array_tc(int i, TypeCode tc) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public Any create_any() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+        }
+
+        ORBEasyMock orbEasyMock = createMock(ORBEasyMock.class);
+        ORBMock orb = new ORBMock(orbEasyMock);
         NamingContext orbNamingContext = createMock(NamingContext.class);
-        expect(orb.resolve_initial_references(EasyMock.anyString())).andReturn(orbNamingContext).anyTimes();
+        expect(orbEasyMock.resolve_initial_references(EasyMock.anyString())).andReturn(orbNamingContext).anyTimes();
         expect(orbNamingContext.resolve(anyObject())).andReturn(null).anyTimes();
         expect(orbNamingContext.bind_new_context(anyObject())).andReturn(orbNamingContext).anyTimes();
         orbNamingContext.bind(anyObject(), anyObject());
         expectLastCall().anyTimes();
-        replay(orb, orbNamingContext);
+        replay(orbEasyMock, orbNamingContext);
         GlassfishNamingManagerImpl manager = new GlassfishNamingManagerImpl();
         InvocationManager invocationManager = new InvocationManagerImpl();
         manager.setInvocationManager(invocationManager);

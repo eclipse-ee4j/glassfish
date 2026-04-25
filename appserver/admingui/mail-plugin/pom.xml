@@ -76,7 +76,7 @@
                         <!-- _include does not work. See Felix-620.
                         <_include>osgi.bundle</_include>
                         -->
-                        <Export-Package>org.glassfish.javamail.admingui</Export-Package>
+                        <Export-Package>org.glassfish.jmail.admingui</Export-Package>
                     </instructions>
                 </configuration>
                 <executions>

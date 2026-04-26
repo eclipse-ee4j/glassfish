@@ -344,7 +344,7 @@ public class MappingClassElementImpl extends MappingElementImpl implements Mappi
     public List<MappingTableElement> getTables ()
     {
         if (_tables == null) {
-            _tables = new ArrayList();
+            _tables = new ArrayList<>();
         }
 
         return _tables;
@@ -375,86 +375,61 @@ public class MappingClassElementImpl extends MappingElementImpl implements Mappi
      * @exception ModelException if impossible
      */
     @Override
-    public void addTable (TableElement table) throws ModelException
-    {
-        if (table != null)
-        {
-            List<MappingTableElement> tables = getTables();
+    public void addTable(TableElement table) throws ModelException {
+        if (table == null) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.table.null_argument"));
+        }
+        List<MappingTableElement> tables = getTables();
 
-            // If the table list is empty, this should be the primary table
-            if (tables.isEmpty()) {
-                setPrimaryTable(table);
-            } else
-            {
-                HashMap newSecondaryTables = new HashMap();
-                Iterator iterator = tables.iterator();
-                boolean found = false;
+        // If the table list is empty, this should be the primary table
+        if (tables.isEmpty()) {
+            setPrimaryTable(table);
+            return;
+        }
+        Iterator<MappingTableElement> iterator = tables.iterator();
+        // If this table has already been added just skip it and return
+        while (iterator.hasNext()) {
+            if (iterator.next().isEqual(table)) {
+                return;
+            }
+        }
 
-                // If this table has already been added just skip it and return
-                while (iterator.hasNext()) {
-                    if (((MappingTableElement)iterator.next()).isEqual(table)) {
-                        return;
-                    }
-                }
+        HashMap<MappingTableElement, ForeignKeyElement> newSecondaryTables = new HashMap<>();
+        boolean found = false;
+        // Add the table as a secondary table as long as there are
+        // relevant fks setup. Otherwise, throw an exception
+        iterator = tables.iterator();
+        while (iterator.hasNext()) {
+            MappingTableElement mappingTable = iterator.next();
+            String absoluteTableName = NameUtil.getAbsoluteTableName(_databaseRoot, mappingTable.getTable());
+            ForeignKeyElement[] foreignKeys = TableElement.forName(absoluteTableName).getForeignKeys();
+            int i, count = ((foreignKeys != null) ? foreignKeys.length : 0);
 
-                // Add the table as a secondary table as long as there are
-                // relevant fks setup. Otherwise, throw an exception
-                iterator = tables.iterator();
-                while (iterator.hasNext())
-                {
-                    MappingTableElement mappingTable =
-                        (MappingTableElement)iterator.next();
-                    String absoluteTableName = NameUtil.getAbsoluteTableName(
-                        _databaseRoot, mappingTable.getTable());
-                    ForeignKeyElement[] foreignKeys = TableElement.forName(
-                        absoluteTableName).getForeignKeys();
-                    int i, count =
-                        ((foreignKeys != null) ? foreignKeys.length : 0);
+            for (i = 0; i < count; i++) {
+                ForeignKeyElement fk = foreignKeys[i];
 
-                    for (i = 0; i < count; i++)
-                    {
-                        ForeignKeyElement fk = foreignKeys[i];
-
-                        if (table == fk.getReferencedTable())
-                        {
-                            // store it so it can be added after we finish
-                            // iterating the array (can't now because of
-                            // concurrent modification restrictions)
-                            newSecondaryTables.put(mappingTable, fk);
-                            found = true;
-                        }
-                    }
-                }
-
-                if (found)    // add the secondary tables now
-                {
-                    iterator = newSecondaryTables.keySet().iterator();
-
-                    while (iterator.hasNext())
-                    {
-                        MappingTableElement mappingTable =
-                            (MappingTableElement)iterator.next();
-                        MappingReferenceKeyElement refKey =
-                            addSecondaryTable(mappingTable, table);
-
-                        refKey.addColumnPairs(((ForeignKeyElement)
-                            newSecondaryTables.get(mappingTable)).
-                            getColumnPairs());
-                    }
-
-                }
-                else
-                {
-                    throw new ModelException(I18NHelper.getMessage(
-                        getMessages(),
-                        "mapping.table.foreign_key_not_found", table));
+                if (table == fk.getReferencedTable()) {
+                    // store it so it can be added after we finish
+                    // iterating the array (can't now because of
+                    // concurrent modification restrictions)
+                    newSecondaryTables.put(mappingTable, fk);
+                    found = true;
                 }
             }
         }
-        else
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.table.null_argument"));
+
+        if (!found) {
+            throw new ModelException(
+                I18NHelper.getMessage(getMessages(), "mapping.table.foreign_key_not_found", table));
+        }
+        // add the secondary tables now
+        iterator = newSecondaryTables.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            MappingTableElement mappingTable = iterator.next();
+            MappingReferenceKeyElement refKey = addSecondaryTable(mappingTable, table);
+
+            refKey.addColumnPairs(newSecondaryTables.get(mappingTable).getColumnPairs());
         }
     }
 
@@ -636,14 +611,11 @@ public class MappingClassElementImpl extends MappingElementImpl implements Mappi
      * @return the mapping field whose name matches the name parameter
      */
     @Override
-    public MappingFieldElement getField (String name)
-    {
-        Iterator fieldIterator = getFields().iterator();
+    public MappingFieldElement getField(String name) {
+        Iterator<MappingFieldElement> fieldIterator = getFields().iterator();
 
-        while (fieldIterator.hasNext())
-        {
-            MappingFieldElement field =
-                (MappingFieldElement)fieldIterator.next();
+        while (fieldIterator.hasNext()) {
+            MappingFieldElement field = fieldIterator.next();
 
             if (name.equals(field.getName())) {
                 return field;
@@ -658,20 +630,15 @@ public class MappingClassElementImpl extends MappingElementImpl implements Mappi
      * @exception ModelException if impossible
      */
     @Override
-    public void addField (MappingFieldElement field) throws ModelException
-    {
+    public void addField(MappingFieldElement field) throws ModelException {
         List<MappingFieldElement> fields = getFields();
 
-        if (!fields.contains(field))
-        {
-            try
-            {
+        if (!fields.contains(field)) {
+            try {
                 fireVetoableChange(PROP_FIELDS, null, null);
                 fields.add(field);
                 firePropertyChange(PROP_FIELDS, null, null);
-            }
-            catch (PropertyVetoException e)
-            {
+            } catch (PropertyVetoException e) {
                 throw new ModelVetoException(e);
             }
         }
@@ -783,8 +750,7 @@ public class MappingClassElementImpl extends MappingElementImpl implements Mappi
      * @see PersistenceClassElement#APPLICATION_IDENTITY
      *
      */
-    public String getKeyClass ()
-    {
+    public String getKeyClass() {
         return getPersistenceElement().getKeyClass();
     }
 
@@ -805,9 +771,13 @@ public class MappingClassElementImpl extends MappingElementImpl implements Mappi
      * and archiving.
      * @param fields the list of mapping fields in this mapping class
      */
-    public void setFields (ArrayList fields) { _fields = fields; }
+    public void setFields(ArrayList<MappingFieldElement> fields) {
+        _fields = fields;
+    }
 
-    public int getProperties () { return _properties; }
+    public int getProperties() {
+        return _properties;
+    }
 
     //======== to be used for reference in best guess implementation ==========
     // configure methods

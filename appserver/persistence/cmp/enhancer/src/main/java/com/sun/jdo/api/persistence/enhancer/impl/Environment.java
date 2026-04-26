@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 
 //@lars added: field for last error message
@@ -132,46 +134,31 @@ public final class Environment
     private File destinationDirectory = null;
 
     /* Hash VM class name to ClassControl */
-    private Hashtable classMap = new Hashtable(11);
+    private Hashtable<String, ClassControl> classMap = new Hashtable<>(11);
 
     /* Set of classes that were looked up but not found. */
     //@olsen: subst: Hashtable -> HashMap
-    private HashMap missingClasses = new HashMap(11);
-
-    /* Hash VM class name to ClassControl
-     * Entries in this table have been renamed and the class control
-     * reflects the updated name */
-//@olsen: inlined method
-/*
-    private Hashtable renamedMap = new Hashtable(203);
-*/
-
-    /* explicit package name translations
-     * Maps string to string */
-//@olsen: disabled feature
-/*
-    private Hashtable translations = new Hashtable(11);
-*/
+    private HashMap<String, String> missingClasses = new HashMap<>(11);
 
     /* Search path to be used for locating classes */
     //@olsen: added default initialization
-    private ClassPath classPathOption = new ClassPath("");//NOI18N
+    private ClassPath classPathOption = new ClassPath("");
 
     /* Search path to be used for locating annotated classes in output dir */
     private ClassPath destClassPath;
 
     /* A set of fully qualified field names (maps name to itself) */
-    private Hashtable fieldSuppressions = new Hashtable();
+    private Hashtable<String, String> fieldSuppressions = new Hashtable<>();
 
     /* A set of fully qualified class names (maps name to itself) */
-    private Hashtable classSuppressions = new Hashtable();
+    private Hashtable<String, String> classSuppressions = new Hashtable<>();
 
     /* The instance providing the JDO meta data. */
     //@olsen: added field
     private JDOMetaData jdoMetaData;
 
     /* Last error message */
-    private String lastErrorMessage = null;
+    private String lastErrorMessage;
 
     // public accessors
 
@@ -201,7 +188,7 @@ public final class Environment
             //@olsen: redirected output
             //System.out.print("Warning: ");
             //System.out.println(warn);
-            out.println(getI18N("enhancer.warning", warn));//NOI18N
+            out.println(getI18N("enhancer.warning", warn));
         }
     }
 
@@ -212,7 +199,7 @@ public final class Environment
             //@olsen: redirected output
             //System.out.print("Warning: ");
             //System.out.println(warn);
-            out.println(getI18N("enhancer.warning", warn));//NOI18N
+            out.println(getI18N("enhancer.warning", warn));
         }
     }
 
@@ -224,7 +211,7 @@ public final class Environment
             //@olsen: redirected output
             //System.out.print("Warning: ");
             //System.out.println(warn);
-            out.print(getI18N("enhancer.warning", warn));//NOI18N
+            out.print(getI18N("enhancer.warning", warn));
         }
     }
 
@@ -232,7 +219,7 @@ public final class Environment
         if (verboseOption) {
             //@olsen: redirected output
             //System.out.println(mess);
-            out.println("JDO ENHANCER: " + mess);//NOI18N
+            out.println("JDO ENHANCER: " + mess);
         }
     }
 
@@ -241,7 +228,7 @@ public final class Environment
             //@olsen: redirected output
             //System.out.println(mess);
             out.println();
-            out.println("JDO ENHANCER: " + mess);//NOI18N
+            out.println("JDO ENHANCER: " + mess);
         }
     }
 
@@ -430,7 +417,7 @@ public final class Environment
 
             if (!existCC.source().sameAs(cc.source())) {
                 //@olsen: support for I18N
-                error(getI18N("enhancer.class_already_entered",//NOI18N
+                error(getI18N("enhancer.class_already_entered",
                               cc.userClassName(),
                               cc.sourceName(),
                               existCC.sourceName()));
@@ -442,31 +429,19 @@ public final class Environment
             if (cc.persistType() == ClassControl.PersistUnknown ||
                 existCC.persistType() == ClassControl.PersistCapable ||
                 (existCC.persistType() == ClassControl.PersistAware &&
-                 cc.persistType() != ClassControl.PersistCapable))
+                 cc.persistType() != ClassControl.PersistCapable)) {
                 return;
+            }
 
         }
 
-        if (existCC == null && cc.sourceName() != null)
-            message("adding class " + cc.userClassName() +//NOI18N
-                    " from " + cc.sourceName());//NOI18N
+        if (existCC == null && cc.sourceName() != null) {
+            message("adding class " + cc.userClassName() +
+                    " from " + cc.sourceName());
+        }
 
         classMap.put(className, cc);
     }
-
-    /**
-     * Add the modified name to the class map if the class name has changed.
-     */
-    //@olsen: added method
-//@olsen: disabled feature
-/*
-    public void renameClass(String oldClassName) {
-        ClassControl cc = (ClassControl)classMap.remove(oldClassName);
-        String newClassName = cc.className();
-        renamedMap.put(oldClassName, cc);
-        classMap.put(newClassName, cc);
-    }
-*/
 
     /**
      * Look for the specified class in the class map.  If not there,
@@ -483,11 +458,11 @@ public final class Environment
      * class will have been found.
      */
     public ClassControl getClass(String className) {
-        return (ClassControl)classMap.get(className);
+        return classMap.get(className);
     }
 
     //@olsen: added method
-    public Iterator getClasses() {
+    public Iterator<ClassControl> getClasses() {
         return classMap.values().iterator();
     }
 
@@ -497,15 +472,15 @@ public final class Environment
      * return false.
      */
     public ClassControl findClass(String className) {
-        ClassControl cc = (ClassControl) classMap.get(className);
+        ClassControl cc = classMap.get(className);
 
         if ((cc == null) && (missingClasses.get(className) == null)) {
 
             // Not already known - try looking up in class path
             cc = lookupClass(className);
             if (cc != null) {
-                message("Reading class " + cc.userClassName() +//NOI18N
-                        " from " + cc.sourceName());//NOI18N
+                message("Reading class " + cc.userClassName() +
+                        " from " + cc.sourceName());
                 classMap.put(className, cc);
             } else {
                 missingClasses.put(className, className);
@@ -524,15 +499,17 @@ public final class Environment
         ClassFileSource source = classPathOption.findClass(className);
 
         while (true) {
-            if (source == null)
+            if (source == null) {
                 return null;
+            }
 
             //@olsen: cosmetics
             try {
                 ClassControl cc = new ClassControl(source, this);
                 if (cc.className() != null &&
-                    cc.className().equals(className))
+                    cc.className().equals(className)) {
                     return cc;
+                }
             } catch (ClassFormatError e) {
             }
 
@@ -557,12 +534,13 @@ public final class Environment
      * Return a ArrayList of ClassControl objects which have the specified
      * persistence type
      */
-    public ArrayList collectClasses(int persistType) {
-        ArrayList v = new ArrayList();
-        for (Iterator e = classMap.values().iterator(); e.hasNext();) {
-            ClassControl cc = (ClassControl)e.next();
-            if (cc.persistType() == persistType)
+    public List<ClassControl> collectClasses(int persistType) {
+        ArrayList<ClassControl> v = new ArrayList<>();
+        for (Iterator<ClassControl> e = classMap.values().iterator(); e.hasNext();) {
+            ClassControl cc = e.next();
+            if (cc.persistType() == persistType) {
                 v.add(cc);
+            }
         }
         return v;
     }
@@ -571,10 +549,11 @@ public final class Environment
      * Return an ArrayList of the ClassControls in classMap.
      * This is useful in that it provides a stable base for enumeration.
      */
-    public ArrayList collectClasses() {
-        ArrayList v = new ArrayList();
-        for (Iterator e = classMap.values().iterator(); e.hasNext(); )
+    public List<ClassControl> collectClasses() {
+        ArrayList<ClassControl> v = new ArrayList<>();
+        for (Iterator<ClassControl> e = classMap.values().iterator(); e.hasNext(); ) {
             v.add(e.next());
+        }
         return v;
     }
 
@@ -585,8 +564,9 @@ public final class Environment
      * for the class specified.  Return null if not found.
      */
     public ClassFileSource lookupDestClass(String className) {
-        if (destClassPath == null && destinationDirectory != null)
+        if (destClassPath == null && destinationDirectory != null) {
             destClassPath = new ClassPath(destinationDirectory.getPath());
+        }
         return (destClassPath == null
                 ? null : destClassPath.findClass(className));
     }
@@ -600,25 +580,17 @@ public final class Environment
     public Environment() {
     }
 
-//@olsen: disabled feature
-/*
-    public void setClassPath(String path) {
-        message("setting class path to " + path);
-        classPathOption = new ClassPath(path);
-    }
-*/
-
     public void setDestinationDirectory(String dir) {
         final File dest = new File(dir);
         if (destinationDirectory != null) {
             //@olsen: support for I18N
-            error(getI18N("destination_directory_already_set",//NOI18N
+            error(getI18N("destination_directory_already_set",
                           dir,
                           destinationDirectory.getPath()));
             return;
         }
         if (!dest.isDirectory()) {
-            error(getI18N("enhancer.destination_directory_not_exist",//NOI18N
+            error(getI18N("enhancer.destination_directory_not_exist",
                           dir));
             return;
         }
@@ -630,8 +602,9 @@ public final class Environment
      * is found in the class path.
      */
     public void excludeDestinationDirectory() {
-        if (destinationDirectory != null)
+        if (destinationDirectory != null) {
             classPathOption.remove(destinationDirectory);
+        }
     }
 
     /**
@@ -640,8 +613,9 @@ public final class Environment
      */
     public void moveDestinationDirectoryToEnd() {
         if (destinationDirectory != null &&
-            classPathOption.remove(destinationDirectory))
+            classPathOption.remove(destinationDirectory)) {
             classPathOption.append(destinationDirectory);
+        }
     }
 
     //@olsen: added method
@@ -782,25 +756,29 @@ public final class Environment
         while (i<pkg.length()) {
             if (i != 0) {
                 // each package component must be preceded by a '.'
-                if (pkg.charAt(i) != '.')
+                if (pkg.charAt(i) != '.') {
                     return null;
+                }
 
                 // translate '.' to '/'
-                buf.append("/");//NOI18N
+                buf.append("/");
 
                 // there must be more characters for the next package component
                 i++;
-                if (i == pkg.length())
+                if (i == pkg.length()) {
                     return null;
+                }
             }
 
-            if (!Character.isJavaIdentifierStart(pkg.charAt(i)))
+            if (!Character.isJavaIdentifierStart(pkg.charAt(i))) {
                 return null;
+            }
             buf.append(pkg.charAt(i++));
 
             while (i < pkg.length() &&
-                   Character.isJavaIdentifierPart(pkg.charAt(i)))
+                   Character.isJavaIdentifierPart(pkg.charAt(i))) {
                 buf.append(pkg.charAt(i++));
+            }
         }
 
         return buf.toString();
@@ -817,38 +795,15 @@ public final class Environment
      * Check whether the named field in the named class should have
      * warnings suppressed.
      */
-    private boolean fieldWarningsSuppressed(String classname,
-                                            String fieldName) {
-        return fieldSuppressions.get(classname + "." + fieldName) != null;//NOI18N
+    private boolean fieldWarningsSuppressed(String classname, String fieldName) {
+        return fieldSuppressions.get(classname + "." + fieldName) != null;
     }
+
 
     /**
      * Reset the environment.
      */
-    //@olsen: added method
     public void reset() {
-/*
-        jdoMetaData = null;
-
-        verboseOption = false;
-        quietOption = false;
-        dumpLevel = 0;
-
-        disableThisHookHoisting = false;
-        disableInitializerAnnotationSuppression = false;
-        disableArrayHookCaching = false;
-        disableArrayElementFetch = false;
-
-        noWriteOption = false;
-        forceOverwriteOption = false;
-        updateInPlaceOption = false;
-        classPathOption = null;
-        destinationDirectory = null;
-        destClassPath = null;
-
-        renamedMap.clear();
-        translations.clear();
-*/
         errorsEncountered = 0;
 
         classMap.clear();

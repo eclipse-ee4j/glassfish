@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * PersistenceElementCollection.java
- *
- * Created on March 6, 2000, 2:20 PM
- */
-
 package com.sun.jdo.api.persistence.model.jdo.impl;
 
 import com.sun.jdo.api.persistence.model.ModelException;
@@ -33,8 +28,7 @@ import java.util.List;
 
 /**
  *
- * @author raccah
- * @version %I%
+ * @author raccah 2000
  */
 public class PersistenceElementCollection
 {
@@ -60,9 +54,7 @@ public class PersistenceElementCollection
     }
 
     /** Creates new PersistenceElementCollection */
-    public PersistenceElementCollection (PersistenceElementImpl owner,
-        String propertyName, Object[] template)
-    {
+    public PersistenceElementCollection(PersistenceElementImpl owner, String propertyName, Object[] template) {
         _owner = owner;
         _propertyName = propertyName;
         _template = template;
@@ -75,9 +67,7 @@ public class PersistenceElementCollection
      * {@link com.sun.jdo.api.persistence.model.jdo.PersistenceElement.Impl#SET}
      * @exception ModelException if impossible
      */
-    public void changeElements (PersistenceElement[] elements, int action)
-        throws ModelException
-    {
+    public void changeElements(PersistenceElement[] elements, int action) throws ModelException {
         changeElements(Arrays.asList(elements), action);
     }
 
@@ -88,59 +78,47 @@ public class PersistenceElementCollection
      * {@link com.sun.jdo.api.persistence.model.jdo.PersistenceElement.Impl#SET}
      * @exception ModelException if impossible
      */
-    public void changeElements (List elements, int action)
-        throws ModelException
-    {
+    public void changeElements(List<PersistenceElement> elements, int action) throws ModelException {
         boolean changed = false;
 
-        try
-        {
+        try {
             PersistenceElement[] oldElements = getElements();
-            int oldLength = (oldElements == null) ? 0 : oldElements.length;
-            int newLength = (elements == null) ? 0 : elements.size();
-            List list = null;
+            int oldLength = oldElements == null ? 0 : oldElements.length;
+            int newLength = elements == null ? 0 : elements.size();
+            List<PersistenceElement> list = null;
 
-            switch (action)
-            {
+            switch (action) {
                 case PersistenceElement.Impl.SET:
                     list = elements;
                     changed = true;
                     break;
                 case PersistenceElement.Impl.ADD:
-                    if (newLength > 0)
-                    {
-                        list = ((oldLength == 0) ? new ArrayList() :
-                            new ArrayList(Arrays.asList(oldElements)));
+                    if (newLength > 0) {
+                        list = ((oldLength == 0) ? new ArrayList<>() : new ArrayList<>(Arrays.asList(oldElements)));
                         list.addAll(elements);
                         changed = true;
                     }
                     break;
                 case PersistenceElement.Impl.REMOVE:
-                    if ((newLength > 0) && (oldLength > 0))
-                    {
-                        list = new ArrayList(Arrays.asList(oldElements));
+                    if ((newLength > 0) && (oldLength > 0)) {
+                        list = new ArrayList<>(Arrays.asList(oldElements));
                         list.removeAll(elements);
                         changed = true;
                     }
                     break;
             }
-            if (changed)
-            {
-                try
-                {
+            if (changed) {
+                try {
                     _owner.fireVetoableChange(_propertyName, null, null);
-                    _elements = (PersistenceElement[])list.toArray(_template);
-                }
-                catch (PropertyVetoException e)
-                {
+                    _elements = (PersistenceElement[]) list.toArray(_template);
+                } catch (PropertyVetoException e) {
                     throw new ModelVetoException(e);
                 }
             }
-        }
-        finally
-        {
-            if (changed)
+        } finally {
+            if (changed) {
                 _owner.firePropertyChange(_propertyName, null, null);
+            }
         }
     }
 
@@ -165,8 +143,9 @@ public class PersistenceElementCollection
         {
             PersistenceElement element = elements[i];
 
-            if (name.equals(element.getName()))
+            if (name.equals(element.getName())) {
                 return element;
+            }
         }
 
         return null;

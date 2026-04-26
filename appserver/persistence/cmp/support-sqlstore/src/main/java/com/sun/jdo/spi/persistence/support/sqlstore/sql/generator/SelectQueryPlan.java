@@ -821,7 +821,7 @@ public class SelectQueryPlan extends QueryPlan {
      * @param index Index in current stack.
      */
     private int processLocalFieldConstraint(ConstraintFieldName node,
-                                            List currentStack,
+                                            List<ConstraintNode> currentStack,
                                             int index) {
         if (node.desc != null) {
             SelectQueryPlan fcp = ((RetrieveDescImpl) node.desc).getPlan();
@@ -1449,7 +1449,7 @@ public class SelectQueryPlan extends QueryPlan {
         if (constraint != null) {
             i = 0;
             while (i < constraint.stack.size()) {
-                ConstraintNode opNode = (ConstraintNode) constraint.stack.get(i);
+                ConstraintNode opNode = constraint.stack.get(i);
 
                 if ((opNode instanceof ConstraintOperation)
                         && ((((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY) ||
@@ -1473,7 +1473,7 @@ public class SelectQueryPlan extends QueryPlan {
                         orderByArray.set(insertAt, new ArrayList());
                     }
 
-                    ConstraintNode fieldNode = (ConstraintNode) constraint.stack.get(i - 1);
+                    ConstraintNode fieldNode = constraint.stack.get(i - 1);
                     ConstraintFieldDesc consFieldDesc = null;
 
                     if (fieldNode instanceof ConstraintFieldName) {

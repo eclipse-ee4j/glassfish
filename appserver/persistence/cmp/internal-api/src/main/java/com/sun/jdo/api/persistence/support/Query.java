@@ -53,12 +53,12 @@ public interface Query extends java.io.Serializable
      * put into the result Collection.
      * @param cls the Class of the candidate instances.
      */
-    void setClass(Class cls);
+    void setClass(Class<?> cls);
 
     /** Set the candidate Collection to query.
      * @param pcs the Candidate collection.
      */
-    void setCandidates(Collection pcs);
+    void setCandidates(Collection<?> pcs);
 
     /** Set the filter for the query.
      *
@@ -174,7 +174,7 @@ public interface Query extends java.io.Serializable
      * @see #executeWithArray (Object[] parameters)
      * @param parameters the Map containing all of the parameters.
      */
-    Object executeWithMap (Map parameters);
+    Object executeWithMap (Map<String, Object> parameters);
 
     /** Execute the query and return the filtered Collection.
      *

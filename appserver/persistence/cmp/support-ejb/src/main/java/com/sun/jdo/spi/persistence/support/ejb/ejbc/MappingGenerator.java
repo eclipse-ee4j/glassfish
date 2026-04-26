@@ -622,7 +622,7 @@ public class MappingGenerator extends
             throws DBException, SQLException, GeneratorException {
 
         String generatedSchemaName = getInfoHelper().getSchemaNameToGenerate();
-        Set tables = new HashSet();
+        Set tables = new HashSet<>();
         int size = sunCmpMappings.sizeSunCmpMapping();
 
         // Sweep through the mappings to check dbschema existence.  If a
@@ -686,9 +686,9 @@ public class MappingGenerator extends
                 schemaElement.setName(DBIdentifier.create(generatedSchemaName));
 
                 if(dmd.getDatabaseProductName().compareToIgnoreCase("MYSQL") == 0) {
-                    outSchemaImpl.initTables(cp, new LinkedList(tables), new LinkedList(), true);
+                    outSchemaImpl.initTables(cp, new LinkedList<>(tables), new LinkedList<>(), true);
                 } else {
-                    outSchemaImpl.initTables(cp, new LinkedList(tables), new LinkedList(), false);
+                    outSchemaImpl.initTables(cp, new LinkedList<>(tables), new LinkedList<>(), false);
                 }
                 outstream = new FileOutputStream(
                         new File(classout,
@@ -724,7 +724,7 @@ public class MappingGenerator extends
      * @param sunCmpMapping the SunCmpMapping element to check.
      * @param tables the Set to update.
      */
-    private void addAllTables(SunCmpMapping sunCmpMapping, Set tables) {
+    private void addAllTables(SunCmpMapping sunCmpMapping, Set<String> tables) {
         EntityMapping[] beans = sunCmpMapping.getEntityMapping();
         for (EntityMapping bean : beans) {
             // Always add the table name.

@@ -176,7 +176,7 @@ public class CMPBeanHelper {
      * @param beanName the name of the caller bean.
      * @throws IllegalArgumentException if the argument is null.
      */
-    public static void assertCollectionNotNull(Collection c, String beanName) {
+    public static void assertCollectionNotNull(Collection<?> c, String beanName) {
         if (c == null) {
             String msg = I18NHelper.getMessage(cmpMessages, "GEN.cmrsettercol_nullexception", beanName,
                 findCallingMethodName());

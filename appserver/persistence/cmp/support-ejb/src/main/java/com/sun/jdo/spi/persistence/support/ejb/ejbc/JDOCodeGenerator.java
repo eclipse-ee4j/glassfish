@@ -184,9 +184,9 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
     * @see CMPGenerator#validate(IASEjbCMPEntityDescriptor descr)
     */
     @Override
-    public Collection validate(IASEjbCMPEntityDescriptor descr) {
+    public Collection<Exception> validate(IASEjbCMPEntityDescriptor descr) {
 
-        Collection c = new ArrayList();
+        Collection<Exception> c = new ArrayList<>();
 
         c.addAll(validateModel(descr));
 
@@ -196,8 +196,8 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
         }
 
         if (LOG.isLoggable(DEBUG)) {
-            for (Iterator i = c.iterator(); i.hasNext();) {
-                LOG.log(DEBUG, "validation exception: ", (Exception) i.next());
+            for (Iterator<Exception> i = c.iterator(); i.hasNext();) {
+                LOG.log(DEBUG, "validation exception: ", i.next());
             }
         }
 
@@ -219,7 +219,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
      * totally missing or Collection of ModelException instances
      * for each found validation error.
      */
-    private Collection validateModel(IASEjbCMPEntityDescriptor descr) {
+    private Collection<Exception> validateModel(IASEjbCMPEntityDescriptor descr) {
         String beanName = descr.getName();
         String className = nameMapper.getPersistenceClassForEjbName(beanName);
 
@@ -229,7 +229,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
                "CMG.MissingBeanMapping", beanName, bundle));
         }
 
-        return model.validate(className, loader, validationBundle);
+        return new ArrayList<>(model.validate(className, loader, validationBundle));
     }
 
     /**
@@ -244,7 +244,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
      * @return if the collection contains exactly one GeneratorException
      * return it, otherwise return <code>null</code>
      */
-    private GeneratorException getMappingMissingException(Collection c) {
+    private GeneratorException getMappingMissingException(Collection<Exception> c) {
         if (c.size() == 1) {
             Object firstElement = c.iterator().next();
 
@@ -264,13 +264,13 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
      * @return a Collection of Exception instances for each found
      * validation error.
      */
-    private Collection validateEJB(IASEjbCMPEntityDescriptor descr) {
-        Collection c = null;
+    private Collection<Exception> validateEJB(IASEjbCMPEntityDescriptor descr) {
+        Collection<Exception> c = null;
         try {
             JDOConcreteBeanGenerator cmpGenerator = getCMPGenerator(descr);
             c = cmpGenerator.validate(new MethodHelper(descr), descr.getName());
         } catch (GeneratorException e) {
-            c = new ArrayList();
+            c = new ArrayList<>();
             c.add(e);
         }
 
@@ -284,8 +284,8 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
      * @return a Collection of Exception instances for each found
      * validation error.
      */
-    private Collection validateSupported(IASEjbCMPEntityDescriptor descr) {
-        Collection rc = new ArrayList();
+    private Collection<Exception> validateSupported(IASEjbCMPEntityDescriptor descr) {
+        Collection<Exception> rc = new ArrayList<>();
         /*
          * XXX Add validation of read-only configuration?
          */
@@ -297,9 +297,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
      * @see CMPGenerator#generate(IASEjbCMPEntityDescriptor, File, File)
      */
     @Override
-    public void generate(IASEjbCMPEntityDescriptor ejbcmp, File srcout,
-        File classout)
-        throws GeneratorException {
+    public void generate(IASEjbCMPEntityDescriptor ejbcmp, File srcout, File classout) throws GeneratorException {
 
         String beanName = ejbcmp.getName();
 
@@ -313,7 +311,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
         // returns an unmodifiable list.  This may be a place to look
         // for a performance improvement later for the case of empty
         // or singleton collection (extra copies).
-        Collection c = new ArrayList(validateModel(ejbcmp));
+        Collection<Exception> c = new ArrayList<>(validateModel(ejbcmp));
 
         // if the mapping info is not present, throw the exception and
         // stop the generation process
@@ -333,10 +331,10 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
             // exceptions in a concatenated message and a GeneratorException
             // is thrown.
             validateex = new StringBuffer();
-            Iterator iter = c.iterator();
+            Iterator<Exception> iter = c.iterator();
 
             while (iter.hasNext()) {
-                Exception ex = (Exception)iter.next();
+                Exception ex = iter.next();
                 LOG.log(DEBUG, "validation exception: " , ex);
                 validateex.append(ex.getMessage()).append('\n');
             }
@@ -444,7 +442,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
     * @see CMPGenerator#cleanup()
     */
     @Override
-    public Collection cleanup() throws GeneratorException {
+    public Collection<File> cleanup() throws GeneratorException {
         // Remove the strong references to MappingClassElements
         // needed during deployment. The mapping class cache
         // can now be cleaned up by the garbage collector.

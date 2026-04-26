@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,14 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * EjbConversionHelper.java
- *
- * Created on March 19, 2002
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
+import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
 import com.sun.jdo.api.persistence.mapping.ejb.ConversionHelper;
 import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
 
@@ -33,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.IASEjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistentFieldInfo;
@@ -43,17 +40,17 @@ import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;
  * This class implements ConversionHelper interface by using data from
  * IASEjbBundleDescriptor.
  *
- * @author Shing Wai Chan
+ * @author Shing Wai Chan 2002
  */
 public class EjbConversionHelper implements ConversionHelper {
 
     private NameMapper nameMapper = null;
     private EjbBundleDescriptorImpl bundle = null;
-    private HashMap ejbDescMap = new HashMap();
-    private HashMap ejbFieldMap = new HashMap();
-    private HashMap ejbKeyMap = new HashMap();
-    private HashMap ejbPerDescMap = new HashMap();
-    private HashMap ejbRelMap = new HashMap();
+    private HashMap<String, IASEjbCMPEntityDescriptor> ejbDescMap = new HashMap<>();
+    private HashMap<String, HashMap<String, String>> ejbFieldMap = new HashMap<>();
+    private HashMap<String, HashMap<String, String>> ejbKeyMap = new HashMap<>();
+    private HashMap<String, PersistenceDescriptor> ejbPerDescMap = new HashMap<>();
+    private HashMap<String, ArrayList<RelationshipDescriptor>> ejbRelMap = new HashMap<>();
     boolean generateFields = true;
     boolean ensureValidation = true;
 
@@ -61,7 +58,7 @@ public class EjbConversionHelper implements ConversionHelper {
         this.nameMapper = nameMapper;
         this.bundle = nameMapper.getBundleDescriptor();
 
-        Iterator iter = bundle.getEjbs().iterator();
+        Iterator<EjbDescriptor> iter = bundle.getEjbs().iterator();
         while (iter.hasNext()) {
             Object desc = iter.next();
             if (desc instanceof IASEjbCMPEntityDescriptor) {
@@ -77,28 +74,28 @@ public class EjbConversionHelper implements ConversionHelper {
                 ejbPerDescMap.put(ejbName, pers);
 
                 //collect pers fields
-                Collection pFields = ejbDesc.getPersistentFields();
-                HashMap fieldMap = new HashMap();
-                Iterator fIter = pFields.iterator();
+                Collection<PersistentFieldInfo> pFields = ejbDesc.getPersistentFields();
+                HashMap<String, String> fieldMap = new HashMap<>();
+                Iterator<PersistentFieldInfo> fIter = pFields.iterator();
                 while (fIter.hasNext()) {
-                    String fieldName = ((PersistentFieldInfo)fIter.next()).name;
+                    String fieldName = fIter.next().name;
                     fieldMap.put(fieldName, fieldName);
                 }
                 ejbFieldMap.put(ejbName, fieldMap);
 
                 //collect pseudo cmr fields
-                List pseudoFields = nameMapper.getGeneratedRelationshipsForEjbName(ejbName);
-                Iterator pIter = pseudoFields.iterator();
+                List<String> pseudoFields = nameMapper.getGeneratedRelationshipsForEjbName(ejbName);
+                Iterator<String> pIter = pseudoFields.iterator();
                 while (pIter.hasNext()) {
-                    addField(ejbName, (String)pIter.next());
+                    addField(ejbName, pIter.next());
                 }
 
                 //collect all keys
-                Collection pKeys = ejbDesc.getPrimaryKeyFields();
-                HashMap pKeyMap = new HashMap();
-                Iterator kIter = pKeys.iterator();
+                Collection<PersistentFieldInfo> pKeys = ejbDesc.getPrimaryKeyFields();
+                HashMap<String, String> pKeyMap = new HashMap<>();
+                Iterator<PersistentFieldInfo> kIter = pKeys.iterator();
                 while (kIter.hasNext()) {
-                    String fieldName = ((PersistentFieldInfo)kIter.next()).name;
+                    String fieldName = kIter.next().name;
                     pKeyMap.put(fieldName, fieldName);
                 }
                 ejbKeyMap.put(ejbName, pKeyMap);
@@ -106,18 +103,18 @@ public class EjbConversionHelper implements ConversionHelper {
         }
 
         //collect relationship
-        Set rels = bundle.getRelationships();
-        Iterator relIter = rels.iterator();
+        Set<RelationshipDescriptor> rels = bundle.getRelationships();
+        Iterator<RelationshipDescriptor> relIter = rels.iterator();
         while (relIter.hasNext()) {
-            RelationshipDescriptor rel = (RelationshipDescriptor)relIter.next();
+            RelationshipDescriptor rel = relIter.next();
             RelationRoleDescriptor source = rel.getSource();
             RelationRoleDescriptor sink = rel.getSink();
 
             //collect source RelationshipDescriptor
             String sourceEjbName = source.getOwner().getName();
-            ArrayList sourceRels = (ArrayList)ejbRelMap.get(sourceEjbName);
+            ArrayList<RelationshipDescriptor> sourceRels = ejbRelMap.get(sourceEjbName);
             if (sourceRels == null) {
-                sourceRels = new ArrayList();
+                sourceRels = new ArrayList<>();
                 ejbRelMap.put(sourceEjbName, sourceRels);
             }
             sourceRels.add(rel);
@@ -130,9 +127,9 @@ public class EjbConversionHelper implements ConversionHelper {
 
             //collect sink RelationshipDescriptor
             String sinkEjbName = sink.getOwner().getName();
-            ArrayList sinkRels = (ArrayList)ejbRelMap.get(sinkEjbName);
+            ArrayList<RelationshipDescriptor> sinkRels = ejbRelMap.get(sinkEjbName);
             if (sinkRels == null) {
-                sinkRels = new ArrayList();
+                sinkRels = new ArrayList<>();
                 ejbRelMap.put(sinkEjbName, sinkRels);
             }
             sinkRels.add(rel);
@@ -147,6 +144,7 @@ public class EjbConversionHelper implements ConversionHelper {
 
     //---- implements interface ConversionHelper ----
 
+    @Override
     public String getMappedClassName(String ejbName) {
         return nameMapper.getPersistenceClassForEjbName(ejbName);
     }
@@ -160,14 +158,13 @@ public class EjbConversionHelper implements ConversionHelper {
      * @return <code>true</code> if the bean contains the field, otherwise
      * return <code>false</code>
      */
+    @Override
     public boolean hasField(String ejbName, String fieldName) {
-        if (!generateFields && isGeneratedRelationship(ejbName, fieldName))
-            return false;
-        else {
-            HashMap fieldMap = (HashMap)ejbFieldMap.get(ejbName);
-            return (fieldMap != null) ?
-                (fieldMap.get(fieldName) != null) : false;
+        if (generateFields || !isGeneratedRelationship(ejbName, fieldName)) {
+            HashMap<String, String> fieldMap = ejbFieldMap.get(ejbName);
+            return fieldMap == null ? false : fieldMap.get(fieldName) != null;
         }
+        return false;
     }
 
     /**
@@ -177,10 +174,11 @@ public class EjbConversionHelper implements ConversionHelper {
      * @param ejbName The ejb-name element for the bean
      * @return an array of fields in the ejb bean
      */
+    @Override
     public Object[] getFields(String ejbName) {
-        HashMap fieldMap = (HashMap)ejbFieldMap.get(ejbName);
+        HashMap<String, String> fieldMap = ejbFieldMap.get(ejbName);
         if (fieldMap != null) {
-            List fields = new ArrayList(fieldMap.keySet());
+            ArrayList<String> fields = new ArrayList<>(fieldMap.keySet());
             if (!generateFields) {
                 fields.removeAll(getGeneratedRelationships(ejbName));
             }
@@ -192,8 +190,9 @@ public class EjbConversionHelper implements ConversionHelper {
     /**
      * The boolean argument candidate is ignored in this case.
      */
+    @Override
     public boolean isKey(String ejbName, String fieldName, boolean candidate) {
-        HashMap keyMap = (HashMap)ejbKeyMap.get(ejbName);
+        HashMap<String, String> keyMap = ejbKeyMap.get(ejbName);
         return (keyMap != null) ? (keyMap.get(fieldName) != null) : false;
     }
 
@@ -201,12 +200,13 @@ public class EjbConversionHelper implements ConversionHelper {
      * This API will only be called from MappingFile when multiplicity is Many
      * on the other role.
      */
+    @Override
     public String getRelationshipFieldType(String ejbName, String fieldName) {
         if (isGeneratedRelationship(ejbName, fieldName)) {
             return java.util.Collection.class.getName();
         } else {
             PersistenceDescriptor pers =
-                (PersistenceDescriptor)ejbPerDescMap.get(ejbName);
+                ejbPerDescMap.get(ejbName);
             return pers.getCMRFieldReturnType(fieldName);
         }
     }
@@ -215,12 +215,14 @@ public class EjbConversionHelper implements ConversionHelper {
      * getMultiplicity of the other role on the relationship
      * Please note that multiplicity is JDO style
      */
+    @Override
     public String getMultiplicity(String ejbName, String fieldName) {
         RelationRoleDescriptor oppRole = getRelationRoleDescriptor(ejbName,
                 fieldName, false);
         return (oppRole.getIsMany()) ? MANY : ONE;
     }
 
+    @Override
     public String getRelationshipFieldContent(String ejbName, String fieldName) {
         RelationRoleDescriptor oppRole = getRelationRoleDescriptor(ejbName,
                 fieldName, false);
@@ -230,15 +232,17 @@ public class EjbConversionHelper implements ConversionHelper {
     /**
      * This method return the fieldName of relation role on the other end.
      */
+    @Override
     public String getInverseFieldName(String ejbName, String fieldName) {
         RelationRoleDescriptor oppRole = getRelationRoleDescriptor(ejbName,
                 fieldName, false);
         String inverseName = oppRole.getCMRField();
 
         // if we are generating relationships, check for a generated inverse
-        if ((generateFields) && (inverseName == null))
+        if ((generateFields) && (inverseName == null)) {
             inverseName = nameMapper.getGeneratedFieldForEjbField(
                 ejbName, fieldName)[1];
+        }
 
         return inverseName;
     }
@@ -251,9 +255,10 @@ public class EjbConversionHelper implements ConversionHelper {
      * @return <code>true</code> to apply the default unknown PK Class Strategy,
      * <code>false</code> otherwise
      */
+    @Override
     public boolean applyDefaultUnknownPKClassStrategy(String ejbName) {
         IASEjbCMPEntityDescriptor ejbDesc =
-                (IASEjbCMPEntityDescriptor)ejbDescMap.get(ejbName);
+                ejbDescMap.get(ejbName);
         String keyClassName = ejbDesc.getPrimaryKeyClassName();
         return keyClassName != null &&
                 keyClassName.equals(Object.class.getName());
@@ -263,18 +268,21 @@ public class EjbConversionHelper implements ConversionHelper {
      * Returns the name used for generated primary key fields.
      * @return a string for key field name
      */
+    @Override
     public String getGeneratedPKFieldName() {
-        return nameMapper.GENERATED_KEY_FIELD_NAME;
+        return AbstractNameMapper.GENERATED_KEY_FIELD_NAME;
     }
 
     /**
      * Returns the prefix used for generated version fields.
      * @return a string for version field name prefix
      */
+    @Override
     public String getGeneratedVersionFieldNamePrefix() {
-        return nameMapper.GENERATED_VERSION_FIELD_PREFIX;
+        return AbstractNameMapper.GENERATED_VERSION_FIELD_PREFIX;
     }
 
+    @Override
     public boolean relatedObjectsAreDeleted(String beanName, String fieldName) {
         RelationRoleDescriptor oppRole = getRelationRoleDescriptor(beanName, fieldName, false);
         return oppRole.getCascadeDelete();
@@ -288,6 +296,7 @@ public class EjbConversionHelper implements ConversionHelper {
      * @return <code>true</code> to generate fields in the dot-mapping file
      * (if they are not present).
      */
+    @Override
     public boolean generateFields() {
         return generateFields;
     }
@@ -298,6 +307,7 @@ public class EjbConversionHelper implements ConversionHelper {
      * @param generateFields a flag which indicates whether fields should be
      * generated
      */
+    @Override
     public void setGenerateFields(boolean generateFields) {
         this.generateFields = generateFields;
     }
@@ -307,6 +317,7 @@ public class EjbConversionHelper implements ConversionHelper {
      * @return <code>true</code> to validate all the fields in the dot-mapping
      * file.
      */
+    @Override
     public boolean ensureValidation() {
         return ensureValidation;
     }
@@ -316,6 +327,7 @@ public class EjbConversionHelper implements ConversionHelper {
      * against schema columns.
      * @param isValidating a boolean of indicating validating fields or not
      */
+    @Override
     public void setEnsureValidation(boolean isValidating) {
         ensureValidation = isValidating;
     }
@@ -330,10 +342,12 @@ public class EjbConversionHelper implements ConversionHelper {
      * otherwise.
      */
 
+    @Override
     public boolean isGeneratedField(String ejbName, String fieldName) {
         return nameMapper.isGeneratedField(ejbName, fieldName);
     }
 
+    @Override
     public boolean isGeneratedRelationship(String ejbName, String fieldName) {
         return nameMapper.isGeneratedEjbRelationship(ejbName, fieldName);
     }
@@ -343,7 +357,8 @@ public class EjbConversionHelper implements ConversionHelper {
      * @param ejbName The ejb-name element for the bean
      * @return a list of generated relationship field names
      */
-    public List getGeneratedRelationships(String ejbName) {
+    @Override
+    public List<String> getGeneratedRelationships(String ejbName) {
         return nameMapper.getGeneratedRelationshipsForEjbName(ejbName);
 
     }
@@ -366,9 +381,9 @@ public class EjbConversionHelper implements ConversionHelper {
 
     private RelationRoleDescriptor getRealRelationRoleDescriptor(
             String ejbName, String cmrFieldName, boolean self) {
-        ArrayList rels = (ArrayList)ejbRelMap.get(ejbName);
+        ArrayList<RelationshipDescriptor> rels = ejbRelMap.get(ejbName);
         for (int i = 0; i < rels.size(); i++) {
-            RelationshipDescriptor rel = (RelationshipDescriptor)rels.get(i);
+            RelationshipDescriptor rel = rels.get(i);
             RelationRoleDescriptor source = rel.getSource();
             RelationRoleDescriptor sink = rel.getSink();
             if (ejbName.equals(source.getOwner().getName()) &&
@@ -383,9 +398,9 @@ public class EjbConversionHelper implements ConversionHelper {
     }
 
     private void addField(String ejbName, String fieldName) {
-        HashMap fieldMap = (HashMap)ejbFieldMap.get(ejbName);
+        HashMap<String, String> fieldMap = ejbFieldMap.get(ejbName);
         if (fieldMap == null) {
-            fieldMap = new HashMap();
+            fieldMap = new HashMap<>();
             ejbFieldMap.put(ejbName, fieldMap);
         }
         fieldMap.put(fieldName, fieldName);

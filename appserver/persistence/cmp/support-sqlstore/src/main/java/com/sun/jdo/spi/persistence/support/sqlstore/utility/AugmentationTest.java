@@ -47,18 +47,20 @@ public class AugmentationTest
 
     static final void affirm(boolean cond)
     {
-        if (debug && !cond)
+        if (debug && !cond) {
             throw new RuntimeException("affirmion failed.");
+        }
     }
 
     static final void affirm(Object obj)
     {
-        if (debug && obj == null)
+        if (debug && obj == null) {
             throw new RuntimeException("affirmion failed: obj = null");
+        }
     }
 
     static String toString(int mods,
-                           Class type,
+                           Class<?> type,
                            String name)
     {
         final StringBuffer s = new StringBuffer();
@@ -72,7 +74,7 @@ public class AugmentationTest
 
     static String toString(int mods,
                            String name,
-                           Class[] params)
+                           Class<?>[] params)
     {
         final StringBuffer s = new StringBuffer();
         s.append(Modifier.toString(mods));
@@ -82,17 +84,18 @@ public class AugmentationTest
         final int j = params.length - 1;
         for (int i = 0; i <= j; i++) {
             s.append(params[i].getName());
-            if (i < j)
+            if (i < j) {
                 s.append(",");
+            }
         }
         s.append(")");
         return s.toString();
     }
 
     static String toString(int mods,
-                           Class result,
+                           Class<?> result,
                            String name,
-                           Class[] params)
+                           Class<?>[] params)
     {
         final StringBuffer s = new StringBuffer();
         s.append(Modifier.toString(mods));
@@ -104,8 +107,9 @@ public class AugmentationTest
         final int j = params.length - 1;
         for (int i = 0; i <= j; i++) {
             s.append(params[i].getName());
-            if (i < j)
+            if (i < j) {
                 s.append(",");
+            }
         }
         s.append(")");
         return s.toString();
@@ -117,9 +121,8 @@ public class AugmentationTest
 
     boolean verbose;
     boolean requirePC;
-    List classes;
     String className;
-    Class classClass;
+    Class<?> classClass;
 
     public AugmentationTest()
     {}
@@ -136,14 +139,16 @@ public class AugmentationTest
 
     final void verbose()
     {
-        if (verbose)
+        if (verbose) {
             out.println();
+        }
     }
 
     final void verbose(String msg)
     {
-        if (verbose)
+        if (verbose) {
             out.println(msg);
+        }
     }
 
     public int testLoadingClass()
@@ -169,9 +174,9 @@ public class AugmentationTest
         }
     }
 
-    int implementsInterface(Class intf)
+    int implementsInterface(Class<?> intf)
     {
-        final Class[] interfaces = classClass.getInterfaces();
+        final Class<?>[] interfaces = classClass.getInterfaces();
         for (int i = interfaces.length - 1; i >= 0; i--) {
             if (interfaces[i].equals(intf)) {
                 verbose("+++ implements interface: " + intf.getName());
@@ -183,7 +188,7 @@ public class AugmentationTest
     }
 
     int hasField(int mods,
-                 Class type,
+                 Class<?> type,
                  String name)
     {
         try {
@@ -207,10 +212,10 @@ public class AugmentationTest
     }
 
     int hasConstructor(int mods,
-                       Class[] params)
+                       Class<?>[] params)
     {
         try {
-            final Constructor ctor = classClass.getConstructor(params);
+            final Constructor<?> ctor = classClass.getConstructor(params);
 
             if (ctor.getModifiers() != mods) {
                 println("!!! ERROR: constructor declaration: ");
@@ -230,9 +235,9 @@ public class AugmentationTest
     }
 
     int hasMethod(int mods,
-                  Class result,
+                  Class<?> result,
                   String name,
-                  Class[] params)
+                  Class<?>[] params)
     {
         try {
             final Method method = classClass.getMethod(name, params);
@@ -343,8 +348,9 @@ public class AugmentationTest
                 return ERROR;
             }
 
-            if (j > NEGATIVE)
+            if (j > NEGATIVE) {
                 res = j;
+            }
         }
 
         if (res > NEGATIVE) {
@@ -404,8 +410,9 @@ public class AugmentationTest
                 return ERROR;
             }
 
-            if (j > NEGATIVE)
+            if (j > NEGATIVE) {
                 res = j;
+            }
         }
 
         if (res > NEGATIVE) {
@@ -480,15 +487,15 @@ public class AugmentationTest
         }
 
         //verbose("get superclass ...");
-        final Class superClass = classClass.getSuperclass();
+        final Class<?> superClass = classClass.getSuperclass();
         if (superClass == null) {
             println("!!! ERROR: specified class doesn't have super class");
             status = ERROR;
         } else {
             try {
                 //verbose("get superclass' default constructor ...");
-                final Class[] params = new Class[]{};
-                Constructor sctor = superClass.getConstructor(params);
+                final Class<?>[] params = new Class[]{};
+                Constructor<?> sctor = superClass.getConstructor(params);
             } catch (NoSuchMethodException ex) {
                 println("!!! ERROR: super class '" + superClass.getName()
                       + "' doesn't provide default constructor");
@@ -510,8 +517,8 @@ public class AugmentationTest
 
         try {
             //verbose("get jdo constructor ...");
-            final Class[] params = new Class[]{StateManager.class};
-            final Constructor ctor = classClass.getConstructor(params);
+            final Class<?>[] params = new Class[]{StateManager.class};
+            final Constructor<?> ctor = classClass.getConstructor(params);
 
             //verbose("create new instance by jdo constructor ...");
             final Object[] args = new Object[]{null};
@@ -680,7 +687,7 @@ public class AugmentationTest
         // parse args
         boolean verbose = false;
         boolean requirePC = false;
-        List classes = new ArrayList();
+        List<String> classes = new ArrayList<>();
         for (int i = 0; i < argv.length; i++) {
             String arg = argv[i];
             if (arg.equals("-h") || arg.equals("--help")) {
@@ -721,8 +728,9 @@ public class AugmentationTest
             out.println("    verbose = " + verbose);
             out.println("    requirePC = " + requirePC);
             out.print("    classes =");
-            for (int i = 0; i < classes.size(); i++)
+            for (int i = 0; i < classes.size(); i++) {
                 out.print(" " + classes.get(i));
+            }
             out.println();
         }
 

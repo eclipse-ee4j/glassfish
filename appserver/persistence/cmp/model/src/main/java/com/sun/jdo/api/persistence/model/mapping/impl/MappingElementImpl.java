@@ -81,6 +81,7 @@ public abstract class MappingElementImpl implements MappingElement
      * of this mapping element.
      * @return a string representation of the object
      */
+    @Override
     public String toString () { return getName(); }
 
     /** Overrides Object's <code>equals</code> method by comparing the name of this mapping element
@@ -89,20 +90,24 @@ public abstract class MappingElementImpl implements MappingElement
      * @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
      * @param obj the reference object with which to compare.
      */
+    @Override
     public boolean equals(Object obj)
     {
-        if (obj == null)
+        if (obj == null) {
             return false;
-        if (obj == this)
+        }
+        if (obj == this) {
             return true;
+        }
 
         // check for the right class and then do the name check by calling compareTo.
-        return (getClass() == obj.getClass()) && (compareTo(obj) == 0);
+        return (getClass() == obj.getClass()) && (compareTo((MappingElement) obj) == 0);
     }
 
     /** Overrides Object's <code>hashCode</code> method to return the hashCode of this mapping element's name.
      * @return a hash code value for this object.
      */
+    @Override
     public int hashCode()
     {
         return (getName()==null) ? 0 : getName().hashCode();
@@ -115,8 +120,9 @@ public abstract class MappingElementImpl implements MappingElement
      */
     protected void firePropertyChange (String name, Object o, Object n)
     {
-        if (_support != null)
+        if (_support != null) {
             _support.firePropertyChange(name, o, n);
+        }
     }
 
     /** Fires vetoable change event.
@@ -128,8 +134,9 @@ public abstract class MappingElementImpl implements MappingElement
     protected void fireVetoableChange (String name, Object o, Object n)
         throws PropertyVetoException
     {
-        if (_vetoableSupport != null)
+        if (_vetoableSupport != null) {
             _vetoableSupport.fireVetoableChange(name, o, n);
+        }
     }
 
     //================= implementation of MappingElement ================
@@ -137,12 +144,14 @@ public abstract class MappingElementImpl implements MappingElement
     /** Add a property change listener.
      * @param l the listener to add
      */
+    @Override
     public synchronized void addPropertyChangeListener
         (PropertyChangeListener l)
     {
         // new test under synchronized block
-        if (_support == null)
+        if (_support == null) {
             _support = new PropertyChangeSupport(this);
+        }
 
 
         _support.addPropertyChangeListener(l);
@@ -151,20 +160,24 @@ public abstract class MappingElementImpl implements MappingElement
     /** Remove a property change listener.
      * @param l the listener to remove
      */
+    @Override
     public void removePropertyChangeListener (PropertyChangeListener l)
     {
-        if (_support != null)
+        if (_support != null) {
             _support.removePropertyChangeListener(l);
+        }
     }
 
     /** Add a vetoable change listener.
      * @param l the listener to add
      */
+    @Override
     public synchronized void addVetoableChangeListener
         (VetoableChangeListener l)
     {
-        if (_vetoableSupport == null)
+        if (_vetoableSupport == null) {
             _vetoableSupport = new VetoableChangeSupport(this);
+        }
 
         _vetoableSupport.addVetoableChangeListener(l);
     }
@@ -172,22 +185,26 @@ public abstract class MappingElementImpl implements MappingElement
     /** Remove a vetoable change listener.
      * @param l the listener to remove
      */
+    @Override
     public synchronized void removeVetoableChangeListener (
         VetoableChangeListener l)
     {
-        if (_vetoableSupport != null)
+        if (_vetoableSupport != null) {
             _vetoableSupport.removeVetoableChangeListener(l);
+        }
     }
 
     /** Get the name of this mapping element.
      * @return the name
      */
+    @Override
     public String getName () { return _name; }
 
     /** Set the name of this mapping element.
      * @param name the name
      * @exception ModelException if impossible
      */
+    @Override
     public void setName (String name) throws ModelException
     {
         String old = getName();
@@ -217,30 +234,36 @@ public abstract class MappingElementImpl implements MappingElement
      * or greater than the specified object.
      * @exception ClassCastException - if the specified object is null or is not an instance of MappingElementImpl
      */
-    public int compareTo(Object o)
+    @Override
+    public int compareTo(MappingElement o)
     {
         // null is not allowed
-        if (o == null)
+        if (o == null) {
             throw new ClassCastException();
-        if (o == this)
+        }
+        if (o == this) {
             return 0;
+        }
 
         String thisName = getName();
         // the following statement throws a ClassCastException if o is not a MappingElementImpl
         String otherName = ((MappingElementImpl)o).getName();
         // if this does not have a name it should compare less than any named object
-        if (thisName == null)
+        if (thisName == null) {
             return (otherName == null) ? 0 : -1;
+        }
         // if this is named and o does not have a name it should compare greater
-        if (otherName == null)
+        if (otherName == null) {
             return 1;
+        }
         // now we know that this and o are named mapping elements =>
         // use locale-sensitive String comparison
         int ret = Collator.getInstance().compare(thisName, otherName);
         // if both names are equal, both objects might have different types.
         // If so order both objects by their type names (necessary to be consistent with equals)
-        if ((ret == 0) && (getClass() != o.getClass()))
+        if ((ret == 0) && (getClass() != o.getClass())) {
             ret = getClass().getName().compareTo(o.getClass().getName());
+        }
         return ret;
     }
 

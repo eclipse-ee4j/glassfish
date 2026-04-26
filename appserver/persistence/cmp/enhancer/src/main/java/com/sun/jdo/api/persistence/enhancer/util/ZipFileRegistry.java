@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,13 +32,13 @@ import java.util.zip.ZipFile;
 public class ZipFileRegistry {
 
     /* A mapping of file name to ZipFile */
-    private static Hashtable zipFileMap = new Hashtable(11);
+    private static Hashtable<String, ZipFile> zipFileMap = new Hashtable<>(11);
 
     /**
      * Return a zip file which may already be open
      */
     public static ZipFile openZipFile(File f) throws FileNotFoundException, IOException {
-        ZipFile zf = (ZipFile) zipFileMap.get(f.getPath());
+        ZipFile zf = zipFileMap.get(f.getPath());
         if (zf == null) {
             zf = new ZipFile(f);
             zipFileMap.put(zf.getName(), zf);
@@ -50,7 +51,7 @@ public class ZipFileRegistry {
      * Return a zip file which must already be open
      */
     public static ZipFile getZipFile(String path) {
-        return (ZipFile) zipFileMap.get(path);
+        return zipFileMap.get(path);
     }
 
 
@@ -58,7 +59,7 @@ public class ZipFileRegistry {
      * Returns an enumeration of the zip files in the registry
      * Each element is a ZipFile.
      */
-    public static Enumeration zipFiles() {
+    public static Enumeration<ZipFile> zipFiles() {
         return zipFileMap.elements();
     }
 

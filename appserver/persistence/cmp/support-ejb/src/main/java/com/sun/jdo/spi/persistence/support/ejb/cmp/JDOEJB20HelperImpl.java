@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * JDOEJB20HelperImpl.java
- *
- * Created on January 17, 2002
  */
 
 package com.sun.jdo.spi.persistence.support.ejb.cmp;
@@ -45,7 +40,7 @@ import static java.lang.System.Logger.Level.DEBUG;
  * to and from EJB objects of type EJBLocalObject and Collections of those.
  * It extends JDOEJB11HelperImpl for conversion of instances of other types.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2002
  */
 abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl implements JDOEJB20Helper {
 
@@ -128,12 +123,12 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl implements J
      * @return Collection of EJBLocalObjects.
      */
     @Override
-    public Collection convertCollectionPCToEJBLocalObject (Collection pcs, PersistenceManager pm){
-        Collection rc = new java.util.ArrayList();
+    public Collection<Object> convertCollectionPCToEJBLocalObject (Collection<?> pcs, PersistenceManager pm){
+        Collection<Object> rc = new java.util.ArrayList<>();
         Object o = null;
 
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBLocalObject(it.next(), pm);
+        for (Object pc : pcs) {
+            o = convertPCToEJBLocalObject(pc, pm);
             LOG.log(DEBUG, "convertCollectionPCToEJBLocalObject() adding: {0}", o);
             rc.add(o);
         }
@@ -148,12 +143,12 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl implements J
      * @return Set of EJBLocalObjects.
      */
     @Override
-    public Set convertCollectionPCToEJBLocalObjectSet (Collection pcs, PersistenceManager pm) {
-        java.util.Set rc = new java.util.HashSet();
+    public Set<Object> convertCollectionPCToEJBLocalObjectSet (Collection<?> pcs, PersistenceManager pm) {
+        java.util.Set<Object> rc = new java.util.HashSet<>();
         Object o = null;
 
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBLocalObject(it.next(), pm);
+        for (Object pc : pcs) {
+            o = convertPCToEJBLocalObject(pc, pm);
             LOG.log(DEBUG, "convertCollectionPCToEJBLocalObjectSet() adding: {0}", o);
             rc.add(o);
         }
@@ -171,13 +166,13 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl implements J
      * not exist in the database or is deleted.
      */
     @Override
-    public Collection convertCollectionEJBLocalObjectToPC (Collection coll, PersistenceManager pm,
+    public Collection<Object> convertCollectionEJBLocalObjectToPC (Collection<?> coll, PersistenceManager pm,
                                                            boolean validate) {
-        Collection rc = new java.util.ArrayList();
+        Collection<Object> rc = new java.util.ArrayList<>();
         Object o = null;
 
-        for (java.util.Iterator it = coll.iterator(); it.hasNext();) {
-            o = convertEJBLocalObjectToPC((EJBLocalObject)it.next(), pm, validate);
+        for (Object element : coll) {
+            o = convertEJBLocalObjectToPC((EJBLocalObject)element, pm, validate);
             LOG.log(DEBUG, "convertCollectionEJBLocalObjectToPC() adding: {0}", o);
             rc.add(o);
         }

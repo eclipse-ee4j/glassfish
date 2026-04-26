@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * AbstractNameMapper.java
- *
- * Created on October 28, 2004, 2:51 PM
  */
 
 package com.sun.jdo.api.persistence.mapping.ejb;
@@ -34,7 +29,7 @@ import java.util.Map;
  * also has methods for translation of field names.  The basic entry point
  * is ejb name or persistence-capable class name.
  *
- * @author Rochelle Raccah
+ * @author Rochelle Raccah 2004
  */
 abstract public class AbstractNameMapper {
     public static final int USER_DEFINED_KEY_CLASS = 1;
@@ -42,14 +37,14 @@ abstract public class AbstractNameMapper {
     public static final int UNKNOWN_KEY_CLASS = 3;
 
     /** Defines key field name for unknown primary key */
-    public static final String GENERATED_KEY_FIELD_NAME = "generatedPKField"; // NOI18N
+    public static final String GENERATED_KEY_FIELD_NAME = "generatedPKField";
     /** Defines version field name prefix for version consistency */
     public static final String GENERATED_VERSION_FIELD_PREFIX =
-        "thisVersionFieldWasGeneratedByTheNameMapper"; // NOI18N
+        "thisVersionFieldWasGeneratedByTheNameMapper";
     protected static final String GENERATED_CMR_FIELD_PREFIX =
-        "thisRelationshipFieldWasGeneratedByTheNameMapper";        // NOI18N
+        "thisRelationshipFieldWasGeneratedByTheNameMapper";
 
-    abstract protected Map getGeneratedFieldsMap();
+    abstract protected Map<List<String>, List<String>> getGeneratedFieldsMap();
 
     abstract protected Map getInverseFieldsMap();
 
@@ -95,7 +90,7 @@ abstract public class AbstractNameMapper {
      * key class
      */
     public String getEjbNameForPersistenceKeyClass(String className) {
-        if (className.toUpperCase().endsWith("OID")) {    // NOI18N
+        if (className.toUpperCase().endsWith("OID")) {
             return getEjbNameForPersistenceClass(
                 className.substring(0, className.length() - 4));
         }
@@ -284,16 +279,17 @@ abstract public class AbstractNameMapper {
      * @param name the name of the ejb
      * @return a List of generated relationship names
      */
-    public List getGeneratedRelationshipsForEjbName(String name) {
-        Map generatedFieldsMap = getGeneratedFieldsMap();
-        Iterator iterator = generatedFieldsMap.keySet().iterator();
-        List returnList = new ArrayList();
+    public List<String> getGeneratedRelationshipsForEjbName(String name) {
+        Map<List<String>, List<String>> generatedFieldsMap = getGeneratedFieldsMap();
+        Iterator<List<String>> iterator = generatedFieldsMap.keySet().iterator();
+        List<String> returnList = new ArrayList<>();
 
         while (iterator.hasNext()) {
-            List nextField = (List)iterator.next();
+            List<String> nextField = iterator.next();
 
-            if (nextField.get(0).equals(name))
+            if (nextField.get(0).equals(name)) {
                 returnList.add(nextField.get(1));
+            }
         }
 
         return returnList;
@@ -324,7 +320,7 @@ abstract public class AbstractNameMapper {
      */
     public String[] getEjbFieldForGeneratedField(String name, String fieldName)
     {
-        List field = (List)getGeneratedFieldsMap().get(
+        List field = getGeneratedFieldsMap().get(
             Arrays.asList(new String[]{name, fieldName}));
 
         return ((field != null) ?

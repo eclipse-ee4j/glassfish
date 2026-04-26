@@ -46,12 +46,12 @@ public class ConfigCacheImpl
     /**
      * Map of class types to PersistenceConfig.
      */
-    private Map classConfigs;
+    private Map<Class<?>, ClassDesc> classConfigs;
 
     /**
      * Map of OID classes to PersistenceCapable classes.
      */
-    private Map oidClassToClassType;
+    private Map<Class<?>, Class<?>> oidClassToClassType;
 
     /**
      * This cache should be notified every time a VC class
@@ -63,15 +63,15 @@ public class ConfigCacheImpl
      * Map of class loaders to a list of PersistenceCapable
      * classes loaded by the classloader.
      */
-    private Map classLoaderToClassType;
+    private Map<ClassLoader, List<Class<?>>> classLoaderToClassType;
 
     /** The logger. */
     private static final Logger LOG = System.getLogger(ConfigCacheImpl.class.getName(), RESOURCE_BUNDLE);
 
     public ConfigCacheImpl() {
-        classConfigs = new HashMap();
-        classLoaderToClassType = new HashMap();
-        oidClassToClassType = new HashMap();
+        classConfigs = new HashMap<>();
+        classLoaderToClassType = new HashMap<>();
+        oidClassToClassType = new HashMap<>();
 
         // Register for call backs on application loader events.
         EJBHelper.registerApplicationLifeCycleEventListener(this);
@@ -86,9 +86,8 @@ public class ConfigCacheImpl
      * @return PersistenceConfig for given pcClass.
      */
     @Override
-    public synchronized PersistenceConfig getPersistenceConfig(Class pcClass) {
-        ClassDesc sqlConfig =
-                (ClassDesc) classConfigs.get(pcClass);
+    public synchronized PersistenceConfig getPersistenceConfig(Class<?> pcClass) {
+        ClassDesc sqlConfig = classConfigs.get(pcClass);
         if (sqlConfig == null) {
             // The order of the below operations is important.
             // Initialize is called after puting sqlConfig into the
@@ -114,13 +113,10 @@ public class ConfigCacheImpl
      * @return The Class instance corresponding to given oidType.
      */
     @Override
-    public Class getClassByOidClass(Class oidType) {
-        return (Class) oidClassToClassType.get(oidType);
+    public Class<?> getClassByOidClass(Class<?> oidType) {
+        return oidClassToClassType.get(oidType);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public void notifyApplicationUnloaded(ClassLoader classLoader) {
         boolean debug = LOG.isLoggable(TRACE);
@@ -133,7 +129,7 @@ public class ConfigCacheImpl
                 LOG.log(TRACE, "sqlstore.model.configcacheimpl.size_before",items);
             }
 
-            List pcClasses = (List) classLoaderToClassType.get(classLoader);
+            List<Class<?>> pcClasses = classLoaderToClassType.get(classLoader);
             if (pcClasses != null) {
                 if (debug) {
                     Object[] items = new Object[] {"classConfigs", classConfigs.size()};
@@ -143,12 +139,11 @@ public class ConfigCacheImpl
                     LOG.log(TRACE, "sqlstore.model.configcacheimpl.size_before",items);
                 }
 
-                Iterator it = pcClasses.iterator();
+                Iterator<Class<?>> it = pcClasses.iterator();
                 while (it.hasNext()) {
-                    Class classType = (Class) it.next();
-                    ClassDesc config =
-                            (ClassDesc) classConfigs.remove(classType);
-                    Class oidClass = config.getOidClass();
+                    Class<?> classType = it.next();
+                    ClassDesc config = classConfigs.remove(classType);
+                    Class<?> oidClass = config.getOidClass();
                     oidClassToClassType.remove(oidClass);
                     if (config.hasVersionConsistency() && vcCache != null) {
                         vcCache.removePCType(classType);
@@ -198,12 +193,12 @@ public class ConfigCacheImpl
      *
      * @param pcClass The pcClass to be added.
      */
-    private void addToClassLoaderMap(Class pcClass) {
+    private void addToClassLoaderMap(Class<?> pcClass) {
         ClassLoader classLoader = pcClass.getClassLoader();
-        List classes = (List) classLoaderToClassType.get(classLoader);
+        List<Class<?>> classes = classLoaderToClassType.get(classLoader);
         if (classes == null) {
             // First entry for a given ClassLoader, initialize the ArrayList.
-            classes = new ArrayList();
+            classes = new ArrayList<>();
             classLoaderToClassType.put(classLoader, classes);
         }
         classes.add(pcClass);

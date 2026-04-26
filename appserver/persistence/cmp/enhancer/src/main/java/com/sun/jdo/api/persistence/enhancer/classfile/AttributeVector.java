@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,14 +35,8 @@ import java.util.NoSuchElementException;
 public class AttributeVector {
 
     /* Vector of ClassAttribute */
-    private ClassAttribute attributes[] = null;
+    private ClassAttribute[] attributes;
 
-    /**
-     * Returns the i'th attribute in the array
-     */
-    private ClassAttribute attrAt(int i) {
-        return attributes[i];
-    }
 
     /**
      * Construct an empty AttributeVector
@@ -52,9 +47,9 @@ public class AttributeVector {
      * Add an element to the vector
      */
     public void addElement(ClassAttribute attr) {
-        if (attributes == null)
+        if (attributes == null) {
             attributes = new ClassAttribute[1];
-        else {
+        } else {
             ClassAttribute newAttributes[] = new ClassAttribute[attributes.length+1];
             System.arraycopy(attributes, 0, newAttributes, 0, attributes.length);
             attributes = newAttributes;
@@ -62,8 +57,8 @@ public class AttributeVector {
         attributes[attributes.length-1] = attr;
     }
 
-    public Enumeration elements() {
-        class AttributeVectorEnumeration implements Enumeration {
+    public Enumeration<ClassAttribute> elements() {
+        class AttributeVectorEnumeration implements Enumeration<ClassAttribute> {
             private ClassAttribute[] attributes;
             private int current = 0;
 
@@ -71,12 +66,15 @@ public class AttributeVector {
                 attributes = attrs;
             }
 
+            @Override
             public boolean hasMoreElements() {
                 return attributes != null && current < attributes.length;
             }
-            public Object nextElement() {
-                if (!hasMoreElements())
+            @Override
+            public ClassAttribute nextElement() {
+                if (!hasMoreElements()) {
                     throw new NoSuchElementException();
+                }
                 return attributes[current++];
             }
         }
@@ -88,11 +86,12 @@ public class AttributeVector {
      * Look for an attribute of a specific name
      */
     public ClassAttribute findAttribute(String attrName) {
-        Enumeration e = elements();
+        Enumeration<ClassAttribute> e = elements();
         while (e.hasMoreElements()) {
-            ClassAttribute attr = (ClassAttribute) e.nextElement();
-            if (attr.attrName().asString().equals(attrName))
+            ClassAttribute attr = e.nextElement();
+            if (attr.attrName().asString().equals(attrName)) {
                 return attr;
+            }
         }
         return null;
     }
@@ -133,8 +132,9 @@ public class AttributeVector {
             out.writeShort(0);
         } else {
             out.writeShort(attributes.length);
-            for (int i=0; i<attributes.length; i++)
+            for (int i=0; i<attributes.length; i++) {
                 attributes[i].write(out);
+            }
         }
     }
 
@@ -143,8 +143,9 @@ public class AttributeVector {
      */
     void print(PrintStream out, int indent) {
         if (attributes != null) {
-            for (int i=0; i<attributes.length; i++)
+            for (int i=0; i<attributes.length; i++) {
                 attributes[i].print(out, indent);
+            }
         }
     }
 

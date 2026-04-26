@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * PersistenceFieldElement.java
- *
- * Created on February 29, 2000, 1:11 PM
  */
 
 package com.sun.jdo.api.persistence.model.jdo;
@@ -35,8 +30,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author raccah
- * @version %I%
+ * @author raccah 2000
  */
 public class PersistenceFieldElement extends PersistenceMemberElement
 {
@@ -180,53 +174,47 @@ public class PersistenceFieldElement extends PersistenceMemberElement
      * @return the concurrency groups in which this field participates
      * @see PersistenceClassElement#getConcurrencyGroups
      */
-    public ConcurrencyGroupElement[] getConcurrencyGroups ()
-    {
-        ConcurrencyGroupElement[] groups = getDeclaringClass().
-            getConcurrencyGroups();
-        int i, count = ((groups != null) ? groups.length : 0);
-        ArrayList myGroups = new ArrayList(count);
+    public ConcurrencyGroupElement[] getConcurrencyGroups() {
+        ConcurrencyGroupElement[] groups = getDeclaringClass().getConcurrencyGroups();
+        int i, count = groups != null ? groups.length : 0;
+        ArrayList<ConcurrencyGroupElement> myGroups = new ArrayList<>(count);
 
-        for (i = 0; i < count; i++)
-        {
+        for (i = 0; i < count; i++) {
             ConcurrencyGroupElement group = groups[i];
 
-            if (group.containsField(this))
+            if (group.containsField(this)) {
                 myGroups.add(group);
+            }
         }
 
         count = myGroups.size();
 
-        return ((ConcurrencyGroupElement[])myGroups.toArray(
-            new ConcurrencyGroupElement[count]));
+        return ((ConcurrencyGroupElement[]) myGroups.toArray(new ConcurrencyGroupElement[count]));
     }
 
     /** Computes the field number of this field element.
      * @return the field number of this field, -1 if it cannot be found
      */
-    public int getFieldNumber ()
-    {
+    public int getFieldNumber() {
         // for later - take into account the class
         // get/setFieldInheritanceFlag behavior (i.e. might need to climb
         // inheritance hierarchy
         PersistenceFieldElement[] fields = getDeclaringClass().getFields();
         int i, count = ((fields != null) ? fields.length : 0);
 
-        for (i = 0; i < count; i++)
-            if (equals(fields[i]))
+        for (i = 0; i < count; i++) {
+            if (equals(fields[i])) {
                 return i;
+            }
+        }
 
         return -1;
     }
 
-    /* won't be used now -- we will compute this number whenever it is requested
-    public void setFieldNumber (int fieldNumber) {} */
-
     /** Pluggable implementation of the storage of field element properties.
      * @see PersistenceFieldElement#PersistenceFieldElement
      */
-    public interface Impl extends PersistenceMemberElement.Impl
-    {
+    public interface Impl extends PersistenceMemberElement.Impl {
         /** Get the persistence type of this field element.
          * @return the persistence type, one of {@link #PERSISTENT} or
          * {@link #DERIVED}

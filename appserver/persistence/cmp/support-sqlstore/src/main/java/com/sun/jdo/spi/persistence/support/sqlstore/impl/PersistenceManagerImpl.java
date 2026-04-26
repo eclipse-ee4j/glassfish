@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * PersistenceManagerimpl.java
- *
- * Created on March 6, 2000
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
@@ -108,13 +103,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * List of all Persistent instances used
      * in this Transaction not yet flushed to the datastore.
      */
-    private List _txCache;
+    private List<StateManager> _txCache;
 
     /**
      * List of all Persistent instances used
      * in this Transaction.
      */
-    private Set _flushedCache;
+    private Set<StateManager> _flushedCache;
 
     /**
      * Map of Persistent instances accessed by this PersistenceManager. Ideally it should be
@@ -122,7 +117,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * referenced any more. java.util.WeakHashMap is a weak-key HashMap and thus does not
      * solve this purpose.
      */
-    private Map _weakCache;
+    private Map<Object, StateManager> _weakCache;
 
     /**
      * Intended to be set to true if there is an exception during flush in
@@ -206,7 +201,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
     /** Collection of Query instances created for this pm. */
-    private Collection queries = new ArrayList();
+    private Collection<QueryImpl> queries = new ArrayList<>();
 
     /**
      * Flag for Query
@@ -330,9 +325,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
         // Initialize caches as per property values.
         LOG.log(TRACE, "sqlstore.persistencemgr.cacheproperties", _txCacheInitialCapacity, _flushedCacheInitialCapacity,
             _flushedCacheLoadFactor, _weakCacheInitialCapacity, _weakCacheLoadFactor);
-        _txCache = new ArrayList(_txCacheInitialCapacity);
-        _flushedCache = new LinkedHashSet(_flushedCacheInitialCapacity, _flushedCacheLoadFactor);
-        _weakCache = new HashMap(_weakCacheInitialCapacity, _weakCacheLoadFactor);
+        _txCache = new ArrayList<>(_txCacheInitialCapacity);
+        _flushedCache = new LinkedHashSet<>(_flushedCacheInitialCapacity, _flushedCacheLoadFactor);
+        _weakCache = new HashMap<>(_weakCacheInitialCapacity, _weakCacheLoadFactor);
 
         // create new Transaction object and set defaults
 
@@ -427,9 +422,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
             current.close();
         }
 
-        Collection c = _weakCache.values();
-        for (Iterator it = c.iterator(); it.hasNext();) {
-            StateManager sm = (StateManager)it.next();
+        Collection<StateManager> c = _weakCache.values();
+        for (Iterator<StateManager> it = c.iterator(); it.hasNext();) {
+            StateManager sm = it.next();
 
             // RESOLVE - do we want to release all references in SM?
             // 1 of two calls below should be removed.
@@ -540,7 +535,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the new Query
      */
     @Override
-    public Query newQuery(Class cls) {
+    public Query newQuery(Class<?> cls) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls);
         registerQuery(q);
@@ -554,7 +549,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the new Query
      */
     @Override
-    public Query newQuery(Class cls, Collection cln) {
+    public Query newQuery(Class<?> cls, Collection<?> cln) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls, cln);
         registerQuery(q);
@@ -568,7 +563,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the new Query
      */
     @Override
-    public Query newQuery(Class cls, String filter) {
+    public Query newQuery(Class<?> cls, String filter) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls, filter);
         registerQuery(q);
@@ -583,7 +578,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the new Query
      */
     @Override
-    public Query newQuery(Class cls, Collection cln, String filter) {
+    public Query newQuery(Class<?> cls, Collection<?> cln, String filter) {
         assertIsOpen();
         QueryImpl q = new QueryImpl(this, cls, cln, filter);
         registerQuery(q);
@@ -600,7 +595,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @see #newQuery
      */
     @Override
-    public Collection getExtent(Class persistenceCapableClass,
+    public Collection<?> getExtent(Class<?> persistenceCapableClass,
                                 boolean subclasses) {
         assertIsOpen();
         return new ExtentCollection(this, persistenceCapableClass, subclasses);
@@ -700,7 +695,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * with this StateManager.
      */
     @Override
-    public StateManager findOrCreateStateManager(Object oid, Class pcClass) {
+    public StateManager findOrCreateStateManager(Object oid, Class<?> pcClass) {
         return lookupObjectById(oid, pcClass);
     }
 
@@ -709,14 +704,14 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param oid an ObjectId
      * @param classType the Class type of the returned object or null if not known.
      */
-    private StateManager lookupObjectById(Object oid, Class classType) {
+    private StateManager lookupObjectById(Object oid, Class<?> classType) {
         StateManager sm = null;
 
         // Check the _weakCache for the instance
         try {
             acquireCacheLock();
 
-            sm = (StateManager)_weakCache.get(oid);
+            sm = _weakCache.get(oid);
             if (sm == null) {
                 boolean external = false;
                 // Do NOT look in DB, but create a Hollow instance:
@@ -767,7 +762,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Create a StateManager.
      * @param classType Class of the PersistenceCapable.
      */
-    private StateManager createStateManager(Class classType) {
+    private StateManager createStateManager(Class<?> classType) {
         StateManager rc = _store.getStateManager(classType);
         newInstance(rc);
 
@@ -882,7 +877,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
     @Override
-    public void makePersistent(Collection pcs) {
+    public void makePersistent(Collection<?> pcs) {
         if (pcs == null) {
             return;        // ignore
         }
@@ -920,7 +915,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     }
 
     @Override
-    public void deletePersistent(Collection pcs) {
+    public void deletePersistent(Collection<?> pcs) {
         if (pcs == null) {
             return;        // ignore
         }
@@ -1074,7 +1069,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the Class of the ObjectId of the parameter
      */
     @Override
-    public Class getObjectIdClass(Class cls) {
+    public Class<?> getObjectIdClass(Class<?> cls) {
         PersistenceConfig config = loadPersistenceConfig(cls);
         return config.getOidClass();
     }
@@ -1096,7 +1091,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     "jdo.persistencemanagerimpl.newinstance.badsm"));
         }
 
-        Constructor constr = config.getConstructor();
+        Constructor<?> constr = config.getConstructor();
         try {
             if (constr != null) {
                 o = constr.newInstance(new Object[]{sm});
@@ -1163,7 +1158,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Return a RetrieveDesc given a Class object.
      */
     @Override
-    public RetrieveDesc getRetrieveDesc(Class classType) {
+    public RetrieveDesc getRetrieveDesc(Class<?> classType) {
         acquireShareLock();
 
         try {
@@ -1179,7 +1174,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Class object for the parent class.
      */
     @Override
-    public RetrieveDesc getRetrieveDesc(String fieldName, Class classType) {
+    public RetrieveDesc getRetrieveDesc(String fieldName, Class<?> classType) {
         acquireShareLock();
 
         try {
@@ -1238,7 +1233,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 LOG.log(TRACE, "sqlstore.persistencemgr.registerinstancein_wkc");
                 _weakCache.put(oid, sm);
             } else if (throwDuplicateException) {
-                StateManager old = (StateManager)_weakCache.get(oid);
+                StateManager old = _weakCache.get(oid);
                 if (_supersedeDeletedInstance && old.isDeleted()) {
 
                     LOG.log(DEBUG,
@@ -1297,7 +1292,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         if (oid != null) {
             try {
                 acquireCacheLock();
-                StateManager sm = (StateManager) _weakCache.remove(oid);
+                StateManager sm = _weakCache.remove(oid);
                 removeFromCaches(sm);
             } finally {
                 releaseCacheLock();
@@ -1381,7 +1376,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      */
     private void prepareToUpdate() {
         for (int i = 0; i < _txCache.size(); i++) {
-            StateManager sm = (StateManager)_txCache.get(i);
+            StateManager sm = _txCache.get(i);
             // NOTE: prepareToUpdatePhaseI has the side-effect of adding more objects
             // to the transaction cache.
 
@@ -1390,10 +1385,10 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         // We only do phase 2 and 3 during commit only.
         if (!_insideFlush) {
-            HashSet phase3sms = new HashSet();
+            HashSet<StateManager> phase3sms = new HashSet<>();
 
-            for (Iterator iter = _flushedCache.iterator(); iter.hasNext(); ) {
-                StateManager sm = (StateManager)iter.next();
+            for (Iterator<StateManager> iter = _flushedCache.iterator(); iter.hasNext(); ) {
+                StateManager sm = iter.next();
                 // NOTE: prepareToUpdatePhaseII has the side-effect of adding state managers
                 // to the phase3sms HashSet which need to have prepareToUpdatePhaseIII()
                 // called on them
@@ -1401,14 +1396,14 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 sm.prepareToUpdatePhaseII(phase3sms);
             }
 
-            Iterator iter = phase3sms.iterator();
+            Iterator<StateManager> iter = phase3sms.iterator();
 
             // phase3sms should contain all the non-reachable autopersistence instance.
             // We need to call prepareToUpdatePhaseIII on them to make sure we roll
             // back any changes that may have been flushed to the datastore.
 
             while (iter.hasNext()) {
-                StateManager sm = (StateManager) iter.next();
+                StateManager sm = iter.next();
                 sm.prepareToUpdatePhaseIII();
             }
         }
@@ -1422,13 +1417,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
      *  because of circular dependencies.
      */
     private void flushTxCache() {
-        List err = flushToDataStore(_txCache);
+        List<StateManager> err = flushToDataStore(_txCache);
 
         // Try to resolve dependencies.
         if (err != null && err.size() > 0) {
-            Iterator iter = err.iterator();
+            Iterator<StateManager> iter = err.iterator();
             while (iter.hasNext()) {
-                ((StateManager) iter.next()).resolveDependencies();
+                iter.next().resolveDependencies();
             }
             // Second flush.
             err = flushToDataStore(err);
@@ -1479,9 +1474,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
      *   because of unresolved dependencies, null if all
      *   instances could be processed.
      */
-    static private List flushToDataStore(List flushList) {
+    static private List<StateManager> flushToDataStore(List<StateManager> flushList) {
         int size = flushList.size();
-        List errorList = null;
+        List<StateManager> errorList = null;
 
         // The connection initialisation is not neccessary. There
         // are two conditions in TransactionImpl assuring connections
@@ -1492,17 +1487,16 @@ public class PersistenceManagerImpl implements PersistenceManager {
         // transactions are not released until commit
         // Please refer to TransactionImpl.releaseConnection
         for (int i = 0; i < size; i++) {
-            StateManager sm = (StateManager)flushList.get(i);
-            StateManager smNext =
-                (i+1 < size)? (StateManager)flushList.get(i+1) : null;
+            StateManager sm = flushList.get(i);
+            StateManager smNext = (i + 1 < size) ? flushList.get(i + 1) : null;
             sm.updatePersistent(smNext);
         }
 
         for (int i = 0; i < size; i++) {
-            StateManager sm = (StateManager)flushList.get(i);
+            StateManager sm = flushList.get(i);
             if (!sm.isProcessed()) {
                 if (errorList == null) {
-                    errorList = new ArrayList();
+                    errorList = new ArrayList<>();
                 }
 
                 // Dependencies have not been resolved.
@@ -1519,13 +1513,13 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param smList List of state managers.
      * @return Array of persistence capable instances.
      */
-    static private Object[] toPCArray(List smList) {
+    static private Object[] toPCArray(List<StateManager> smList) {
         final int size = smList.size();
         if (size > 0) {
-            List pcList = new ArrayList(size);
+            List<Object> pcList = new ArrayList<>(size);
 
             for (int i = 0; i < size; i++) {
-                StateManager sm = (StateManager)smList.get(i);
+                StateManager sm = smList.get(i);
                 pcList.add(sm.getPersistent());
             }
             return pcList.toArray();
@@ -1549,8 +1543,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         boolean retainValues = _transaction.getRetainValues();
 
-        for (Iterator iter = _flushedCache.iterator(); iter.hasNext(); ) {
-            StateManager sm = (StateManager)iter.next();
+        for (Iterator<StateManager> iter = _flushedCache.iterator(); iter.hasNext(); ) {
+            StateManager sm = iter.next();
             LOG.log(TRACE, "sqlstore.persistencemgr.aftercompletion.process",sm.getObjectId());
             if (abort) {
                 rollback(sm, retainValues);
@@ -1612,7 +1606,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         StateManager rc = null;
 
         if (null != sm && sm.hasVersionConsistency()) {
-            Class pcType = sm.getPersistent().getClass();
+            Class<?> pcType = sm.getPersistent().getClass();
             Object oid = sm.getObjectId();
             VersionConsistencyCache vcCache =
                     persistenceManagerFactory.getVersionConsistencyCache();
@@ -1640,7 +1634,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         StateManager rc = null;
 
         if (null != sm && sm.hasVersionConsistency()) {
-            Class pcType = sm.getPersistent().getClass();
+            Class<?> pcType = sm.getPersistent().getClass();
             Object oid = sm.getObjectId();
             VersionConsistencyCache vcCache =
                     persistenceManagerFactory.getVersionConsistencyCache();
@@ -1653,9 +1647,6 @@ public class PersistenceManagerImpl implements PersistenceManager {
         return rc;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public boolean initializeFromVersionConsistencyCache(StateManager sm) {
         boolean rc = false;
@@ -1685,7 +1676,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         StateManager rc = null;
 
         if (null != sm && sm.hasVersionConsistency()) {
-            Class pcType = sm.getPersistent().getClass();
+            Class<?> pcType = sm.getPersistent().getClass();
             Object oid = sm.getObjectId();
             VersionConsistencyCache vcCache =
                 persistenceManagerFactory.getVersionConsistencyCache();
@@ -1774,7 +1765,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the object of the class type
      */
     @Override
-    public Object newSCOInstance(Class type, Object owner, String fieldName) {
+    public Object newSCOInstance(Class<?> type, Object owner, String fieldName) {
         Object obj = null;
 
         if (Collection.class.isAssignableFrom(type)) {
@@ -1802,7 +1793,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the object of the class type
      */
     @Override
-    public Object newSCOInstanceInternal(Class type, Object owner, String fieldName) {
+    public Object newSCOInstanceInternal(Class<?> type, Object owner, String fieldName) {
 
         Object obj = null;
 
@@ -1851,8 +1842,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the object of the class type
      */
     @Override
-    public Object newCollectionInstance(Class type, Object owner, String fieldName,
-                                        Class elementType, boolean allowNulls, int initialSize) {
+    public Object newCollectionInstance(Class<?> type, Object owner, String fieldName,
+                                        Class<?> elementType, boolean allowNulls, int initialSize) {
         Object obj = newCollectionInstanceInternal(type, owner, fieldName,
                 elementType, allowNulls, initialSize);
 
@@ -1876,8 +1867,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @return the object of the class type
      */
     @Override
-    public Object newCollectionInstanceInternal(Class type, Object owner, String fieldName,
-                                                Class elementType, boolean allowNulls, int initialSize) {
+    public Object newCollectionInstanceInternal(Class<?> type, Object owner, String fieldName,
+                                                Class<?> elementType, boolean allowNulls, int initialSize) {
         Object obj = null;
 
         // Make sure that the order of type comparison will go from
@@ -1958,7 +1949,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                     //_transaction.rollback();
                 } else {
                     for (int i = 0; i < _txCache.size(); i++) {
-                        StateManager sm = (StateManager)_txCache.get(i);
+                        StateManager sm = _txCache.get(i);
                         sm.flushed();
                     }
                 }
@@ -2086,9 +2077,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
      */
     private void disconnectQueries()
     {
-        for (Iterator i = queries.iterator(); i.hasNext();)
+        for (Iterator<QueryImpl> i = queries.iterator(); i.hasNext();)
         {
-            QueryImpl q = (QueryImpl)i.next();
+            QueryImpl q = i.next();
             q.clearPersistenceManager();
         }
         queries.clear();
@@ -2159,7 +2150,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                                 new Object[]{pc});
                     }
                 } else {
-                    Class classType = pc.getClass();
+                    Class<?> classType = pc.getClass();
                     loadPersistenceConfig(classType);
                     sm = _store.getStateManager(classType);
                 }
@@ -2200,9 +2191,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * @param oid  the Oid
      * @return classtype for the owning Class
      */
-    private Class loadClassForOid(Object oid) {
-        Class oidClass = oid.getClass();
-        Class classType = _store.getClassByOidClass(oidClass);
+    private Class<?> loadClassForOid(Object oid) {
+        Class<?> oidClass = oid.getClass();
+        Class<?> classType = _store.getClassByOidClass(oidClass);
         if (classType != null) {
             // Found in the DataStore
             return classType;
@@ -2241,7 +2232,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
 
         LOG.log(TRACE, "sqlstore.persistencemgr.loadingclass", s);
-        Class oidClass = null;
+        Class<?> oidClass = null;
 
         try {
             // take current class loader if not specified
@@ -2323,7 +2314,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         }
     }
 
-    private PersistenceConfig loadPersistenceConfig(Class classType) {
+    private PersistenceConfig loadPersistenceConfig(Class<?> classType) {
         return _store.getPersistenceConfig(classType);
     }
 
@@ -2344,7 +2335,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         Object newoid = null;
         try {
-            Class oidClass = oid.getClass();
+            Class<?> oidClass = oid.getClass();
             newoid = oidClass.getDeclaredConstructor().newInstance();
             PersistenceConfig config = sm.getPersistenceConfig();
             Field keyFields[] = config.getKeyFields();

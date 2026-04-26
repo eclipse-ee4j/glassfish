@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,15 +46,13 @@ import static java.lang.System.Logger.Level.DEBUG;
 /**
  *
  * @author  Michael Bouschen
- * @version 0.1
  */
-public class QueryImpl
-    implements Query
-{
+public class QueryImpl implements Query {
+
     /**
      *
      */
-    private Class candidateClass;
+    private Class<?> candidateClass;
 
     /**
      *
@@ -98,7 +97,7 @@ public class QueryImpl
     /**
      *
      */
-    private transient Collection candidateCollection;
+    private transient Collection<?> candidateCollection;
 
     /**
      *
@@ -194,7 +193,7 @@ public class QueryImpl
      * Create a query instance with the candidate class specified.
      * @param candidateClass the Class of the candidate instances.
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass) {
+    public QueryImpl(PersistenceManager pm, Class<?> candidateClass) {
         this(pm);
         setClass(candidateClass);
     }
@@ -205,7 +204,7 @@ public class QueryImpl
      * @param candidateClass the Class of the candidate instances.
      * @param candidateCollection the Collection of candidate instances.
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass, Collection candidateCollection) {
+    public QueryImpl(PersistenceManager pm, Class<?> candidateClass, Collection<?> candidateCollection) {
         this(pm);
         setClass(candidateClass);
         setCandidates(candidateCollection);
@@ -217,7 +216,7 @@ public class QueryImpl
      * @param candidateClass the Class of the candidate instances.
      * @param filter the Filter for candidate instances.
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass, String filter) {
+    public QueryImpl(PersistenceManager pm, Class<?> candidateClass, String filter) {
         this(pm);
         setClass(candidateClass);
         setFilter(filter);
@@ -232,7 +231,7 @@ public class QueryImpl
      * @param candidateCollection the Collection of candidate instances.
      * @param filter the Filter for candidate instances
      */
-    public QueryImpl(PersistenceManager pm, Class candidateClass, Collection candidateCollection, String filter) {
+    public QueryImpl(PersistenceManager pm, Class<?> candidateClass, Collection<?> candidateCollection, String filter) {
         this(pm);
         setClass(candidateClass);
         setCandidates(candidateCollection);
@@ -248,7 +247,7 @@ public class QueryImpl
      * @param candidateClass the Class of the candidate instances.
      */
     @Override
-    public void setClass(Class candidateClass) {
+    public void setClass(Class<?> candidateClass) {
         synchronized (this.paramtab) {
             this.candidateClass = candidateClass;
             this.compiled = false;
@@ -261,7 +260,7 @@ public class QueryImpl
      * @param candidateCollection the Candidate collection.
      */
     @Override
-    public void setCandidates(Collection candidateCollection) {
+    public void setCandidates(Collection<?> candidateCollection) {
         synchronized (this.paramtab) {
             this.candidateCollection = candidateCollection;
             // candidateCollection is not part of query compilation =>
@@ -516,7 +515,7 @@ public class QueryImpl
      * @param parameters the Map containing all of the parameters.
      */
     @Override
-    public Object executeWithMap(Map parameters) {
+    public Object executeWithMap(Map<String, Object> parameters) {
         synchronized (this.paramtab) {
             compile();
             ParameterTable params = new ParameterTable(paramtab);

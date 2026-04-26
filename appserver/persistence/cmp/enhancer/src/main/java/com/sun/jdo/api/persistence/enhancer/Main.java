@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.zip.ZipInputStream;
@@ -150,19 +152,19 @@ public class Main
     //@olsen: split: method filter() -> process(), processArgs()
     public int process(String[] argv) {
         //@olsen: added inplace of disabled feature
-        ArrayList cNames = new ArrayList();
+        ArrayList<String> cNames = new ArrayList<>();
         //@olsen: split: method filter() -> process(), processArgs()
         int res = processArgs(argv, cNames);
         if (res != 0) {
             //@olsen: added println()
-            printMessage ("aborted with errors.");//NOI18N
+            printMessage ("aborted with errors.");
             return res;
         }
 
         //@olsen: added support for timing statistics
         try {
             if (this.cmdLineOpts.doTiming) {
-                Support.timer.push("Main.process(String[])");//NOI18N
+                Support.timer.push("Main.process(String[])");
             }
 
             // Find all of the classes on which we want to operate
@@ -172,7 +174,7 @@ public class Main
             computeClasses(pcNames, paNames, ccNames);
 */
 
-            printMessage ("done.");//NOI18N
+            printMessage ("done.");
             return 0;
         } finally {
             if (this.cmdLineOpts.doTiming) {
@@ -188,214 +190,70 @@ public class Main
     //@olsen: made private
     protected int processArgs(String[] argv,
                             //@olsen: added inplace of disabled feature
-                            Collection cNames) {
+                            Collection<String> cNames) {
         argv = preprocess(argv);
 
-//@olsen: disabled feature
-/*
-        ArrayList ccNames = new ArrayList();
-        ArrayList pcNames = new ArrayList();
-        ArrayList paNames = new ArrayList();
-        int classMode = ClassControl.PersistCapable;
-*/
-
-//@olsen: disabled feature
-/*
-        String classpath = System.getProperty("java.class.path");
-        String sysClasspath = System.getProperty("sun.boot.class.path", "");
-*/
-
-        //@olsen: added
         Properties jdoMetaDataProperties = null;
 
         for (int i=0; i<argv.length; i++) {
-            //@olsen: improved control flow, subst: else -> continue
-
             String arg = argv[i];
-//@olsen: disabled feature
-/*
-            if (arg.equals("-cc") ||
-                arg.equals("-copyclass")) {
-                classMode = ClassControl.PersistUnknown;
-                continue;
-            }
-            if (arg.equals("-pa") ||
-                arg.equals("-persistaware")) {
-                classMode = ClassControl.PersistAware;
-                continue;
-            }
-            if (arg.equals("-pc") ||
-                arg.equals("-persistcapable")) {
-                classMode = ClassControl.PersistCapable;
-                continue;
-            }
-*/
-            if (arg.equals("-v") ||//NOI18N
-                arg.equals("-verbose")) {//NOI18N
+            if (arg.equals("-v") ||
+                arg.equals("-verbose")) {
                 this.cmdLineOpts.verbose = true;
                 this.cmdLineOpts.quiet = false;
                 continue;
             }
-            if (arg.equals("-q") ||//NOI18N
-                arg.equals("-quiet")) {//NOI18N
+            if (arg.equals("-q") ||
+                arg.equals("-quiet")) {
                 this.cmdLineOpts.quiet = true;
                 this.cmdLineOpts.verbose = false;
                 continue;
             }
-            if (arg.equals("-f") ||//NOI18N
-                arg.equals("-force")) {//NOI18N
+            if (arg.equals("-f") ||
+                arg.equals("-force")) {
                 this.cmdLineOpts.forceWrite = true;
                 continue;
             }
-//@olsen: disabled feature
-/*
-            if (arg.equals("-inplace")) {
-                env.setUpdateInPlace(true);
-                continue;
-            }
-*/
-//@lars: disabled feature
-/*
-            if (arg.equals("-qf") ||//NOI18N
-                arg.equals("-quietfield")) {//NOI18N
-                if (argv.length-i < 2) {
-                    usage();
-                    printError ("Missing argument to the -quietfield option", null);//NOI18N
-                } else {
-                    String fullFieldName = argv[++i];
-                    if (fullFieldName.indexOf('.') == -1) {
-                        printError ("Field name specifications must include " +//NOI18N
-                                  "a fully qualified class name.  " +//NOI18N
-                                  fullFieldName + " does not include one.", null);//NOI18N
-                    } else {
-                        env.suppressFieldWarnings(fullFieldName);
-                    }
-                }
-                continue;
-            }
-            if (arg.equals("-qc") ||//NOI18N
-                arg.equals("-quietclass")) {//NOI18N
-                if (argv.length-i < 2) {
-                    usage();
-                    env.error("Missing argument to the -quietclass option");//NOI18N
-                } else {
-                    env.suppressClassWarnings(argv[++i]);
-                }
-                continue;
-            }
-*/
-            if (arg.equals("-nowrite")) {//NOI18N
+            if (arg.equals("-nowrite")) {
                 this.cmdLineOpts.noWrite = true;
                 continue;
             }
-//@olsen: disabled feature
-/*
-            if (arg.equals("-modifyjava")) {
-                env.setModifyJavaClasses(true);
-                continue;
-            }
-*/
-//@olsen: disabled feature
-/*
-            if (arg.equals("-modifyfinals")) {
-                env.setAllowFinalModifications(true);
-                continue;
-            }
-*/
-//@olsen: disabled feature
-/*
-            if (arg.equals("-noarrayopt")) {
-                env.setNoArrayOptimization(true);
-                continue;
-            }
-*/
-//@lars: disabled feature
-/*
-            if (arg.equals("-nothisopt")) {//NOI18N
-                env.setNoThisOptimization(true);
-                continue;
-            }
-            if (arg.equals("-noinitializeropt")) {//NOI18N
-                env.setNoInitializerOptimization(true);
-                continue;
-            }
-            if (arg.equals("-noopt")) {//NOI18N
-                env.setNoOptimization(true);
-                continue;
-            }
-*/
-            if (arg.equals("-d") ||//NOI18N
-                arg.equals("-dest")) {//NOI18N
+            if (arg.equals("-d") ||
+                arg.equals("-dest")) {
                 if (argv.length-i < 2) {
-                    printError ("Missing argument to the -dest option", null);//NOI18N
+                    printError ("Missing argument to the -dest option", null);
                     usage();
                 }
                 this.cmdLineOpts.destinationDirectory = argv[++i];
                 continue;
             }
-//@olsen: disabled feature
-/*
-            if (arg.equals("-classpath") ||
-                arg.equals("-cpath")) {
-                if (argv.length-i < 2) {
-                    usage();
-                    env.error("Missing argument to the -classpath option");
-                }
-                classpath = argv[++i];
-                continue;
-            }
-            if (arg.equals("-sysclasspath") ||
-                arg.equals("-syscpath")) {
-                if (argv.length-i < 2) {
-                    usage();
-                    env.error("Missing argument to the -sysclasspath option");
-                }
-                sysClasspath = argv[++i];
-                continue;
-            }
-*/
-//@olsen: disabled feature
-/*
-            if (arg.equals("-tp") ||
-                arg.equals("-translatepackage")) {
-                if (argv.length-i < 3) {
-                    usage();
-                    env.error("Missing arguments to the -translatepackage option");
-                }
-                env.setPackageTranslation(argv[i+1], argv[i+2]);
-                i += 2;
-                continue;
-            }
-*/
-            //@olsen: new command line option for timing statistics
-            if (arg.equals("-t") ||//NOI18N
-                arg.equals("--doTiming")) {//NOI18N
+            if (arg.equals("-t") ||
+                arg.equals("--doTiming")) {
                 this.cmdLineOpts.doTiming = true;
-//                env.setDoTimingStatistics(true);
                 continue;
             }
             //@olsen: new command line option for JDO meta data properties
-            if (arg.equals("-jp") ||//NOI18N
-                arg.equals("--jdoProperties")) {//NOI18N
+            if (arg.equals("-jp") ||
+                arg.equals("--jdoProperties")) {
                 if (argv.length-i < 2) {
-                    printError("Missing argument to the -jp/--jdoProperties option", null);//NOI18N
+                    printError("Missing argument to the -jp/--jdoProperties option", null);
                     usage();
                 }
                 try {
                     jdoMetaDataProperties = new Properties();
                     jdoMetaDataProperties.load(new FileInputStream(argv[++i]));
                 } catch (IOException ex) {
-                    printError("Cannot read JDO meta data properties from file", ex);//NOI18N
+                    printError("Cannot read JDO meta data properties from file", ex);
                     usage();
                 }
                 continue;
             }
             if (arg.length() > 0 && arg.charAt(0) == '-') {
-                printError("Unrecognized option:" + arg, null);//NOI18N
+                printError("Unrecognized option:" + arg, null);
                 usage();
             }
             if (arg.length() == 0) {
-                printMessage ("Empty file name encountered on the command line.");//NOI18N
+                printMessage ("Empty file name encountered on the command line.");
             }
 
             //@olsen: added inplace of disabled feature
@@ -421,7 +279,7 @@ public class Main
         //env.setVerbose(true);
         this.cmdLineOpts.quiet = false;
 //        env.setNoOptimization(true);
-//        env.message("forced settings: -noopt");//NOI18N
+//        env.message("forced settings: -noopt");
 
 /*
         if (env.errorCount() > 0)
@@ -437,18 +295,19 @@ public class Main
 
         // The user must specify a destination directory
         if (this.cmdLineOpts.destinationDirectory == null) {
-            if (argv.length > 0)
-                printError("No -dest output directory was specified", null);//NOI18N
+            if (argv.length > 0) {
+                printError("No -dest output directory was specified", null);
+            }
             usage();
         }
 
         //@olsen: added: initialize JDO meta data
         JDOMetaData jdoMetaData;
         if (jdoMetaDataProperties != null) {
-            printMessage("using JDO meta-data from properties");//NOI18N
+            printMessage("using JDO meta-data from properties");
             jdoMetaData = new JDOMetaDataPropertyImpl(jdoMetaDataProperties, this.outMessages);
         } else {
-            printMessage("using JDO meta-data from Model.Enhancer");//NOI18N
+            printMessage("using JDO meta-data from Model.Enhancer");
             jdoMetaData = new JDOMetaDataModelImpl(Model.ENHANCER, this.outMessages);
         }
         //@olsen: added support for timing statistics
@@ -499,19 +358,20 @@ public class Main
      * of the @files, if any
      */
     private String[] preprocess(String[] args) {
-        ArrayList argVec = new ArrayList();
+        ArrayList<String> argVec = new ArrayList<>();
         for (int i=0; i<args.length; i++) {
             if (args[i].length() > 0 && args[i].charAt(0) == '@') {
                 String filename = null;
                 if (args[i].length() == 1) {
-                    if (i+1 < args.length)
+                    if (i+1 < args.length) {
                         filename = args[++i];
+                    }
                 } else {
                     filename = args[i].substring(1);
                 }
 
                 if (filename == null) {
-                    printError("missing file name argument to @.", null);//NOI18N
+                    printError("missing file name argument to @.", null);
                 } else {
                     appendFileContents(filename, argVec);
                 }
@@ -531,31 +391,34 @@ public class Main
      * within the file to argVec.  This currently has only a very
      * primitive notion of words (separated by white space).
      */
-    private void appendFileContents(String filename, ArrayList argVec) {
+    private void appendFileContents(String filename, List<String> argVec) {
         try {
             FileReader inputFile = new FileReader(filename);
             try (BufferedReader input = new BufferedReader(inputFile)) {
                 String s = null;
                 while ((s = input.readLine()) != null) {
-                    StringTokenizer parser = new StringTokenizer(s, " \t", false);//NOI18N
+                    StringTokenizer parser = new StringTokenizer(s, " \t", false);
                     while (parser.hasMoreElements()) {
                         String token = parser.nextToken();
-                        if (token.length() > 0 && token.charAt(0) == '@')
-                            printError("The included file \"" +//NOI18N
+                        if (token.length() > 0 && token.charAt(0) == '@') {
+                            printError("The included file \"" +
                                       filename +
-                                      "\" contains a recursive include.  " +//NOI18N
-                                      "Recursive includes are not supported.", null);//NOI18N
-                        if (token.charAt(0) == '#') break;
+                                      "\" contains a recursive include.  " +
+                                      "Recursive includes are not supported.", null);
+                        }
+                        if (token.charAt(0) == '#') {
+                            break;
+                        }
                         argVec.add(token);
                     }
                 }
             }
             catch (IOException ex) {
-                printError("IO exception reading file " + filename + ".", ex);//NOI18N
+                printError("IO exception reading file " + filename + ".", ex);
             }
         }
         catch (FileNotFoundException ex) {
-            printError("file " + filename + " not found.", ex);//NOI18N
+            printError("file " + filename + " not found.", ex);
         }
     }
 
@@ -586,37 +449,26 @@ public class Main
      *  @param  filenames  The filenames.
      *********************************************************************/
 
-    private final void enhanceInputFiles (Collection filenames)
-    {
+    private final void enhanceInputFiles(Collection<String> filenames) {
+        for (Iterator<String> names = filenames.iterator(); names.hasNext();) {
+            try {
+                String name = names.next();
 
-        for (Iterator names = filenames.iterator(); names.hasNext ();)
-        {
-            try
-            {
-                String name = (String) names.next ();
-
-                //if we have a class-files
-                if (isClassFileName (name))
-                {
-                    enhanceClassFile (openFileInputStream (name));
-                }
-                else
-                {
-                    //if we have an archive
-                    if (isZipFileName (name))
-                    {
-                        enhanceZipFile (name); //getZipFile (name));
+                // if we have a class-files
+                if (isClassFileName(name)) {
+                    enhanceClassFile(openFileInputStream(name));
+                } else {
+                    // if we have an archive
+                    if (isZipFileName(name)) {
+                        enhanceZipFile(name); // getZipFile (name));
                     }
-                    //assume that it is a class name
-                    else
-                    {
-                        enhanceClassFile (openClassInputStream (name));
+                    // assume that it is a class name
+                    else {
+                        enhanceClassFile(openClassInputStream(name));
                     }
                 }
-            }
-            catch (Throwable ex)
-            {
-                printError (null, ex);
+            } catch (Throwable ex) {
+                printError(null, ex);
             }
         }
 

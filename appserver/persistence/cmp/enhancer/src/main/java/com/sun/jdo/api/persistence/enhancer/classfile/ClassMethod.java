@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,10 +29,10 @@ import java.util.Enumeration;
  */
 public class ClassMethod extends ClassMember {
     /* The name of the constructor code */
-    public final static String intializerName = "<init>";//NOI18N
+    public final static String intializerName = "<init>";
 
     /* The name of the static initializer code */
-    public final static String staticIntializerName = "<clinit>";//NOI18N
+    public final static String staticIntializerName = "<clinit>";
 
     /* access flag bit mask - see VMConstants */
     private int accessFlags;
@@ -51,6 +52,7 @@ public class ClassMethod extends ClassMember {
     /**
      * Return the access flags for the method - see VMConstants
      */
+    @Override
     public int access() {
         return accessFlags;
     }
@@ -58,6 +60,7 @@ public class ClassMethod extends ClassMember {
     /**
      * Update the access flags for the field - see VMConstants
      */
+    @Override
     public void setAccess(int newFlags) {
         accessFlags = newFlags;
     }
@@ -79,6 +82,7 @@ public class ClassMethod extends ClassMember {
     /**
      * Return the name of the method
      */
+    @Override
     public ConstUtf8 name() {
         return methodName;
     }
@@ -93,6 +97,7 @@ public class ClassMethod extends ClassMember {
     /**
      * Return the type signature of the method
      */
+    @Override
     public ConstUtf8 signature() {
         return methodSignature;
     }
@@ -107,6 +112,7 @@ public class ClassMethod extends ClassMember {
     /**
      * Return the attributes associated with the method
      */
+    @Override
     public AttributeVector attributes() {
         return methodAttributes;
     }
@@ -135,11 +141,12 @@ public class ClassMethod extends ClassMember {
      * Returns the CodeAttribute associated with this method (if any)
      */
     public CodeAttribute codeAttribute() {
-        Enumeration e = methodAttributes.elements();
+        Enumeration<ClassAttribute> e = methodAttributes.elements();
         while (e.hasMoreElements()) {
-            ClassAttribute attr = (ClassAttribute) e.nextElement();
-            if (attr instanceof CodeAttribute)
+            ClassAttribute attr = e.nextElement();
+            if (attr instanceof CodeAttribute) {
                 return (CodeAttribute) attr;
+            }
         }
         return null;
     }
@@ -172,10 +179,10 @@ public class ClassMethod extends ClassMember {
 
     void print(PrintStream out, int indent) {
         ClassPrint.spaces(out, indent);
-        out.print("'" + methodName.asString() + "'");//NOI18N
-        out.print(" sig = " + methodSignature.asString());//NOI18N
-        out.print(" accessFlags = " + Integer.toString(accessFlags));//NOI18N
-        out.println(" attributes:");//NOI18N
+        out.print("'" + methodName.asString() + "'");
+        out.print(" sig = " + methodSignature.asString());
+        out.print(" accessFlags = " + Integer.toString(accessFlags));
+        out.println(" attributes:");
         methodAttributes.print(out, indent+2);
     }
 }

@@ -26,6 +26,7 @@ import com.sun.jdo.api.persistence.model.jdo.impl.RelationshipElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
+import com.sun.jdo.api.persistence.model.util.ModelValidationException;
 import com.sun.jdo.api.persistence.model.util.ModelValidator;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,13 +92,12 @@ public abstract class Model {
     /** Map of mapping class elements which have been loaded.  Keys are fully
      * qualified class names.
      */
-    @SuppressWarnings("unchecked")
     private final Map<String, MappingClassElement> _classes = new WeakValueHashMap();
 
     /** Set of fully qualified names of classes known to be
      * non persistence-capable.
      */
-    private final Set<String> _nonPCClasses = new WeakHashSet();
+    private final Set<String> _nonPCClasses = new WeakHashSet<>();
 
     /** List of illegal package name prefixes for superclasses of
      * persistence capable classes.
@@ -166,38 +167,40 @@ public abstract class Model {
         ENHANCER = NewModel(null, "com.sun.jdo.api.persistence.model.EnhancerModel");
     }
 
-        /** Create a new Model of the requested type.  If the class definition
-         * exists in the class path of the environment, then this method will
-         * create a new instance of the Model.
-         * @param modelName the fully qualified name of the class to be
-         * instantiated.
-         * @param testName the fully qualified name of the class to be tested
-         * as a precondition to loading.
-         * @return a new instance of the requested class (which implements
-         * Model).
-         */
-        static protected Model NewModel (String testName, String modelName) {
-            Class DynamicClass = null;
-            Model model = null;
-            try {
-                if (testName != null) {
-                    // try this class as a precondition to the real class to load
-                    Class.forName (testName);
-                }
-                DynamicClass = Class.forName (modelName);
-                if (DynamicClass != null) {
-                    model = (Model) DynamicClass.newInstance();
-                }
-            }
-            catch (Exception e) {
-                // this is expected in the environment
-            }
-            return model;
-        }
-    /** @return I18N message handler for this element
+    /**
+     * Create a new Model of the requested type. If the class definition
+     * exists in the class path of the environment, then this method will
+     * create a new instance of the Model.
+     *
+     * @param modelName the fully qualified name of the class to be
+     *            instantiated.
+     * @param testName the fully qualified name of the class to be tested
+     *            as a precondition to loading.
+     * @return a new instance of the requested class (which implements
+     *         Model).
      */
-    protected static final ResourceBundle getMessages ()
-    {
+    private static Model NewModel(String testName, String modelName) {
+        try {
+            if (testName != null) {
+                // try this class as a precondition to the real class to load
+                Class.forName(testName);
+            }
+            @SuppressWarnings("unchecked")
+            Class<? extends Model> dynamicClass = (Class<? extends Model>) Class.forName(modelName);
+            if (dynamicClass != null) {
+                return dynamicClass.getDeclaredConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            // this is expected in the environment
+        }
+        return null;
+    }
+
+
+    /**
+     * @return I18N message handler for this element
+     */
+    protected static final ResourceBundle getMessages() {
         return _messages;
     }
 
@@ -210,7 +213,7 @@ public abstract class Model {
      * @return the input stream for the specified resource, <code>null</code>
      * if an error occurs or none exists
      */
-    abstract protected BufferedInputStream getInputStreamForResource (
+    protected abstract BufferedInputStream getInputStreamForResource (
         String className, ClassLoader classLoader, String resourceName);
 
     /** Determines if the specified className represents an interface type.
@@ -218,7 +221,7 @@ public abstract class Model {
      * @return <code>true</code> if this class name represents an interface;
      * <code>false</code> otherwise.
      */
-     abstract public boolean isInterface (String className);
+     public abstract boolean isInterface (String className);
 
     /** Determines if the specified className has a persistent superclass.
      * @param className the fully qualified name of the class to be checked
@@ -244,14 +247,14 @@ public abstract class Model {
      * @return the top non-Object superclass for className,
      * <code>className</code> if an error occurs or none exists
      */
-    abstract protected String findPenultimateSuperclass (String className);
+    protected abstract String findPenultimateSuperclass (String className);
 
     /** Returns the name of the superclass for the given class name.
      * @param className the fully qualified name of the class to be checked
      * @return thesuperclass for className, <code>null</code> if an error
      * occurs or none exists
      */
-    abstract protected String getSuperclass (String className);
+    protected abstract String getSuperclass (String className);
 
     /** Returns a PersistenceClassElement created from the specified class name.
      * Since our implementation of the mapping model class includes the
@@ -279,24 +282,22 @@ public abstract class Model {
      * <code>null</code> if an error occurs or none exists
      * @see #getMappingClass
      */
-    public PersistenceClassElement getPersistenceClass (String className,
-        ClassLoader classLoader)
-    {
+    public PersistenceClassElement getPersistenceClass(String className, ClassLoader classLoader) {
         return getPersistenceClass(getMappingClass(className, classLoader));
     }
 
-    /** Returns a PersistenceClassElement created from the mapping class.
+
+    /**
+     * Returns a PersistenceClassElement created from the mapping class.
+     *
      * @param mappingClass the mapping class element to which the persistence
-     * class is associated
+     *            class is associated
      * @return the PersistenceClassElement for mappingClass,
-     * <code>null</code> if an error occurs or none exists
+     *         <code>null</code> if an error occurs or none exists
      * @see #getMappingClass
      */
-    protected PersistenceClassElement getPersistenceClass (
-        MappingClassElement mappingClass)
-    {
-        return ((mappingClass == null) ? null :
-            ((MappingClassElementImpl)mappingClass).getPersistenceElement());
+    protected PersistenceClassElement getPersistenceClass(MappingClassElement mappingClass) {
+        return ((mappingClass == null) ? null : ((MappingClassElementImpl) mappingClass).getPersistenceElement());
     }
 
     /** Returns the MappingClassElement created for the specified class name.
@@ -306,8 +307,7 @@ public abstract class Model {
      * @return the MappingClassElement for class,
      * <code>null</code> if an error occurs or none exists
      */
-    public MappingClassElement getMappingClass (String className)
-    {
+    public MappingClassElement getMappingClass(String className) {
         return getMappingClass(className, null);
     }
 
@@ -389,18 +389,19 @@ public abstract class Model {
     /** Returns an unmodifiable copy of the MappingClassElement cache.
      * @return unmodifiable MappingClassElement cache
      */
-    public Map getMappingCache ()
-    {
+    public Map<String, MappingClassElement> getMappingCache() {
         return Collections.unmodifiableMap(_classes);
     }
 
-    /** Returns an unmodifiable copy of the ClassLoader cache.
+
+    /**
+     * Returns an unmodifiable copy of the ClassLoader cache.
      * This implementation returns null, but subclasses (such as RuntimeModel)
      * can override this method if they support a class loader cache.
+     *
      * @return unmodifiable ClassLoader cache
      */
-    public Map getClassLoaderCache ()
-    {
+    public Map<String, ClassLoader> getClassLoaderCache() {
         return null;
     }
 
@@ -424,19 +425,14 @@ public abstract class Model {
      * will determine the status of the classes.
      * @param classNames a collection of fully qualified class names
      */
-    protected void removeResourcesFromCaches (Collection classNames)
-    {
+    protected void removeResourcesFromCaches(Collection<String> classNames) {
         if (classNames == null) {
             return;
         }
 
-        synchronized (this._classes)
-        {
-            for (Iterator i = classNames.iterator(); i.hasNext();)
-            {
-                String className = (String)i.next();
-                MappingClassElement mapping =
-                    _classes.get(className);
+        synchronized (this._classes) {
+            for (String className : classNames) {
+                MappingClassElement mapping = _classes.get(className);
 
                 // If the cache has a MappingClassElement with the specified
                 // className, get its databaseRoot and remove the corresonding
@@ -459,10 +455,8 @@ public abstract class Model {
      * The next call getMappingClass will determine the status of the class.
       * @param className the fully qualified name of the class
      */
-    public void removeFromCache (String className)
-    {
-        synchronized (this._classes)
-        {
+    public void removeFromCache(String className) {
+        synchronized (this._classes) {
             // remove the class from the set of classes known to be non PC
             _nonPCClasses.remove(className);
         }
@@ -497,40 +491,39 @@ public abstract class Model {
      * @see #createFile
      */
     public void storeMappingClass(MappingClassElement mappingClass, OutputStream stream) throws IOException {
-        if (mappingClass != null) {
-            String className = mappingClass.getName();
+        if (mappingClass == null) {
+            return;
+        }
+        String className = mappingClass.getName();
 
-            if (stream != null) {
-                XMLOutputStream xmlOutput = new XMLOutputStream(stream);
-
-                try {
-                    mappingClass.preArchive(); // call pre archive hook
-                    xmlOutput.writeObject(mappingClass);
-
-                    // update modified flags for the mapping and persistence
-                    // classes after save
-                    mappingClass.setModified(false);
-                    getPersistenceClass(mappingClass).setModified(false);
-                } catch (ModelException e) {
-                    // MBO: print reason to logger
-                    LOG.log(WARNING, "Failed to store mapping class " + mappingClass, e);
-                } finally {
-                    if (xmlOutput != null) {
-                        xmlOutput.close();
-                    }
-
-                    unlockFile(stream, className);
-                }
-                return;
-            }
-
+        if (stream == null) {
             throw new IOException(I18NHelper.getMessage(getMessages(), "file.cannot_save", className));
         }
+        XMLOutputStream xmlOutput = new XMLOutputStream(stream);
+
+        try {
+            mappingClass.preArchive(); // call pre archive hook
+            xmlOutput.writeObject(mappingClass);
+
+            // update modified flags for the mapping and persistence
+            // classes after save
+            mappingClass.setModified(false);
+            getPersistenceClass(mappingClass).setModified(false);
+        } catch (ModelException e) {
+            // MBO: print reason to logger
+            LOG.log(WARNING, "Failed to store mapping class " + mappingClass, e);
+        } finally {
+            if (xmlOutput != null) {
+                xmlOutput.close();
+            }
+
+            unlockFile(stream, className);
+        }
+        return;
     }
 
-    public void unlockFile (OutputStream stream, String className)
-        throws IOException
-    {
+
+    public void unlockFile(OutputStream stream, String className) throws IOException {
         unlockFile(className);
 
         if (stream != null) {
@@ -551,12 +544,10 @@ public abstract class Model {
      * @exception IOException if there is some error saving the class
      * @see #storeMappingClass
      */
-    public void storeMappingClass (String className) throws IOException
-    {
+    public void storeMappingClass(String className) throws IOException {
         MappingClassElement mappingClass = null;
 
-        synchronized (this._classes)
-        {
+        synchronized (this._classes) {
             mappingClass = _classes.get(className);
         }
         storeMappingClass(mappingClass);
@@ -570,21 +561,17 @@ public abstract class Model {
      * @param oldName the fully qualified name of the old key for the mapping
      * class (use <code>null</code> to add the new key but not replace it)
      */
-    public void updateKeyForClass (MappingClassElement mappingClass,
-        String oldName)
-    {
+    public void updateKeyForClass(MappingClassElement mappingClass, String oldName) {
         // need to synchronize _classes access here
         // (for details see getMappingClass)
-        synchronized (this._classes)
-        {
+        synchronized (this._classes) {
             // remove the old key from the cache
             if (oldName != null) {
                 _classes.remove(oldName);
             }
 
             // store the class under the new key in the cache
-            if (mappingClass != null)
-            {
+            if (mappingClass != null) {
                 String className = mappingClass.getName();
 
                 _classes.put(className, mappingClass);
@@ -636,18 +623,16 @@ public abstract class Model {
      * @see #isInterface
      * @see #findPenultimateSuperclass
      */
-    public boolean isPersistenceCapableAllowed (String className)
-    {
+    public boolean isPersistenceCapableAllowed(String className) {
         int modifier = getModifiersForClass(className);
 
-        if (!Modifier.isStatic(modifier) && !Modifier.isAbstract(modifier) &&
-            !isInterface(className) && !hasPersistentSuperclass(className))
-        {
+        if (!Modifier
+            .isStatic(modifier) && !Modifier.isAbstract(modifier) && !isInterface(className)
+            && !hasPersistentSuperclass(className)) {
             String highestSuperclassName = findPenultimateSuperclass(className);
-            Iterator iterator = _illegalPrefixes.iterator();
+            Iterator<String> iterator = _illegalPrefixes.iterator();
 
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 String nextPrefix = iterator.next().toString();
 
                 if (highestSuperclassName.startsWith(nextPrefix)) {
@@ -656,8 +641,7 @@ public abstract class Model {
             }
 
             iterator = _illegalClasses.iterator();
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 String nextClass = iterator.next().toString();
 
                 if (highestSuperclassName.equals(nextClass)) {
@@ -671,17 +655,18 @@ public abstract class Model {
         return false;
     }
 
-    /** Computes the mapping file resource name (with extension) for the
+
+    /**
+     * Computes the mapping file resource name (with extension) for the
      * supplied class name by converting the package name to a resource name.
+     *
      * @param className the fully qualified name of the class
      * @return the mapping file resource name (with extension) for the supplied
-     * class name
+     *         class name
      * @see MappingClassElement#MAPPING_EXTENSION
      */
-    protected String getResourceNameWithExtension (String className)
-    {
-        return getResourceName(className) + "." +
-            MappingClassElement.MAPPING_EXTENSION;
+    protected String getResourceNameWithExtension(String className) {
+        return getResourceName(className) + "." + MappingClassElement.MAPPING_EXTENSION;
     }
 
     /** Computes the base resource name (without extension) for the supplied
@@ -690,8 +675,7 @@ public abstract class Model {
      * @return the base resource name (without extension) for the supplied
      * class name
      */
-    protected String getResourceName (String className)
-    {
+    protected String getResourceName(String className) {
         return ((className != null) ?
             className.replace('.', '/') : null);
     }
@@ -704,10 +688,8 @@ public abstract class Model {
      * @see #getFileName
      * @see MappingClassElement#MAPPING_EXTENSION
      */
-    protected String getFileNameWithExtension (String className)
-    {
-        return getFileName(className) + "." +
-            MappingClassElement.MAPPING_EXTENSION;
+    protected String getFileNameWithExtension(String className) {
+        return getFileName(className) + "." + MappingClassElement.MAPPING_EXTENSION;
     }
 
     /** Computes the base file name (without extension) for the supplied
@@ -716,72 +698,62 @@ public abstract class Model {
      * @return the base file name (without extension) for the supplied
      * class name
      */
-    protected String getFileName (String className)
-    {
-        return ((className != null) ?
-            className.replace('.', File.separatorChar) : null);
+    protected String getFileName(String className) {
+        return ((className != null) ? className.replace('.', File.separatorChar) : null);
     }
 
-    /** Converts the class with the supplied name to or from persistence
+
+    /**
+     * Converts the class with the supplied name to or from persistence
      * capable depending on the flag.
+     *
      * @param className the fully qualified name of the class
      * @param flag if <code>true</code>, convert this class to be
-     * persistence capable, if <code>false</code>, convert this class
-     * to be non-persistence capable
+     *            persistence capable, if <code>false</code>, convert this class
+     *            to be non-persistence capable
      * @exception IOException if there is some error converting the class
      */
-    public void convertToPersistenceCapable (String className,
-        boolean flag) throws IOException
-    {
+    public void convertToPersistenceCapable(String className, boolean flag) throws IOException {
         boolean classIsPersistent = isPersistent(className);
         Exception conversionException = null;
 
-        if (flag && !classIsPersistent &&
-            isPersistenceCapableAllowed(className))
-        {
-            try
-            {
+        if (flag && !classIsPersistent && isPersistenceCapableAllowed(className)) {
+            try {
                 // this calls updateKeyForClass which updates
                 // the mapping cache and the set of classes known to be non PC
                 createSkeletonMappingClass(className);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 // need to unconvert whatever partial conversion succeeded
                 conversionException = e;
             }
         }
 
-        if ((!flag && classIsPersistent) || (conversionException != null))
-        {
-            try
-            {
+        if ((!flag && classIsPersistent) || (conversionException != null)) {
+            try {
                 // delete the mapping file
                 deleteFile(className, getFileNameWithExtension(className));
 
-                synchronized (this._classes)
-                {
+                synchronized (this._classes) {
                     // remove the corresponding MappingClassElement from cache
                     _classes.remove(className);
 
                     // put the class in the set of classes known to be non PC
                     _nonPCClasses.add(className);
                 }
-            }
-            catch (Exception e)    // rethrow if not a problem during unconvert
-            {
+            } catch (Exception e) {
+                // rethrow if not a problem during unconvert
                 if (conversionException == null) {
                     conversionException = e;
                 }
             }
         }
 
-        if (conversionException != null)        // rethrow the exception
+        if (conversionException != null) // rethrow the exception
         {
             if (conversionException instanceof RuntimeException) {
-                throw (RuntimeException)conversionException;
+                throw (RuntimeException) conversionException;
             } else if (conversionException instanceof IOException) {
-                throw (IOException)conversionException;
+                throw (IOException) conversionException;
             }
         }
     }
@@ -791,9 +763,7 @@ public abstract class Model {
      * @param className the fully qualified name of the class
      * @exception IOException if there is some error storing the class
      */
-    public void convertToPersistenceCapable (String className)
-        throws IOException
-    {
+    public void convertToPersistenceCapable(String className) throws IOException {
         convertToPersistenceCapable(className, true);
         convertDefaultFields(className);
         storeMappingClass(className);
@@ -806,11 +776,8 @@ public abstract class Model {
      * @see #convertDefaultFields
      * @see #updateKeyForClass
      */
-    private void createSkeletonMappingClass (String className)
-    {
-        PersistenceClassElement element = new PersistenceClassElement(
-            new PersistenceClassElementImpl(className));
-
+    private void createSkeletonMappingClass(String className) {
+        PersistenceClassElement element = new PersistenceClassElement(new PersistenceClassElementImpl(className));
         updateKeyForClass(new MappingClassElementImpl(element), null);
     }
 
@@ -821,8 +788,7 @@ public abstract class Model {
      * @see #createSkeletonMappingClass
      * @see #convertFields
      */
-    public void convertDefaultFields (String className)
-    {
+    public void convertDefaultFields(String className) {
         convertFields(className, getFields(className));
     }
 
@@ -832,88 +798,58 @@ public abstract class Model {
      * @param fields a list of (short) field names
      * @see #convertDefaultFields
      */
-    public void convertFields (String className, List fields)
-    {
+    public void convertFields(String className, List<String> fields) {
         PersistenceClassElement element = getPersistenceClass(className);
 
-        if (element != null)
-        {
-            Iterator iterator = fields.iterator();
+        if (element != null) {
+            Iterator<String> iterator = fields.iterator();
 
             // iterate the list of fields and create corresponding
             // PersistenceFieldElements (& RelationshipElements)
-            while (iterator.hasNext())
-            {
-                String fieldName = (String)iterator.next();
+            while (iterator.hasNext()) {
+                String fieldName = iterator.next();
 
-                if (isPersistentAllowed(className, fieldName) &&
-                    shouldBePersistent(className, fieldName))
-                {
+                if (isPersistentAllowed(className, fieldName) && shouldBePersistent(className, fieldName)) {
                     addFieldElement(element, fieldName);
                 }
             }
-
-            /* comment out -- not supporting concurrency groups for beta
-            // add everything to one concurrency group by default
-            PersistenceFieldElement[] persistentFields = element.getFields();
-            if ((persistentFields != null) && (persistentFields.length > 0))
-            {
-                String defaultGroupName = I18NHelper.getMessage(getMessages(),
-                    "jdo.concurrency_group.default");
-                ConcurrencyGroupElement group = new ConcurrencyGroupElement(
-                    new ConcurrencyGroupElementImpl(defaultGroupName), element);
-
-                try
-                {
-                    group.addFields(persistentFields);
-                    element.addConcurrencyGroup(group);
-                }
-                catch (ModelException e)
-                {}    // just don't add this group
-            }*/
         }
     }
 
-    /** Adds a PersistenceFieldElement for the specified field to the
+
+    /**
+     * Adds a PersistenceFieldElement for the specified field to the
      * supplied PersistenceClassElement, creating a RelationshipElement if
      * necessary.
+     *
      * @param element the persistence class element to be used
      * @param fieldName the name of the field to be added
      */
-    public boolean addFieldElement (PersistenceClassElement element,
-        String fieldName)
-    {
+    public boolean addFieldElement(PersistenceClassElement element, String fieldName) {
         String fieldType = getFieldType(element.getName(), fieldName);
         boolean isCollection = isCollection(fieldType);
 
-        try
-        {
+        try {
             // check if should be relationship here
-            if (isPersistent(fieldType) || isCollection)
-            {
-                RelationshipElement relationship = new RelationshipElement(
-                    new RelationshipElementImpl(fieldName), element);
+            if (isPersistent(fieldType) || isCollection) {
+                RelationshipElement relationship = new RelationshipElement(new RelationshipElementImpl(fieldName),
+                    element);
 
-                if (isCollection)
-                {
-                    relationship.setCollectionClass(
-                        getDefaultCollectionClass(fieldType));
+                if (isCollection) {
+                    relationship.setCollectionClass(getDefaultCollectionClass(fieldType));
                 } else { // set upper bound = 1 (jdo model should really do this)
                     relationship.setUpperBound(1);
                 }
 
                 element.addField(relationship);
-            }
-            else
-            {
-                element.addField(new PersistenceFieldElement(new
-                    PersistenceFieldElementImpl(fieldName), element));
+            } else {
+                element.addField(new PersistenceFieldElement(new PersistenceFieldElementImpl(fieldName), element));
             }
 
             return true;
+        } catch (ModelException e) {
+            // will return false
         }
-        catch (ModelException e)
-        {}    // will return false
 
         return false;
     }
@@ -954,17 +890,11 @@ public abstract class Model {
      * @param element the relationship element to be examined
      * @return the name of the related class
      */
-    public String getRelatedClass (RelationshipElement element)
-    {
-        if (element != null)
-        {
-            String fieldType = getFieldType(
-                element.getDeclaringClass().getName(), element.getName());
-            String relatedClass =  (isCollection(fieldType) ?
-                element.getElementClass() : fieldType);
-
-            return (StringHelper.isEmpty(relatedClass) ? null :
-                relatedClass.trim());
+    public String getRelatedClass(RelationshipElement element) {
+        if (element != null) {
+            String fieldType = getFieldType(element.getDeclaringClass().getName(), element.getName());
+            String relatedClass = (isCollection(fieldType) ? element.getElementClass() : fieldType);
+            return StringHelper.isEmpty(relatedClass) ? null : relatedClass.trim();
         }
 
         return null;
@@ -978,28 +908,9 @@ public abstract class Model {
      * @see #getFieldType
      * @see #getDefaultCollectionClass
      */
-    public ArrayList getSupportedCollectionClasses (String className)
-    {
-        String supportedSet = "java.util.HashSet";
-    //    String supportedList = "java.util.ArrayList";
-    //    String supportedVector = "java.util.Vector";
-        ArrayList returnList = new ArrayList();
-
-        // for dogwood, only support sets
-        returnList.add(supportedSet);
-    /*    if (className.indexOf("Collection") != -1)
-        {
-            returnList.add(supportedSet);
-            returnList.add(supportedList);
-            returnList.add(supportedVector);
-        }
-        else if (className.indexOf("List") != -1)
-            returnList.add(supportedList);
-        else if (className.indexOf("Set") != -1)
-            returnList.add(supportedSet);
-        else if (supportedVector.equals(className))
-            returnList.add(supportedVector);
-    */
+    public List<String> getSupportedCollectionClasses(String className) {
+        ArrayList<String> returnList = new ArrayList<>();
+        returnList.add("java.util.HashSet");
         return returnList;
     }
 
@@ -1012,18 +923,10 @@ public abstract class Model {
      * @see #getFieldType
      * @see #getSupportedCollectionClasses
      */
-    public String getDefaultCollectionClass (String className)
-    {
-        String collectionClass = "java.util.HashSet";
-
-        // for dogwood, only support sets
-    /*    if (className.indexOf("List") != -1)
-            collectionClass = "java.util.ArrayList";
-        else if ("java.util.Vector".equals(className))
-            collectionClass = className;
-    */
-        return collectionClass;
+    public String getDefaultCollectionClass(String className) {
+        return "java.util.HashSet";
     }
+
 
     /** Creates a file with the given base file name and extension
      * parallel to the supplied class (if it does not yet exist).
@@ -1034,7 +937,7 @@ public abstract class Model {
      * if an error occurs or none exists
      * @exception IOException if there is some error creating the file
      */
-    abstract protected BufferedOutputStream createFile (String className,
+    protected abstract BufferedOutputStream createFile (String className,
         String baseFileName, String extension) throws IOException;
 
     /** Deletes the file with the given file name which is parallel
@@ -1043,7 +946,7 @@ public abstract class Model {
      * @param fileName the name of the file
      * @exception IOException if there is some error deleting the file
      */
-    abstract protected void deleteFile (String className, String fileName)
+    protected abstract void deleteFile (String className, String fileName)
         throws IOException;
 
     /** Returns a list of names of all the declared field elements in the
@@ -1051,7 +954,7 @@ public abstract class Model {
      * @param className the fully qualified name of the class to be checked
      * @return the names of the field elements for the specified class
      */
-    abstract public List getFields (String className);
+    public abstract List<String> getFields(String className);
 
     /** Returns a list of names of all the field elements in the
      * class with the specified name.  This list includes the inherited
@@ -1059,12 +962,10 @@ public abstract class Model {
      * @param className the fully qualified name of the class to be checked
      * @return the names of the field elements for the specified class
      */
-    public List getAllFields (String className)
-    {
-        List returnList = new ArrayList();
+    public List<String> getAllFields(String className) {
+        List<String> returnList = new ArrayList<>();
 
-        while (className != null)
-        {
+        while (className != null) {
             returnList.addAll(getFields(className));
             className = getSuperclass(className);
         }
@@ -1076,25 +977,27 @@ public abstract class Model {
      * @param className the fully qualified name of the class to be checked
      * @return the class element for the specified className
      */
-    public Object getClass (String className)
-    {
+    public Class<?> getClass(String className) {
         return getClass(className, null);
     }
 
-    /** Returns the class element with the specified className.
+    /**
+     * Returns the class element with the specified className.
+     *
      * @param className the fully qualified name of the class to be checked
      * @param classLoader the class loader used to find mapping information
      * @return the class element for the specified className
      */
-    abstract public Object getClass (String className, ClassLoader classLoader);
+    public abstract Class<?> getClass(String className, ClassLoader classLoader);
 
-    /** Determines if a class with the specified className exists.
+    /**
+     * Determines if a class with the specified className exists.
+     *
      * @param className the fully qualified name of the class to be checked
      * @return <code>true</code> if this class name represents a valid
-     * class; <code>false</code> otherwise.
+     *         class; <code>false</code> otherwise.
      */
-    public boolean hasClass (String className)
-    {
+    public boolean hasClass(String className) {
         return hasClass(className, null);
     }
 
@@ -1104,9 +1007,8 @@ public abstract class Model {
      * @return <code>true</code> if this class name represents a valid
      * class; <code>false</code> otherwise.
      */
-    public boolean hasClass (String className, ClassLoader classLoader)
-    {
-        return (getClass(className, classLoader) != null);
+    public boolean hasClass(String className, ClassLoader classLoader) {
+        return getClass(className, classLoader) != null;
     }
 
     /** Determines if the specified class implements the specified interface.
@@ -1119,7 +1021,7 @@ public abstract class Model {
      * <code>false</code> otherwise.
      * @see #getClass
      */
-    abstract public boolean implementsInterface (Object classElement,
+    public abstract boolean implementsInterface (Object classElement,
         String interfaceName);
 
     /** Determines if the class with the specified name declares a constructor.
@@ -1128,7 +1030,7 @@ public abstract class Model {
      * <code>false</code> otherwise.
      * @see #getClass
      */
-    abstract public boolean hasConstructor (String className);
+    public abstract boolean hasConstructor (String className);
 
     /** Returns the constructor element for the specified argument types
      * in the class with the specified name. Types are specified as type
@@ -1140,8 +1042,7 @@ public abstract class Model {
      * @return the constructor element
      * @see #getClass
      */
-    abstract public Object getConstructor (String className,
-        String[] argTypeNames);
+    public abstract Object getConstructor(String className, String[] argTypeNames);
 
     /** Returns the method element for the specified method name and argument
      * types in the class with the specified name. Types are specified as
@@ -1154,8 +1055,7 @@ public abstract class Model {
      * @return the method element
      * @see #getClass
      */
-    abstract public Object getMethod (String className, String methodName,
-        String[] argTypeNames);
+    public abstract Object getMethod(String className, String methodName, String[] argTypeNames);
 
     /** Returns the inherited method element for the specified method
      * name and argument types in the class with the specified name.
@@ -1170,15 +1070,11 @@ public abstract class Model {
      * @return the method element
      * @see #getClass
      */
-    public Object getInheritedMethod (String className, String methodName,
-        String[] argTypeNames)
-    {
+    public Object getInheritedMethod(String className, String methodName, String[] argTypeNames) {
         String superClass = getSuperclass(className);
-        Object method = null;
+        Method method = null;
 
-        while ((superClass != null) && ((method =
-            getMethod(superClass, methodName, argTypeNames)) == null))
-        {
+        while ((superClass != null) && ((method = (Method) getMethod(superClass, methodName, argTypeNames)) == null)) {
             superClass = getSuperclass(superClass);
         }
 
@@ -1196,7 +1092,7 @@ public abstract class Model {
      * @see #getField
      * @see #getMethod
      */
-    abstract public String getType (Object element);
+    public abstract String getType(Object element);
 
     /** Returns the field element for the specified fieldName in the class
      * with the specified className.
@@ -1205,7 +1101,7 @@ public abstract class Model {
      * @param fieldName the name of the field to be checked
      * @return the field element for the specified fieldName
      */
-    abstract public Object getField (String className, String fieldName);
+    public abstract Object getField(String className, String fieldName);
 
     /** Returns the inherited field element for the specified fieldName in
      * the class with the specified className.  Note that the class
@@ -1216,17 +1112,12 @@ public abstract class Model {
      * @param fieldName the name of the field to be checked
      * @return the field element for the specified fieldName
      */
-    public Object getInheritedField (String className, String fieldName)
-    {
+    public Object getInheritedField(String className, String fieldName) {
         String superClass = getSuperclass(className);
         Object field = null;
-
-        while ((superClass != null) &&
-            ((field = getField(superClass, fieldName)) == null))
-        {
+        while ((superClass != null) && ((field = getField(superClass, fieldName)) == null)) {
             superClass = getSuperclass(superClass);
         }
-
         return field;
     }
 
@@ -1238,9 +1129,8 @@ public abstract class Model {
      * @return <code>true</code> if this field name represents a valid
      * field; <code>false</code> otherwise.
      */
-    public boolean hasField (String className, String fieldName)
-    {
-        return (getField(className, fieldName) != null);
+    public boolean hasField(String className, String fieldName) {
+        return getField(className, fieldName) != null;
     }
 
     /** Returns the field type for the specified fieldName in the class
@@ -1250,8 +1140,7 @@ public abstract class Model {
      * @param fieldName the name of the field to be checked
      * @return the field type for the specified fieldName
      */
-    public String getFieldType (String className, String fieldName)
-    {
+    public String getFieldType(String className, String fieldName) {
         return getType(getField(className, fieldName));
     }
 
@@ -1266,7 +1155,7 @@ public abstract class Model {
      * <code>false</code> otherwise.
      * @see #getField
      */
-    abstract public boolean isSerializable (Object fieldElement);
+    public abstract boolean isSerializable (Object fieldElement);
 
     /** Determines if a field with the specified fieldName in the class
      * with the specified className has a primitive type.
@@ -1277,8 +1166,7 @@ public abstract class Model {
      * field; <code>false</code> otherwise.
      * @see #getFieldType
      */
-    public boolean isPrimitive (String className, String fieldName)
-    {
+    public boolean isPrimitive(String className, String fieldName) {
         return isPrimitive(getFieldType(className, fieldName));
     }
 
@@ -1289,10 +1177,8 @@ public abstract class Model {
      * <code>false</code> otherwise.
      * @see #getFieldType
      */
-    protected boolean isPrimitive (String className)
-    {
-        return ((className != null) &&
-            JavaTypeHelper.getPrimitiveClass(className) != null);
+    protected boolean isPrimitive(String className) {
+        return className != null && JavaTypeHelper.getPrimitiveClass(className) != null;
     }
 
     /** Determines if a field with the specified fieldName in the class
@@ -1304,7 +1190,7 @@ public abstract class Model {
      * field; <code>false</code> otherwise.
      * @see #getFieldType
      */
-    abstract public boolean isArray (String className, String fieldName);
+    public abstract boolean isArray (String className, String fieldName);
 
     /** Determines if a field with the specified fieldName in the class
      * with the specified className is a byte array.
@@ -1315,8 +1201,7 @@ public abstract class Model {
      * field; <code>false</code> otherwise.
      * @see #getFieldType
      */
-    public boolean isByteArray (String className, String fieldName)
-    {
+    public boolean isByteArray(String className, String fieldName) {
         return isByteArray(getFieldType(className, fieldName));
     }
 
@@ -1326,8 +1211,7 @@ public abstract class Model {
      * @return <code>true</code> if this class represents a byte array;
      * <code>false</code> otherwise.
      */
-    protected boolean isByteArray (String className)
-    {
+    protected boolean isByteArray(String className) {
         return ("byte[]".equals(className));
     }
 
@@ -1337,8 +1221,7 @@ public abstract class Model {
      * <code>false</code> otherwise.
      * @see #getFieldType
      */
-    public boolean isCollection (String className)
-    {
+    public boolean isCollection(String className) {
         return _collectionClasses.contains(className);
     }
 
@@ -1353,8 +1236,7 @@ public abstract class Model {
      * @see #isCollection
      * @see #getFieldType
      */
-    public boolean isSecondClassObject (String className)
-    {
+    public boolean isSecondClassObject(String className) {
         return _scoClasses.contains(className);
     }
 
@@ -1369,8 +1251,7 @@ public abstract class Model {
      * @see #isCollection
      * @see #getFieldType
      */
-    public boolean isMutableSecondClassObject (String className)
-    {
+    public boolean isMutableSecondClassObject(String className) {
         return _mutableScoClasses.contains(className);
     }
 
@@ -1388,7 +1269,7 @@ public abstract class Model {
      * @see #getConstructor
      * @see #getMethod
      */
-    abstract public String getDeclaringClass (Object memberElement);
+    public abstract String getDeclaringClass (Object memberElement);
 
     /** Returns the modifier mask for the specified member element.
      * Note, the member element is either a class element as returned by
@@ -1403,15 +1284,14 @@ public abstract class Model {
      * @see #getConstructor
      * @see #getMethod
      */
-    abstract public int getModifiers (Object memberElement);
+    public abstract int getModifiers (Object memberElement);
 
     /** Returns the modifier mask for the specified className.
      * @param className the fully qualified name of the class to be checked
      * @return the modifier mask for the specified class
      * @see java.lang.reflect.Modifier
      */
-    public int getModifiersForClass (String className)
-    {
+    public int getModifiersForClass(String className) {
         return getModifiers(getClass(className));
     }
 
@@ -1423,8 +1303,7 @@ public abstract class Model {
      * @return the modifier mask for the specified field
      * @see java.lang.reflect.Modifier
      */
-    protected int getModifiers (String className, String fieldName)
-    {
+    protected int getModifiers(String className, String fieldName) {
         return getModifiers(getField(className, fieldName));
     }
 
@@ -1444,8 +1323,7 @@ public abstract class Model {
      * @see #isSecondClassObject
      * @see #shouldBePersistent
      */
-    public boolean isPersistentAllowed (String className, String fieldName)
-    {
+    public boolean isPersistentAllowed(String className, String fieldName) {
         return isPersistentAllowed(className, null, fieldName);
     }
 
@@ -1464,18 +1342,12 @@ public abstract class Model {
      * @see #isPersistentTypeAllowed
      * @see #shouldBePersistent
      */
-    public boolean isPersistentAllowed (String className,
-       ClassLoader classLoader, String fieldName)
-    {
+    public boolean isPersistentAllowed(String className, ClassLoader classLoader, String fieldName) {
         int modifier = getModifiers(className, fieldName);
-
-        if (!Modifier.isStatic(modifier) && !Modifier.isFinal(modifier))
-        {
-            return isPersistentTypeAllowed(
-                getFieldType(className, fieldName), classLoader);
+        if (Modifier.isStatic(modifier) || Modifier.isFinal(modifier)) {
+            return false;
         }
-
-        return false;
+        return isPersistentTypeAllowed(getFieldType(className, fieldName), classLoader);
     }
 
     /** Returns <code>true</code> if the a field of the specified class or
@@ -1492,11 +1364,9 @@ public abstract class Model {
      * @see #isPersistent
      * @see #isSecondClassObject
      */
-    protected boolean isPersistentTypeAllowed (String className,
-        ClassLoader classLoader)
-    {
-        return (isPrimitive(className) || isSecondClassObject(className) ||
-            isByteArray(className) || isPersistent(className, classLoader));
+    protected boolean isPersistentTypeAllowed(String className, ClassLoader classLoader) {
+        return isPrimitive(className) || isSecondClassObject(className) || isByteArray(className)
+            || isPersistent(className, classLoader);
     }
 
     /** Returns <code>true</code> if the specified field should be made
@@ -1509,8 +1379,7 @@ public abstract class Model {
      * @return whether the specified field should be made persistent
      * see #getModifiers(String,String)
      */
-    public boolean shouldBePersistent (String className, String fieldName)
-    {
+    public boolean shouldBePersistent(String className, String fieldName) {
         return !Modifier.isVolatile(getModifiers(className, fieldName));
     }
 
@@ -1522,11 +1391,8 @@ public abstract class Model {
      * @return the PersistenceFieldElement for the specified field,
      * <code>null</code> if an error occurs or none exists
      */
-    public PersistenceFieldElement getPersistenceField (String className,
-        String fieldName)
-    {
-        return (hasField(className, fieldName) ?
-            getPersistenceFieldInternal(className, fieldName) : null);
+    public PersistenceFieldElement getPersistenceField(String className, String fieldName) {
+        return hasField(className, fieldName) ? getPersistenceFieldInternal(className, fieldName) : null;
     }
 
     /** Returns the PersistenceFieldElement with the supplied fieldName found
@@ -1537,13 +1403,9 @@ public abstract class Model {
      * @return the PersistenceFieldElement for the specified field,
      * <code>null</code> if an error occurs or none exists
      */
-    protected PersistenceFieldElement getPersistenceFieldInternal
-        (String className, String fieldName)
-    {
+    protected PersistenceFieldElement getPersistenceFieldInternal(String className, String fieldName) {
         PersistenceClassElement classElement = getPersistenceClass(className);
-
-        return ((classElement != null) ?
-            classElement.getField(fieldName) : null);
+        return classElement == null ? null : classElement.getField(fieldName);
     }
 
     /** Determines if the specified className and fieldName pair represent a
@@ -1554,18 +1416,12 @@ public abstract class Model {
      * @return <code>true</code> if this field name represents a persistent
      * field; <code>false</code> otherwise.
      */
-    public boolean isPersistent (String className, String fieldName)
-    {
-        PersistenceFieldElement fieldElement =
-            getPersistenceField(className, fieldName);
-
-        if (fieldElement != null)
-        {
-            return (PersistenceFieldElement.PERSISTENT ==
-                fieldElement.getPersistenceType());
+    public boolean isPersistent(String className, String fieldName) {
+        PersistenceFieldElement fieldElement = getPersistenceField(className, fieldName);
+        if (fieldElement == null) {
+            return false;
         }
-
-        return false;
+        return (PersistenceFieldElement.PERSISTENT == fieldElement.getPersistenceType());
     }
 
     /** Determines if the specified className and fieldName pair represent a
@@ -1576,23 +1432,16 @@ public abstract class Model {
      * @return <code>true</code> if this field name represents a key field;
      * <code>false</code> otherwise.
      */
-    public boolean isKey (String className, String fieldName)
-    {
-        if (hasField(className, fieldName))
-        {
-            PersistenceClassElement classElement =
-                getPersistenceClass(className);
-
-            if (classElement != null)
-            {
+    public boolean isKey(String className, String fieldName) {
+        if (hasField(className, fieldName)) {
+            PersistenceClassElement classElement = getPersistenceClass(className);
+            if (classElement != null) {
                 String keyClass = classElement.getKeyClass();
-
                 if (keyClass != null) {
                     return hasField(keyClass, fieldName);
                 }
             }
         }
-
         return false;
     }
 
@@ -1606,16 +1455,14 @@ public abstract class Model {
      * @return <code>true</code> if this field name represents a field
      * with a valid type for a key field; <code>false</code> otherwise.
      */
-    public boolean isValidKeyType (String className, String fieldName)
-    {
+    public boolean isValidKeyType(String className, String fieldName) {
         String fieldType = getFieldType(className, fieldName);
 
         if (fieldType == null) {
             fieldType = getType(getInheritedField(className, fieldName));
         }
 
-        return (isPrimitive(fieldType) ||
-            (isSecondClassObject(fieldType) && !isCollection(fieldType)));
+        return (isPrimitive(fieldType) || (isSecondClassObject(fieldType) && !isCollection(fieldType)));
     }
 
     /** Determines if the specified className and fieldName pair represent a
@@ -1626,17 +1473,14 @@ public abstract class Model {
      * @return <code>true</code> if this field name represents a field in
      * the default fetch group; <code>false</code> otherwise.
      */
-    public boolean isDefaultFetchGroup (String className, String fieldName)
-    {
+    public boolean isDefaultFetchGroup(String className, String fieldName) {
         MappingClassElement mappingClass = getMappingClass(className);
 
-        try
-        {
-            return (MappingFieldElement.GROUP_DEFAULT ==
-                mappingClass.getField(fieldName).getFetchGroup());
+        try {
+            return (MappingFieldElement.GROUP_DEFAULT == mappingClass.getField(fieldName).getFetchGroup());
+        } catch (Exception e) {
+            // will return false
         }
-        catch (Exception e)
-        {}    // will return false
 
         return false;
     }
@@ -1649,8 +1493,7 @@ public abstract class Model {
      * @return <code>true</code> if no errors or warnings occur,
      * <code>false</code> otherwise.
      */
-    public boolean parse (String className)
-    {
+    public boolean parse(String className) {
         return new ModelValidator(this, className, getMessages()).parseCheck();
     }
 
@@ -1665,8 +1508,7 @@ public abstract class Model {
      * errors or warnings encountered.  If no errors or warnings were
      * encountered, the collection will be empty, not <code>null</code>.
      */
-    public Collection validate (String className, ResourceBundle bundle)
-    {
+    public Collection<ModelValidationException> validate(String className, ResourceBundle bundle) {
         return validate(className, null, bundle);
     }
 
@@ -1682,12 +1524,11 @@ public abstract class Model {
      * errors or warnings encountered.  If no errors or warnings were
      * encountered, the collection will be empty, not <code>null</code>.
      */
-    public Collection validate (String className, ClassLoader classLoader,
-        ResourceBundle bundle)
-    {
-        return new ModelValidator(this, className, classLoader,
-            ((bundle == null) ? getMessages() : bundle)).fullValidationCheck();
+    public Collection<ModelValidationException> validate(String className, ClassLoader classLoader, ResourceBundle bundle) {
+        return new ModelValidator(this, className, classLoader, bundle == null ? getMessages() : bundle)
+            .fullValidationCheck();
     }
+
 
     /** Standard set of arguments for comparison with readObject method.
      */

@@ -433,18 +433,10 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl imp
      * @throws ModelException if impossible
      */
     @Override
-    public void removeColumnPairs (ColumnPairElement[] pairs)
-        throws ModelException
-    {
-        ArrayList pairNames = new ArrayList();
-        int i, count = ((pairs != null) ? pairs.length : 0);
-
-        for (i = 0; i < count ; i++)
-        {
-            ColumnPairElement pair = pairs[i];
-
-            pairNames.add(NameUtil.getRelativeMemberName(
-                pair.getName().getFullName()));
+    public void removeColumnPairs(ColumnPairElement[] pairs) throws ModelException {
+        ArrayList<String> pairNames = new ArrayList<>();
+        for (ColumnPairElement pair : pairs) {
+            pairNames.add(NameUtil.getRelativeMemberName(pair.getName().getFullName()));
         }
 
         removeColumnPairs(pairNames);
@@ -514,7 +506,7 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl imp
      * @param referencingKey the list of names of the columns in this
      * referencing key
      */
-    public void setReferencingKey(ArrayList referencingKey) {
+    public void setReferencingKey(List<String> referencingKey) {
         _referencingKey = referencingKey;
     }
 
@@ -536,10 +528,10 @@ public class MappingReferenceKeyElementImpl extends MappingMemberElementImpl imp
             // Use ListIterator here, because I want to replace the value
             // stored in the ArrayList. The ListIterator returned by
             // ArrayList.listIterator() supports the set method.
-            ListIterator i = _referencingKey.listIterator();
+            ListIterator<String> i = _referencingKey.listIterator();
 
             while (i.hasNext()) {
-                i.set(NameUtil.getRelativeMemberName((String) i.next()));
+                i.set(NameUtil.getRelativeMemberName(i.next()));
             }
         }
     }

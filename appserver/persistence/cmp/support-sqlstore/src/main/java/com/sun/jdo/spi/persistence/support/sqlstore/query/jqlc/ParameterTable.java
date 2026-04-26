@@ -35,7 +35,6 @@ import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import com.sun.jdo.spi.persistence.utility.ParameterInfo;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -51,28 +50,28 @@ import org.glassfish.persistence.common.I18NHelper;
 public class ParameterTable
 {
     /** Query parameter names */
-    List names = null;
+    List<String> names = null;
 
     /** Query parameter types */
-    List types = null;
+    List<Type> types = null;
 
     /** Query Parameter values */
-    transient List values = null;
+    transient List<Object> values = null;
 
     /** null key */
-    private static final String NULL_ = "null"; //NOI18N
+    private static final String NULL_ = "null";
 
     /** true key */
-    private static final String TRUE_ = "true"; //NOI18N
+    private static final String TRUE_ = "true";
 
     /** false key */
-    private static final String FALSE_ = "false"; //NOI18N
+    private static final String FALSE_ = "false";
 
     /** other key */
-    private static final String OTHER_ = "other"; //NOI18N
+    private static final String OTHER_ = "other";
 
     /** noparams key */
-    private static final String NOPARAMS_ = "noparams"; //NOI18N
+    private static final String NOPARAMS_ = "noparams";
 
     /** key parameter separator */
     private static final char PARAMKEY_SEPARATOR = '/';
@@ -124,8 +123,8 @@ public class ParameterTable
      */
     public void init()
     {
-        this.names = new ArrayList();
-        this.types = new ArrayList();
+        this.names = new ArrayList<>();
+        this.types = new ArrayList<>();
     }
 
     /**
@@ -134,7 +133,7 @@ public class ParameterTable
      */
     public void initValueHandling()
     {
-        values = new ArrayList(names.size());
+        values = new ArrayList<>(names.size());
         final int size = names.size();
         for (int i = 0; i < size; i++) {
             values.add(unbound);
@@ -169,7 +168,7 @@ public class ParameterTable
             if (values.get(i) == unbound)
             {
                 throw new JDOQueryException(
-                    I18NHelper.getMessage(messages, "jqlc.parametertable.checkunboundparams.unboundparam",  //NOI18N
+                    I18NHelper.getMessage(messages, "jqlc.parametertable.checkunboundparams.unboundparam",
                                           names.get(i)));
             }
         }
@@ -180,15 +179,13 @@ public class ParameterTable
      * ValueFetcher for the inputparameters.
      * @param actualParams
      */
-    public void setValues(Map actualParams)
+    public void setValues(Map<String, Object> actualParams)
     {
         if (actualParams != null)
         {
-            for (Iterator i = actualParams.entrySet().iterator(); i.hasNext();)
-            {
-                Map.Entry actualParam = (Map.Entry)i.next();
-                String name = (String)actualParam.getKey();
-                Object value = actualParam.getValue();
+            for (Map.Entry<String, Object> entry : actualParams.entrySet()) {
+                String name = entry.getKey();
+                Object value = entry.getValue();
                 defineValueByName(name, value);
             }
         }
@@ -200,11 +197,12 @@ public class ParameterTable
     public Object getValueByName(String name)
     {
         int index = names.indexOf(name);
-        if (index == -1)
+        if (index == -1) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages,
-                "jqlc.parametertable.getvaluebyname.undefined", //NOI18N
+                "jqlc.parametertable.getvaluebyname.undefined",
                 name));
+        }
 
         return getValueByIndex(index);
     }
@@ -214,17 +212,18 @@ public class ParameterTable
      */
     public Object getValueByIndex(int index)
     {
-        if ((index < 0) || (index >= values.size()))
+        if ((index < 0) || (index >= values.size())) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages,
-                "jqlc.parametertable.getvaluebyindex.wrongindex", //NOI18N
+                "jqlc.parametertable.getvaluebyindex.wrongindex",
                 String.valueOf(index)));
+        }
 
         return values.get(index);
     }
 
     /** Returns the list of parameter values. */
-    public List getValues()
+    public List<Object> getValues()
     {
         return values;
     }
@@ -252,8 +251,9 @@ public class ParameterTable
         for (int i = 0; i < size; i++) {
             // Do not cache RetrieveDesc if the parameter type is pc class
             // or java.lang.Object => return null
-            if (isInlineType(types.get(i)))
+            if (isInlineType(types.get(i))) {
                 return null;
+            }
 
             Object item = values.get(i);
             if (item == null) {
@@ -294,11 +294,17 @@ public class ParameterTable
         int index = names.indexOf(paramName);
         Object value = values.get(index);
 
-        if (isInlineType(types.get(index))) return true;
+        if (isInlineType(types.get(index))) {
+            return true;
+        }
 
-        if (value == null) return true;
+        if (value == null) {
+            return true;
+        }
 
-        if (value instanceof Boolean) return true;
+        if (value instanceof Boolean) {
+            return true;
+        }
 
         return false;
     }
@@ -323,8 +329,9 @@ public class ParameterTable
             (type instanceof PrimitiveType) ||
             (type instanceof WrapperClassType) ||
             (type instanceof MathType) ||
-            (type instanceof DateType))
+            (type instanceof DateType)) {
             return false;
+        }
         return true;
     }
 
@@ -332,6 +339,7 @@ public class ParameterTable
      * Returns the parameter index for the specified parameter name.
      * @deprecated
      */
+    @Deprecated
     public Integer getIndexForParamName(String paramName)
     {
         return new Integer(names.indexOf(paramName));
@@ -360,7 +368,7 @@ public class ParameterTable
             String associatedField)
     {
         int index = names.indexOf(paramName);
-        Type type = (Type)types.get(index);
+        Type type = types.get(index);
         return new ParameterInfo(index, type.getEnumType(), associatedField);
     }
 
@@ -370,9 +378,10 @@ public class ParameterTable
     private void defineValueByName(String name, Object value)
     {
         int index = names.indexOf(name);
-        if (index == -1)
+        if (index == -1) {
             throw new JDOQueryException(
-                I18NHelper.getMessage(messages, "jqlc.parametertable.definevaluebyname.undefinedparam", name)); //NOI18N
+                I18NHelper.getMessage(messages, "jqlc.parametertable.definevaluebyname.undefinedparam", name));
+        }
         defineValueByIndex(index, value);
     }
 
@@ -382,24 +391,26 @@ public class ParameterTable
     private void defineValueByIndex(int index, Object value)
     {
         // index < 0 => implementation error
-        if (index < 0)
+        if (index < 0) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages,
-                "jqlc.parametertable.definevaluebyindex.wrongindex", //NOI18N
+                "jqlc.parametertable.definevaluebyindex.wrongindex",
                 String.valueOf(index)));
+        }
 
         // index > type.size => too many actual parameters
-        if (index >= types.size())
+        if (index >= types.size()) {
             throw new JDOQueryException(
-                I18NHelper.getMessage(messages, "jqlc.parametertable.definevaluebyindex.wrongnumberofargs")); //NOI18N
+                I18NHelper.getMessage(messages, "jqlc.parametertable.definevaluebyindex.wrongnumberofargs"));
+        }
 
         // check type compatibility of actual and formal parameter
-        Class formalType = ((Type)types.get(index)).getJavaClass();
+        Class<?> formalType = types.get(index).getJavaClass();
         if (!isCompatibleValue(formalType, value))
         {
             String actualTypeName = ((value==null) ? "<type of null>" : value.getClass().getName());
             throw new JDOQueryException(
-                I18NHelper.getMessage(messages, "jqlc.parametertable.definevaluebyindex.typemismatch",  //NOI18N
+                I18NHelper.getMessage(messages, "jqlc.parametertable.definevaluebyindex.typemismatch",
                                       actualTypeName, formalType.getName()));
         }
 
@@ -415,7 +426,7 @@ public class ParameterTable
      * @return <code>true</code> if the type of the value is compatible with the
      * formal type; <code>false</code> otherwise.
      */
-    private boolean isCompatibleValue(Class formalType, Object value)
+    private boolean isCompatibleValue(Class<?> formalType, Object value)
     {
         boolean isCompatible = true;
 
@@ -424,9 +435,10 @@ public class ParameterTable
             isCompatible = !formalType.isPrimitive();
         }
         else {
-            Class actualType = value.getClass();
-            if (formalType.isPrimitive())
+            Class<? extends Object> actualType = value.getClass();
+            if (formalType.isPrimitive()) {
                 formalType = JavaTypeHelper.getWrapperClass(formalType);
+            }
 
             isCompatible = formalType.isAssignableFrom(actualType);
         }

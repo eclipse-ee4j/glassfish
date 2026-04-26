@@ -78,7 +78,7 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @param table table element to be used by the mapping table.
      * @param declaringClass the class to attach to
      */
-    public MappingTableElementImpl(TableElement table, MappingClassElement declaringClass) throws ModelException {
+    public MappingTableElementImpl(TableElement table, MappingClassElement declaringClass) {
         this(table.toString(), declaringClass);
 
         // don't use setTable so as not to fire property change events
@@ -299,6 +299,7 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * table.  This method should only be used by the runtime.
      * @return the table element for this mapping table
      */
+    @Override
     public TableElement getTableObject ()
     {
         if (_tableObject == null)

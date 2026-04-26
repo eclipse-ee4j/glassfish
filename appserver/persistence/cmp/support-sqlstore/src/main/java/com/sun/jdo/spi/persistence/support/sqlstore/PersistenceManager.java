@@ -1,23 +1,18 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v. 2.0, which is available at
+ * terms of the Eclipse License v. 2.0, which is available at
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * This Source Code may also be made available under the following Secondary
  * Licenses when the conditions for such availability set forth in the
- * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * Eclipse License v. 2.0 are satisfied: GNU General License,
  * version 2 with the GNU Classpath Exception, which is available at
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * PersistenceManager.java
- *
- * Create on March 3, 2000
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
@@ -29,23 +24,23 @@ import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerWrapp
 public interface PersistenceManager
         extends com.sun.jdo.api.persistence.support.PersistenceManager
 {
-        public PersistenceManagerWrapper getCurrentWrapper();
+        PersistenceManagerWrapper getCurrentWrapper();
 
-        public Object newInstance(StateManager sm);
+        Object newInstance(StateManager sm);
 
-        public void setStateManager(Object pc, StateManager sm);
+        void setStateManager(Object pc, StateManager sm);
 
-        public void setFlags(Object pc, byte flags);
+        void setFlags(Object pc, byte flags);
 
-        public byte getFlags(Object pc);
+        byte getFlags(Object pc);
 
-        public StateManager getStateManager(Object pc);
+        StateManager getStateManager(Object pc);
 
-        public void setField(Object pc, int fieldNumber, Object value);
+        void setField(Object pc, int fieldNumber, Object value);
 
-        public Object getField(Object pc, int fieldNumber);
+        Object getField(Object pc, int fieldNumber);
 
-        public void clearFields(Object pc);
+        void clearFields(Object pc);
 
         /**
          * Executes the given retrieve descriptor. The result
@@ -61,7 +56,7 @@ public interface PersistenceManager
          * @return A collection of (persistent) objects unless
          * an aggregate query was specified.
          */
-        public Object retrieve(RetrieveDesc action, ValueFetcher parameters);
+        Object retrieve(RetrieveDesc action, ValueFetcher parameters);
 
         /**
          * Executes the given retrieve descriptor. The result
@@ -76,45 +71,45 @@ public interface PersistenceManager
          * @return A collection of (persistent) objects unless
          * an aggregate query was specified.
          */
-        public Object retrieve(RetrieveDesc action);
+        Object retrieve(RetrieveDesc action);
 
         /**
          * Return a RetrieveDesc given a Class object.
          */
-        public RetrieveDesc getRetrieveDesc(Class classType);
+        RetrieveDesc getRetrieveDesc(Class<?> classType);
 
         /**
          * Return a RetrieveDesc for a foreign field (relationship) given the
          * Class object for the parent class.
          */
-        public RetrieveDesc getRetrieveDesc(String fieldName, Class classType);
+        RetrieveDesc getRetrieveDesc(String fieldName, Class<?> classType);
 
         /**
          * Called by Transaction commit() or rollback()
          * cleans up transactional cache
          * @param        status        jakarta.transaction.Status
          */
-        public void afterCompletion(int status);
+        void afterCompletion(int status);
 
         /**
          * Called by Transaction commit()
          * Loops through transactional cache and calls PersistentStore.updatePersistent()
          * on each instance
          */
-        public void beforeCompletion();
+        void beforeCompletion();
 
         /**
          * Called by Query in pessimistic transaction
          * to flush changes to the database
          */
-        public void internalFlush();
+        void internalFlush();
 
         /**
          * Called by StateManager to register new instance. This method will throw
          * an JDOUserException if throwDuplicateException is true and the object being
          * registered already exists in the pm cache.
          */
-        public void registerInstance(StateManager sm, Object oid,
+        void registerInstance(StateManager sm, Object oid,
              boolean throwDuplicateException, boolean forceRegister);
 
         /**
@@ -122,53 +117,53 @@ public interface PersistenceManager
          * it was removed from the global (weak) cache as the result of the replace
          * operation.
          */
-        public void registerInstance(StateManager sm, Object oid);
+        void registerInstance(StateManager sm, Object oid);
 
         /**
          * Deregister an instance.
          */
-        public void deregisterInstance(Object oid);
+        void deregisterInstance(Object oid);
 
         /**
          * Deregister an instance with this object Id, only if it holds the same instance.
          */
-        public void deregisterInstance(Object oid, StateManager sm);
+        void deregisterInstance(Object oid, StateManager sm);
 
         /**
          * For Transaction to notify PersistenceManager that
          * status is changed
          */
-        public void notifyStatusChange(boolean isActive);
+        void notifyStatusChange(boolean isActive);
 
         /**
          * For Transaction to notify PersistenceManager that
          * optimistic flag is changed
          */
-        public void notifyOptimistic(boolean optimistic);
+        void notifyOptimistic(boolean optimistic);
 
         /**
          * Returns true if associated transaction is optimistic
          */
-        public boolean isOptimisticTransaction();
+        boolean isOptimisticTransaction();
 
         /**
          * For Transaction to notify PersistenceManager that
          * optimistic flag is changed
          */
-        public void notifyNontransactionalRead(boolean nontransactionalRead);
+        void notifyNontransactionalRead(boolean nontransactionalRead);
 
         /**
          * Returns true if nontransactionalRead flag is set to true.
          */
-        public boolean isNontransactionalRead();
+        boolean isNontransactionalRead();
 
         /**
          * Returns true if associated transaction is active
          */
-        public boolean isActiveTransaction();
+        boolean isActiveTransaction();
 
         /**
-         * Called by newSCOInstance from the public interface or internally
+         * Called by newSCOInstance from the interface or internally
          * by the runtime
          * Will not result in marking field as dirty
          *
@@ -178,10 +173,10 @@ public interface PersistenceManager
          * @param fieldName the field to notify upon changes
          * @return the object of the class type
          */
-        public Object newSCOInstanceInternal (Class type, Object owner, String fieldName);
+        Object newSCOInstanceInternal (Class<?> type, Object owner, String fieldName);
 
         /**
-         * Called by newCollectionInstance from the public interface
+         * Called by newCollectionInstance from the interface
          * or internally by the runtime
          * Will not result in marking field as dirty
          *
@@ -193,67 +188,67 @@ public interface PersistenceManager
          * @param initialSize initial size of the Collection
          * @return the object of the class type
          */
-    Object newCollectionInstanceInternal (Class type, Object owner, String fieldName,
-                Class elementType, boolean allowNulls, int initialSize);
+    Object newCollectionInstanceInternal (Class<?> type, Object owner, String fieldName,
+                Class<?> elementType, boolean allowNulls, int initialSize);
 
         /**
          * Serialize field updates
          */
-        public void acquireFieldUpdateLock();
+        void acquireFieldUpdateLock();
 
         /**
          * Allow other threads to update fields
          */
-        public void releaseFieldUpdateLock();
+        void releaseFieldUpdateLock();
 
         /**
      * Acquires a share lock from the persistence manager. This method will
      * put the calling thread to sleep if another thread is holding the exclusive lock.
          */
-        public void acquireShareLock();
+        void acquireShareLock();
 
         /**
      * Releases the share lock and notify any thread waiting to get an exclusive lock.
          * Note that every releaseShareLock() call needs to be preceeded by an acquireShareLock() call.
          */
-        public void releaseShareLock();
+        void releaseShareLock();
 
         /**
      * Acquires an exclusive lock from the persistence manager. By acquiring an
          * exclusive lock, a thread is guaranteed to have exclusive right to the persistence
      * runtime meaning no other threads can perform any operation in the runtime.
          */
-        public void acquireExclusiveLock();
+        void acquireExclusiveLock();
 
         /**
      * Release the exclusive lock and notify any thread waiting to get an exclusive or
          * share lock. Note that every releaseShareLock() call needs to be preceeded by
          * an acquireExclusiveLock() call.
          */
-        public void releaseExclusiveLock();
+        void releaseExclusiveLock();
 
     /**
      * Force to close the persistence manager. Called by
      * TransactionImpl.afterCompletion in case of the CMT transaction
      * and the status value passed to the method cannot be resolved.
      */
-    public void forceClose();
+    void forceClose();
 
     /**
      * Returns StateManager instance for this Object Id.
      * @param oid the ObjectId to look up.
      * @param pcClass the expected Class type of the new PC instance.
      */
-    public StateManager findOrCreateStateManager(Object oid, Class pcClass);
+    StateManager findOrCreateStateManager(Object oid, Class<?> pcClass);
 
     /**
      * Lock cache for getObjectById and result processing synchronization.
      */
-    public void acquireCacheLock();
+    void acquireCacheLock();
 
     /** Release cache lock.
      */
-    public void releaseCacheLock();
+    void releaseCacheLock();
 
     /**
      * Looks up the given instance in the Version Consistency cache and
@@ -263,6 +258,6 @@ public interface PersistenceManager
      * @return true if the <code>sm</code> was found and populated, false
      * otherwise.
      */
-    public boolean initializeFromVersionConsistencyCache(StateManager sm);
+    boolean initializeFromVersionConsistencyCache(StateManager sm);
 
 }

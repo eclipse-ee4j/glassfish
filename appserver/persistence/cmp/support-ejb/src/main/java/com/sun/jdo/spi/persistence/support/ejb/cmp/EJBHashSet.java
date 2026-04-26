@@ -36,7 +36,7 @@ import static java.lang.System.Logger.Level.TRACE;
  *
  * @author Marina Vatkina 2001
  */
-public class EJBHashSet extends HashSet {
+public class EJBHashSet extends HashSet<Object> {
     // Reference to the PersistenceManager and Transaction that were active
     // at the time of this Set creation.
     private PersistenceManager pm = null;
@@ -60,7 +60,7 @@ public class EJBHashSet extends HashSet {
      * @param helper the JDOEJB20Helper instance.
      * @param pcs a Collection of  persistence-capable instances.
      */
-    public EJBHashSet(PersistenceManager pm, JDOEJB20Helper helper, Collection pcs) {
+    public EJBHashSet(PersistenceManager pm, JDOEJB20Helper helper, Collection<?> pcs) {
         this.pm = pm;
         tx = pm.currentTransaction();
         this.helper = helper;
@@ -106,7 +106,7 @@ public class EJBHashSet extends HashSet {
      * @see java.util.HashSet
      */
     @Override
-    public boolean addAll(Collection c) {
+    public boolean addAll(Collection<?> c) {
         LOG.log(TRACE, "---EJBHashSet.addAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
@@ -148,7 +148,7 @@ public class EJBHashSet extends HashSet {
      * @see java.util.AbstractCollection
      */
     @Override
-    public boolean removeAll(Collection c) {
+    public boolean removeAll(Collection<?> c) {
         LOG.log(TRACE, "---EJBHashSet.removeAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
@@ -170,7 +170,7 @@ public class EJBHashSet extends HashSet {
      * @see java.util.AbstractCollection
      */
     @Override
-    public boolean retainAll(Collection c) {
+    public boolean retainAll(Collection<?> c) {
         LOG.log(TRACE, "---EJBHashSet.retainAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
@@ -249,7 +249,7 @@ public class EJBHashSet extends HashSet {
      * @see #contains(Object)
      */
     @Override
-    public boolean containsAll(Collection c) {
+    public boolean containsAll(Collection<?> c) {
         LOG.log(TRACE, "---EJBHashSet.containsAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
@@ -267,7 +267,7 @@ public class EJBHashSet extends HashSet {
     public Object clone() {
         LOG.log(TRACE, "---EJBHashSet.clone---"); // NOI18N
         EJBHashSet newSet = (EJBHashSet)super.clone();
-        newSet.pcSet = (HashSet)pcSet.clone();
+        newSet.pcSet = (HashSet<Object>)pcSet.clone();
         return newSet;
     }
 
@@ -276,10 +276,10 @@ public class EJBHashSet extends HashSet {
      * with this Set.
      * @return Set of the persistence-capable instances.
      */
-    public HashSet getSCOHashSet() {
+    public HashSet<?> getSCOHashSet() {
         assertIsValid();
         assertInTransaction();
-        return (pcSet != null) ? (HashSet)pcSet.clone() : null;
+        return (pcSet != null) ? (HashSet<?>)pcSet.clone() : null;
     }
 
     /**
@@ -288,11 +288,11 @@ public class EJBHashSet extends HashSet {
      * There is no need to check transaction as it has already been checked
      * in this case.
      */
-    public void setSCOHashSet(Collection coll) {
+    public void setSCOHashSet(Collection<?> coll) {
         if (coll instanceof java.util.HashSet) {
             pcSet = (java.util.HashSet)coll;
         } else {
-            pcSet = new java.util.HashSet(coll);
+            pcSet = new java.util.HashSet<>(coll);
         }
     }
 
@@ -304,19 +304,21 @@ public class EJBHashSet extends HashSet {
      * @see ConcurrentModificationException
      */
     @Override
-    public Iterator iterator() {
+    public Iterator<Object> iterator() {
         assertIsValid();
         assertInTransaction();
         return new EJBHashIterator();
     }
 
-    private class EJBHashIterator implements Iterator {
-        Iterator _iterator = null;
+    private class EJBHashIterator implements Iterator<Object> {
+
+        Iterator<Object> _iterator;
         Object lastReturned = null;
 
         EJBHashIterator() {
             _iterator = pcSet.iterator();
         }
+
 
         @Override
         public boolean hasNext() {
@@ -325,20 +327,21 @@ public class EJBHashSet extends HashSet {
             return _iterator.hasNext();
         }
 
+
         @Override
-        public Object next() {
+        public EJBLocalObject next() {
             assertIsValid();
             assertInTransaction();
             try {
                 lastReturned = _iterator.next();
-            } catch(ConcurrentModificationException e) {
-                IllegalStateException ise = new IllegalStateException(
-                        e.toString());
+            } catch (ConcurrentModificationException e) {
+                IllegalStateException ise = new IllegalStateException(e.toString());
                 ise.initCause(e);
                 throw ise;
             }
-            return  helper.convertPCToEJBLocalObject(lastReturned, pm);
+            return helper.convertPCToEJBLocalObject(lastReturned, pm);
         }
+
 
         @Override
         public void remove() {
@@ -346,9 +349,8 @@ public class EJBHashSet extends HashSet {
             assertInTransaction();
             try {
                 _iterator.remove();
-            } catch(ConcurrentModificationException e) {
-                IllegalStateException ise = new IllegalStateException(
-                        e.toString());
+            } catch (ConcurrentModificationException e) {
+                IllegalStateException ise = new IllegalStateException(e.toString());
                 ise.initCause(e);
                 throw ise;
             }
@@ -382,8 +384,8 @@ public class EJBHashSet extends HashSet {
      * @param c the Collection to verify.
      * @throw EJBException of validation fails.
      */
-    private void assertInstancesOfLocalInterfaceImpl(Collection c) {
-        for (Iterator it = c.iterator(); it.hasNext();) {
+    private void assertInstancesOfLocalInterfaceImpl(Collection<?> c) {
+        for (Iterator<?> it = c.iterator(); it.hasNext();) {
             helper.assertInstanceOfLocalInterfaceImpl(it.next());
         }
     }

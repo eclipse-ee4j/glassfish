@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,10 +65,10 @@ public final class Timer {
     PrintWriter out = new PrintWriter(System.out, true);
 
     // methods
-    HashMap methods = new HashMap();
+    HashMap<String, MethodDescriptor> methods = new HashMap<>();
 
     // method call stack
-    private final ArrayList calls = new ArrayList(16);
+    private final ArrayList<MethodCall> calls = new ArrayList<>(16);
 
     public Timer() {
     }
@@ -87,7 +88,7 @@ public final class Timer {
         final long now = System.currentTimeMillis();
 
         // get a method descriptor
-        MethodDescriptor current = (MethodDescriptor)methods.get(name);
+        MethodDescriptor current = methods.get(name);
         if (current == null) {
             current = new MethodDescriptor(name);
             methods.put(name, current);
@@ -107,7 +108,7 @@ public final class Timer {
         final long now = System.currentTimeMillis();
 
         // update method call stack
-        final MethodCall call = (MethodCall)calls.remove(calls.size()-1);
+        final MethodCall call = calls.remove(calls.size()-1);
 
         // get current call's time
         final long currentSelf = now - call.self;
@@ -115,7 +116,7 @@ public final class Timer {
 
         // update previous call's self time
         if (calls.size() > 0) {
-            final MethodCall previous = (MethodCall)calls.get(calls.size()-1);
+            final MethodCall previous = calls.get(calls.size()-1);
             previous.self += currentTotal;
         }
 
@@ -135,8 +136,9 @@ public final class Timer {
 
     static private final String pad(String s, int i) {
         StringBuffer b = new StringBuffer();
-        for (i -= s.length(); i > 0; i--)
-            b.append((char)' ');
+        for (i -= s.length(); i > 0; i--) {
+            b.append(' ');
+        }
         b.append(s);
         return b.toString();
     }
@@ -144,17 +146,12 @@ public final class Timer {
 
     public final synchronized void print() {
         out.println("Timer : printing accumulated times ...");
-        final Object[] calls = methods.values().toArray();
+        final MethodDescriptor[] calls = methods.values().toArray(MethodDescriptor[]::new);
+        Arrays.sort(calls, new Comparator<MethodDescriptor>() {
 
-        Arrays.sort(calls,
-            new Comparator() {
-            public int compare(Object o1,
-                Object o2) {
-                return (int)(((MethodDescriptor)o2).total
-                    - ((MethodDescriptor)o1).total);
-            }
-            public boolean equals(Object obj) {
-                return (obj != null && compare(this, obj) == 0);
+            @Override
+            public int compare(MethodDescriptor o1, MethodDescriptor o2) {
+                return (int) (o2.total - o1.total);
             }
         });
 
@@ -165,7 +162,7 @@ public final class Timer {
         //nf.applyPattern("#,##0.00");
         //out.println("Timer : pattern = " + nf.toPattern());
         for (int i = 0; i < calls.length; i++) {
-            final MethodDescriptor current = (MethodDescriptor)calls[i];
+            final MethodDescriptor current = calls[i];
 
             out.println("Timer : "
                 + pad(nf.format(current.total / 1000.0), 8) + "  "

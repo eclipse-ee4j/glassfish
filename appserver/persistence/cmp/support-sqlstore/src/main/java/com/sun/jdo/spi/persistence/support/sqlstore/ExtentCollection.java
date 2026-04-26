@@ -38,7 +38,7 @@ import org.glassfish.persistence.common.I18NHelper;
  * @version 0.1
  */
 public class ExtentCollection
-        implements Collection {
+        implements Collection<Object> {
     /**
      * The PersistenceManager getExtent is called from
      */
@@ -65,20 +65,23 @@ public class ExtentCollection
         this.persistenceCapableClass = persistenceCapableClass;
 
         // check persistenceCapableClass parameter being null
-        if (persistenceCapableClass == null)
+        if (persistenceCapableClass == null) {
             throw new JDOUserException(
                     I18NHelper.getMessage(messages, "jdo.extentcollection.constructor.invalidclass", "null"));// NOI18N
+        }
         // check persistence-capable
         if (Model.RUNTIME.getMappingClass(persistenceCapableClass.getName(),
-                persistenceCapableClass.getClassLoader()) == null)
+                persistenceCapableClass.getClassLoader()) == null) {
             throw new JDOUserException(
                     I18NHelper.getMessage(messages, "jdo.extentcollection.constructor.nonpc", // NOI18N
                             persistenceCapableClass.getName()));
+        }
 
         // subclasses == true is not yet supported
-        if (subclasses)
+        if (subclasses) {
             throw new JDOUnsupportedOptionException(
                     I18NHelper.getMessage(messages, "jdo.extentcollection.constructor.subclasses"));// NOI18N
+        }
     }
 
     /**
@@ -91,6 +94,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public int size() {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "size"));// NOI18N
@@ -99,6 +103,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public boolean isEmpty() {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "isEmpty"));// NOI18N
@@ -107,6 +112,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public boolean contains(Object o) {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "contains"));// NOI18N
@@ -115,6 +121,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public Iterator iterator() {
         RetrieveDesc rd = pm.getRetrieveDesc(persistenceCapableClass);
         return ((Collection)pm.retrieve(rd)).iterator();
@@ -123,6 +130,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public Object[] toArray() {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "toArray"));// NOI18N
@@ -131,6 +139,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public Object[] toArray(Object a[]) {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "toArray"));// NOI18N
@@ -139,6 +148,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean add(Object o) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -148,6 +158,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -157,6 +168,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public boolean containsAll(Collection c) {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "containsAll"));// NOI18N
@@ -165,6 +177,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean addAll(Collection c) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -174,6 +187,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean removeAll(Collection c) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -183,6 +197,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean retainAll(Collection c) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -192,6 +207,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public void clear() {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -201,9 +217,11 @@ public class ExtentCollection
     /**
      * Two extent collections are equal, iff the names of their persistence capable class are equal
      */
+    @Override
     public boolean equals(Object o) {
-        if (o == this)
+        if (o == this) {
             return true;
+        }
         if (o instanceof ExtentCollection) {
             String otherClassName = ((ExtentCollection) o).persistenceCapableClass.getName();
             return persistenceCapableClass.getName().equals(otherClassName);
@@ -214,6 +232,7 @@ public class ExtentCollection
     /**
      * The hashCode is mapped to the hashCode of the name of the extent collection's persistence capable class
      */
+    @Override
     public int hashCode() {
         return persistenceCapableClass.getName().hashCode();
     }

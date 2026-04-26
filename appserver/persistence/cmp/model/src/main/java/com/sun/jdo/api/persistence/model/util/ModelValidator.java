@@ -127,11 +127,11 @@ public class ModelValidator {
      * @see #getBasicValidationList
      */
     public boolean parseCheck() {
-        Iterator iterator = getBasicValidationList().iterator();
+        Iterator<ValidationComponent> iterator = getBasicValidationList().iterator();
 
         try {
             while (iterator.hasNext()) {
-                ((ValidationComponent) iterator.next()).validate();
+                iterator.next().validate();
             }
         } catch (ModelValidationException e) {
             LOG.log(DEBUG, "Errors during persistence validation", e);
@@ -150,19 +150,14 @@ public class ModelValidator {
      * encountered, the collection will be empty, not <code>null</code>.
      * @see #getFullValidationList
      */
-    public Collection fullValidationCheck ()
-    {
-        ArrayList list = new ArrayList();
-        Iterator iterator = getFullValidationList().iterator();
+    public Collection<ModelValidationException> fullValidationCheck() {
+        ArrayList<ModelValidationException> list = new ArrayList<>();
+        Iterator<ValidationComponent> iterator = getFullValidationList().iterator();
 
-        while (iterator.hasNext())
-        {
-            try
-            {
-                ((ValidationComponent)iterator.next()).validate();
-            }
-            catch (ModelValidationException e)
-            {
+        while (iterator.hasNext()) {
+            try {
+                iterator.next().validate();
+            } catch (ModelValidationException e) {
                 list.add(e);
             }
         }
@@ -180,9 +175,8 @@ public class ModelValidator {
      * @see #getFieldsValidationList
      * @see #getFullValidationList
      */
-    public Collection getBasicValidationList ()
-    {
-        ArrayList list = new ArrayList();
+    public Collection<ValidationComponent> getBasicValidationList() {
+        ArrayList<ValidationComponent> list = new ArrayList<>();
         String className = getClassName();
 
         list.add(createClassExistenceComponent(className));
@@ -203,15 +197,12 @@ public class ModelValidator {
      * @see #getRelatedClassValidationList
      * @see #getBasicValidationList
      */
-    public Collection getFullValidationList ()
-    {
-        ArrayList list = new ArrayList(getBasicValidationList());
+    public Collection<ValidationComponent> getFullValidationList() {
+        ArrayList<ValidationComponent> list = new ArrayList<>(getBasicValidationList());
         String className = getClassName();
-        PersistenceClassElement persistenceClass =
-            getPersistenceClass(className);
+        PersistenceClassElement persistenceClass = getPersistenceClass(className);
 
-        if (persistenceClass != null)
-        {
+        if (persistenceClass != null) {
             PersistenceFieldElement[] fields = persistenceClass.getFields();
             int i, count = ((fields != null) ? fields.length : 0);
 
@@ -220,8 +211,7 @@ public class ModelValidator {
             list.add(createClassMappingComponent(persistenceClass));
             list.add(createKeyColumnMappingComponent(persistenceClass));
 
-            for (i = 0; i < count; i++)
-            {
+            for (i = 0; i < count; i++) {
                 PersistenceFieldElement field = fields[i];
 
                 list.add(createFieldCardinalityComponent(field));
@@ -234,52 +224,38 @@ public class ModelValidator {
         return Collections.unmodifiableCollection(list);
     }
 
-    // ============= Validation list construction suppport methods ============
-
     /** Computes and returns a collection of ValidationComponents
      * representing the database tests to be performed.
      * @return a collection of ValidationComponents representing the
      * database tests to be performed.
      */
-    private Collection getDatabaseValidationList ()
-    {
-        ArrayList list = new ArrayList();
+    private Collection<ValidationComponent> getDatabaseValidationList() {
+        ArrayList<ValidationComponent> list = new ArrayList<>();
         String className = getClassName();
         MappingClassElement mappingClass = getMappingClass(className);
 
-        if (mappingClass != null)
-        {
+        if (mappingClass != null) {
             List<MappingTableElement> tables = mappingClass.getTables();
-            int i, count = ((tables != null) ? tables.size() : 0);
+            int i, count = tables == null ? 0 : tables.size();
             MappingTableElement primaryTable = null;
-            Iterator iterator = null;
 
             list.add(createSchemaExistenceComponent(className));
 
-            for (i = 0; i < count; i++)
-            {
-                MappingTableElement nextTable =
-                    tables.get(i);
+            for (i = 0; i < count; i++) {
+                MappingTableElement nextTable = tables.get(i);
 
                 list.add(createTableExistenceComponent(nextTable.getTable()));
 
-                if (i == 0)
-                {
+                if (i == 0) {
                     primaryTable = nextTable;
                     list.add(createPrimaryTableComponent(primaryTable));
-                }
-                else
-                {
-                    MappingReferenceKeyElement referenceKey =
-                        findReferenceKey(primaryTable, nextTable);
+                } else {
+                    MappingReferenceKeyElement referenceKey = findReferenceKey(primaryTable, nextTable);
 
-                    if (referenceKey != null)
-                    {
-                        iterator = referenceKey.getColumnPairNames().iterator();
-                        while (iterator.hasNext())
-                        {
-                            list.add(createColumnExistenceComponent(
-                                (String)iterator.next()));
+                    if (referenceKey != null) {
+                        Iterator<String> iterator = referenceKey.getColumnPairNames().iterator();
+                        while (iterator.hasNext()) {
+                            list.add(createColumnExistenceComponent(iterator.next()));
                         }
                     }
                 }
@@ -287,27 +263,20 @@ public class ModelValidator {
 
             list.add(createVersionConsistencyComponent(mappingClass));
 
-            iterator = mappingClass.getFields().iterator();
-            while (iterator.hasNext())
-            {
-                MappingFieldElement nextField =
-                    (MappingFieldElement)iterator.next();
-                ArrayList allColumns = new ArrayList();
-                Iterator columnIterator = null;
+            Iterator<MappingFieldElement> iterator = mappingClass.getFields().iterator();
+            while (iterator.hasNext()) {
+                MappingFieldElement nextField = iterator.next();
+                ArrayList<String> allColumns = new ArrayList<>();
 
-                if (isRelationship(nextField))
-                {
-                    allColumns.addAll(((MappingRelationshipElement)nextField).
-                        getAssociatedColumns());
+                if (isRelationship(nextField)) {
+                    allColumns.addAll(((MappingRelationshipElement) nextField).getAssociatedColumns());
                 }
 
                 allColumns.addAll(nextField.getColumns());
 
-                columnIterator = allColumns.iterator();
-                while (columnIterator.hasNext())
-                {
-                    list.add(createColumnExistenceComponent(
-                        (String)columnIterator.next(), nextField));
+                Iterator<String> columnIterator = allColumns.iterator();
+                while (columnIterator.hasNext()) {
+                    list.add(createColumnExistenceComponent(columnIterator.next(), nextField));
                 }
             }
         }
@@ -320,80 +289,69 @@ public class ModelValidator {
      * @return a collection of ValidationComponents representing the
      * field and relationship tests to be performed.
      */
-    private Collection getFieldsValidationList ()
-    {
-        ArrayList list = new ArrayList();
+    private Collection<ValidationComponent> getFieldsValidationList() {
+        ArrayList<ValidationComponent> list = new ArrayList<>();
         Model model = getModel();
         String className = getClassName();
-        PersistenceClassElement persistenceClass =
-            getPersistenceClass(className);
+        PersistenceClassElement persistenceClass = getPersistenceClass(className);
+        if (persistenceClass == null) {
+            return list;
+        }
+        PersistenceFieldElement[] fields = persistenceClass.getFields();
+        int i, count = ((fields != null) ? fields.length : 0);
+        Iterator<MappingFieldElement> iterator = getMappingClass(className).getFields().iterator();
 
-        if (persistenceClass != null)
-        {
-            PersistenceFieldElement[] fields = persistenceClass.getFields();
-            int i, count = ((fields != null) ? fields.length : 0);
-            Iterator iterator =
-                getMappingClass(className).getFields().iterator();
+        for (i = 0; i < count; i++) {
+            PersistenceFieldElement field = fields[i];
 
-            for (i = 0; i < count; i++)
-            {
-                PersistenceFieldElement field = fields[i];
+            list.add(createFieldExistenceComponent(field));
 
+            // even though this is really the validation step, we
+            // only want to add the others if the field exists
+            if (model.hasField(className, field.getName())) {
+                list.add(createFieldPersistenceComponent(field));
+                list.add(createFieldPersistenceTypeComponent(field));
+                list.add(createFieldConsistencyComponent(field));
+
+                if (isLegalRelationship(field)) {
+                    RelationshipElement rel = (RelationshipElement) field;
+
+                    /*
+                     * user modifiable collection class not yet supported
+                     * list.add(createCollectionClassComponent(rel));
+                     */
+                    list.add(createElementClassComponent(rel));
+                    list.add(createRelatedClassMatchesComponent(rel));
+                }
+            }
+        }
+
+        while (iterator.hasNext()) {
+            MappingFieldElement field = iterator.next();
+            String fieldName = field.getName();
+
+            // only check this if it is not in the jdo model
+            if (persistenceClass.getField(fieldName) == null) {
                 list.add(createFieldExistenceComponent(field));
 
                 // even though this is really the validation step, we
                 // only want to add the others if the field exists
-                if (model.hasField(className, field.getName()))
-                {
-                    list.add(createFieldPersistenceComponent(field));
-                    list.add(createFieldPersistenceTypeComponent(field));
+                if (model.hasField(className, fieldName)) {
                     list.add(createFieldConsistencyComponent(field));
-
-                    if (isLegalRelationship(field))
-                    {
-                        RelationshipElement rel = (RelationshipElement)field;
-
-                        /* user modifiable collection class not yet supported
-                        list.add(createCollectionClassComponent(rel));*/
-                        list.add(createElementClassComponent(rel));
-                        list.add(createRelatedClassMatchesComponent(rel));
-                    }
                 }
             }
 
-            while (iterator.hasNext())
-            {
-                MappingFieldElement field =
-                    (MappingFieldElement)iterator.next();
-                String fieldName = field.getName();
+            if (!isRelationship(field)) {
+                list.add(createColumnOverlapComponent(field));
+            }
 
-                // only check this if it is not in the jdo model
-                if (persistenceClass.getField(fieldName) == null)
-                {
-                    list.add(createFieldExistenceComponent(field));
-
-                    // even though this is really the validation step, we
-                    // only want to add the others if the field exists
-                    if (model.hasField(className, fieldName)) {
-                        list.add(createFieldConsistencyComponent(field));
-                    }
-                }
-
-                if (!isRelationship(field)) {
-                    list.add(createColumnOverlapComponent(field));
-                }
-
-                // preliminary fix for CR6239630
-                if (Boolean.getBoolean("AllowManagedFieldsInDefaultFetchGroup"))
-                 {
-                                    // Do nothing - AllowManagedFieldsInDefaultFetchGroup:
-                                    // disabled single model validation test;
-                                    // may use checked read/write access to managed fields
-                }
-                else
-                {
-                    list.add(createFieldDefaultFetchGroupComponent(field));
-                }
+            // preliminary fix for CR6239630
+            if (Boolean.getBoolean("AllowManagedFieldsInDefaultFetchGroup")) {
+                // Do nothing - AllowManagedFieldsInDefaultFetchGroup:
+                // disabled single model validation test;
+                // may use checked read/write access to managed fields
+            } else {
+                list.add(createFieldDefaultFetchGroupComponent(field));
             }
         }
 
@@ -408,88 +366,67 @@ public class ModelValidator {
      * @return a collection of ValidationComponents representing the
      * related class tests to be performed.
      */
-    private Collection getRelatedClassValidationList (
-        PersistenceFieldElement field)
-    {
+    private Collection<ValidationComponent> getRelatedClassValidationList (
+        PersistenceFieldElement field) {
         String relatedClass = getRelatedClass(field);
-        ArrayList list = new ArrayList();
+        ArrayList<ValidationComponent> list = new ArrayList<>();
 
         // even though this is really already included in the validation
         // step, we only want to add the extra steps if the field exists
-        if ((relatedClass != null) &&
-            getModel().hasField(getClassName(), field.getName()))
-        {
-            MappingClassElement relatedClassElement =
-                getMappingClass(relatedClass);
+        if (relatedClass == null || !getModel().hasField(getClassName(), field.getName())) {
+            return list;
+        }
+        MappingClassElement relatedClassElement = getMappingClass(relatedClass);
 
-            list.add(createClassExistenceComponent(relatedClass, field));
-            list.add(createClassPersistenceComponent(relatedClass, field));
-            list.add(createSchemaExistenceComponent(relatedClass, field));
-            list.add(createRelatedSchemaMatchesComponent(relatedClass, field));
+        list.add(createClassExistenceComponent(relatedClass, field));
+        list.add(createClassPersistenceComponent(relatedClass, field));
+        list.add(createSchemaExistenceComponent(relatedClass, field));
+        list.add(createRelatedSchemaMatchesComponent(relatedClass, field));
 
-            if (relatedClassElement != null)
-            {
-                List<MappingTableElement> tables = relatedClassElement.getTables();
-                MappingTableElement primaryTable = null;
-                boolean hasTables = ((tables != null) && (tables.size() > 0));
+        if (relatedClassElement != null) {
+            List<MappingTableElement> tables = relatedClassElement.getTables();
+            MappingTableElement primaryTable = null;
+            boolean hasTables = tables != null && !tables.isEmpty();
+            if (hasTables) {
+                primaryTable = tables.get(0);
+                list.add(createTableExistenceComponent(primaryTable.getTable(), field));
+            }
 
-                if (hasTables)
-                {
-                    primaryTable = tables.get(0);
-                    list.add(createTableExistenceComponent(
-                        primaryTable.getTable(), field));
+            if (!isRelationship(field)) {
+                return list;
+            }
+
+            RelationshipElement relElement = (RelationshipElement) field;
+            Object rel = getMappingClass(getClassName()).getField(field.getName());
+
+            list.add(createInverseFieldComponent(relElement));
+            list.add(createInverseMappingComponent(relElement));
+
+            // verify that the columns from the primary table
+            // of the related class are actually from that table
+            // since it could have been changed
+            if (rel == null || !isRelationship(rel)) {
+                return list;
+            }
+            MappingRelationshipElement relationship = (MappingRelationshipElement) rel;
+            List<String> columns = relationship.getAssociatedColumns();
+            if (columns == null || columns.isEmpty()) {
+                columns = relationship.getColumns();
+            }
+            if (columns == null) {
+                return list;
+            }
+            List<String> tableNames = new ArrayList<>();
+            if (hasTables) {
+                Iterator<MappingTableElement> tableIterator = tables.iterator();
+                while (tableIterator.hasNext()) {
+                    tableNames.add(tableIterator.next().getName());
                 }
-
-                if (isRelationship(field))
-                {
-                    RelationshipElement relElement = (RelationshipElement)field;
-                    Object rel = getMappingClass(getClassName()).
-                        getField(field.getName());
-
-                    list.add(createInverseFieldComponent(relElement));
-                    list.add(createInverseMappingComponent(relElement));
-
-                    // verify that the columns from the primary table
-                    // of the related class are actually from that table
-                    // since it could have been changed
-                    if ((rel != null) && isRelationship(rel))
-                    {
-                        MappingRelationshipElement relationship =
-                            (MappingRelationshipElement)rel;
-                        List<String> columns =
-                            relationship.getAssociatedColumns();
-                        Iterator iterator = null;
-
-                        if ((columns == null) || (columns.size() == 0)) {
-                            columns = relationship.getColumns();
-                        }
-
-                        if (columns != null)
-                        {
-                            List tableNames = new ArrayList();
-
-                            if (hasTables)
-                            {
-                                Iterator tableIterator = tables.iterator();
-
-                                while (tableIterator.hasNext())
-                                {
-                                    tableNames.add(((MappingTableElement)
-                                        tableIterator.next()).getName());
-                                }
-                            }
-
-                            iterator = columns.iterator();
-
-                            while (iterator.hasNext())
-                            {
-                                list.add(createRelatedTableMatchesComponent(
-                                    relatedClass, field, tableNames,
-                                    (String)iterator.next()));
-                            }
-                        }
-                    }
-                }
+            }
+            Iterator<String> iterator = columns.iterator();
+            while (iterator.hasNext()) {
+                list.add(
+                    createRelatedTableMatchesComponent(relatedClass, field, tableNames, iterator.next()));
             }
         }
 
@@ -505,19 +442,14 @@ public class ModelValidator {
      * same class as the validator is checking overall
      * @return the validation component
      */
-    protected ValidationComponent createClassExistenceComponent (
-        final String className, final PersistenceFieldElement relatedField)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createClassExistenceComponent(final String className,
+        final PersistenceFieldElement relatedField) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if ((className == null) ||
-                    !getModel().hasClass(className, getClassLoader()))
-                {
-                    throw constructClassException(className, relatedField,
-                        "util.validation.class_not_found");        //NOI18N
+            public void validate() throws ModelValidationException {
+                if ((className == null) || !getModel().hasClass(className, getClassLoader())) {
+                    throw constructClassException(className, relatedField, "util.validation.class_not_found");
                 }
             }
         };
@@ -527,9 +459,7 @@ public class ModelValidator {
      * @param className the class whose existence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createClassExistenceComponent (
-        final String className)
-    {
+    protected ValidationComponent createClassExistenceComponent(final String className) {
         return createClassExistenceComponent(className, null);
     }
 
@@ -540,31 +470,25 @@ public class ModelValidator {
      * same class as the validator is checking overall
      * @return the validation component
      */
-    protected ValidationComponent createClassPersistenceComponent (
-        final String className, final PersistenceFieldElement relatedField)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createClassPersistenceComponent(final String className,
+        final PersistenceFieldElement relatedField) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 Model model = getModel();
 
-                if ((className != null) &&
-                     model.hasClass(className, getClassLoader()))
-                {
+                if ((className != null) && model.hasClass(className, getClassLoader())) {
                     String key = null;
 
                     if (!isPersistent(className)) {
-                        key = "util.validation.class_not_persistence_capable";//NOI18N
+                        key = "util.validation.class_not_persistence_capable";
                     } else if (!model.isPersistenceCapableAllowed(className)) {
-                        key = "util.validation.class_not_allowed";//NOI18N
+                        key = "util.validation.class_not_allowed";
                     }
 
-                    if (key != null)
-                    {
-                        throw constructClassException(
-                            className, relatedField, key);
+                    if (key != null) {
+                        throw constructClassException(className, relatedField, key);
                     }
                 }
             }
@@ -575,39 +499,37 @@ public class ModelValidator {
      * @param className the class whose persistence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createClassPersistenceComponent (
-        final String className)
-    {
+    protected ValidationComponent createClassPersistenceComponent(final String className) {
         return createClassPersistenceComponent(className, null);
     }
 
-    /** Create a validation component which can check whether the field exists.
+
+    /**
+     * Create a validation component which can check whether the field exists.
+     *
      * @param fieldName the field whose existence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldExistenceComponent (
-        final String fieldName)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createFieldExistenceComponent(final String fieldName) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (!getModel().hasField(getClassName(), fieldName))
-                {
-                    throw constructFieldException(fieldName,
-                        "util.validation.field_not_found");            //NOI18N
+            public void validate() throws ModelValidationException {
+                if (!getModel().hasField(getClassName(), fieldName)) {
+                    throw constructFieldException(fieldName, "util.validation.field_not_found");
                 }
             }
         };
     }
 
-    /** Create a validation component which can check whether the field exists.
+
+    /**
+     * Create a validation component which can check whether the field exists.
+     *
      * @param field the field whose existence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldExistenceComponent (Object field)
-    {
+    protected ValidationComponent createFieldExistenceComponent(Object field) {
         return createFieldExistenceComponent(field.toString());
     }
 
@@ -616,23 +538,16 @@ public class ModelValidator {
      * @param field the field whose persistence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldPersistenceComponent (
-        final PersistenceFieldElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createFieldPersistenceComponent(final PersistenceFieldElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                boolean isPersistent = (PersistenceFieldElement.PERSISTENT ==
-                    field.getPersistenceType());
+            public void validate() throws ModelValidationException {
+                boolean isPersistent = (PersistenceFieldElement.PERSISTENT == field.getPersistenceType());
                 String fieldName = field.getName();
 
-                if (isPersistent &&
-                    !isPersistentAllowed(getClassName(), fieldName))
-                {
-                    throw constructFieldException(fieldName,
-                        "util.validation.field_persistent_not_allowed");//NOI18N
+                if (isPersistent && !isPersistentAllowed(getClassName(), fieldName)) {
+                    throw constructFieldException(fieldName, "util.validation.field_persistent_not_allowed");
                 }
             }
         };
@@ -671,7 +586,7 @@ public class ModelValidator {
                         if (jdoIsRelationship != isRelationship(mappingElement))
                         {
                             throw constructFieldException(fieldName,
-                                "util.validation.field_type_inconsistent");    //NOI18N
+                                "util.validation.field_type_inconsistent");
                         }
                     }
                 }
@@ -704,7 +619,7 @@ public class ModelValidator {
                     if (persistenceElement == null)
                     {
                         throw constructFieldException(fieldName,
-                            "util.validation.field_model_inconsistent");//NOI18N
+                            "util.validation.field_model_inconsistent");
                     }
                 }
             }
@@ -716,33 +631,23 @@ public class ModelValidator {
      * @param field the field whose persistence type is being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldPersistenceTypeComponent (
-        final PersistenceFieldElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createFieldPersistenceTypeComponent(final PersistenceFieldElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 String fieldName = field.getName();
                 String className = getClassName();
-                boolean isLegallyPersistent =
-                    isPersistentAllowed(className, fieldName);
+                boolean isLegallyPersistent = isPersistentAllowed(className, fieldName);
 
-                if (isLegallyPersistent)
-                {
+                if (isLegallyPersistent) {
                     boolean isRelationship = isRelationship(field);
                     boolean mustBeRelationship = shouldBeRelationship(field);
 
-                    if (isRelationship && !mustBeRelationship)
-                    {
-                        throw constructFieldException(fieldName,
-                            "util.validation.field_relationship_not_allowed");//NOI18N
-                    }
-                    else if (!isRelationship && mustBeRelationship)
-                    {
-                        throw constructFieldException(fieldName,
-                            "util.validation.field_type_not_allowed");    //NOI18N
+                    if (isRelationship && !mustBeRelationship) {
+                        throw constructFieldException(fieldName, "util.validation.field_relationship_not_allowed");
+                    } else if (!isRelationship && mustBeRelationship) {
+                        throw constructFieldException(fieldName, "util.validation.field_type_not_allowed");
                     }
                 }
             }
@@ -754,65 +659,51 @@ public class ModelValidator {
      * @param field the relationship whose cardinality bounds are being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldCardinalityComponent (
-        final PersistenceFieldElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createFieldCardinalityComponent(final PersistenceFieldElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (isLegalRelationship(field))
-                {
-                    RelationshipElement relationship =
-                        (RelationshipElement)field;
+            public void validate() throws ModelValidationException {
+                if (isLegalRelationship(field)) {
+                    RelationshipElement relationship = (RelationshipElement) field;
                     String fieldName = field.getName();
-                    boolean nonCollectionRelationship =
-                        !isCollection(getClassName(), fieldName);
-                    int upperBound = (nonCollectionRelationship ?
-                        1 : relationship.getUpperBound());
+                    boolean nonCollectionRelationship = !isCollection(getClassName(), fieldName);
+                    int upperBound = (nonCollectionRelationship ? 1 : relationship.getUpperBound());
                     int lowerBound = relationship.getLowerBound();
                     MappingRelationshipElement mapping = null;
 
-                    if ((lowerBound < 0) || (upperBound <= 0) ||
-                        (lowerBound > upperBound))
-                    {
-                        throw constructFieldException(fieldName,
-                            "util.validation.cardinality_invalid");    //NOI18N
+                    if ((lowerBound < 0) || (upperBound <= 0) || (lowerBound > upperBound)) {
+                        throw constructFieldException(fieldName, "util.validation.cardinality_invalid");
                     }
 
                     // now check specific lower bound requirements imposed
                     // by the mapping
                     mapping = getMappingRelationship(relationship);
-                    if (nonCollectionRelationship && (lowerBound != 1) &&
-                        (mapping != null) && !isJoin(mapping))
-                    {
+                    if (nonCollectionRelationship && (lowerBound != 1) && (mapping != null) && !isJoin(mapping)) {
                         // If the non-collection relationship field is exactly
                         // mapped to a FK, we need to check the nullability
                         // of the columns. If there are any non-nullable
                         // columns the lower bound must be 1.
                         ForeignKeyElement fk = getMatchingFK(mapping);
 
-                        if ((fk != null) && hasNonNullableColumn(fk))
-                        {
-                            throw constructFieldException(fieldName,
-                                "util.validation.lower_bound_invalid"); //NOI18N
+                        if ((fk != null) && hasNonNullableColumn(fk)) {
+                            throw constructFieldException(fieldName, "util.validation.lower_bound_invalid");
                         }
                     }
                 }
             }
 
-            /** Returns <code>true</code> if the specified FK has at least
+
+            /**
+             * Returns <code>true</code> if the specified FK has at least
              * one non-nullable column. Please note that the caller is
              * responsible for passing a non-null fk argument.
              */
-            private boolean hasNonNullableColumn (ForeignKeyElement fk)
-            {
+            private boolean hasNonNullableColumn(ForeignKeyElement fk) {
                 ColumnElement[] localColumns = fk.getLocalColumns();
                 int count = ((localColumns != null) ? localColumns.length : 0);
 
-                for (int i = 0; i < count; i++)
-                {
+                for (int i = 0; i < count; i++) {
                     if (!localColumns[i].isNullable()) {
                         return true;
                     }
@@ -821,7 +712,9 @@ public class ModelValidator {
                 return false;
             }
 
-            /** Checks whether the specified relationship is exactly mapped
+
+            /**
+             * Checks whether the specified relationship is exactly mapped
              * to a FK. If yes, the method returns the matching FK. If not,
              * it returns <code>null</code>. Please note that the caller is
              * responsible for passing a non-null mapping argument.
@@ -829,7 +722,7 @@ public class ModelValidator {
             private ForeignKeyElement getMatchingFK(MappingRelationshipElement mapping) {
                 MappingClassElement mappingClass = mapping.getDeclaringClass();
                 String databaseRoot = getSchemaForClass(getClassName());
-                List pairNames = mapping.getColumns();
+                List<String> pairNames = mapping.getColumns();
                 List<MappingTableElement> tables = mappingClass.getTables();
 
                 if (tables != null) {
@@ -847,20 +740,19 @@ public class ModelValidator {
                 return null;
             }
 
-            /** Checks whether the specified TableElement has a FK that
+
+            /**
+             * Checks whether the specified TableElement has a FK that
              * exactly matches the list of column pair names.
+             *
              * @return the matching FK if it exactly matches the list
-             * of column pairs; <code>null</code> otherwise.
+             *         of column pairs; <code>null</code> otherwise.
              */
-            private ForeignKeyElement getMatchingFK (List pairNames,
-                TableElement table)
-            {
-                ForeignKeyElement[] foreignKeys = (table != null) ?
-                    table.getForeignKeys() : null;
+            private ForeignKeyElement getMatchingFK(List<String> pairNames, TableElement table) {
+                ForeignKeyElement[] foreignKeys = table == null ? null : table.getForeignKeys();
                 int count = ((foreignKeys != null) ? foreignKeys.length : 0);
 
-                for (int i = 0; i < count; i++)
-                {
+                for (int i = 0; i < count; i++) {
                     if (matchesFK(pairNames, foreignKeys[i])) {
                         return foreignKeys[i];
                     }
@@ -869,26 +761,23 @@ public class ModelValidator {
                 return null;
             }
 
-            /** Returns <code>true</code> if the specified list of column
+
+            /**
+             * Returns <code>true</code> if the specified list of column
              * pair names matches exactly the specified FK.
              */
-            private boolean matchesFK (List pairNames,
-                ForeignKeyElement foreignKey)
-            {
+            private boolean matchesFK(List<String> pairNames, ForeignKeyElement foreignKey) {
                 ColumnPairElement[] fkPairs = foreignKey.getColumnPairs();
-                int fkCount = ((fkPairs != null) ? fkPairs.length : 0);
-                int count = ((pairNames != null) ? pairNames.size() : 0);
+                int fkCount = fkPairs == null ? 0 : fkPairs.length;
+                int count = pairNames == null ? 0 : pairNames.size();
 
                 // First check whether the list of fk column pairs has the
                 // same size than the specified list of columns.
-                if (fkCount == count)
-                {
+                if (fkCount == count) {
                     // Now check whether each fk column is included in the
                     // specified list of columns.
-                    for (int i = 0; i < fkCount; i++)
-                    {
-                        String fkPairName = NameUtil.getRelativeMemberName(
-                            fkPairs[i].getName().getFullName());
+                    for (int i = 0; i < fkCount; i++) {
+                        String fkPairName = NameUtil.getRelativeMemberName(fkPairs[i].getName().getFullName());
 
                         if (!pairNames.contains(fkPairName)) {
                             return false;
@@ -903,8 +792,11 @@ public class ModelValidator {
         };
     }
 
-    /** Create a validation component which can check whether the field is
+
+    /**
+     * Create a validation component which can check whether the field is
      * unmapped.
+     *
      * @param field the field whose mapping is being checked
      * @return the validation component
      */
@@ -937,77 +829,55 @@ public class ModelValidator {
      * is being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldBlobMappingComponent (
-        final PersistenceFieldElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createFieldBlobMappingComponent(final PersistenceFieldElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 String className = getClassName();
                 String fieldName = field.getName();
                 MappingClassElement mappingClass = getMappingClass(className);
-                MappingFieldElement mappingField = ((mappingClass != null) ?
-                    mappingClass.getField(fieldName) : null);
+                MappingFieldElement mappingField = mappingClass == null ? null : mappingClass.getField(fieldName);
 
-                if (mappingField != null)
-                {
+                if (mappingField != null) {
                     boolean isKey = field.isKey();
 
-                     if (isKey || (MappingFieldElement.GROUP_DEFAULT ==
-                        mappingField.getFetchGroup()))
-                    {
-                        if (isMappedToBlob(mappingField,
-                            getSchemaForClass(className)))
-                        {
-                            throw constructFieldException(fieldName, (isKey ?
-                                "util.validation.field_key_field_not_allowed" : //NOI18N
-                                "util.validation.field_fetch_group_not_allowed"));
+                    if (isKey || (MappingFieldElement.GROUP_DEFAULT == mappingField.getFetchGroup())) {
+                        if (isMappedToBlob(mappingField, getSchemaForClass(className))) {
+                            throw constructFieldException(fieldName,
+                                (isKey ? "util.validation.field_key_field_not_allowed"
+                                    : "util.validation.field_fetch_group_not_allowed"));
                         }
                     }
                 }
             }
-            private boolean isMappedToBlob (MappingFieldElement mappingField,
-                String schema)
-            {
-                if (mappingField instanceof MappingRelationshipElement)
-                {
-                    return isMappedToBlob(
-                        (MappingRelationshipElement)mappingField, schema);
+
+
+            private boolean isMappedToBlob(MappingFieldElement mappingField, String schema) {
+                if (mappingField instanceof MappingRelationshipElement) {
+                    return isMappedToBlob((MappingRelationshipElement) mappingField, schema);
                 }
-                else
-                {
-                    Iterator iterator = mappingField.getColumns().iterator();
+                Iterator<String> iterator = mappingField.getColumns().iterator();
+                while (iterator.hasNext()) {
+                    String absoluteName = NameUtil.getAbsoluteMemberName(schema, iterator.next());
+                    TableElement table = TableElement.forName(NameUtil.getTableName(absoluteName));
+                    ColumnElement columnElement = ((table != null)
+                        ? (ColumnElement) table.getMember(DBIdentifier.create(absoluteName))
+                        : null);
 
-                    while (iterator.hasNext())
-                    {
-                        String absoluteName = NameUtil.getAbsoluteMemberName(
-                            schema, (String)iterator.next());
-                        TableElement table = TableElement.forName(
-                            NameUtil.getTableName(absoluteName));
-                        ColumnElement columnElement = ((table != null) ?
-                            (ColumnElement)table.getMember(
-                            DBIdentifier.create(absoluteName)) : null);
-
-                        if (isMappedToBlob(columnElement)) {
-                            return true;
-                        }
+                    if (isMappedToBlob(columnElement)) {
+                        return true;
                     }
                 }
 
                 return false;
             }
-            private boolean isMappedToBlob (MappingRelationshipElement rel,
-                String schema)
-            {
-                Iterator iterator = rel.getColumns().iterator();
 
-                while (iterator.hasNext())
-                {
-                    ColumnPairElement pair =
-                        getPair((String)iterator.next(), schema);
 
+            private boolean isMappedToBlob(MappingRelationshipElement rel, String schema) {
+                Iterator<String> iterator = rel.getColumns().iterator();
+                while (iterator.hasNext()) {
+                    ColumnPairElement pair = getPair(iterator.next(), schema);
                     if (isMappedToBlob(pair)) {
                         return true;
                     }
@@ -1015,10 +885,8 @@ public class ModelValidator {
 
                 // now check join columns
                 iterator = rel.getAssociatedColumns().iterator();
-                while (iterator.hasNext())
-                {
-                    ColumnPairElement pair =
-                        getPair((String)iterator.next(), schema);
+                while (iterator.hasNext()) {
+                    ColumnPairElement pair = getPair(iterator.next(), schema);
 
                     if (isMappedToBlob(pair)) {
                         return true;
@@ -1027,16 +895,16 @@ public class ModelValidator {
 
                 return false;
             }
-            private boolean isMappedToBlob (ColumnPairElement pair)
-            {
-                return ((pair == null) ? false :
-                    isMappedToBlob(pair.getLocalColumn()) &&
-                    isMappedToBlob(pair.getReferencedColumn()));
+
+
+            private boolean isMappedToBlob(ColumnPairElement pair) {
+                return ((pair == null) ? false
+                    : isMappedToBlob(pair.getLocalColumn()) && isMappedToBlob(pair.getReferencedColumn()));
             }
-            private boolean isMappedToBlob (ColumnElement column)
-            {
-                return ((column != null) &&
-                    SQLTypeUtil.isBlob(column.getType()));
+
+
+            private boolean isMappedToBlob(ColumnElement column) {
+                return ((column != null) && SQLTypeUtil.isBlob(column.getType()));
             }
         };
     }
@@ -1046,31 +914,23 @@ public class ModelValidator {
      * @param field the relationship whose collection class is being checked
      * @return the validation component
      */
-    protected ValidationComponent createCollectionClassComponent (
-        final RelationshipElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createCollectionClassComponent(final RelationshipElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 String className = getClassName();
                 String fieldName = field.getName();
 
-                if (isCollection(className, fieldName))
-                {
+                if (isCollection(className, fieldName)) {
                     Model model = getModel();
                     String collectionClass = field.getCollectionClass();
                     String fieldType = model.getFieldType(className, fieldName);
-                    boolean missingCollectionClass =
-                        StringHelper.isEmpty(collectionClass);
+                    boolean missingCollectionClass = StringHelper.isEmpty(collectionClass);
 
-                    if (!missingCollectionClass &&
-                        !model.getSupportedCollectionClasses(fieldType).
-                        contains(collectionClass))
-                    {
-                        throw constructFieldException(fieldName,
-                            "util.validation.collection_class_invalid");//NOI18N
+                    if (!missingCollectionClass
+                        && !model.getSupportedCollectionClasses(fieldType).contains(collectionClass)) {
+                        throw constructFieldException(fieldName, "util.validation.collection_class_invalid");
                     }
                 }
             }
@@ -1082,34 +942,24 @@ public class ModelValidator {
      * @param field the relationship whose element class is being checked
      * @return the validation component
      */
-    protected ValidationComponent createElementClassComponent (
-        final RelationshipElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createElementClassComponent(final RelationshipElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 String className = getClassName();
                 String fieldName = field.getName();
 
-                if (isCollection(className, fieldName))
-                {
+                if (isCollection(className, fieldName)) {
                     String elementClass = field.getElementClass();
 
-                    if (StringHelper.isEmpty(elementClass))
-                    {
-                        MappingClassElement mappingClass =
-                            getMappingClass(className);
-                        MappingFieldElement mappingElement =
-                            ((mappingClass != null) ?
-                            mappingClass.getField(fieldName) : null);
+                    if (StringHelper.isEmpty(elementClass)) {
+                        MappingClassElement mappingClass = getMappingClass(className);
+                        MappingFieldElement mappingElement = mappingClass == null ? null
+                            : mappingClass.getField(fieldName);
 
-                        if ((mappingElement != null) &&
-                            (mappingElement.getColumns().size() > 0))
-                        {
-                            throw constructFieldException(fieldName,
-                                "util.validation.element_class_not_found");//NOI18N
+                        if (mappingElement != null && !mappingElement.getColumns().isEmpty()) {
+                            throw constructFieldException(fieldName, "util.validation.element_class_not_found");
                         }
                     }
                 }
@@ -1136,35 +986,25 @@ public class ModelValidator {
      * checked
      * @return the validation component
      */
-    protected ValidationComponent createVersionConsistencyComponent (
-        final MappingClassElement mappingClass)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createVersionConsistencyComponent(final MappingClassElement mappingClass) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 // only bother to check for classes with version consistency
-                if (MappingClassElement.VERSION_CONSISTENCY ==
-                    mappingClass.getConsistencyLevel())
-                {
-                    MappingFieldElement versionField =
-                         validateVersionFieldExistence();
+                if (MappingClassElement.VERSION_CONSISTENCY == mappingClass.getConsistencyLevel()) {
+                    MappingFieldElement versionField = validateVersionFieldExistence();
                     String className = mappingClass.getName();
                     String fieldName = versionField.getName();
                     String columnName = null;
                     ColumnElement column = null;
 
-                    if (versionField instanceof MappingRelationshipElement)
-                    {
+                    if (versionField instanceof MappingRelationshipElement) {
                         throw constructFieldException(fieldName,
-                            "util.validation.version_field_relationship_not_allowed");//NOI18N
-                    }
-                    else if (MappingFieldElement.GROUP_DEFAULT !=
-                        versionField.getFetchGroup()) // must be in DFG
-                    {
-                        throw constructFieldException(fieldName,
-                            "util.validation.version_field_fetch_group_invalid");//NOI18N
+                            "util.validation.version_field_relationship_not_allowed");
+                    } else if (MappingFieldElement.GROUP_DEFAULT != versionField.getFetchGroup()) {
+                        // must be in DFG
+                        throw constructFieldException(fieldName, "util.validation.version_field_fetch_group_invalid");
                     }
 
                     validatePersistenceFieldAttributes(className, fieldName);
@@ -1173,63 +1013,66 @@ public class ModelValidator {
                     validateColumnAttributes(className, fieldName, column);
                 }
             }
-            /** Helper method validating the existence of the exactly one
+
+
+            /**
+             * Helper method validating the existence of the exactly one
              * version field.
              */
-            private MappingFieldElement validateVersionFieldExistence ()
-                throws ModelValidationException
-            {
-                List versionFields = mappingClass.getVersionFields();
+            private MappingFieldElement validateVersionFieldExistence() throws ModelValidationException {
+                List<MappingFieldElement> versionFields = mappingClass.getVersionFields();
 
                 // must have exactly 1 version field (for this release)
-                if (versionFields.size() != 1)
-                {
-                    throw constructClassException(mappingClass.getName(),
-                        null, "util.validation.version_field_cardinality");    //NOI18N
+                if (versionFields.size() != 1) {
+                    throw constructClassException(mappingClass.getName(), null,
+                        "util.validation.version_field_cardinality");
                 }
 
-                return (MappingFieldElement)versionFields.get(0);
+                return versionFields.get(0);
             }
-            /** Helper method validating the attributes of the field in the
+
+
+            /**
+             * Helper method validating the attributes of the field in the
              * jdo model which corresponds to the version field.
              */
-            private void validatePersistenceFieldAttributes (String className,
-                String fieldName) throws ModelValidationException
-            {
-                Class fieldType = JavaTypeHelper.getPrimitiveClass(
-                    getModel().getFieldType(className, fieldName));
+            private void validatePersistenceFieldAttributes(String className, String fieldName)
+                throws ModelValidationException {
+                Class<?> fieldType = JavaTypeHelper.getPrimitiveClass(getModel().getFieldType(className, fieldName));
                 String keyName = null;
 
                 // must not be a key field
                 if (getPersistenceClass(className).getField(fieldName).isKey()) {
-                    keyName = "util.validation.version_field_key_field_not_allowed";//NOI18N
+                    keyName = "util.validation.version_field_key_field_not_allowed";
                 } else if (Long.TYPE != fieldType) { // must be type long
-                    keyName = "util.validation.version_field_type_not_allowed";//NOI18N
+                    keyName = "util.validation.version_field_type_not_allowed";
                 }
 
                 if (keyName != null) {
                     throw constructFieldException(fieldName, keyName);
                 }
             }
-            /** Helper method validating the column name of the
+
+
+            /**
+             * Helper method validating the column name of the
              * version field mapping.
              */
-            private String validateVersionFieldMapping (
-                MappingFieldElement versionField)
-                throws ModelValidationException
-            {
-                List columns = versionField.getColumns();
+            private String validateVersionFieldMapping(MappingFieldElement versionField)
+                throws ModelValidationException {
+                List<String> columns = versionField.getColumns();
 
                 // must be mapped to exactly 1 column (for this release)
-                if (columns.size() != 1)
-                {
-                    throw constructFieldException(versionField.getName(),
-                        "util.validation.version_field_not_mapped");    //NOI18N
+                if (columns.size() != 1) {
+                    throw constructFieldException(versionField.getName(), "util.validation.version_field_not_mapped");
                 }
 
-                return (String)columns.get(0);
+                return columns.get(0);
             }
-            /** Helper method validating the column mapping of the version
+
+
+            /**
+             * Helper method validating the column mapping of the version
              * field is from the primary table.
              */
             private ColumnElement validateTableMatch(String className, String fieldName, String columnName)
@@ -1249,7 +1092,10 @@ public class ModelValidator {
 
                 return ((table != null) ? (ColumnElement) table.getMember(DBIdentifier.create(absoluteName)) : null);
             }
-            /** Helper method validating the attributes of the column of the
+
+
+            /**
+             * Helper method validating the attributes of the column of the
              * version field mapping.
              */
             private void validateColumnAttributes(String className, String fieldName, ColumnElement column)
@@ -1312,7 +1158,7 @@ public class ModelValidator {
                     String fieldName = field.getName();
 
                     throw new ModelValidationException(model.getField(getClassName(), fieldName),
-                        I18NHelper.getMessage(getMessages(), "util.validation.inverse_field_invalid", // NOI18N
+                        I18NHelper.getMessage(getMessages(), "util.validation.inverse_field_invalid",
                             new Object[] {fieldName, inverse.getName()}));
                 }
             }
@@ -1325,36 +1171,29 @@ public class ModelValidator {
      * @param field the relationship whose inverse relationship is being checked
      * @return the validation component
      */
-    protected ValidationComponent createRelatedClassMatchesComponent (
-        final RelationshipElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createRelatedClassMatchesComponent(final RelationshipElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                String inverseName =
-                    field.getInverseRelationshipName();
+            public void validate() throws ModelValidationException {
+                String inverseName = field.getInverseRelationshipName();
 
-                if (!StringHelper.isEmpty(inverseName))
-                {
+                if (!StringHelper.isEmpty(inverseName)) {
                     Model model = getModel();
-                    RelationshipElement inverse =
-                        field.getInverseRelationship(model);
+                    RelationshipElement inverse = field.getInverseRelationship(model);
 
-                    if (inverse == null) // no such field in that related class
-                    {
+                    if (inverse == null) {
+                        // no such field in that related class
                         String relatedClass = getRelatedClass(field);
                         String fieldName = field.getName();
-                        String key = ((relatedClass != null) ?
-                            "util.validation.related_class_mismatch" : //NOI18N
-                            "util.validation.related_class_not_found");//NOI18N
-                        Object[] args = ((relatedClass != null) ?
-                            new Object[]{fieldName, inverseName, relatedClass}
-                            : new Object[]{fieldName, inverseName});
+                        String key = ((relatedClass != null)
+                            ? "util.validation.related_class_mismatch"
+                            : "util.validation.related_class_not_found");
+                        Object[] args = ((relatedClass != null)
+                            ? new Object[] {fieldName, inverseName, relatedClass}
+                            : new Object[] {fieldName, inverseName});
 
-                        throw new ModelValidationException(
-                            model.getField(getClassName(), fieldName),
+                        throw new ModelValidationException(model.getField(getClassName(), fieldName),
                             I18NHelper.getMessage(getMessages(), key, args));
                     }
                 }
@@ -1368,29 +1207,23 @@ public class ModelValidator {
      * @param field the relationship whose inverse relationship is being checked
      * @return the validation component
      */
-    protected ValidationComponent createInverseMappingComponent (
-        final RelationshipElement field)
-    {
-        return new ValidationComponent ()
-        {
-            @Override
-            public void validate () throws ModelValidationException
-            {
-                Model model = getModel();
-                RelationshipElement inverse =
-                    field.getInverseRelationship(model);
+    protected ValidationComponent createInverseMappingComponent(final RelationshipElement field) {
+        return new ValidationComponent() {
 
-                if ((inverse != null) && !isInverseMapping(field, inverse))
-                {
+            @Override
+            public void validate() throws ModelValidationException {
+                Model model = getModel();
+                RelationshipElement inverse = field.getInverseRelationship(model);
+
+                if ((inverse != null) && !isInverseMapping(field, inverse)) {
                     String fieldName = field.getName();
 
-                    throw new ModelValidationException(
-                        model.getField(getClassName(), fieldName),
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.inverse_mapping_mismatch", //NOI18N
-                        new Object[]{fieldName, inverse.getName()}));
+                    throw new ModelValidationException(model.getField(getClassName(), fieldName),
+                        I18NHelper.getMessage(getMessages(), "util.validation.inverse_mapping_mismatch",
+                            new Object[] {fieldName, inverse.getName()}));
                 }
             }
+
 
             private boolean hasMappingRows(MappingRelationshipElement field2) {
                 if (field2 != null) {
@@ -1464,88 +1297,65 @@ public class ModelValidator {
      * @param field the field whose fetch group is being checked
      * @return the validation component
      */
-    protected ValidationComponent createFieldDefaultFetchGroupComponent (
-        final MappingFieldElement field)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createFieldDefaultFetchGroupComponent(final MappingFieldElement field) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (field != null)
-                {
+            public void validate() throws ModelValidationException {
+                if (field != null) {
                     String fieldName = field.getName();
-                    PersistenceClassElement persistenceClass =
-                        getPersistenceClass(getClassName());
-                    PersistenceFieldElement pElement =
-                        ((persistenceClass != null) ?
-                        persistenceClass.getField(fieldName) : null);
+                    PersistenceClassElement persistenceClass = getPersistenceClass(getClassName());
+                    PersistenceFieldElement pElement = ((persistenceClass != null)
+                        ? persistenceClass.getField(fieldName)
+                        : null);
 
-                    if ((pElement != null) && !pElement.isKey() &&
-                        (MappingFieldElement.GROUP_DEFAULT ==
-                        field.getFetchGroup()))
-                    {
-                        MappingClassElement mappingClass =
-                            field.getDeclaringClass();
-                        boolean isVersionField =
-                            ((MappingClassElement.VERSION_CONSISTENCY ==
-                                mappingClass.getConsistencyLevel()) &&
-                                field.isVersion());
-                        Iterator iterator = mappingClass.getFields().iterator();
-                        String exceptionKey = (!isVersionField ?
-                            "util.validation.field_fetch_group_invalid"://NOI18N
-                            "util.validation.version_field_column_invalid");//NOI18N
+                    if ((pElement != null) && !pElement.isKey()
+                        && (MappingFieldElement.GROUP_DEFAULT == field.getFetchGroup())) {
+                        MappingClassElement mappingClass = field.getDeclaringClass();
+                        boolean isVersionField = ((MappingClassElement.VERSION_CONSISTENCY == mappingClass
+                            .getConsistencyLevel()) && field.isVersion());
+                        Iterator<MappingFieldElement> iterator = mappingClass.getFields().iterator();
+                        String exceptionKey = (!isVersionField ? "util.validation.field_fetch_group_invalid"
+                            : "util.validation.version_field_column_invalid");
 
-                        /* rules:
-                         *    primitive, primitive -> error if exact match of
-                         *        columns
-                         *    primitive, relationship OR
-                         *    relationship, primitive -> error if non-collection
-                         *        relationship and none of the relationship's
-                         *        columns are PK columns and any are present in
-                         *        the primitive's list
-                         *    relationship, relationship -> error if exact
-                         *        match of mapping (local, join, associated),
-                         *        but order is not important
+                        /*
+                         * rules:
+                         * primitive, primitive -> error if exact match of
+                         * columns
+                         * primitive, relationship OR
+                         * relationship, primitive -> error if non-collection
+                         * relationship and none of the relationship's
+                         * columns are PK columns and any are present in
+                         * the primitive's list
+                         * relationship, relationship -> error if exact
+                         * match of mapping (local, join, associated),
+                         * but order is not important
                          */
-                        while (iterator.hasNext())
-                        {
-                            MappingFieldElement testField =
-                                (MappingFieldElement)iterator.next();
+                        while (iterator.hasNext()) {
+                            MappingFieldElement testField = iterator.next();
 
-                            if (isManaged(field, testField) ||
-                                isManaged(testField, field))
-                            {
-                                throw constructFieldException(
-                                    fieldName, exceptionKey);
-                            }
-                            else if (!testField.equals(field) && isExactMatch(
-                                field, testField))
-                            {
-                                throw constructFieldException(
-                                    fieldName, exceptionKey);
+                            if (isManaged(field, testField) || isManaged(testField, field)) {
+                                throw constructFieldException(fieldName, exceptionKey);
+                            } else if (!testField.equals(field) && isExactMatch(field, testField)) {
+                                throw constructFieldException(fieldName, exceptionKey);
                             }
                         }
                     }
                 }
             }
-            private boolean isManaged (MappingFieldElement primField,
-                MappingFieldElement relField)
-            {
+
+
+            private boolean isManaged(MappingFieldElement primField, MappingFieldElement relField) {
                 String className = getClassName();
 
-                if (!isRelationship(primField) && isRelationship(relField) &&
-                    !isCollection(className, relField.getName()))
-                {
+                if (!isRelationship(primField) && isRelationship(relField)
+                    && !isCollection(className, relField.getName())) {
                     List<String> columns = primField.getColumns();
                     Iterator<String> iterator = relField.getColumns().iterator();
                     String databaseRoot = getSchemaForClass(className);
 
-                    while (iterator.hasNext())
-                    {
-                        if (!testColumn(getLocalColumn(iterator.next(),
-                            databaseRoot), columns))
-                        {
+                    while (iterator.hasNext()) {
+                        if (!testColumn(getLocalColumn(iterator.next(), databaseRoot), columns)) {
                             return true;
                         }
                     }
@@ -1624,30 +1434,23 @@ public class ModelValidator {
      * compared
      * @return the validation component
      */
-    protected ValidationComponent createRelatedSchemaMatchesComponent (
-        final String relatedClass, final PersistenceFieldElement relatedField)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createRelatedSchemaMatchesComponent(final String relatedClass,
+        final PersistenceFieldElement relatedField) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (relatedClass != null)
-                {
+            public void validate() throws ModelValidationException {
+                if (relatedClass != null) {
                     String className = getClassName();
                     String mySchema = getSchemaForClass(className);
                     String relatedSchema = getSchemaForClass(relatedClass);
 
-                    if ((mySchema != null) && (relatedSchema != null) &&
-                        !(relatedSchema.equals(mySchema)))
-                    {
+                    if ((mySchema != null) && (relatedSchema != null) && !(relatedSchema.equals(mySchema))) {
                         String fieldName = relatedField.getName();
 
-                        throw new ModelValidationException(
-                            getModel().getField(className, fieldName),
-                            I18NHelper.getMessage(getMessages(),
-                            "util.validation.schema_mismatch", //NOI18N
-                            new Object[]{className, relatedClass, fieldName}));
+                        throw new ModelValidationException(getModel().getField(className, fieldName),
+                            I18NHelper.getMessage(getMessages(), "util.validation.schema_mismatch",
+                                new Object[] {className, relatedClass, fieldName}));
                     }
                 }
             }
@@ -1666,34 +1469,23 @@ public class ModelValidator {
      * be checked
      * @return the validation component
      */
-    protected ValidationComponent createRelatedTableMatchesComponent (
-        final String relatedClass, final PersistenceFieldElement relatedField,
-        final List tableNames, final String pairName)
-    {
-        return new ValidationComponent ()
-        {
-            @Override
-            public void validate () throws ModelValidationException
-            {
-                ColumnPairElement pair = getPair(pairName,
-                    getSchemaForClass(relatedClass));
+    protected ValidationComponent createRelatedTableMatchesComponent(final String relatedClass,
+        final PersistenceFieldElement relatedField, final List<String> tableNames, final String pairName) {
+        return new ValidationComponent() {
 
-                if (pair != null)
-                {
+            @Override
+            public void validate() throws ModelValidationException {
+                ColumnPairElement pair = getPair(pairName, getSchemaForClass(relatedClass));
+
+                if (pair != null) {
                     ColumnElement column = pair.getReferencedColumn();
 
-                    if (!matchesTable(tableNames, column))
-                    {
+                    if (!matchesTable(tableNames, column)) {
                         String fieldName = relatedField.getName();
 
-                        throw new ModelValidationException(
-                            getModel().getField(getClassName(), fieldName),
-                            I18NHelper.getMessage(getMessages(),
-                            getKey(
-                            "util.validation.table_mismatch", //NOI18N
-                            relatedField),
-                            new Object[]{column.getName().getFullName(),
-                            fieldName, relatedClass}));
+                        throw new ModelValidationException(getModel().getField(getClassName(), fieldName),
+                            I18NHelper.getMessage(getMessages(), getKey("util.validation.table_mismatch", relatedField),
+                                new Object[] {column.getName().getFullName(), fieldName, relatedClass}));
                     }
                 }
             }
@@ -1706,11 +1498,10 @@ public class ModelValidator {
      * being checked
      * @return the validation component
      */
-    protected ValidationComponent createSchemaExistenceComponent (
-        final String className)
-    {
+    protected ValidationComponent createSchemaExistenceComponent(final String className) {
         return createSchemaExistenceComponent(className, null);
     }
+
 
     /** Create a validation component which can check whether the schema of
      * the given class exists.
@@ -1722,29 +1513,21 @@ public class ModelValidator {
      * checking overall
      * @return the validation component
      */
-    protected ValidationComponent createSchemaExistenceComponent (
-        final String className, final PersistenceFieldElement relatedField)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createSchemaExistenceComponent(final String className,
+        final PersistenceFieldElement relatedField) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 String schemaName = getSchemaForClass(className);
 
-                if ((schemaName != null) &&
-                    (SchemaElement.forName(schemaName) == null))
-                {
-                    Object[] args = (relatedField == null) ?
-                        new Object[]{schemaName, className} :
-                        new Object[]{schemaName, className, relatedField};
+                if ((schemaName != null) && (SchemaElement.forName(schemaName) == null)) {
+                    Object[] args = (relatedField == null) ? new Object[] {schemaName, className}
+                        : new Object[] {schemaName, className, relatedField};
 
-                    throw new ModelValidationException(
-                        ModelValidationException.WARNING,
-                        getOffendingObject(relatedField),
-                        I18NHelper.getMessage(getMessages(), getKey(
-                            "util.validation.schema_not_found", //NOI18N
-                            relatedField), args));
+                    throw new ModelValidationException(ModelValidationException.WARNING,
+                        getOffendingObject(relatedField), I18NHelper.getMessage(getMessages(),
+                            getKey("util.validation.schema_not_found", relatedField), args));
                 }
             }
         };
@@ -1756,51 +1539,40 @@ public class ModelValidator {
      * @param primaryTable the primary table for the class
      * @return the validation component
      */
-    protected ValidationComponent createPrimaryTableComponent (
-        final MappingTableElement primaryTable)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createPrimaryTableComponent(final MappingTableElement primaryTable) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (primaryTable != null)
-                {
+            public void validate() throws ModelValidationException {
+                if (primaryTable != null) {
                     String className = getClassName();
                     String schemaName = getSchemaForClass(className);
 
-                    if (schemaName == null)
-                    {
-                        throw constructClassException(className, null,
-                            "util.validation.schema_not_set");        //NOI18N
+                    if (schemaName == null) {
+                        throw constructClassException(className, null, "util.validation.schema_not_set");
                     }
-                    else
-                    {
-                        String tableName = primaryTable.getName();
-                        TableElement table = getTable(tableName, schemaName);
+                    String tableName = primaryTable.getName();
+                    TableElement table = getTable(tableName, schemaName);
 
-                        if ((table != null) && (table.getPrimaryKey() == null))
-                        {
-                            throw new ModelValidationException(
-                                getOffendingObject(null),
-                                I18NHelper.getMessage(getMessages(),
-                                    "util.validation.table_no_primarykey", //NOI18N
-                                    new Object[]{tableName, className}));
-                        }
+                    if (table != null && table.getPrimaryKey() == null) {
+                        throw new ModelValidationException(getOffendingObject(null),
+                            I18NHelper.getMessage(getMessages(), "util.validation.table_no_primarykey",
+                                new Object[] {tableName, className}));
                     }
                 }
             }
         };
     }
 
-    /** Create a validation component which can check whether the given table
+
+    /**
+     * Create a validation component which can check whether the given table
      * exists.
+     *
      * @param tableName the table whose existence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createTableExistenceComponent (
-        final String tableName)
-    {
+    protected ValidationComponent createTableExistenceComponent(final String tableName) {
         return createTableExistenceComponent(tableName, null);
     }
 
@@ -1813,34 +1585,25 @@ public class ModelValidator {
      * checking overall
      * @return the validation component
      */
-    protected ValidationComponent createTableExistenceComponent (
-        final String tableName, final PersistenceFieldElement relatedField)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createTableExistenceComponent(final String tableName,
+        final PersistenceFieldElement relatedField) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (tableName != null)
-                {
+            public void validate() throws ModelValidationException {
+                if (tableName != null) {
                     String className = getClassName();
                     boolean noRelated = (relatedField == null);
                     TableElement table = getTable(tableName,
-                        getSchemaForClass((noRelated ? className :
-                        getRelatedClass(relatedField))));
+                        getSchemaForClass((noRelated ? className : getRelatedClass(relatedField))));
 
-                    if (table == null)
-                    {
-                        Object[] args = noRelated ?
-                            new Object[]{tableName, className} :
-                            new Object[]{tableName, relatedField};
+                    if (table == null) {
+                        Object[] args = noRelated ? new Object[] {tableName, className}
+                            : new Object[] {tableName, relatedField};
 
-                        throw new ModelValidationException(
-                            ModelValidationException.WARNING,
-                            getOffendingObject(relatedField),
-                            I18NHelper.getMessage(getMessages(), getKey(
-                                "util.validation.table_not_found", //NOI18N
-                                relatedField), args));
+                        throw new ModelValidationException(ModelValidationException.WARNING,
+                            getOffendingObject(relatedField), I18NHelper.getMessage(getMessages(),
+                                getKey("util.validation.table_not_found", relatedField), args));
                     }
                 }
             }
@@ -1852,9 +1615,7 @@ public class ModelValidator {
      * @param columnName the column whose existence is being checked
      * @return the validation component
      */
-    protected ValidationComponent createColumnExistenceComponent (
-        final String columnName)
-    {
+    protected ValidationComponent createColumnExistenceComponent(final String columnName) {
         return createColumnExistenceComponent(columnName, null);
     }
 
@@ -1866,67 +1627,48 @@ public class ModelValidator {
      * same secondary table setup
      * @return the validation component
      */
-    protected ValidationComponent createColumnExistenceComponent (
-        final String columnName, final MappingFieldElement relatedField)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createColumnExistenceComponent(final String columnName,
+        final MappingFieldElement relatedField) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
-                if (columnName != null)
-                {
+            public void validate() throws ModelValidationException {
+                if (columnName != null) {
                     String className = getClassName();
-                    String absoluteName = NameUtil.getAbsoluteMemberName(
-                        getSchemaForClass(className), columnName);
-                    TableElement table = TableElement.forName(
-                        NameUtil.getTableName(absoluteName));
+                    String absoluteName = NameUtil.getAbsoluteMemberName(getSchemaForClass(className), columnName);
+                    TableElement table = TableElement.forName(NameUtil.getTableName(absoluteName));
                     boolean foundTable = (table != null);
-                    DBMemberElement columnElement = ((foundTable) ?
-                        table.getMember(DBIdentifier.create(absoluteName)) :
-                        null);
+                    DBMemberElement columnElement = foundTable
+                        ? table.getMember(DBIdentifier.create(absoluteName))
+                        : null;
                     boolean noRelated = (relatedField == null);
 
-                    if (foundTable)
-                    {
-                        boolean isRelationship =
-                            (!noRelated && isRelationship(relatedField));
+                    if (foundTable) {
+                        boolean isRelationship = (!noRelated && isRelationship(relatedField));
                         boolean noColumn = (columnElement == null);
 
-                        if (!isRelationship && noColumn)
-                        {
-                            Object[] args = (noRelated) ?
-                                new Object[]{columnName, className} :
-                                new Object[]{columnName, relatedField,
-                                className};
+                        if (!isRelationship && noColumn) {
+                            Object[] args = (noRelated) ? new Object[] {columnName, className}
+                                : new Object[] {columnName, relatedField, className};
 
-                            throw new ModelValidationException(
-                                ModelValidationException.WARNING,
+                            throw new ModelValidationException(ModelValidationException.WARNING,
+                                getOffendingObject(relatedField), I18NHelper.getMessage(getMessages(),
+                                    getKey("util.validation.column_not_found", relatedField), args));
+                        } else if (isRelationship && (noColumn || !isPairComplete(columnElement))) {
+                            throw new ModelValidationException(ModelValidationException.WARNING,
                                 getOffendingObject(relatedField),
-                                I18NHelper.getMessage(getMessages(), getKey(
-                                    "util.validation.column_not_found", //NOI18N
-                                    relatedField), args));
-                        }
-                        else if (isRelationship &&
-                            (noColumn || !isPairComplete(columnElement)))
-                        {
-                            throw new ModelValidationException(
-                                ModelValidationException.WARNING,
-                                getOffendingObject(relatedField),
-                                I18NHelper.getMessage(getMessages(),
-                                    "util.validation.column_invalid", //NOI18N
-                                    new Object[]{columnName, relatedField,
-                                    className}));
+                                I18NHelper.getMessage(getMessages(), "util.validation.column_invalid",
+                                    new Object[] {columnName, relatedField, className}));
                         }
                     }
                 }
             }
-            private boolean isPairComplete (DBMemberElement member)
-            {
-                return ((member instanceof ColumnPairElement) &&
-                    (((ColumnPairElement)member).getLocalColumn() != null) &&
-                    (((ColumnPairElement)member).getReferencedColumn()
-                    != null));
+
+
+            private boolean isPairComplete(DBMemberElement member) {
+                return ((member instanceof ColumnPairElement)
+                    && (((ColumnPairElement) member).getLocalColumn() != null)
+                    && (((ColumnPairElement) member).getReferencedColumn() != null));
             }
         };
     }
@@ -1953,7 +1695,7 @@ public class ModelValidator {
                         String fieldName = field.getName();
 
                         throw new ModelValidationException(getModel().getField(getClassName(), fieldName),
-                            I18NHelper.getMessage(getMessages(), "util.validation.field_mapping_invalid", // NOI18N
+                            I18NHelper.getMessage(getMessages(), "util.validation.field_mapping_invalid",
                                 new Object[] {fieldName, testField.getName()}));
                     }
                 }
@@ -1972,28 +1714,28 @@ public class ModelValidator {
         };
     }
 
-    /** Create a validation component which can check whether the key class
+
+    /**
+     * Create a validation component which can check whether the key class
      * of the persistence capable class is valid. This includes:
      * <ul>
-     * <li> The key class must be public.
-     * <li> The key class must implement Serializable.
-     * <li> If the key class is an inner class, it must be static.
-     * <li> The key class must have a public constructor, which might be
+     * <li>The key class must be public.
+     * <li>The key class must implement Serializable.
+     * <li>If the key class is an inner class, it must be static.
+     * <li>The key class must have a public constructor, which might be
      * the default constructor or a no-arg constructor.
-     * <li> The field types of all non-static fields in the key class must be
+     * <li>The field types of all non-static fields in the key class must be
      * of valid types.
-     * <li> All serializable non-static fields in the key class must be public.
-     * <li> The names of the non-static fields in the key class must include the
+     * <li>All serializable non-static fields in the key class must be public.
+     * <li>The names of the non-static fields in the key class must include the
      * names of the primary key fields in the JDO class, and the types of the
      * common fields must be identical
-     * <li> The key class must redefine equals and hashCode.
+     * <li>The key class must redefine equals and hashCode.
      * </ul>
      */
-     protected ValidationComponent createKeyClassComponent (
-        final String className)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createKeyClassComponent(final String className) {
+        return new ValidationComponent() {
+
             /** The class element of the key class */
             private Object keyClass;
 
@@ -2001,8 +1743,7 @@ public class ModelValidator {
             private String keyClassName;
 
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 // checks the key class name
                 keyClassName = validateKeyClassName(className);
                 // initilialize keyClass field
@@ -2013,81 +1754,68 @@ public class ModelValidator {
                 validateMethods();
             }
 
-            /** Helper method validating the key class itself:
+
+            /**
+             * Helper method validating the key class itself:
              * public, serializable, static.
              */
-            private void validateClass () throws ModelValidationException
-            {
+            private void validateClass() throws ModelValidationException {
                 Model model = getModel();
                 int modifiers = model.getModifiersForClass(keyClassName);
                 boolean hasKeyClassName = !StringHelper.isEmpty(keyClassName);
-                boolean isInnerClass =
-                    (hasKeyClassName && (keyClassName.indexOf('$') != -1));
+                boolean isInnerClass = (hasKeyClassName && (keyClassName.indexOf('$') != -1));
                 String pcClassName = getClassName();
 
                 // check for key class existence
-                if (keyClass == null)
-                {
-                    throw new ModelValidationException(
-                        ModelValidationException.WARNING,
-                        model.getClass(pcClassName),
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_missing", //NOI18N
-                        keyClassName, pcClassName));
+                if (keyClass == null) {
+                    throw new ModelValidationException(ModelValidationException.WARNING, model.getClass(pcClassName),
+                        I18NHelper.getMessage(getMessages(), "util.validation.key_class_missing", keyClassName,
+                            pcClassName));
                 }
 
                 // check for public class modifier
-                if (!Modifier.isPublic(modifiers))
-                {
-                    throw new ModelValidationException(keyClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_public", //NOI18N
-                        keyClassName, pcClassName));
+                if (!Modifier.isPublic(modifiers)) {
+                    throw new ModelValidationException(keyClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_class_public", keyClassName, pcClassName));
                 }
 
                 // check for Serializable
-                /* This check is disabled because of Boston backward
-                   compatibility. In Boston there was no requirement for a
-                   key class being serializable, thus key classes from pc
-                   classes mapped with boston are not serializable.
-
-                if (!model.implementsInterface(keyClass,
-                    "java.io.Serializable")) //NOI18N
-                {
-                    throw new ModelValidationException(keyClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_serializable", //NOI18N
-                        keyClassName, pcClassName));
-                }
-                */
+                /*
+                 * This check is disabled because of Boston backward
+                 * compatibility. In Boston there was no requirement for a
+                 * key class being serializable, thus key classes from pc
+                 * classes mapped with boston are not serializable.
+                 * if (!model.implementsInterface(keyClass,
+                 * "java.io.Serializable"))
+                 * {
+                 * throw new ModelValidationException(keyClass,
+                 * I18NHelper.getMessage(getMessages(),
+                 * "util.validation.key_class_serializable",
+                 * keyClassName, pcClassName));
+                 * }
+                 */
 
                 // if inner class it must be static
-                if (isInnerClass && !Modifier.isStatic(modifiers))
-                {
-                    throw new ModelValidationException(keyClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_static", //NOI18N
-                        keyClassName, pcClassName));
+                if (isInnerClass && !Modifier.isStatic(modifiers)) {
+                    throw new ModelValidationException(keyClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_class_static", keyClassName, pcClassName));
                 }
             }
 
-            /** Helper method validating the fields of the key class.
+
+            /**
+             * Helper method validating the fields of the key class.
              */
-            private void validateFields () throws ModelValidationException
-            {
+            private void validateFields() throws ModelValidationException {
                 String pcClassName = getClassName();
                 Model model = getModel();
                 // check for valid typed public non-static fields
-                List keyClassFieldNames = model.getAllFields(keyClassName);
-                Map keyFields = getKeyFields();
+                List<String> keyClassFieldNames = model.getAllFields(keyClassName);
+                Map<String, Object> keyFields = getKeyFields();
 
-                for (Iterator i = keyClassFieldNames.iterator(); i.hasNext();)
-                {
-                    String keyClassFieldName = (String)i.next();
-                    Object keyClassField =
-                        getKeyClassField(keyClassName, keyClassFieldName);
-                    int keyClassFieldModifiers =
-                        model.getModifiers(keyClassField);
+                for (String keyClassFieldName : keyClassFieldNames) {
+                    Object keyClassField = getKeyClassField(keyClassName, keyClassFieldName);
+                    int keyClassFieldModifiers = model.getModifiers(keyClassField);
                     String keyClassFieldType = model.getType(keyClassField);
                     Object keyField = keyFields.get(keyClassFieldName);
 
@@ -2096,32 +1824,23 @@ public class ModelValidator {
                         continue;
                     }
 
-                    if (!model.isValidKeyType(keyClassName, keyClassFieldName))
-                    {
-                        throw new ModelValidationException(keyClassField,
-                            I18NHelper.getMessage(getMessages(),
-                            "util.validation.key_field_type_invalid", //NOI18N
-                            keyClassFieldName, keyClassName));
+                    if (!model.isValidKeyType(keyClassName, keyClassFieldName)) {
+                        throw new ModelValidationException(keyClassField, I18NHelper.getMessage(getMessages(),
+                            "util.validation.key_field_type_invalid", keyClassFieldName, keyClassName));
                     }
 
-                    if (!Modifier.isPublic(keyClassFieldModifiers))
-                    {
-                        throw new ModelValidationException(keyClassField,
-                            I18NHelper.getMessage(getMessages(),
-                            "util.validation.key_field_public", //NOI18N
-                            keyClassFieldName, keyClassName));
+                    if (!Modifier.isPublic(keyClassFieldModifiers)) {
+                        throw new ModelValidationException(keyClassField, I18NHelper.getMessage(getMessages(),
+                            "util.validation.key_field_public", keyClassFieldName, keyClassName));
                     }
 
                     if (keyField == null) {
                         continue;
                     }
 
-                    if (!keyClassFieldType.equals(model.getType(keyField)))
-                    {
-                        throw new ModelValidationException(keyClassField,
-                            I18NHelper.getMessage(getMessages(),
-                            "util.validation.key_field_type_mismatch", //NOI18N
-                            keyClassFieldName, keyClassName, pcClassName));
+                    if (!keyClassFieldType.equals(model.getType(keyField))) {
+                        throw new ModelValidationException(keyClassField, I18NHelper.getMessage(getMessages(),
+                            "util.validation.key_field_type_mismatch", keyClassFieldName, keyClassName, pcClassName));
                     }
 
                     // remove handled keyField from the list of keyFields
@@ -2129,75 +1848,58 @@ public class ModelValidator {
                 }
 
                 // check whether there are any unhandled key fields
-                if (!keyFields.isEmpty())
-                {
+                if (!keyFields.isEmpty()) {
                     Object pcClass = model.getClass(pcClassName);
-                    String fieldNames = StringHelper.arrayToSeparatedList(
-                        new ArrayList(keyFields.keySet()));
+                    String fieldNames = StringHelper.arrayToSeparatedList(new ArrayList<>(keyFields.keySet()));
 
-                    throw new ModelValidationException(pcClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_field_missing", //NOI18N
-                        pcClassName, keyClassName, fieldNames));
+                    throw new ModelValidationException(pcClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_field_missing", pcClassName, keyClassName, fieldNames));
                 }
             }
 
-            /** Helper method validating the key class constructors.
+
+            /**
+             * Helper method validating the key class constructors.
              */
-            private void validateConstructor () throws ModelValidationException
-            {
+            private void validateConstructor() throws ModelValidationException {
                 // no constructor or no arg constructor
                 Model model = getModel();
                 boolean hasConstr = model.hasConstructor(keyClassName);
-                Object noArgConstr =
-                    model.getConstructor(keyClassName, Model.NO_ARGS);
+                Object noArgConstr = model.getConstructor(keyClassName, Model.NO_ARGS);
                 int modifiers = model.getModifiers(noArgConstr);
 
-                if (hasConstr &&
-                    ((noArgConstr == null) || !Modifier.isPublic(modifiers)))
-                {
-                    throw new ModelValidationException(keyClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_constructor", //NOI18N
-                        keyClassName, getClassName()));
+                if (hasConstr && ((noArgConstr == null) || !Modifier.isPublic(modifiers))) {
+                    throw new ModelValidationException(keyClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_class_constructor", keyClassName, getClassName()));
                 }
             }
 
-            /** Helper method validating the key class methods.
+
+            /**
+             * Helper method validating the key class methods.
              */
-            private void validateMethods () throws ModelValidationException
-            {
-                Object equalsMethod = getNonObjectMethod(keyClassName,
-                    "equals", Model.getEqualsArgs()); //NOI18N
-                Object hashCodeMethod = getNonObjectMethod(keyClassName,
-                    "hashCode", Model.NO_ARGS); //NOI18N
+            private void validateMethods() throws ModelValidationException {
+                Object equalsMethod = getNonObjectMethod(keyClassName, "equals", Model.getEqualsArgs());
+                Object hashCodeMethod = getNonObjectMethod(keyClassName, "hashCode", Model.NO_ARGS);
 
                 // check equals method
-                if (!matchesMethod(equalsMethod, Modifier.PUBLIC,
-                    0, "boolean")) //NOI18N
-                {
-                    throw new ModelValidationException(keyClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_equals", //NOI18N
-                        keyClassName, getClassName()));
+                if (!matchesMethod(equalsMethod, Modifier.PUBLIC, 0, "boolean")) {
+                    throw new ModelValidationException(keyClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_class_equals", keyClassName, getClassName()));
                 }
 
                 // check hashCode method
-                if (!matchesMethod(hashCodeMethod, Modifier.PUBLIC,
-                    0, "int")) //NOI18N
-                {
-                    throw new ModelValidationException(keyClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_hashcode", //NOI18N
-                        keyClassName, getClassName()));
+                if (!matchesMethod(hashCodeMethod, Modifier.PUBLIC, 0, "int")) {
+                    throw new ModelValidationException(keyClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_class_hashcode", keyClassName, getClassName()));
                 }
             }
 
-            /** Helper method validating the name of the key class.
+
+            /**
+             * Helper method validating the name of the key class.
              */
-            private String validateKeyClassName (String keyClassName)
-                throws ModelValidationException
-            {
+            private String validateKeyClassName(String keyClassName) throws ModelValidationException {
                 String pcClassName = getClassName();
                 Model model = getModel();
                 boolean hasKeyClassName = !StringHelper.isEmpty(keyClassName);
@@ -2206,36 +1908,22 @@ public class ModelValidator {
                 boolean isOIDNameSuffix;
 
                 // check for existence of key class name
-                if (!hasKeyClassName)
-                {
-                    throw new ModelValidationException(
-                        ModelValidationException.WARNING,
-                        model.getClass(pcClassName),
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_unset", //NOI18N
-                        pcClassName));
+                if (!hasKeyClassName) {
+                    throw new ModelValidationException(ModelValidationException.WARNING, model.getClass(pcClassName),
+                        I18NHelper.getMessage(getMessages(), "util.validation.key_class_unset", pcClassName));
                 }
 
                 keyClassName = keyClassName.trim();
                 hasPrefix = keyClassName.startsWith(pcClassName);
-                nameSuffix = (hasPrefix ?
-                   keyClassName.substring(pcClassName.length()) : keyClassName);
-                isOIDNameSuffix =
-                    (nameSuffix.equalsIgnoreCase(".OID") ||
-                     nameSuffix.equalsIgnoreCase("$OID"));
+                nameSuffix = (hasPrefix ? keyClassName.substring(pcClassName.length()) : keyClassName);
+                isOIDNameSuffix = (nameSuffix.equalsIgnoreCase(".OID") || nameSuffix.equalsIgnoreCase("$OID"));
 
-                if (!hasPrefix ||
-                    (!nameSuffix.equalsIgnoreCase("Key") &&
-                     !isOIDNameSuffix))
-                {
+                if (!hasPrefix || (!nameSuffix.equalsIgnoreCase("Key") && !isOIDNameSuffix)) {
                     Object pcClass = getModel().getClass(pcClassName);
-                    throw new ModelValidationException(pcClass,
-                        I18NHelper.getMessage(getMessages(),
-                        "util.validation.key_class_invalid", //NOI18N
-                        keyClassName, pcClassName));
+                    throw new ModelValidationException(pcClass, I18NHelper.getMessage(getMessages(),
+                        "util.validation.key_class_invalid", keyClassName, pcClassName));
                 }
-                if (isOIDNameSuffix)
-                {
+                if (isOIDNameSuffix) {
                     StringBuffer buf = new StringBuffer(keyClassName);
                     buf.setCharAt(keyClassName.length() - 4, '$');
                     return buf.toString();
@@ -2243,69 +1931,58 @@ public class ModelValidator {
                 return keyClassName;
             }
 
+
             // helper method which returns a field object from the
             // given class or one of its superclasses
-            private Object getKeyClassField (String keyClassName,
-                String keyClassFieldName)
-            {
+            private Object getKeyClassField(String keyClassName, String keyClassFieldName) {
                 Model model = getModel();
-                Object keyClassField =
-                    model.getField(keyClassName, keyClassFieldName);
+                Object keyClassField = model.getField(keyClassName, keyClassFieldName);
 
-                if (keyClassField == null)    // this is an inherited field
-                {
-                    keyClassField = model.getInheritedField(
-                        keyClassName, keyClassFieldName);
+                if (keyClassField == null) {
+                    // this is an inherited field
+                    keyClassField = model.getInheritedField(keyClassName, keyClassFieldName);
                 }
 
                 return keyClassField;
             }
 
-            /** Helper method returning the key fields of the pc class as a map.
+
+            /**
+             * Helper method returning the key fields of the pc class as a map.
              */
-            private Map getKeyFields ()
-            {
+            private Map<String, Object> getKeyFields() {
                 Model model = getModel();
                 String pcClassName = getClassName();
-                PersistenceClassElement pce =
-                    model.getPersistenceClass(pcClassName);
+                PersistenceClassElement pce = model.getPersistenceClass(pcClassName);
                 PersistenceFieldElement[] fields = pce.getFields();
-                Map keyFields = new HashMap();
+                Map<String, Object> keyFields = new HashMap<>();
 
-                if (fields != null)
-                {
-                    for (int i = 0; i < fields.length; i++)
-                    {
+                if (fields != null) {
+                    for (int i = 0; i < fields.length; i++) {
                         PersistenceFieldElement pfe = fields[i];
-                        if (pfe.isKey())
-                        {
+                        if (pfe.isKey()) {
                             String name = pfe.getName();
-                            keyFields.put(name,
-                                model.getField(pcClassName, name));
+                            keyFields.put(name, model.getField(pcClassName, name));
                         }
                     }
                 }
 
                 return keyFields;
             }
+
+
             // helper method which returns a method object from the
             // given class or one of its superclasses provided it
             // is not java.lang.Object
-            private Object getNonObjectMethod (String className,
-                String methodName, String[] argTypeNames)
-            {
+            private Object getNonObjectMethod(String className, String methodName, String[] argTypeNames) {
                 Model model = getModel();
-                Object method =
-                    model.getMethod(className, methodName, argTypeNames);
+                Object method = model.getMethod(className, methodName, argTypeNames);
 
-                if (method == null)    // look for an inherited method
+                if (method == null) // look for an inherited method
                 {
-                    method = model.getInheritedMethod(
-                        className, methodName, argTypeNames);
+                    method = model.getInheritedMethod(className, methodName, argTypeNames);
 
-                    if ((method != null) && model.getDeclaringClass(method).
-                        equals("java.lang.Object"))
-                    {
+                    if ((method != null) && model.getDeclaringClass(method).equals("java.lang.Object")) {
                         method = null;
                     }
                 }
@@ -2315,20 +1992,20 @@ public class ModelValidator {
         };
     }
 
-    /** Create a validation component which can check that the persistence
+
+    /**
+     * Create a validation component which can check that the persistence
      * capable class implement methods readObject and writeObject, if the class
      * implements the intreface java.io.Serializable
+     *
      * @param className the class whose methods are checked
      * @return the validation component
      */
-    protected ValidationComponent createSerializableClassComponent (
-        final String className)
-    {
-        return new ValidationComponent ()
-        {
+    protected ValidationComponent createSerializableClassComponent(final String className) {
+        return new ValidationComponent() {
+
             @Override
-            public void validate () throws ModelValidationException
-            {
+            public void validate() throws ModelValidationException {
                 Model model = getModel();
                 Object pcClass = null;
 
@@ -2340,40 +2017,32 @@ public class ModelValidator {
                     return;
                 }
 
-                if (model.implementsInterface(pcClass, "java.io.Serializable")) //NOI18N
-                {
+                if (model.implementsInterface(pcClass, "java.io.Serializable")) {
                     // check readObject method
-                    Object readMethod = model.getMethod(className,
-                        "readObject", Model.getReadObjectArgs()); //NOI18N
+                    Object readMethod = model.getMethod(className, "readObject", Model.getReadObjectArgs());
 
-                    if (!matchesMethod(readMethod, Modifier.PRIVATE,
-                        Modifier.SYNCHRONIZED, "void"))
-                    {
+                    if (!matchesMethod(readMethod, Modifier.PRIVATE, Modifier.SYNCHRONIZED, "void")) {
                         throw new ModelValidationException(pcClass,
-                            I18NHelper.getMessage(getMessages(),
-                            "util.validation.class_readobject", //NOI18N
-                            className));
+                            I18NHelper.getMessage(getMessages(), "util.validation.class_readobject", className));
                     }
 
                     // check writeObject method
-                    Object writeMethod = model.getMethod(className,
-                        "writeObject", Model.getWriteObjectArgs()); //NOI18N
+                    Object writeMethod = model.getMethod(className, "writeObject", Model.getWriteObjectArgs());
 
-                    if (!matchesMethod(writeMethod, Modifier.PRIVATE,
-                        Modifier.SYNCHRONIZED, "void"))
-                    {
+                    if (!matchesMethod(writeMethod, Modifier.PRIVATE, Modifier.SYNCHRONIZED, "void")) {
                         throw new ModelValidationException(pcClass,
-                            I18NHelper.getMessage(getMessages(),
-                            "util.validation.class_writeobject", //NOI18N
-                            className));
+                            I18NHelper.getMessage(getMessages(), "util.validation.class_writeobject", className));
                     }
                 }
             }
         };
     }
 
-    /** Create a validation component which can check whether the class is
+
+    /**
+     * Create a validation component which can check whether the class is
      * unmapped.
+     *
      * @param persistenceClass the class whose mapping is being checked
      * @return the validation component
      */
@@ -2400,8 +2069,11 @@ public class ModelValidator {
         };
     }
 
-    /** Create a validation component which can check whether the class
+
+    /**
+     * Create a validation component which can check whether the class
      * contains field mappings for all primary key columns.
+     *
      * @param persistenceClass the class whose mapping is being checked
      * @return the validation component
      */
@@ -2422,13 +2094,13 @@ public class ModelValidator {
                 }
                 String tableName = tables.get(0).getName();
                 TableElement table = getTable(tableName, getSchemaForClass(className));
-                List<String> columns = getUnmappedColumnNames(table == null ? null : table.getPrimaryKey(), mappingClass);
+                List<String> columns = getUnmappedColumnNames(table == null ? null : table.getPrimaryKey(),
+                    mappingClass);
 
                 if (columns != null && !columns.isEmpty()) {
-                    throw new ModelValidationException(ModelValidationException.WARNING,
-                        getOffendingObject(null),
-                        I18NHelper.getMessage(getMessages(), "util.validation.class_key_column_missing",
-                            className, tableName, StringHelper.arrayToSeparatedList(columns)));
+                    throw new ModelValidationException(ModelValidationException.WARNING, getOffendingObject(null),
+                        I18NHelper.getMessage(getMessages(), "util.validation.class_key_column_missing", className,
+                            tableName, StringHelper.arrayToSeparatedList(columns)));
                 }
             }
 
@@ -2508,9 +2180,8 @@ public class ModelValidator {
      * <code>null</code>
      * @return the key
      */
-    private String getKey (String keyBase, Object field)
-    {
-        return ((field == null) ? keyBase : (keyBase + "_related"));    //NOI18N
+    private String getKey(String keyBase, Object field) {
+        return field == null ? keyBase : keyBase + "_related";
     }
 
     /** Computes the arguments for the i18n string to be used in the
@@ -2523,17 +2194,18 @@ public class ModelValidator {
      * <code>null</code>
      * @return the argument array
      */
-    private Object[] getArguments (String className, Object field)
-    {
-        return ((field == null) ? new Object[]{className} :
-            new Object[]{className, field});
+    private Object[] getArguments(String className, Object field) {
+        return field == null ? new Object[] {className} : new Object[] {className, field};
     }
 
-    /** Constructs a ModelValidationException for class validation tests
+
+    /**
+     * Constructs a ModelValidationException for class validation tests
      * using the supplied class name, related field, and key base.
+     *
      * @param className the name of the class which caused the problem
      * @param field the field object which caused the problem - may be
-     * <code>null</code>
+     *            <code>null</code>
      * @param keyBase the base key to be used for the i18n string
      * @return the ModelValidationException
      * @see #getOffendingObject
@@ -2541,11 +2213,8 @@ public class ModelValidator {
      * @see #getArguments
      * @see #constructFieldException
      */
-    private ModelValidationException constructClassException (String className,
-        Object relatedField, String keyBase)
-    {
-        return constructClassException(ModelValidationException.ERROR,
-            className, relatedField, keyBase);
+    private ModelValidationException constructClassException(String className, Object relatedField, String keyBase) {
+        return constructClassException(ModelValidationException.ERROR, className, relatedField, keyBase);
     }
 
     /** Constructs a ModelValidationException for class validation tests
@@ -2563,9 +2232,8 @@ public class ModelValidator {
      * @see #getArguments
      * @see #constructFieldException
      */
-    private ModelValidationException constructClassException (int errorType,
-        String className, Object relatedField, String keyBase)
-    {
+    private ModelValidationException constructClassException(int errorType, String className, Object relatedField,
+        String keyBase) {
         return new ModelValidationException(errorType,
             getOffendingObject(relatedField), I18NHelper.getMessage(
             getMessages(), getKey(keyBase, relatedField),
@@ -2579,12 +2247,10 @@ public class ModelValidator {
      * @return the ModelValidationException
      * @see #constructClassException
      */
-    private ModelValidationException constructFieldException (String fieldName,
-        String key)
-    {
-        return constructFieldException(ModelValidationException.ERROR,
-            fieldName, key);
+    private ModelValidationException constructFieldException(String fieldName, String key) {
+        return constructFieldException(ModelValidationException.ERROR, fieldName, key);
     }
+
 
     /** Constructs a ModelValidationException for field validation tests
      * using the supplied field name and key.
@@ -2596,11 +2262,8 @@ public class ModelValidator {
      * @return the ModelValidationException
      * @see #constructClassException
      */
-    private ModelValidationException constructFieldException (int errorType,
-        String fieldName, String key)
-    {
-        return new ModelValidationException(errorType,
-            getModel().getField(getClassName(), fieldName),
+    private ModelValidationException constructFieldException(int errorType, String fieldName, String key) {
+        return new ModelValidationException(errorType, getModel().getField(getClassName(), fieldName),
             I18NHelper.getMessage(getMessages(), key, fieldName));
     }
 
@@ -2615,20 +2278,16 @@ public class ModelValidator {
      * @return <code>true</code> if the method matches,
      * <code>false</code> otherwise.
      */
-    private boolean matchesMethod (final Object method,
-        final int expectedModifiers, final int optionalModifiers,
-        final String expectedReturnType)
-    {
+    private boolean matchesMethod(final Object method, final int expectedModifiers, final int optionalModifiers,
+        final String expectedReturnType) {
         boolean matches = false;
 
-        if (method != null)
-        {
+        if (method != null) {
             Model model = getModel();
             int modifiers = model.getModifiers(method);
 
-            matches = (((modifiers == expectedModifiers) ||
-                (modifiers == (expectedModifiers | optionalModifiers))) &&
-                expectedReturnType.equals(model.getType(method)));
+            matches = (((modifiers == expectedModifiers) || (modifiers == (expectedModifiers | optionalModifiers)))
+                && expectedReturnType.equals(model.getType(method)));
         }
 
         return matches;
@@ -2640,73 +2299,64 @@ public class ModelValidator {
      * @return <code>true</code> if the column belongs to a table found
      * in the supplied list of table names, <code>false</code> otherwise
      */
-    private boolean matchesTable (List tableNames, ColumnElement column)
-    {
-        return ((column == null) ? true : tableNames.contains(
-            column.getDeclaringTable().getName().getName()));
+    private boolean matchesTable(List<String> tableNames, ColumnElement column) {
+        return column == null ? true : tableNames.contains(column.getDeclaringTable().getName().getName());
     }
 
-    private boolean isRelationship (Object field)
-    {
-        return ((field instanceof RelationshipElement) ||
-            (field instanceof MappingRelationshipElement));
+
+    private boolean isRelationship(Object field) {
+        return field instanceof RelationshipElement || field instanceof MappingRelationshipElement;
     }
 
-    private boolean shouldBeRelationship (PersistenceFieldElement field)
-    {
+
+    private boolean shouldBeRelationship(PersistenceFieldElement field) {
         Model model = getModel();
         String fieldType = model.getFieldType(getClassName(), field.getName());
 
-        return (isPersistent(fieldType) || model.isCollection(fieldType));
+        return isPersistent(fieldType) || model.isCollection(fieldType);
     }
 
-    private boolean isLegalRelationship (PersistenceFieldElement field)
-    {
-        return (isRelationship(field) ? shouldBeRelationship(field) : false);
+
+    private boolean isLegalRelationship(PersistenceFieldElement field) {
+        return isRelationship(field) ? shouldBeRelationship(field) : false;
     }
 
-    private boolean isCollection (String className, String fieldName)
-    {
+
+    private boolean isCollection(String className, String fieldName) {
         Model model = getModel();
 
         return model.isCollection(model.getFieldType(className, fieldName));
     }
 
-    private String getRelatedClass (PersistenceFieldElement field)
-    {
+
+    private String getRelatedClass(PersistenceFieldElement field) {
         if (isLegalRelationship(field)) {
-            return getModel().getRelatedClass((RelationshipElement)field);
+            return getModel().getRelatedClass((RelationshipElement) field);
         }
 
         return null;
     }
 
-    private String getSchemaForClass (String className)
-    {
+
+    private String getSchemaForClass(String className) {
         MappingClassElement mappingClass = getMappingClass(className);
-        String schema = ((mappingClass != null) ?
-            mappingClass.getDatabaseRoot() : null);
+        String schema = ((mappingClass != null) ? mappingClass.getDatabaseRoot() : null);
 
         return (StringHelper.isEmpty(schema) ? null : schema.trim());
     }
 
-    private MappingRelationshipElement getMappingRelationship (
-        RelationshipElement jdoElement)
-    {
+
+    private MappingRelationshipElement getMappingRelationship(RelationshipElement jdoElement) {
         MappingRelationshipElement mappingElement = null;
 
-        if (jdoElement != null)
-        {
-            MappingClassElement mappingClass = getMappingClass(
-                jdoElement.getDeclaringClass().getName());
+        if (jdoElement != null) {
+            MappingClassElement mappingClass = getMappingClass(jdoElement.getDeclaringClass().getName());
 
-            if (mappingClass != null)
-            {
-                MappingFieldElement fieldElement =
-                    mappingClass.getField(jdoElement.getName());
+            if (mappingClass != null) {
+                MappingFieldElement fieldElement = mappingClass.getField(jdoElement.getName());
 
                 if (isRelationship(fieldElement)) {
-                    mappingElement = (MappingRelationshipElement)fieldElement;
+                    mappingElement = (MappingRelationshipElement) fieldElement;
                 }
             }
         }
@@ -2749,8 +2399,7 @@ public class ModelValidator {
     private ColumnPairElement getPair(String pairName, String databaseRoot) {
         String absoluteName = NameUtil.getAbsoluteMemberName(databaseRoot, pairName);
         TableElement tableElement = TableElement.forName(NameUtil.getTableName(absoluteName));
-        DBMemberElement pair = ((tableElement == null) ? null
-            : tableElement.getMember(DBIdentifier.create(absoluteName)));
+        DBMemberElement pair = tableElement == null ? null : tableElement.getMember(DBIdentifier.create(absoluteName));
 
         return pair instanceof ColumnPairElement ? (ColumnPairElement) pair : null;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * ParameterSupport.java
- *
- * Created on December 07, 2001
  */
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
@@ -36,7 +31,7 @@ import org.glassfish.persistence.common.I18NHelper;
 public class ParameterSupport
 {
     /** The types of the parameters of the finder/selector method. */
-    private Class[] parameterTypes;
+    private Class<?>[] parameterTypes;
 
     /**
      * The EJB names corresponding to types of parameters of the
@@ -66,7 +61,7 @@ public class ParameterSupport
      * starting with 1.
      * @return class instance representing the parameter type.
      */
-    public Class getParameterType(String ejbqlParamDecl)
+    public Class<?> getParameterType(String ejbqlParamDecl)
     {
         return getParameterType(getParamNumber(ejbqlParamDecl));
     }
@@ -77,7 +72,7 @@ public class ParameterSupport
      * so the method expects 1 as the number of the first parameter.
      * @return class instance representing the parameter type.
      */
-    public Class getParameterType(int paramNumber)
+    public Class<?> getParameterType(int paramNumber)
     {
         // InputParams are numbered starting at 1, so adjust for
         // array indexing.

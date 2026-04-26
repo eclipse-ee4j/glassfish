@@ -31,6 +31,7 @@ import com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingFieldElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingRelationshipElementImpl;
 import com.sun.jdo.api.persistence.model.mapping.impl.MappingTableElementImpl;
+import com.sun.jdo.api.persistence.model.util.ModelValidationException;
 import com.sun.jdo.api.persistence.support.JDOException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
@@ -103,11 +104,11 @@ public class ClassDesc
     /** Contains the fields used for version consistency validation. */
     private LocalFieldDesc[] versionFields;
 
-    private ArrayList tables;
+    private ArrayList<TableDesc> tables;
 
-    private Class pcClass;
+    private Class<?> pcClass;
 
-    private Class oidClass;
+    private Class<?> oidClass;
 
     public int maxFields;
 
@@ -127,7 +128,7 @@ public class ClassDesc
 
     private ClassLoader classLoader;
 
-    private Constructor constructor;
+    private Constructor<?> constructor;
 
     private PersistenceClassElement pcElement;
 
@@ -141,21 +142,21 @@ public class ClassDesc
     private static final Logger LOG = System.getLogger(ClassDesc.class.getName(), RESOURCE_BUNDLE);
 
     /** RetrieveDescriptor cache for navigation and reloading. */
-    private final Map retrieveDescCache = new HashMap();
+    private final Map<String, RetrieveDescImpl> retrieveDescCache = new HashMap<>();
 
     /**
      * RetrieveDescriptor cache for navigation queries. This cache
      * holds foreign RetrieveDescriptors constrained by the relationship
      * key values.
      */
-    private final Map foreignRetrieveDescCache = new HashMap();
+    private final Map<String, RetrieveDescImpl> foreignRetrieveDescCache = new HashMap<>();
 
     /** Retrieve descriptor for version consistency verification. */
     private RetrieveDesc retrieveDescForVerification;
     private Object retrieveDescForVerificationSynchObj = new Object();
 
     /** UpdateQueryPlan cache. */
-    private final Map updateQueryPlanCache = new HashMap();
+    private final Map<String, UpdateQueryPlan> updateQueryPlanCache = new HashMap<>();
 
     /** UpdateQueryPlan for insert. */
     private UpdateQueryPlan updateQueryPlanForInsert;
@@ -171,9 +172,9 @@ public class ClassDesc
             ClassDesc.class.getClassLoader());
 
     /** PC Constructor signature. */
-    private static final Class[] sigSM = new Class[]{StateManager.class};
+    private static final Class<?>[] sigSM = new Class[]{StateManager.class};
 
-    public ClassDesc(MappingClassElement mdConfig, Class pcClass) {
+    public ClassDesc(MappingClassElement mdConfig, Class<?> pcClass) {
 
         this.mdConfig = (MappingClassElementImpl) mdConfig;
         pcElement = this.mdConfig.getPersistenceElement();
@@ -189,10 +190,10 @@ public class ClassDesc
                     pcClass.getName()), e);
         }
 
-        fields = new ArrayList();
-        foreignFields = new ArrayList();
-        tables = new ArrayList();
-        fetchGroups = new ArrayList();
+        fields = new ArrayList<>();
+        foreignFields = new ArrayList<>();
+        tables = new ArrayList<>();
+        fetchGroups = new ArrayList<>();
     }
 
     @Override
@@ -206,7 +207,7 @@ public class ClassDesc
      * @param pcClass The persistence capable class.
      * @return A new instance of ClassDesc.
      */
-    static ClassDesc newInstance(Class pcClass) {
+    static ClassDesc newInstance(Class<?> pcClass) {
         Model model = Model.RUNTIME;
         String className = pcClass.getName();
         ClassLoader classLoader = pcClass.getClassLoader();
@@ -249,14 +250,14 @@ public class ClassDesc
     static private void validateModel(Model model,
                                       String className,
                                       ClassLoader classLoader) {
-        Collection c = null;
+        Collection<ModelValidationException> c = null;
 
         if (!(c = model.validate(className, classLoader, null)).isEmpty()) {
-            Iterator iter = c.iterator();
+            Iterator<ModelValidationException> iter = c.iterator();
             StringBuffer validationMsgs = new StringBuffer();
 
             while (iter.hasNext()) {
-                Exception ex = (Exception) iter.next();
+                Exception ex = iter.next();
                 String validationMsg = ex.getLocalizedMessage();
 
                 LOG.log(DEBUG, () -> I18NHelper.getMessage(messages,
@@ -334,7 +335,7 @@ public class ClassDesc
      * the value for maxVisibleFields.
      */
     private void initializeFields() {
-        ArrayList concurrencyGroups = new ArrayList();
+        ArrayList<ConcurrencyGroupElement> concurrencyGroups = new ArrayList<>();
         persistentFields = pcElement.getFields();
 
         for (int i = 0; i < persistentFields.length; i++) {
@@ -603,7 +604,7 @@ public class ClassDesc
 
         for (int i = 0; i < tables.size(); i++) {
             MappingTableElementImpl mdt = (MappingTableElementImpl) mdTables.get(i);
-            TableDesc t = (TableDesc) tables.get(i);
+            TableDesc t = tables.get(i);
             List<MappingReferenceKeyElement> secondaryKeys = mdt.getReferencingKeys();
 
             for (int j = 0; j < secondaryKeys.size(); j++) {
@@ -614,10 +615,10 @@ public class ClassDesc
     }
 
     private void initializeJoinTables() {
-        Iterator iter = foreignFields.iterator();
+        Iterator<ForeignFieldDesc> iter = foreignFields.iterator();
 
         while (iter.hasNext()) {
-            ForeignFieldDesc ff = (ForeignFieldDesc) iter.next();
+            ForeignFieldDesc ff = iter.next();
 
             if (ff.useJoinTable()) {
                 TableElement joinTable = ff.assocLocalColumns.get(0).getDeclaringTable();
@@ -782,11 +783,11 @@ public class ClassDesc
      */
     private void initializeVersionFields() {
         int size = mdConfig.getVersionFields().size();
-        Iterator versionFieldIterator = mdConfig.getVersionFields().iterator();
+        Iterator<MappingFieldElement> versionFieldIterator = mdConfig.getVersionFields().iterator();
         versionFields = new LocalFieldDesc[size];
 
         for (int i = 0; i < size; i++) {
-            MappingFieldElement mdField = (MappingFieldElement) versionFieldIterator.next();
+            MappingFieldElement mdField = versionFieldIterator.next();
             LocalFieldDesc f = (LocalFieldDesc) getField(mdField.getName());
 
             if (f != null) {
@@ -816,10 +817,10 @@ public class ClassDesc
     private void registerVersionFieldWithTable(LocalFieldDesc versionField) {
         // Version field must be mapped to exactly one column.
         ColumnElement ce =  versionField.getColumnElements().next();
-        Iterator iter = tables.iterator();
+        Iterator<TableDesc> iter = tables.iterator();
 
         while (iter.hasNext()) {
-            TableDesc table = (TableDesc) iter.next();
+            TableDesc table = iter.next();
 
             if (!table.isJoinTable()) {
                 if (ce.getDeclaringTable() == table.getTableElement()) {
@@ -916,7 +917,7 @@ public class ClassDesc
 
         for (int i = 0; i < foreignFields.size(); i++) {
             ForeignFieldDesc ff = foreignFields.get(i);
-            Class classType = null;
+            Class<?> classType = null;
 
             if ((classType = ff.getComponentType()) == null) {
                 classType = ff.getType();
@@ -1021,7 +1022,7 @@ public class ClassDesc
 
     public TableDesc findTableDesc(TableElement mdTable) {
         for (int i = 0; i < tables.size(); i++) {
-            TableDesc t = (TableDesc) tables.get(i);
+            TableDesc t = tables.get(i);
 
             if (t.getTableElement().equals(mdTable)) {
                 return t;
@@ -1076,17 +1077,17 @@ public class ClassDesc
     }
 
     @Override
-    public Constructor getConstructor() {
+    public Constructor<?> getConstructor() {
         return constructor;
     }
 
     @Override
-    public Class getPersistenceCapableClass() {
+    public Class<?> getPersistenceCapableClass() {
         return pcClass;
     }
 
     @Override
-    public Class getOidClass() {
+    public Class<?> getOidClass() {
         return oidClass;
     }
 
@@ -1094,12 +1095,12 @@ public class ClassDesc
         return pcClass.getName();
     }
 
-    public Iterator getTables() {
+    public Iterator<TableDesc> getTables() {
         return tables.iterator();
     }
 
     public TableDesc getPrimaryTable() {
-        return (TableDesc) tables.get(0);
+        return tables.get(0);
     }
 
     public boolean isNavigable() {
@@ -1254,7 +1255,7 @@ public class ClassDesc
 
         synchronized (retrieveDescCache) {
             // Cache lookup.
-            rd = (RetrieveDescImpl) retrieveDescCache.get(cacheKey);
+            rd = retrieveDescCache.get(cacheKey);
             // Generate a new RD if there isn't one be found in the cache.
             if (rd == null) {
                 rd = (RetrieveDescImpl) store.getRetrieveDesc(pcClass);
@@ -1264,8 +1265,8 @@ public class ClassDesc
                     // If the additionalField is not null, we will retrieve
                     // the field indicated by it along with the query.
                     if (additionalField instanceof ForeignFieldDesc) {
-                        Class additionalClass = ((ForeignFieldDesc) additionalField).
-                                foreignConfig.getPersistenceCapableClass();
+                        Class<?> additionalClass = ((ForeignFieldDesc) additionalField).foreignConfig
+                            .getPersistenceCapableClass();
 
                         frd = store.getRetrieveDesc(additionalClass);
                     }
@@ -1315,7 +1316,7 @@ public class ClassDesc
 
         synchronized (foreignRetrieveDescCache) {
             // Cache lookup.
-            rd = (RetrieveDescImpl) foreignRetrieveDescCache.get(cacheKey);
+            rd = foreignRetrieveDescCache.get(cacheKey);
             // Generate a new RD if there isn't one be found in the cache.
             if (rd == null) {
                 rd = (RetrieveDescImpl) store.getRetrieveDesc(foreignField.foreignConfig.getPersistenceCapableClass());
@@ -1481,7 +1482,7 @@ public class ClassDesc
         String key = getSortedFieldNumbers(desc.getUpdatedFields());
         UpdateQueryPlan plan;
         synchronized(updateQueryPlanCache) {
-            plan = (UpdateQueryPlan)updateQueryPlanCache.get(key);
+            plan = updateQueryPlanCache.get(key);
             if (plan == null) {
                 plan = buildQueryPlan(store, desc);
                 updateQueryPlanCache.put(key, plan);
@@ -1523,13 +1524,13 @@ public class ClassDesc
      * @param fields the list of FieldDescs
      * @return the sorted field number string
      */
-    private String getSortedFieldNumbers(List fields)
+    private String getSortedFieldNumbers(List<FieldDesc> fields)
     {
         // Use the array of field numbers of the updated fields as the key
         int size = fields.size();
         int [] fieldNos = new int[size];
         for (int i = 0; i < size; i++) {
-            FieldDesc f = (FieldDesc)fields.get(i);
+            FieldDesc f = fields.get(i);
             fieldNos[i] = f.absoluteID;
         }
         Arrays.sort(fieldNos);

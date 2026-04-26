@@ -383,7 +383,7 @@ public class JQLC
     /**
      *
      */
-    public void checkCandidates(Class candidateClass, Collection candidateCollection)
+    public void checkCandidates(Class<?> candidateClass, Collection<?> candidateCollection)
     {
         if (candidateClass == null) {
             throw new JDOQueryException(
@@ -394,7 +394,7 @@ public class JQLC
                 I18NHelper.getMessage(messages, "jqlc.jqlc.checkcandidates.memorycollection"));
         }
 
-        Class candidatePCClass = ((ExtentCollection)candidateCollection).getPersistenceCapableClass();
+        Class<?> candidatePCClass = ((ExtentCollection)candidateCollection).getPersistenceCapableClass();
         if (candidatePCClass == null) {
             throw new JDOFatalInternalException(
                 I18NHelper.getMessage(messages, "jqlc.jqlc.checkcandidates.nullpc"));

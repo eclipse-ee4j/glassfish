@@ -38,14 +38,14 @@ public class Constraint extends Object {
      * The stack that contains all constraints beside join constraints.
      * Join constraints are handled by a separate stack.
      */
-    public List stack;
+    public List<ConstraintNode> stack;
 
     /**
      * The stack that contains outer join constraints. All the elements of this stack
      * are instance of {@link ConstraintJoin}. Outer join constraints can be appended
      * to the query w/o changing the semantic.
      */
-    private List outerJoinStack;
+    private List<ConstraintNode>outerJoinStack;
 
     /**
      * The stack that contains order by constraints. We would like to
@@ -239,7 +239,7 @@ public class Constraint extends Object {
         boolean rc = true;
         // Abort the loop at first possible opportunity.
         for (int i = stack.size() - 1; i >= 0 && rc; ) {
-            ConstraintNode node = (ConstraintNode) stack.get(i);
+            ConstraintNode node = stack.get(i);
 
             if ((node instanceof ConstraintOperation)
                     && ((((ConstraintOperation) node).operation == ActionDesc.OP_ORDERBY) ||
@@ -270,7 +270,7 @@ public class Constraint extends Object {
       * Gets the where clause constraints for this Constraint
       * @return The where clause constraints for this Constraint
       */
-     public List getConstraints() {
+     public List<ConstraintNode> getConstraints() {
          return stack;
      }
 
@@ -278,13 +278,13 @@ public class Constraint extends Object {
       * Gets the outer join constraints for this Constraint
       * @return The outer join constraints for this Constraint
       */
-     public List getOuterJoinConstraints() {
+     public List<ConstraintNode> getOuterJoinConstraints() {
          return outerJoinStack;
      }
 
     public Constraint() {
-        stack = new ArrayList();
-        outerJoinStack = new ArrayList();
+        stack = new ArrayList<>();
+        outerJoinStack = new ArrayList<>();
     }
 
 }

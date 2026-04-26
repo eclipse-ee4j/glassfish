@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,11 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/**
- * DumpMapping.java
- *
  */
 
 package com.sun.jdo.api.persistence.model.util;
@@ -37,17 +33,16 @@ import com.sun.jdo.api.persistence.model.mapping.impl.MappingTableElementImpl;
 import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.ColumnPairElement;
 
-public class DumpMapping
-{
+public class DumpMapping {
+
     private static Model model;
 
-    static
-    {
+    static {
         // initialize the model reference
         setModel(Model.RUNTIME);
     }
@@ -55,17 +50,13 @@ public class DumpMapping
     /** Print out the cache of MappingClassElements to the specified PrintStream.
      * @param stream PrintStream used to dump the info
      */
-    public static void dumpMappingCache (PrintStream stream)
-    {
+    public static void dumpMappingCache(PrintStream stream) {
         stream.println("Mapping cache (class names -> MappingClassElements)");
-        for (Iterator i = model.getMappingCache().entrySet().iterator();
-             i.hasNext();)
-        {
-            Map.Entry entry = (Map.Entry)i.next();
-            String className = (String)entry.getKey();
-            MappingClassElement mce =  (MappingClassElement)entry.getValue();
-            String mceRepr = mce.getClass() + "@" +
-                Integer.toHexString(System.identityHashCode(mce));
+        for (Iterator<Entry<String, MappingClassElement>> i = model.getMappingCache().entrySet().iterator(); i.hasNext();) {
+            Entry<String, MappingClassElement> entry = i.next();
+            String className = entry.getKey();
+            MappingClassElement mce = entry.getValue();
+            String mceRepr = mce.getClass() + "@" + Integer.toHexString(System.identityHashCode(mce));
             stream.println("\t" + className + " ->\t" + mceRepr);
         }
     }
@@ -73,15 +64,11 @@ public class DumpMapping
     /** Print out the cache of classLoaders to the specified PrintStream.
      * @param stream PrintStream used to dump the info
      */
-    public static void dumpClassLoaderCache (PrintStream stream)
-    {
+    public static void dumpClassLoaderCache(PrintStream stream) {
         stream.println("ClassLoader cache (class names -> ClassLoaders)");
-        for (Iterator i = model.getClassLoaderCache().entrySet().iterator();
-             i.hasNext();)
-        {
-            Map.Entry entry = (Map.Entry)i.next();
-            String className = (String)entry.getKey();
-            ClassLoader classLoader = (ClassLoader)entry.getValue();
+        for (Entry<String, ClassLoader> entry : model.getClassLoaderCache().entrySet()) {
+            String className = entry.getKey();
+            ClassLoader classLoader = entry.getValue();
             stream.println("\t" + className + " ->\t" + classLoader);
         }
     }

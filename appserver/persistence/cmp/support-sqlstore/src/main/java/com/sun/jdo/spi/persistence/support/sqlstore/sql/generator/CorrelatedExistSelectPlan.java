@@ -70,10 +70,10 @@ public class CorrelatedExistSelectPlan extends CorrelatedSelectPlan {
             foreignFields = parentField.foreignFields;
         }
 
-        ArrayList localFields = parentField.localFields;
+        ArrayList<LocalFieldDesc> localFields = parentField.localFields;
         // Add the constraint linking the parent query with the subquery.
         for (int i = 0; i < localFields.size(); i++) {
-            LocalFieldDesc la = (LocalFieldDesc) localFields.get(i);
+            LocalFieldDesc la = localFields.get(i);
             LocalFieldDesc fa = foreignFields.get(i);
 
             ConstraintFieldDesc lcfd = new ConstraintFieldDesc(la, parentPlan);

@@ -41,6 +41,7 @@ import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.lang.System.Logger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -49,7 +50,7 @@ import org.glassfish.persistence.common.I18NHelper;
 
 import static java.lang.System.Logger.Level.DEBUG;
 
-/*
+/**
  * This is an abstract class which is a generic implementation of the
  * JDOEJB11Helper interface for conversion of persistence-capable instances
  * to and from EJB objects of type: EJBObject, PrimaryKey, and Collections of those.
@@ -145,12 +146,12 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return Collection of EJBObjects.
      */
     @Override
-    public Collection convertCollectionPCToEJBObject (Collection pcs, PersistenceManager pm) {
-        Collection rc = new java.util.ArrayList();
+    public Collection<Object> convertCollectionPCToEJBObject (Collection<?> pcs, PersistenceManager pm) {
+        Collection<Object> rc = new ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBObject(it.next(), pm);
+        for (Object pc : pcs) {
+            o = convertPCToEJBObject(pc, pm);
             LOG.log(DEBUG, "convertCollectionPCToEJBObject() adding: {0}", o);
             rc.add(o);
         }
@@ -165,12 +166,12 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return Set of EJBObjects.
      */
     @Override
-    public Set convertCollectionPCToEJBObjectSet (Collection pcs, PersistenceManager pm) {
-        java.util.Set rc = new java.util.HashSet();
+    public Set<Object> convertCollectionPCToEJBObjectSet (Collection<?> pcs, PersistenceManager pm) {
+        java.util.Set<Object> rc = new java.util.HashSet<>();
 
         Object o = null;
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBObject(it.next(), pm);
+        for (Object pc : pcs) {
+            o = convertPCToEJBObject(pc, pm);
             LOG.log(DEBUG, "convertCollectionPCToEJBObjectSet() adding: {0}", o);
             rc.add(o);
         }
@@ -188,13 +189,13 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * not exist in the database or is deleted.
      */
     @Override
-    public Collection convertCollectionEJBObjectToPC (Collection coll, PersistenceManager pm,
-                                                      boolean validate) {
-        Collection rc = new java.util.ArrayList();
+    public Collection<Object> convertCollectionEJBObjectToPC(Collection<?> coll, PersistenceManager pm,
+        boolean validate) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = coll.iterator(); it.hasNext();) {
-            o = convertEJBObjectToPC((EJBObject)it.next(), pm, validate);
+        for (Object element : coll) {
+            o = convertEJBObjectToPC((EJBObject)element, pm, validate);
             LOG.log(DEBUG, "convertCollectionEJBObjectToPC() adding: {0}", o);
             rc.add(o);
         }
@@ -226,12 +227,12 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return Collection of the PrimaryKey Class instances.
      */
     @Override
-    public Collection convertCollectionPCToPrimaryKey (Collection pcs, PersistenceManager pm) {
-        Collection rc = new java.util.ArrayList();
+    public Collection<Object> convertCollectionPCToPrimaryKey (Collection<?> pcs, PersistenceManager pm) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToPrimaryKey(it.next(), pm);
+        for (Object pc : pcs) {
+            o = convertPCToPrimaryKey(pc, pm);
             LOG.log(DEBUG, "convertCollectionPCToPrimaryKey() adding: {0}", o);
             rc.add(o);
         }
@@ -263,12 +264,12 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return Collection of of the PrimaryKey Class instances.
      */
     @Override
-    public Collection convertCollectionObjectIdToPrimaryKey (Collection oids) {
-        Collection rc = new java.util.ArrayList();
+    public Collection<Object> convertCollectionObjectIdToPrimaryKey (Collection<?> oids) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = oids.iterator(); it.hasNext();) {
-            o = convertObjectIdToPrimaryKey(it.next());
+        for (Object oid : oids) {
+            o = convertObjectIdToPrimaryKey(oid);
             LOG.log(DEBUG, "convertCollectionObjectIdToPrimaryKey() adding: {0}", o);
             rc.add(o);
         }
@@ -282,12 +283,12 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return Collection of the Object Id's.
      */
     @Override
-    public Collection convertCollectionPrimaryKeyToObjectId (Collection keys) {
-        Collection rc = new java.util.ArrayList();
+    public Collection<Object> convertCollectionPrimaryKeyToObjectId (Collection<?> keys) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = keys.iterator(); it.hasNext();) {
-            o = convertPrimaryKeyToObjectId(it.next());
+        for (Object key : keys) {
+            o = convertPrimaryKeyToObjectId(key);
             LOG.log(DEBUG, "convertCollectionPrimaryKeyToObjectId() adding: {0}", o);
             rc.add(o);
         }
@@ -380,7 +381,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return the pc class object
      */
     @Override
-    abstract public Class getPCClass ();
+    abstract public Class<?> getPCClass ();
 
     /**
      * Validates that this instance is of the correct implementation class
@@ -482,7 +483,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
 
          /** Overrides the same method of the base class */
          @Override
-        protected Class resolveClass(ObjectStreamClass v)
+        protected Class<?> resolveClass(ObjectStreamClass v)
               throws IOException, ClassNotFoundException {
               return Class.forName(v.getName(), true, classLoader);
          }

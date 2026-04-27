@@ -190,7 +190,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The primitive type long has the highest precedence and the type
      * Float has the lowest.
      */
-    private static final Class[] nonNullableNonScaledTypes =
+    private static final Class<?>[] nonNullableNonScaledTypes =
             {
                 Long.TYPE, Integer.TYPE, Short.TYPE, Byte.TYPE, Double.TYPE,
                 Float.TYPE, BigInteger.class, BigDecimal.class, Long.class,
@@ -203,7 +203,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The type BigDecimal has the highest precedence and the primitive
      * type float has the lowest.
      */
-    private static final Class[] nullableNonScaledTypes =
+    private static final Class<?>[] nullableNonScaledTypes =
             {
                 BigInteger.class, BigDecimal.class, Long.class, Integer.class, Short.class,
                 Byte.class, Double.class, Float.class, Long.TYPE, Integer.TYPE,
@@ -216,7 +216,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The primitive type double has the highest precedence and the primitive
      * type byte has the lowest.
      */
-    private static final Class[] nonNullableScaledTypes =
+    private static final Class<?>[] nonNullableScaledTypes =
             {
                 Double.TYPE, Float.TYPE, Long.TYPE, Integer.TYPE, Short.TYPE,
                 Byte.TYPE,  BigDecimal.class, Double.class, BigInteger.class,
@@ -229,7 +229,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The primitive type BigDecimal has the highest precedence and the primitive
      * type float has the lowest.
      */
-    private static final Class[] nullableScaledTypes =
+    private static final Class<?>[] nullableScaledTypes =
             {
                 BigDecimal.class, Double.class, Float.class, BigInteger.class,
                 Long.class, Integer.class, Short.class, Byte.class, Double.TYPE,
@@ -246,7 +246,7 @@ public class LocalFieldDesc extends FieldDesc {
      * @see #nullableScaledTypes
      * @return an integer value indicating the precedence
      */
-    private static int lookupTypePrecedence(Class type, Class typePrecedence[]) {
+    private static int lookupTypePrecedence(Class<?> type, Class<?> typePrecedence[]) {
         for (int i = 0; i < typePrecedence.length; i++) {
             if (type == typePrecedence[i]) {
                 return i;
@@ -264,7 +264,7 @@ public class LocalFieldDesc extends FieldDesc {
     private int computeTypePrecedence() {
         ColumnElement c = columnDescs.get(0);
         int sqlType = c.getType();
-        Class type = getType();
+        Class<?> type = getType();
         boolean isNullable = c.isNullable();
         int precedence = Integer.MAX_VALUE;
 

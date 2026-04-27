@@ -88,7 +88,7 @@ public class SelectQueryPlan extends QueryPlan {
     public int options;
 
     /** Iterator for the retrieve descriptor's list of fields to be retrieved. */
-    private Iterator fieldIterator;
+    private Iterator<ConstraintFieldName> fieldIterator;
 
     /**
      * Aggregate result type from the retrieve descriptor as defined by
@@ -100,7 +100,7 @@ public class SelectQueryPlan extends QueryPlan {
      * List of SelectQueryPlan. After this plan is completely built, this field
      * contains all the foreign plans that could not be joined with this plan.
      */
-    private ArrayList foreignPlans;
+    private ArrayList<SelectQueryPlan> foreignPlans;
 
     /**
      * This foreign field joins this plan to the parent plan. The field is from
@@ -125,7 +125,7 @@ public class SelectQueryPlan extends QueryPlan {
     /** BitSet containing the fields to be retrieved for this plan */
     private BitSet fieldMask;
 
-    private Map foreignConstraintPlans;
+    private Map<Object, SelectQueryPlan> foreignConstraintPlans;
 
     private ResultDesc resultDesc;
 
@@ -306,8 +306,8 @@ public class SelectQueryPlan extends QueryPlan {
      * @param localFields List of fields to be selected.
      * @see RetrieveDescImpl
      */
-    private void processForeignFields(ArrayList foreignFields,
-                                      ArrayList localFields) {
+    private void processForeignFields(ArrayList<ConstraintFieldName> foreignFields,
+                                      ArrayList<FieldDesc> localFields) {
         if (foreignFields.size() == 0) {
             return;
         }
@@ -315,10 +315,10 @@ public class SelectQueryPlan extends QueryPlan {
         LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processforeignfield",
                       config.getPersistenceCapableClass().getName());
 
-        foreignPlans = new ArrayList();
+        foreignPlans = new ArrayList<>();
 
         for (int i = 0; i < foreignFields.size(); i++) {
-            processForeignField((ConstraintFieldName) foreignFields.get(i), localFields);
+            processForeignField(foreignFields.get(i), localFields);
         }
 
         LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processforeignfield.exit");
@@ -334,7 +334,7 @@ public class SelectQueryPlan extends QueryPlan {
      * @param localFields
      */
     private void processForeignField(ConstraintFieldName cfn,
-                                     ArrayList localFields) {
+                                     ArrayList<FieldDesc> localFields) {
 
         SelectQueryPlan fp = new SelectQueryPlan(cfn.desc, store, concurrency);
 
@@ -405,8 +405,8 @@ public class SelectQueryPlan extends QueryPlan {
      * @param foreignFields List of foreign fields connecting to foreign plans.
      */
     private void addFetchGroup(int groupID,
-                               ArrayList localFields,
-                               ArrayList foreignFields) {
+                               ArrayList<FieldDesc> localFields,
+                               ArrayList<ConstraintFieldName> foreignFields) {
         // We should enter this method only if OPT_ADD_FETCHGROUPS is set.
         assert (options & RetrieveDescImpl.OPT_ADD_FETCHGROUPS) > 0;
 
@@ -463,8 +463,8 @@ public class SelectQueryPlan extends QueryPlan {
      * @param foreignFields List of foreign fields.
      */
     private void addFetchGroups(int groupID,
-                                ArrayList localFields,
-                                ArrayList foreignFields) {
+                                ArrayList<FieldDesc> localFields,
+                                ArrayList<ConstraintFieldName> foreignFields) {
 
         if (groupID >= FieldDesc.GROUP_DEFAULT) {
             //Hierachical fetch group
@@ -499,7 +499,7 @@ public class SelectQueryPlan extends QueryPlan {
      * @param foreignFields List of foreign fields.
      * @see RetrieveDescImpl#setFetchGroupOptions(int)
      */
-     private void processFetchGroups(ArrayList localFields, ArrayList foreignFields) {
+     private void processFetchGroups(ArrayList<FieldDesc> localFields, ArrayList<ConstraintFieldName> foreignFields) {
 
         if ((options & RetrieveDescImpl.OPT_ADD_FETCHGROUPS) > 0) {
             int requestedItems = localFields.size() + foreignFields.size();
@@ -511,7 +511,7 @@ public class SelectQueryPlan extends QueryPlan {
 
             if (requestedItems > 0) {
                 for (int i = 0; i < localFields.size(); i++) {
-                    FieldDesc f = (FieldDesc) localFields.get(i);
+                    FieldDesc f = localFields.get(i);
 
                     setFieldMask(f.absoluteID);
 
@@ -523,7 +523,7 @@ public class SelectQueryPlan extends QueryPlan {
                 }
 
                 for (int i = 0; i < foreignFields.size(); i++) {
-                    ConstraintFieldName cfn = (ConstraintFieldName) foreignFields.get(i);
+                    ConstraintFieldName cfn = foreignFields.get(i);
                     FieldDesc f = config.getField(cfn.name);
 
                     setFieldMask(f.absoluteID);
@@ -544,7 +544,7 @@ public class SelectQueryPlan extends QueryPlan {
      * @param localFields List of local fields to be selected.
      * @param projectionField The projected field.
      */
-    private void processLocalFields(ArrayList localFields, LocalFieldDesc projectionField) {
+    private void processLocalFields(ArrayList<FieldDesc> localFields, LocalFieldDesc projectionField) {
         LOG.log(TRACE, "sqlstore.sql.generator.selectqueryplan.processlocalfield",
             config.getPersistenceCapableClass().getName());
 
@@ -633,10 +633,10 @@ public class SelectQueryPlan extends QueryPlan {
      * @see ConstraintFieldName#originalPlan
      */
     private void processLocalConstraints() {
-        List stack = constraint.getConstraints();
+        List<ConstraintNode> stack = constraint.getConstraints();
 
         for (int i = 0; i < stack.size(); i++) {
-            ConstraintNode node = (ConstraintNode) stack.get(i);
+            ConstraintNode node = stack.get(i);
 
             if (node instanceof ConstraintFieldName) {
                 ConstraintFieldName fieldNode = (ConstraintFieldName) node;
@@ -702,20 +702,20 @@ public class SelectQueryPlan extends QueryPlan {
         }
 
         if (foreignConstraintPlans == null) {
-            foreignConstraintPlans = new HashMap();
+            foreignConstraintPlans = new HashMap<>();
         }
 
         SelectQueryPlan masterPlan = null;
 
         Object tag = (rd.getNavigationalId() != null) ? rd.getNavigationalId() : fieldName;
 
-        if ((masterPlan = (SelectQueryPlan) foreignConstraintPlans.get(tag)) != null) {
+        if ((masterPlan = foreignConstraintPlans.get(tag)) != null) {
             // Share the tables with the master plan.
             fcp.tables = masterPlan.tables;
             fcp.foreignConstraintPlans = masterPlan.foreignConstraintPlans;
         } else {
             foreignConstraintPlans.put(tag, fcp);
-            fcp.foreignConstraintPlans = new HashMap();
+            fcp.foreignConstraintPlans = new HashMap<>();
         }
 
         return fcp;
@@ -732,7 +732,7 @@ public class SelectQueryPlan extends QueryPlan {
      */
     private void addCorrelatedExistsQuery(ForeignFieldDesc ff, int operation) {
 
-        Class classType = (ff.cardinalityUPB > 1) ? ff.getComponentType() : ff.getType();
+        Class<?> classType = (ff.cardinalityUPB > 1) ? ff.getComponentType() : ff.getType();
         RetrieveDescImpl rd = (RetrieveDescImpl) store.getRetrieveDesc(classType);
 
         SelectQueryPlan subqueryPlan = new CorrelatedExistSelectPlan(rd, store, ff, this);
@@ -756,12 +756,12 @@ public class SelectQueryPlan extends QueryPlan {
      * @see RetrieveDescImpl
      */
     private void processForeignConstraints() {
-        List currentStack = constraint.getConstraints();
-        constraint.stack = new ArrayList();
+        List<ConstraintNode> currentStack = constraint.getConstraints();
+        constraint.stack = new ArrayList<>();
         int index = 0;
 
         while (index < currentStack.size()) {
-            ConstraintNode node = (ConstraintNode) currentStack.get(index);
+            ConstraintNode node = currentStack.get(index);
 
             if (node instanceof ConstraintForeignFieldName) {
                 processForeignFieldConstraint((ConstraintForeignFieldName) node);
@@ -864,7 +864,7 @@ public class SelectQueryPlan extends QueryPlan {
      * @param index Index in current stack.
      */
     private int processForeignFieldNullComparision(ConstraintFieldName node,
-                                                   List currentStack,
+                                                   List<ConstraintNode> currentStack,
                                                    int index) {
         boolean addCurrentNode = true;
         if (node.name != null) {
@@ -872,7 +872,7 @@ public class SelectQueryPlan extends QueryPlan {
             FieldDesc f = config.getField(node.name);
 
             if (f instanceof ForeignFieldDesc && (index + 1 < currentStack.size())) {
-                ConstraintNode nextNode = (ConstraintNode) currentStack.get(++index);
+                ConstraintNode nextNode = currentStack.get(++index);
                 if ((nextNode instanceof ConstraintOperation) &&
                         ((((ConstraintOperation) nextNode).operation == ActionDesc.OP_NULL) ||
                         (((ConstraintOperation) nextNode).operation == ActionDesc.OP_NOTNULL))) {
@@ -905,10 +905,10 @@ public class SelectQueryPlan extends QueryPlan {
 
         if (ff.hasForeignKey()) {
             // Optimize the query to compare the foreign key fields with null.
-            ArrayList localFields = ff.getLocalFields();
+            ArrayList<LocalFieldDesc> localFields = ff.getLocalFields();
 
             for (int j = 0; j < localFields.size(); j++) {
-                constraint.stack.add(new ConstraintFieldDesc((LocalFieldDesc) localFields.get(j)));
+                constraint.stack.add(new ConstraintFieldDesc(localFields.get(j)));
                 constraint.stack.add(nextNode);
             }
         } else {
@@ -956,10 +956,10 @@ public class SelectQueryPlan extends QueryPlan {
             subqueryConstraint.plan = subqueryPlan;
             constraint.stack.add(subqueryConstraint);
 
-            ArrayList localFields = ff.getLocalFields();
+            ArrayList<LocalFieldDesc> localFields = ff.getLocalFields();
             // Add the local fields corresponding to the subquery to the stack.
             for (int i = 0; i < localFields.size(); i++) {
-                constraint.addField((LocalFieldDesc) localFields.get(i), this);
+                constraint.addField(localFields.get(i), this);
             }
         } else {
             // We didn't get a ForeignFieldDesc from config,
@@ -981,11 +981,11 @@ public class SelectQueryPlan extends QueryPlan {
      * {@link RetrieveDesc#addConstraint(String, int, RetrieveDesc, String)}.
      */
     private void processUnboundConstraints() {
-        List currentStack = constraint.getConstraints();
-        constraint.stack = new ArrayList();
+        List<ConstraintNode> currentStack = constraint.getConstraints();
+        constraint.stack = new ArrayList<>();
 
         for (int i = 0; i < currentStack.size(); i++) {
-            ConstraintNode node = (ConstraintNode) currentStack.get(i);
+            ConstraintNode node = currentStack.get(i);
 
             if (node instanceof ConstraintFieldName) {
                 ConstraintFieldName fieldNode = (ConstraintFieldName) node;
@@ -1092,8 +1092,8 @@ public class SelectQueryPlan extends QueryPlan {
      * <em>Must be overwritten by subquery plans!</em>
      */
     protected void processFields() {
-        ArrayList foreignFields = new ArrayList();
-        ArrayList localFields = new ArrayList();
+        ArrayList<ConstraintFieldName> foreignFields = new ArrayList<>();
+        ArrayList<FieldDesc> localFields = new ArrayList<>();
 
         LocalFieldDesc projectionField = separateFieldList(localFields, foreignFields);
 
@@ -1117,13 +1117,13 @@ public class SelectQueryPlan extends QueryPlan {
      * @param foreignFields List of ConstraintFieldName.
      * @return LocalFieldDesc of the projected field.
      */
-    private LocalFieldDesc separateFieldList(ArrayList localFields,
-                                             ArrayList foreignFields) {
+    private LocalFieldDesc separateFieldList(ArrayList<FieldDesc> localFields,
+                                             ArrayList<ConstraintFieldName> foreignFields) {
 
         LocalFieldDesc projectionField = null;
 
         while (fieldIterator.hasNext()) {
-            ConstraintFieldName cfn = (ConstraintFieldName) fieldIterator.next();
+            ConstraintFieldName cfn = fieldIterator.next();
             FieldDesc f = config.getField(cfn.name);
 
             if (f == null) {
@@ -1333,8 +1333,8 @@ public class SelectQueryPlan extends QueryPlan {
             return;
         }
 
-        for (Iterator iter = foreignPlans.iterator(); iter.hasNext(); ) {
-            SelectQueryPlan fp = (SelectQueryPlan) iter.next();
+        for (Iterator<SelectQueryPlan> iter = foreignPlans.iterator(); iter.hasNext(); ) {
+            SelectQueryPlan fp = iter.next();
 
             if ((fp.status & ST_JOINED) == 0) {
                 // Recursively join foreign plans of the foreign plan.
@@ -1353,12 +1353,11 @@ public class SelectQueryPlan extends QueryPlan {
         }
 
         // Sanity check.
-        if (foreignPlans != null && foreignPlans.size() > 0) {
-
+        if (foreignPlans == null || foreignPlans.isEmpty()) {
+            foreignPlans = null;
+        } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                     "sqlstore.sql.generator.selectqueryplan.plansnotjoined"));
-        } else {
-            foreignPlans = null;
         }
     }
 
@@ -1438,7 +1437,7 @@ public class SelectQueryPlan extends QueryPlan {
             return;
         }
 
-        ArrayList orderByArray = new ArrayList();
+        ArrayList<List<ConstraintFieldDesc>> orderByArray = new ArrayList<>();
 
         int i, pos;
         int insertAt = 0;
@@ -1452,11 +1451,11 @@ public class SelectQueryPlan extends QueryPlan {
                 ConstraintNode opNode = constraint.stack.get(i);
 
                 if ((opNode instanceof ConstraintOperation)
-                        && ((((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY) ||
-                        (((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY_DESC))) {
+                    && ((((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY)
+                        || (((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY_DESC))) {
                     pos = -1;
                     if ((i > 1) && (constraint.stack.get(i - 2) instanceof ConstraintValue)) {
-                        pos = ((Integer) ((ConstraintValue) constraint.stack.get(i - 2)).getValue() ).intValue();
+                        pos = ((Integer) ((ConstraintValue) constraint.stack.get(i - 2)).getValue()).intValue();
                         constraint.stack.remove(i - 2);
                         i = i - 1;
                     }
@@ -1470,7 +1469,7 @@ public class SelectQueryPlan extends QueryPlan {
                     }
 
                     if (orderByArray.get(insertAt) == null) {
-                        orderByArray.set(insertAt, new ArrayList());
+                        orderByArray.set(insertAt, new ArrayList<>());
                     }
 
                     ConstraintNode fieldNode = constraint.stack.get(i - 1);
@@ -1483,25 +1482,19 @@ public class SelectQueryPlan extends QueryPlan {
                             originalPlan = ((ConstraintField) fieldNode).originalPlan;
                         }
 
-                        FieldDesc fieldDesc = originalPlan.config.
-                                getField(((ConstraintFieldName) fieldNode).name);
+                        FieldDesc fieldDesc = originalPlan.config.getField(((ConstraintFieldName) fieldNode).name);
 
                         if (!(fieldDesc instanceof LocalFieldDesc)) {
-                            throw new JDOUserException(I18NHelper.getMessage(messages,
-                                    "core.generic.notinstanceof",
-                                    fieldDesc.getClass().getName(),
-                                    "LocalFieldDesc"));
+                            throw new JDOUserException(I18NHelper.getMessage(messages, "core.generic.notinstanceof",
+                                fieldDesc.getClass().getName(), "LocalFieldDesc"));
                         }
 
-                        consFieldDesc = new ConstraintFieldDesc((LocalFieldDesc) fieldDesc,
-                                originalPlan, 1);
+                        consFieldDesc = new ConstraintFieldDesc((LocalFieldDesc) fieldDesc, originalPlan, 1);
                     } else if (fieldNode instanceof ConstraintFieldDesc) {
                         consFieldDesc = (ConstraintFieldDesc) fieldNode;
                     } else {
-                        throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "core.generic.notinstanceof",
-                                fieldNode.getClass().getName(),
-                                "ConstraintFieldName/ConstraintFieldDesc"));
+                        throw new JDOUserException(I18NHelper.getMessage(messages, "core.generic.notinstanceof",
+                            fieldNode.getClass().getName(), "ConstraintFieldName/ConstraintFieldDesc"));
                     }
 
                     if (((ConstraintOperation) opNode).operation == ActionDesc.OP_ORDERBY_DESC) {
@@ -1509,7 +1502,7 @@ public class SelectQueryPlan extends QueryPlan {
                     }
 
                     // Remember constraint in orderByArray.
-                    ArrayList temp = (ArrayList) (orderByArray.get(insertAt));
+                    List<ConstraintFieldDesc> temp = (orderByArray.get(insertAt));
                     temp.add(consFieldDesc);
 
                     constraint.stack.remove(i);
@@ -1521,14 +1514,14 @@ public class SelectQueryPlan extends QueryPlan {
         }
 
         for (int j = 0, size = orderByArray.size(); j < size; j++) {
-            ArrayList oa = (ArrayList) orderByArray.get(j);
+            List<ConstraintFieldDesc> oa = orderByArray.get(j);
 
             if (constraint == null) {
                 constraint = new Constraint();
             }
 
             for (int k = 0, sizeK = oa.size(); k < sizeK; k++) {
-                ConstraintFieldDesc ob = (ConstraintFieldDesc) oa.get(k);
+                ConstraintFieldDesc ob = oa.get(k);
 
                 if (ob.ordering < 0) {
                     constraint.addField(ob);

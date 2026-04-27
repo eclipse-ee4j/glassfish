@@ -45,12 +45,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.SchemaElement;
@@ -92,12 +90,12 @@ public abstract class Model {
     /** Map of mapping class elements which have been loaded.  Keys are fully
      * qualified class names.
      */
-    private final Map<String, MappingClassElement> _classes = new WeakValueHashMap();
+    private final WeakValueHashMap<String, MappingClassElement> _classes = new WeakValueHashMap<>();
 
     /** Set of fully qualified names of classes known to be
      * non persistence-capable.
      */
-    private final Set<String> _nonPCClasses = new WeakHashSet<>();
+    private final WeakHashSet<String> _nonPCClasses = new WeakHashSet<>();
 
     /** List of illegal package name prefixes for superclasses of
      * persistence capable classes.
@@ -385,14 +383,6 @@ public abstract class Model {
             return mappingClass;
         }
     }
-
-    /** Returns an unmodifiable copy of the MappingClassElement cache.
-     * @return unmodifiable MappingClassElement cache
-     */
-    public Map<String, MappingClassElement> getMappingCache() {
-        return Collections.unmodifiableMap(_classes);
-    }
-
 
     /**
      * Returns an unmodifiable copy of the ClassLoader cache.

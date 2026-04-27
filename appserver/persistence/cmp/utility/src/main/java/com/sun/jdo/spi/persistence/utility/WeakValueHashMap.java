@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,29 +30,34 @@ import java.util.Set;
 
 /**
  * A WeakValueHashMap is implemented as a HashMap that maps keys to
- * WeakValues.  Because we don't have access to the innards of the
+ * WeakValues. Because we don't have access to the innards of the
  * HashMap, we have to wrap/unwrap value objects with WeakValues on
- * every operation.  Fortunately WeakValues are small, short-lived
+ * every operation. Fortunately WeakValues are small, short-lived
  * objects, so the added allocation overhead is tolerable. This
  * implementaton directly extends java.util.HashMap.
  *
- * @author    Markus Fuchs
- * @see        java.util.HashMap
- * @see     java.lang.ref.WeakReference
+ * @author Markus Fuchs
+ * @see java.util.HashMap
+ * @see java.lang.ref.WeakReference
  */
+public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
 
-public class WeakValueHashMap extends HashMap {
+    private static final long serialVersionUID = 7836788274746992673L;
 
     /**
      *  Reference queue for cleared WeakValues.
      *  We do not expect instance of this class to be serialized. Marking a non serializable member as transient to make findbugs happy.
      */
-    private transient ReferenceQueue queue = new ReferenceQueue();
+    private transient ReferenceQueue<Object> queue = new ReferenceQueue<>();
+    /** stores the value collection */
+    private transient Collection<Object> values;
+
 
     /**
      * Returns the number of key-value mappings in this map.<p>
      * @return the number of key-value mappings in this map.
      */
+    @Override
     public int size() {
         // delegate to entrySet, as super.size() also counts WeakValues
         return entrySet().size();
@@ -61,6 +67,7 @@ public class WeakValueHashMap extends HashMap {
      * Returns <tt>true</tt> if this map contains no key-value mappings.<p>
      * @return <tt>true</tt> if this map contains no key-value mappings.
      */
+    @Override
     public boolean isEmpty() {
         return size() == 0;
     }
@@ -72,6 +79,7 @@ public class WeakValueHashMap extends HashMap {
      * @return <tt>true</tt> if this map contains a mapping for the specified
      * key.
      */
+    @Override
     public boolean containsKey(Object key) {
         // need to clean up gc'ed values before invoking super method
         processQueue();
@@ -84,6 +92,7 @@ public class WeakValueHashMap extends HashMap {
      * @param value value whose presence in this map is to be tested
      * @return <tt>true</tt> if this map maps one or more keys to this value.
      */
+    @Override
     public boolean containsValue(Object value) {
         return super.containsValue(WeakValue.create(value));
     }
@@ -93,12 +102,13 @@ public class WeakValueHashMap extends HashMap {
      * @param key key whose associated value, if any, is to be returned
      * @return the value to which this map maps the specified key.
      */
-    public Object get(Object key) {
+    @Override
+    public V get(Object key) {
         // We don't need to remove garbage collected values here;
         // if they are garbage collected, the get() method returns null;
         // the next put() call with the same key removes the old value
         // automatically so that it can be completely garbage collected
-        return getReferenceObject((WeakReference) super.get(key));
+        return getReferenceObject((WeakReference<V>) super.get(key));
     }
 
     /**
@@ -109,7 +119,8 @@ public class WeakValueHashMap extends HashMap {
      * if there was no mapping for key or the value has been garbage
      * collected by the garbage collector.
      */
-    public Object put(Object key, Object value) {
+    @Override
+    public Object put(K key, Object value) {
         // If the map already contains an equivalent key, the new key
         // of a (key, value) pair is NOT stored in the map but the new
         // value only. But as the key is strongly referenced by the
@@ -121,8 +132,7 @@ public class WeakValueHashMap extends HashMap {
         // clean up calls on different operations.
         processQueue();
 
-        WeakValue oldValue =
-            (WeakValue)super.put(key, WeakValue.create(key, value, queue));
+        WeakValue<K, V> oldValue = (WeakValue<K, V>) super.put(key, WeakValue.create(key, value, queue));
         return getReferenceObject(oldValue);
     }
 
@@ -133,15 +143,16 @@ public class WeakValueHashMap extends HashMap {
      * if there was no mapping for key or the value has been garbage
      * collected by the garbage collector.
      */
-    public Object remove(Object key) {
-        return getReferenceObject((WeakReference) super.remove(key));
+    @Override
+    public V remove(Object key) {
+        return getReferenceObject((WeakReference<V>) super.remove(key));
     }
 
     /**
      * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
-    private final Object getReferenceObject(WeakReference ref) {
+    private final V getReferenceObject(WeakReference<V> ref) {
         return (ref == null) ? null : ref.get();
     }
 
@@ -151,9 +162,9 @@ public class WeakValueHashMap extends HashMap {
      * costs, we should not call it every map operation.
      */
     private void processQueue() {
-        WeakValue wv = null;
+        WeakValue<K, V> wv = null;
 
-        while ((wv = (WeakValue) this.queue.poll()) != null) {
+        while ((wv = (WeakValue<K, V>) this.queue.poll()) != null) {
             // "super" is not really necessary but use it
             // to be on the safe side
             super.remove(wv.key);
@@ -167,38 +178,44 @@ public class WeakValueHashMap extends HashMap {
      * the value to the key, so that we are able to remove the key if
      * the value is garbage collected.
      */
-    private static class WeakValue extends WeakReference {
+    private static class WeakValue<K, V> extends WeakReference<V> {
+
         /**
          * It's the same as the key in the map. We need the key to remove
          * the value if it is garbage collected.
          */
-        private Object key;
+        private K key;
 
-        private WeakValue(Object value) {
+        private WeakValue(V value) {
             super(value);
         }
 
+
         /**
-         * Creates a new weak reference without adding it to a
-         * ReferenceQueue.
+         * Creates a new weak reference without adding it to a {@link ReferenceQueue}.
          */
-    private static WeakValue create(Object value) {
-        if (value == null) return null;
-        else return new WeakValue(value);
+        private static <K, V> WeakValue<K, V> create(V value) {
+            if (value == null) {
+                return null;
+            }
+            return new WeakValue<>(value);
         }
 
-        private WeakValue(Object key, Object value, ReferenceQueue queue) {
+
+        private WeakValue(K key, V value, ReferenceQueue<V> queue) {
             super(value, queue);
             this.key = key;
         }
 
+
         /**
          * Creates a new weak reference and adds it to the given queue.
          */
-        private static WeakValue create(Object key, Object value,
-                                        ReferenceQueue queue) {
-        if (value == null) return null;
-        else return new WeakValue(key, value, queue);
+        private static <K, V> WeakValue<K, V> create(K key, V value, ReferenceQueue<V> queue) {
+            if (value == null) {
+                return null;
+            }
+            return new WeakValue<>(key, value, queue);
         }
 
         /**
@@ -206,21 +223,26 @@ public class WeakValueHashMap extends HashMap {
          * to objects that are, in turn, equal according to their own
          * equals methods.
          */
+        @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
+            }
 
-            if (!(obj instanceof WeakValue))
+            if (!(obj instanceof WeakValue)) {
                 return false;
+            }
 
             Object ref1 = this.get();
-            Object ref2 = ((WeakValue) obj).get();
+            Object ref2 = ((WeakValue<?, ?>) obj).get();
 
-            if (ref1 == ref2)
+            if (ref1 == ref2) {
                 return true;
+            }
 
-            if ((ref1 == null) || (ref2 == null))
+            if ((ref1 == null) || (ref2 == null)) {
                 return false;
+            }
 
             return ref1.equals(ref2);
         }
@@ -228,6 +250,7 @@ public class WeakValueHashMap extends HashMap {
         /**
          *
          */
+        @Override
         public int hashCode() {
             Object ref = this.get();
 
@@ -239,25 +262,31 @@ public class WeakValueHashMap extends HashMap {
      * Internal class for entries. This class wraps/unwraps the
      * values of the Entry objects returned from the underlying map.
      */
-    private class Entry implements Map.Entry {
-        private Map.Entry ent;
-        private Object value;    /* Strong reference to value, so that the
-                   GC will leave it alone as long as this
-                   Entry exists */
+    private class Entry<K> implements Map.Entry<K, Object> {
+        private Map.Entry<K, Object> ent;
+        /**
+         * Strong reference to value, so that the
+         * GC will leave it alone as long as this
+         * Entry exists
+         */
+        private Object value;
 
-        Entry(Map.Entry ent, Object value) {
+        Entry(Map.Entry<K, Object> ent, Object value) {
             this.ent = ent;
             this.value = value;
         }
 
-        public Object getKey() {
+        @Override
+        public K getKey() {
             return ent.getKey();
         }
 
+        @Override
         public Object getValue() {
             return value;
         }
 
+        @Override
         public Object setValue(Object value) {
             // This call changes the map. Please see the comment on
             // the put method for the correctness remark.
@@ -271,17 +300,19 @@ public class WeakValueHashMap extends HashMap {
             return (o1 == null) ? (o2 == null) : o1.equals(o2);
         }
 
+        @Override
         public boolean equals(Object o) {
-            if (!(o instanceof Map.Entry)) return false;
-            Map.Entry e = (Map.Entry) o;
-            return (valEquals(ent.getKey(), e.getKey())
-                    && valEquals(value, e.getValue()));
+            if (!(o instanceof Map.Entry)) {
+                return false;
+            }
+            Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
+            return valEquals(ent.getKey(), e.getKey()) && valEquals(value, e.getValue());
         }
 
+        @Override
         public int hashCode() {
             Object k;
-            return ((((k = ent.getKey()) == null) ? 0 : k.hashCode())
-                    ^ ((value == null) ? 0 : value.hashCode()));
+            return ((((k = ent.getKey()) == null) ? 0 : k.hashCode()) ^ ((value == null) ? 0 : value.hashCode()));
         }
 
     }
@@ -290,37 +321,42 @@ public class WeakValueHashMap extends HashMap {
      * Internal class for entry sets to unwrap/wrap WeakValues stored
      * in the map.
      */
-    private class EntrySet extends AbstractSet {
+    private class EntrySet extends AbstractSet<Entry<K>> {
 
-        public Iterator iterator() {
+        @Override
+        public Iterator<Entry<K>> iterator() {
             // remove garbage collected elements
             processQueue();
 
-            return new Iterator() {
-                Iterator hashIterator = hashEntrySet.iterator();
-                Entry next = null;
+            return new Iterator<>() {
+                Iterator<Map.Entry<K, Object>> hashIterator = hashEntrySet.iterator();
+                Entry<K> next;
 
+                @Override
                 public boolean hasNext() {
                     if (hashIterator.hasNext()) {
                         // since we removed garbage collected elements,
                         // we can simply return the next entry.
-                        Map.Entry ent = (Map.Entry) hashIterator.next();
-                        WeakValue wv = (WeakValue) ent.getValue();
-                        Object v = (wv == null) ? null : wv.get();
-                        next = new Entry(ent, v);
+                        Map.Entry<K, Object> ent = hashIterator.next();
+                        WeakValue<K, Object> wv = (WeakValue<K, Object>) ent.getValue();
+                        Object v = wv == null ? null : wv.get();
+                        next = new Entry<>(ent, v);
                         return true;
                     }
                     return false;
                 }
 
-                public Object next() {
-                    if ((next == null) && !hasNext())
+                @Override
+                public Entry<K> next() {
+                    if ((next == null) && !hasNext()) {
                         throw new NoSuchElementException();
-                    Entry e = next;
+                    }
+                    Entry<K> e = next;
                     next = null;
                     return e;
                 }
 
+                @Override
                 public void remove() {
                     hashIterator.remove();
                 }
@@ -328,32 +364,37 @@ public class WeakValueHashMap extends HashMap {
             };
         }
 
+        @Override
         public boolean isEmpty() {
             return !(iterator().hasNext());
         }
 
+        @Override
         public int size() {
             int j = 0;
-            for (Iterator i = iterator(); i.hasNext(); i.next()) j++;
+            for (Iterator<?> i = iterator(); i.hasNext(); i.next()) {
+                j++;
+            }
             return j;
         }
 
+        @Override
         public boolean remove(Object o) {
-            if (!(o instanceof Map.Entry)) return false;
-            Map.Entry e = (Map.Entry) o;
+            if (!(o instanceof Map.Entry)) {
+                return false;
+            }
+            Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
             Object ek = e.getKey();
             Object ev = e.getValue();
             Object hv = WeakValueHashMap.this.get(ek);
             if (hv == null) {
                 // if the map's value is null, we have to check, if the
                 // entry's value is null and the map contains the key
-                if ((ev == null) && WeakValueHashMap.this.containsKey(ek)) {
+                if (ev == null && WeakValueHashMap.this.containsKey(ek)) {
                     WeakValueHashMap.this.remove(ek);
                     return true;
-                } else {
-                    return false;
                 }
-                // otherwise, simply compare the values
+                return false;
             } else if (hv.equals(ev)) {
                 WeakValueHashMap.this.remove(ek);
                 return true;
@@ -362,15 +403,17 @@ public class WeakValueHashMap extends HashMap {
             return false;
         }
 
+        @Override
         public int hashCode() {
             int h = 0;
-            for (Iterator i = hashEntrySet.iterator(); i.hasNext(); ) {
-                Map.Entry ent = (Map.Entry) i.next();
+            for (Iterator<Map.Entry<K, Object>> i = hashEntrySet.iterator(); i.hasNext();) {
+                Map.Entry<K, Object> ent = i.next();
                 Object k;
-                WeakValue wv = (WeakValue) ent.getValue();
-                if (wv == null) continue;
-                h += ((((k = ent.getKey()) == null) ? 0 : k.hashCode())
-                        ^ wv.hashCode());
+                Object wv = ent.getValue();
+                if (wv == null) {
+                    continue;
+                }
+                h += ((((k = ent.getKey()) == null) ? 0 : k.hashCode()) ^ wv.hashCode());
             }
             return h;
         }
@@ -379,14 +422,15 @@ public class WeakValueHashMap extends HashMap {
 
     // internal helper variable, because we can't access
     // entrySet from the superclass inside the EntrySet class
-    private Set hashEntrySet = null;
+    private Set<Map.Entry<K, Object>> hashEntrySet;
     // stores the EntrySet instance
-    private Set entrySet = null;
+    private EntrySet entrySet;
 
     /**
      * Returns a <code>Set</code> view of the mappings in this map.<p>
      * @return a <code>Set</code> view of the mappings in this map.
      */
+    @Override
     public Set entrySet() {
         if (entrySet == null) {
             hashEntrySet = super.entrySet();
@@ -395,48 +439,55 @@ public class WeakValueHashMap extends HashMap {
         return entrySet;
     }
 
-    // stores the value collection
-    private transient Collection values = null;
-
     /**
      * Returns a <code>Collection</code> view of the values contained
      * in this map.<p>
      * @return a <code>Collection</code> view of the values contained
      * in this map.
      */
-    public Collection values() {
+    @Override
+    public Collection<Object> values() {
         // delegates to entrySet, because super method returns
         // WeakValues instead of value objects
-    if (values == null) {
-        values = new AbstractCollection() {
-        public Iterator iterator() {
-            return new Iterator() {
-            private Iterator i = entrySet().iterator();
+        if (values == null) {
+            values = new AbstractCollection<>() {
 
-            public boolean hasNext() {
-                return i.hasNext();
-            }
+                public Iterator<Object> iterator() {
+                    return new Iterator<>() {
 
-            public Object next() {
-                return ((Entry)i.next()).getValue();
-            }
+                        private Iterator<Entry<K>> i = entrySet().iterator();
 
-            public void remove() {
-                i.remove();
-            }
+                        @Override
+                        public boolean hasNext() {
+                            return i.hasNext();
+                        }
+
+
+                        @Override
+                        public Object next() {
+                            return i.next().getValue();
+                        }
+
+
+                        @Override
+                        public void remove() {
+                            i.remove();
+                        }
                     };
                 }
 
-        public int size() {
-            return WeakValueHashMap.this.size();
-        }
 
-        public boolean contains(Object v) {
-            return WeakValueHashMap.this.containsValue(v);
+                public int size() {
+                    return WeakValueHashMap.this.size();
+                }
+
+
+                public boolean contains(Object v) {
+                    return WeakValueHashMap.this.containsValue(v);
+                }
+            };
         }
-        };
-    }
-    return values;
+        return values;
     }
 
 }

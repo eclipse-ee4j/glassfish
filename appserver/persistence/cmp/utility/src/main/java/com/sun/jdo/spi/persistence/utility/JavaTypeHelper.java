@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JavaTypeHelper.java
- *
- * Created on January 22, 2002, 3:39 PM
- */
-
 package com.sun.jdo.spi.persistence.utility;
 
 import java.util.HashMap;
@@ -30,25 +25,24 @@ import java.util.Map;
  * extraction of a short (non-qualified) name from a fully qualified class
  * name, and various wrapper and primitive type methods.
  *
- * @author Rochelle Raccah
+ * @author Rochelle Raccah 2002
  */
 public class JavaTypeHelper
 {
     /** Map of primitive to wrapper classes */
-    private final static Map _primitiveToWrappers;
+    private final static Map<Class<?>, Class<?>> _primitiveToWrappers;
 
     /** Map of primitive names to primitive classes */
-    private final static Map _primitiveNamesToPrimitives;
+    private final static Map<String, Class<?>> _primitiveNamesToPrimitives;
 
     /** Map of primitive names to wrapper names */
-    private final static Map _primitiveNamesToWrapperNames;
+    private final static Map<String, String> _primitiveNamesToWrapperNames;
 
     /** Map of wrapper classes to primitive names*/
-    private final static Map _wrapperToPrimitiveNames;
+    private final static Map<Class<?>, String> _wrapperToPrimitiveNames;
 
-    static
-    {
-        _primitiveToWrappers = new HashMap(9);
+    static {
+        _primitiveToWrappers = new HashMap<>(9);
         _primitiveToWrappers.put(Boolean.TYPE, Boolean.class);
         _primitiveToWrappers.put(Byte.TYPE, Byte.class);
         _primitiveToWrappers.put(Character.TYPE, Character.class);
@@ -59,38 +53,38 @@ public class JavaTypeHelper
         _primitiveToWrappers.put(Short.TYPE, Short.class);
         _primitiveToWrappers.put(Void.TYPE, Void.class);
 
-        _primitiveNamesToPrimitives = new HashMap(9);
-        _primitiveNamesToPrimitives.put("boolean", Boolean.TYPE);    // NOI18N
-        _primitiveNamesToPrimitives.put("byte", Byte.TYPE);            // NOI18N
-        _primitiveNamesToPrimitives.put("char", Character.TYPE);    // NOI18N
-        _primitiveNamesToPrimitives.put("double", Double.TYPE);        // NOI18N
-        _primitiveNamesToPrimitives.put("float", Float.TYPE);        // NOI18N
-        _primitiveNamesToPrimitives.put("int", Integer.TYPE);        // NOI18N
-        _primitiveNamesToPrimitives.put("long", Long.TYPE);            // NOI18N
-        _primitiveNamesToPrimitives.put("short", Short.TYPE);        // NOI18N
-        _primitiveNamesToPrimitives.put("void", Void.TYPE);            // NOI18N
+        _primitiveNamesToPrimitives = new HashMap<>(9);
+        _primitiveNamesToPrimitives.put("boolean", Boolean.TYPE);
+        _primitiveNamesToPrimitives.put("byte", Byte.TYPE);
+        _primitiveNamesToPrimitives.put("char", Character.TYPE);
+        _primitiveNamesToPrimitives.put("double", Double.TYPE);
+        _primitiveNamesToPrimitives.put("float", Float.TYPE);
+        _primitiveNamesToPrimitives.put("int", Integer.TYPE);
+        _primitiveNamesToPrimitives.put("long", Long.TYPE);
+        _primitiveNamesToPrimitives.put("short", Short.TYPE);
+        _primitiveNamesToPrimitives.put("void", Void.TYPE);
 
-        _primitiveNamesToWrapperNames =  new HashMap(9);
-        _primitiveNamesToWrapperNames.put("boolean", "Boolean");    // NOI18N
-        _primitiveNamesToWrapperNames.put("byte", "Byte");            // NOI18N
-        _primitiveNamesToWrapperNames.put("char", "Character");        // NOI18N
-        _primitiveNamesToWrapperNames.put("double", "Double");        // NOI18N
-        _primitiveNamesToWrapperNames.put("float", "Float");        // NOI18N
-        _primitiveNamesToWrapperNames.put("int", "Integer");        // NOI18N
-        _primitiveNamesToWrapperNames.put("long", "Long");            // NOI18N
-        _primitiveNamesToWrapperNames.put("short", "Short");        // NOI18N
-        _primitiveNamesToWrapperNames.put("void", "Void");            // NOI18N
+        _primitiveNamesToWrapperNames =  new HashMap<>(9);
+        _primitiveNamesToWrapperNames.put("boolean", "Boolean");
+        _primitiveNamesToWrapperNames.put("byte", "Byte");
+        _primitiveNamesToWrapperNames.put("char", "Character");
+        _primitiveNamesToWrapperNames.put("double", "Double");
+        _primitiveNamesToWrapperNames.put("float", "Float");
+        _primitiveNamesToWrapperNames.put("int", "Integer");
+        _primitiveNamesToWrapperNames.put("long", "Long");
+        _primitiveNamesToWrapperNames.put("short", "Short");
+        _primitiveNamesToWrapperNames.put("void", "Void");
 
-        _wrapperToPrimitiveNames = new HashMap(9);
-        _wrapperToPrimitiveNames.put(Boolean.class, "boolean");    // NOI18N
-        _wrapperToPrimitiveNames.put(Byte.class, "byte");        // NOI18N
-        _wrapperToPrimitiveNames.put(Character.class, "char");    // NOI18N
-        _wrapperToPrimitiveNames.put(Double.class, "double");    // NOI18N
-        _wrapperToPrimitiveNames.put(Float.class, "float");        // NOI18N
-        _wrapperToPrimitiveNames.put(Integer.class, "int");        // NOI18N
-        _wrapperToPrimitiveNames.put(Long.class, "long");        // NOI18N
-        _wrapperToPrimitiveNames.put(Short.class, "short");        // NOI18N
-        _wrapperToPrimitiveNames.put(Void.class, "void");        // NOI18N
+        _wrapperToPrimitiveNames = new HashMap<>(9);
+        _wrapperToPrimitiveNames.put(Boolean.class, "boolean");
+        _wrapperToPrimitiveNames.put(Byte.class, "byte");
+        _wrapperToPrimitiveNames.put(Character.class, "char");
+        _wrapperToPrimitiveNames.put(Double.class, "double");
+        _wrapperToPrimitiveNames.put(Float.class, "float");
+        _wrapperToPrimitiveNames.put(Integer.class, "int");
+        _wrapperToPrimitiveNames.put(Long.class, "long");
+        _wrapperToPrimitiveNames.put(Short.class, "short");
+        _wrapperToPrimitiveNames.put(Void.class, "void");
     }
 
     /**
@@ -106,7 +100,7 @@ public class JavaTypeHelper
             final int index = className.lastIndexOf('.');
 
             return ((index != -1) ?
-                className.substring(0, index) : ""); // NOI18N
+                className.substring(0, index) : "");
         }
 
         return null;
@@ -134,9 +128,9 @@ public class JavaTypeHelper
      * @param primitive the primitive class to be used for lookup.
      * @return the associated wrapper class.
      */
-    public static Class getWrapperClass (Class primitive)
+    public static Class<?> getWrapperClass (Class<?> primitive)
     {
-        return (Class)_primitiveToWrappers.get(primitive);
+        return _primitiveToWrappers.get(primitive);
     }
 
     /** Returns the primitive class associated with the supplied primitive
@@ -144,9 +138,9 @@ public class JavaTypeHelper
      * @param primitiveName the name of the primitive to be used for lookup.
      * @return the associated primitive class.
      */
-    public static Class getPrimitiveClass (String primitiveName)
+    public static Class<?> getPrimitiveClass (String primitiveName)
     {
-        return (Class)_primitiveNamesToPrimitives.get(primitiveName);
+        return _primitiveNamesToPrimitives.get(primitiveName);
     }
 
     /** Returns the name of the wrapper class associated with the supplied
@@ -156,7 +150,7 @@ public class JavaTypeHelper
      */
     public static String getWrapperName (String primitiveName)
     {
-        return (String)_primitiveNamesToWrapperNames.get(primitiveName);
+        return _primitiveNamesToWrapperNames.get(primitiveName);
     }
 
     /** Returns the name of the primitive type associated with the supplied
@@ -164,9 +158,9 @@ public class JavaTypeHelper
      * @param wrapper the wrapper class to be used for lookup.
      * @return the associated primitive type name.
      */
-    public static String getPrimitiveName (Class wrapper)
+    public static String getPrimitiveName (Class<?> wrapper)
     {
-        return (String)_wrapperToPrimitiveNames.get(wrapper);
+        return _wrapperToPrimitiveNames.get(wrapper);
     }
 
     /** Returns the Boolean wrapper object for true or false

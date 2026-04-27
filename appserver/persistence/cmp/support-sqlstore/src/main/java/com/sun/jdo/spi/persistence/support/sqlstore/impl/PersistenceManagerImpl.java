@@ -35,6 +35,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.RuntimeVersion;
 import com.sun.jdo.spi.persistence.support.sqlstore.SCOCollection;
+import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.ValueFetcher;
 import com.sun.jdo.spi.persistence.support.sqlstore.VersionConsistencyCache;
@@ -1385,7 +1386,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         // We only do phase 2 and 3 during commit only.
         if (!_insideFlush) {
-            HashSet<StateManager> phase3sms = new HashSet<>();
+            HashSet<SQLStateManager> phase3sms = new HashSet<>();
 
             for (Iterator<StateManager> iter = _flushedCache.iterator(); iter.hasNext(); ) {
                 StateManager sm = iter.next();
@@ -1396,7 +1397,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
                 sm.prepareToUpdatePhaseII(phase3sms);
             }
 
-            Iterator<StateManager> iter = phase3sms.iterator();
+            Iterator<SQLStateManager> iter = phase3sms.iterator();
 
             // phase3sms should contain all the non-reachable autopersistence instance.
             // We need to call prepareToUpdatePhaseIII on them to make sure we roll
@@ -1448,10 +1449,10 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * from outside.
      */
     private void verifyFlushedCache() {
-        Iterator iter = _flushedCache.iterator();
+        Iterator<StateManager> iter = _flushedCache.iterator();
 
         while (iter.hasNext()) {
-            StateManager sm = (StateManager)iter.next();
+            StateManager sm = iter.next();
 
             if (sm.hasVersionConsistency() && !sm.verifyPersistent()) {
                 Object [] items = { sm.getPersistent() };

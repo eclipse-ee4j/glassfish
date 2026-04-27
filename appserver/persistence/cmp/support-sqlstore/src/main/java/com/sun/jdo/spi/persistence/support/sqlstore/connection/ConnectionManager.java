@@ -289,7 +289,7 @@ public class ConnectionManager {
      * transaction object (jakarta.transaction.Transaction).
      * @serial
      */
-    private transient Hashtable xactConnections;
+    private transient Hashtable<Transaction, ConnectionImpl> xactConnections;
 
     /**
      * Flag that a shutdown to this ConnectionManager object is pending.
@@ -1337,26 +1337,7 @@ public class ConnectionManager {
      *          the current thread; null otherwise.
      */
     private synchronized ConnectionImpl checkXact() {
-        Transaction tran = null;
-
-        /* RESOLVE: Need to reimplement this???
-        try
-        {
-            // Is this ForteJDBCConnet participating in a transaction?
-            tran = ThreadContext.transactionContext().getTransaction();
-        }
-        catch (SystemException ex)
-        {
-            // There is no transaction.
-            return null;
-        }
-        */
-
-        // Return Connection associated with this transaction - maybe null?
-        if (tran == null) {
-            return null;
-        }
-        return (ConnectionImpl) this.xactConnections.get(tran);
+        return null;
     }
 
     /**
@@ -1375,7 +1356,7 @@ public class ConnectionManager {
         }
 
         this.busyList = new DoubleLinkedList();
-        this.xactConnections = new Hashtable();
+        this.xactConnections = new Hashtable<>();
         this.expandedDriverName = this.expandAttribute(this.driverName);
         if (this.expandedDriverName == null) {
             SQLException se = new SQLException
@@ -2027,7 +2008,7 @@ public class ConnectionManager {
         ConnectionImpl xactConn = null;
 
         if (tran != null) {
-            xactConn = (ConnectionImpl) this.xactConnections.remove(tran);
+            xactConn = this.xactConnections.remove(tran);
         }
 
         if (tran == null || xactConn.equals(conn)) {
@@ -2060,55 +2041,30 @@ public class ConnectionManager {
      * @ForteInternal
      */
     private synchronized void expandPool(int connections) throws SQLException {
-        ConnectionImpl conn = null;
 
         if (this.shutDownPending == true) {
-            SQLException se = new SQLException
-                    (
-                            StringScanner.createParamString
-                    (
-                            I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown")
-                    ),
-                            SQL_CONN_FAIL
-                    );
+            SQLException se = new SQLException(
+                StringScanner.createParamString(I18NHelper.getMessage(messages, "connection.connectionmanager.isdown")),
+                SQL_CONN_FAIL);
             throw se;
         }
 
         for (int i = 0; i < connections; i++) {
             if (this.poolSize >= this.maxPool) {
                 // There is no room for a new connection.
-                SQLException se = new SQLException
-                        (
-                                StringScanner.createParamString
-                        (
-                                I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.maxpool")
-                        ),
-                                SQL_CONN_FAIL
-                        );
+                SQLException se = new SQLException(StringScanner.createParamString(
+                    I18NHelper.getMessage(messages, "connection.connectionmanager.maxpool")), SQL_CONN_FAIL);
                 throw se;
-            } else // There is room in the pool, so get a new connection.
-            {
-                try {
-                    conn = new ConnectionImpl
-                            (
-                                    DriverManager.getConnection
-                            (
-                                    this.expandedUrl,
-                                    this.expandedUserName,
-                                    this.expandedPassword
-                            ),
-                                    this.expandedUrl,
-                                    this.expandedUserName,
-                                    this
-                            );
-                    conn.setPooled(true);
-                    this.freeList.insertAtTail(conn);
-                    this.poolSize++;
-                } catch (SQLException e) {
-                    throw e;
-                }
+            }
+            try {
+                ConnectionImpl conn = new ConnectionImpl(
+                    DriverManager.getConnection(this.expandedUrl, this.expandedUserName, this.expandedPassword),
+                    this.expandedUrl, this.expandedUserName, this);
+                conn.setPooled(true);
+                this.freeList.insertAtTail(conn);
+                this.poolSize++;
+            } catch (SQLException e) {
+                throw e;
             }
         }
     }
@@ -2122,32 +2078,7 @@ public class ConnectionManager {
      * @exceptions  SQLException  We should come up with a better one.
      */
     private String expandAttribute(String envname) throws SQLException {
-        String attribute = null;
-        /*RESOLVE:
-        try
-        {
-            attribute = ForteProperties.expandVars(envname);
-        }
-        catch (EnvVariableException e)
-        {
-            SQLException se = new SQLException
-            (
-                StringScanner.createParamString
-                (
-                  I18NHelper.getMessage(messages,
-                                             "connection.connectionmanager.badvalue"),
-                    envname
-                ),
-                SQL_INVAL_PARAM_VALUE
-            );
-            throw se;
-        }
-        */
-        if (attribute != null) {
-            return attribute;
-        } else {
-            return envname;
-        }
+        return envname;
     }
 
     /**

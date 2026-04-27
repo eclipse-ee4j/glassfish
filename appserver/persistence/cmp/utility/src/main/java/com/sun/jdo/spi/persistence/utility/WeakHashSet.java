@@ -26,13 +26,13 @@ import java.util.Iterator;
  * A weak HashSet. An element stored in the WeakHashSet might be garbage collected,
  * if there is no strong reference to this element.
  */
-public class WeakHashSet<T>
-    extends HashSet
-{
+public class WeakHashSet<T> extends HashSet<Object> {
+
+    private static final long serialVersionUID = -4493040266028957440L;
     /**
      * Helps to detect garbage collected values.
      */
-    ReferenceQueue queue = new ReferenceQueue();
+    ReferenceQueue<Object> queue = new ReferenceQueue<>();
 
     /**
      * Returns an iterator over the elements in this set.  The elements
@@ -41,31 +41,30 @@ public class WeakHashSet<T>
      * @return an Iterator over the elements in this set.
      */
     @Override
-    public Iterator iterator ()
-    {
+    public Iterator<Object> iterator() {
         // remove garbage collected elements
         processQueue();
 
         // get an iterator of the superclass WeakHashSet
-        final Iterator i = super.iterator();
+        final Iterator<Object> i = super.iterator();
 
-        return new Iterator () {
+        return new Iterator<>() {
+
             @Override
-            public boolean hasNext ()
-            {
+            public boolean hasNext() {
                 return i.hasNext();
             }
 
-            @Override
-            public Object next ()
-            {
-                // unwrap the element
-                return getReferenceObject((WeakReference)i.next());
-            }
 
             @Override
-            public void remove ()
-            {
+            public Object next() {
+                // unwrap the element
+                return getReferenceObject((WeakReference<Object>) i.next());
+            }
+
+
+            @Override
+            public void remove() {
                 // remove the element from the HashSet
                 i.remove();
             }
@@ -79,10 +78,10 @@ public class WeakHashSet<T>
      * @return <code>true</code> if this set contains the specified element.
      */
     @Override
-    public boolean contains (Object o)
-    {
+    public boolean contains(Object o) {
         return super.contains(WeakElement.create(o));
     }
+
 
     /**
      * Adds the specified element to this set if it is not already
@@ -90,14 +89,14 @@ public class WeakHashSet<T>
      *
      * @param o element to be added to this set.
      * @return <code>true</code> if the set did not already contain the specified
-     * element.
+     *         element.
      */
     @Override
-    public boolean add (Object o)
-    {
+    public boolean add(Object o) {
         processQueue();
         return super.add(WeakElement.create(o, this.queue));
     }
+
 
     /**
      * Removes the given element from this set if it is present.
@@ -106,33 +105,30 @@ public class WeakHashSet<T>
      * @return <code>true</code> if the set contained the specified element.
      */
     @Override
-    public boolean remove (Object o)
-    {
+    public boolean remove(Object o) {
         boolean ret = super.remove(WeakElement.create(o));
         processQueue();
         return ret;
     }
 
+
     /**
      * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
-    private final Object getReferenceObject (WeakReference ref)
-    {
+    private final Object getReferenceObject(WeakReference<Object> ref) {
         return ((ref != null) ? ref.get() : null);
     }
+
 
     /**
      * Removes all garbage collected values with their keys from the map.
      * Since we don't know how much the ReferenceQueue.poll() operation
      * costs, we should call it only in the put() method.
      */
-    private final void processQueue ()
-    {
+    private final void processQueue() {
         WeakElement wv = null;
-
-        while  ((wv = (WeakElement)this.queue.poll()) != null)
-        {
+        while ((wv = (WeakElement) this.queue.poll()) != null) {
             super.remove(wv);
         }
     }
@@ -144,39 +140,41 @@ public class WeakHashSet<T>
      * It redefines equals and hashCode which delegate to the corresponding methods
      * of the wrapped element.
      */
-    static private class WeakElement
-        extends WeakReference
-    {
-        private int hash;    /* Hashcode of key, stored here since the key
-                               may be tossed by the GC */
+    static private class WeakElement extends WeakReference<Object> {
 
-        private WeakElement (Object o)
-        {
+        private int hash; /*
+                           * Hashcode of key, stored here since the key
+                           * may be tossed by the GC
+                           */
+
+        private WeakElement(Object o) {
             super(o);
             hash = o.hashCode();
         }
 
-        private WeakElement (Object o, ReferenceQueue q)
-        {
+
+        private WeakElement(Object o, ReferenceQueue<Object> q) {
             super(o, q);
             hash = o.hashCode();
         }
 
-        private static WeakElement create (Object o)
-        {
+
+        private static WeakElement create(Object o) {
             return (o == null) ? null : new WeakElement(o);
         }
 
-        private static WeakElement create (Object o, ReferenceQueue q)
-        {
+
+        private static WeakElement create(Object o, ReferenceQueue<Object> q) {
             return (o == null) ? null : new WeakElement(o, q);
         }
 
-        /* A WeakElement is equal to another WeakElement iff they both refer to objects
-               that are, in turn, equal according to their own equals methods */
+
+        /*
+         * A WeakElement is equal to another WeakElement iff they both refer to objects
+         * that are, in turn, equal according to their own equals methods
+         */
         @Override
-        public boolean equals (Object o)
-        {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -184,7 +182,7 @@ public class WeakHashSet<T>
                 return false;
             }
             Object t = this.get();
-            Object u = ((WeakElement)o).get();
+            Object u = ((WeakElement) o).get();
             if ((t == null) || (u == null)) {
                 return false;
             }
@@ -194,9 +192,9 @@ public class WeakHashSet<T>
             return t.equals(u);
         }
 
+
         @Override
-        public int hashCode ()
-        {
+        public int hashCode() {
             return hash;
         }
 

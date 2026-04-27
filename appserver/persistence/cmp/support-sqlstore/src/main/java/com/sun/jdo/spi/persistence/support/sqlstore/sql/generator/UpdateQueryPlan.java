@@ -150,9 +150,9 @@ public class UpdateQueryPlan extends QueryPlan {
     private void generateStatements() {
         // For insert and delete we build a statement for each table
         if ((action == ACT_DELETE) || (action == ACT_INSERT)) {
-            Iterator iter = config.getTables();
+            Iterator<TableDesc> iter = config.getTables();
             while (iter.hasNext()) {
-                TableDesc t = (TableDesc) iter.next();
+                TableDesc t = iter.next();
 
                 // Skip join tables
                 if (!t.isJoinTable()) {
@@ -321,27 +321,27 @@ public class UpdateQueryPlan extends QueryPlan {
     }
 
     private void processJoinTables() {
-        Collection fields = updateDesc.getUpdatedJoinTableFields();
+        Collection<ForeignFieldDesc> fields = updateDesc.getUpdatedJoinTableFields();
 
         if (fields == null) {
             return;
         }
 
-        Iterator fieldIter = fields.iterator();
+        Iterator<ForeignFieldDesc> fieldIter = fields.iterator();
 
         List<UpdateStatement> deleteStatements = new ArrayList<>();
         List<UpdateStatement> insertStatements = new ArrayList<>();
 
         while (fieldIter.hasNext()) {
-            ForeignFieldDesc f = (ForeignFieldDesc) fieldIter.next();
-            Collection descs = updateDesc.getUpdateJoinTableDescs(f);
-            Iterator descIter = descs.iterator();
+            ForeignFieldDesc f = fieldIter.next();
+            Collection<UpdateJoinTableDesc> descs = updateDesc.getUpdateJoinTableDescs(f);
+            Iterator<UpdateJoinTableDesc> descIter = descs.iterator();
 
             ColumnElement c = f.assocLocalColumns.get(0);
             QueryTable t = addQueryTable(config.findTableDesc(c.getDeclaringTable()));
 
             while (descIter.hasNext()) {
-                UpdateJoinTableDesc desc = (UpdateJoinTableDesc) descIter.next();
+                UpdateJoinTableDesc desc = descIter.next();
                 int action = getAction(desc.getAction());
 
                 UpdateStatement s = (UpdateStatement) createStatement(t);

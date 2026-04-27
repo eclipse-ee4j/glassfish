@@ -228,11 +228,11 @@ public class ForeignFieldDesc extends FieldDesc {
 
         assert isMappedToPk();
 
-        Class oidClass = foreignConfig.getOidClass();
+        Class<?> oidClass = foreignConfig.getOidClass();
         Object oid = null;
 
         try {
-            oid = oidClass.newInstance();
+            oid = oidClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                     "core.statemanager.cantnewoid", oidClass.getName()), e);

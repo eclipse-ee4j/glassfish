@@ -84,7 +84,7 @@ public class SQLStoreManager implements PersistenceStore {
      * The access to the model cache is synchronized.
      */
     @Override
-    public PersistenceConfig getPersistenceConfig(Class classType) {
+    public PersistenceConfig getPersistenceConfig(Class<?> classType) {
         LOG.log(DEBUG, "sqlstore.sqlstoremanager.getpersistenceconfig", classType.getName());
         return configCache.getPersistenceConfig(classType);
     }
@@ -106,11 +106,11 @@ public class SQLStoreManager implements PersistenceStore {
      *         less than the minimum rows required.
      */
     @Override
-    public void execute(PersistenceManager pm, Collection actions) {
-        Iterator iter = actions.iterator();
+    public void execute(PersistenceManager pm, Collection<? extends ActionDesc> actions) {
+        Iterator<? extends ActionDesc> iter = actions.iterator();
 
         while (iter.hasNext()) {
-            ActionDesc action = (ActionDesc) iter.next();
+            ActionDesc action = iter.next();
 
             if (action instanceof UpdateObjectDescImpl) {
                 UpdateObjectDescImpl request = (UpdateObjectDescImpl) action;
@@ -220,7 +220,7 @@ public class SQLStoreManager implements PersistenceStore {
      *
      */
     @Override
-    public Class getClassByOidClass(Class oidType) {
+    public Class<?> getClassByOidClass(Class<?> oidType) {
         return configCache.getClassByOidClass(oidType);
     }
 
@@ -228,7 +228,7 @@ public class SQLStoreManager implements PersistenceStore {
      *
      */
     @Override
-    public StateManager getStateManager(Class classType) {
+    public StateManager getStateManager(Class<?> classType) {
         ClassDesc c = (ClassDesc) getPersistenceConfig(classType);
 
         if (c != null) {
@@ -245,7 +245,7 @@ public class SQLStoreManager implements PersistenceStore {
      * @return A new retrieve descriptor for anexternal (user) query.
      */
     @Override
-    public RetrieveDesc getRetrieveDesc(Class classType) {
+    public RetrieveDesc getRetrieveDesc(Class<?> classType) {
         return new RetrieveDescImpl(classType, (ClassDesc) getPersistenceConfig(classType));
     }
 
@@ -259,7 +259,7 @@ public class SQLStoreManager implements PersistenceStore {
      * @return A new retrieve descriptor for anexternal (user) query.
      */
     @Override
-    public RetrieveDesc getRetrieveDesc(String fieldName, Class classType) {
+    public RetrieveDesc getRetrieveDesc(String fieldName, Class<?> classType) {
         ClassDesc c = (ClassDesc) getPersistenceConfig(classType);
 
         if (c != null) {
@@ -277,7 +277,7 @@ public class SQLStoreManager implements PersistenceStore {
     /**
      */
     @Override
-    public UpdateObjectDesc getUpdateObjectDesc(Class classType) {
+    public UpdateObjectDesc getUpdateObjectDesc(Class<?> classType) {
           return new UpdateObjectDescImpl(classType);
     }
 
@@ -365,8 +365,8 @@ public class SQLStoreManager implements PersistenceStore {
                 if (((plan.options & RetrieveDescImpl.OPT_FOR_UPDATE) > 0 &&
                         !vendorType.isDistinctSupportedWithUpdateLock()) ) {
 
-                    HashSet hash = new HashSet();
-                    for (Iterator iter = ((Collection)result).iterator(); iter.hasNext(); ) {
+                    HashSet<Object> hash = new HashSet<>();
+                    for (Iterator<?> iter = ((Collection<?>)result).iterator(); iter.hasNext(); ) {
                         Object temp = iter.next();
                         if (!hash.contains(temp)) {
                             hash.add(temp);
@@ -678,8 +678,8 @@ public class SQLStoreManager implements PersistenceStore {
      */
     static private void closeDBStatements(UpdateQueryPlan plan, Transaction tran) {
         if ((plan != null) && (tran != null)) {
-            for (Iterator i = plan.getStatements().iterator(); i.hasNext(); ) {
-                UpdateStatement updateStmt = (UpdateStatement)i.next();
+            for (Iterator<Statement> i = plan.getStatements().iterator(); i.hasNext(); ) {
+                UpdateStatement updateStmt = (UpdateStatement) i.next();
                 DBStatement s = updateStmt.removeDBStatement(tran);
                 close(s);
             }

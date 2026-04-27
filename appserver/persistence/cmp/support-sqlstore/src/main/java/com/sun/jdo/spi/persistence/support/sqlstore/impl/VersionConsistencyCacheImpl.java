@@ -48,7 +48,7 @@ import static java.lang.System.Logger.Level.WARNING;
  */
 public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     /** The outermost map of the two-level cache. */
-    private final Map pcTypeMap = new HashMap();
+    private final Map<Class<?>, VCCache> pcTypeMap = new HashMap<>();
 
     /** Used to create different kinds of caches. */
     // Not final, so that we can create different kinds of caches for testing.
@@ -294,13 +294,13 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * @see VersionConsistencyCache#put
      */
     @Override
-    public StateManager put(Class pcType, Object oid, StateManager sm) {
+    public StateManager put(Class<?> pcType, Object oid, StateManager sm) {
         LOG.log(TRACE, "jdo.versionconsistencycacheimpl.put.entering", pcType, oid, sm);
 
         StateManager rc = null;
         VCCache oid2sm = null;
         synchronized (pcTypeMap) {
-            oid2sm = (VCCache) pcTypeMap.get(pcType);
+            oid2sm = pcTypeMap.get(pcType);
 
             if (null == oid2sm) {
                 oid2sm = cacheFactory.create();
@@ -318,13 +318,13 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * @see VersionConsistencyCache#get
      */
     @Override
-    public StateManager get(Class pcType, Object oid) {
+    public StateManager get(Class<?> pcType, Object oid) {
         LOG.log(TRACE, "jdo.versionconsistencycacheimpl.get.entering", pcType, oid);
         StateManager rc = null;
 
         VCCache oid2sm = null;
         synchronized (pcTypeMap) {
-            oid2sm = (VCCache) pcTypeMap.get(pcType);
+            oid2sm = pcTypeMap.get(pcType);
         }
 
         if (null != oid2sm) {
@@ -340,12 +340,12 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * @see VersionConsistencyCache#remove
      */
     @Override
-    public StateManager remove(Class pcType, Object oid) {
+    public StateManager remove(Class<?> pcType, Object oid) {
         LOG.log(TRACE, "jdo.versionconsistencycacheimpl.remove.entering", pcType, oid);
 
         StateManager rc = null;
         synchronized (pcTypeMap) {
-            VCCache oid2sm = (VCCache) pcTypeMap.get(pcType);
+            VCCache oid2sm = pcTypeMap.get(pcType);
 
             if (null != oid2sm) {
                 rc = oid2sm.remove(oid);
@@ -364,7 +364,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * pcType as-needed; see {@link #put}
      */
     @Override
-    public void addPCType(Class pcType) {
+    public void addPCType(Class<?> pcType) {
         LOG.log(TRACE, "jdo.versionconsistencycacheimpl.addpctype", pcType);
         // Intentionally empty
     }
@@ -373,11 +373,11 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * @see VersionConsistencyCache#removePCType
      */
     @Override
-    public void removePCType(Class pcType) {
+    public void removePCType(Class<?> pcType) {
         LOG.log(TRACE, "jdo.versionconsistencycacheimpl.removepctype", pcType);
 
         synchronized (pcTypeMap) {
-            VCCache oid2sm = (VCCache) pcTypeMap.get(pcType);
+            VCCache oid2sm = pcTypeMap.get(pcType);
 
             if (null != oid2sm) {
                 oid2sm.clear();
@@ -392,8 +392,8 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     public int size() {
         int rc = 0;
         synchronized (pcTypeMap) {
-            for (Iterator i = pcTypeMap.keySet().iterator(); i.hasNext();) {
-                VCCache oid2sm = (VCCache) pcTypeMap.get(i.next());
+            for (Iterator<Class<?>> i = pcTypeMap.keySet().iterator(); i.hasNext();) {
+                VCCache oid2sm = pcTypeMap.get(i.next());
                 rc += oid2sm.size();
             }
         }
@@ -414,22 +414,22 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     /** Provides cache operations of put, get, and remove. */
     interface VCCache {
         /** @see Map#put */
-        public StateManager put(Object key, StateManager value);
+        StateManager put(Object key, StateManager value);
 
         /** @see Map#get */
-        public StateManager get(Object key);
+        StateManager get(Object key);
 
         /** @see Map#remove */
-        public StateManager remove(Object key);
+        StateManager remove(Object key);
 
         /** @see Map#clear */
-        public void clear();
+        void clear();
 
         /** @see Map#isEmpty */
-        public boolean isEmpty();
+        boolean isEmpty();
 
         /** @see Map#size */
-        public int size();
+        int size();
     }
 
     /**
@@ -437,29 +437,29 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * the underlying implemention <em>is</em>synchronized.
      */
     static class BasicVCCache implements VCCache {
-        private final Map cache;
+        private final Map<Object, StateManager> cache;
 
         BasicVCCache() {
             LOG.log(DEBUG, "jdo.versionconsistencycacheimpl.usinghashmap", bucketSize, initialCapacity, loadFactor);
-            cache = Collections.synchronizedMap(new BucketizedHashtable(bucketSize, initialCapacity, loadFactor));
+            cache = Collections.synchronizedMap(new BucketizedHashtable<>(bucketSize, initialCapacity, loadFactor));
         }
 
         /** @see Map#put */
         @Override
         public StateManager put(Object key, StateManager value) {
-            return (StateManager) cache.put(key, value);
+            return cache.put(key, value);
         }
 
         /** @see Map#get */
         @Override
         public StateManager get(Object key) {
-            return (StateManager) cache.get(key);
+            return cache.get(key);
         }
 
         /** @see Map#remove */
         @Override
         public StateManager remove(Object key) {
-            return (StateManager) cache.remove(key);
+            return cache.remove(key);
         }
 
         /** @see Map#clear */
@@ -490,7 +490,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
          * We can't use the interface type Cache because we need to be able to
          * clear out the cache, which is only supported by the implementation.
          */
-        private final Cache cache;
+        private final Cache<Object, StateManager> cache;
 
         /**
          * @param maxEntries maximum number of entries expected in the cache
@@ -500,7 +500,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         LruVCCache(int maxEntries, long timeout, float loadFactor) {
             LOG.log(DEBUG, "jdo.versionconsistencycacheimpl.usinglrucache", maxEntries, timeout, loadFactor);
 
-            LruCache c = new LruCache();
+            LruCache<Object, StateManager> c = new LruCache<>();
             c.init(maxEntries, timeout, loadFactor, (Properties) null);
             c.addCacheListener(new CacheListener() {
 
@@ -516,19 +516,19 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         /** @see Map#put */
         @Override
         public StateManager put(Object key, StateManager value) {
-            return (StateManager) cache.put(key, value);
+            return cache.put(key, value);
         }
 
         /** @see Map#get */
         @Override
         public StateManager get(Object key) {
-            return (StateManager) cache.get(key);
+            return cache.get(key);
         }
 
         /** @see Map#remove */
         @Override
         public StateManager remove(Object key) {
-            return (StateManager) cache.remove(key);
+            return cache.remove(key);
         }
 
         /** @see Map#clear */

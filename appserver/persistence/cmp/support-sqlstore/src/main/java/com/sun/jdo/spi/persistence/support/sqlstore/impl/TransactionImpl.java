@@ -34,7 +34,6 @@ import jakarta.transaction.TransactionManager;
 
 import java.lang.System.Logger;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -144,10 +143,6 @@ public class TransactionImpl
      */
     private    Synchronization    synchronization = null;
 
-    /**
-     * Array of registered Resource interfaces.
-     */
-    private    ArrayList    resources;
     private static final int    RESOURCE_START     = 0;
     private static final int    RESOURCE_END     = 1;
 
@@ -234,7 +229,6 @@ public class TransactionImpl
         this.timeout = seconds;
         this.startedCommit = false;
         this.onePhase = false;
-        this.resources = new ArrayList();
 
         persistenceManager = pm;
         this.username = username;
@@ -808,31 +802,6 @@ public class TransactionImpl
                 statusString(this.status)));
         }
 
-        //
-        // If there is at most one resource then we can do this in 1-phase.
-        //
-        if (this.resources.size() <= 1) {
-            this.onePhase = true;
-        }
-
-        /*
-        //
-        // Prepare resources if not one-phase
-        //
-        if (!this.onePhase) {
-            int    error = this.prepareResources();
-            if (error != XAResource.XA_OK) {
-                this.forceRollback();
-
-                throw (RollbackException)ErrorManager.createFormatAdd(
-                        RollbackException.class,
-                        ErrorManager.USER,
-                        TransactionMsgCat.SH_ERR_TX_TR_CMT_RB_IN_PREP_XA,
-                        this.XAErrorString(error));
-            }
-        }
-        */
-
         this.setStatus(Status.STATUS_PREPARED);
     }
 
@@ -1186,11 +1155,7 @@ public class TransactionImpl
         }
         _connectionReferenceCount = 0;
 
-        //
-        // Do we need to invoke forget on the resource?
-        //
-        this.resources.clear();
-            if (txType != NON_MGD) {
+        if (txType != NON_MGD) {
             persistenceManager.close();
         }
 
@@ -1228,9 +1193,6 @@ public class TransactionImpl
         }
         if ((info & TRACE_SYNCHRONIZATIONS) != 0) {
             logMessage.append(", sync = " + this.synchronization);
-        }
-        if ((info & TRACE_RESOURCES) != 0) {
-            logMessage.append(", resources = " + this.resources.size());
         }
         if ((info & TRACE_ONE_PHASE) != 0 && this.onePhase) {
             logMessage.append(", onePhase = true");
@@ -1483,22 +1445,6 @@ public class TransactionImpl
 
         if (synchronization != null) {
             s = s + "sync:     " + synchronization + "\n";
-        }
-        if (!this.resources.isEmpty()) {
-            s = s +    "   # resources   = " + this.resources.size() + "\n";
-            /*
-            for (i = 0; i < this.resources.size(); i++) {
-                XAResource        res = (XAResource)this.resources.get(i);
-                //
-                // Make be null if vote readonly during commit processing
-                // Bug 48325: avoid recursive toString() calls
-                //
-                if (res != null) {
-                    s = s + "    [" + i + "] " +
-                        res.getClass().getName() + "\n";
-                }
-            }
-            */
         }
         return s;
 

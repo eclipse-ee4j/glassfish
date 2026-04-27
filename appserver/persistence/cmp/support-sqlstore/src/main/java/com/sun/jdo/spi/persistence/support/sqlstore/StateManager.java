@@ -193,7 +193,7 @@ public interface StateManager
      * This is the second phase of the commit processing. It populates phase3sms with all
      * the autopersistence instances that are no longer reachable from a persistent instance.
      */
-    void prepareToUpdatePhaseII(java.util.HashSet phase3sms);
+    void prepareToUpdatePhaseII(java.util.HashSet<SQLStateManager> phase3sms);
 
     /**
      * This is the third phase of commit processing. It sets up the delete dependencies among

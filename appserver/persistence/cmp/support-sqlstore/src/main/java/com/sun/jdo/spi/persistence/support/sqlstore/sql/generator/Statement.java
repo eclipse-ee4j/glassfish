@@ -230,10 +230,10 @@ public abstract class Statement extends Object implements Cloneable {
      */
     public StringBuffer processConstraints() {
         StringBuffer whereText = new StringBuffer();
-        List stack = constraint.getConstraints();
+        List<ConstraintNode> stack = constraint.getConstraints();
 
         while (stack.size() > 0) {
-            ConstraintNode node = (ConstraintNode) stack.get(stack.size() - 1);
+            ConstraintNode node = stack.get(stack.size() - 1);
 
             if (!(node instanceof ConstraintOperation)) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
@@ -248,7 +248,7 @@ public abstract class Statement extends Object implements Cloneable {
     }
 
     protected void processRootConstraint(ConstraintOperation opNode,
-                                         List stack,
+                                         List<ConstraintNode> stack,
                                          StringBuffer whereText) {
         int op = opNode.operation;
         int opInfo = operationFormat(op);
@@ -284,7 +284,7 @@ public abstract class Statement extends Object implements Cloneable {
      *  We would need to sort constraints out by statement and do something
      *  about constraints that span statements (e.g. t1.c1 = t2.c2).
      */
-    protected String getWhereText(List stack) {
+    protected String getWhereText(List<ConstraintNode> stack) {
 
         StringBuffer result = new StringBuffer();
         ConstraintNode node;
@@ -294,7 +294,7 @@ public abstract class Statement extends Object implements Cloneable {
                     "core.constraint.stackempty"));
         }
 
-        node = (ConstraintNode) stack.get(stack.size() - 1);
+        node = stack.get(stack.size() - 1);
         stack.remove(stack.size() - 1);
 
         if (node instanceof ConstraintParamIndex) {
@@ -441,7 +441,7 @@ public abstract class Statement extends Object implements Cloneable {
     }
 
     private void processConstraintOperation(ConstraintOperation opNode,
-                                            List stack,
+                                            List<ConstraintNode> stack,
                                             StringBuffer result) {
         int opCode = opNode.operation;
         int format = operationFormat(opCode);
@@ -455,7 +455,7 @@ public abstract class Statement extends Object implements Cloneable {
 
     private void processFunctionOrBinaryOperation(int format,
                                                   int opCode,
-                                                  List stack,
+                                                  List<ConstraintNode> stack,
                                                   StringBuffer result) {
 
         if ((format & OP_PREFIX_MASK) > 0) {
@@ -493,7 +493,7 @@ public abstract class Statement extends Object implements Cloneable {
 
     protected void processIrregularOperation(ConstraintOperation opNode,
                                              int opCode,
-                                             List stack,
+                                             List<ConstraintNode> stack,
                                              StringBuffer result) {
         switch (opCode) {
             case ActionDesc.OP_NULL:
@@ -592,9 +592,9 @@ public abstract class Statement extends Object implements Cloneable {
                 boolean swap = vendorType.isPositionSearchSource();
                 if (swap) {
                     ConstraintNode expr =
-                            (ConstraintNode)stack.remove(stack.size() - 1);
+                            stack.remove(stack.size() - 1);
                     ConstraintNode pattern =
-                            (ConstraintNode)stack.remove(stack.size() - 1);
+                            stack.remove(stack.size() - 1);
                     stack.add(expr);
                     stack.add(pattern);
                 }
@@ -616,9 +616,9 @@ public abstract class Statement extends Object implements Cloneable {
                 if (threeArgs) {
                     if (swapArgs) {
                         ConstraintNode expr =
-                                (ConstraintNode)stack.remove(stack.size() - 1);
+                                stack.remove(stack.size() - 1);
                         ConstraintNode pattern =
-                                (ConstraintNode)stack.remove(stack.size() - 1);
+                                stack.remove(stack.size() - 1);
                         stack.add(expr);
                         stack.add(pattern);
                     }
@@ -669,9 +669,8 @@ public abstract class Statement extends Object implements Cloneable {
         }
     }
 
-    private void processConcatOperation(int opCode, List stack,
-            StringBuffer result) {
 
+    private void processConcatOperation(int opCode, List<ConstraintNode> stack, StringBuffer result) {
         if (stack.size() < 2) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                     "core.constraint.stackempty"));
@@ -698,7 +697,7 @@ public abstract class Statement extends Object implements Cloneable {
         }
     }
 
-    private void processMaybeNullOperation(List stack, StringBuffer result) {
+    private void processMaybeNullOperation(List<ConstraintNode> stack, StringBuffer result) {
         ConstraintValue valueNode = null;
         ConstraintField fieldNode = null;
 
@@ -775,7 +774,7 @@ public abstract class Statement extends Object implements Cloneable {
         }
     }
 
-    private void processNullOperation(int opCode, List stack, StringBuffer result) {
+    private void processNullOperation(int opCode, List<ConstraintNode> stack, StringBuffer result) {
         String nullComparisionFunctionName =
             vendorType.getNullComparisonFunctionName();
         if( nullComparisionFunctionName.length() != 0) {
@@ -808,7 +807,7 @@ public abstract class Statement extends Object implements Cloneable {
         result.append(str);
     }
 
-    private void processInOperation(int opCode, List stack, StringBuffer result) {
+    private void processInOperation(int opCode, List<ConstraintNode> stack, StringBuffer result) {
         //We are trying to construct a where clause like following in the quotes here
         // where "(t0.field1, t0.field2, t0.field3,...) in
         //        ( select t1.fld1, t1.fld2, t2.fld3,...where ....)"
@@ -844,7 +843,7 @@ public abstract class Statement extends Object implements Cloneable {
         result.append("in (");
 
 
-        ConstraintNode currentNode = (ConstraintNode)stack.remove(stack.size() - 1);
+        ConstraintNode currentNode = stack.remove(stack.size() - 1);
         if ( ! ( currentNode instanceof ConstraintSubquery)) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                     "core.generic.notinstanceof",

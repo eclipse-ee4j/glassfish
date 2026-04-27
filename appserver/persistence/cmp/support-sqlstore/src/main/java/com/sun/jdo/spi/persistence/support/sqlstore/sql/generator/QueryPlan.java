@@ -73,8 +73,8 @@ public abstract class QueryPlan {
             QueryPlan.class.getClassLoader());
 
     public QueryPlan(ActionDesc desc, SQLStoreManager store) {
-        this.tables = new ArrayList();
-        this.statements = new ArrayList();
+        this.tables = new ArrayList<>();
+        this.statements = new ArrayList<>();
         this.store = store;
         this.config = (ClassDesc) store.getPersistenceConfig(desc.getPersistenceCapableClass());
     }

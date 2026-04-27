@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,13 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * RetrieveDescImpl.java
- *
- * Created on March 3, 2000
- *
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sql;
@@ -119,7 +113,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     public static final int OPT_VERIFY =       0x1000; // 4024
 
     /** Array of ConstraintFieldName. */
-    private ArrayList fields;
+    private List<ConstraintFieldName> fields;
 
     /** The constraint stack */
     private Constraint constraint;
@@ -128,7 +122,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     private int options;
 
     /** Candidate class of this instance */
-    private Class pcClass;
+    private Class<?> pcClass;
 
     /** Config for candidate class of this instance */
     private ClassDesc config;
@@ -149,15 +143,13 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             RetrieveDescImpl.class.getClassLoader());
 
-    public RetrieveDescImpl(Class pcClass, ClassDesc config) {
-        super();
-
+    public RetrieveDescImpl(Class<?> pcClass, ClassDesc config) {
         this.pcClass = pcClass;
         this.config = config;
-        fields = new ArrayList();
+        fields = new ArrayList<>();
         constraint = new Constraint();
     }
 
@@ -184,7 +176,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
         if (projection) {
             if ((options & OPT_PROJECTION) > 0) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "sqlstore.retrievedesc.toomanyprojections")); // NOI18N
+                        "sqlstore.retrievedesc.toomanyprojections"));
             }
 
             // For projections on foreign fields, mark the foreign constraint.
@@ -247,7 +239,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
                 break;
             default:
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "core.constraint.illegalop", "" + opCode)); // NOI18N
+                        "core.constraint.illegalop", "" + opCode));
         }
 
         if (aggregateResultType != FieldTypeEnumeration.NOT_ENUMERATED) {
@@ -256,7 +248,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
             } else {
                 // aggregate result type has already been set
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "sqlstore.retrievedesc.toomanyresulttypes")); // NOI18N
+                        "sqlstore.retrievedesc.toomanyresulttypes"));
             }
         }
     }
@@ -347,19 +339,19 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
 
         if ((info & OPINFO_ILLEGAL) > 0) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.illegalop", "" + operation)); // NOI18N
+                    "core.constraint.illegalop", "" + operation));
         } else if ((info & OPINFO_FIELD_REQUIRED) > 0 && name == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.fieldrequired", "" + operation)); // NOI18N
+                    "core.constraint.fieldrequired", "" + operation));
         } else if ((info & OPINFO_FIELD_DISALLOWED) > 0 && name != null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.fielddisallowed", "" + operation)); // NOI18N
+                    "core.constraint.fielddisallowed", "" + operation));
         } else if ((info & OPINFO_VAL_REQUIRED) > 0 && value == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.valrequired", "" + operation)); // NOI18N
+                    "core.constraint.valrequired", "" + operation));
         } else if ((info & OPINFO_VAL_DISALLOWED) > 0 && value != null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.valdisallowed", "" + operation)); // NOI18N
+                    "core.constraint.valdisallowed", "" + operation));
         }
         if ((info & OPINFO_VAL_IS_PCOUNT) > 0) {
             if (name != null) {
@@ -368,7 +360,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
             addValueConstraint(name, value);
         } else {
             switch (operation) {
-                case RetrieveDescImpl.OP_PARAMETER:
+                case ActionDesc.OP_PARAMETER:
                     addParameterConstraint(value);
                     break;
                 case ActionDesc.OP_IN:
@@ -451,7 +443,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
                     getLocalFieldDesc(parameterInfo.getAssociatedField()));
         } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.constraint.illegalParameterInfo")); // NOI18N
+                    "core.constraint.illegalParameterInfo"));
         }
     }
 
@@ -642,7 +634,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
             // Sanity check.
             if (statements.size() > 1) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "sqlstore.retrievedesc.stmntsnotjoined")); // NOI18N
+                        "sqlstore.retrievedesc.stmntsnotjoined"));
             }
         }
         return plan;
@@ -711,7 +703,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
 
         // Loop through all dependent retrieve descriptors in the field list.
         for (int i = 0; i < fields.size(); i++) {
-            ConstraintFieldName cfn = (ConstraintFieldName) fields.get(i);
+            ConstraintFieldName cfn = fields.get(i);
 
             if (cfn.isProjection()) {
                 // This is a local field projection.
@@ -821,7 +813,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     }
 
     @Override
-    public Class getPersistenceCapableClass() {
+    public Class<?> getPersistenceCapableClass() {
         return pcClass;
     }
 
@@ -829,7 +821,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
         return constraint;
     }
 
-    public Iterator getFields() {
+    public Iterator<ConstraintFieldName> getFields() {
         return fields.iterator();
     }
 
@@ -837,7 +829,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     public Object clone() {
         try {
             RetrieveDescImpl clone = (RetrieveDescImpl) super.clone();
-            clone.fields = new ArrayList();
+            clone.fields = new ArrayList<>();
             clone.constraint = new Constraint();
 
             return clone;

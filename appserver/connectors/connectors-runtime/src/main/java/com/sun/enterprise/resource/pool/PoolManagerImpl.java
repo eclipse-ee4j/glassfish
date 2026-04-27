@@ -36,6 +36,7 @@ import com.sun.enterprise.resource.rm.ResourceManagerImpl;
 import com.sun.enterprise.resource.rm.SystemResourceManagerImpl;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.spi.TransactionalResource;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
@@ -594,7 +595,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      */
     private void handleLazilyAssociatedConnectionPools(Object comp, ComponentInvocation invToUse) {
         JavaEETransactionManager jJavaEETransactionManager = getConnectorRuntime().getTransactionManager();
-        List<ResourceHandle> list = jJavaEETransactionManager.getExistingResourceList(comp, invToUse);
+        List<TransactionalResource> list = jJavaEETransactionManager.getExistingResourceList(comp, invToUse);
 
         if ((list == null) || list.isEmpty()) {
             return;

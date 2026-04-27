@@ -47,6 +47,8 @@ import static java.lang.System.Logger.Level.TRACE;
  */
 public abstract class FieldDesc implements java.io.Serializable {
 
+    private static final long serialVersionUID = -941304938453639045L;
+
     public static final int GROUP_DEFAULT = 1;
 
     public static final int GROUP_NONE = 0;
@@ -175,15 +177,15 @@ public abstract class FieldDesc implements java.io.Serializable {
         return classDesc.getName() + "." + getName();
     }
 
-    public Class getComponentType() {
+    public Class<?> getComponentType() {
         return componentType;
     }
 
-    public Class getDeclaringClass() {
+    public Class<?> getDeclaringClass() {
         return declaringClass;
     }
 
-    public Class getType() {
+    public Class<?> getType() {
         if (fieldType != null) {
             return fieldType;
         }
@@ -644,7 +646,7 @@ public abstract class FieldDesc implements java.io.Serializable {
     // ------------ Initialisation methods ------------
     //
 
-    void setupDesc(final Class classType, final String name) {
+    void setupDesc(final Class<?> classType, final String name) {
         Field field;
         try {
             field = classType.getDeclaredField(name);
@@ -668,7 +670,7 @@ public abstract class FieldDesc implements java.io.Serializable {
         LOG.log(TRACE, "sqlstore.model.fielddesc.setupdesc", fieldName,fieldType);
     }
 
-    private static int translateToEnumType(Class fldType) {
+    private static int translateToEnumType(Class<?> fldType) {
 
         int retVal = FieldTypeEnumeration.NOT_ENUMERATED;
 
@@ -727,7 +729,7 @@ public abstract class FieldDesc implements java.io.Serializable {
         return retVal;
     }
 
-    void setComponentType(Class type) {
+    void setComponentType(Class<?> type) {
         this.componentType = type;
     }
 

@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2026 Contributors to the Eclipse Foundation.
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,32 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
-
-/**
- * @author Michael Bouschen 2000
- */
-public class WrapperClassType extends ClassType {
-
-    /**
-     *
-     */
-    protected PrimitiveType primitiveType;
-
-    /**
-     *
-     */
-    public WrapperClassType(String name, Class<?> clazz, int enumType, PrimitiveType primitiveType, TypeTable typetab) {
-        super(name, clazz, enumType, typetab);
-        this.primitiveType = primitiveType;
-    }
+package com.sun.jdo.spi.persistence.support.sqlstore.sql;
 
 
-    /**
-     *
-     */
-    public PrimitiveType getPrimitiveType() {
-        return primitiveType;
-    }
+interface ResultDescItem {
 
 }

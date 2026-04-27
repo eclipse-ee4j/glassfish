@@ -65,9 +65,8 @@ public class SelectStatement extends Statement {
         isJoined = true;
     }
 
-    public ColumnRef addColumn(ColumnElement columnElement,
-                          QueryTable queryTable) {
 
+    public ColumnRef addColumn(ColumnElement columnElement, QueryTable queryTable) {
         ColumnRef columnRef = getColumnRef(columnElement);
         if (columnRef == null) {
             columnRef = new ColumnRef(columnElement, queryTable);
@@ -413,14 +412,14 @@ public class SelectStatement extends Statement {
      */
     @Override
     protected void processRootConstraint(ConstraintOperation opNode,
-                                         List stack,
+                                         List<ConstraintNode> stack,
                                          StringBuffer whereText) {
         int op = opNode.operation;
         int opInfo = operationFormat(op);
 
         if ((opInfo & OP_ORDERBY_MASK) > 0) {
             stack.remove(stack.size() - 1);
-            ConstraintNode node = (ConstraintNode) stack.get(stack.size() - 1);
+            ConstraintNode node = stack.get(stack.size() - 1);
 
             if (node instanceof ConstraintField) {
                 processOrderByField((ConstraintFieldDesc) node, op);
@@ -437,7 +436,7 @@ public class SelectStatement extends Statement {
     @Override
     protected void processIrregularOperation(ConstraintOperation opNode,
                                              int opCode,
-                                             List stack,
+                                             List<ConstraintNode> stack,
                                              StringBuffer result) {
         switch (opCode) {
             case ActionDesc.OP_EQUIJOIN:
@@ -457,7 +456,7 @@ public class SelectStatement extends Statement {
      */
     private StringBuffer processOuterJoinConstraints() {
         StringBuffer joinCondition = null;
-        final List joinStack = constraint.getOuterJoinConstraints();
+        final List<ConstraintNode> joinStack = constraint.getOuterJoinConstraints();
         final int joinStackSize = joinStack.size();
 
         if (joinStackSize > 0) {
@@ -589,7 +588,7 @@ public class SelectStatement extends Statement {
         // alias and the new based, of course, on the key columns.
 
         if (fromTable.nextTable == null) {
-            fromTable.nextTable = new ArrayList();
+            fromTable.nextTable = new ArrayList<>();
             fromTable.nextTable.add(toTable);
             toTable.prevTable = fromTable;
         } else {
@@ -734,7 +733,7 @@ public class SelectStatement extends Statement {
         }
 
         for (int i = 0; i < table.nextTable.size(); i++) {
-            QueryTable toTable = (QueryTable) table.nextTable.get(i);
+            QueryTable toTable = table.nextTable.get(i);
             text.append(getJoinOperator(table.joinOp)).append(" ");
 
             appendTableText(text, toTable);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.transaction;
 
 import com.sun.appserv.util.cache.BaseCache;
-import com.sun.appserv.util.cache.Cache;
 import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
@@ -49,11 +48,12 @@ import jakarta.transaction.TransactionManager;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -107,7 +107,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     // to be inherited by child threads.
     private final ThreadLocal<JavaEETransaction> transactions;
 
-    private final ThreadLocal localCallCounter;
+    private final ThreadLocal<int[]> localCallCounter;
     private final ThreadLocal<JavaEETransactionManagerDelegate> delegates;
 
     // If multipleEnlistDelists is set to true, with in the transaction, for the same
@@ -122,14 +122,14 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     private int purgeCancelledTtransactions = 0;
 
     // admin and monitoring related parameters
-    private static final Hashtable statusMap = new Hashtable();
-    private final List activeTransactions = Collections.synchronizedList(new ArrayList());
+    private static final Hashtable<Integer, String> statusMap = new Hashtable<>();
+    private final List<Transaction> activeTransactions = Collections.synchronizedList(new ArrayList<>());
     private boolean monitoringEnabled = false;
 
     private TransactionServiceProbeProvider monitor;
-    private Hashtable txnTable = null;
+    private Hashtable<String, Transaction> txnTable;
 
-    private Cache resourceTable;
+    private BaseCache<Object, List<TransactionalResource>> resourceTable;
 
     private final Timer _timer = new Timer("transaction-manager", true);
 
@@ -149,7 +149,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
 
     public JavaEETransactionManagerSimplified() {
         transactions = new ThreadLocal<>();
-        localCallCounter = new ThreadLocal();
+        localCallCounter = new ThreadLocal<>();
         delegates = new ThreadLocal<>();
     }
 
@@ -189,9 +189,8 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
             // ignore
         }
 
-        resourceTable = new BaseCache();
-        ((BaseCache) resourceTable).init(maxEntries, loadFactor, null);
-        // END IASRI 4705808 TTT001
+        resourceTable = new BaseCache<>();
+        resourceTable.init(maxEntries, loadFactor, null);
 
         if (habitat != null) {
             TransactionService txnService = habitat.getService(TransactionService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
@@ -218,14 +217,9 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
             }
         }
 
-        // ENF OF BUG 4665539
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "TM: Tx Timeout = " + transactionTimeout);
-        }
+        LOG.log(Level.FINE, () -> "TM: Tx Timeout = " + transactionTimeout);
 
-        // START IASRI 4705808 TTT004 -- monitor resource table stats
         try {
-            // XXX TODO:
             if (Boolean.getBoolean("MONITOR_JTA_RESOURCE_TABLE_STATISTICS")) {
                 registerStatisticMonitorTask();
             }
@@ -407,7 +401,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         }
         h.setComponentInstance(null);
         ComponentInvocation inv = invMgr.getCurrentInvocation();
-        List l = getExistingResourceList(instance, inv);
+        List<TransactionalResource> l = getExistingResourceList(instance, inv);
 
         if (l != null) {
             l.remove(h);
@@ -438,17 +432,10 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
      * @return List of resources
      */
     @Override
-    public List getResourceList(Object instance, ComponentInvocation inv) {
+    public List<TransactionalResource> getResourceList(Object instance, ComponentInvocation inv) {
         if (inv == null) {
-            return new ArrayList(0);
+            return new ArrayList<>(0);
         }
-        List l = null;
-
-        /**
-         * XXX EJB CONTAINER ONLY XXX -- NEED TO CHECK THE NEW CODE BELOW ** if (inv.getInvocationType() ==
-         * ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) { ComponentContext ctx = inv.context; if (ctx != null) l
-         * = ctx.getResourceList(); else { l = new ArrayList(0); } } XXX EJB CONTAINER ONLY XXX
-         **/
 
         ResourceHandler rh = inv.getResourceHandler();
         if (LOG.isLoggable(Level.FINE)) {
@@ -456,19 +443,20 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
                     + ((rh == null) ? "" : (" ResourceHandler type: " + rh.getClass().getName())) + " ResourceHandler: " + rh);
         }
 
+        List l;
         if (rh != null) {
             l = rh.getResourceList();
             if (l == null) {
-                l = new ArrayList(0);
+                l = new ArrayList<>(0);
             }
         } else {
             Object key = getResourceTableKey(instance, inv);
             if (key == null) {
-                return new ArrayList(0);
+                return new ArrayList<>(0);
             }
-            l = (List) resourceTable.get(key);
+            l = resourceTable.get(key);
             if (l == null) {
-                l = new ArrayList(); // FIXME: use an optimum size?
+                l = new ArrayList<>();
                 resourceTable.put(key, l);
             }
         }
@@ -582,11 +570,11 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     }
 
     @Override
-    public List getExistingResourceList(Object instance, ComponentInvocation inv) {
+    public List<TransactionalResource> getExistingResourceList(Object instance, ComponentInvocation inv) {
         if (inv == null) {
             return null;
         }
-        List l = null;
+        List<TransactionalResource> l = null;
 
         /**
          * XXX EJB CONTAINER ONLY XXX -- NEED TO CHECK THE NEW CODE BELOW ** if (inv.getInvocationType() ==
@@ -605,7 +593,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         } else {
             Object key = getResourceTableKey(instance, inv);
             if (key != null) {
-                l = (List) resourceTable.get(key);
+                l = resourceTable.get(key);
             }
         }
         return l;
@@ -649,7 +637,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         }
 
         // Access resourceTable directly to avoid adding an empty list then removing it
-        List l = (List) resourceTable.remove(getResourceTableKey(instance, inv));
+        List<TransactionalResource> l = resourceTable.remove(getResourceTableKey(instance, inv));
         processResourceList(l);
 
         if (LOG.isLoggable(Level.FINE)) {
@@ -685,7 +673,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     @Override
     public void checkTransactionImport() {
         // First check if this is a local call
-        int[] count = (int[]) localCallCounter.get();
+        int[] count = localCallCounter.get();
         if (count != null && count[0] > 0) {
             count[0]--;
             return;
@@ -708,7 +696,7 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         if (isLocal) {
             // Put a counter in TLS indicating this is a local call.
             // Use int[1] as a mutable java.lang.Integer!
-            int[] count = (int[]) localCallCounter.get();
+            int[] count = localCallCounter.get();
             if (count == null) {
                 count = new int[1];
                 localCallCounter.set(count);
@@ -1123,9 +1111,9 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
      * @see TransactionAdminBean
      */
     @Override
-    public ArrayList getActiveTransactions() {
-        ArrayList tranBeans = new ArrayList();
-        txnTable = new Hashtable();
+    public ArrayList<TransactionAdminBean> getActiveTransactions() {
+        ArrayList<TransactionAdminBean> tranBeans = new ArrayList<>();
+        txnTable = new Hashtable<>();
         Object[] activeCopy = activeTransactions.toArray(); // get the clone of the active transactions
         for (Object element : activeCopy) {
             try {
@@ -1182,13 +1170,11 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         if (txnTable == null || txnTable.get(txnId) == null) {
             String result = sm.getString("transaction.monitor.rollback_invalid_id");
             throw new IllegalStateException(result);
-        } else {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "TM: Marking txnId " + txnId + " for rollback");
-            }
-
-            ((Transaction) txnTable.get(txnId)).setRollbackOnly();
         }
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "TM: Marking txnId " + txnId + " for rollback");
+        }
+        txnTable.get(txnId).setRollbackOnly();
 
     }
 
@@ -1241,23 +1227,29 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     class StatisticMonitorTask extends TimerTask {
         @Override
         public void run() {
-            if (resourceTable != null) {
-                Map stats = resourceTable.getStats();
-                Iterator it = stats.entrySet().iterator();
-                LOG.log(Level.INFO, "********** JavaEETransactionManager resourceTable stats *****");
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    LOG.log(Level.INFO, (String) entry.getKey() + ": " + entry.getValue());
+            if (resourceTable != null && LOG.isLoggable(Level.INFO)) {
+                StringBuilder message = new StringBuilder(1024);
+                message.append("JavaEETransactionManager resourceTable stats:");
+                for (Entry<String, Object> entry : resourceTable.getStats().entrySet()) {
+                    message.append('\n').append(entry.getKey()).append(": ").append(toString(entry.getValue()));
                 }
+                LOG.log(Level.INFO, message.toString());
             }
+        }
+
+        private static String toString(Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object.getClass().isArray()) {
+                return Arrays.toString((Object[]) object);
+            }
+            return String.valueOf(object);
         }
     }
 
-    /****************************************************************************/
-    /************************* Helper Methods ***********************************/
-    /****************************************************************************/
     public static String getStatusAsString(int status) {
-        return (String) statusMap.get(status);
+        return statusMap.get(status);
     }
 
     private void delistComponentResources(ComponentInvocation inv, boolean suspend) throws InvocationException {
@@ -1265,24 +1257,23 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         try {
             Transaction tran = (Transaction) inv.getTransaction();
             if (isTransactionActive(tran)) {
-                List l = getExistingResourceList(inv.getInstance(), inv);
+                List<TransactionalResource> l = getExistingResourceList(inv.getInstance(), inv);
                 if (l == null || l.size() == 0) {
                     return;
                 }
 
                 int flag = (suspend) ? XAResource.TMSUSPEND : XAResource.TMSUCCESS;
-                Iterator it = l.iterator();
+                Iterator<TransactionalResource> it = l.iterator();
                 while (it.hasNext()) {
-                    TransactionalResource h = (TransactionalResource) it.next();
+                    TransactionalResource h = it.next();
                     try {
                         if (h.isEnlisted()) {
                             delistResource(tran, h, flag);
                         }
                     } catch (IllegalStateException ex) {
-                        if (LOG.isLoggable(Level.FINE))
-                         {
+                        if (LOG.isLoggable(Level.FINE)) {
                             LOG.log(Level.FINE, "TM: Exception in delistResource", ex);
-                        // ignore error due to tx time out
+                            // ignore error due to tx time out
                         }
                     } catch (Exception ex) {
                         if (LOG.isLoggable(Level.FINE)) {
@@ -1332,14 +1323,13 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
         try {
             Transaction tran = (Transaction) inv.getTransaction();
             if (isTransactionActive(tran)) {
-                List l = getExistingResourceList(inv.getInstance(), inv);
+                List<TransactionalResource> l = getExistingResourceList(inv.getInstance(), inv);
                 if (l == null || l.size() == 0) {
                     return;
                 }
-                Iterator it = l.iterator();
-                // END IASRI 4705808 TTT002
+                Iterator<TransactionalResource> it = l.iterator();
                 while (it.hasNext()) {
-                    TransactionalResource h = (TransactionalResource) it.next();
+                    TransactionalResource h = it.next();
                     try {
                         enlistResource(tran, h);
                     } catch (Exception ex) {
@@ -1351,7 +1341,6 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
                         handleResourceError(h, ex, tran);
                     }
                 }
-                // END OF IASRI 4658504
             }
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "enterprise_distributedtx.excep_in_enlist", ex);
@@ -1361,11 +1350,11 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     /**
      * Called by #componentDestroyed()
      */
-    private void processResourceList(List l) {
+    private void processResourceList(List<TransactionalResource> l) {
         if (l != null && l.size() > 0) {
-            Iterator it = l.iterator();
+            Iterator<TransactionalResource> it = l.iterator();
             while (it.hasNext()) {
-                TransactionalResource h = (TransactionalResource) it.next();
+                TransactionalResource h = it.next();
                 try {
                     h.closeUserConnection();
                 } catch (Exception ex) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -144,9 +144,9 @@ import org.glassfish.persistence.ejb.entitybean.container.stats.EntityBeanStatsP
 
 public class EntityContainer extends BaseContainer implements CacheListener {
 
-    private final ThreadLocal ejbServant = new ThreadLocal() {
+    private final ThreadLocal<EJBObjectImpl> ejbServant = new ThreadLocal<>() {
         @Override
-        protected Object initialValue() {
+        protected EJBObjectImpl initialValue() {
             return null;
         }
     };
@@ -167,7 +167,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     protected EJBObjectCache ejbLocalObjectStore;
 
     // protected LIFOChannel channel = null;
-    protected Stack passivationCandidates = new Stack();
+    protected Stack<Object> passivationCandidates = new Stack<>();
 
     // table of EJBs (Contexts) in READY state, key is primary key
     protected Cache readyStore;
@@ -264,7 +264,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     @Override
     protected void setEJBMetaData() throws Exception {
         EjbEntityDescriptor ed = (EjbEntityDescriptor) ejbDescriptor;
-        Class primaryKeyClass = loader.loadClass(ed.getPrimaryKeyClassName());
+        Class<?> primaryKeyClass = loader.loadClass(ed.getPrimaryKeyClassName());
 
         metadata = new EJBMetaDataImpl(ejbHomeStub, homeIntf, remoteIntf, primaryKeyClass);
     }
@@ -286,7 +286,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     }
 
     @Override
-    protected void adjustHomeTargetMethodInfo(InvocationInfo invInfo, String methodName, Class[] paramTypes) throws NoSuchMethodException {
+    protected void adjustHomeTargetMethodInfo(InvocationInfo invInfo, String methodName, Class<?>[] paramTypes) throws NoSuchMethodException {
         if (invInfo.startsWithCreate) {
             String extraCreateChars = methodName.substring("create".length());
             invInfo.targetMethod2 = ejbClass.getMethod("ejbPostCreate" + extraCreateChars, paramTypes);
@@ -295,12 +295,12 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     }
 
     @Override
-    protected EJBHomeInvocationHandler getEJBHomeInvocationHandler(Class homeIntfClass) throws Exception {
+    protected EJBHomeInvocationHandler getEJBHomeInvocationHandler(Class<?> homeIntfClass) throws Exception {
         return new EntityBeanHomeImpl(ejbDescriptor, homeIntfClass);
     }
 
     @Override
-    protected EJBLocalHomeInvocationHandler getEJBLocalHomeInvocationHandler(Class homeIntfClass) throws Exception {
+    protected EJBLocalHomeInvocationHandler getEJBLocalHomeInvocationHandler(Class<?> homeIntfClass) throws Exception {
         return new EntityBeanLocalHomeImpl(ejbDescriptor, homeIntfClass);
     }
 
@@ -830,7 +830,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
 
         if (primaryKeys instanceof Enumeration) {
             // create Enumeration of objrefs from Enumeration of primaryKeys
-            Enumeration e = (Enumeration) primaryKeys;
+            Enumeration<?> e = (Enumeration<?>) primaryKeys;
             // this is a portable Serializable Enumeration
             ObjrefEnumeration objrefs = new ObjrefEnumeration();
             while (e.hasMoreElements()) {
@@ -850,9 +850,9 @@ public class EntityContainer extends BaseContainer implements CacheListener {
             return objrefs;
         } else if (primaryKeys instanceof Collection) {
             // create Collection of objrefs from Collection of primaryKeys
-            Collection c = (Collection) primaryKeys;
-            Iterator it = c.iterator();
-            ArrayList objrefs = new ArrayList(); // a Serializable Collection
+            Collection<?> c = (Collection<?>) primaryKeys;
+            Iterator<?> it = c.iterator();
+            ArrayList<Object> objrefs = new ArrayList<>(); // a Serializable Collection
             while (it.hasNext()) {
                 Object primaryKey = it.next();
                 Object ref;
@@ -989,7 +989,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
         // Method must be a remove method defined on one of :
         // jakarta.ejb.EJBHome, jakarta.ejb.EJBObject, jakarta.ejb.EJBLocalHome,
         // jakarta.ejb.EJBLocalObject
-        Class declaringClass = removeMethod.getDeclaringClass();
+        Class<?> declaringClass = removeMethod.getDeclaringClass();
         i.isHome = ((declaringClass == jakarta.ejb.EJBHome.class) || (declaringClass == jakarta.ejb.EJBLocalHome.class));
 
         try {
@@ -1480,7 +1480,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
 
     @Override
     protected void adjustInvocationInfo(InvocationInfo invInfo, Method method, int txAttr, boolean flushEnabled, String methodIntf,
-            Class originalIntf) throws EJBException {
+            Class<?> originalIntf) throws EJBException {
 
         invInfo.isHomeFinder = isHomeFinder(method);
     }
@@ -1489,7 +1489,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     // Note: this method object is of the EJB's remote/home/local interfaces,
     // not the EJB class.
     private final boolean isHomeFinder(Method method) {
-        Class methodClass = method.getDeclaringClass();
+        Class<?> methodClass = method.getDeclaringClass();
         if (isRemote) {
             if ((hasRemoteHomeView && methodClass.isAssignableFrom(homeIntf)) && (methodClass != EJBHome.class)
                     && (!method.getName().startsWith("create"))) {
@@ -1727,7 +1727,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
             // This is necessary to prevent infinite recursion
             // because PRO.narrow calls is_a which calls the
             // ProtocolMgr which calls getEJBObject.
-            ejbObjImpl = (EJBObjectImpl) ejbServant.get();
+            ejbObjImpl = ejbServant.get();
             if (ejbObjImpl != null) {
                 return ejbObjImpl;
             }
@@ -2198,7 +2198,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
         // destroy all EJBObject refs
 
         try {
-            Iterator elements = ejbObjectStore.values();
+            Iterator<?> elements = ejbObjectStore.values();
             while (elements.hasNext()) {
                 EJBObjectImpl ejbObjImpl = (EJBObjectImpl) elements.next();
                 try {
@@ -2580,7 +2580,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
 
         protected Object lock = new Object();
         protected boolean addedTask = false;
-        protected ArrayList keys = new ArrayList(16);
+        protected ArrayList<Object> keys = new ArrayList<>(16);
 
         protected LocalEJBObjectCacheVictimHandler() {
         }
@@ -2592,7 +2592,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
         }
 
         @Override
-        public void handleBatchOverflow(ArrayList paramKeys) {
+        public void handleBatchOverflow(ArrayList<Object> paramKeys) {
             int size = paramKeys.size();
             synchronized (lock) {
                 for (int i = 0; i < size; i++) {
@@ -2624,7 +2624,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
                 // We need to set the context class loader for this (deamon) thread!!
                 currentThread.setContextClassLoader(myClassLoader);
 
-                ArrayList localKeys = null;
+                ArrayList<Object> localKeys = null;
                 do {
                     synchronized (lock) {
                         int size = keys.size();
@@ -2633,7 +2633,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
                         }
 
                         localKeys = keys;
-                        keys = new ArrayList(16);
+                        keys = new ArrayList<>(16);
                     }
 
                     int maxIndex = localKeys.size();

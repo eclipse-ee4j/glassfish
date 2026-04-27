@@ -21,7 +21,7 @@ import java.util.Collection;
 /*
  * @author Marina Vatkina 2000
  */
-public interface SCOCollection extends java.util.Collection, SCO {
+public interface SCOCollection extends java.util.Collection<Object>, SCO {
 
     /**
      * Resets removed and added lists after flush
@@ -45,7 +45,7 @@ public interface SCOCollection extends java.util.Collection, SCO {
      * collection c will be added to the underlying collection
      * before the deferred updates are applied.
      */
-    void applyDeferredUpdates(Collection c);
+    void applyDeferredUpdates(Collection<?> c);
 
     /**
      * Adds object to the Collection without recording
@@ -57,7 +57,7 @@ public interface SCOCollection extends java.util.Collection, SCO {
      * Adds objects of the given Collection to this Collection without recording
      * the event. Used internaly to initially populate the Collection
      */
-    void addAllInternal(Collection c);
+    void addAllInternal(Collection<?> c);
 
     /**
      * Adds an object to the list without recording changes.
@@ -68,7 +68,7 @@ public interface SCOCollection extends java.util.Collection, SCO {
      * Removes objects of the given Collection from this Collection without recording
      * the event. Used internaly to remove a collection of elements from this collection.
      */
-    void removeAllInternal(Collection c);
+    void removeAllInternal(Collection<?> c);
 
     /**
      * Clears Collection without recording
@@ -88,14 +88,14 @@ public interface SCOCollection extends java.util.Collection, SCO {
      *
      * @return Collection of the added elements as java.util.Collection
      */
-    Collection getAdded();
+    Collection<Object> getAdded();
 
     /**
      * Returns the Collection of removed elements
      *
      * @return Collection of the removed elements as java.util.Collection
      */
-    Collection getRemoved();
+    Collection<Object> getRemoved();
 
     /**
      * Sets a new owner for the SCO instance that is not owned
@@ -108,6 +108,6 @@ public interface SCOCollection extends java.util.Collection, SCO {
      * @throws com.sun.jdo.api.persistence.support.JDOUserException if the
      * instance is owned by another owner.
      */
-    void setOwner(Object owner, String fieldName, Class elementType);
+    void setOwner(Object owner, String fieldName, Class<?> elementType);
 
 }

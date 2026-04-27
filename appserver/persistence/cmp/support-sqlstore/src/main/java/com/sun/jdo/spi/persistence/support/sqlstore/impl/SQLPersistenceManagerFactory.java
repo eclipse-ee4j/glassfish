@@ -30,6 +30,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.VersionConsistencyCache;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.utility.BucketizedHashtable;
 
+import jakarta.transaction.Transaction;
+
 import java.io.PrintWriter;
 import java.lang.System.Logger;
 import java.sql.Connection;
@@ -93,7 +95,7 @@ public class SQLPersistenceManagerFactory
     /**
      * Transactional cache of PersistenceManager instances
      */
-    private final Map pmCache = new BucketizedHashtable(pmCacheBucketSize, pmCacheInitialCapacity);
+    private final Map<Transaction, PersistenceManager> pmCache = new BucketizedHashtable<>(pmCacheBucketSize, pmCacheInitialCapacity);
     private PersistenceStore _store;
     private ConnectionFactory _connectionFactory;
     private Object _dataSource;
@@ -702,7 +704,7 @@ public class SQLPersistenceManagerFactory
 
         // Check if we are in managed environment and PersistenceManager is cached
         PersistenceManagerImpl pm = null;
-        jakarta.transaction.Transaction t = EJBHelper.getTransaction();
+        Transaction t = EJBHelper.getTransaction();
 
         if (t != null) {
             LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr.found", Thread.currentThread(), t);
@@ -780,7 +782,7 @@ public class SQLPersistenceManagerFactory
             jakarta.transaction.Transaction t) {
 
         LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.registerpersistencemgr.pmt", pm,t);
-        PersistenceManager pm1 = (PersistenceManager) pmCache.get(t);
+        PersistenceManager pm1 = pmCache.get(t);
         // double-check locking has been removed
         if (pm1 == null) {
             pmCache.put(t, pm);
@@ -843,7 +845,7 @@ public class SQLPersistenceManagerFactory
         } else {
             // Managed environment
             // Deregister only
-            PersistenceManager pm1 = (PersistenceManager) pmCache.get(t);
+            PersistenceManager pm1 = pmCache.get(t);
             if (pm1 != null && pm1 == pm) {
                 pmCache.remove(t);
             } else {

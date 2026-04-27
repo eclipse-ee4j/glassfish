@@ -69,13 +69,13 @@ import static java.lang.System.Logger.Level.WARNING;
  * JDBC resultset. Each ResultDesc binds values from the ResultSet
  * to instances of a persistence capable class.
  */
-public class ResultDesc {
+public class ResultDesc implements ResultDescItem {
 
     /** List of ResultFieldDesc/ResultDesc. */
-    private List fields;
+    private List<ResultDescItem> fields;
 
     /** List of field names corresponding to <code>fields</code>. */
-    private List fieldNames;
+    private List<String> fieldNames;
 
     /** Class descriptor. */
     private ClassDesc config;
@@ -88,7 +88,7 @@ public class ResultDesc {
      * prefetched collection relationship fields. The ResultDesc is the
      * associated result descriptor.
      */
-    private Map prefetchedCollectionFields;
+    private Map<ForeignFieldDesc, ResultDesc> prefetchedCollectionFields;
 
     /** The field that is the recipient of the value from this ResultDesc. */
     private ForeignFieldDesc parentField;
@@ -107,8 +107,8 @@ public class ResultDesc {
     private static final Logger LOG = System.getLogger(ResultDesc.class.getName(), messages);
 
     public ResultDesc(ClassDesc config, int aggregateResultType) {
-        fields = new ArrayList();
-        fieldNames = new ArrayList();
+        fields = new ArrayList<>();
+        fieldNames = new ArrayList<>();
         this.config = config;
         this.aggregateResultType = aggregateResultType;
     }
@@ -483,7 +483,7 @@ public class ResultDesc {
         Object result = null;
 
         if (!isAggregate()) {
-            Collection resultCollection = new ArrayList();
+            Collection<PersistenceCapable> resultCollection = new ArrayList<>();
 
             // Fill in the data from the current row of resultData.
             while (resultData.next()) {
@@ -498,7 +498,7 @@ public class ResultDesc {
                 // is enabled. Do not add duplicates. Duplicates are required
                 // for projection queries
                 if (!prefetching || !resultCollection.contains(resultObject)) {
-                    resultCollection.add(resultObject);
+                    resultCollection.add((PersistenceCapable) resultObject);
                 }
             }
 
@@ -517,11 +517,11 @@ public class ResultDesc {
      * Iterate the result collection applying updates to deferred collections.
      * @param resultCollection Result collection.
      */
-    private void applyDeferredUpdatesToPrefetchedCollections(Collection resultCollection) {
+    private void applyDeferredUpdatesToPrefetchedCollections(Collection<PersistenceCapable> resultCollection) {
         if (prefetching && prefetchedCollectionFields != null && prefetchedCollectionFields.size() > 0) {
-            for (Iterator resultItr = resultCollection.iterator(); resultItr.hasNext(); ) {
+            for (Iterator<PersistenceCapable> resultItr = resultCollection.iterator(); resultItr.hasNext(); ) {
                 // each result object is guaranteed to be instance of PersistenceCapable
-                PersistenceCapable pc = (PersistenceCapable) resultItr.next();
+                PersistenceCapable pc = resultItr.next();
 
                 // pc can be null if this is a projection query
                 if (pc != null) {
@@ -538,25 +538,23 @@ public class ResultDesc {
     private void applyDeferredUpdatesToPrefetchedCollections(PersistenceCapable pc) {
         if (prefetchedCollectionFields != null) {
             StateManager sm = pc.jdoGetStateManager();
-            Iterator prefetchedCollectionFieldsIter = prefetchedCollectionFields.keySet().iterator();
+            Iterator<ForeignFieldDesc> prefetchedCollectionFieldsIter = prefetchedCollectionFields.keySet().iterator();
 
             while (prefetchedCollectionFieldsIter.hasNext()) {
-                ForeignFieldDesc prefetchedCollectionField =
-                        (ForeignFieldDesc) prefetchedCollectionFieldsIter.next();
-                ResultDesc prefetchedResultDesc =
-                        (ResultDesc) prefetchedCollectionFields.get(prefetchedCollectionField);
+                ForeignFieldDesc prefetchedCollectionField = prefetchedCollectionFieldsIter.next();
+                ResultDesc prefetchedResultDesc = prefetchedCollectionFields.get(prefetchedCollectionField);
 
                 // process deferred updates for prefetched collection relationships
                 if (prefetchedCollectionField.cardinalityUPB > 1) {
-                    Collection relationshipValue =
-                            (Collection) prefetchedCollectionField.getValue(sm);
+                    Collection<Object> relationshipValue = (Collection<Object>) prefetchedCollectionField.getValue(sm);
 
-                    if (relationshipValue instanceof SCOCollection && ((SCOCollection) relationshipValue).isDeferred()){
+                    if (relationshipValue instanceof SCOCollection
+                        && ((SCOCollection) relationshipValue).isDeferred()) {
                         ((SCOCollection) relationshipValue).applyDeferredUpdates(null);
                     }
 
                     // recursion into the next level
-                    for (Iterator iter = relationshipValue.iterator(); iter.hasNext(); ) {
+                    for (Iterator<Object> iter = relationshipValue.iterator(); iter.hasNext();) {
                         PersistenceCapable persistenceCapable = (PersistenceCapable) iter.next();
                         prefetchedResultDesc.applyDeferredUpdatesToPrefetchedCollections(persistenceCapable);
                     }
@@ -687,12 +685,12 @@ public class ResultDesc {
      * @param value Given value.
      */
     private static void addCollectionValue(SQLStateManager sm, ForeignFieldDesc f, Object value) {
-        Collection collection = (Collection) f.getValue(sm);
+        Collection<Object> collection = (Collection<Object>) f.getValue(sm);
         if (collection == null) {
             // Initialize the collection.
             sm.replaceCollection(f, null);
             // Get the newly created SCOCollection back.
-            collection = (Collection) f.getValue(sm);
+            collection = (Collection<Object>) f.getValue(sm);
         }
 
         // Set the presence mask if necessary.
@@ -739,7 +737,7 @@ public class ResultDesc {
     private StateManager findOrCreateStateManager(ResultSet resultData,
                                                   PersistenceManager pm) {
         try {
-            Class oidClass = config.getOidClass();
+            Class<?> oidClass = config.getOidClass();
             Object oid = oidClass.getDeclaredConstructor().newInstance();
 
             // Copy key field values
@@ -751,7 +749,7 @@ public class ResultDesc {
                 FieldDesc fd = config.getField(keyName);
                 int index = fieldNames.indexOf(keyName);
 
-                ResultFieldDesc rfd = (ResultFieldDesc)fields.get(index);
+                ResultFieldDesc rfd = (ResultFieldDesc) fields.get(index);
 
                 Object v = getConvertedObject(resultData, rfd.getColumnRef(), fd, null);
 
@@ -783,7 +781,7 @@ public class ResultDesc {
         // prefetched, remember it.
         if(parentField.cardinalityUPB > 1) {
             if (prefetchedCollectionFields == null) {
-                prefetchedCollectionFields = new HashMap();
+                prefetchedCollectionFields = new HashMap<>();
             }
             prefetchedCollectionFields.put(parentField, foreignResult);
         }

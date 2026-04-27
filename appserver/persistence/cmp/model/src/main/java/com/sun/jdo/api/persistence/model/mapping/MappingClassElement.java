@@ -30,7 +30,7 @@ import org.netbeans.modules.dbschema.TableElement;
 public interface MappingClassElement extends MappingElement
 {
     /** Constant representing mapping file extension. */
-    public static final String MAPPING_EXTENSION = "mapping";        // NOI18N
+    public static final String MAPPING_EXTENSION = "mapping";
 
     /** Constant representing Consistency level.
      * NONE_CONSISTENCY implies that no consistency semantics are enforced.

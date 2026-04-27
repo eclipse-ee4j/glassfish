@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * IOJavaClassWriter.java
- *
- * Created on November 12, 2001, 4:59 PM
  */
 
 package com.sun.jdo.spi.persistence.utility.generator.io;
@@ -43,23 +38,23 @@ import java.util.Map;
  * interspersed among each other in exactly the order they were added (no
  * member categories).
  *
- * @author raccah
+ * @author raccah 2001
  */
 public final class IOJavaClassWriter implements JavaClassWriter
 {
-    private static final String FIELD = "FIELD";                // NOI18N
-    private static final String INITIALIZER = "INITIALIZER";    // NOI18N
-    private static final String CONSTRUCTOR = "CONSTRUCTOR";    // NOI18N
-    private static final String METHOD = "METHOD";                // NOI18N
-    private static final String INNER_CLASS = "INNER_CLASS";    // NOI18N
-    private static final String MIXED = "MIXED";                // NOI18N
-    private static final String COMMA_SEPARATOR = ", ";            // NOI18N
+    private static final String FIELD = "FIELD";
+    private static final String INITIALIZER = "INITIALIZER";
+    private static final String CONSTRUCTOR = "CONSTRUCTOR";
+    private static final String METHOD = "METHOD";
+    private static final String INNER_CLASS = "INNER_CLASS";
+    private static final String MIXED = "MIXED";
+    private static final String COMMA_SEPARATOR = ", ";
 
     private boolean _maintainCategories;
     private String _superclass;
     private String _classDeclarationBlock;
-    private List _interfaces = new ArrayList();
-    private Map _members = new HashMap();
+    private List<String> _interfaces = new ArrayList<>();
+    private Map<String, List<String>> _members = new HashMap<>();
 
     /** Creates a new instance of IOJavaClassWriter which maintains the
      * order of member input but groups them by category.
@@ -92,6 +87,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
      * to make use of this comment.
      * @see java.lang.reflect.Modifier
      */
+    @Override
     public void setClassDeclaration (final int modifiers,
         final String className, final String[] comments)
     {
@@ -101,7 +97,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
         writerHelper.writeComments(comments);
 
         writerHelper.writeln(modifierString + ((modifierString.length() > 0)
-            ? " " : "") + "class " + className);    // NOI18N
+            ? " " : "") + "class " + className);
 
         _classDeclarationBlock = writerHelper.toString();
     }
@@ -110,6 +106,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
      * be package style (that is - it can contain . but not / or $).
      * @param name The name of the superclass.
      */
+    @Override
     public void setSuperclass (final String name)
     {
         _superclass = name;
@@ -118,10 +115,12 @@ public final class IOJavaClassWriter implements JavaClassWriter
     /** Adds an interface to the list of those implemented by this class.
      * @param name The name of the interface.
      */
+    @Override
     public void addInterface (final String name)
     {
-        if (!StringHelper.isEmpty(name))
+        if (!StringHelper.isEmpty(name)) {
             _interfaces.add(name);
+        }
     }
 
     /** Adds a field to the list of those declared by this class.  Note
@@ -138,6 +137,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
      * implementations will choose to make use of this comment.
      * @see java.lang.reflect.Modifier
      */
+    @Override
     public void addField (final String name, final int modifiers, String type,
         final String initialValue, final String[] comments)
     {
@@ -147,7 +147,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
 
         writerHelper.writeComments(comments);
         writerHelper.writeln(fieldString + ((initialValue != null) ?
-            (" = " + initialValue) : "") + ';');        // NOI18N
+            (" = " + initialValue) : "") + ';');
 
         getMemberList(FIELD).add(writerHelper.toString());
     }
@@ -162,6 +162,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
      * by the implementation.  Note that not all implementations will choose
      * to make use of this comment.
      */
+    @Override
     public void addInitializer (boolean isStatic, String[] body,
         String[] comments)
     {
@@ -171,15 +172,16 @@ public final class IOJavaClassWriter implements JavaClassWriter
         writerHelper.writeComments(comments);
 
         // header
-        writerHelper.writeln(isStatic ? "static" : "");        // NOI18N
-        writerHelper.writeln("{");                            // NOI18N
+        writerHelper.writeln(isStatic ? "static" : "");
+        writerHelper.writeln("{");
 
         // implementation
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             writerHelper.writeln(1, body[i]);
+        }
 
         // end
-        writerHelper.writeln("}");                            // NOI18N
+        writerHelper.writeln("}");
 
         getMemberList(INITIALIZER).add(writerHelper.toString());
     }
@@ -202,6 +204,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
      * to make use of this comment.
      * @see java.lang.reflect.Modifier
      */
+    @Override
     public void addConstructor (final String name, final int modifiers,
         final String[] parameterNames, final String[] parameterTypes,
         final String[] exceptions, final String[] body, final String[] comments)
@@ -228,6 +231,7 @@ public final class IOJavaClassWriter implements JavaClassWriter
      * to make use of this comment.
      * @see java.lang.reflect.Modifier
      */
+    @Override
     public void addMethod (final String name, final int modifiers,
         final String returnType, final String[] parameterNames,
         final String[] parameterTypes, final String[] exceptions,
@@ -240,22 +244,25 @@ public final class IOJavaClassWriter implements JavaClassWriter
     /** Adds an inner class to this class.
      * @param classWriter The definition of the inner class.
      */
+    @Override
     public void addClass (final JavaClassWriter classWriter)
     {
-        if (classWriter != null)
-            getMemberList(INNER_CLASS).add(classWriter);
+        if (classWriter != null) {
+            getMemberList(INNER_CLASS).add(classWriter.toString());
+        }
     }
 
     /** Returns a string representation of this object.
      * @return The string representation of the generated class.
      */
+    @Override
     public String toString ()
     {
         final FormattedWriter writerHelper =  new FormattedWriter();
 
         writeClassDeclaration(writerHelper);        // class declaration
         writeMembers(writerHelper);                    // members
-        writerHelper.writeln("}");        // NOI18N    // closing
+        writerHelper.writeln("}");            // closing
         writerHelper.writeln();
 
         return writerHelper.toString();
@@ -274,17 +281,19 @@ public final class IOJavaClassWriter implements JavaClassWriter
         writerHelper.writeComments(comments);
 
         // signature==null if we have an instance initializer
-        if (signature.length() > 0)
+        if (signature.length() > 0) {
             writerHelper.writeln(signature);
+        }
 
-        writerHelper.writeln("{");                    // NOI18N
+        writerHelper.writeln("{");
 
         // implementation
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             writerHelper.writeln(1, body[i]);
+        }
 
         // end
-        writerHelper.writeln("}");                    // NOI18N
+        writerHelper.writeln("}");
 
         methodList.add(writerHelper.toString());
     }
@@ -296,31 +305,33 @@ public final class IOJavaClassWriter implements JavaClassWriter
         int i, count = (parameterNames != null ? parameterNames.length : 0);
         final FormattedWriter writerHelper =  new FormattedWriter();
 
-        if (modifiers != 0)
+        if (modifiers != 0) {
             writerHelper.write(Modifier.toString(modifiers) + ' ');
+        }
 
         writerHelper.write(((returnType != null) ?
-            returnType + " " : "") + name);            // NOI18N
+            returnType + " " : "") + name);
 
         // parameters
-        writerHelper.write(" (");                        // NOI18N
+        writerHelper.write(" (");
 
         for (i = 0; i < count; i++)
         {
             writeListElement(i, count, parameterTypes[i] + ' ' +
                 parameterNames[i], writerHelper);
         }
-        writerHelper.write(")");                        // NOI18N
+        writerHelper.write(")");
 
         // exceptions
         count = (exceptions != null ? exceptions.length : 0);
         if (count > 0)
         {
             writerHelper.writeln();
-            writerHelper.write(1, "throws ");                // NOI18N
+            writerHelper.write(1, "throws ");
 
-            for (i = 0; i < count; i++)
+            for (i = 0; i < count; i++) {
                 writeListElement(i, count, exceptions[i], writerHelper);
+            }
         }
 
         return writerHelper.toString();
@@ -331,28 +342,25 @@ public final class IOJavaClassWriter implements JavaClassWriter
     {
         int indent = ((i == 0) ? 0 : 1);
 
-        if (i == (count - 1))
+        if (i == (count - 1)) {
             writerHelper.write(indent, string);
-        else
+        } else {
             writerHelper.writeln(indent, string + COMMA_SEPARATOR);
+        }
     }
 
-    private List getMemberList (String memberType)
-    {
-        Object memberList = null;
 
-        if (!_maintainCategories)
+    private List<String> getMemberList(String memberType) {
+        List<String> memberList = null;
+        if (!_maintainCategories) {
             memberType = MIXED;
-
+        }
         memberList = _members.get(memberType);
-        if (memberList == null)
-        {
-            memberList = new ArrayList();
-
+        if (memberList == null) {
+            memberList = new ArrayList<>();
             _members.put(memberType, memberList);
         }
-
-        return (List)memberList;
+        return memberList;
     }
 
     private void writeClassDeclaration (FormattedWriter writerHelper)
@@ -361,19 +369,20 @@ public final class IOJavaClassWriter implements JavaClassWriter
         writerHelper.write(_classDeclarationBlock);
 
         // extends
-        if (_superclass != null)
-            writerHelper.writeln(1, "extends " + _superclass);    // NOI18N
+        if (_superclass != null) {
+            writerHelper.writeln(1, "extends " + _superclass);
+        }
 
         // implements
         if ((_interfaces != null) &&  (_interfaces.size() > 0))
         {
-            writerHelper.write(1, "implements ");                // NOI18N
+            writerHelper.write(1, "implements ");
             writerHelper.write(StringHelper.arrayToSeparatedList(
                 _interfaces, COMMA_SEPARATOR));
             writerHelper.writeln();
         }
 
-        writerHelper.writeln("{");                                // NOI18N
+        writerHelper.writeln("{");
     }
 
     private void writeMembers (FormattedWriter writerHelper)
@@ -385,8 +394,8 @@ public final class IOJavaClassWriter implements JavaClassWriter
             writerHelper.writeList(1, getMemberList(CONSTRUCTOR));
             writerHelper.writeList(1, getMemberList(METHOD));
             writerHelper.writeList(1, getMemberList(INNER_CLASS));
-        }
-        else
+        } else {
             writerHelper.writeList(1, getMemberList(MIXED), true);
+        }
     }
 }

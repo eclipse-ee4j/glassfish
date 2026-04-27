@@ -47,7 +47,7 @@ public class DBVendorType  {
     /**
      * Map from property name to property value.
      */
-    private HashMap dbMap;
+    private HashMap<String, String> dbMap;
 
     /**
      * Instance of specialDBOperation for this vendor type. Please look at
@@ -68,7 +68,7 @@ public class DBVendorType  {
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper
-        .loadBundle("com.sun.jdo.spi.persistence.support.sqlstore.Bundle", DBVendorType.class.getClassLoader());;
+        .loadBundle("com.sun.jdo.spi.persistence.support.sqlstore.Bundle", DBVendorType.class.getClassLoader());
 
     /**
      * Default properties
@@ -167,19 +167,24 @@ public class DBVendorType  {
         this.vendorType     = vendorType;
         DBVendorTypeHelper.getEnumDBType(vendorType);
         dbMap               = getDBPropertiesMap(vendorType,vendorName);
-        specialDBOperation  = newSpecialDBOperationInstance((String)dbMap.get(SPECIAL_DB_OPERATION),
+        specialDBOperation  = newSpecialDBOperationInstance(dbMap.get(SPECIAL_DB_OPERATION),
                                 databaseMetaData, identifier);
     }
 
     /**
      * get properties map for given vendorType and vendorName
      */
-    private static HashMap getDBPropertiesMap(String vendorType, String vendorName) {
+    private static HashMap<String, String> getDBPropertiesMap(String vendorType, String vendorName) {
         //Initialize returned map to default
-        HashMap dbHashMap = new HashMap(defaultProperties);
-        Properties dbProperties = loadDBProperties(vendorType, vendorName);
-        dbHashMap.putAll(dbProperties);
 
+        HashMap<String, String> dbHashMap = new HashMap<>(defaultProperties.size());
+        for (String name : defaultProperties.stringPropertyNames()) {
+            dbHashMap.put(name, defaultProperties.getProperty(name));
+        }
+        Properties dbProperties = loadDBProperties(vendorType, vendorName);
+        for (String name : dbProperties.stringPropertyNames()) {
+            dbHashMap.put(name, dbProperties.getProperty(name));
+        }
         return dbHashMap;
     }
 
@@ -312,7 +317,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getLeftJoin() {
-        String s = (String)dbMap.get(LEFT_JOIN);
+        String s = dbMap.get(LEFT_JOIN);
         if (s == null) {
             s = NONE;
         }
@@ -327,7 +332,7 @@ public class DBVendorType  {
      * Returns true if this database supports update lock
      */
     public boolean isUpdateLockSupported() {
-        String s = (String)dbMap.get(SUPPORTS_UPDATE_LOCK);
+        String s = dbMap.get(SUPPORTS_UPDATE_LOCK);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.isupdatelocksupported", b);
@@ -339,7 +344,7 @@ public class DBVendorType  {
      * Returns true if this database supports update 'of column list'
      */
     public boolean  isLockColumnListSupported() {
-        String s = (String)dbMap.get(SUPPORTS_LOCK_COLUMN_LIST);
+        String s = dbMap.get(SUPPORTS_LOCK_COLUMN_LIST);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.islockcolumnlistsupported", b);
@@ -351,7 +356,7 @@ public class DBVendorType  {
      * Returns true if this database supports distinct clause with update lock
      */
     public boolean isDistinctSupportedWithUpdateLock() {
-        String s = (String)dbMap.get(SUPPORTS_DISTINCT_WITH_UPDATE_LOCK);
+        String s = dbMap.get(SUPPORTS_DISTINCT_WITH_UPDATE_LOCK);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.isdistinctupdatelocksupported", b);
@@ -365,7 +370,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getHoldlock() {
-        String s = (String)dbMap.get(HOLDLOCK);
+        String s = dbMap.get(HOLDLOCK);
         if (s == null) {
             s = NONE;
         }
@@ -379,7 +384,7 @@ public class DBVendorType  {
      * Returns true if the this database needs native outer join semantics.
      */
     public boolean isNativeOuterJoin() {
-        String s = (String)dbMap.get(NATIVE_OUTER_JOIN);
+        String s = dbMap.get(NATIVE_OUTER_JOIN);
         Boolean b = Boolean.valueOf(s);
         LOG.log(DEBUG, "sqlstore.database.dbvendor.isNativeOuterJoin", b);
         return b.booleanValue();
@@ -390,7 +395,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getLeftJoinPost() {
-        String s = (String)dbMap.get(LEFT_JOIN_APPEND);
+        String s = dbMap.get(LEFT_JOIN_APPEND);
         if (s == null) {
             s = NONE;
         }
@@ -404,7 +409,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getRightJoin() {
-        String s = (String)dbMap.get(RIGHT_JOIN);
+        String s = dbMap.get(RIGHT_JOIN);
         if (s == null) {
             s = NONE;
         }
@@ -417,7 +422,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getRightJoinPre() {
-        String s = (String)dbMap.get(RIGHT_JOIN_PRE);
+        String s = dbMap.get(RIGHT_JOIN_PRE);
         if (s == null) {
             s = NONE;
         }
@@ -431,7 +436,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getIsNull() {
-        String s = (String)dbMap.get(IS_NULL);
+        String s = dbMap.get(IS_NULL);
         if (s == null) {
             s = NONE;
         }
@@ -446,7 +451,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getIsNotNull() {
-        String s = (String)dbMap.get(IS_NOT_NULL);
+        String s = dbMap.get(IS_NOT_NULL);
         if (s == null) {
             s = NONE;
         }
@@ -460,7 +465,7 @@ public class DBVendorType  {
      * Returns true if this database need ansi style rtrim semantics.
      */
     public boolean isAnsiTrim() {
-        String s = (String)dbMap.get(ANSI_TRIM);
+        String s = dbMap.get(ANSI_TRIM);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.isAnsiTrim", b);
@@ -473,7 +478,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getRtrim() {
-        String s = (String)dbMap.get(RTRIM);
+        String s = dbMap.get(RTRIM);
         if (s == null) {
             s = NONE;
         }
@@ -488,7 +493,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getRtrimPost() {
-        String s = (String)dbMap.get(RTRIM_POST);
+        String s = dbMap.get(RTRIM_POST);
         if (s == null) {
             s = NONE;
         }
@@ -503,7 +508,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getCharLength() {
-        String s = (String)dbMap.get(CHAR_LENGTH);
+        String s = dbMap.get(CHAR_LENGTH);
         if (s == null) {
             s = NONE;
         }
@@ -518,7 +523,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getSqrt() {
-        String s = (String)dbMap.get(SQRT);
+        String s = dbMap.get(SQRT);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -535,7 +540,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getAbs() {
-        String s = (String)dbMap.get(ABS);
+        String s = dbMap.get(ABS);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -552,7 +557,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getForUpdate() {
-        String s = (String)dbMap.get(FOR_UPDATE);
+        String s = dbMap.get(FOR_UPDATE);
         if (s == null) {
             s = NONE;
         }
@@ -567,7 +572,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getTableListStart() {
-        String s = (String)dbMap.get(TABLE_LIST_START);
+        String s = dbMap.get(TABLE_LIST_START);
         if (s == null) {
             s = NONE;
         }
@@ -582,7 +587,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getTableListEnd() {
-        String s = (String)dbMap.get(TABLE_LIST_END);
+        String s = dbMap.get(TABLE_LIST_END);
         if (s == null) {
             s = NONE;
         }
@@ -597,7 +602,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getStringConcat() {
-        String s = (String)dbMap.get(STRING_CONCAT);
+        String s = dbMap.get(STRING_CONCAT);
         if (s == null) {
             s = NONE;
         }
@@ -612,7 +617,7 @@ public class DBVendorType  {
      * an empty string, if there is none.
      */
     public String getQuoteCharStart() {
-        String s = (String)dbMap.get(QUOTE_CHAR_START);
+        String s = dbMap.get(QUOTE_CHAR_START);
         if (s == null) {
             s = NONE;
         }
@@ -627,7 +632,7 @@ public class DBVendorType  {
      * an empty string, if there is none.
      */
     public String getQuoteCharEnd() {
-        String s = (String)dbMap.get(QUOTE_CHAR_END);
+        String s = dbMap.get(QUOTE_CHAR_END);
         if (s == null) {
             s = NONE;
         }
@@ -642,7 +647,7 @@ public class DBVendorType  {
      * for this database
      */
     public boolean getQuoteSpecialOnly() {
-        String s = (String)dbMap.get(QUOTE_SPECIAL_ONLY);
+        String s = dbMap.get(QUOTE_SPECIAL_ONLY);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(TRACE, QUOTE_SPECIAL_ONLY + " is set to " + b);
@@ -655,7 +660,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getSubstring() {
-        String s = (String)dbMap.get(SUBSTRING);
+        String s = dbMap.get(SUBSTRING);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -672,7 +677,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getSubstringFrom() {
-        String s = (String)dbMap.get(SUBSTRING_FROM);
+        String s = dbMap.get(SUBSTRING_FROM);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -689,7 +694,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getSubstringFor() {
-        String s = (String)dbMap.get(SUBSTRING_FOR);
+        String s = dbMap.get(SUBSTRING_FOR);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -706,7 +711,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getPosition() {
-        String s = (String)dbMap.get(POSITION);
+        String s = dbMap.get(POSITION);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -723,7 +728,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getPositionSep() {
-        String s = (String)dbMap.get(POSITION_SEP);
+        String s = dbMap.get(POSITION_SEP);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -740,7 +745,7 @@ public class DBVendorType  {
      * argument is Source String for this database
      */
     public boolean isPositionSearchSource() {
-        String s = (String)dbMap.get(POSITION_SEARCH_SOURCE);
+        String s = dbMap.get(POSITION_SEARCH_SOURCE);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.getpositionsrchsrc", b);
@@ -752,7 +757,7 @@ public class DBVendorType  {
      * Returns true if position has three argument for this database
      */
     public boolean isPositionThreeArgs() {
-        String s = (String)dbMap.get(POSITION_THREE_ARGS);
+        String s = dbMap.get(POSITION_THREE_ARGS);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.getposition3args", b);
@@ -764,7 +769,7 @@ public class DBVendorType  {
      * Returns true if this database maps empty Strings to NULL
      */
     public boolean mapEmptyStringToNull() {
-        String s = (String)dbMap.get(MAP_EMPTY_STRING_TO_NULL);
+        String s = dbMap.get(MAP_EMPTY_STRING_TO_NULL);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.mapemptystrtonull", b);
@@ -776,7 +781,7 @@ public class DBVendorType  {
      * Returns true if this database supports "LIKE ESCAPE" clause
      */
     public boolean supportsLikeEscape() {
-        String s = (String)dbMap.get(SUPPORTS_LIKE_ESCAPE);
+        String s = dbMap.get(SUPPORTS_LIKE_ESCAPE);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.supportslikeescape", b);
@@ -789,7 +794,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getLeftLikeEscape() {
-        String s = (String)dbMap.get(LEFT_LIKE_ESCAPE);
+        String s = dbMap.get(LEFT_LIKE_ESCAPE);
         if (s == null) {
             s = NONE;
         }
@@ -804,7 +809,7 @@ public class DBVendorType  {
      * for this database
      */
     public String getRightLikeEscape() {
-        String s = (String)dbMap.get(RIGHT_LIKE_ESCAPE);
+        String s = dbMap.get(RIGHT_LIKE_ESCAPE);
         if (s == null) {
             s = NONE;
         }
@@ -818,7 +823,7 @@ public class DBVendorType  {
      * Returns function name for comparing null value for this database
      */
     public String getNullComparisonFunctionName() {
-        String s = (String)dbMap.get(NULL_COMPARISON_FUNCTION_NAME);
+        String s = dbMap.get(NULL_COMPARISON_FUNCTION_NAME);
         if (s == null) {
             s = NONE;
         } else {
@@ -840,7 +845,7 @@ public class DBVendorType  {
      * Returns function name for MOD.
      */
     public String getModFunctionName() {
-        String s = (String)dbMap.get(MOD_FUNCTION_NAME);
+        String s = dbMap.get(MOD_FUNCTION_NAME);
         if (s == null) {
            throw new JDOUserException(I18NHelper.getMessage(messages,
                "core.constraint.illegalop",
@@ -856,7 +861,7 @@ public class DBVendorType  {
      * Returns cast name that surrounds concat operation.
      */
     public String getConcatCast() {
-        String s = (String)dbMap.get(CONCAT_CAST);
+        String s = dbMap.get(CONCAT_CAST);
         if (s == null) {
             s = NONE;
         } else {
@@ -870,7 +875,7 @@ public class DBVendorType  {
      * Returns true if parameters need to be casted for this database
      */
     public boolean isParameterCast() {
-        String s = (String)dbMap.get(PARAMETER_CAST);
+        String s = dbMap.get(PARAMETER_CAST);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "isParameterCast(): {0}.", b);
@@ -882,7 +887,7 @@ public class DBVendorType  {
      * Returns true if numeric parameters are inlined for this database
      */
     public boolean isInlineNumeric() {
-        String s = (String)dbMap.get(INLINE_NUMERIC);
+        String s = dbMap.get(INLINE_NUMERIC);
         Boolean b = Boolean.valueOf(s);
 
         LOG.log(DEBUG, "sqlstore.database.dbvendor.isInlineNumeric", b);
@@ -897,7 +902,7 @@ public class DBVendorType  {
      * "<>".
      */
     public String getNotEqual() {
-        String s = (String)dbMap.get(NOT_EQUAL);
+        String s = dbMap.get(NOT_EQUAL);
         if (s == null) {
             s = NONE;
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,7 @@ import java.util.Properties;
  * Underlying Hashtable is made into logical segments, with each segment
  * having its own LRU list.
  */
-public class MultiLruCache extends BaseCache {
+public class MultiLruCache<K, V> extends BaseCache<K, V> {
 
     /* an array of LRU lists; each element in this array is actually
      * LruCacheItem[2] with LRU list (lru[0] is head and lru[1] the tail
@@ -34,7 +35,7 @@ public class MultiLruCache extends BaseCache {
     public static final int DEFAULT_HASHTABLE_SEGMENT_SIZE = 4096;
 
     int segmentSize;
-    LruCacheItem[][] lists;
+    LruCacheItem<K, V>[][] lists;
     protected int[] listsLength;
 
     int trimCount;
@@ -45,6 +46,7 @@ public class MultiLruCache extends BaseCache {
      * initialize the LRU cache
      * @param maxCapacity maximum number of entries this cache may hold
      */
+    @Override
     public void init(int maxCapacity, Properties props) throws Exception {
         super.init(maxCapacity, props);
 
@@ -60,9 +62,8 @@ public class MultiLruCache extends BaseCache {
         }
 
         // create the array of LRU lists
-        int segments = ((maxBuckets / segmentSize) +
-                        (((maxBuckets % segmentSize) != 0) ? 1 : 0));
-               lists = new LruCacheItem[segments][2];
+        int segments = ((maxBuckets / segmentSize) + (((maxBuckets % segmentSize) != 0) ? 1 : 0));
+        lists = new LruCacheItem[segments][2];
         listsLength = new int[lists.length];
         for (int i = 0; i < lists.length; i++) {
             lists[i][LRU_HEAD] = null;
@@ -82,9 +83,9 @@ public class MultiLruCache extends BaseCache {
      * subclasses may override to provide their own CacheItem extensions
      * e.g. one that permits persistence.
      */
-    protected CacheItem createItem(int hashCode, Object key,
-                                        Object value, int size) {
-        return new LruCacheItem(hashCode, key, value, size);
+    @Override
+    protected CacheItem<K, V> createItem(int hashCode, K key, V value, int size) {
+        return new LruCacheItem<>(hashCode, key, value, size);
     }
 
     /**
@@ -92,9 +93,9 @@ public class MultiLruCache extends BaseCache {
      * @param the LRU segment index to trim
      * @return the item that was successfully trimmed
      */
-    protected CacheItem trimLru(int segment) {
-        LruCacheItem[] list = lists[segment];
-        LruCacheItem l = null;
+    protected CacheItem<K, V> trimLru(int segment) {
+        LruCacheItem<K, V>[] list = lists[segment];
+        LruCacheItem<K, V> l = null;
 
         l = list[LRU_TAIL];
 
@@ -118,25 +119,27 @@ public class MultiLruCache extends BaseCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected CacheItem itemAdded(CacheItem item) {
-        CacheItem overflow = null;
-        if(! (item instanceof LruCacheItem))
+    @Override
+    protected CacheItem<K, V> itemAdded(CacheItem<K, V> item) {
+        CacheItem<K, V> overflow = null;
+        if(! (item instanceof LruCacheItem)) {
             return null;
+        }
 
-        LruCacheItem lc = (LruCacheItem) item;
+        LruCacheItem<K, V> lc = (LruCacheItem<K, V>) item;
 
         int index = getIndex(item.hashCode());
         int segment = (index/segmentSize);
-        LruCacheItem[] list = lists[segment];
+        LruCacheItem<K, V>[] list = lists[segment];
 
         // update the LRU
         synchronized (list) {
             if (list[LRU_HEAD] != null) {
                 list[LRU_HEAD].lPrev = lc;
                 lc.lNext = list[LRU_HEAD];
-            }
-            else
+            } else {
                 list[LRU_TAIL] = lc;
+            }
             list[LRU_HEAD] = lc;
 
             listsLength[segment]++;
@@ -157,19 +160,21 @@ public class MultiLruCache extends BaseCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemAccessed(CacheItem item) {
+    @Override
+    protected void itemAccessed(CacheItem<K, V> item) {
         int index = getIndex(item.hashCode());
         int segment = (index/segmentSize);
-        LruCacheItem[] list = lists[segment];
+        LruCacheItem<K, V>[] list = lists[segment];
 
-        if(! (item instanceof LruCacheItem))
+        if(! (item instanceof LruCacheItem)) {
             return;
-        LruCacheItem lc = (LruCacheItem) item;
+        }
+        LruCacheItem<K, V> lc = (LruCacheItem<K, V>) item;
 
         // update the LRU list
         synchronized (list) {
-            LruCacheItem prev = lc.lPrev;
-            LruCacheItem next = lc.lNext;
+            LruCacheItem<K, V> prev = lc.lPrev;
+            LruCacheItem<K, V> next = lc.lNext;
 
             if (prev != null) {
                 // put the item at the head of LRU list
@@ -180,10 +185,11 @@ public class MultiLruCache extends BaseCache {
 
                 // patch up the previous neighbors
                 prev.lNext = next;
-                if (next != null)
+                if (next != null) {
                     next.lPrev = prev;
-                else
+                } else {
                     list[LRU_TAIL] = prev;
+                }
 
            }
         }
@@ -195,7 +201,8 @@ public class MultiLruCache extends BaseCache {
      * @param oldSize size of the previous value that was refreshed
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemRefreshed(CacheItem item, int oldSize) {
+    @Override
+    protected void itemRefreshed(CacheItem<K, V> item, int oldSize) {
         itemAccessed(item);
     }
 
@@ -205,34 +212,39 @@ public class MultiLruCache extends BaseCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemRemoved(CacheItem item) {
-        if(! (item instanceof LruCacheItem))
+    @Override
+    protected void itemRemoved(CacheItem<K, V> item) {
+        if(! (item instanceof LruCacheItem)) {
             return;
-        LruCacheItem l = (LruCacheItem) item;
+        }
+        LruCacheItem<K, V> l = (LruCacheItem<K, V>) item;
 
         int index = getIndex(item.hashCode());
         int segment = (index/segmentSize);
-        LruCacheItem[] list = lists[segment];
+        LruCacheItem<K, V>[] list = lists[segment];
 
         // remove the item from the LRU list
         synchronized (list) {
             // if the item is already trimmed from the LRU list, nothing to do.
-            if (l.isTrimmed)
+            if (l.isTrimmed) {
                 return;
+            }
 
-            LruCacheItem prev = l.lPrev;
-            LruCacheItem next = l.lNext;
+            LruCacheItem<K, V> prev = l.lPrev;
+            LruCacheItem<K, V> next = l.lNext;
 
             // patch up the neighbors and make sure head/tail are correct
-            if (prev != null)
+            if (prev != null) {
                 prev.lNext = next;
-            else
+            } else {
                 list[LRU_HEAD] = next;
+            }
 
-            if (next != null)
+            if (next != null) {
                 next.lPrev = prev;
-            else
+            } else {
                 list[LRU_TAIL] = prev;
+            }
 
             listsLength[segment]--;
         }
@@ -242,6 +254,7 @@ public class MultiLruCache extends BaseCache {
      * cache has reached threshold so trim its size. subclasses are expected
      * to provide a robust cache replacement algorithm.
      */
+    @Override
     protected void handleOverflow() {
     }
 
@@ -265,19 +278,20 @@ public class MultiLruCache extends BaseCache {
      * @return an Object corresponding to the stat
      * See also: Constant.java for the key
      */
+    @Override
     public Object getStatByName(String key) {
         Object stat = super.getStatByName(key);
 
         if (stat == null && key != null) {
-            if (key.equals(Constants.STAT_MULTILRUCACHE_SEGMENT_SIZE))
+            if (key.equals(Constants.STAT_MULTILRUCACHE_SEGMENT_SIZE)) {
                 stat = Integer.valueOf(segmentSize);
-            else if (key.equals(Constants.STAT_MULTILRUCACHE_TRIM_COUNT))
+            } else if (key.equals(Constants.STAT_MULTILRUCACHE_TRIM_COUNT)) {
                 stat = Integer.valueOf(trimCount);
-            else if (key.equals(Constants.STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH)) {
+            } else if (key.equals(Constants.STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH)) {
                 stat = new Integer[lists.length];
 
                 for (int i = 0; i < lists.length; i++) {
-                    ((Integer[])stat)[i] = Integer.valueOf(listsLength[i]);
+                    ((Integer[]) stat)[i] = Integer.valueOf(listsLength[i]);
                 }
             }
         }
@@ -290,30 +304,26 @@ public class MultiLruCache extends BaseCache {
      * @return a Map of stats
      * See also: Constant.java for the keys
      */
-    public Map getStats() {
-        Map stats = super.getStats();
-
-        stats.put(Constants.STAT_MULTILRUCACHE_SEGMENT_SIZE,
-                  Integer.valueOf(segmentSize));
+    @Override
+    public Map<String, Object> getStats() {
+        Map<String, Object> stats = super.getStats();
+        stats.put(Constants.STAT_MULTILRUCACHE_SEGMENT_SIZE, Integer.valueOf(segmentSize));
         for (int i = 0; i < lists.length; i++) {
-            stats.put(Constants.STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH + "["
-                      + i + "]:",
-                      Integer.valueOf(listsLength[i]));
+            stats.put(Constants.STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH + "[" + i + "]:", Integer.valueOf(listsLength[i]));
         }
-        stats.put(Constants.STAT_MULTILRUCACHE_TRIM_COUNT,
-                  Integer.valueOf(trimCount));
+        stats.put(Constants.STAT_MULTILRUCACHE_TRIM_COUNT, Integer.valueOf(trimCount));
         return stats;
     }
 
     /** default CacheItem class implementation  ***/
-    static class LruCacheItem extends BaseCache.CacheItem {
+    static class LruCacheItem<K, V> extends BaseCache.CacheItem<K, V> {
 
         // double linked LRU list
-            LruCacheItem lNext;
-            LruCacheItem lPrev;
+        LruCacheItem<K, V> lNext;
+        LruCacheItem<K, V> lPrev;
         boolean isTrimmed;
 
-        LruCacheItem(int hashCode, Object key, Object value, int size) {
+        LruCacheItem(int hashCode, K key, V value, int size) {
             super(hashCode, key, value, size);
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,10 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * sco.Vector.java
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sco;
@@ -35,36 +32,34 @@ import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * A mutable 2nd class object date.
- * @author Marina Vatkina
- * @version 1.0
+ * @author Marina Vatkina 2000
  * @see java.util.Vector
  */
-public class Vector
-    extends java.util.Vector
-    implements SCOCollection
-{
+public class Vector extends java.util.Vector<Object> implements SCOCollection {
+
+    private static final long serialVersionUID = 5812205137627529003L;
 
     private transient PersistenceCapable owner;
 
     private transient String fieldName;
 
-    private transient     Class elementType;
+    private transient Class<?> elementType;
 
     private transient boolean allowNulls;
 
-    private transient java.util.Vector added = new java.util.Vector();
+    private transient java.util.Vector<Object> added = new java.util.Vector<>();
 
-    private transient java.util.Vector removed = new java.util.Vector();
+    private transient java.util.Vector<Object> removed = new java.util.Vector<>();
 
     /**
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-                             "com.sun.jdo.spi.persistence.support.sqlstore.impl.Bundle", // NOI18N
+                             "com.sun.jdo.spi.persistence.support.sqlstore.impl.Bundle",
                              Vector.class.getClassLoader());
 
     private final static ResourceBundle messages1 = I18NHelper.loadBundle(
-                             "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+                             "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
                              Vector.class.getClassLoader());
 
     /**
@@ -76,16 +71,14 @@ public class Vector
      * @param elementType the element types allowed
      * @param allowNulls true if nulls are allowed
      */
-    public Vector(Object owner, String fieldName, Class elementType, boolean allowNulls)
-    {
-    super();
-    if (owner instanceof PersistenceCapable)
-        {
-                this.owner = (PersistenceCapable)owner;
-        this.fieldName = fieldName;
+    public Vector(Object owner, String fieldName, Class<?> elementType, boolean allowNulls) {
+        super();
+        if (owner instanceof PersistenceCapable) {
+            this.owner = (PersistenceCapable) owner;
+            this.fieldName = fieldName;
         }
-    this.elementType = elementType;
-    this.allowNulls = allowNulls;
+        this.elementType = elementType;
+        this.allowNulls = allowNulls;
     }
 
     /**
@@ -100,17 +93,14 @@ public class Vector
      * @exception IllegalArgumentException if the specified initial capacity
      *               is negative
      */
-    public Vector(Object owner, String fieldName,
-            Class elementType, boolean allowNulls, int initialCapacity)
-    {
-    super(initialCapacity);
-    if (owner instanceof PersistenceCapable)
-        {
-                this.owner = (PersistenceCapable)owner;
-        this.fieldName = fieldName;
+    public Vector(Object owner, String fieldName, Class<?> elementType, boolean allowNulls, int initialCapacity) {
+        super(initialCapacity);
+        if (owner instanceof PersistenceCapable) {
+            this.owner = (PersistenceCapable) owner;
+            this.fieldName = fieldName;
         }
-    this.elementType = elementType;
-    this.allowNulls = allowNulls;
+        this.elementType = elementType;
+        this.allowNulls = allowNulls;
     }
 
     /** ------------------Public Methods----------------*/
@@ -125,43 +115,40 @@ public class Vector
      * @exception  ArrayIndexOutOfBoundsException  if the index was invalid.
      * @see java.util.Vector
      */
+    @Override
     public synchronized void setElementAt(Object obj, int index) {
+        throwUnsupportedOption();
 
-    throwUnsupportedOption();
-
-    if (obj == null)
-    {
-        if (allowNulls == false)
-        {
-            throw new JDOUserException(I18NHelper.getMessage(messages,
-                "sco.nulls_not_allowed")); // NOI18N
+        if (obj == null) {
+            if (allowNulls == false) {
+                throw new JDOUserException(I18NHelper.getMessage(messages, "sco.nulls_not_allowed"));
+            }
+            // It is actualy remove
+            this.removeElementAt(index);
         }
-        // It is actualy remove
-        this.removeElementAt(index);
-    }
 
-    if (elementType == null || elementType.isAssignableFrom(obj.getClass()))
-    {
-        // Mark the field as dirty
-        StateManager stateManager = this.makeDirty();
+        if (elementType == null || elementType.isAssignableFrom(obj.getClass())) {
+            // Mark the field as dirty
+            StateManager stateManager = this.makeDirty();
 
-        Object o = super.elementAt(index);
-        super.setElementAt(obj, index);
+            Object o = super.elementAt(index);
+            super.setElementAt(obj, index);
 
-        if (added.remove(o) == false)
-            removed.add(o);
+            if (added.remove(o) == false) {
+                removed.add(o);
+            }
 
-        if (removed.remove(obj) == false)
-            added.add(obj);
+            if (removed.remove(obj) == false) {
+                added.add(obj);
+            }
 
-        // Apply updates
-        this.applyUpdates(stateManager, true);
+            // Apply updates
+            this.applyUpdates(stateManager, true);
 
-    } else {
-        throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
-                 new ClassCastException(), new Object[] {obj});
-    }
+        } else {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.classcastexception", elementType.getName()),
+                new ClassCastException(), new Object[] {obj});
+        }
 
     }
 
@@ -173,20 +160,21 @@ public class Vector
      * @exception  ArrayIndexOutOfBoundsException  if the index was invalid.
      * @see java.util.Vector
      */
+    @Override
     public synchronized void removeElementAt(int index) {
+        throwUnsupportedOption();
 
-    throwUnsupportedOption();
+        // Mark the field as dirty
+        StateManager stateManager = this.makeDirty();
 
-    // Mark the field as dirty
-    StateManager stateManager = this.makeDirty();
-
-    Object obj = super.elementAt(index);
+        Object obj = super.elementAt(index);
         super.removeElementAt(index);
-    if (added.remove(obj) == false)
-        removed.add(obj);
+        if (added.remove(obj) == false) {
+            removed.add(obj);
+        }
 
-    // Apply updates
-    this.applyUpdates(stateManager, true);
+        // Apply updates
+        this.applyUpdates(stateManager, true);
 
     }
 
@@ -199,32 +187,30 @@ public class Vector
      * @exception  ArrayIndexOutOfBoundsException  if the index was invalid.
      * @see java.util.Vector
      */
+    @Override
     public synchronized void insertElementAt(Object obj, int index) {
-    if (allowNulls == false && obj == null)
-        {
-                throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+        if (allowNulls == false && obj == null) {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.nulls_not_allowed"));
         }
 
-        if (elementType == null || elementType.isAssignableFrom(obj.getClass()))
-        {
-        // Mark the field as dirty
-        StateManager stateManager = this.makeDirty();
+        if (elementType == null || elementType.isAssignableFrom(obj.getClass())) {
+            // Mark the field as dirty
+            StateManager stateManager = this.makeDirty();
 
-                super.insertElementAt(obj, index);
-            if (removed.remove(obj) == false)
-            added.add(obj);
+            super.insertElementAt(obj, index);
+            if (removed.remove(obj) == false) {
+                added.add(obj);
+            }
 
-        // Apply updates
-        this.applyUpdates(stateManager, true);
+            // Apply updates
+            this.applyUpdates(stateManager, true);
 
-    } else {
-        throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
-                 new ClassCastException(), new Object[] {obj});
+        } else {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.classcastexception", elementType.getName()),
+                new ClassCastException(), new Object[] {obj});
+        }
     }
 
-    }
 
     /**
      * Adds the specified component to the end of this vector,
@@ -233,30 +219,28 @@ public class Vector
      * @param   obj   the component to be added.
      * @see java.util.Vector
      */
+    @Override
     public synchronized void addElement(Object obj) {
-    if (allowNulls == false && obj == null)
-        {
-                throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+        if (allowNulls == false && obj == null) {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.nulls_not_allowed"));
         }
 
-        if (elementType == null || elementType.isAssignableFrom(obj.getClass()))
-        {
-        // Mark the field as dirty
-        StateManager stateManager = this.makeDirty();
+        if (elementType == null || elementType.isAssignableFrom(obj.getClass())) {
+            // Mark the field as dirty
+            StateManager stateManager = this.makeDirty();
 
-                super.addElement(obj);
-            if (removed.remove(obj) == false)
-            added.add(obj);
+            super.addElement(obj);
+            if (removed.remove(obj) == false) {
+                added.add(obj);
+            }
 
-        // Apply updates
-        this.applyUpdates(stateManager, true);
+            // Apply updates
+            this.applyUpdates(stateManager, true);
 
-    } else {
-        throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
-                 new ClassCastException(), new Object[] {obj});
-    }
+        } else {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.classcastexception", elementType.getName()),
+                new ClassCastException(), new Object[] {obj});
+        }
 
     }
 
@@ -269,6 +253,7 @@ public class Vector
      *          vector; <code>false</code> otherwise.
      * @see java.util.Vector
      */
+    @Override
     public synchronized boolean removeElement(Object obj) {
 
         // Because java.util.Vector.removeElement(Object) calls internally removeElementAt(int)
@@ -281,8 +266,9 @@ public class Vector
         if (i > -1) {
                 super.removeElementAt(i);
 
-                if (added.remove(obj) == false)
-                        removed.add(obj);
+                if (added.remove(obj) == false) {
+                    removed.add(obj);
+                }
 
                 // Apply updates
                 this.applyUpdates(stateManager, true);
@@ -297,21 +283,23 @@ public class Vector
      *
      * @see java.util.Vector
      */
+    @Override
     public synchronized void removeAllElements() {
-    // Mark the field as dirty
-    StateManager stateManager = this.makeDirty();
+        // Mark the field as dirty
+        StateManager stateManager = this.makeDirty();
 
-    for (Iterator iter = super.iterator(); iter.hasNext();) {
-        Object o = iter.next();
-        if (added.remove(o) == false)
-            removed.add(o);
-    }
-    added.clear();
+        for (Iterator<?> iter = super.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            if (added.remove(o) == false) {
+                removed.add(o);
+            }
+        }
+        added.clear();
 
-    super.removeAllElements();
+        super.removeAllElements();
 
-    // Apply updates
-    this.applyUpdates(stateManager, true);
+        // Apply updates
+        this.applyUpdates(stateManager, true);
 
     }
 
@@ -325,46 +313,43 @@ public class Vector
      * @param element element to be stored at the specified position.
      * @return the element previously at the specified position.
      * @exception ArrayIndexOutOfBoundsException index out of range
-     *            (index &lt; 0 || index &gt;= size()).
+     *                (index &lt; 0 || index &gt;= size()).
      * @exception IllegalArgumentException fromIndex &gt; toIndex.
      * @see java.util.Vector
      */
+    @Override
     public synchronized Object set(int index, Object element) {
+        throwUnsupportedOption();
 
-    throwUnsupportedOption();
-
-    if (element == null)
-        {
-        if (allowNulls == false)
-                {
-                        throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.nulls_not_allowed")); // NOI18N
-                }
-                // It is actualy remove
-                return this.remove(index);
+        if (element == null) {
+            if (allowNulls == false) {
+                throw new JDOUserException(I18NHelper.getMessage(messages, "sco.nulls_not_allowed"));
+            }
+            // It is actualy remove
+            return this.remove(index);
         }
-        if (elementType == null || elementType.isAssignableFrom(element.getClass()))
-        {
-        // Mark the field as dirty
-        StateManager stateManager = this.makeDirty();
+        if (elementType == null || elementType.isAssignableFrom(element.getClass())) {
+            // Mark the field as dirty
+            StateManager stateManager = this.makeDirty();
 
-        Object o = super.set(index, element);
+            Object o = super.set(index, element);
 
-                if (added.remove(o) == false)
-                        removed.add(o);
+            if (added.remove(o) == false) {
+                removed.add(o);
+            }
 
-                if (removed.remove(element) == false)
-                        added.add(element);
+            if (removed.remove(element) == false) {
+                added.add(element);
+            }
 
-        // Apply updates
-        this.applyUpdates(stateManager, true);
+            // Apply updates
+            this.applyUpdates(stateManager, true);
 
             return o;
-    } else {
-        throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
-                 new ClassCastException(), new Object[] {element});
-    }
+        } else {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.classcastexception", elementType.getName()),
+                new ClassCastException(), new Object[] {element});
+        }
 
     }
 
@@ -376,11 +361,12 @@ public class Vector
      * @return true (as per the general contract of Collection.add).
      * @see java.util.Vector
      */
+    @Override
     public synchronized boolean add(Object o) {
     if (allowNulls == false && o == null)
         {
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+                        "sco.nulls_not_allowed"));
         }
 
     if (elementType == null || elementType.isAssignableFrom(o.getClass()))
@@ -388,8 +374,9 @@ public class Vector
         // Mark the field as dirty
         StateManager stateManager = this.makeDirty();
 
-                if (removed.remove(o) == false)
-            added.add(o);
+                if (removed.remove(o) == false) {
+                    added.add(o);
+                }
 
             boolean modified = super.add(o);
 
@@ -400,7 +387,7 @@ public class Vector
 
     } else {
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
+                                "sco.classcastexception", elementType.getName()),
                  new ClassCastException(), new Object[] {o});
     }
 
@@ -414,6 +401,7 @@ public class Vector
      * @return true if the Vector contained the specified element.
      * @see java.util.Vector
      */
+    @Override
     public boolean remove(Object o) {
         return this.removeElement(o);
     }
@@ -427,6 +415,7 @@ public class Vector
      *            (index &lt; 0 || index &gt; size()).
      * @see java.util.Vector
      */
+    @Override
     public void add(int index, Object element) {
         this.insertElementAt(element, index);
     }
@@ -441,6 +430,7 @@ public class Vector
      *            &lt; 0 || index &gt;= size()).
      * @see java.util.Vector
      */
+    @Override
     public synchronized Object remove(int index) {
 
     throwUnsupportedOption();
@@ -450,8 +440,9 @@ public class Vector
 
         Object obj = super.remove(index);
 
-        if (added.remove(obj) == false)
-        removed.add(obj);
+        if (added.remove(obj) == false) {
+            removed.add(obj);
+        }
 
     // Apply updates
     this.applyUpdates(stateManager, true);
@@ -465,6 +456,7 @@ public class Vector
      *
      * @see java.util.Vector
      */
+    @Override
     public void clear() {
         this.removeAllElements();
     }
@@ -477,29 +469,31 @@ public class Vector
      * @param c elements to be inserted into this Vector.
      * @see java.util.Vector
      */
-    public synchronized boolean addAll(Collection c) {
+    @Override
+    public synchronized boolean addAll(Collection<?> c) {
     if (allowNulls == false && c.contains(null))
         {
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+                        "sco.nulls_not_allowed"));
         }
 
-    java.util.Vector errc = new java.util.Vector();
+    java.util.Vector<Object> errc = new java.util.Vector<>();
     if (elementType != null)
     {
         // iterate the collection and make a list of wrong elements.
-        Iterator i = c.iterator();
+        Iterator<?> i = c.iterator();
         while (i.hasNext())
         {
             Object o = i.next();
-            if (!elementType.isAssignableFrom(o.getClass()))
+            if (!elementType.isAssignableFrom(o.getClass())) {
                 errc.add(o);
+            }
         }
     }
     if (errc != null && errc.size() > 0)
     {
         throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
+                                "sco.classcastexception", elementType.getName()),
                  new ClassCastException(), errc.toArray());
     }
 
@@ -524,18 +518,20 @@ public class Vector
      * @return true if this Vector changed as a result of the call.
      * @see java.util.Vector
      */
-    public synchronized boolean removeAll(Collection c) {
+    @Override
+    public synchronized boolean removeAll(Collection<?> c) {
         boolean modified = false;
     // Mark the field as dirty
     StateManager stateManager = this.makeDirty();
 
-        Iterator e = c.iterator();
+        Iterator<?> e = c.iterator();
         while (e.hasNext()) {
                 Object o = e.next();
                 if(super.contains(o)) {
                         removeInternal(o);
-                        if (added.remove(o) == false)
-                                removed.add(o);
+                        if (added.remove(o) == false) {
+                            removed.add(o);
+                        }
                         modified = true;
                 }
         }
@@ -561,42 +557,38 @@ public class Vector
      *            &lt; 0 || index &gt; size()).
      * @see java.util.Vector
      */
-    public synchronized boolean addAll(int index, Collection c) {
-    if (allowNulls == false && c.contains(null))
-        {
-                throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+    @Override
+    public synchronized boolean addAll(int index, Collection<?> c) {
+        if (allowNulls == false && c.contains(null)) {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.nulls_not_allowed"));
         }
 
-    java.util.Vector errc = new java.util.Vector();
-        if (elementType != null)
-        {
-                // iterate the collection and make a list of wrong elements.
-                Iterator i = c.iterator();
-                while (i.hasNext())
-                {
-                        Object o = i.next();
-                        if (!elementType.isAssignableFrom(o.getClass()))
-                                errc.add(o);
+        java.util.Vector<Object> errc = new java.util.Vector<>();
+        if (elementType != null) {
+            // iterate the collection and make a list of wrong elements.
+            Iterator<?> i = c.iterator();
+            while (i.hasNext()) {
+                Object o = i.next();
+                if (!elementType.isAssignableFrom(o.getClass())) {
+                    errc.add(o);
                 }
+            }
         }
-        if (errc != null && errc.size() > 0)
-        {
-                throw new JDOUserException(I18NHelper.getMessage(messages,
-                                "sco.classcastexception", elementType.getName()), // NOI18N
-                 new ClassCastException(), errc.toArray());
+        if (errc != null && errc.size() > 0) {
+            throw new JDOUserException(I18NHelper.getMessage(messages, "sco.classcastexception", elementType.getName()),
+                new ClassCastException(), errc.toArray());
         }
 
-    // Mark the field as dirty
-    StateManager stateManager = this.makeDirty();
+        // Mark the field as dirty
+        StateManager stateManager = this.makeDirty();
 
         removed.removeAll(c);
         added.addAll(c);
 
         boolean modified = super.addAll(index, c);
 
-    // Apply updates
-    this.applyUpdates(stateManager, modified);
+        // Apply updates
+        this.applyUpdates(stateManager, modified);
 
         return modified;
     }
@@ -608,35 +600,33 @@ public class Vector
      * @return true if this Vector changed as a result of the call.
      * @see java.util.Vector
      */
-    public synchronized boolean retainAll(Collection c)  {
-    boolean modified = false;
-        java.util.Vector v = new java.util.Vector();
+    @Override
+    public synchronized boolean retainAll(Collection<?> c) {
+        boolean modified = false;
+        java.util.Vector<Object> v = new java.util.Vector<>();
 
-    // Mark the field as dirty
-    StateManager stateManager = this.makeDirty();
+        // Mark the field as dirty
+        StateManager stateManager = this.makeDirty();
 
-        for (Iterator iter = super.iterator(); iter.hasNext();)
-        {
-                Object o = iter.next();
-                if (!c.contains(o))
-                {
-                        v.add(o);
-                        if (added.remove(o) == false)
-                                removed.add(o);
-
-                        modified = true;
+        for (Iterator<?> iter = super.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            if (!c.contains(o)) {
+                v.add(o);
+                if (added.remove(o) == false) {
+                    removed.add(o);
                 }
+
+                modified = true;
+            }
         }
 
         // Now remove the rest (stored in "v")
-        for (Iterator iter = v.iterator(); iter.hasNext();)
-        {
-                        removeInternal(iter.next());
+        for (Iterator<Object> iter = v.iterator(); iter.hasNext();) {
+            removeInternal(iter.next());
         }
 
-    // Apply updates
-    this.applyUpdates(stateManager, modified);
-
+        // Apply updates
+        this.applyUpdates(stateManager, modified);
 
         return modified;
     }
@@ -649,6 +639,7 @@ public class Vector
      * objects. In contrast to Object.clone(), this method must not throw a
      * CloneNotSupportedException.
      */
+    @Override
     public Object clone()
     {
         Vector obj = (Vector)super.clone();
@@ -661,6 +652,7 @@ public class Vector
      * Creates and returns a copy of this object without resetting the owner and field value.
      *
      */
+    @Override
     public Object cloneInternal()
     {
         return super.clone();
@@ -669,6 +661,7 @@ public class Vector
     /**
      * Cleans removed and added lists
      */
+    @Override
     public void reset()
     {
         added.clear();
@@ -676,16 +669,19 @@ public class Vector
     }
 
 
+    @Override
     public void markDeferred()
     {
     }
 
+    @Override
     public boolean isDeferred()
     {
         return false;
     }
 
-    public void applyDeferredUpdates(Collection c)
+    @Override
+    public void applyDeferredUpdates(Collection<?> c)
     {
         super.addAll(c);
     }
@@ -693,6 +689,7 @@ public class Vector
     /**
      * Adds an object to the list without recording changes
      */
+    @Override
     public void addInternal(Object o)
     {
         super.addElement(o);
@@ -702,7 +699,8 @@ public class Vector
     /**
      * Adds a Collection to the list without recording changes
      */
-    public void addAllInternal(Collection c)
+    @Override
+    public void addAllInternal(Collection<?> c)
     {
         super.addAll(c);
     }
@@ -710,6 +708,7 @@ public class Vector
     /**
      * @inheritDoc
      */
+    @Override
     public void addToBaseCollection(Object o)
     {
         super.add(o);
@@ -718,7 +717,8 @@ public class Vector
     /**
      * Removes from this collection without recording changes
      */
-    public void removeAllInternal(Collection c)
+    @Override
+    public void removeAllInternal(Collection<?> c)
     {
         super.removeAll(c);
     }
@@ -728,9 +728,10 @@ public class Vector
      *
      * @return added    collection of added elements
      */
-    public Collection getAdded()
+    @Override
+    public Collection<Object> getAdded()
     {
-        return (Collection)added;
+        return added;
     }
 
     /**
@@ -738,14 +739,16 @@ public class Vector
      *
      * @return removed    collection of removed elements
      */
-    public Collection getRemoved()
+    @Override
+    public Collection<Object> getRemoved()
     {
-        return (Collection)removed;
+        return removed;
     }
 
     /**
      * Clears Collection without notifing the owner
      */
+    @Override
     public void clearInternal()
     {
     //Cannot call super.clear() as it internally calls removeAllElements()
@@ -766,6 +769,7 @@ public class Vector
     /**
      * Removes an element without notifing the owner
      */
+    @Override
     public void removeInternal(Object o)
     {
         int i = super.indexOf(o);
@@ -775,6 +779,7 @@ public class Vector
     /**
      * Nullifies references to the owner Object and Field
      */
+    @Override
     public void unsetOwner()
     {
         this.owner = null;
@@ -789,6 +794,7 @@ public class Vector
      *
      * @return owner object
      */
+    @Override
     public Object getOwner()
     {
         return this.owner;
@@ -799,6 +805,7 @@ public class Vector
      *
      * @return field name as java.lang.String
      */
+    @Override
     public String getFieldName()
     {
         return this.fieldName;
@@ -807,6 +814,7 @@ public class Vector
     /**
      * Marks object dirty
      */
+    @Override
     public StateManager makeDirty()
     {
     if (owner != null)
@@ -824,6 +832,7 @@ public class Vector
     /**
      * Apply changes (can be a no-op)
      */
+    @Override
     public void applyUpdates(StateManager sm, boolean modified)
     {
 
@@ -852,11 +861,12 @@ public class Vector
      * @param elementType the new element type as Class, or null if type
      * is not to be checked.
      */
-    public void setOwner(Object owner, String fieldName, Class elementType) {
+    @Override
+    public void setOwner(Object owner, String fieldName, Class<?> elementType) {
 
         if (this.owner != null) {
             throw new JDOUserException(I18NHelper.getMessage(
-                messages1, "core.statemanager.anotherowner"), // NOI18N
+                messages1, "core.statemanager.anotherowner"),
                 new Object[]{this.owner, this.fieldName});
         }
         if (owner instanceof PersistenceCapable) {

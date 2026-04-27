@@ -68,7 +68,7 @@ public class JQLC
     protected ErrorMsg errorMsg;
 
     /** */
-    protected Class candidateClass;
+    protected Class<?> candidateClass;
 
     /** */
     protected JQLAST filterAST = null;
@@ -100,11 +100,10 @@ public class JQLC
      * It's ok to use WeakHashMap from java.util, because the key is a string
      * which is not referenced by the RD.
      */
-    protected Map retrieveDescCache = new HashMap();
+    protected Map<String, RetrieveDesc> retrieveDescCache = new HashMap<>();
 
     /** I18N support */
-    protected final static ResourceBundle messages =
-        I18NHelper.loadBundle(JQLC.class);
+    protected final static ResourceBundle messages = I18NHelper.loadBundle(JQLC.class);
 
     /** The logger */
     private static final Logger LOG = System.getLogger(JQLC.class.getName(), LogHelperSQLStore.RESOURCE_BUNDLE);
@@ -121,7 +120,7 @@ public class JQLC
     /**
      *
      */
-    public void setClass(Class candidateClass)
+    public void setClass(Class<?> candidateClass)
     {
         // check valid candidate class definition
         if (candidateClass == null)
@@ -330,7 +329,7 @@ public class JQLC
         synchronized(retrieveDescCache)
         {
             if (key != null) {
-                rd = (RetrieveDesc)retrieveDescCache.get(key);
+                rd = retrieveDescCache.get(key);
             }
 
             if (rd == null) {

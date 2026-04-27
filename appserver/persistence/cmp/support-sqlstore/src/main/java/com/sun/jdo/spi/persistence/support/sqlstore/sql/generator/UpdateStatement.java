@@ -49,10 +49,10 @@ public class UpdateStatement extends Statement implements Cloneable {
     UpdateQueryPlan plan;
 
     /** List of ColumnRef for the where clause used during batch. */
-    private List columnRefsForWhereClause;
+    private List<ColumnRef> columnRefsForWhereClause;
 
     /** List of version columns */
-    private List versionColumns;
+    private List<ColumnElement> versionColumns;
 
     /** Flag indicating whether we use batch. */
     private boolean batch = false;
@@ -79,7 +79,7 @@ public class UpdateStatement extends Statement implements Cloneable {
     public UpdateStatement(DBVendorType vendorType, UpdateQueryPlan plan, boolean batch) {
         super(vendorType);
         this.plan = plan;
-        columnRefsForWhereClause = new ArrayList();
+        columnRefsForWhereClause = new ArrayList<>();
         this.batch = batch;
         minAffectedRows = 1;
     }
@@ -104,8 +104,8 @@ public class UpdateStatement extends Statement implements Cloneable {
         // NOTE, the sqlstore processes the constraints in reverse order,
         // so start with the last index and decrement
         int nextIndex = columns.size() + columnRefsForWhereClause.size();
-        for (Iterator i = columnRefsForWhereClause.iterator(); i.hasNext(); ) {
-            ColumnRef columnRef = (ColumnRef)i.next();
+        for (Iterator<ColumnRef> i = columnRefsForWhereClause.iterator(); i.hasNext(); ) {
+            ColumnRef columnRef = i.next();
             columnRef.setIndex(nextIndex--);
         }
     }
@@ -213,7 +213,7 @@ public class UpdateStatement extends Statement implements Cloneable {
             if (versionColumns != null)
             {
                 for (int i = 0; i < versionColumns.size(); i++) {
-                    ColumnElement columnElement = (ColumnElement) versionColumns.get(i);
+                    ColumnElement columnElement = versionColumns.get(i);
                     String columnName = columnElement.getName().getName();
                     setClause.append(", ");
                     appendQuotedText(setClause, columnName);
@@ -337,12 +337,12 @@ public class UpdateStatement extends Statement implements Cloneable {
             throws SQLException {
 
         // bind set clause (if necessary)
-        for (Iterator i = getColumnRefs().iterator(); i.hasNext(); ) {
-            bindInputColumn(s, (ColumnRef)i.next(), updateDesc, false );
+        for (Iterator<ColumnRef> i = getColumnRefs().iterator(); i.hasNext(); ) {
+            bindInputColumn(s, i.next(), updateDesc, false );
         }
         // bind where clause (if necessary)
-        for (Iterator i = columnRefsForWhereClause.iterator(); i.hasNext(); ) {
-            bindInputColumn(s, (ColumnRef) i.next(), updateDesc,
+        for (Iterator<ColumnRef> i = columnRefsForWhereClause.iterator(); i.hasNext(); ) {
+            bindInputColumn(s, i.next(), updateDesc,
                     updateDesc.isBeforeImageRequired());
         }
 
@@ -374,14 +374,14 @@ public class UpdateStatement extends Statement implements Cloneable {
     private Object[] getInputValues(UpdateObjectDescImpl updateDesc) {
         Object[] inputValues =
                 new Object[getColumnRefs().size() + columnRefsForWhereClause.size()];
-        for (Iterator i = getColumnRefs().iterator(); i.hasNext(); ) {
-            ColumnRef columnRef = (ColumnRef)i.next();
+        for (Iterator<ColumnRef> i = getColumnRefs().iterator(); i.hasNext(); ) {
+            ColumnRef columnRef = i.next();
             // columnRef's index are 1 based.
             inputValues[columnRef.getIndex() - 1] = getInputValue(updateDesc, columnRef, false);
         }
         final boolean getBeforeValue = updateDesc.isBeforeImageRequired();
-        for (Iterator i = columnRefsForWhereClause.iterator(); i.hasNext(); ) {
-            ColumnRef columnRef = (ColumnRef)i.next();
+        for (Iterator<ColumnRef> i = columnRefsForWhereClause.iterator(); i.hasNext(); ) {
+            ColumnRef columnRef = i.next();
             inputValues[columnRef.getIndex() - 1] = getInputValue(updateDesc, columnRef, getBeforeValue);
         }
         return inputValues;
@@ -417,9 +417,8 @@ public class UpdateStatement extends Statement implements Cloneable {
             // as they're incremented internally after each flush.
             // Version fields must not be modified from "outside".
             value = updateDesc.getAfterValue(field);
-        }  else {
-            value = getBeforeValue ? updateDesc.getBeforeValue(field) :
-                    updateDesc.getAfterValue(field);
+        } else {
+            value = getBeforeValue ? updateDesc.getBeforeValue(field) : updateDesc.getAfterValue(field);
         }
 
         return value;
@@ -427,7 +426,7 @@ public class UpdateStatement extends Statement implements Cloneable {
 
     public void addVersionColumn(ColumnElement versionColumn) {
         if (versionColumns == null) {
-            versionColumns = new ArrayList();
+            versionColumns = new ArrayList<>();
         }
         versionColumns.add(versionColumn);
     }

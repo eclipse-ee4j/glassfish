@@ -19,7 +19,7 @@
  * and open the template in the editor.
  */
 
-package org.glassfish.full.admingui;
+package org.glassfish.admingui.plugin.jmail;
 
 import java.net.URL;
 
@@ -41,7 +41,7 @@ public class JMailConsolePlugin implements ConsoleProvider {
  *  @return URL of configration file.
  */
     public URL getConfiguration(){
-            return null;
+        return null;
     }
 }
 

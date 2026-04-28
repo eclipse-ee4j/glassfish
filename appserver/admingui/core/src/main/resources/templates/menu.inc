@@ -74,7 +74,7 @@
 	<sc:menuItem value="JDBC Connection Pools" url="#{request.contextPath}/jdbc/jdbcConnectionPools.jsf" />
 	<sc:menuItem value="JMS Connection Factories" url="#{request.contextPath}/layouttest.jsf?page=JMS+Connection+Factories" />
 	<sc:menuItem value="JMS Destination Resources" url="#{request.contextPath}/layouttest.jsf?page=JMS+Destination+Resources" />
-	<sc:menuItem value="JavaMail Sessions" url="#{request.contextPath}/layouttest.jsf?page=JavaMail+Sessions" />
+	<sc:menuItem value="Jakarta Mail Sessions" url="#{request.contextPath}/layouttest.jsf?page=Jakarta+Mail+Sessions" />
 	<sc:menuItem value="JNDI Custom Resources" url="#{request.contextPath}/layouttest.jsf?page=JNDI+Custom+Resources" />
 	<sc:menuItem value="JNDI External Resources" url="#{request.contextPath}/layouttest.jsf?page=JNDI+External+Resources" />
 	<sc:subMenu value="Connectors">

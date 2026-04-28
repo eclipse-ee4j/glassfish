@@ -154,7 +154,7 @@
                     <dependency>
                         <groupId>org.glassfish.external</groupId>
                         <artifactId>ant-osgi</artifactId>
-                        <version>1.10.17-SNAPSHOT</version>
+                        <version>1.10.17</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.ant</groupId>

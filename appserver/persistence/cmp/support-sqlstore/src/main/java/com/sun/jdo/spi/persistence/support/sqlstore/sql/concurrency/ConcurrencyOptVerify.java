@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ConcurrencyOptVerify.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
@@ -28,8 +22,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.QueryPlan;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 
-import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 /**
  */
@@ -39,8 +33,9 @@ public class ConcurrencyOptVerify extends ConcurrencyCheckDirty {
      * Find all the local fields that have been updated
      * and use their concurrencyGroup to set the verifyGroupMask.
      */
+    @Override
     protected BitSet prepareVerifyGroupMask(UpdateQueryPlan plan) {
-        ArrayList fields;
+        List<FieldDesc> fields;
         BitSet verifyGroupMask = new BitSet();
         int action = plan.getAction();
 
@@ -56,7 +51,7 @@ public class ConcurrencyOptVerify extends ConcurrencyCheckDirty {
             }
 
             for (int j = 0; j < fields.size(); j++) {
-                FieldDesc f = (FieldDesc) fields.get(j);
+                FieldDesc f = fields.get(j);
 
                 if ((f instanceof LocalFieldDesc) &&
                         (f.sqlProperties & FieldDesc.PROP_IN_CONCURRENCY_CHECK) > 0) {
@@ -78,6 +73,7 @@ public class ConcurrencyOptVerify extends ConcurrencyCheckDirty {
         return verifyGroupMask;
     }
 
+    @Override
     protected boolean isFieldVerificationRequired(LocalFieldDesc lf,
                                                   BitSet verifyGroupMask) {
         boolean fieldVerificationRequired = true;
@@ -95,6 +91,7 @@ public class ConcurrencyOptVerify extends ConcurrencyCheckDirty {
         return fieldVerificationRequired;
     }
 
+    @Override
     public Object clone() {
         return new ConcurrencyOptVerify();
     }

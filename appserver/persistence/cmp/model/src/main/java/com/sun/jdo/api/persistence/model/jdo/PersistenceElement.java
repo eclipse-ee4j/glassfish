@@ -37,7 +37,7 @@ import org.glassfish.persistence.common.I18NHelper;
  * @version %I%
  */
 public abstract class PersistenceElement extends Object
-    implements PersistenceElementProperties, Comparable
+    implements PersistenceElementProperties, Comparable<PersistenceElement>
 {
     /** I18N message handler */
     private static final ResourceBundle _messages = I18NHelper.loadBundle(
@@ -126,6 +126,7 @@ public abstract class PersistenceElement extends Object
      * of this persistence element.
      * @return a string representation of the object
      */
+    @Override
     public String toString () { return getName(); }
 
     /** Overrides Object's <code>equals</code> method by comparing the name of this persistence element
@@ -134,20 +135,24 @@ public abstract class PersistenceElement extends Object
      * @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
      * @param obj the reference object with which to compare.
      */
+    @Override
     public boolean equals(Object obj)
     {
-        if (obj == null)
+        if (obj == null) {
             return false;
-        if (obj == this)
+        }
+        if (obj == this) {
             return true;
+        }
 
         // check for the right class and then do the name check by calling compareTo.
-        return (getClass() == obj.getClass()) && (compareTo(obj) == 0);
+        return (getClass() == obj.getClass()) && (compareTo((PersistenceElement) obj) == 0);
     }
 
     /** Overrides Object's <code>hashCode</code> method to return the hashCode of this persistence element's name.
      * @return a hash code value for this object.
      */
+    @Override
     public int hashCode()
     {
         return (getName()==null) ? 0 : getName().hashCode();
@@ -166,30 +171,36 @@ public abstract class PersistenceElement extends Object
      * or greater than the specified object.
      * @exception ClassCastException - if the specified object is null or is not an instance of PersistenceElement
      */
-    public int compareTo(Object o)
+    @Override
+    public int compareTo(PersistenceElement o)
     {
         // null is not allowed
-        if (o == null)
+        if (o == null) {
             throw new ClassCastException();
-        if (o == this)
+        }
+        if (o == this) {
             return 0;
+        }
 
         String thisName = getName();
         // the following statement throws a ClassCastException if o is not a PersistenceElement
-        String otherName = ((PersistenceElement)o).getName();
+        String otherName = o.getName();
         // if this does not have a name it should compare less than any named object
-        if (thisName == null)
+        if (thisName == null) {
             return (otherName == null) ? 0 : -1;
+        }
         // if this is named and o does not have a name it should compare greater
-        if (otherName == null)
+        if (otherName == null) {
             return 1;
+        }
         // now we know that this and o are named persistence elements =>
         // use locale-sensitive String comparison
         int ret = Collator.getInstance().compare(thisName, otherName);
         // if both names are equal, both objects might have different types.
         // If so order both objects by their type names (necessary to be consistent with equals)
-        if ((ret == 0) && (getClass() != o.getClass()))
+        if ((ret == 0) && (getClass() != o.getClass())) {
             ret = getClass().getName().compareTo(o.getClass().getName());
+        }
         return ret;
     }
 
@@ -204,8 +215,9 @@ public abstract class PersistenceElement extends Object
     {
         _impl = impl;
 
-        if (_impl != null)
+        if (_impl != null) {
             getImpl().attachToElement(this);
+        }
     }
 
     /** Pluggable implementation of the storage of element properties.

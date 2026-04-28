@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,7 +30,7 @@ header
     import antlr.NoViableAltException;
     import antlr.NoViableAltForCharException;
     import antlr.TokenStreamRecognitionException;
-    
+
     import java.util.Locale;
     import java.util.ResourceBundle;
     import com.sun.jdo.api.persistence.support.JDOQueryException;
@@ -52,43 +53,43 @@ options
 {
     k = 2;
     exportVocab = JQL;
-    charVocabulary = '\u0000'..'\uFFFE'; //NOI18N
+    charVocabulary = '\u0000'..'\uFFFE';
 }
 
 tokens {
 
-    IMPORT = "import"; //NOI18N
-    THIS = "this"; //NOI18N
-    ASCENDING = "ascending"; //NOI18N
-    DESCENDING = "descending"; //NOI18N
+    IMPORT = "import";
+    THIS = "this";
+    ASCENDING = "ascending";
+    DESCENDING = "descending";
 
     // non-standard extensions
-    DISTINCT = "distinct"; //NOI18N
-    
+    DISTINCT = "distinct";
+
     // types
-    
-    BOOLEAN = "boolean"; //NOI18N
-    BYTE = "byte"; //NOI18N
-    CHAR = "char"; //NOI18N
-    SHORT = "short"; //NOI18N
-    INT = "int"; //NOI18N
-    FLOAT = "float"; //NOI18N
-    LONG = "long"; //NOI18N
-    DOUBLE = "double"; //NOI18N
-    
+
+    BOOLEAN = "boolean";
+    BYTE = "byte";
+    CHAR = "char";
+    SHORT = "short";
+    INT = "int";
+    FLOAT = "float";
+    LONG = "long";
+    DOUBLE = "double";
+
     // literals
-    
-    NULL = "null"; //NOI18N
-    TRUE = "true"; //NOI18N
-    FALSE = "false"; //NOI18N
+
+    NULL = "null";
+    TRUE = "true";
+    FALSE = "false";
 
     // aggregate functions
-    AVG = "avg"; //NOI18N
-    MAX = "max"; //NOI18N
-    MIN = "min"; //NOI18N
-    SUM = "sum"; //NOI18N
-    COUNT = "count"; //NOI18N
-    
+    AVG = "avg";
+    MAX = "max";
+    MIN = "min";
+    SUM = "sum";
+    COUNT = "count";
+
 }
 
 {
@@ -97,12 +98,12 @@ tokens {
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
             JQLLexer.class);
-    
+
     /**
      *
      */
     protected ErrorMsg errorMsg;
-    
+
     /**
      * The width of a tab stop.
      * This value is used to calculate the correct column in a line
@@ -117,11 +118,11 @@ tokens {
     {
         this.errorMsg = errorMsg;
     }
-    
+
     /**
      *
      */
-    public void tab() 
+    public void tab()
     {
         int column = getColumn();
         int newColumn = (((column-1)/TABSIZE)+1)*TABSIZE+1;
@@ -166,24 +167,24 @@ LPAREN          :   '('     ;
 RPAREN          :   ')'     ;
 COMMA           :   ','     ;
 //DOT           :   '.'     ;
-EQUAL           :   "=="    ; //NOI18N
+EQUAL           :   "=="    ;
 LNOT            :   '!'     ;
 BNOT            :   '~'     ;
-NOT_EQUAL       :   "!="    ; //NOI18N
+NOT_EQUAL       :   "!="    ;
 DIV             :   '/'     ;
 PLUS            :   '+'     ;
 MINUS           :   '-'     ;
 STAR            :   '*'     ;
 MOD             :   '%'     ;
-GE              :   ">="    ; //NOI18N
-GT              :   ">"     ; //NOI18N
-LE              :   "<="    ; //NOI18N
+GE              :   ">="    ;
+GT              :   ">"     ;
+LE              :   "<="    ;
 LT              :   '<'     ;
 BXOR            :   '^'     ;
 BOR             :   '|'     ;
-OR              :   "||"    ; //NOI18N
+OR              :   "||"    ;
 BAND            :   '&'     ;
-AND             :   "&&"    ; //NOI18N
+AND             :   "&&"    ;
 SEMI            :   ';'     ;
 
 // Whitespace -- ignored
@@ -196,24 +197,24 @@ WS
     ;
 
 NEWLINE
-    :   (   "\r\n"  //NOI18N
+    :   (   "\r\n"
         |   '\r'
         |   '\n'
         )
-        { 
-            newline(); 
-            _ttype = Token.SKIP; 
+        {
+            newline();
+            _ttype = Token.SKIP;
         }
     ;
 
 // character literals
 CHAR_LITERAL
-    :   '\'' ( ESC | ~'\'' ) '\'' 
+    :   '\'' ( ESC | ~'\'' ) '\''
     ;
 
 // string literals
 STRING_LITERAL
-    :  '"' ( ESC | ~'"')* '"' //NOI18N
+    :  '"' ( ESC | ~'"')* '"'
     ;
 
 // escape sequence -- note that this is protected; it can only be called
@@ -227,23 +228,23 @@ STRING_LITERAL
 protected
 ESC
     :   '\\'
-        (   options { warnWhenFollowAmbig = false; }    
+        (   options { warnWhenFollowAmbig = false; }
         :   'n'
         |   'r'
         |   't'
         |   'b'
         |   'f'
-        |   '"' //NOI18N
+        |   '"'
         |   '\''
         |   '\\'
-        |   ('u')+ HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT 
+        |   ('u')+ HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
         |   ('0'..'3')
             (
                 options {
                     warnWhenFollowAmbig = false;
                 }
             :   ('0'..'7')
-                (   
+                (
                     options {
                         warnWhenFollowAmbig = false;
                     }
@@ -269,13 +270,13 @@ HEX_DIGIT
 
 // a numeric literal
 INT_LITERAL
-    {   
+    {
         boolean isDecimal=false;
-        int tokenType = DOUBLE_LITERAL; 
+        int tokenType = DOUBLE_LITERAL;
     }
     :   '.' {_ttype = DOT;}
             (('0'..'9')+ {tokenType = DOUBLE_LITERAL;}
-             (EXPONENT)? 
+             (EXPONENT)?
              (tokenType = FLOATINGPOINT_SUFFIX)?
             { _ttype = tokenType; })?
     |   (   '0' {isDecimal = true;} // special case for just '0'
@@ -296,11 +297,11 @@ INT_LITERAL
         |   ('1'..'9') ('0'..'9')*  {isDecimal=true;}       // non-zero decimal
         )
         (   ('l'|'L') { _ttype = LONG_LITERAL; }
-        
+
         // only check to see if it's a float if looks like decimal so far
         |   {isDecimal}?
-            {tokenType = DOUBLE_LITERAL;} 
-            (   '.' ('0'..'9')* (EXPONENT)? 
+            {tokenType = DOUBLE_LITERAL;}
+            (   '.' ('0'..'9')* (EXPONENT)?
                 (tokenType = FLOATINGPOINT_SUFFIX)?
             |   EXPONENT (tokenType = FLOATINGPOINT_SUFFIX)?
             |   tokenType = FLOATINGPOINT_SUFFIX
@@ -317,10 +318,10 @@ EXPONENT
 
 protected
 FLOATINGPOINT_SUFFIX returns [int tokenType]
-    : 'f' { tokenType = FLOAT_LITERAL; } 
-    | 'F' { tokenType = FLOAT_LITERAL; } 
-    | 'd' { tokenType = DOUBLE_LITERAL; } 
-    | 'D' { tokenType = DOUBLE_LITERAL; } 
+    : 'f' { tokenType = FLOAT_LITERAL; }
+    | 'F' { tokenType = FLOAT_LITERAL; }
+    | 'd' { tokenType = DOUBLE_LITERAL; }
+    | 'D' { tokenType = DOUBLE_LITERAL; }
     ;
 
 // an identifier.  Note that testLiterals is set to true!  This means
@@ -328,21 +329,21 @@ FLOATINGPOINT_SUFFIX returns [int tokenType]
 // if it's a literal or really an identifer
 
 IDENT
-    options {paraphrase = "an identifier"; testLiterals=true;} //NOI18N
+    options {paraphrase = "an identifier"; testLiterals=true;}
     :   (   'a'..'z'
         |   'A'..'Z'
         |   '_'
         |   '$'
         |   UNICODE_ESCAPE
         |   c1:'\u0080'..'\uFFFE'
-            {   
+            {
                 if (!Character.isJavaIdentifierStart(c1)) {
-                    errorMsg.error(getLine(), getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedchar", //NOI18N
+                    errorMsg.error(getLine(), getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedchar",
                             String.valueOf(c1)));
                 }
             }
-        ) 
+        )
         (   'a'..'z'
         |   'A'..'Z'
         |   '_'
@@ -350,10 +351,10 @@ IDENT
         |   '0'..'9'
         |   UNICODE_ESCAPE
         |   c2:'\u0080'..'\uFFFE'
-            {   
+            {
                 if (!Character.isJavaIdentifierPart(c2)) {
-                    errorMsg.error(getLine(), getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedchar", //NOI18N
+                    errorMsg.error(getLine(), getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedchar",
                         String.valueOf(c2)));
                 }
             }
@@ -368,11 +369,11 @@ UNICODE_ESCAPE
                 String tmp = text.toString();
                 char c  = (char)Integer.parseInt(tmp.substring(tmp.length() - 4, tmp.length()), 16);
                 // problems using ANTLR feature $setText => use generated code
-                text.setLength(_begin); 
+                text.setLength(_begin);
                 text.append(new Character(c).toString());
             }
             catch (NumberFormatException ex) {
-                throw new JDOFatalInternalException(I18NHelper.getMessage(messages, "jqlc.parser.invalidunicodestr"), ex); //NOI18N
+                throw new JDOFatalInternalException(I18NHelper.getMessage(messages, "jqlc.parser.invalidunicodestr"), ex);
             }
         }
     ;
@@ -426,7 +427,7 @@ tokens
     STARTS_WITH;
     ENDS_WITH;
     IS_EMPTY;
-    
+
     // identifier types
     VARIABLE;
     PARAMETER;
@@ -446,7 +447,7 @@ tokens
     ABS;
     SQRT;
 
-    // 
+    //
     NOT_IN;
 }
 
@@ -464,7 +465,7 @@ tokens
      *
      */
     protected ErrorMsg errorMsg;
-    
+
     /**
      *
      */
@@ -472,7 +473,7 @@ tokens
     {
         this.errorMsg = errorMsg;
     }
-    
+
     /**
      * ANTLR method called when an error was detected.
      */
@@ -515,16 +516,16 @@ tokens
             MismatchedCharException mismatched = (MismatchedCharException)ex;
             if (mismatched.mismatchType == MismatchedCharException.CHAR)
             {
-                if (mismatched.foundChar == EOF_CHAR) 
+                if (mismatched.foundChar == EOF_CHAR)
                 {
-                    errorMsg.error(mismatched.getLine(), mismatched.getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedEOF")); //NOI18N
+                    errorMsg.error(mismatched.getLine(), mismatched.getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedEOF"));
                 }
-                else 
+                else
                 {
-                    errorMsg.error(mismatched.getLine(), mismatched.getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.expectedfoundchar", //NOI18N
-                            String.valueOf((char)mismatched.expecting), 
+                    errorMsg.error(mismatched.getLine(), mismatched.getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.expectedfoundchar",
+                            String.valueOf((char)mismatched.expecting),
                             String.valueOf((char)mismatched.foundChar)));
                 }
                 return;
@@ -535,15 +536,15 @@ tokens
             MismatchedTokenException mismatched = (MismatchedTokenException)ex;
             Token token = mismatched.token;
             if ((mismatched.mismatchType == MismatchedTokenException.TOKEN) &&
-                (token != null)) 
+                (token != null))
             {
                 if (token.getType() == Token.EOF_TYPE) {
-                    errorMsg.error(token.getLine(), token.getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedEOF")); //NOI18N
+                    errorMsg.error(token.getLine(), token.getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedEOF"));
                 }
                 else {
-                    errorMsg.error(token.getLine(), token.getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.syntaxerrorattoken", token.getText())); //NOI18N
+                    errorMsg.error(token.getLine(), token.getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.syntaxerrorattoken", token.getText()));
                 }
                 return;
             }
@@ -553,15 +554,15 @@ tokens
             Token token = ((NoViableAltException)ex).token;
             if (token != null)
             {
-                if (token.getType() == Token.EOF_TYPE) 
+                if (token.getType() == Token.EOF_TYPE)
                 {
                     errorMsg.error(token.getLine(), token.getColumn(),
-                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedEOF")); //NOI18N
+                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedEOF"));
                 }
-                else 
+                else
                 {
-                    errorMsg.error(token.getLine(), token.getColumn(), 
-                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedtoken", token.getText())); //NOI18N
+                    errorMsg.error(token.getLine(), token.getColumn(),
+                        I18NHelper.getMessage(messages, "jqlc.parser.unexpectedtoken", token.getText()));
                 }
                 return;
             }
@@ -569,8 +570,8 @@ tokens
         else if (ex instanceof NoViableAltForCharException)
         {
             NoViableAltForCharException noViableAlt = (NoViableAltForCharException)ex;
-            errorMsg.error(noViableAlt.getLine(), noViableAlt.getColumn(), 
-                I18NHelper.getMessage(messages, "jqlc.parser.unexpectedchar", //NOI18N
+            errorMsg.error(noViableAlt.getLine(), noViableAlt.getColumn(),
+                I18NHelper.getMessage(messages, "jqlc.parser.unexpectedchar",
                     String.valueOf(noViableAlt.foundChar)));
         }
         else if (ex instanceof TokenStreamRecognitionException)
@@ -587,7 +588,7 @@ tokens
             line = ((RecognitionException)ex).getLine();
             column = ((RecognitionException)ex).getColumn();
         }
-        errorMsg.error(line, column, I18NHelper.getMessage(messages, "jqlc.parser.syntaxerror")); //NOI18N
+        errorMsg.error(line, column, I18NHelper.getMessage(messages, "jqlc.parser.syntaxerror"));
     }
 }
 
@@ -596,14 +597,14 @@ tokens
 // ----------------------------------
 
 parseImports
-{   
-    errorMsg.setContext("declareImports");  //NOI18N
+{
+    errorMsg.setContext("declareImports");
 }
     :   ( declareImport ( SEMI! declareImport )* )? ( SEMI! )? EOF!
     ;
 
 declareImport
-    :   i:IMPORT^ qualifiedName //NOI18N
+    :   i:IMPORT^ qualifiedName
         {
             #i.setType(IMPORT_DEF);
         }
@@ -614,15 +615,15 @@ declareImport
 // ----------------------------------
 
 parseParameters
-{   
-    errorMsg.setContext("declareParameters"); //NOI18N
+{
+    errorMsg.setContext("declareParameters");
 }
     :   ( declareParameter ( COMMA! declareParameter )* )? ( COMMA! )? EOF!
     ;
 
 declareParameter
     :   type IDENT
-        { #declareParameter = #(#[PARAMETER_DEF,"parameterDef"], #declareParameter); } //NOI18N
+        { #declareParameter = #(#[PARAMETER_DEF,"parameterDef"], #declareParameter); }
     ;
 
 // ----------------------------------
@@ -630,15 +631,15 @@ declareParameter
 // ----------------------------------
 
 parseVariables
-{   
-    errorMsg.setContext("declareVariables");  //NOI18N
+{
+    errorMsg.setContext("declareVariables");
 }
     :   ( declareVariable ( SEMI! declareVariable )* )? ( SEMI! )? EOF!
     ;
 
 declareVariable
     :   type IDENT
-        {  #declareVariable = #(#[VARIABLE_DEF,"variableDef"], #declareVariable); } //NOI18N
+        {  #declareVariable = #(#[VARIABLE_DEF,"variableDef"], #declareVariable); }
     ;
 
 // ----------------------------------
@@ -646,16 +647,16 @@ declareVariable
 // ----------------------------------
 
 parseOrdering
-{   
-    errorMsg.setContext("setOrdering");  //NOI18N
+{
+    errorMsg.setContext("setOrdering");
 }
     :   ( orderSpec ( COMMA! orderSpec )* )? ( COMMA! )? EOF!
     ;
 
 orderSpec!
     :   e:expression d:direction
-        { #orderSpec = #(#[ORDERING_DEF,"orderingDef"], #d, #e); } //NOI18N
-    ; 
+        { #orderSpec = #(#[ORDERING_DEF,"orderingDef"], #d, #e); }
+    ;
 
 direction
     :    ASCENDING
@@ -667,18 +668,18 @@ direction
 // ----------------------------------
 
 parseResult
-{  
-    errorMsg.setContext("setResult");  //NOI18N
+{
+    errorMsg.setContext("setResult");
 }
     :   ( ( DISTINCT^ )? ( a:aggregateExpr | e:expression ) )? EOF!
-        {  
+        {
             // create RESULT_DEF node if there was a projection
             if (#a != null) {
                 // skip a possible first distinct in case of an aggregate expr
                 #parseResult = #(#[RESULT_DEF, "resultDef"], #a);
             }
             else if (#e != null) {
-                #parseResult = #(#[RESULT_DEF,"resultDef"], #parseResult); //NOI18N
+                #parseResult = #(#[RESULT_DEF,"resultDef"], #parseResult);
             }
         }
     ;
@@ -688,7 +689,7 @@ aggregateExpr
     ;
 
 distinctExpr
-    :   DISTINCT^ e:expression 
+    :   DISTINCT^ e:expression
     |   expression
     ;
 
@@ -697,11 +698,11 @@ distinctExpr
 // ----------------------------------
 
 parseFilter!
-{  
-    errorMsg.setContext("setFilter");  //NOI18N
+{
+    errorMsg.setContext("setFilter");
 }
     :   e:expression EOF!
-        {  #parseFilter = #(#[FILTER_DEF,"filterDef"], #e); } //NOI18N
+        {  #parseFilter = #(#[FILTER_DEF,"filterDef"], #e); }
     ;
 
 // This is a list of expressions.
@@ -786,10 +787,10 @@ postfixExpression
 argList
     :   LPAREN!
         (   expressionList
-            {#argList = #(#[ARG_LIST,"ARG_LIST"], #argList); } //NOI18N
+            {#argList = #(#[ARG_LIST,"ARG_LIST"], #argList); }
 
         |   /* empty list */
-            {#argList = #[ARG_LIST,"ARG_LIST"];} //NOI18N
+            {#argList = #[ARG_LIST,"ARG_LIST"];}
         )
         RPAREN!
     ;

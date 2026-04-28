@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,7 +32,7 @@ public interface ConfigCache {
      * @param pcClass The input pcClass.
      * @return PersistenceConfig for given pcClass.
      */
-    PersistenceConfig getPersistenceConfig(Class pcClass);
+    PersistenceConfig getPersistenceConfig(Class<?> pcClass);
 
     /**
      * Gets the Class instance corresponding to given oidType.
@@ -39,7 +40,7 @@ public interface ConfigCache {
      * @param oidType The input oidType.
      * @return The Class instance corresponding to given oidType.
      */
-    Class getClassByOidClass(Class oidType);
+    Class<?> getClassByOidClass(Class<?> oidType);
 
     /**
      * Sets VersionConsistencyCache field.

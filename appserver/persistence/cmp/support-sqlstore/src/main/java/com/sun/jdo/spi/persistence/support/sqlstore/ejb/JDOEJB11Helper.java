@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * JDOEJB11Helper.java
- *
- * Created on January 17, 2002
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
@@ -36,7 +31,7 @@ import java.util.Set;
  * to and from EJB objects of type: EJBObject, PrimaryKey, and Collections of those.
  * This interface is generic for CMP1.1 and CMP2.0.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2002
  */
 public interface JDOEJB11Helper {
 
@@ -66,7 +61,7 @@ public interface JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Collection of EJBObjects.
      */
-    Collection convertCollectionPCToEJBObject (Collection pcs, PersistenceManager pm);
+    Collection<Object> convertCollectionPCToEJBObject (Collection<?> pcs, PersistenceManager pm);
 
     /**
      * Converts Collection of persistence-capable instances to a Set of
@@ -75,7 +70,7 @@ public interface JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Set of EJBObjects.
      */
-    Set convertCollectionPCToEJBObjectSet (Collection pcs, PersistenceManager pm);
+    Set<Object> convertCollectionPCToEJBObjectSet (Collection<?> pcs, PersistenceManager pm);
 
     /**
      * Converts Collection of EJBObjects to a Collection of
@@ -87,7 +82,7 @@ public interface JDOEJB11Helper {
      * @throws IllegalArgumentException if validate is true and at least one instance does
      * not exist in the database or is deleted.
      */
-    Collection convertCollectionEJBObjectToPC (Collection coll, PersistenceManager pm,
+    Collection<Object> convertCollectionEJBObjectToPC (Collection<?> coll, PersistenceManager pm,
         boolean validate);
 
     /**
@@ -105,7 +100,7 @@ public interface JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Collection of the PrimaryKey Class instances.
      */
-    Collection convertCollectionPCToPrimaryKey (Collection pcs, PersistenceManager pm);
+    Collection<Object> convertCollectionPCToPrimaryKey (Collection<?> pcs, PersistenceManager pm);
 
    /**
      * Converts Object Id of a persistence-capable instance to an instance of the
@@ -129,7 +124,7 @@ public interface JDOEJB11Helper {
      * @param oids Collection of the Object Id to be converted.
      * @return Collection of of the PrimaryKey Class instances.
      */
-    Collection convertCollectionObjectIdToPrimaryKey (Collection oids);
+    Collection<Object> convertCollectionObjectIdToPrimaryKey (Collection<?> oids);
 
    /**
      * Converts Collection of PrimaryKey instances to a Collection of Object Id's
@@ -137,14 +132,14 @@ public interface JDOEJB11Helper {
      * @param key Collection of the PrimaryKey instances to be converted.
      * @return Collection of the Object Id's.
      */
-    Collection convertCollectionPrimaryKeyToObjectId (Collection key);
+    Collection<Object> convertCollectionPrimaryKeyToObjectId (Collection<?> key);
 
     /**
      * Returns the class object of the corresponding persistence-capable class
      * of the concrete bean class.
      * @return the pc class object
      */
-    Class getPCClass ();
+    Class<?> getPCClass ();
 
     /**
      * Serializes serializableObject into a byte array

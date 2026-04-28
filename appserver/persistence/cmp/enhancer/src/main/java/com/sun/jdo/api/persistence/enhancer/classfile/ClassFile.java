@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,8 +46,7 @@ final public class ClassFile implements VMConstants {
         new short[]{49, 0}, // jdk 1.5
         new short[]{50, 0}  // jdk 1.6
     };
-    public static final List jdkVersions =
-        convertMajorMinorVersions(jdkMajorMinorVersions);
+    public static final List<Integer> jdkVersions = convertMajorMinorVersions(jdkMajorMinorVersions);
     public static final String supportedVersions = printSupportedVersions();
 
     private int majorVersion = 0;
@@ -67,17 +67,17 @@ final public class ClassFile implements VMConstants {
     /* A list of the interfaces which the class implements
      * The contents are ConstClass objects
      */
-    private Vector classInterfaces = new Vector();
+    private Vector<ConstClass> classInterfaces = new Vector<>();
 
     /* A list of the fields which the class contains
      * The contents are ClassField objects
      */
-    private Vector classFields = new Vector();
+    private Vector<ClassField> classFields = new Vector<>();
 
     /* A list of the methods which the class defines
      * The contents are ClassMethod objects
      */
-    private Vector classMethods = new Vector();
+    private Vector<ClassMethod> classMethods = new Vector<>();
 
     /* A list of the attributes associated with the class */
     private AttributeVector classAttributes = new AttributeVector();
@@ -170,7 +170,7 @@ final public class ClassFile implements VMConstants {
      * Return the list of the interfaces which the class implements
      * The contents are ConstClass objects
      */
-    public Vector interfaces() {
+    public Vector<ConstClass> interfaces() {
         return classInterfaces;
     }
 
@@ -185,7 +185,7 @@ final public class ClassFile implements VMConstants {
      * Return the list of the fields which the class contains
      * The contents are ClassField objects
      */
-    public Vector fields() {
+    public Vector<ClassField> fields() {
         return classFields;
     }
 
@@ -208,7 +208,7 @@ final public class ClassFile implements VMConstants {
      * Return the list of the methods which the class defines
      * The contents are ClassMethod objects
      */
-    public Vector methods() {
+    public Vector<ClassMethod> methods() {
         return classMethods;
     }
 
@@ -216,11 +216,12 @@ final public class ClassFile implements VMConstants {
      * Look for a method with the specified name and type signature
      */
     public ClassMethod findMethod(String methodName, String methodSig) {
-        for (Enumeration e = methods().elements(); e.hasMoreElements();) {
-            ClassMethod method = (ClassMethod) e.nextElement();
+        for (Enumeration<ClassMethod> e = methods().elements(); e.hasMoreElements();) {
+            ClassMethod method = e.nextElement();
             if (method.name().asString().equals(methodName) &&
-                method.signature().asString().equals(methodSig))
+                method.signature().asString().equals(methodSig)) {
                 return method;
+            }
         }
         return null;
     }
@@ -236,10 +237,11 @@ final public class ClassFile implements VMConstants {
      * Look for a field with the specified name
      */
     public ClassField findField(String fieldName) {
-        for (Enumeration e = fields().elements(); e.hasMoreElements();) {
-            ClassField field = (ClassField) e.nextElement();
-            if (field.name().asString().equals(fieldName))
+        for (Enumeration<ClassField> e = fields().elements(); e.hasMoreElements();) {
+            ClassField field = e.nextElement();
+            if (field.name().asString().equals(fieldName)) {
                 return field;
+            }
         }
         return null;
     }
@@ -257,8 +259,9 @@ final public class ClassFile implements VMConstants {
     public ClassFile(DataInputStream data) throws ClassFormatError {
         try {
             int thisMagic = data.readInt();
-            if (thisMagic != magic)
-                throw new ClassFormatError("Bad magic value for input");//NOI18N
+            if (thisMagic != magic) {
+                throw new ClassFormatError("Bad magic value for input");
+            }
 
             short thisMinorVersion = data.readShort();
             short thisMajorVersion = data.readShort();
@@ -269,10 +272,10 @@ final public class ClassFile implements VMConstants {
                 minorVersion = thisMinorVersion;
                 majorVersion = thisMajorVersion;
             } else {
-                throw new ClassFormatError("Bad version number: {" + //NOI18N
-                    thisMajorVersion + "," + //NOI18N
+                throw new ClassFormatError("Bad version number: {" +
+                    thisMajorVersion + "," +
                     thisMinorVersion +
-                    "} expected one of: " + //NOI18N
+                    "} expected one of: " +
                     supportedVersions);
             }
             readConstants(data);
@@ -286,7 +289,7 @@ final public class ClassFile implements VMConstants {
             readMethods(data);
             classAttributes = AttributeVector.readAttributes(data, constantPool);
         } catch (IOException e) {
-            ClassFormatError cfe = new ClassFormatError("IOException during reading");//NOI18N
+            ClassFormatError cfe = new ClassFormatError("IOException during reading");
             cfe.initCause(e);
             throw cfe;
         }
@@ -333,7 +336,7 @@ final public class ClassFile implements VMConstants {
             System.getProperty("filter.writeClassToDirectory");
         if (writeClassToDirectory != null) {
             String filename = writeClassToDirectory + java.io.File.separator +
-                thisClassName.asString() + ".class";//NOI18N
+                thisClassName.asString() + ".class";
             System.err.println("Writing class to file " + filename);
             DataOutputStream stream = new DataOutputStream(
                 new java.io.FileOutputStream(filename));
@@ -357,28 +360,28 @@ final public class ClassFile implements VMConstants {
         constantPool.print(out);
         out.println();
 
-        out.println("majorVersion = " + Integer.toString(majorVersion));//NOI18N
-        out.println("minorVersion = " + Integer.toString(minorVersion));//NOI18N
-        out.println("accessFlags = " + Integer.toString(accessFlags));//NOI18N
-        out.println("className = " + thisClassName.asString());//NOI18N
-        out.println("superClassName = " + superClassName.asString());//NOI18N
-        out.print("Interfaces =");//NOI18N
+        out.println("majorVersion = " + Integer.toString(majorVersion));
+        out.println("minorVersion = " + Integer.toString(minorVersion));
+        out.println("accessFlags = " + Integer.toString(accessFlags));
+        out.println("className = " + thisClassName.asString());
+        out.println("superClassName = " + superClassName.asString());
+        out.print("Interfaces =");
         for (int i=0; i<classInterfaces.size(); i++) {
-            out.print(" " + ((ConstClass) classInterfaces.elementAt(i)).asString());//NOI18N
+            out.print(" " + classInterfaces.elementAt(i).asString());
         }
         out.println();
 
-        out.println("fields =");//NOI18N
+        out.println("fields =");
         for (int i=0; i<classFields.size(); i++) {
-            ((ClassField) classFields.elementAt(i)).print(out, 3);
+            classFields.elementAt(i).print(out, 3);
         }
 
-        out.println("methods =");//NOI18N
+        out.println("methods =");
         for (int i=0; i<classMethods.size(); i++) {
-            ((ClassMethod) classMethods.elementAt(i)).print(out, 3);
+            classMethods.elementAt(i).print(out, 3);
         }
 
-        out.println("attributes =");//NOI18N
+        out.println("attributes =");
         classAttributes.print(out, 3);
 
     }
@@ -387,9 +390,9 @@ final public class ClassFile implements VMConstants {
         constantPool.summarize();
         int codeSize = 0;
         for (int i=0; i<classMethods.size(); i++) {
-            codeSize += ((ClassMethod) classMethods.elementAt(i)).codeSize();
+            codeSize += classMethods.elementAt(i).codeSize();
         }
-        System.out.println(classMethods.size() + " methods in " + codeSize + " bytes");//NOI18N
+        System.out.println(classMethods.size() + " methods in " + codeSize + " bytes");
     }
 
     /*
@@ -404,8 +407,9 @@ final public class ClassFile implements VMConstants {
         while (nInterfaces-- > 0) {
             int interfaceIndex = data.readUnsignedShort();
             ConstClass ci = null;
-            if (interfaceIndex != 0)
+            if (interfaceIndex != 0) {
                 ci = (ConstClass) constantPool.constantAt(interfaceIndex);
+            }
             classInterfaces.addElement(ci);
         }
     }
@@ -413,10 +417,11 @@ final public class ClassFile implements VMConstants {
     private void writeInterfaces(DataOutputStream data) throws IOException {
         data.writeShort(classInterfaces.size());
         for (int i=0; i<classInterfaces.size(); i++) {
-            ConstClass ci = (ConstClass) classInterfaces.elementAt(i);
+            ConstClass ci = classInterfaces.elementAt(i);
             int interfaceIndex = 0;
-            if (ci != null)
+            if (ci != null) {
                 interfaceIndex = ci.getIndex();
+            }
             data.writeShort(interfaceIndex);
         }
     }
@@ -430,8 +435,9 @@ final public class ClassFile implements VMConstants {
 
     private void writeFields (DataOutputStream data) throws IOException {
         data.writeShort(classFields.size());
-        for (int i=0; i<classFields.size(); i++)
-            ((ClassField)classFields.elementAt(i)).write(data);
+        for (int i=0; i<classFields.size(); i++) {
+            classFields.elementAt(i).write(data);
+        }
     }
 
     private void readMethods (DataInputStream data) throws IOException {
@@ -443,15 +449,16 @@ final public class ClassFile implements VMConstants {
 
     private void writeMethods (DataOutputStream data) throws IOException {
         data.writeShort(classMethods.size());
-        for (int i=0; i<classMethods.size(); i++)
-            ((ClassMethod)classMethods.elementAt(i)).write(data);
+        for (int i=0; i<classMethods.size(); i++) {
+            classMethods.elementAt(i).write(data);
+        }
     }
 
 
     //@olsen: Static methods added for major.minor compatibility checking
-    private static List convertMajorMinorVersions(short[][] majorMinor) {
+    private static List<Integer> convertMajorMinorVersions(short[][] majorMinor) {
         int length = majorMinor.length;
-        List result = new ArrayList(length);
+        List<Integer> result = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
             result.add(getVersionInt(majorMinor[i][0], majorMinor[i][1]));
         }
@@ -464,22 +471,22 @@ final public class ClassFile implements VMConstants {
     }
 
     private static Integer getVersionInt(short major, short minor) {
-        return  new Integer(major * 65536 + minor);
+        return  Integer.valueOf(major * 65536 + minor);
     }
 
     public static final String printSupportedVersions() {
-        StringBuffer buf = new StringBuffer("{"); //NOI18N
+        StringBuffer buf = new StringBuffer("{");
         int length = jdkMajorMinorVersions.length;
         for (int i = 0; i < length; i++) {
             int major = jdkMajorMinorVersions[i][0];
             int minor = jdkMajorMinorVersions[i][1];
-            buf.append("{"); //NOI18N
+            buf.append("{");
             buf.append(major);
-            buf.append(","); //NOI18N
+            buf.append(",");
             buf.append(minor);
-            buf.append("}"); //NOI18N
+            buf.append("}");
         }
-        buf.append("}"); //NOI18N
+        buf.append("}");
         return buf.toString();
     }
 
@@ -506,8 +513,9 @@ abstract class ArraySorter {
             swap(start, (start+end)/2);
             int last = start;
             for (int i = start+1; i<=end; i++) {
-                if (compare(i, start) < 0)
+                if (compare(i, start) < 0) {
                     swap (++last, i);
+                }
             }
             swap(start, last);
             sortArray(start, last-1);
@@ -524,15 +532,18 @@ class InterfaceArraySorter extends ArraySorter {
     }
 
     /* return the size of the array being sorted */
+    @Override
     int size() { return theArray.length; }
 
     /* return -1 if o1 < o2, 0 if o1 == o2, 1 if o1 > o2 */
+    @Override
     int compare(int o1Index, int o2Index) {
         return theArray[o1Index].asString().compareTo(
             theArray[o2Index].asString());
     }
 
     /* Swap the elements at index o1Index and o2Index */
+    @Override
     void swap(int o1Index, int o2Index) {
         ConstClass tmp = theArray[o1Index];
         theArray[o1Index] = theArray[o2Index];
@@ -548,15 +559,18 @@ class FieldArraySorter extends ArraySorter {
     }
 
     /* return the size of the array being sorted */
+    @Override
     int size() { return theArray.length; }
 
     /* return -1 if o1 < o2, 0 if o1 == o2, 1 if o1 > o2 */
+    @Override
     int compare(int o1Index, int o2Index) {
         return theArray[o1Index].name().asString().compareTo(
             theArray[o2Index].name().asString());
     }
 
     /* Swap the elements at index o1Index and o2Index */
+    @Override
     void swap(int o1Index, int o2Index) {
         ClassField tmp = theArray[o1Index];
         theArray[o1Index] = theArray[o2Index];
@@ -572,9 +586,11 @@ class MethodArraySorter extends ArraySorter {
     }
 
     /* return the size of the array being sorted */
+    @Override
     int size() { return theArray.length; }
 
     /* return -1 if o1 < o2, 0 if o1 == o2, 1 if o1 > o2 */
+    @Override
     int compare(int o1Index, int o2Index) {
         int cmp = theArray[o1Index].name().asString().compareTo(
             theArray[o2Index].name().asString());
@@ -586,6 +602,7 @@ class MethodArraySorter extends ArraySorter {
     }
 
     /* Swap the elements at index o1Index and o2Index */
+    @Override
     void swap(int o1Index, int o2Index) {
         ClassMethod tmp = theArray[o1Index];
         theArray[o1Index] = theArray[o2Index];

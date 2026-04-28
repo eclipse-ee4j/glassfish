@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * VariableTable.java
- *
- * Created on April 12, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
@@ -31,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -39,8 +35,7 @@ import org.glassfish.persistence.common.I18NHelper;
 /**
  * The variable table
  *
- * @author  Michael Bouschen
- * @version 0.1
+ * @author  Michael Bouschen 2000
  */
 public class VariableTable
 {
@@ -65,7 +60,7 @@ public class VariableTable
         /**
          * Set of JQLAST nodes denoting an access of this variable.
          */
-        Set used;
+        Set<JQLAST> used;
 
         /**
          * Dependency for this variable.
@@ -85,7 +80,7 @@ public class VariableTable
         VarInfo()
         {
             this.constraint = null;
-            this.used = new HashSet();
+            this.used = new HashSet<>();
             this.dependsOn = null;
             this.status = UNCHECKED;
         }
@@ -93,7 +88,7 @@ public class VariableTable
         VarInfo(VarInfo other)
         {
             this.constraint = other.constraint;
-            this.used = new HashSet(other.used);
+            this.used = new HashSet<>(other.used);
             this.dependsOn = other.dependsOn;
             this.status = other.status;
         }
@@ -103,10 +98,10 @@ public class VariableTable
     private ErrorMsg errorMsg;
 
     /** List of names of declared variables. */
-    private List declaredVars;
+    private List<String> declaredVars;
 
     /** Map of variable infos. */
-    private Map varInfos;
+    private Map<String, VarInfo> varInfos;
 
     /**
      * Create an empty variable table
@@ -114,8 +109,8 @@ public class VariableTable
     public VariableTable(ErrorMsg errorMsg)
     {
         this.errorMsg = errorMsg;
-        declaredVars = new ArrayList();
-        varInfos = new HashMap();
+        declaredVars = new ArrayList<>();
+        varInfos = new HashMap<>();
     }
 
     /**
@@ -126,11 +121,11 @@ public class VariableTable
     {
         errorMsg = other.errorMsg;
         declaredVars = other.declaredVars;
-        varInfos = new HashMap();
-        for (Iterator i = other.varInfos.entrySet().iterator(); i.hasNext();)
+        varInfos = new HashMap<>();
+        for (Iterator<Entry<String, VarInfo>> i = other.varInfos.entrySet().iterator(); i.hasNext();)
         {
-            Map.Entry entry = (Map.Entry)i.next();
-            varInfos.put(entry.getKey(), new VarInfo((VarInfo)entry.getValue()));
+            Entry<String, VarInfo> entry = i.next();
+            varInfos.put(entry.getKey(), new VarInfo(entry.getValue()));
         }
     }
 
@@ -152,20 +147,22 @@ public class VariableTable
     public void markUsed(JQLAST variable, String dependendVar)
     {
         String name = variable.getText();
-        VarInfo entry = (VarInfo)varInfos.get(name);
-        if (entry == null)
+        VarInfo entry = varInfos.get(name);
+        if (entry == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                 "jqlc.variabletable.markused.varnotfound", //NOI18N
                 name));
+        }
         entry.used.add(variable);
         if (dependendVar != null)
         {
-            VarInfo dependendVarInfo = (VarInfo)varInfos.get(dependendVar);
-            if (dependendVarInfo.dependsOn != null)
+            VarInfo dependendVarInfo = varInfos.get(dependendVar);
+            if (dependendVarInfo.dependsOn != null) {
                 throw new JDOFatalInternalException(I18NHelper.getMessage(
                     messages,
                     "jqlc.variabletable.markused.multidep", //NOI18N
                     dependendVar, dependendVarInfo.dependsOn, name));
+            }
             dependendVarInfo.dependsOn = name;
         }
     }
@@ -177,12 +174,13 @@ public class VariableTable
     public void markConstraint(JQLAST variable, JQLAST expr)
     {
         String name = variable.getText();
-        VarInfo entry = (VarInfo)varInfos.get(name);
-        if (entry == null)
+        VarInfo entry = varInfos.get(name);
+        if (entry == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages,
                 "jqlc.variabletable.markconstraint.varnotfound", //NOI18N
                 name));
+        }
         String old = (entry.constraint==null ? null : entry.constraint.getText());
         if ((old != null) && !old.equals(expr.getText()))
         {
@@ -198,11 +196,11 @@ public class VariableTable
      */
     public void merge(VariableTable other)
     {
-        for (Iterator i = declaredVars.iterator(); i.hasNext();)
+        for (Iterator<String> i = declaredVars.iterator(); i.hasNext();)
         {
-            String name = (String)i.next();
-            VarInfo info = (VarInfo)varInfos.get(name);
-            VarInfo otherInfo = (VarInfo)other.varInfos.get(name);
+            String name = i.next();
+            VarInfo info = varInfos.get(name);
+            VarInfo otherInfo = other.varInfos.get(name);
 
             // copy other info if this info is empty
             if ((info.constraint == null) && (info.used.size() == 0))
@@ -250,10 +248,10 @@ public class VariableTable
     public void checkConstraints()
     {
         // iterate declaredVars to check the variables in the order they are declared
-        for (Iterator i = declaredVars.iterator(); i.hasNext();)
+        for (Iterator<String> i = declaredVars.iterator(); i.hasNext();)
         {
-            String name = (String)i.next();
-            VarInfo info = (VarInfo)varInfos.get(name);
+            String name = i.next();
+            VarInfo info = varInfos.get(name);
             checkConstraint(name, info);
         }
     }
@@ -278,7 +276,7 @@ public class VariableTable
 
         if (info.dependsOn != null)
         {
-            VarInfo dependendVarInfo = (VarInfo)varInfos.get(info.dependsOn);
+            VarInfo dependendVarInfo = varInfos.get(info.dependsOn);
             checkConstraint(info.dependsOn, dependendVarInfo);
         }
 
@@ -298,11 +296,12 @@ public class VariableTable
      */
     protected void attachConstraintToUsedAST(VarInfo info)
     {
-        for (Iterator i = info.used.iterator(); i.hasNext();)
+        for (Iterator<JQLAST> i = info.used.iterator(); i.hasNext();)
         {
-            JQLAST varNode = (JQLAST)i.next();
-            if (varNode.getFirstChild() == null)
+            JQLAST varNode = i.next();
+            if (varNode.getFirstChild() == null) {
                 varNode.setFirstChild(JQLAST.Factory.getInstance().dupTree(info.constraint));
+            }
         }
     }
 

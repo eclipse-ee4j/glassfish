@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JDOEJB11HelperImpl.java
- *
- * Created on January 17, 2002
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.cmp;
 
 import com.sun.jdo.api.persistence.support.JDOFatalDataStoreException;
@@ -32,7 +27,6 @@ import com.sun.jdo.spi.persistence.support.sqlstore.ejb.CMPHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.JDOEJB11Helper;
 import com.sun.jdo.spi.persistence.support.sqlstore.utility.NumericConverter;
 import com.sun.jdo.spi.persistence.support.sqlstore.utility.NumericConverterFactory;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.ejb.EJBException;
 import jakarta.ejb.EJBObject;
@@ -46,30 +40,32 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.lang.System.Logger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.glassfish.persistence.common.I18NHelper;
 
-/*
+import static java.lang.System.Logger.Level.DEBUG;
+
+/**
  * This is an abstract class which is a generic implementation of the
  * JDOEJB11Helper interface for conversion of persistence-capable instances
  * to and from EJB objects of type: EJBObject, PrimaryKey, and Collections of those.
  * These implementations are common for CMP1.1 and CMP2.0 beans.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2002
  */
 abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
 
     /**
      * I18N message handler
      */
-    protected final static ResourceBundle messages = I18NHelper.loadBundle(
-        JDOEJB11HelperImpl.class);
+    protected final static ResourceBundle messages = I18NHelper.loadBundle(JDOEJB11HelperImpl.class);
 
-    //The logger
-    protected static final Logger logger = LogHelperEntityInternal.getLogger();
+    private static final Logger LOG = System.getLogger(JDOEJB11HelperImpl.class.getName());
 
     /**
      * Converts persistence-capable instance to EJBObject.
@@ -77,16 +73,18 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return instance of EJBObject.
      */
+    @Override
     public EJBObject convertPCToEJBObject (Object pc, PersistenceManager pm) {
-        if (pc == null) return null;
+        if (pc == null) {
+            return null;
+        }
         Object jdoObjectId = pm.getObjectId(pc);
         Object key = convertObjectIdToPrimaryKey(jdoObjectId);
         try {
             return CMPHelper.getEJBObject(key, getContainer());
         } catch (Exception ex) {
-            EJBException e = new EJBException(I18NHelper.getMessage(messages,
-                        "EXC_ConvertPCToEJBObject", key.toString()), ex);// NOI18N
-            logger.throwing("JDOEJB11HelperImpl", "convertPCToEJBObject", e); // NOI18N
+            EJBException e = new EJBException(
+                I18NHelper.getMessage(messages, "EXC_ConvertPCToEJBObject", key.toString()), ex);
             throw e;
         }
     }
@@ -100,14 +98,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @throws IllegalArgumentException if validate is true and instance does
      * not exist in the database or is deleted.
      */
+    @Override
     public Object convertEJBObjectToPC(EJBObject o, PersistenceManager pm, boolean validate) {
         Object key = null;
         try {
             key = o.getPrimaryKey();
         } catch (Exception ex) {
             EJBException e = new EJBException(I18NHelper.getMessage(messages,
-                        "EXC_ConvertEJBObjectToPC", o.getClass().getName()), ex);// NOI18N
-            logger.throwing("JDOEJB11HelperImpl", "convertEJBObjectToPC", e); // NOI18N
+                        "EXC_ConvertEJBObjectToPC", o.getClass().getName()), ex);
             throw e;
         }
         return convertPrimaryKeyToPC(key, pm, validate);
@@ -128,17 +126,13 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
             Object jdoObjectId = convertPrimaryKeyToObjectId(key);
             pc = pm.getObjectById(jdoObjectId, validate);
         } catch (JDOObjectNotFoundException ex) {
-            logger.fine("---JDOEJB11HelperImpl.convertPrimaryKeyToPC: Object not found for: " + key); // NOI18N
-
             throw new IllegalArgumentException(I18NHelper.getMessage(messages,
-                        "EXC_DeletedInstanceOtherTx", key.toString()));// NOI18N
+                        "EXC_DeletedInstanceOtherTx", key.toString()));
         }
 
         if (validate && JDOHelper.isDeleted(pc)) {
-            logger.fine("---JDOEJB11HelperImpl.convertPrimaryKeyToPC: Object is deleted for: " + key); // NOI18N
-
             throw new IllegalArgumentException(I18NHelper.getMessage(messages,
-                        "EXC_DeletedInstanceThisTx", key.toString()));// NOI18N
+                        "EXC_DeletedInstanceThisTx", key.toString()));
         }
 
         return pc;
@@ -151,16 +145,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Collection of EJBObjects.
      */
-    public Collection convertCollectionPCToEJBObject (Collection pcs, PersistenceManager pm) {
-        Collection rc = new java.util.ArrayList();
+    @Override
+    public Collection<Object> convertCollectionPCToEJBObject (Collection<?> pcs, PersistenceManager pm) {
+        Collection<Object> rc = new ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBObject((Object)it.next(), pm);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB11HelperImpl.convertCollectionPCToEJBObject() adding: " + o);// NOI18N
-            }
+        for (Object pc : pcs) {
+            o = convertPCToEJBObject(pc, pm);
+            LOG.log(DEBUG, "convertCollectionPCToEJBObject() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -173,16 +165,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Set of EJBObjects.
      */
-    public Set convertCollectionPCToEJBObjectSet (Collection pcs, PersistenceManager pm) {
-        java.util.Set rc = new java.util.HashSet();
+    @Override
+    public Set<Object> convertCollectionPCToEJBObjectSet (Collection<?> pcs, PersistenceManager pm) {
+        java.util.Set<Object> rc = new java.util.HashSet<>();
 
         Object o = null;
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToEJBObject((Object)it.next(), pm);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB11HelperImpl.convertCollectionPCToEJBObjectSet() adding: " + o);// NOI18N
-            }
+        for (Object pc : pcs) {
+            o = convertPCToEJBObject(pc, pm);
+            LOG.log(DEBUG, "convertCollectionPCToEJBObjectSet() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -198,17 +188,15 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @throws IllegalArgumentException if validate is true and at least one instance does
      * not exist in the database or is deleted.
      */
-    public Collection convertCollectionEJBObjectToPC (Collection coll, PersistenceManager pm,
-                                                      boolean validate) {
-        Collection rc = new java.util.ArrayList();
+    @Override
+    public Collection<Object> convertCollectionEJBObjectToPC(Collection<?> coll, PersistenceManager pm,
+        boolean validate) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = coll.iterator(); it.hasNext();) {
-            o = convertEJBObjectToPC((EJBObject)it.next(), pm, validate);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB11HelperImpl.convertCollectionEJBObjectToPC() adding: " + o);// NOI18N
-            }
+        for (Object element : coll) {
+            o = convertEJBObjectToPC((EJBObject)element, pm, validate);
+            LOG.log(DEBUG, "convertCollectionEJBObjectToPC() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -220,13 +208,13 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return instance of the PrimaryKey Class.
      */
+    @Override
     public Object convertPCToPrimaryKey (Object pc, PersistenceManager pm) {
-        if (pc == null) return null;
-        Object rc = convertObjectIdToPrimaryKey(pm.getObjectId(pc));
-
-        if(logger.isLoggable(Logger.FINEST) ) {
-            logger.finest("\n---JDOEJB11HelperImpl.convertPCToPrimaryKey() PK: " + rc);// NOI18N
+        if (pc == null) {
+            return null;
         }
+        Object rc = convertObjectIdToPrimaryKey(pm.getObjectId(pc));
+        LOG.log(DEBUG, "convertPCToPrimaryKey() PK: {0}", rc);
         return rc;
     }
 
@@ -238,16 +226,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Collection of the PrimaryKey Class instances.
      */
-    public Collection convertCollectionPCToPrimaryKey (Collection pcs, PersistenceManager pm) {
-        Collection rc = new java.util.ArrayList();
+    @Override
+    public Collection<Object> convertCollectionPCToPrimaryKey (Collection<?> pcs, PersistenceManager pm) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
-            o = convertPCToPrimaryKey(it.next(), pm);
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB11HelperImpl.convertCollectionPCToPrimaryKey() adding: " + o);// NOI18N
-            }
+        for (Object pc : pcs) {
+            o = convertPCToPrimaryKey(pc, pm);
+            LOG.log(DEBUG, "convertCollectionPCToPrimaryKey() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -259,6 +245,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param objectId the Object Id to be converted.
      * @return instance of the PrimaryKey Class.
      */
+    @Override
     abstract public Object convertObjectIdToPrimaryKey (Object objectId);
 
    /**
@@ -267,6 +254,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param key the PrimaryKey instance to be converted.
      * @return instance of the Object Id.
      */
+    @Override
     abstract public Object convertPrimaryKeyToObjectId (Object key);
 
    /**
@@ -275,16 +263,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param oids Collection of the Object Id to be converted.
      * @return Collection of of the PrimaryKey Class instances.
      */
-    public Collection convertCollectionObjectIdToPrimaryKey (Collection oids) {
-        Collection rc = new java.util.ArrayList();
+    @Override
+    public Collection<Object> convertCollectionObjectIdToPrimaryKey (Collection<?> oids) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = oids.iterator(); it.hasNext();) {
-            o = convertObjectIdToPrimaryKey(it.next());
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB11HelperImpl.convertCollectionObjectIdToPrimaryKey() adding: " + o);// NOI18N
-            }
+        for (Object oid : oids) {
+            o = convertObjectIdToPrimaryKey(oid);
+            LOG.log(DEBUG, "convertCollectionObjectIdToPrimaryKey() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -296,16 +282,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param keys Collection of the PrimaryKey instances to be converted.
      * @return Collection of the Object Id's.
      */
-    public Collection convertCollectionPrimaryKeyToObjectId (Collection keys) {
-        Collection rc = new java.util.ArrayList();
+    @Override
+    public Collection<Object> convertCollectionPrimaryKeyToObjectId (Collection<?> keys) {
+        Collection<Object> rc = new java.util.ArrayList<>();
 
         Object o = null;
-        for (java.util.Iterator it = keys.iterator(); it.hasNext();) {
-            o = convertPrimaryKeyToObjectId(it.next());
-            if(logger.isLoggable(Logger.FINEST) ) {
-                logger.finest(
-                    "\n---JDOEJB11HelperImpl.convertCollectionPrimaryKeyToObjectId() adding: " + o);// NOI18N
-            }
+        for (Object key : keys) {
+            o = convertPrimaryKeyToObjectId(key);
+            LOG.log(DEBUG, "convertCollectionPrimaryKeyToObjectId() adding: {0}", o);
             rc.add(o);
         }
         return rc;
@@ -316,6 +300,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param serializableObject Instance of a Serializable Object
      * @return serializableObject serialized into a byte array
      */
+    @Override
     public byte[] writeSerializableObjectToByteArray(Serializable serializableObject)
     {
         byte[] byteArray = null;
@@ -333,7 +318,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
             {
                 String clsName = serializableObject.getClass().getName();
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "EXC_IOWriteSerializableObject", clsName), e);// NOI18N
+                        "EXC_IOWriteSerializableObject", clsName), e);
             }
         }
         return byteArray;
@@ -346,6 +331,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @return A Serializable object contructed from byteArray
      * @see #writeSerializableObjectToByteArray(Serializable)
      */
+    @Override
     public Serializable readSerializableObjectFromByteArray(byte[] byteArray)
     {
         Serializable serializableObject = null;
@@ -366,12 +352,12 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
             catch (ClassNotFoundException e)
             {
                 throw new JDOFatalDataStoreException(I18NHelper.getMessage(messages,
-                        "EXC_CNFReadSerializableObject"), e);// NOI18N
+                        "EXC_CNFReadSerializableObject"), e);
             }
             catch(java.io.IOException e)
             {
                 throw new JDOFatalDataStoreException(I18NHelper.getMessage(messages,
-                        "EXC_IOReadSerializableObject"), e);// NOI18N
+                        "EXC_IOReadSerializableObject"), e);
             }
         }
         return serializableObject;
@@ -383,6 +369,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * correct policy value to the NumericConverterFactory.
      * @return NumericConverter for given object policy
      */
+    @Override
     public NumericConverter getNumericConverter() {
         int policy = CMPHelper.getNumericConverterPolicy(getContainer());
         return NumericConverterFactory.getNumericConverter(policy);
@@ -393,7 +380,8 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * of the concrete bean class.
      * @return the pc class object
      */
-    abstract public Class getPCClass ();
+    @Override
+    abstract public Class<?> getPCClass ();
 
     /**
      * Validates that this instance is of the correct implementation class
@@ -402,6 +390,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @param o the instance to validate.
      * @throws IllegalArgumentException if validation fails.
      */
+    @Override
     abstract public void assertInstanceOfRemoteInterfaceImpl(Object o);
 
    /**
@@ -418,18 +407,18 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
 
         // We can't check if null is the correct type or not. So
         // we let it succeed.
-        if (o == null)
+        if (o == null) {
             return;
+        }
 
         try {
             CMPHelper.assertValidRemoteObject(o, getContainer());
 
         } catch (EJBException ex) {
-            String msg = I18NHelper.getMessage(messages, "EXC_WrongRemoteInstance", // NOI18N
+            String msg = I18NHelper.getMessage(messages, "EXC_WrongRemoteInstance",
                 new Object[] {o.getClass().getName(), beanName,
                     ex.getMessage()});
-            logger.log(Logger.WARNING, msg);
-            throw new IllegalArgumentException(msg);
+            throw new IllegalArgumentException(msg, ex);
         }
     }
 
@@ -442,7 +431,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
     protected void assertPrimaryKeyNotNull(Object pk) {
         if (pk == null) {
             throw new IllegalArgumentException(I18NHelper.getMessage(
-                messages, "EXC_pknull_exception")); // NOI18N
+                messages, "EXC_pknull_exception"));
         }
     }
 
@@ -459,7 +448,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
 
         if (pkfield == null) {
             throw new IllegalArgumentException(I18NHelper.getMessage(
-                messages, "EXC_pkfieldnull_exception", // NOI18N
+                messages, "EXC_pkfieldnull_exception",
                 pkfieldName, beanName));
         }
     }
@@ -474,7 +463,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
     protected void assertObjectIdNotNull(Object oid) {
         if (oid == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
-                messages, "EXC_oidnull_exception")); // NOI18N
+                messages, "EXC_oidnull_exception"));
         }
     }
 
@@ -493,7 +482,8 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
          }
 
          /** Overrides the same method of the base class */
-         protected Class resolveClass(ObjectStreamClass v)
+         @Override
+        protected Class<?> resolveClass(ObjectStreamClass v)
               throws IOException, ClassNotFoundException {
               return Class.forName(v.getName(), true, classLoader);
          }

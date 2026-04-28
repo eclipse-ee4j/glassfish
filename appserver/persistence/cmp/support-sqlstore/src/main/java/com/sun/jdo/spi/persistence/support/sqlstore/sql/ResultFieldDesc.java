@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ResultFieldDesc.java
- *
- * Created on October 15, 2001
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
@@ -30,7 +24,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.ColumnRef;
  * This class is used to associated a field to the position of a column
  * in a JDBC resultset.
  */
-public class ResultFieldDesc extends Object {
+public class ResultFieldDesc implements ResultDescItem {
     /**
      * field descriptor for the field that is the recipient of the column value
      * from the resultset

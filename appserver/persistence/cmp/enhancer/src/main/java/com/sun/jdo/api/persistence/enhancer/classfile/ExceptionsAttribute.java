@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,24 +29,24 @@ import java.util.Vector;
  * listing the checked exceptions for the method.
  */
 public class ExceptionsAttribute extends ClassAttribute {
-    public final static String expectedAttrName = "Exceptions";//NOI18N
+    public final static String expectedAttrName = "Exceptions";
 
     /* The list of checked exceptions */
-    private Vector exceptionTable;
+    private Vector<ConstClass> exceptionTable;
 
     /* public accessors */
 
     /**
      *  Return an enumeration of the checked exceptions
      */
-    public Enumeration exceptions() {
+    public Enumeration<ConstClass> exceptions() {
         return exceptionTable.elements();
     }
 
     /**
      * Constructor
      */
-    public ExceptionsAttribute(ConstUtf8 attrName, Vector excTable) {
+    public ExceptionsAttribute(ConstUtf8 attrName, Vector<ConstClass> excTable) {
         super(attrName);
         exceptionTable = excTable;
     }
@@ -55,7 +56,7 @@ public class ExceptionsAttribute extends ClassAttribute {
      */
     public ExceptionsAttribute(ConstUtf8 attrName, ConstClass exc) {
         super(attrName);
-        exceptionTable = new Vector(1);
+        exceptionTable = new Vector<>(1);
         exceptionTable.addElement(exc);
     }
 
@@ -65,31 +66,36 @@ public class ExceptionsAttribute extends ClassAttribute {
         DataInputStream data, ConstantPool pool)
             throws IOException {
         int nExcepts = data.readUnsignedShort();
-        Vector excTable = new Vector();
+        Vector<ConstClass> excTable = new Vector<>();
         while (nExcepts-- > 0) {
             int excIndex = data.readUnsignedShort();
             ConstClass exc_class = null;
-            if (excIndex != 0)
+            if (excIndex != 0) {
                 exc_class = (ConstClass) pool.constantAt(excIndex);
+            }
             excTable.addElement(exc_class);
         }
 
         return new ExceptionsAttribute(attrName, excTable);
     }
 
+    @Override
     void write(DataOutputStream out) throws IOException {
         out.writeShort(attrName().getIndex());
         out.writeInt(2+2*exceptionTable.size());
         out.writeShort(exceptionTable.size());
-        for (int i=0; i<exceptionTable.size(); i++)
-            out.writeShort(((ConstClass) exceptionTable.elementAt(i)).getIndex());
+        for (int i=0; i<exceptionTable.size(); i++) {
+            out.writeShort(exceptionTable.elementAt(i).getIndex());
+        }
     }
 
+    @Override
     void print(PrintStream out, int indent) {
         ClassPrint.spaces(out, indent);
-        out.print("Exceptions:");//NOI18N
-        for (int i=0; i<exceptionTable.size(); i++)
-            out.print(" " + ((ConstClass) exceptionTable.elementAt(i)).asString());//NOI18N
+        out.print("Exceptions:");
+        for (int i=0; i<exceptionTable.size(); i++) {
+            out.print(" " + exceptionTable.elementAt(i).asString());
+        }
         out.println();
     }
 

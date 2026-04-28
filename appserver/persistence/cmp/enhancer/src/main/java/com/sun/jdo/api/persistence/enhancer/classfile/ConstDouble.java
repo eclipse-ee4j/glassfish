@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +36,7 @@ public class ConstDouble extends ConstValue {
     /**
      * The tag of this constant entry
      */
+    @Override
     public int tag () {
         return MyTag;
     }
@@ -49,6 +51,7 @@ public class ConstDouble extends ConstValue {
     /**
      * Return the descriptor string for the constant type.
      */
+    @Override
     public String descriptor() {
         return "D";//NOI18N
     }
@@ -56,6 +59,7 @@ public class ConstDouble extends ConstValue {
     /**
      * A printable representation
      */
+    @Override
     public String toString () {
         return "CONSTANTDouble(" + indexAsString() + "): " + //NOI18N
             "doubleValue(" + Double.toString(doubleValue) + ")";//NOI18N
@@ -70,6 +74,7 @@ public class ConstDouble extends ConstValue {
         doubleValue = f;
     }
 
+    @Override
     void formatData (DataOutputStream b) throws IOException {
         b.writeDouble(doubleValue);
     }
@@ -78,6 +83,8 @@ public class ConstDouble extends ConstValue {
         return new ConstDouble (input.readDouble());
     }
 
-    void resolve (ConstantPool p) { }
+    @Override
+    void resolve(ConstantPool p) {
+    }
 }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,18 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * TableDesc.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.TableElement;
 
@@ -38,7 +33,7 @@ public class TableDesc {
     private KeyDesc key;
 
     /** array of ReferenceKeyDescs referencing secondary tables */
-    private ArrayList secondaryTableKeys;
+    private List<ReferenceKeyDesc> secondaryTableKeys;
 
     /** ReferenceKeyDesc referencing the primary table */
     private ReferenceKeyDesc primaryTableKey;
@@ -68,7 +63,7 @@ public class TableDesc {
     /** Return all secondary table keys.
      *  @return an ArrayList of ReferenceKeyDescs for secondary tables
      */
-    public ArrayList getSecondaryTableKeys() {
+    public List<ReferenceKeyDesc> getSecondaryTableKeys() {
         return secondaryTableKeys;
     }
 
@@ -76,8 +71,9 @@ public class TableDesc {
      *  @param key - ReferenceKeyDesc to be added
      */
     void addSecondaryTableKey(ReferenceKeyDesc key) {
-        if (secondaryTableKeys == null)
-            secondaryTableKeys = new ArrayList();
+        if (secondaryTableKeys == null) {
+            secondaryTableKeys = new ArrayList<>();
+        }
 
         secondaryTableKeys.add(key);
     }
@@ -166,8 +162,3 @@ public class TableDesc {
     }
 
 }
-
-
-
-
-

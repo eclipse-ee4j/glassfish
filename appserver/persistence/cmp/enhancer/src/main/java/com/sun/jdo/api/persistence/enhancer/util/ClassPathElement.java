@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,7 +51,7 @@ abstract class ClassPathElement {
      *    can be found.  The return value may be null if the class
      *    path element is not valid.
      */
-    public abstract Enumeration classesInPackage(String packageName);
+    public abstract Enumeration<String> classesInPackage(String packageName);
 
     /**
      * Check to see if this ClassPathElement is a directory matching
@@ -84,11 +85,10 @@ abstract class ClassPathElement {
      */
     static ClassPathElement create(String elementSpec) {
         File element = new File(elementSpec);
-        if (!element.isDirectory() &&
-            looksLikeZipName(elementSpec))
-            return new ZipFileClassPathElement(element);
-        else
+        if (element.isDirectory() || !looksLikeZipName(elementSpec)) {
             return new DirectoryClassPathElement(element);
+        }
+        return new ZipFileClassPathElement(element);
     }
 
     /**
@@ -96,8 +96,9 @@ abstract class ClassPathElement {
      */
     void append(ClassPathElement another) {
         ClassPathElement e = this;
-        while (e.next() != null)
+        while (e.next() != null) {
             e = e.next();
+        }
         e.next = another;
     }
 
@@ -106,8 +107,8 @@ abstract class ClassPathElement {
      */
     static protected boolean looksLikeZipName(String fname) {
         return (fname.length() > 4 &&
-            (fname.regionMatches(true, fname.length() - 4, ".zip", 0, 4) ||//NOI18N
-                fname.regionMatches(true, fname.length() - 4, ".jar", 0, 4)));//NOI18N
+            (fname.regionMatches(true, fname.length() - 4, ".zip", 0, 4) ||
+                fname.regionMatches(true, fname.length() - 4, ".jar", 0, 4)));
     }
 
 }
@@ -128,6 +129,7 @@ class DirectoryClassPathElement extends ClassPathElement {
      * If this class path element resolves the class, return a
      * ClassFileSource for the class.
      */
+    @Override
     public ClassFileSource sourceOf(String className) {
         File f = fileOf(className);
         if (f != null && f.exists()) {
@@ -136,13 +138,16 @@ class DirectoryClassPathElement extends ClassPathElement {
         return null;
     }
 
-    public Enumeration classesInPackage(String packageName) {
-        if (!exists)
+    @Override
+    public Enumeration<String> classesInPackage(String packageName) {
+        if (!exists) {
             return null;
+        }
 
         return new DirectoryClassPackageEnumerator(directory, packageName);
     }
 
+    @Override
     boolean matches(File matchDirectory) {
         String dir = FilePath.canonicalize(directory);
         String matchDir = FilePath.canonicalize(matchDirectory);
@@ -166,24 +171,18 @@ class DirectoryClassPathElement extends ClassPathElement {
     private File fileOf(String className) {
         if (exists && directory.isDirectory()) {
             StringBuffer newPath = new StringBuffer(directory.getPath());
-            if (newPath.charAt(newPath.length() - 1) != File.separatorChar)
+            if (newPath.charAt(newPath.length() - 1) != File.separatorChar) {
                 newPath.append(File.separatorChar);
+            }
             newPath.append(ClassPath.fileNameOf(className));
 
             File f = new File(newPath.toString());
-            if (f.isFile())
+            if (f.isFile()) {
                 return f;
+            }
         }
 
         return null;
-    }
-
-    /**
-     * Is this class path element valid?  That is, does the directory
-     * exist with the specified name?
-     */
-    private boolean isValid() {
-        return exists;
     }
 
     private void checkValid() {
@@ -206,6 +205,7 @@ class ZipFileClassPathElement extends ClassPathElement {
      * If this class path element resolves the class, return a
      * ClassFileSource for the class.
      */
+    @Override
     public ClassFileSource sourceOf(String className) {
         if (zipFile != null) {
             ZipEntry entry =
@@ -217,13 +217,16 @@ class ZipFileClassPathElement extends ClassPathElement {
         return null;
     }
 
-    public Enumeration classesInPackage(String packageName) {
-        if (zipFile == null)
+    @Override
+    public Enumeration<String> classesInPackage(String packageName) {
+        if (zipFile == null) {
             return null;
+        }
 
         return new ZipFileClassPackageEnumerator(zipFile, packageName);
     }
 
+    @Override
     boolean matches(File directory) {
         return false;
     }
@@ -258,7 +261,7 @@ class ZipFileClassPathElement extends ClassPathElement {
  * can be found relative to a particular directory.
  */
 class DirectoryClassPackageEnumerator
-implements Enumeration, FilenameFilter {
+implements Enumeration<String>, FilenameFilter {
 
     private String[] matches;
     private int nextMatch = -1;
@@ -278,32 +281,38 @@ implements Enumeration, FilenameFilter {
         File packageDir = new File(packageDirName);
         if (packageDir.isDirectory()) {
             matches = packageDir.list(this);
-            if (matches != null && matches.length > 0)
+            if (matches != null && matches.length > 0) {
                 nextMatch = 0;
+            }
         }
     }
 
+    @Override
     public boolean hasMoreElements() {
         return (nextMatch >= 0);
     }
 
-    public Object nextElement() {
-        if (!hasMoreElements())
+    @Override
+    public String nextElement() {
+        if (!hasMoreElements()) {
             throw new NoSuchElementException();
+        }
         String next = matches[nextMatch++];
-        if (nextMatch >= matches.length)
+        if (nextMatch >= matches.length) {
             nextMatch = -1;
-        return ClassPath.classNameOf(searchPackage + "/" + next);//NOI18N
+        }
+        return ClassPath.classNameOf(searchPackage + "/" + next);
     }
 
     /**
      * Check whether the file name is valid.
      * Needed for FilenameFilter implementation.
      */
+    @Override
     public boolean accept(File dir, String name) {
         int nameLength = name.length();
         boolean isOk = (nameLength > 6 &&
-            name.regionMatches(true, nameLength - 6, ".class", 0, 6));//NOI18N
+            name.regionMatches(true, nameLength - 6, ".class", 0, 6));
         return isOk;
     }
 
@@ -313,8 +322,8 @@ implements Enumeration, FilenameFilter {
  * An enumeration class which returns the names of the classes which
  * can be found within a zip file.
  */
-class ZipFileClassPackageEnumerator implements Enumeration {
-    Enumeration zipFileEntries;
+class ZipFileClassPackageEnumerator implements Enumeration<String> {
+    Enumeration<? extends ZipEntry> zipFileEntries;
     ZipEntry nextEntry;
     String packageName;
 
@@ -323,10 +332,11 @@ class ZipFileClassPackageEnumerator implements Enumeration {
         this.packageName = packageName;
     }
 
+    @Override
     public boolean hasMoreElements() {
         while (nextEntry == null && zipFileEntries != null &&
             zipFileEntries.hasMoreElements()) {
-            ZipEntry ent = (ZipEntry) zipFileEntries.nextElement();
+            ZipEntry ent = zipFileEntries.nextElement();
             String memName = ent.getName();
             int memNameLength = memName.length();
             int packageNameLength = packageName.length();
@@ -342,18 +352,21 @@ class ZipFileClassPackageEnumerator implements Enumeration {
                 if (memName.indexOf('/', packageNameLength+1) == -1) {
                     boolean isOk =
                         (memNameLength > packageNameLength+7 &&
-                            memName.regionMatches(true, memNameLength - 6, ".class", 0, 6));//NOI18N
-                    if (isOk)
+                            memName.regionMatches(true, memNameLength - 6, ".class", 0, 6));
+                    if (isOk) {
                         nextEntry = ent;
+                    }
                 }
             }
         }
         return nextEntry != null;
     }
 
-    public Object nextElement() {
-        if (!hasMoreElements())
+    @Override
+    public String nextElement() {
+        if (!hasMoreElements()) {
             throw new NoSuchElementException();
+        }
         String className = nextEntry.getName();
         nextEntry = null;
         return ClassPath.classNameOf(className);

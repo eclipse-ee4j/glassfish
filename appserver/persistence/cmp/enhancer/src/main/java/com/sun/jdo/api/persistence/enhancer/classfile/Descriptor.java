@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,8 +32,9 @@ public class Descriptor implements VMConstants {
      * based on the method signature
      */
     public static int countMethodArgWords(String sig) {
-        if (sig.charAt(0) != '(')
+        if (sig.charAt(0) != '(') {
             throw new InsnError ("not a method signature");//NOI18N
+        }
         int count = 0;
         for (int idx = 1; sig.charAt(idx) != ')'; idx++) {
             switch (sig.charAt(idx)) {
@@ -54,10 +56,12 @@ public class Descriptor implements VMConstants {
                     break;
                 case '[':
                     count++;
-                    while (sig.charAt(idx) == '[' || sig.charAt(idx) == ']')
+                    while (sig.charAt(idx) == '[' || sig.charAt(idx) == ']') {
                         idx++;
-                    if (sig.charAt(idx) == 'L')
+                    }
+                    if (sig.charAt(idx) == 'L') {
                         idx = sig.indexOf(';', idx);
+                    }
                     /* else, let idx++ at loop iteration skip primitive descriptor */
                     break;
                 default:
@@ -73,8 +77,9 @@ public class Descriptor implements VMConstants {
      */
     public static int countMethodReturnWords(String sig) {
         int idx = sig.lastIndexOf(')') + 1;
-        if (idx == 0)
+        if (idx == 0) {
             throw new InsnError ("not a method signature");//NOI18N
+        }
         switch (sig.charAt(idx)) {
             case 'J': /* long */
             case 'D': /* double */
@@ -130,8 +135,9 @@ public class Descriptor implements VMConstants {
     private static void reverseArgSig(StringBuffer buf, String methodSig,
         int idx) {
         char c = methodSig.charAt(idx);
-        if (c == ')')
+        if (c == ')') {
             return;
+        }
         int startIdx = idx;
 
         switch(c) {
@@ -146,8 +152,9 @@ public class Descriptor implements VMConstants {
                 idx = idx+1;
                 break;
             case '[':
-                while (methodSig.charAt(idx) == '[' || methodSig.charAt(idx) == ']')
+                while (methodSig.charAt(idx) == '[' || methodSig.charAt(idx) == ']') {
                     idx++;
+                }
                 if (methodSig.charAt(idx) != 'L') {
                     idx++;
                     break;
@@ -161,8 +168,9 @@ public class Descriptor implements VMConstants {
         }
 
         reverseArgSig(buf, methodSig, idx);
-        while (startIdx < idx)
+        while (startIdx < idx) {
             buf.append(methodSig.charAt(startIdx++));
+        }
     }
 
     /**
@@ -170,8 +178,9 @@ public class Descriptor implements VMConstants {
      */
     //@olsen: added method
     public static int countFieldWords(String sig) {
-        if (sig == null || sig.length() < 1)
+        if (sig == null || sig.length() < 1) {
             throw new InsnError ("not a field signature");//NOI18N
+        }
         switch (sig.charAt(0)) {
             case 'J': /* long */
             case 'D': /* double */
@@ -195,8 +204,9 @@ public class Descriptor implements VMConstants {
      */
     //@olsen: added method
     public static int elementType(String sig) {
-        if (sig == null || sig.length() < 1)
+        if (sig == null || sig.length() < 1) {
             throw new InsnError ("not a value signature");//NOI18N
+        }
         switch(sig.charAt(0)) {
             case 'B':
                 return T_BOOLEAN;
@@ -273,7 +283,7 @@ public class Descriptor implements VMConstants {
      * For each type in the signature, pushes an Integer objects identifying
      * the types on top of the input Stack object.
      */
-    public static void computeStackTypes(String stackSig, Stack stack) {
+    public static void computeStackTypes(String stackSig, Stack<Integer> stack) {
         for (int idx = 0; idx < stackSig.length(); idx++) {
             int tp = 0;
             switch(stackSig.charAt(idx)) {
@@ -308,10 +318,12 @@ public class Descriptor implements VMConstants {
                     break;
                 case '[':
                     tp = TC_OBJECT;
-                    while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']')
+                    while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']') {
                         idx++;
-                    if (stackSig.charAt(idx) != 'L')
+                    }
+                    if (stackSig.charAt(idx) != 'L') {
                         break;
+                    }
                     /* fall through */
                 case 'L':
                     tp = TC_OBJECT;
@@ -342,10 +354,12 @@ public class Descriptor implements VMConstants {
             case 'D':
                 break;
             case '[':
-                while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']')
+                while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']') {
                     idx++;
-                if (stackSig.charAt(idx) != 'L')
+                }
+                if (stackSig.charAt(idx) != 'L') {
                     break;
+                }
                 /* fall through */
             case 'L':
                 idx = stackSig.indexOf(';', idx);
@@ -376,14 +390,16 @@ public class Descriptor implements VMConstants {
                     /* An array - skip through the [] pairs, copying to buf if not null */
                     while ((c = sig.charAt(idx)) == '[' || c == ']') {
                         idx++;
-                        if (buf != null)
+                        if (buf != null) {
                             buf.append(c);
+                        }
                     }
 
                     /* If the next char isnt 'L', the next char is a simple type and
                        will be handled by the default 1 char translation */
-                    if (sig.charAt(idx) != 'L')
+                    if (sig.charAt(idx) != 'L') {
                         break;
+                    }
                     /* fall through to type name translation */
                 case 'L':
                     /* This is a type name */
@@ -410,8 +426,9 @@ public class Descriptor implements VMConstants {
                     break;
             }
 
-            if (buf != null)
+            if (buf != null) {
                 buf.append(c);
+            }
         }
         return (buf == null) ? sig : (buf.toString());
     }
@@ -425,12 +442,13 @@ public class Descriptor implements VMConstants {
      */
     public static String translateClass(
         String cls, Map classTranslations) {
-        if (cls.charAt(0) == '[')
+        if (cls.charAt(0) == '[') {
             return remapTypes(cls, classTranslations);
-        else {
+        } else {
             String mapTo = (String) classTranslations.get(cls);
-            if (mapTo != null)
+            if (mapTo != null) {
                 return mapTo;
+            }
             return cls;
         }
     }
@@ -499,14 +517,16 @@ public class Descriptor implements VMConstants {
         }
 
         /* If a non-array type, we already have the answer */
-        if (arrayDims == 0)
+        if (arrayDims == 0) {
             return sigElement;
+        }
 
         /* array types need a little more work */
         StringBuffer buf = new StringBuffer(sigElement.length() + 2 * arrayDims);
         buf.append(sigElement);
-        while (arrayDims-- > 0)
+        while (arrayDims-- > 0) {
             buf.append("[]");//NOI18N
+        }
 
         return buf.toString();
     }
@@ -517,8 +537,9 @@ public class Descriptor implements VMConstants {
      */
     public static String userMethodArgs(String methodSig) {
         /* This better be a method signature */
-        if (methodSig.charAt(0) != '(')
+        if (methodSig.charAt(0) != '(') {
             throw new InsnError("Invalid method signature");//NOI18N
+        }
 
         StringBuffer buf = new StringBuffer();
 
@@ -527,10 +548,11 @@ public class Descriptor implements VMConstants {
         int idx = 1;
         boolean firstArg = true;
         while (methodSig.charAt(idx) != ')') {
-            if (firstArg)
+            if (firstArg) {
                 firstArg = false;
-            else
+            } else {
                 buf.append(", ");//NOI18N
+            }
 
             buf.append(userFieldSig(methodSig, idx));
             idx = nextSigElement(methodSig, idx);

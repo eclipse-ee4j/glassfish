@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,10 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * sco.HashSet.java
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.sco;
@@ -36,26 +33,24 @@ import org.glassfish.persistence.common.I18NHelper;
 
 /**
  * A mutable 2nd class object date.
- * @author Marina Vatkina
- * @version 1.0
+ * @author Marina Vatkina 2000
  * @see java.util.HashSet
  */
-public class HashSet
-    extends java.util.HashSet
-    implements SCOCollection
-{
+public class HashSet extends java.util.HashSet<Object> implements SCOCollection {
+
+    private static final long serialVersionUID = 2489812924578469637L;
 
     private transient PersistenceCapable owner;
 
     private transient String fieldName;
 
-    private transient Class elementType;
+    private transient Class<?> elementType;
 
     private transient boolean allowNulls;
 
-    private transient java.util.HashSet added = new java.util.HashSet();
+    private transient java.util.HashSet<Object> added = new java.util.HashSet<>();
 
-    private transient java.util.HashSet removed = new java.util.HashSet();
+    private transient java.util.HashSet<Object> removed = new java.util.HashSet<>();
 
     private transient boolean isDeferred;
 
@@ -63,11 +58,11 @@ public class HashSet
      * I18N message handlers
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-                             "com.sun.jdo.spi.persistence.support.sqlstore.impl.Bundle", // NOI18N
+                             "com.sun.jdo.spi.persistence.support.sqlstore.impl.Bundle",
                              HashSet.class.getClassLoader());
 
     private final static ResourceBundle messages1 = I18NHelper.loadBundle(
-                             "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+                             "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
                              HashSet.class.getClassLoader());
 
 
@@ -80,7 +75,7 @@ public class HashSet
      * @param elementType the element types allowed
      * @param allowNulls true if nulls are allowed
      */
-    public HashSet(Object owner, String fieldName, Class elementType, boolean allowNulls)
+    public HashSet(Object owner, String fieldName, Class<?> elementType, boolean allowNulls)
     {
         super();
     if (owner instanceof PersistenceCapable)
@@ -106,7 +101,7 @@ public class HashSet
      * @see java.util.HashSet
      */
     public HashSet(Object owner, String fieldName,
-                                Class elementType, boolean allowNulls,
+                                Class<?> elementType, boolean allowNulls,
                                 int initialCapacity)
     {
     super(initialCapacity);
@@ -130,18 +125,19 @@ public class HashSet
      * element.
      * @see java.util.HashSet
      */
+    @Override
     public boolean add(Object o)
     {
         if (allowNulls == false && o == null)
         {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+                        "sco.nulls_not_allowed"));
         }
 
         if (elementType != null && !elementType.isAssignableFrom(o.getClass()))
         {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                                     "sco.classcastexception", elementType.getName()), // NOI18N
+                                     "sco.classcastexception", elementType.getName()),
                                        new ClassCastException(), new Object[] {o});
         }
 
@@ -230,32 +226,34 @@ public class HashSet
      * @see java.util.AbstractCollection
      * @see java.util.HashSet
      */
-    public boolean addAll(Collection c)
+    @Override
+    public boolean addAll(Collection<?> c)
     {
         if (allowNulls == false && c.contains(null))
         {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "sco.nulls_not_allowed")); // NOI18N
+                        "sco.nulls_not_allowed"));
         }
 
-        ArrayList errc = new ArrayList();
+        ArrayList<Object> errc = new ArrayList<>();
 
         if (elementType != null)
         {
             // iterate the collection and make a list of wrong elements.
-            Iterator i = c.iterator();
+            Iterator<?> i = c.iterator();
             while (i.hasNext())
             {
                 Object o = i.next();
-                if (!elementType.isAssignableFrom(o.getClass()))
+                if (!elementType.isAssignableFrom(o.getClass())) {
                     errc.add(o);
+                }
             }
         }
 
         if (errc != null && errc.size() > 0)
         {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                                     "sco.classcastexception", elementType.getName()), // NOI18N
+                                     "sco.classcastexception", elementType.getName()),
                                        new ClassCastException(), errc.toArray());
         }
 
@@ -279,7 +277,7 @@ public class HashSet
                         // Mark the field as dirty
                         stateManager.makeDirty(fieldName);
 
-                        for (Iterator iter = c.iterator(); iter.hasNext();)
+                        for (Iterator<?> iter = c.iterator(); iter.hasNext();)
                         {
                             Object o = iter.next();
                             if (!super.contains(o))
@@ -337,6 +335,7 @@ public class HashSet
      * @return <tt>true</tt> if the set contained the specified element.
      * @see java.util.HashSet
      */
+    @Override
     public boolean remove(Object o)
     {
     // Mark the field as dirty
@@ -403,7 +402,8 @@ public class HashSet
      * @see java.util.HashSet
      * @see java.util.AbstractCollection
      */
-    public boolean removeAll(Collection c)
+    @Override
+    public boolean removeAll(Collection<?> c)
     {
         // Mark the field as dirty
 
@@ -424,7 +424,7 @@ public class HashSet
                     {
                         stateManager.makeDirty(fieldName);
 
-                        for (Iterator iter = c.iterator(); iter.hasNext();)
+                        for (Iterator<?> iter = c.iterator(); iter.hasNext();)
                         {
                             Object o = iter.next();
                             if (super.contains(o))
@@ -474,7 +474,8 @@ public class HashSet
      * @see java.util.HashSet
      * @see java.util.AbstractCollection
      */
-    public boolean retainAll(Collection c)
+    @Override
+    public boolean retainAll(Collection<?> c)
     {
         if (owner != null)
         {
@@ -494,7 +495,7 @@ public class HashSet
                         // Mark the field as dirty
                         stateManager.makeDirty(fieldName);
 
-                        for (Iterator iter = super.iterator(); iter.hasNext();)
+                        for (Iterator<?> iter = super.iterator(); iter.hasNext();)
                         {
                             Object o = iter.next();
                             if (!c.contains(o))
@@ -536,6 +537,7 @@ public class HashSet
      * Removes all of the elements from this set.
      * @see java.util.HashSet
      */
+    @Override
     public void clear()
     {
         if (owner != null)
@@ -559,7 +561,7 @@ public class HashSet
                         removed.clear();
                         added.clear();
 
-                        for (Iterator iter = super.iterator(); iter.hasNext();)
+                        for (Iterator<?> iter = super.iterator(); iter.hasNext();)
                         {
                             removed.add(iter.next());
                         }
@@ -593,6 +595,7 @@ public class HashSet
      * objects. In contrast to Object.clone(), this method must not throw a
      * CloneNotSupportedException.
      */
+    @Override
     public Object clone()
     {
         HashSet obj = (HashSet) super.clone();
@@ -612,33 +615,38 @@ public class HashSet
      * @return an Iterator over the elements in this set.
      * @see java.util.ConcurrentModificationException
      */
-    public Iterator iterator() {
+    @Override
+    public Iterator<Object> iterator() {
         return new SCOHashIterator(super.iterator(), this);
     }
 
-    private class SCOHashIterator implements Iterator {
-        Iterator _iterator = null;
+    private class SCOHashIterator implements Iterator<Object> {
+        Iterator<?> _iterator = null;
         HashSet _caller = null;
         Object lastReturned = null;
 
-        SCOHashIterator(Iterator it, HashSet cl) {
+        SCOHashIterator(Iterator<?> it, HashSet cl) {
             _iterator = it;
             _caller = cl;
         }
 
+        @Override
         public boolean hasNext() {
             return _iterator.hasNext();
         }
 
+        @Override
         public Object next() {
             lastReturned = _iterator.next();
             return  lastReturned;
         }
 
+        @Override
         public void remove() {
             // Check if called twice.
-            if (lastReturned == null)
+            if (lastReturned == null) {
                 throw new IllegalStateException();
+            }
 
             if (_caller.owner != null) {
                 // Mark the field as dirty
@@ -689,6 +697,7 @@ public class HashSet
      * Creates and returns a copy of this object without resetting the owner and field value.
      *
      */
+    @Override
     public Object cloneInternal()
     {
         return super.clone();
@@ -697,19 +706,23 @@ public class HashSet
     /**
      * Cleans removed and added lists
      */
+    @Override
     public void reset()
     {
         // RESOLVE: do we need to synchronize this??
-        if (added != null)
+        if (added != null) {
             added.clear();
+        }
 
-        if (removed != null)
+        if (removed != null) {
             removed.clear();
+        }
     }
 
     /**
      * Mark this HashSet as deferred.
      */
+    @Override
     public void markDeferred()
     {
         isDeferred = true;
@@ -718,6 +731,7 @@ public class HashSet
     /**
      * Return true is this HashSet is deferred, false otherwise.
      */
+    @Override
     public boolean isDeferred()
     {
         return isDeferred;
@@ -728,7 +742,8 @@ public class HashSet
      * with c and they apply any deferred updates specified by the added and
      * removed lists.
      */
-    public void applyDeferredUpdates(Collection c)
+    @Override
+    public void applyDeferredUpdates(Collection<?> c)
     {
         if (!isDeferred)
         {
@@ -749,6 +764,7 @@ public class HashSet
       * Adds an object to the list without recording changes if the HashSet is
       * not deferred. Otherwise, add o to the added list.
      */
+    @Override
     public void addInternal(Object o)
     {
         if (isDeferred)
@@ -769,14 +785,15 @@ public class HashSet
      * Adds a Collection to the list without recording changes if the HashSet is
      * not deferred. Otherwise, add o to the removed list.
      */
-    public void addAllInternal(Collection c)
+    @Override
+    public void addAllInternal(Collection<?> c)
     {
         if (c == null)
         {
             return;
         }
 
-        Iterator iter = c.iterator();
+        Iterator<?> iter = c.iterator();
 
         while (iter.hasNext())
         {
@@ -784,9 +801,7 @@ public class HashSet
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void addToBaseCollection(Object o)
     {
         super.add(o);
@@ -796,14 +811,15 @@ public class HashSet
      * Remove c from the list if the HashSet is not deferred.
      * Otherwise, add c to the removed list.
      */
-    public void removeAllInternal(Collection c)
+    @Override
+    public void removeAllInternal(Collection<?> c)
     {
         if (c == null)
         {
             return;
         }
 
-        Iterator iter = c.iterator();
+        Iterator<?> iter = c.iterator();
 
         while (iter.hasNext())
         {
@@ -816,9 +832,10 @@ public class HashSet
      *
      * @return added    collection of added elements
      */
-    public Collection getAdded()
+    @Override
+    public Collection<Object> getAdded()
     {
-        return (Collection)added;
+        return added;
     }
 
     /**
@@ -826,15 +843,17 @@ public class HashSet
      *
      * @return removed  collection of removed elements
      */
-    public Collection getRemoved()
+    @Override
+    public Collection<Object> getRemoved()
     {
-        return (Collection)removed;
+        return removed;
     }
 
 
     /**
      * Clears Collection without notifing the owner
      */
+    @Override
     public void clearInternal()
     {
         super.clear();
@@ -844,6 +863,7 @@ public class HashSet
     /**
      * Removes an element without notifing the owner
      */
+    @Override
     public void removeInternal(Object o)
     {
         if (isDeferred)
@@ -863,6 +883,7 @@ public class HashSet
     /**
      * Nullifies references to the owner Object and Field
      */
+    @Override
     public void unsetOwner()
     {
         this.owner = null;
@@ -877,6 +898,7 @@ public class HashSet
      *
      * @return owner object
      */
+    @Override
     public Object getOwner()
     {
         return this.owner;
@@ -887,6 +909,7 @@ public class HashSet
      *
      * @return field name as java.lang.String
      */
+    @Override
     public String getFieldName()
     {
         return this.fieldName;
@@ -895,6 +918,7 @@ public class HashSet
     /**
      * Marks object dirty
      */
+    @Override
     public StateManager makeDirty()
     {
         StateManager stateManager = owner.jdoGetStateManager();
@@ -911,6 +935,7 @@ public class HashSet
     /**
      * Apply changes (can be a no-op)
      */
+    @Override
     public void applyUpdates(StateManager sm, boolean modified)
     {
          if (modified && sm != null)
@@ -927,11 +952,12 @@ public class HashSet
      * @param elementType the new element type as Class, or null if type
      * is not checked or not supported.
      */
-    public void setOwner(Object owner, String fieldName, Class elementType) {
+    @Override
+    public void setOwner(Object owner, String fieldName, Class<?> elementType) {
 
         if (this.owner != null) {
             throw new JDOUserException(I18NHelper.getMessage(
-                messages1, "core.statemanager.anotherowner"), // NOI18N
+                messages1, "core.statemanager.anotherowner"),
                 new Object[]{this.owner, this.fieldName});
         }
         if (owner instanceof PersistenceCapable) {

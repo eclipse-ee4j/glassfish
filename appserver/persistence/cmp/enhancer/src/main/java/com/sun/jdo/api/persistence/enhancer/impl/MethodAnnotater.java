@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -130,10 +131,10 @@ class MethodAnnotater
     private int annotate;
 
     /* List of single element register values (Integer) for temporaries */
-    private Vector tmpRegisters;
+    private Vector<Integer> tmpRegisters;
 
     /* List of double element register values (Integer) for temporaries */
-    private Vector tmpDoubleRegisters;
+    private Vector<Integer> tmpDoubleRegisters;
 
     /* List of single word register values which cache fetches/stores
      * Each of these registers must be initialized to null at the start of
@@ -162,7 +163,7 @@ class MethodAnnotater
 
     /* Table mapping Insn to InsnNote - allows annotation computations to
      * be attached to instructions non-intrusively */
-    private Map insnNotes = new HashMap(11);
+    private Map<Insn, InsnNote> insnNotes = new HashMap<>(11);
 
     /* The largest loop contained within the method, or null.  */
 //@olsen: disabled feature
@@ -603,8 +604,9 @@ class MethodAnnotater
         final String fieldName
             = fieldRef.nameAndType().name().asString();
         final JDOMetaData meta = env.getJDOMetaData();
-        if (!meta.isPersistentField(fieldOf, fieldName))
+        if (!meta.isPersistentField(fieldOf, fieldName)) {
             return null;
+        }
 
 //@olsen: disabled feature
 /*
@@ -645,19 +647,22 @@ class MethodAnnotater
         Insn dep = findArgDepositer(insn, stackArgSize);
         if (dep != null
             && dep.opcode() == opc_aload_0
-            && !method.isStatic())
+            && !method.isStatic()) {
             // This represents a fetch of "this"
             flags |= FetchThis;
-        else
+        } else {
             flags |= FetchPersistent;
+        }
 
         //@olsen: added test
-        if (dfgField)
+        if (dfgField) {
             flags |= DFGField;
+        }
 
         //@olsen: added test
-        if (pkField)
+        if (pkField) {
             flags |= PKField;
+        }
 
         //@olsen: changed to use JDOMetaData
         return new InsnNote(insn, flags,
@@ -684,8 +689,9 @@ class MethodAnnotater
         final String fieldName
             = fieldRef.nameAndType().name().asString();
         final JDOMetaData meta = env.getJDOMetaData();
-        if (!meta.isPersistentField(fieldOf, fieldName))
+        if (!meta.isPersistentField(fieldOf, fieldName)) {
             return null;
+        }
 
 //@olsen: disabled feature
 /*
@@ -727,19 +733,22 @@ class MethodAnnotater
         Insn dep = findArgDepositer(insn, stackArgSize);
         if (dep != null
             && dep.opcode() == opc_aload_0
-            && !method.isStatic())
+            && !method.isStatic()) {
             // This represents a dirtyfication of "this"
             flags |= DirtyThis;
-        else
+        } else {
             flags |= DirtyPersistent;
+        }
 
         //@olsen: added test
-        if (dfgField)
+        if (dfgField) {
             flags |= DFGField;
+        }
 
         //@olsen: added test
-        if (pkField)
+        if (pkField) {
             flags |= PKField;
+        }
 
         //@olsen: changed to use JDOMetaData
         return new InsnNote(insn, flags,
@@ -845,8 +854,9 @@ class MethodAnnotater
     void annotateMethod() {
         //@olsen: cosmetics
         final CodeAttribute codeAttr = method.codeAttribute();
-        if (codeAttr == null || !needsAnnotation())
+        if (codeAttr == null || !needsAnnotation()) {
             return;
+        }
 
 //@olsen: disabled feature
 /*
@@ -1039,8 +1049,9 @@ class MethodAnnotater
         }
 */
 
-        if (annotationStack > 0)
+        if (annotationStack > 0) {
             codeAttr.setStackUsed(codeAttr.stackUsed() + annotationStack);
+        }
     }
 
 // ---------------------------------------------------------------------------
@@ -1202,8 +1213,9 @@ class MethodAnnotater
             // which does a super.clone() call, and if it is, add
             // field initializations for the jdoStateManager and jdoFlags
             // fields.
-            if (insn.opcode() != opc_invokespecial)
+            if (insn.opcode() != opc_invokespecial) {
                 continue;
+            }
 
             final InsnConstOp invoke = (InsnConstOp)insn;
             final ConstMethodRef methodRef = (ConstMethodRef)invoke.value();
@@ -1212,8 +1224,9 @@ class MethodAnnotater
             final String methodSig = methodNT.signature().asString();
 
             if (!(methodName.equals("clone")//NOI18N
-                  && methodSig.equals("()Ljava/lang/Object;")))//NOI18N
+                  && methodSig.equals("()Ljava/lang/Object;"))) { //NOI18N
                 continue;
+            }
 
             if (false) {
                 final ConstClass methodClass = methodRef.className();
@@ -1443,8 +1456,9 @@ class MethodAnnotater
              note = note.next()) { ... }
 */
         InsnNote note = getNoteList(insn);
-        if (note == null)
+        if (note == null) {
             return insn;
+        }
 
         //@olsen: ensured to use single note only (as instantiated)
         affirm(insn == note.insn);
@@ -1556,7 +1570,7 @@ class MethodAnnotater
                 // The value is hidden by 2 or more stack operands.  Move
                 // the obscuring values into temporaries to get access to
                 // the value - put them back when done
-                Stack stackTypes = state.stackTypes;
+                Stack<Integer> stackTypes = state.stackTypes;
                 int depth = state.argDepth;
                 int elem = stackTypes.size()-1;
 
@@ -1568,7 +1582,7 @@ class MethodAnnotater
                 // Now, move values into temp registers
                 while (depth > 0) {
                     int elemType =
-                        ((Integer)stackTypes.elementAt(elem--)).intValue();
+                        stackTypes.elementAt(elem--).intValue();
                     int elemSize = Descriptor.elementSize(elemType);
                     depth -= elemSize;
                     int reg = ((elemSize == 1)
@@ -1577,20 +1591,22 @@ class MethodAnnotater
                     regnums[regtotal++] = reg;
 
                     Insn store = InsnUtils.store(elemType, reg, pool);
-                    if (annotation == null)
+                    if (annotation == null) {
                         annotation = store;
-                    else
+                    } else {
                         annotation.append(store);
+                    }
                 }
                 affirm((depth >= 0),
                        "Stack underflow while computing save registers");//NOI18N
 
                 annotation.append(frag0.annotation);
 
-                while (regtotal > 0)
+                while (regtotal > 0) {
                     annotation.append(InsnUtils.load(
-                        ((Integer)stackTypes.elementAt(++elem)).intValue(),
+                        stackTypes.elementAt(++elem).intValue(),
                         regnums[--regtotal], pool));
+                }
 
                 noteStack(frag0.stackRequired - note.arg());
             }
@@ -2223,19 +2239,20 @@ class MethodAnnotater
      *  specified temporary hasn't been allocated, allocated it now.
      */
     private int tmpReg2(int idx) {
-        if (tmpDoubleRegisters == null)
-            tmpDoubleRegisters = new Vector(3);
+        if (tmpDoubleRegisters == null) {
+            tmpDoubleRegisters = new Vector<>(3);
+        }
 
         // allocated as many 2 register pairs as necessary in order to
         // make idx be a valid index
         while (tmpDoubleRegisters.size() <= idx) {
             final CodeAttribute codeAttr = method.codeAttribute();
             final int reg = codeAttr.localsUsed();
-            tmpDoubleRegisters.addElement(new Integer(reg));
+            tmpDoubleRegisters.addElement(Integer.valueOf(reg));
             codeAttr.setLocalsUsed(reg+2);
         }
 
-        return ((Integer)tmpDoubleRegisters.elementAt(idx)).intValue();
+        return tmpDoubleRegisters.elementAt(idx).intValue();
     }
 
     /**
@@ -2244,56 +2261,29 @@ class MethodAnnotater
      *  specified temporary hasn't been allocated, allocated it now.
      */
     private int tmpReg(int idx) {
-        if (tmpRegisters == null)
-            tmpRegisters = new Vector(3);
+        if (tmpRegisters == null) {
+            tmpRegisters = new Vector<>(3);
+        }
 
         // allocate as many registers as necessary in order to
         // make idx be a valid index
         while (tmpRegisters.size() <= idx) {
             final CodeAttribute codeAttr = method.codeAttribute();
             final int reg = codeAttr.localsUsed();
-            tmpRegisters.addElement(new Integer(reg));
+            tmpRegisters.addElement(Integer.valueOf(reg));
             codeAttr.setLocalsUsed(reg+1);
         }
-        return ((Integer)tmpRegisters.elementAt(idx)).intValue();
+        return tmpRegisters.elementAt(idx).intValue();
     }
-
-    /**
-     * Allocate an object fetch/store cache slot
-     */
-//@olsen: disabled feature
-/*
-    private int newCacheSlot() {
-        CodeAttribute codeAttr = method.codeAttribute();
-        int slot = codeAttr.localsUsed();
-        codeAttr.setLocalsUsed(slot+1);
-        if (caches == null)
-            caches = new Vector(3);
-        caches.addElement(new Integer(slot));
-        return slot;
-    }
-*/
 
     /**
      * Note the following amount of stack used by a single annotation.
      */
     private void noteStack(int stk) {
-        if (stk > annotationStack)
+        if (stk > annotationStack) {
             annotationStack = (short)stk;
+        }
     }
-
-    /**
-     * Is this a non-static method of a persistence-capable class?
-     */
-//@olsen: disabled feature
-/*
-    private boolean thisIsPersistent() {
-        return (ca.persistCapable() &&
-                !method.isStatic());
-    }
-*/
-
-// ---------------------------------------------------------------------------
 
     /**
      * Attempt to locate the instruction which deposits to the top of stack
@@ -2312,8 +2302,9 @@ class MethodAnnotater
             // At control flow branch/merge points, abort the search for the
             // target operand.
             if (i.branches() ||
-                ((i instanceof InsnTarget) && ((InsnTarget)i).isBranchTarget()))
+                ((i instanceof InsnTarget) && ((InsnTarget)i).isBranchTarget())) {
                 break;
+            }
 
             int nArgs = i.nStackArgs();
             int nResults = i.nStackResults();
@@ -2324,16 +2315,18 @@ class MethodAnnotater
                 // deposit more than one value.  These are the
                 // long/doubleinstructions (which can't be depositing a one
                 // word value) and the dupX variants
-                if (nResults > 1 && i.opcode() != opc_dup)
+                if (nResults > 1 && i.opcode() != opc_dup) {
                     break;
+                }
                 depositer = i;
 
                 // consider special cases which may cause us to look further
                 switch (i.opcode()) {
                 case opc_dup:
-                    if (argDepth == 0)
+                    if (argDepth == 0) {
                         // keep going to find the real depositer at a greater depth
                         argDepth++;
+                    }
                     break;
                 case opc_checkcast:
                     // keep going to find the real depositer
@@ -2362,9 +2355,9 @@ class MethodAnnotater
         Insn i = state.insn;
         int argDepth = state.argDepth;
 
-        Stack argTypesStack = new Stack();
-        Stack resultTypesStack = new Stack();
-        Stack stackTypes = new Stack();
+        Stack<Integer> argTypesStack = new Stack<>();
+        Stack<Integer> resultTypesStack = new Stack<>();
+        Stack<Integer> stackTypes = new Stack<>();
         copyStack(state.stackTypes, stackTypes);
 
         for (; argDepth > 0; i = i.prev()) {
@@ -2373,8 +2366,9 @@ class MethodAnnotater
             // stack state computed thus far.
             if (i.branches() ||
                 ((i instanceof InsnTarget)
-                 && ((InsnTarget)i).isBranchTarget()))
+                 && ((InsnTarget)i).isBranchTarget())) {
                 break;
+            }
 
             int nArgs = i.nStackArgs();
             int nResults = i.nStackResults();
@@ -2386,31 +2380,38 @@ class MethodAnnotater
             // deposited multiple results (one of the dup type instructions)
             // then we don't have the smarts to figure out where it came from
             // so just quit looking
-            if (argDepth < 0)
+            if (argDepth < 0) {
                 break;
+            }
             argDepth += nArgs;
 
             if (i.opcode() == opc_swap) {
-                Object x = stackTypes.pop();
-                Object y = stackTypes.pop();
+                Integer x = stackTypes.pop();
+                Integer y = stackTypes.pop();
                 stackTypes.push(x);
                 stackTypes.push(y);
             } else {
                 // Make sure the arg types and result types stacks are empty
-                while (!argTypesStack.empty()) argTypesStack.pop();
-                while (!resultTypesStack.empty()) resultTypesStack.pop();
+                while (!argTypesStack.empty()) {
+                    argTypesStack.pop();
+                }
+                while (!resultTypesStack.empty()) {
+                    resultTypesStack.pop();
+                }
 
                 Descriptor.computeStackTypes(argTypes, argTypesStack);
                 Descriptor.computeStackTypes(resultTypes, resultTypesStack);
 
                 int expectWords = 0;
-                while (!resultTypesStack.empty())
+                while (!resultTypesStack.empty()) {
                     expectWords += Descriptor.elementSize(
-                        ((Integer) resultTypesStack.pop()).intValue());
+                        resultTypesStack.pop().intValue());
+                }
 
-                while (expectWords > 0)
+                while (expectWords > 0) {
                     expectWords -= Descriptor.elementSize(
-                        ((Integer) stackTypes.pop()).intValue());
+                        stackTypes.pop().intValue());
+                }
 
                 if (expectWords < 0) {
                     // perhaps we ought to signal an exception, but returning
@@ -2432,30 +2433,32 @@ class MethodAnnotater
 
     /* Take all stack elements in fromStack and push them onto toStack
      * such that they are in the same relative stack positions */
-    private final void transferStackArgs(Stack fromStack, Stack toStack) {
+    private final void transferStackArgs(Stack<Integer> fromStack, Stack<Integer> toStack) {
         if (!fromStack.empty()) {
-            Object o = fromStack.pop();
+            Integer o = fromStack.pop();
             transferStackArgs(fromStack, toStack);
             toStack.push(o);
         }
     }
 
     /* Make toStack look just like fromStack */
-    private final void copyStack(Stack fromStack, Stack toStack) {
-        while (!toStack.empty())
+    private final void copyStack(Stack<Integer> fromStack, Stack<Integer> toStack) {
+        while (!toStack.empty()) {
             toStack.pop();
+        }
 
         // take advantage of Stack's inheritance from Vector
-        for (int i=0; i<fromStack.size(); i++)
+        for (int i=0; i<fromStack.size(); i++) {
             toStack.addElement(fromStack.elementAt(i));
+        }
     }
 
     /* Check that the top nWords worth of types on stack are well defined */
-    private final boolean knownTypes(Stack stack, int nWords) {
+    private final boolean knownTypes(Stack<Integer> stack, int nWords) {
         // take advantage of Stack's inheritance from Vector
         for (int i=stack.size()-1; i>= 0 && nWords > 0; i--) {
             int words = 0;
-            switch (((Integer)stack.elementAt(i)).intValue()) {
+            switch (stack.elementAt(i).intValue()) {
             case T_UNKNOWN:
             case T_WORD:
             case T_TWOWORD:
@@ -2501,7 +2504,7 @@ class MethodAnnotater
      */
     //@olsen: made final
     private final InsnNote getNoteList(Insn insn) {
-        return (InsnNote)insnNotes.get(insn);
+        return insnNotes.get(insn);
     }
 }
 
@@ -2800,13 +2803,13 @@ class StackState implements VMConstants {
     int argDepth;
 
     /* Stack of types */
-    Stack stackTypes;
+    Stack<Integer> stackTypes;
 
     /* the instruction after which, the word is argDepth deep */
     Insn insn;
 
     StackState(int depth, String stackSig, Insn i) {
-        stackTypes = new Stack();
+        stackTypes = new Stack<Integer>();
         Descriptor.computeStackTypes(stackSig, stackTypes);
         argDepth = depth;
         insn = i;

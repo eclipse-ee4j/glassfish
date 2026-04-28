@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * ExtentCollection.java
- *
- * Created on April 6, 2000
  */
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
@@ -37,8 +32,7 @@ import org.glassfish.persistence.common.I18NHelper;
  * @author  Michael Bouschen
  * @version 0.1
  */
-public class ExtentCollection
-        implements Collection {
+public class ExtentCollection implements Collection<Object> {
     /**
      * The PersistenceManager getExtent is called from
      */
@@ -47,7 +41,7 @@ public class ExtentCollection
     /**
      * This extent collection reperesents the extent of persistenceCapableClass.
      */
-    protected Class persistenceCapableClass;
+    protected Class<? extends Object> persistenceCapableClass;
 
     /**
      * I18N message handler
@@ -60,37 +54,41 @@ public class ExtentCollection
      * @param persistenceCapableClass Class of instances
      * @param subclasses whether to include instances of subclasses
      */
-    public ExtentCollection(PersistenceManager pm, Class persistenceCapableClass, boolean subclasses) {
+    public ExtentCollection(PersistenceManager pm, Class<?> persistenceCapableClass, boolean subclasses) {
         this.pm = pm;
         this.persistenceCapableClass = persistenceCapableClass;
 
         // check persistenceCapableClass parameter being null
-        if (persistenceCapableClass == null)
+        if (persistenceCapableClass == null) {
             throw new JDOUserException(
                     I18NHelper.getMessage(messages, "jdo.extentcollection.constructor.invalidclass", "null"));// NOI18N
+        }
         // check persistence-capable
         if (Model.RUNTIME.getMappingClass(persistenceCapableClass.getName(),
-                persistenceCapableClass.getClassLoader()) == null)
+                persistenceCapableClass.getClassLoader()) == null) {
             throw new JDOUserException(
                     I18NHelper.getMessage(messages, "jdo.extentcollection.constructor.nonpc", // NOI18N
                             persistenceCapableClass.getName()));
+        }
 
         // subclasses == true is not yet supported
-        if (subclasses)
+        if (subclasses) {
             throw new JDOUnsupportedOptionException(
                     I18NHelper.getMessage(messages, "jdo.extentcollection.constructor.subclasses"));// NOI18N
+        }
     }
 
     /**
      *
      */
-    public Class getPersistenceCapableClass() {
+    public Class<?> getPersistenceCapableClass() {
         return persistenceCapableClass;
     }
 
     /**
      *
      */
+    @Override
     public int size() {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "size"));// NOI18N
@@ -99,6 +97,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public boolean isEmpty() {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "isEmpty"));// NOI18N
@@ -107,6 +106,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public boolean contains(Object o) {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "contains"));// NOI18N
@@ -115,14 +115,16 @@ public class ExtentCollection
     /**
      *
      */
-    public Iterator iterator() {
+    @Override
+    public Iterator<Object> iterator() {
         RetrieveDesc rd = pm.getRetrieveDesc(persistenceCapableClass);
-        return ((Collection)pm.retrieve(rd)).iterator();
+        return ((Collection<Object>) pm.retrieve(rd)).iterator();
     }
 
     /**
      *
      */
+    @Override
     public Object[] toArray() {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "toArray"));// NOI18N
@@ -131,6 +133,7 @@ public class ExtentCollection
     /**
      *
      */
+    @Override
     public Object[] toArray(Object a[]) {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "toArray"));// NOI18N
@@ -139,6 +142,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean add(Object o) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -148,6 +152,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -157,7 +162,8 @@ public class ExtentCollection
     /**
      *
      */
-    public boolean containsAll(Collection c) {
+    @Override
+    public boolean containsAll(Collection<?> c) {
         throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.methodnotsupported", "containsAll"));// NOI18N
     }
@@ -165,7 +171,8 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
-    public boolean addAll(Collection c) {
+    @Override
+    public boolean addAll(Collection<?> c) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
                         persistenceCapableClass.getName()));
@@ -174,7 +181,8 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
-    public boolean removeAll(Collection c) {
+    @Override
+    public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
                         persistenceCapableClass.getName()));
@@ -183,7 +191,8 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
-    public boolean retainAll(Collection c) {
+    @Override
+    public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
                         persistenceCapableClass.getName()));
@@ -192,6 +201,7 @@ public class ExtentCollection
     /**
      * Extent collection is unmodifiable => throw UnsupportedOperationException
      */
+    @Override
     public void clear() {
         throw new UnsupportedOperationException(
                 I18NHelper.getMessage(messages, "jdo.extentcollection.illegalmodification", // NOI18N
@@ -201,9 +211,11 @@ public class ExtentCollection
     /**
      * Two extent collections are equal, iff the names of their persistence capable class are equal
      */
+    @Override
     public boolean equals(Object o) {
-        if (o == this)
+        if (o == this) {
             return true;
+        }
         if (o instanceof ExtentCollection) {
             String otherClassName = ((ExtentCollection) o).persistenceCapableClass.getName();
             return persistenceCapableClass.getName().equals(otherClassName);
@@ -214,6 +226,7 @@ public class ExtentCollection
     /**
      * The hashCode is mapped to the hashCode of the name of the extent collection's persistence capable class
      */
+    @Override
     public int hashCode() {
         return persistenceCapableClass.getName().hashCode();
     }

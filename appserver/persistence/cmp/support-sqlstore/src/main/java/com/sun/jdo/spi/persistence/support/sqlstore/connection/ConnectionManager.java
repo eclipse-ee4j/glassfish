@@ -23,11 +23,10 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.connection;
 
 import com.sun.jdo.api.persistence.support.Transaction;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.utility.StringScanner;
 import com.sun.jdo.spi.persistence.utility.DoubleLinkedList;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -35,6 +34,9 @@ import java.util.Hashtable;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * <P>This class represents a connection manager, which creates a
@@ -287,7 +289,7 @@ public class ConnectionManager {
      * transaction object (jakarta.transaction.Transaction).
      * @serial
      */
-    private transient Hashtable xactConnections;
+    private transient Hashtable<Transaction, ConnectionImpl> xactConnections;
 
     /**
      * Flag that a shutdown to this ConnectionManager object is pending.
@@ -342,13 +344,13 @@ public class ConnectionManager {
     /**
      * The logger
      */
-    private static Logger logger = LogHelperSQLStore.getLogger();
+    private static final Logger LOG = System.getLogger(ConnectionManager.class.getName(), RESOURCE_BUNDLE);
 
     /**
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             ConnectionManager.class.getClassLoader());
 
 
@@ -359,411 +361,411 @@ public class ConnectionManager {
     //
     // SQL92 "00000" Successful completion.
     //
-    static final String SQL_SUCCESS = "00000"; // NOI18N
+    static final String SQL_SUCCESS = "00000";
 
     //
     // SQL92 "01000" Warning.
     //
-    static final String SQL_WARNING = "01000"; // NOI18N
+    static final String SQL_WARNING = "01000";
 
     //
     // SQL92 "01001" Warning; cursor operation conflict.
     //
-    static final String SQL_CURSOR_OP = "01001"; // NOI18N
+    static final String SQL_CURSOR_OP = "01001";
 
     //
     // SQL92 "01002" Warning; disconnect error.
     //
-    static final String SQL_DISCONNECT = "01002"; // NOI18N
+    static final String SQL_DISCONNECT = "01002";
 
     //
     // SQL92 "01003" Warning; null value eliminated in set function.
     //
-    static final String SQL_NULL_ELIM = "01003"; // NOI18N
+    static final String SQL_NULL_ELIM = "01003";
 
     //
     // SQL92 "01004" Warning; string date, right truncation.
     //
-    static final String SQL_R_TRUNC = "01004"; // NOI18N
+    static final String SQL_R_TRUNC = "01004";
 
     //
     // SQL92 "01005" Warning; insufficient item descriptor areas.
     //
-    static final String SQL_INSUFF_ITEM = "01005"; // NOI18N
+    static final String SQL_INSUFF_ITEM = "01005";
 
     //
     // SQL92 "01006" Warning; privilege not revoked.
     //
-    static final String SQL_NOT_REVOKED = "01006"; // NOI18N
+    static final String SQL_NOT_REVOKED = "01006";
 
     //
     // SQL92 "01007" Warning; privilege not granted.
     //
-    static final String SQL_NOT_GRANTED = "01007"; // NOI18N
+    static final String SQL_NOT_GRANTED = "01007";
 
     //
     // SQL92 "01008" Warning; implicit zero-bit padding.
     //
-    static final String SQL_ZERO_BIT_PAD = "01008"; // NOI18N
+    static final String SQL_ZERO_BIT_PAD = "01008";
 
     //
     // SQL92 "01009" Warning; search condition too long for
     // information schema.
     //
-    static final String SQL_COND_TOO_LONG = "01009"; // NOI18N
+    static final String SQL_COND_TOO_LONG = "01009";
 
     //
     // SQL92 "0100A" Warning; query condition too long for
     // information schema.
     //
-    static final String SQL_QUERY_TOO_LONG = "0100A"; // NOI18N
+    static final String SQL_QUERY_TOO_LONG = "0100A";
 
     //
     // SQL92 "02000" No data.
     //
-    static final String SQL_NO_DATA = "02000"; // NOI18N
+    static final String SQL_NO_DATA = "02000";
 
     //
     // SQL92 "07000" Dynamic SQL error.
     //
-    static final String SQL_DYN_ERROR = "07000"; // NOI18N
+    static final String SQL_DYN_ERROR = "07000";
 
     //
     // SQL92 "07001" Dynamic SQL error; using clause does not
     // match dynamic parameter specifications.
     //
-    static final String SQL_USING_NO_PARAM = "07001"; // NOI18N
+    static final String SQL_USING_NO_PARAM = "07001";
 
     //
     // SQL92 "07002" Dynamic SQL error; using clause does not
     // match target specifications.
     //
-    static final String SQL_USING_NO_TARGET = "07002"; // NOI18N
+    static final String SQL_USING_NO_TARGET = "07002";
 
     //
     // SQL92 "07003" Dynamic SQL error; cursor specification
     // cannot be executed.
     //
-    static final String SQL_CURSOR_NOEXE = "07003"; // NOI18N
+    static final String SQL_CURSOR_NOEXE = "07003";
 
     //
     // SQL92 "07004" Dynamic SQL error; using clause
     // required for dynamic parameters.
     //
-    static final String SQL_USING_REQ = "07004"; // NOI18N
+    static final String SQL_USING_REQ = "07004";
 
     //
     // SQL92 "07005" Dynamic SQL error; prepared statement
     // not a cursor specification.
     //
-    static final String SQL_PREP_NO_CURSOR = "07005"; // NOI18N
+    static final String SQL_PREP_NO_CURSOR = "07005";
 
     //
     // SQL92 "07006" Dynamic SQL error; restricted datatype
     // attribute violation.
     //
-    static final String SQL_RESTRIC_ATTR = "07006"; // NOI18N
+    static final String SQL_RESTRIC_ATTR = "07006";
 
     //
     // SQL92 "07007" Dynamic SQL error; using caluse required
     // for result fields.
     //
-    static final String SQL_USING_RESULTS = "07007"; // NOI18N
+    static final String SQL_USING_RESULTS = "07007";
 
     //
     // SQL92 "07008" Dynamic SQL error; invalid descriptor count.
     //
-    static final String SQL_INVAL_DESC_CNT = "07008"; // NOI18N
+    static final String SQL_INVAL_DESC_CNT = "07008";
 
     //
     // SQL92 "07009" Dynamic SQL error; invalid descriptor index.
     //
-    static final String SQL_INVAL_DESC_IDX = "07009"; // NOI18N
+    static final String SQL_INVAL_DESC_IDX = "07009";
 
     //
     // SQL92 "08000" Connection exception.
     //
-    static final String SQL_CONN = "08000"; // NOI18N
+    static final String SQL_CONN = "08000";
 
     //
     // SQL92 "08001" Connection exception; SQL-client unable
     // to establish SQL-connection.
     //
-    static final String SQL_CLIENT_NO_CONN = "08001"; // NOI18N
+    static final String SQL_CLIENT_NO_CONN = "08001";
 
     //
     // SQL92 "08002" Connection exception; connection name
     // in use.
     //
-    static final String SQL_CONN_IN_USE = "08002"; // NOI18N
+    static final String SQL_CONN_IN_USE = "08002";
 
     //
     // SQL92 "08003" Connection exception; connection does not exist.
     //
-    static final String SQL_NO_CONN = "08003"; // NOI18N
+    static final String SQL_NO_CONN = "08003";
 
     //
     // SQL92 "08004" Connection exception; SQL-server rejected
     // establishment of SQL-connection.
     //
-    static final String SQL_REJECT_CONN = "08004"; // NOI18N
+    static final String SQL_REJECT_CONN = "08004";
 
     //
     // SQL92 "08006" Connection exception; connection failure.
     //
-    static final String SQL_CONN_FAIL = "08006"; // NOI18N
+    static final String SQL_CONN_FAIL = "08006";
 
     //
     // SQL92 "08007" Connection exception; transaction resolution unknown.
     //
-    static final String SQL_TRANS_UNK = "08007"; // NOI18N
+    static final String SQL_TRANS_UNK = "08007";
 
     //
     // SQL92 "0A000" Feature not supported.
     //
-    static final String SQL_NO_SUPPORT = "0A000"; // NOI18N
+    static final String SQL_NO_SUPPORT = "0A000";
 
     //
     // SQL92 "0A001" Feature not supported; multiple
     // server transactions
     //
-    static final String SQL_NO_SUPPORT_MULTI = "0A001"; // NOI18N
+    static final String SQL_NO_SUPPORT_MULTI = "0A001";
 
     //
     // SQL92 "21000" Cardinality violation.
     //
-    static final String SQL_INVALID_VALUE = "21000"; // NOI18N
+    static final String SQL_INVALID_VALUE = "21000";
 
     //
     // SQL92 "22000" Data exception.
     //
-    static final String SQL_DATA = "22000"; // NOI18N
+    static final String SQL_DATA = "22000";
 
     //
     // SQL92 "22001" Data exception; string data,
     // right trunctation.
     //
-    static final String SQL_DATA_RTRUNC = "22001"; // NOI18N
+    static final String SQL_DATA_RTRUNC = "22001";
 
     //
     // SQL92 "22002" Data exception; null value, no
     // indicator parameter.
     //
-    static final String SQL_DATA_NULL = "22002"; // NOI18N
+    static final String SQL_DATA_NULL = "22002";
 
     //
     // SQL92 "22003" Data exception; numeric value out
     // of range.
     //
-    static final String SQL_OUT_OF_RANGE = "22003"; // NOI18N
+    static final String SQL_OUT_OF_RANGE = "22003";
 
     //
     // SQL92 "22005" Data exception; error in assignment.
     //
-    static final String SQL_DATA_EXCEPT = "22005"; // NOI18N
+    static final String SQL_DATA_EXCEPT = "22005";
 
     //
     // SQL92 "22007" Data exception; invalid datetime format.
     //
-    static final String SQL_DATETIME_FMT = "22007"; // NOI18N
+    static final String SQL_DATETIME_FMT = "22007";
 
     //
     // SQL92 "22008" Data exception; datetime field overflow.
     //
-    static final String SQL_DATETIME_OVFLO = "22008"; // NOI18N
+    static final String SQL_DATETIME_OVFLO = "22008";
 
     //
     // SQL92 "22009" Data exception; invalid time zone
     // displacement value.
     //
-    static final String SQL_TIMEZONE = "22009"; // NOI18N
+    static final String SQL_TIMEZONE = "22009";
 
     //
     // SQL92 "22011" Data exception; substring error.
     //
-    static final String SQL_SUBSTR_ERROR = "22011"; // NOI18N
+    static final String SQL_SUBSTR_ERROR = "22011";
 
     //
     // SQL92 "22012" Data exception; division by zero.
     //
-    static final String SQL_DIV_BY_ZERO = "22012"; // NOI18N
+    static final String SQL_DIV_BY_ZERO = "22012";
 
     //
     // SQL92 "22015" Data exception; interval field overflow.
     //
-    static final String SQL_INTERVAL_OVFLO = "22015"; // NOI18N
+    static final String SQL_INTERVAL_OVFLO = "22015";
 
     //
     // SQL92 "22018" Data exception; invalid character value
     // for cast.
     //
-    static final String SQL_INVAL_CHAR_CAST = "22018"; // NOI18N
+    static final String SQL_INVAL_CHAR_CAST = "22018";
 
     //
     // SQL92 "22019" Data exception; invalid escape character.
     //
-    static final String SQL_INVAL_ESCAPE_CHAR = "22019"; // NOI18N
+    static final String SQL_INVAL_ESCAPE_CHAR = "22019";
 
     //
     // SQL92 "22021" Data exception; character not in repertoire.
     //
-    static final String SQL_CHAR_NOT_REP = "22021"; // NOI18N
+    static final String SQL_CHAR_NOT_REP = "22021";
 
     //
     // SQL92 "22022" Data exception; indicator overflow.
     //
-    static final String SQL_IND_OVERFLOW = "22022"; // NOI18N
+    static final String SQL_IND_OVERFLOW = "22022";
 
     //
     // SQL92 "22023" Data exception; invalid parameter value.
     //
-    static final String SQL_INVAL_PARAM_VALUE = "22023"; // NOI18N
+    static final String SQL_INVAL_PARAM_VALUE = "22023";
 
     //
     // SQL92 "22024" Data exception; unterminated C string.
     //
-    static final String SQL_UNTERM_C_STR = "22024"; // NOI18N
+    static final String SQL_UNTERM_C_STR = "22024";
 
     //
     // SQL92 "22025" Data exception; invalid escape sequence.
     //
-    static final String SQL_INVAL_ESCAPE_SEQ = "22025"; // NOI18N
+    static final String SQL_INVAL_ESCAPE_SEQ = "22025";
 
     //
     // SQL92 "22026" Data exception; string data, length mismatch.
     //
-    static final String SQL_STR_LEN_MISMATCH = "22026"; // NOI18N
+    static final String SQL_STR_LEN_MISMATCH = "22026";
 
     //
     // SQL92 "22027" Data exception; trim error.
     //
-    static final String SQL_TRIM_ERROR = "22027"; // NOI18N
+    static final String SQL_TRIM_ERROR = "22027";
 
     //
     // SQL92 "23000" Integrity constraint violation.
     //
-    static final String SQL_INTEG_CONSTRAINT = "23000"; // NOI18N
+    static final String SQL_INTEG_CONSTRAINT = "23000";
 
     //
     // SQL92 "24000" Invalid cursor state.
     //
-    static final String SQL_INVAL_CURSOR_STATE = "24000"; // NOI18N
+    static final String SQL_INVAL_CURSOR_STATE = "24000";
 
     //
     // SQL92 "25000" Invalid transaction state
     //
-    static final String SQL_INVAL_TRANS_STATE = "25000"; // NOI18N
+    static final String SQL_INVAL_TRANS_STATE = "25000";
 
     //
     // SQL92 "26000" Invalid SQL statement name.
     //
-    static final String SQL_INVAL_SQL_NAME = "26000"; // NOI18N
+    static final String SQL_INVAL_SQL_NAME = "26000";
 
     //
     // SQL92 "28000" Invalid authorization specification.
     //
-    static final String SQL_INVAL_AUTH = "28000"; // NOI18N
+    static final String SQL_INVAL_AUTH = "28000";
 
     //
     // SQL92 "2A000" Syntax error or access rule violation
     // in direct SQL statement.
     //
-    static final String SQL_SYNTAX_DIRECT = "2A000"; // NOI18N
+    static final String SQL_SYNTAX_DIRECT = "2A000";
 
     //
     // SQL92 "2B000" Dependent privilege descriptors
     // still exist.
     //
-    static final String SQL_DESC_EXIST = "2B000"; // NOI18N
+    static final String SQL_DESC_EXIST = "2B000";
 
     //
     // SQL92 "2C000" Invalid character set name.
     //
-    static final String SQL_INVAL_CHAR_SET = "2C000"; // NOI18N
+    static final String SQL_INVAL_CHAR_SET = "2C000";
 
     //
     // SQL92 "2D000" Invalid transaction termination.
     //
-    static final String SQL_INVAL_TRANS_TERM = "2D000"; // NOI18N
+    static final String SQL_INVAL_TRANS_TERM = "2D000";
 
     //
     // SQL92 "2E000" Invalid connection name.
     //
-    static final String SQL_INVAL_CONN_NAME = "2E000"; // NOI18N
+    static final String SQL_INVAL_CONN_NAME = "2E000";
 
     //
     // SQL92 "33000" Invalid SQL descriptor name
     //
-    static final String SQL_INVAL_SQL_DESC_NAME = "33000"; // NOI18N
+    static final String SQL_INVAL_SQL_DESC_NAME = "33000";
 
     //
     // SQL92 "34000" Invalid cursor name.
     //
-    static final String SQL_INVAL_CURSOR_NAME = "34000"; // NOI18N
+    static final String SQL_INVAL_CURSOR_NAME = "34000";
 
     //
     // SQL92 "35000" Invalid condition number
     //
-    static final String SQL_INVAL_COND_NUM = "35000"; // NOI18N
+    static final String SQL_INVAL_COND_NUM = "35000";
 
     //
     // SQL92 "37000" Syntax error or access rule violation
     // in dynamic SQL statement.
     //
-    static final String SQL_SYNTAX_DYNAMIC = "37000"; // NOI18N
+    static final String SQL_SYNTAX_DYNAMIC = "37000";
 
     //
     // SQL92 "3C000" Ambiguous cursor name.
     //
-    static final String SQL_AMBIG_CURSOR = "3C000"; // NOI18N
+    static final String SQL_AMBIG_CURSOR = "3C000";
 
     //
     // SQL92 "3D000" Invalid catalog name.
     //
-    static final String SQL_INVAL_CATALOG = "3D000"; // NOI18N
+    static final String SQL_INVAL_CATALOG = "3D000";
 
     //
     // SQL92 "3F000" Invalid schema name.
     //
-    static final String SQL_INVAL_SCHEMA_NAME = "3F000"; // NOI18N
+    static final String SQL_INVAL_SCHEMA_NAME = "3F000";
 
     //
     // SQL92 "40000" Transaction rollback.
     //
-    static final String SQL_TRANS_ROLLBACK = "40000"; // NOI18N
+    static final String SQL_TRANS_ROLLBACK = "40000";
 
     //
     // SQL92 "40001" Transaction rollback; serialization
     // failure.
     //
-    static final String SQL_TRANS_SERIAL_FAIL = "40001"; // NOI18N
+    static final String SQL_TRANS_SERIAL_FAIL = "40001";
 
     //
     // SQL92 "40002" Transaction rollback; integrity
     // constraint violation.
     //
-    static final String SQL_TRANS_INTEG = "40002"; // NOI18N
+    static final String SQL_TRANS_INTEG = "40002";
 
     //
     // SQL92 "40003" Transaction rollback; statement
     // completion unknown.
     //
-    static final String SQL_TRANS_COMP_UNK = "40003"; // NOI18N
+    static final String SQL_TRANS_COMP_UNK = "40003";
 
     //
     // SQL92 "42000" Syntax error or access rule violation.
     //
-    static final String SQL_SYNTAX = "42000"; // NOI18N
+    static final String SQL_SYNTAX = "42000";
 
     //
     // SQL92 "44000" With check option violation.
     //
-    static final String SQL_CHECK_OPT = "44000"; // NOI18N
+    static final String SQL_CHECK_OPT = "44000";
 
     //
     // SQL92 "HZ   " Remote Database Access.
     //
-    static final String SQL_RMT_DB_ACCESS = "HZ   "; // NOI18N
+    static final String SQL_RMT_DB_ACCESS = "HZ   ";
 
 
     /**
@@ -1096,7 +1098,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown") // NOI18N
+                                    "connection.connectionmanager.isdown")
                     ),
                             SQL_NO_CONN
                     );
@@ -1132,7 +1134,7 @@ public class ConnectionManager {
                                     StringScanner.createParamString
                             (
                                     I18NHelper.getMessage(messages,
-                                            "connection.connectionmanager.maxpool") // NOI18N
+                                            "connection.connectionmanager.maxpool")
                             ),
                                     SQL_INVAL_PARAM_VALUE // 22023
                             );
@@ -1154,7 +1156,7 @@ public class ConnectionManager {
                                 StringScanner.createParamString
                         (
                                 I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.badvalue") // NOI18N
+                                        "connection.connectionmanager.badvalue")
                         ),
                                 SQL_INVAL_PARAM_VALUE    // 22023
                         );
@@ -1182,8 +1184,6 @@ public class ConnectionManager {
             String userName,
             char[] password
             ) throws SQLException {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
 
         if (this.shutDownPending == true) {
             SQLException se = new SQLException
@@ -1191,7 +1191,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown") // NOI18N
+                                    "connection.connectionmanager.isdown")
                     ),
                             SQL_CONN_FAIL
                     );
@@ -1203,9 +1203,7 @@ public class ConnectionManager {
         if (conn == null) {
             if (freeConn != null) {
                 // We have one available - use it
-                if (debug) {
-                    logger.finest("sqlstore.connection.conncectiomgr.found",freeConn); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.connection.conncectiomgr.found",freeConn);
                 conn = freeConn;
                 freeConn = null;
             } else {
@@ -1224,9 +1222,7 @@ public class ConnectionManager {
                                     this.expandAttribute(userName),
                                     this
                             );
-                    if (debug) {
-                        logger.finest("sqlstore.connection.conncectiomgr.getnewconn",conn); // NOI18N
-                    }
+                    LOG.log(TRACE, "sqlstore.connection.conncectiomgr.getnewconn",conn);
                 } catch (SQLException se) {
                     throw se;
                 }
@@ -1239,7 +1235,7 @@ public class ConnectionManager {
                                 StringScanner.createParamString
                         (
                                 I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.getconnection.mismatch") // NOI18N
+                                        "connection.connectionmanager.getconnection.mismatch")
                         ),
                                 SQL_NO_CONN        // 08003
                         );
@@ -1268,7 +1264,6 @@ public class ConnectionManager {
             String userName,
             String password
             ) throws SQLException {
-        boolean debug = logger.isLoggable(Logger.FINEST);
 
         if (this.shutDownPending == true) {
             SQLException se = new SQLException
@@ -1276,7 +1271,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown") // NOI18N
+                                    "connection.connectionmanager.isdown")
                     ),
                             SQL_CONN_FAIL
                     );
@@ -1288,9 +1283,7 @@ public class ConnectionManager {
         if (conn == null) {
             if (freeConn != null) {
                 // We have one available - use it
-                if (debug) {
-                    logger.finest("sqlstore.connection.conncectiomgr.found",freeConn); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.connection.conncectiomgr.found",freeConn);
                 conn = freeConn;
                 freeConn = null;
             } else {
@@ -1309,9 +1302,7 @@ public class ConnectionManager {
                                     this.expandAttribute(userName),
                                     this
                             );
-                    if (debug) {
-                        logger.finest("sqlstore.connection.conncectiomgr.getnewconn",conn); // NOI18N
-                    }
+                    LOG.log(TRACE, "sqlstore.connection.conncectiomgr.getnewconn",conn);
                 } catch (SQLException se) {
                     throw se;
                 }
@@ -1325,7 +1316,7 @@ public class ConnectionManager {
                                 StringScanner.createParamString
                         (
                                 I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.getconnection.mismatch") // NOI18N
+                                        "connection.connectionmanager.getconnection.mismatch")
                         ),
                                 SQL_NO_CONN    // 08003
                         );
@@ -1346,26 +1337,7 @@ public class ConnectionManager {
      *          the current thread; null otherwise.
      */
     private synchronized ConnectionImpl checkXact() {
-        Transaction tran = null;
-
-        /* RESOLVE: Need to reimplement this???
-        try
-        {
-            // Is this ForteJDBCConnet participating in a transaction?
-            tran = ThreadContext.transactionContext().getTransaction();
-        }
-        catch (SystemException ex)
-        {
-            // There is no transaction.
-            return null;
-        }
-        */
-
-        // Return Connection associated with this transaction - maybe null?
-        if (tran == null) {
-            return null;
-        }
-        return (ConnectionImpl) this.xactConnections.get(tran);
+        return null;
     }
 
     /**
@@ -1384,7 +1356,7 @@ public class ConnectionManager {
         }
 
         this.busyList = new DoubleLinkedList();
-        this.xactConnections = new Hashtable();
+        this.xactConnections = new Hashtable<>();
         this.expandedDriverName = this.expandAttribute(this.driverName);
         if (this.expandedDriverName == null) {
             SQLException se = new SQLException
@@ -1392,7 +1364,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.nulldriver") // NOI18N
+                                    "connection.connectionmanager.nulldriver")
                     ),
                             SQL_INVALID_VALUE // 21000
                     );
@@ -1405,7 +1377,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.nullurl") // NOI18N
+                                    "connection.connectionmanager.nullurl")
                     ),
                             SQL_INVALID_VALUE // 21000
                     );
@@ -1413,11 +1385,11 @@ public class ConnectionManager {
         }
         this.expandedUserName = this.expandAttribute(this.userName);
         if (this.expandedUserName == null) {
-            this.expandedUserName = ""; // Allow null username. // NOI18N
+            this.expandedUserName = ""; // Allow null username.
         }
         this.expandedPassword = this.expandAttribute(new String(this.password));
         if (this.expandedPassword == null) {
-            this.expandedPassword = ""; // Allow null password. // NOI18N
+            this.expandedPassword = ""; // Allow null password.
         }
         try {
             Class.forName(this.expandedDriverName);
@@ -1522,7 +1494,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.nulldriver") // NOI18N
+                                    "connection.connectionmanager.nulldriver")
                     ),
                             SQL_INVALID_VALUE // 21000
                     );
@@ -1563,7 +1535,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.nullurl") // NOI18N
+                                    "connection.connectionmanager.nullurl")
                     ),
                             SQL_INVALID_VALUE // 21000
                     );
@@ -1666,7 +1638,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown") // NOI18N
+                                    "connection.connectionmanager.isdown")
                     ),
                             SQL_CONN_FAIL // 08006
                     );
@@ -1679,7 +1651,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.zero") // NOI18N
+                                    "connection.connectionmanager.zero")
                     ),
                             SQL_INVAL_PARAM_VALUE    // 22023
                     );
@@ -1691,7 +1663,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.badnew"), // NOI18N
+                                    "connection.connectionmanager.badnew"),
                             Integer.toString(minPool),
                             Integer.toString(minPool)
                     ),
@@ -1706,7 +1678,7 @@ public class ConnectionManager {
                                 StringScanner.createParamString
                         (
                                 I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.poolsize") // NOI18N
+                                        "connection.connectionmanager.poolsize")
                         ),
                                 SQL_INVAL_PARAM_VALUE    // 22023
                         );
@@ -1763,7 +1735,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown") // NOI18N
+                                    "connection.connectionmanager.isdown")
                     ),
                             SQL_CONN_FAIL    // 08006
                     );
@@ -1775,7 +1747,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.zero"), // NOI18N
+                                    "connection.connectionmanager.zero"),
                             Integer.toString(maxPool)
                     ),
                             SQL_INVAL_PARAM_VALUE    // 22023
@@ -1789,7 +1761,7 @@ public class ConnectionManager {
                                 StringScanner.createParamString
                         (
                                 I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.badnew"), // NOI18N
+                                        "connection.connectionmanager.badnew"),
                                 Integer.toString(maxPool),
                                 Integer.toString(maxPool)
                         ),
@@ -1805,7 +1777,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.poolsize") // NOI18N
+                                    "connection.connectionmanager.poolsize")
                     ),
                             SQL_INVAL_PARAM_VALUE    // 22023
                     );
@@ -1866,7 +1838,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.badvalue"), // NOI18N
+                                    "connection.connectionmanager.badvalue"),
                             Integer.toString(msWait)
                     ),
                             SQL_INVAL_PARAM_VALUE    // 22023
@@ -1931,9 +1903,9 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.badnew"), // NOI18N
-                            "MsInterval", // NOI18N
-                            "MsWait" // NOI18N
+                                    "connection.connectionmanager.badnew"),
+                            "MsInterval",
+                            "MsWait"
                     ),
                             SQL_INVAL_PARAM_VALUE    // 22023
                     );
@@ -1961,43 +1933,43 @@ public class ConnectionManager {
             SPLogFlags.CFG_DIFFABLE_EXCEPTS,
             1
         );
-        String buf = "ConnectManager@\n"; // NOI18N
+        String buf = "ConnectManager@\n";
         if (dif == false)
         {
-            buf = buf + "    busyList = " + this.busyList + "\n"; // NOI18N
+            buf = buf + "    busyList = " + this.busyList + "\n";
         }
         if (this.busyList != null)
         {
-            buf = buf + "    busyList Object = " + this.busyList.toString(); // NOI18N
+            buf = buf + "    busyList Object = " + this.busyList.toString();
         }
-        buf = buf + "    connectionBlocking = " + this.connectionBlocking + "\n"; // NOI18N
-        buf = buf + "    driverName = " + this.driverName + "\n"; // NOI18N
+        buf = buf + "    connectionBlocking = " + this.connectionBlocking + "\n";
+        buf = buf + "    driverName = " + this.driverName + "\n";
         if (dif == false)
         {
-            buf = buf + "    expandedDriverName = " + this.expandedDriverName + "\n"; // NOI18N
-            buf = buf + "    expandedPassword = " + this.expandedPassword + "\n"; // NOI18N
-            buf = buf + "    expandedUrl = " + this.expandedUrl    + "\n"; // NOI18N
-            buf = buf + "    expandedUserName = " + this.expandedUserName + "\n"; // NOI18N
-            buf = buf + "    freeList = " + this.freeList + "\n"; // NOI18N
+            buf = buf + "    expandedDriverName = " + this.expandedDriverName + "\n";
+            buf = buf + "    expandedPassword = " + this.expandedPassword + "\n";
+            buf = buf + "    expandedUrl = " + this.expandedUrl    + "\n";
+            buf = buf + "    expandedUserName = " + this.expandedUserName + "\n";
+            buf = buf + "    freeList = " + this.freeList + "\n";
         }
         if (this.freeList != null)
         {
-            buf = buf + "    freeList Object = " + this.freeList.toString(); // NOI18N
+            buf = buf + "    freeList Object = " + this.freeList.toString();
         }
         if (dif == false)
         {
-            buf = buf + "    hashCode = " + this.hashCode() + "\n"; // NOI18N
+            buf = buf + "    hashCode = " + this.hashCode() + "\n";
         }
-        buf = buf + "    maxPool = " + this.maxPool + "\n"; // NOI18N
-        buf = buf + "    minPool = " + this.minPool    + "\n"; // NOI18N
-        buf = buf + "    msInterval = " + this.msInterval + "\n"; // NOI18N
-        buf = buf + "    msWait = " + this.msWait + "\n"; // NOI18N
-        buf = buf + "    password = " + this.password + "\n"; // NOI18N
-        buf = buf + "    pooling = " + this.pooling + "\n"; // NOI18N
-        buf = buf + "    poolSize = " + this.poolSize + "\n"; // NOI18N
-        buf = buf + "    shutDownPending = " + this.shutDownPending + "\n"; // NOI18N
-        buf = buf + "    url = " + this.url + "\n"; // NOI18N
-        buf = buf + "    userName = " + this.userName + "\n"; // NOI18N
+        buf = buf + "    maxPool = " + this.maxPool + "\n";
+        buf = buf + "    minPool = " + this.minPool    + "\n";
+        buf = buf + "    msInterval = " + this.msInterval + "\n";
+        buf = buf + "    msWait = " + this.msWait + "\n";
+        buf = buf + "    password = " + this.password + "\n";
+        buf = buf + "    pooling = " + this.pooling + "\n";
+        buf = buf + "    poolSize = " + this.poolSize + "\n";
+        buf = buf + "    shutDownPending = " + this.shutDownPending + "\n";
+        buf = buf + "    url = " + this.url + "\n";
+        buf = buf + "    userName = " + this.userName + "\n";
 
         return buf;
         */
@@ -2036,7 +2008,7 @@ public class ConnectionManager {
         ConnectionImpl xactConn = null;
 
         if (tran != null) {
-            xactConn = (ConnectionImpl) this.xactConnections.remove(tran);
+            xactConn = this.xactConnections.remove(tran);
         }
 
         if (tran == null || xactConn.equals(conn)) {
@@ -2053,7 +2025,7 @@ public class ConnectionManager {
                             StringScanner.createParamString
                     (
                             //MsgCat.getStr(DbmsMsgCat.DB_ERR_XACT_MISMATCH)
-                            "Internal Error: transaction mismatch" // NOI18N
+                            "Internal Error: transaction mismatch"
                     ),
                             SQL_TRANS_UNK // 08007
                     );
@@ -2069,55 +2041,30 @@ public class ConnectionManager {
      * @ForteInternal
      */
     private synchronized void expandPool(int connections) throws SQLException {
-        ConnectionImpl conn = null;
 
         if (this.shutDownPending == true) {
-            SQLException se = new SQLException
-                    (
-                            StringScanner.createParamString
-                    (
-                            I18NHelper.getMessage(messages,
-                                    "connection.connectionmanager.isdown") // NOI18N
-                    ),
-                            SQL_CONN_FAIL
-                    );
+            SQLException se = new SQLException(
+                StringScanner.createParamString(I18NHelper.getMessage(messages, "connection.connectionmanager.isdown")),
+                SQL_CONN_FAIL);
             throw se;
         }
 
         for (int i = 0; i < connections; i++) {
             if (this.poolSize >= this.maxPool) {
                 // There is no room for a new connection.
-                SQLException se = new SQLException
-                        (
-                                StringScanner.createParamString
-                        (
-                                I18NHelper.getMessage(messages,
-                                        "connection.connectionmanager.maxpool") // NOI18N
-                        ),
-                                SQL_CONN_FAIL
-                        );
+                SQLException se = new SQLException(StringScanner.createParamString(
+                    I18NHelper.getMessage(messages, "connection.connectionmanager.maxpool")), SQL_CONN_FAIL);
                 throw se;
-            } else // There is room in the pool, so get a new connection.
-            {
-                try {
-                    conn = new ConnectionImpl
-                            (
-                                    DriverManager.getConnection
-                            (
-                                    this.expandedUrl,
-                                    this.expandedUserName,
-                                    this.expandedPassword
-                            ),
-                                    this.expandedUrl,
-                                    this.expandedUserName,
-                                    this
-                            );
-                    conn.setPooled(true);
-                    this.freeList.insertAtTail(conn);
-                    this.poolSize++;
-                } catch (SQLException e) {
-                    throw e;
-                }
+            }
+            try {
+                ConnectionImpl conn = new ConnectionImpl(
+                    DriverManager.getConnection(this.expandedUrl, this.expandedUserName, this.expandedPassword),
+                    this.expandedUrl, this.expandedUserName, this);
+                conn.setPooled(true);
+                this.freeList.insertAtTail(conn);
+                this.poolSize++;
+            } catch (SQLException e) {
+                throw e;
             }
         }
     }
@@ -2131,32 +2078,7 @@ public class ConnectionManager {
      * @exceptions  SQLException  We should come up with a better one.
      */
     private String expandAttribute(String envname) throws SQLException {
-        String attribute = null;
-        /*RESOLVE:
-        try
-        {
-            attribute = ForteProperties.expandVars(envname);
-        }
-        catch (EnvVariableException e)
-        {
-            SQLException se = new SQLException
-            (
-                StringScanner.createParamString
-                (
-                  I18NHelper.getMessage(messages,
-                                             "connection.connectionmanager.badvalue"), // NOI18N
-                    envname
-                ),
-                SQL_INVAL_PARAM_VALUE
-            );
-            throw se;
-        }
-        */
-        if (attribute != null) {
-            return attribute;
-        } else {
-            return envname;
-        }
+        return envname;
     }
 
     /**
@@ -2197,7 +2119,7 @@ public class ConnectionManager {
                                         StringScanner.createParamString
                                 (
                                         I18NHelper.getMessage(messages,
-                                                "connection.connectionmanager.conntimeout") // NOI18N
+                                                "connection.connectionmanager.conntimeout")
                                 ),
                                         SQL_CONN_FAIL
                                 );
@@ -2212,7 +2134,7 @@ public class ConnectionManager {
                                             StringScanner.createParamString
                                     (
                                             I18NHelper.getMessage(messages,
-                                                    "connection.connectionmanager.threaditerupted") // NOI18N
+                                                    "connection.connectionmanager.threaditerupted")
                                     ),
                                             SQL_CONN_FAIL
                                     );
@@ -2241,11 +2163,7 @@ public class ConnectionManager {
      * Previous free connection can be released (closed) when a new one becomes available.
      */
     protected synchronized void replaceFreeConnection(ConnectionImpl c) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
-        if (debug) {
-            logger.finest("sqlstore.connection.conncectiomgr.replacefreeconn",freeConn); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.connection.conncectiomgr.replacefreeconn",freeConn);
         if (freeConn != null) {
             // Release (close) the old connection.
             freeConn.release();

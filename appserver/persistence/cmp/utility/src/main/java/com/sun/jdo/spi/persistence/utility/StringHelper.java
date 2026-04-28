@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * StringHelper.java
- *
- * Created on March 3, 2000
  */
 
 package com.sun.jdo.spi.persistence.utility;
@@ -59,11 +54,13 @@ public class StringHelper
         {
             int i, count = (endIndex + 1);
 
-            if ((count > beginIndex) && (list.size() >= count))
+            if ((count > beginIndex) && (list.size() >= count)) {
                 result.append(list.get(beginIndex));
+            }
 
-            for (i = beginIndex + 1; i < count; i++)
+            for (i = beginIndex + 1; i < count; i++) {
                 result.append(separator + list.get(i));
+            }
         }
 
         return result.toString();
@@ -113,17 +110,16 @@ public class StringHelper
      * @param separator The separator to be used to tokenize strings.
      * @return an array representing the tokenized list.
      */
-    public static List separatedListToArray (String list, String separator)
-    {
-        ArrayList result = new ArrayList();
+    public static List<String> separatedListToArray(String list, String separator) {
+        ArrayList<String> result = new ArrayList<>();
 
-        if (list != null)
-        {
+        if (list != null) {
             StringTokenizer st = new StringTokenizer(list, separator);
             int i, size = st.countTokens();
 
-            for (i = 0; i < size; i++)
+            for (i = 0; i < size; i++) {
                 result.add(st.nextToken());
+            }
         }
 
         return result;
@@ -166,8 +162,9 @@ public class StringHelper
         if (intArray != null)
         {
             int count = (endIndex + 1);
-            if ((count > beginIndex) && (intArray.length >= count))
+            if ((count > beginIndex) && (intArray.length >= count)) {
                 result.append(intArray[beginIndex]);
+            }
 
             for (int i = beginIndex + 1; i < count; i++) {
                 result.append(separator);
@@ -195,8 +192,9 @@ public class StringHelper
      */
     public static String getCapitalizedString (String aString)
     {
-        if (isEmpty(aString))
+        if (isEmpty(aString)) {
             return aString;
+        }
 
         return Character.toUpperCase(aString.charAt(0)) + aString.substring(1);
     }

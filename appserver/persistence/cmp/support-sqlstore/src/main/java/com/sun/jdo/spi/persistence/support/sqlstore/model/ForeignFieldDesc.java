@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,26 +15,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ForeignFieldDesc.java
- *
- * Created on March 3, 2000
- *
- */
 
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
 import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.TableElement;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  *
@@ -62,6 +61,8 @@ public class ForeignFieldDesc extends FieldDesc {
     /** Currently runtime code does not interprete this action. */
     public static final int ACT_AGGREGATE = RelationshipElement.AGGREGATE_ACTION;
 
+    private static final Logger LOG = System.getLogger(ForeignFieldDesc.class.getName(), RESOURCE_BUNDLE);
+
     /** Class descriptor for the class of this relationship field. */
     public ClassDesc foreignConfig;
 
@@ -73,28 +74,28 @@ public class ForeignFieldDesc extends FieldDesc {
     public int deleteAction;
 
     /** Array of LocalFieldDesc. */
-    public ArrayList foreignFields;
+    public ArrayList<LocalFieldDesc> foreignFields;
 
     /** Array of ColumnElement. */
-    public ArrayList foreignColumns;
+    public List<ColumnElement> foreignColumns;
 
     /** Array of LocalFieldDesc. */
-    public ArrayList localFields;
+    public ArrayList<LocalFieldDesc> localFields;
 
     /** Array of ColumnElement. */
-    public ArrayList localColumns;
+    public List<ColumnElement> localColumns;
 
     /** Array of LocalFieldDesc. */
-    public ArrayList assocForeignFields;
+    public List<LocalFieldDesc> assocForeignFields;
 
     /** Array of ColumnElement. */
-    public ArrayList assocForeignColumns;
+    public List<ColumnElement> assocForeignColumns;
 
     /** Array of LocalFieldDesc. */
-    public ArrayList assocLocalFields;
+    public List<LocalFieldDesc> assocLocalFields;
 
     /** Array of ColumnElement. */
-    public ArrayList assocLocalColumns;
+    public List<ColumnElement> assocLocalColumns;
 
     /**
      * If inverseRelationshipField is not null, it means this field is
@@ -115,6 +116,7 @@ public class ForeignFieldDesc extends FieldDesc {
     /**
      * Returns true.
      */
+    @Override
     public boolean isRelationshipField() {
         return true;
     }
@@ -159,37 +161,37 @@ public class ForeignFieldDesc extends FieldDesc {
         return isMappedToPk;
     }
 
-    public ArrayList getLocalFields() {
+    public ArrayList<LocalFieldDesc> getLocalFields() {
         if (localFields == null) {
-            localFields = new ArrayList();
+            localFields = new ArrayList<>();
         }
 
         return localFields;
     }
 
-    public ArrayList getForeignFields() {
+    public ArrayList<LocalFieldDesc> getForeignFields() {
         if (foreignFields == null) {
-            foreignFields = new ArrayList();
+            foreignFields = new ArrayList<>();
         }
 
         return foreignFields;
     }
 
-    public ArrayList getAssocLocalFields() {
+    public List<LocalFieldDesc> getAssocLocalFields() {
         // Only create assocLocalFields if there is a corresponding
         // assocLocalColumns to save space.
         if (assocLocalFields == null && assocLocalColumns != null) {
-            assocLocalFields = new ArrayList();
+            assocLocalFields = new ArrayList<>();
         }
 
         return assocLocalFields;
     }
 
-    public ArrayList getAssocForeignFields() {
+    public List<LocalFieldDesc> getAssocForeignFields() {
         // Only create assocForeignFields if there is a corresponding
         // assocForeignColumns to save space.
         if (assocForeignFields == null && assocForeignColumns != null) {
-            assocForeignFields = new ArrayList();
+            assocForeignFields = new ArrayList<>();
         }
 
         return assocForeignFields;
@@ -226,14 +228,14 @@ public class ForeignFieldDesc extends FieldDesc {
 
         assert isMappedToPk();
 
-        Class oidClass = foreignConfig.getOidClass();
+        Class<?> oidClass = foreignConfig.getOidClass();
         Object oid = null;
 
         try {
-            oid = oidClass.newInstance();
+            oid = oidClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "core.statemanager.cantnewoid", oidClass.getName()), e); // NOI18N
+                    "core.statemanager.cantnewoid", oidClass.getName()), e);
         }
 
         Field keyFields[] = foreignConfig.getKeyFields();
@@ -242,10 +244,10 @@ public class ForeignFieldDesc extends FieldDesc {
             Field keyField = keyFields[i];
 
             for (int j = 0; j < foreignFields.size() && oid != null; j++) {
-                LocalFieldDesc fa = (LocalFieldDesc) foreignFields.get(j);
+                LocalFieldDesc fa = foreignFields.get(j);
 
                 if (fa.getName().compareTo(keyFieldNames[i]) == 0) {
-                    LocalFieldDesc la = (LocalFieldDesc) localFields.get(j);
+                    LocalFieldDesc la = localFields.get(j);
                     Object keyFieldValue = null;
 
                     if (la == fieldDesc) {
@@ -263,7 +265,7 @@ public class ForeignFieldDesc extends FieldDesc {
                             keyField.set(oid, fa.convertValue(keyFieldValue, sm));
                         } catch (IllegalAccessException e) {
                             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                                    "core.statemanager.cantsetkeyfield", keyField.getName()), e); // NOI18N
+                                    "core.statemanager.cantsetkeyfield", keyField.getName()), e);
                         }
                     } else {
                         oid = null;
@@ -284,6 +286,7 @@ public class ForeignFieldDesc extends FieldDesc {
         inverseRelationshipField = f;
     }
 
+    @Override
     void computeTrackedRelationshipFields() {
         // If the field is a ForeignFieldDesc, we only need
         // to compare against other ForeignFieldDesc. The reason
@@ -293,7 +296,7 @@ public class ForeignFieldDesc extends FieldDesc {
         ForeignFieldDesc inverseField = getInverseRelationshipField();
 
         for (int k = 0; k < classDesc.foreignFields.size(); k++) {
-            ForeignFieldDesc tf = (ForeignFieldDesc) classDesc.foreignFields.get(k);
+            ForeignFieldDesc tf = classDesc.foreignFields.get(k);
 
             if ((this != tf) && (getType() == tf.getType()) && (compareColumns(this, tf) == true)) {
                 if ((inverseField != null) &&
@@ -336,20 +339,19 @@ public class ForeignFieldDesc extends FieldDesc {
      * @param foreignConfig Class descriptor of the foreign class.
      * @param inverseField The inverse relationship field.
      */
-    private void registerForeignConfig(ClassDesc foreignConfig,
-                                       ForeignFieldDesc inverseField) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
+    private void registerForeignConfig(ClassDesc foreignConfig, ForeignFieldDesc inverseField) {
+        boolean debug = LOG.isLoggable(TRACE);
 
         if (debug) {
             Object[] items = new Object[] {classDesc, this, foreignConfig};
-            logger.finest("sqlstore.model.classdesc.general", items); // NOI18N
+            LOG.log(TRACE, "sqlstore.model.classdesc.general", items);
         }
 
         // Remember the class descriptor for the foreign class.
         this.foreignConfig = foreignConfig;
 
         if (debug && inverseField != null) {
-            logger.finest("sqlstore.model.classdesc.assocrelatedfield", inverseField); //NOI18N
+            LOG.log(TRACE, "sqlstore.model.classdesc.assocrelatedfield", inverseField); //NOI18N
         }
 
         setInverseRelationshipField(inverseField);
@@ -362,8 +364,8 @@ public class ForeignFieldDesc extends FieldDesc {
         ClassDesc theConfig = classDesc;
 
         for (int i = 0; i < 4; i++) {
-            ArrayList fields = null;
-            ArrayList columns = null;
+            List<LocalFieldDesc> fields = null;
+            List<ColumnElement> columns = null;
 
             switch (i) {
                 case 0:
@@ -385,15 +387,17 @@ public class ForeignFieldDesc extends FieldDesc {
                     break;
             }
 
-            if (columns == null) continue;
+            if (columns == null) {
+                continue;
+            }
 
             for (int j = 0; j < columns.size(); j++) {
-                ColumnElement ce = (ColumnElement) columns.get(j);
+                ColumnElement ce = columns.get(j);
                 TableElement te = ce.getDeclaringTable();
 
                 if (te == null) {
                     throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                            "core.configuration.columnnotable")); // NOI18N
+                            "core.configuration.columnnotable"));
                 }
 
                 fields.add(theConfig.getLocalFieldDesc(ce));
@@ -413,7 +417,7 @@ public class ForeignFieldDesc extends FieldDesc {
                 foreignConfig.getKeyFields().length == count;
 
         for (int i = 0; i < count && isMappedToPk; i++) {
-            isMappedToPk = ((LocalFieldDesc) foreignFields.get(i)).isKeyField();
+            isMappedToPk = foreignFields.get(i).isKeyField();
         }
     }
 
@@ -422,7 +426,7 @@ public class ForeignFieldDesc extends FieldDesc {
      */
     private void addForeignKeyFieldsToDFG() {
         for (int i = 0; i < localFields.size(); i++)  {
-            LocalFieldDesc lf = (LocalFieldDesc) localFields.get(i);
+            LocalFieldDesc lf = localFields.get(i);
 
             if (lf.absoluteID < 0 && !useJoinTable()) {
                 classDesc.getFetchGroup(GROUP_DEFAULT).add(lf);
@@ -461,7 +465,7 @@ public class ForeignFieldDesc extends FieldDesc {
                 // This side will write relationship updates to the database.
                 // Mark the local fields as part of the foreign key.
                 for (int i = 0; i < localFields.size(); i++) {
-                    ((LocalFieldDesc)localFields.get(i)).sqlProperties |= FieldDesc.PROP_FOREIGN_KEY_FIELD;
+                    localFields.get(i).sqlProperties |= FieldDesc.PROP_FOREIGN_KEY_FIELD;
                 }
             }
         }
@@ -708,13 +712,13 @@ public class ForeignFieldDesc extends FieldDesc {
      * referred in relationships must not be updated. Not updatable fields
      * have property REF_INTEGRITY_UPDATES unset.
      *
-     * @param fieldList Fields corresponding to datastore columns.
+     * @param list Fields corresponding to datastore columns.
      *   The fields are either a <code>ForeignFieldDesc</code>'s local or foreign fields.
      * @return True, if <code>fieldList</code> is a foreign key, false otherwise.
      */
-    private static boolean checkForeignKey(ArrayList fieldList) {
-        for (int i = 0; i < fieldList.size(); i++) {
-            FieldDesc lf = (FieldDesc) fieldList.get(i);
+    private static boolean checkForeignKey(List<LocalFieldDesc> list) {
+        for (int i = 0; i < list.size(); i++) {
+            FieldDesc lf = list.get(i);
 
             if ((lf.sqlProperties & FieldDesc.PROP_REF_INTEGRITY_UPDATES) > 0) {
                 // Based on the assumption, that referred key fields
@@ -770,9 +774,7 @@ public class ForeignFieldDesc extends FieldDesc {
      * Datastore updates will be scheduled on the opposite relationship side.
      */
     private void unsetReferentialIntegrityUpdateProperty() {
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("sqlstore.model.classdesc.unsetrefintegrityupdate", getName()); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.model.classdesc.unsetrefintegrityupdate", getName());
 
         sqlProperties &= ~(FieldDesc.PROP_REF_INTEGRITY_UPDATES);
     }
@@ -783,19 +785,17 @@ public class ForeignFieldDesc extends FieldDesc {
      */
     private void unsetConcurrencyCheckProperty() {
         // Copy the field list temporarily.
-        ArrayList fieldList = (ArrayList) getLocalFields().clone();
+        ArrayList<LocalFieldDesc> fieldList = (ArrayList<LocalFieldDesc>) getLocalFields().clone();
 
         if (useJoinTable()) {
             fieldList.addAll(getAssocLocalFields());
         }
 
         for (int j = 0; j < fieldList.size(); j++) {
-            FieldDesc lf = (FieldDesc) fieldList.get(j);
+            FieldDesc lf = fieldList.get(j);
 
             if (lf.absoluteID < 0) {
-                if (logger.isLoggable(Logger.FINEST)) {
-                    logger.finest("sqlstore.model.classdesc.unsetconcurrencychk", lf.getName()); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.model.classdesc.unsetconcurrencychk", lf.getName());
                 lf.sqlProperties &= ~(FieldDesc.PROP_IN_CONCURRENCY_CHECK);
             }
         }

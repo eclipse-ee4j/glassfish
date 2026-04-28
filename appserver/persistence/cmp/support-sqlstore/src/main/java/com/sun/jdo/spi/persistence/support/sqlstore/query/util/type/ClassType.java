@@ -42,7 +42,7 @@ public class ClassType
     /**
      *
      */
-    protected Map fieldInfos;
+    protected Map<String, FieldInfo> fieldInfos;
 
     /**
      *
@@ -52,11 +52,11 @@ public class ClassType
     /**
      *
      */
-    public ClassType(String name, Class clazz, int enumType, TypeTable typetab)
+    public ClassType(String name, Class<?> clazz, int enumType, TypeTable typetab)
     {
         super(name, clazz, enumType);
         this.typetab = typetab;
-        this.fieldInfos = new HashMap();
+        this.fieldInfos = new HashMap<>();
         // get JDO model element if available
         ClassLoader classLoader = clazz.getClassLoader();
         if (classLoader != null)
@@ -76,7 +76,7 @@ public class ClassType
     /**
      *
      */
-    public ClassType(String name, Class clazz, TypeTable typetab)
+    public ClassType(String name, Class<?> clazz, TypeTable typetab)
     {
         this(name, clazz, FieldTypeEnumeration.NOT_ENUMERATED, typetab);
     }
@@ -138,14 +138,14 @@ public class ClassType
         // NOTE, this code does not work for inheritance!
         //Field[] fields = clazz.getDeclaredFields();
 
-        final Class cl = clazz;
+        final Class<?> cl = clazz;
         Field[] fields = cl.getDeclaredFields();
 
         synchronized(fieldInfos) {
             for (int i = 0; i < fields.length; i++)
             {
                 String fieldName = fields[i].getName();
-                FieldInfo fieldInfo = (FieldInfo)fieldInfos.get(fieldName);
+                FieldInfo fieldInfo = fieldInfos.get(fieldName);
                 if (fieldInfo == null) {
                     fieldInfos.put(fieldName, new FieldInfo(fields[i], this));
                 }
@@ -159,10 +159,10 @@ public class ClassType
      */
     public FieldInfo getFieldInfo(final String fieldName) {
         synchronized(fieldInfos) {
-            FieldInfo fieldInfo = (FieldInfo)fieldInfos.get(fieldName);
+            FieldInfo fieldInfo = fieldInfos.get(fieldName);
             if (fieldInfo == null) {
                 // NOTE, no inheritance!
-                final Class cl = clazz;
+                final Class<?> cl = clazz;
                 Field field;
                 try {
                     field = cl.getDeclaredField(fieldName);
@@ -181,12 +181,12 @@ public class ClassType
     /**
      * Return the list of key field names
      */
-    public List getKeyFieldNames()
+    public List<String> getKeyFieldNames()
     {
         if (pce != null)
         {
             PersistenceFieldElement[] persistentFields = pce.getFields();
-            List names = new ArrayList();
+            List<String> names = new ArrayList<>();
             for (int i = 0; i < persistentFields.length; i++)
             {
                 if (persistentFields[i].isKey()) {

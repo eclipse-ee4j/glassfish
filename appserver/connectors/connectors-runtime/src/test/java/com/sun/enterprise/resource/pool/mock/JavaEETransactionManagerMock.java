@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package com.sun.enterprise.resource.pool.mock;
 
 import com.sun.enterprise.transaction.api.JavaEETransaction;
+import com.sun.enterprise.transaction.api.TransactionAdminBean;
 import com.sun.enterprise.transaction.api.XAResourceWrapper;
 import com.sun.enterprise.transaction.spi.JavaEETransactionManagerDelegate;
 import com.sun.enterprise.transaction.spi.TransactionalResource;
@@ -186,7 +187,7 @@ public class JavaEETransactionManagerMock implements com.sun.enterprise.transact
     }
 
     @Override
-    public ArrayList getActiveTransactions() {
+    public ArrayList<TransactionAdminBean> getActiveTransactions() {
         return null;
     }
 

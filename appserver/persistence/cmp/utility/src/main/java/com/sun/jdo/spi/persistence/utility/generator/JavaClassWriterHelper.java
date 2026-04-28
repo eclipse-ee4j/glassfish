@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JavaClassWriterHelper.java
- *
- * Created on December 03, 2001
- */
-
 package com.sun.jdo.spi.persistence.utility.generator;
 
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
@@ -32,66 +27,66 @@ import java.util.StringTokenizer;
 /*
  * This is the utility class for helper strings and type convertion.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2001
  */
 public class JavaClassWriterHelper extends JavaTypeHelper {
 
-    public final static String javaExtension_             = ".java"; // NOI18N
-    public final static String void_                      = "void"; // NOI18N
-    public final static String boolean_                   = "boolean"; // NOI18N
-    public final static String byte_                      = "byte"; // NOI18N
-    public final static String byteArray_                 = "byte[]"; // NOI18N
-    public final static String param_                     = "param"; // NOI18N
-    public final static String param0_                    = "param0"; // NOI18N
-    public final static String null_                      = "null"; // NOI18N
-    public final static String home_                      = "home"; // NOI18N
-    public final static String delim_                     = ";"; // NOI18N
-    public final static String paramInitializer_          = "\"\" + "; // NOI18N
-    public final static String paramSeparator_            = ", "; // NOI18N
-    public final static String paramList_                 = ","; // NOI18N
-    public final static String paramConcatenator_         = " + \", \" + "; // NOI18N
-    public final static String space_                     = " "; // NOI18N
-    public final static String none_                      = ""; // NOI18N
-    public final static String escapedEmptyString_        = "\"\""; // NOI18N
-    public final static String dot_                       = "."; // NOI18N
-    public final static String parenleft_                 = "("; // NOI18N
-    public final static String parenright_                = ")"; // NOI18N
-    public final static String parenthesis_               = "()"; // NOI18N
-    public final static String new_                       = "new"; // NOI18N
-    public final static String endLine_                   = "\n"; // NOI18N
-    public final static String true_                      = "true"; // NOI18N
-    public final static String false_                     = "false"; // NOI18N
-    public final static String Collection_                = "java.util.Collection"; // NOI18N
-    public final static String Set_                       = "java.util.Set"; // NOI18N
-    public final static String PersistenceCapable_        = "com.sun.jdo.api.persistence.support.PersistenceCapable"; // NOI18N
-    public final static String brackets_                  = "[]"; // NOI18N
-    public final static String get_                       = "get"; // NOI18N
-    public final static String set_                       = "set"; // NOI18N
-    public final static String Oid_                       = ".Oid"; // NOI18N
-    public final static String Helper_                    = "_JDOHelper"; // NOI18N
-    public final static String returnNull_                = "return null;"; // NOI18N
-    public final static String fileName_                  = "fileName"; // NOI18N
-    public final static String int_                       = "int"; // NOI18N
-    public final static String String_                    = "java.lang.String"; // NOI18N
-    public final static String Class_                     = "java.lang.Class"; // NOI18N
-    public final static String Date_                      = "java.util.Date"; // NOI18N
-    public final static String SqlDate_                   = "java.sql.Date"; // NOI18N
-    public final static String SqlTime_                   = "java.sql.Time"; // NOI18N
-    public final static String SqlTimestamp_              = "java.sql.Timestamp"; // NOI18N
+    public final static String javaExtension_             = ".java";
+    public final static String void_                      = "void";
+    public final static String boolean_                   = "boolean";
+    public final static String byte_                      = "byte";
+    public final static String byteArray_                 = "byte[]";
+    public final static String param_                     = "param";
+    public final static String param0_                    = "param0";
+    public final static String null_                      = "null";
+    public final static String home_                      = "home";
+    public final static String delim_                     = ";";
+    public final static String paramInitializer_          = "\"\" + ";
+    public final static String paramSeparator_            = ", ";
+    public final static String paramList_                 = ",";
+    public final static String paramConcatenator_         = " + \", \" + ";
+    public final static String space_                     = " ";
+    public final static String none_                      = "";
+    public final static String escapedEmptyString_        = "\"\"";
+    public final static String dot_                       = ".";
+    public final static String parenleft_                 = "(";
+    public final static String parenright_                = ")";
+    public final static String parenthesis_               = "()";
+    public final static String new_                       = "new";
+    public final static String endLine_                   = "\n";
+    public final static String true_                      = "true";
+    public final static String false_                     = "false";
+    public final static String Collection_                = "java.util.Collection";
+    public final static String Set_                       = "java.util.Set";
+    public final static String PersistenceCapable_        = "com.sun.jdo.api.persistence.support.PersistenceCapable";
+    public final static String brackets_                  = "[]";
+    public final static String get_                       = "get";
+    public final static String set_                       = "set";
+    public final static String Oid_                       = ".Oid";
+    public final static String Helper_                    = "_JDOHelper";
+    public final static String returnNull_                = "return null;";
+    public final static String fileName_                  = "fileName";
+    public final static String int_                       = "int";
+    public final static String String_                    = "java.lang.String";
+    public final static String Class_                     = "java.lang.Class";
+    public final static String Date_                      = "java.util.Date";
+    public final static String SqlDate_                   = "java.sql.Date";
+    public final static String SqlTime_                   = "java.sql.Time";
+    public final static String SqlTimestamp_              = "java.sql.Timestamp";
 
     // This variable is used to construct both the type and method name
     // e.g. setObjectField(), so it should be kept in a short version.
-    public final static String Object_                    = "Object"; // NOI18N
+    public final static String Object_                    = "Object";
 
-    public final static String[] super_                   = new String[] {"super();"}; // NOI18N
+    public final static String[] super_                   = new String[] {"super();"};
 
     // This String[] is used internally to replace "\t" with the element of this array
     // that represents the corresponding indentation in spaces.
     private final static String[] indentation_              = new String[] {
-        "    ", // NOI18N
-        "        ", // NOI18N
-        "            ", // NOI18N
-        "                "}; // NOI18N
+        "    ",
+        "        ",
+        "            ",
+        "                "};
 
     /**
      * Converts method body into String array.
@@ -105,10 +100,11 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
         while(st.hasMoreTokens()) {
             String s = st.nextToken();
             int i = s.lastIndexOf('\t');
-            if (i > -1)
-                 rc[ii] = indentation_[i] + s.substring(i + 1);
-            else
-                 rc[ii] = s;
+            if (i > -1) {
+                rc[ii] = indentation_[i] + s.substring(i + 1);
+            } else {
+                rc[ii] = s;
+            }
 
             ii++;
         }
@@ -123,8 +119,8 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @param cls the primitive Class to find Object wrapper for.
      * @return Object type Class.
      */
-    public static Class getWrapperType(Class cls) {
-        Class rc = getWrapperClass(cls);
+    public static Class<?> getWrapperType(Class<?> cls) {
+        Class<?> rc = getWrapperClass(cls);
         if (rc == null) { // not a primitive
             rc = cls;
         }
@@ -140,7 +136,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @return A String containing the expression for wrapping the
      * primitive datatype in its corresponding wrapperclass
      */
-    public static String getWrapperExpr(Class exprType, String expr) {
+    public static String getWrapperExpr(Class<?> exprType, String expr) {
 
         StringBuffer wrapped = new StringBuffer();
 
@@ -160,7 +156,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @param primitiveType the class object of the primitive type.
      * @return the name of the method to access the primitive value of the wrapper
      */
-    public static String getUnwrapMethodName(Class primitiveType)
+    public static String getUnwrapMethodName(Class<?> primitiveType)
     {
         return primitiveType.getName() + "Value()"; //NOI18N
     }
@@ -174,7 +170,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * the primitive type for.
      * @return name of the primitive type as String.
      */
-    public static String getPrimitiveType(Class cls) {
+    public static String getPrimitiveType(Class<?> cls) {
         String rc = getPrimitiveName(cls);
         if (rc == null) { // not an Object
             rc = cls.getName();
@@ -189,7 +185,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @return exception type names as String[].
      */
     public static String[] getExceptionNames(Method m) {
-        Class[] cls = m.getExceptionTypes();
+        Class<?>[] cls = m.getExceptionTypes();
         String[] rc = new String[cls.length];
         for (int ii = 0; ii < cls.length; ii++) {
             rc[ii] = cls[ii].getName();
@@ -204,14 +200,16 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @return list of method parameter types as String
      */
     public static String getParameterTypesList(Method m) {
-       if (m == null)
-            return none_;
+       if (m == null) {
+        return none_;
+       }
 
         StringBuffer buf = new StringBuffer();
-        Class[] paramTypes = m.getParameterTypes();
+        Class<?>[] paramTypes = m.getParameterTypes();
         for (int i = 0; i < paramTypes.length; i++) {
-            if (i > 0)
+            if (i > 0) {
                 buf.append(paramList_);
+            }
             buf.append(getTypeRepr(paramTypes[i]));
         }
         return buf.toString();
@@ -240,8 +238,9 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
         StringBuffer rc = new StringBuffer();
 
         for (int ii = 0; ii < count; ii++) {
-            if (ii > 0)
+            if (ii > 0) {
                 rc.append(sep);
+            }
 
             rc.append(param_ + ii);
         }
@@ -255,16 +254,16 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @param writer the Class writer.
      * @throws IOException if writer fails to add a field.
      */
-    public static void addFields(String prop, int modifiers, JavaClassWriter writer)
-                                                                 throws IOException{
+    public static void addFields(String prop, int modifiers, JavaClassWriter writer) throws IOException {
         String[] v = getBodyAsStrings(prop);
         for (int i = 0; i < v.length; i++) {
             StringTokenizer st = new StringTokenizer(v[i], space_);
             String type = st.nextToken();
             String name = st.nextToken();
             StringBuffer value = new StringBuffer();
-            while(st.hasMoreTokens())
-               value.append(st.nextToken() + space_);
+            while(st.hasMoreTokens()) {
+                value.append(st.nextToken() + space_);
+            }
 
             int l = value.length();
             value.deleteCharAt(l - 1); // last space
@@ -282,8 +281,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * @param modifiers field modifiers for these fields.
      * @throws IOException if writer fails to add a field.
      */
-    public static void addPrivateField(String prop, int modifiers, JavaClassWriter writer)
-                                                                 throws IOException{
+    public static void addPrivateField(String prop, int modifiers, JavaClassWriter writer) throws IOException {
         addFields(prop, Modifier.PRIVATE + modifiers, writer);
     }
 
@@ -367,7 +365,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
                                  JavaClassWriter writer)
                                  throws IOException{
 
-        Class[] types = m.getParameterTypes();
+        Class<?>[] types = m.getParameterTypes();
         int count = types.length;
         String[] parameterTypes = new String[count];
         String[] parameterNames = new String[count];
@@ -379,8 +377,9 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
         String[] exceptionTypes = getExceptionNames(m);
 
         int modifiers = m.getModifiers();
-        if (Modifier.isAbstract(modifiers))
+        if (Modifier.isAbstract(modifiers)) {
             modifiers -= Modifier.ABSTRACT;
+        }
 
         writer.addMethod(mname, // name
             modifiers, // modifiers
@@ -396,7 +395,7 @@ public class JavaClassWriterHelper extends JavaTypeHelper {
      * Returns the String representation of the specified class instance.
      * An array is represented as the name of the element type followed by [].
      */
-    public static String getTypeRepr(Class clazz)
+    public static String getTypeRepr(Class<?> clazz)
     {
         return (clazz.isArray() ?
                 getTypeRepr(clazz.getComponentType()) + brackets_ :

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,36 +15,33 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * LocalFieldDesc.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.ColumnElement;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.TRACE;
 
 
 /**
  *
  */
 public class LocalFieldDesc extends FieldDesc {
+    private static final Logger LOG = System.getLogger(LocalFieldDesc.class.getName(), RESOURCE_BUNDLE);
 
     /** Array of ColumnElement. */
-    final ArrayList columnDescs;
+    final List<ColumnElement> columnDescs;
 
     /** Stores this special mapping information. */
     private Boolean primitiveMappedToNullableColumn;
@@ -51,9 +49,9 @@ public class LocalFieldDesc extends FieldDesc {
     /** SQL Column type for primary column. */
     private final int primaryColumnType;
 
-    LocalFieldDesc(ClassDesc config, ArrayList columnDescs) {
+    LocalFieldDesc(ClassDesc config, List<ColumnElement> columnDesc) {
         super(config);
-        this.columnDescs = columnDescs;
+        this.columnDescs = columnDesc;
 
         //Initialize primary column's type.
         primaryColumnType = getPrimaryColumn().getType();
@@ -65,11 +63,11 @@ public class LocalFieldDesc extends FieldDesc {
         if (primitiveMappedToNullableColumn == null) {
             boolean rc = getType().isPrimitive();
 
-            for (Iterator iter = columnDescs.iterator(); iter.hasNext() && rc; ) {
-                ColumnElement c = (ColumnElement) iter.next();
+            for (Iterator<ColumnElement> iter = columnDescs.iterator(); iter.hasNext() && rc; ) {
+                ColumnElement c = iter.next();
                 rc = c.isNullable();
             }
-            primitiveMappedToNullableColumn = new Boolean(rc);
+            primitiveMappedToNullableColumn = Boolean.valueOf(rc);
         }
 
         return primitiveMappedToNullableColumn.booleanValue();
@@ -125,14 +123,14 @@ public class LocalFieldDesc extends FieldDesc {
      * @return The <code>ColumnElement</code> for the primary column of this field.
      */
     public ColumnElement getPrimaryColumn() {
-        return ((ColumnElement) columnDescs.get(0));
+        return (columnDescs.get(0));
     }
 
     /**
      * Returns an iterator on the mapped column elements.
      * @return An iterator on the mapped column elements.
      */
-    public Iterator getColumnElements() {
+    public Iterator<ColumnElement> getColumnElements() {
         return columnDescs.iterator();
     }
 
@@ -166,6 +164,7 @@ public class LocalFieldDesc extends FieldDesc {
      * Calls the superclass method and disables concurrency checking
      * for certain field types.
      */
+    @Override
     protected void setupDesc(Field f) {
         super.setupDesc(f);
 
@@ -191,7 +190,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The primitive type long has the highest precedence and the type
      * Float has the lowest.
      */
-    private static final Class[] nonNullableNonScaledTypes =
+    private static final Class<?>[] nonNullableNonScaledTypes =
             {
                 Long.TYPE, Integer.TYPE, Short.TYPE, Byte.TYPE, Double.TYPE,
                 Float.TYPE, BigInteger.class, BigDecimal.class, Long.class,
@@ -204,7 +203,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The type BigDecimal has the highest precedence and the primitive
      * type float has the lowest.
      */
-    private static final Class[] nullableNonScaledTypes =
+    private static final Class<?>[] nullableNonScaledTypes =
             {
                 BigInteger.class, BigDecimal.class, Long.class, Integer.class, Short.class,
                 Byte.class, Double.class, Float.class, Long.TYPE, Integer.TYPE,
@@ -217,7 +216,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The primitive type double has the highest precedence and the primitive
      * type byte has the lowest.
      */
-    private static final Class[] nonNullableScaledTypes =
+    private static final Class<?>[] nonNullableScaledTypes =
             {
                 Double.TYPE, Float.TYPE, Long.TYPE, Integer.TYPE, Short.TYPE,
                 Byte.TYPE,  BigDecimal.class, Double.class, BigInteger.class,
@@ -230,7 +229,7 @@ public class LocalFieldDesc extends FieldDesc {
      * The primitive type BigDecimal has the highest precedence and the primitive
      * type float has the lowest.
      */
-    private static final Class[] nullableScaledTypes =
+    private static final Class<?>[] nullableScaledTypes =
             {
                 BigDecimal.class, Double.class, Float.class, BigInteger.class,
                 Long.class, Integer.class, Short.class, Byte.class, Double.TYPE,
@@ -247,7 +246,7 @@ public class LocalFieldDesc extends FieldDesc {
      * @see #nullableScaledTypes
      * @return an integer value indicating the precedence
      */
-    private static int lookupTypePrecedence(Class type, Class typePrecedence[]) {
+    private static int lookupTypePrecedence(Class<?> type, Class<?> typePrecedence[]) {
         for (int i = 0; i < typePrecedence.length; i++) {
             if (type == typePrecedence[i]) {
                 return i;
@@ -263,9 +262,9 @@ public class LocalFieldDesc extends FieldDesc {
      * highest precedence and Integer.MAX_VALUE indicates lowest.
      */
     private int computeTypePrecedence() {
-        ColumnElement c = (ColumnElement) columnDescs.get(0);
+        ColumnElement c = columnDescs.get(0);
         int sqlType = c.getType();
-        Class type = getType();
+        Class<?> type = getType();
         boolean isNullable = c.isNullable();
         int precedence = Integer.MAX_VALUE;
 
@@ -343,7 +342,7 @@ public class LocalFieldDesc extends FieldDesc {
 
     void computeTrackedPrimitiveFields() {
         for (int i = 0; i < classDesc.fields.size(); i++) {
-            FieldDesc tf = (FieldDesc) classDesc.fields.get(i);
+            FieldDesc tf = classDesc.fields.get(i);
 
             if ((tf instanceof LocalFieldDesc) && (this != tf) && (compareColumns(this, tf) == true)) {
                 addTrackedField(tf);
@@ -355,13 +354,14 @@ public class LocalFieldDesc extends FieldDesc {
      * Compute the primary tracked field.
      */
     void computePrimaryTrackedPrimitiveField() {
-        ArrayList trackedFields = null;
+        List<FieldDesc> trackedFields = getTrackedFields();
 
         // We need to skip fields that are read-only.
-        if (((trackedFields = getTrackedFields()) == null) ||
-                (sqlProperties & (FieldDesc.PROP_PRIMARY_TRACKED_FIELD |
-                FieldDesc.PROP_SECONDARY_TRACKED_FIELD |
-                FieldDesc.PROP_READ_ONLY)) > 0) {
+        if (trackedFields == null ||
+            (sqlProperties
+                & (FieldDesc.PROP_PRIMARY_TRACKED_FIELD
+                    | FieldDesc.PROP_SECONDARY_TRACKED_FIELD
+                    | FieldDesc.PROP_READ_ONLY)) > 0) {
             return;
         }
 
@@ -379,7 +379,7 @@ public class LocalFieldDesc extends FieldDesc {
         }
 
         for (int j = 0; j < trackedFields.size(); j++) {
-            FieldDesc tf = (FieldDesc) trackedFields.get(j);
+            FieldDesc tf = trackedFields.get(j);
 
             // We don't need to assign primary or secondary status for ForeignFieldDesc
             // because we don't write it to the disk.
@@ -403,14 +403,13 @@ public class LocalFieldDesc extends FieldDesc {
             primaryTrackedField = this;
         }
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("sqlstore.model.classdesc.primarytrackedfield", primaryTrackedField.getName()); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.model.classdesc.primarytrackedfield", primaryTrackedField.getName());
 
         primaryTrackedField.sqlProperties |= FieldDesc.PROP_PRIMARY_TRACKED_FIELD;
         primaryTrackedField.sqlProperties &= ~FieldDesc.PROP_SECONDARY_TRACKED_FIELD;
     }
 
+    @Override
     void computeTrackedRelationshipFields() {
 
         if (((sqlProperties & FieldDesc.PROP_REF_INTEGRITY_UPDATES) == 0) &&
@@ -419,7 +418,7 @@ public class LocalFieldDesc extends FieldDesc {
         }
 
         for (int k = 0; k < classDesc.foreignFields.size(); k++) {
-            ForeignFieldDesc tf = (ForeignFieldDesc) classDesc.foreignFields.get(k);
+            ForeignFieldDesc tf = classDesc.foreignFields.get(k);
 
             if (compareColumns(this, tf) == true) {
                 // In the case where the relationship has cardinality LWB and UPB
@@ -447,29 +446,25 @@ public class LocalFieldDesc extends FieldDesc {
     }
 
     void cleanupTrackedFields() {
-        ArrayList trackedFields = getTrackedFields();
+        List<FieldDesc> trackedFields = getTrackedFields();
+        if (trackedFields == null) {
+            return;
+        }
+        for (int j = 1; ; j++) {
+            int index = trackedFields.size() - j;
+            if (index < 0) {
+                break;
+            }
 
-        if (trackedFields != null) {
-            for (int j = 1; ; j++) {
-                int index = trackedFields.size() - j;
+            FieldDesc tf = trackedFields.get(index);
+            if (tf instanceof LocalFieldDesc) {
+                break;
+            }
 
-                if (index < 0) {
-                    break;
-                }
-
-                FieldDesc tf = (FieldDesc) trackedFields.get(index);
-
-                if (tf instanceof LocalFieldDesc) {
-                    break;
-                }
-
-                ArrayList foreignTrackedFields = tf.getTrackedFields();
-
-                if (foreignTrackedFields != null) {
-                    trackedFields.removeAll(foreignTrackedFields);
-                }
+            List<FieldDesc> foreignTrackedFields = tf.getTrackedFields();
+            if (foreignTrackedFields != null) {
+                trackedFields.removeAll(foreignTrackedFields);
             }
         }
     }
-
 }

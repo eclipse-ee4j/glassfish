@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,7 @@ import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.xa.XAResource;
@@ -178,7 +179,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * Returns a list of resource handles held by the component
      */
 
-    List getExistingResourceList(Object instance, ComponentInvocation inv);
+    List<TransactionalResource> getExistingResourceList(Object instance, ComponentInvocation inv);
 
     void registerComponentResource(TransactionalResource h);
 
@@ -236,7 +237,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * Returns the list of ActiveTransactions. Called by Admin framework
      *  The ArrayList contains TransactionAdminBean
      */
-    java.util.ArrayList getActiveTransactions();
+    ArrayList<TransactionAdminBean> getActiveTransactions();
 
     /*
      * Called by Admin Framework. Forces the given transaction to be rolled back

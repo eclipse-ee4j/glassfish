@@ -21,12 +21,14 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.state;
 
 import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperStateManager;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.DEBUG;
 
 
 public abstract class LifeCycleState {
@@ -35,7 +37,7 @@ public abstract class LifeCycleState {
      * I18N message handler
      */
     protected final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             LifeCycleState.class.getClassLoader());
 
     protected boolean isPersistent;
@@ -102,8 +104,7 @@ public abstract class LifeCycleState {
 
     private static LifeCycleState stateTypes[];
 
-    //The logger
-    private static Logger logger = LogHelperStateManager.getLogger();
+    private static final Logger LOG = System.getLogger(LifeCycleState.class.getName(), RESOURCE_BUNDLE);
 
     // ******************************************************************
     // Initialisation stuff
@@ -185,10 +186,7 @@ public abstract class LifeCycleState {
      * @return the type as LifeCycleState object
      */
     public static LifeCycleState getLifeCycleState(int state) {
-        if (logger.isLoggable(Logger.FINER)) {
-            logger.finer("sqlstore.state.lifecyclestate.initial",stateTypes[state]); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.state.lifecyclestate.initial", stateTypes[state]);
         return stateTypes[state];
     }
 
@@ -253,7 +251,7 @@ public abstract class LifeCycleState {
     protected void assertTransaction(boolean transactionActive) {
         if (!transactionActive) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.lifecycle.xactnotactive")); // NOI18N
+                    "jdo.lifecycle.xactnotactive"));
         }
     }
 
@@ -376,48 +374,45 @@ public abstract class LifeCycleState {
      * Life Cycle State change
      */
     public LifeCycleState changeState(int newStateType) {
-        if (logger.isLoggable(Logger.FINER)) {
-            Object[] items = new Object[] {this,stateTypes[newStateType]};
-            logger.finer("sqlstore.state.lifecyclestate.changestate",items); // NOI18N
-        }
-
+        LOG.log(DEBUG, "sqlstore.state.lifecyclestate.changestate", this, stateTypes[newStateType]);
         return (stateTypes[newStateType]);
     }
 
+    @Override
     public String toString() {
         switch (stateType) {
             case HOLLOW:
-                return "HOLLOW"; // NOI18N
+                return "HOLLOW";
             case P_NON_TX:
-                return "P_NON_TX"; // NOI18N
+                return "P_NON_TX";
             case P_CLEAN:
-                return "P_CLEAN"; // NOI18N
+                return "P_CLEAN";
             case P_DIRTY:
-                return "P_DIRTY"; // NOI18N
+                return "P_DIRTY";
             case P_NEW:
-                return "P_NEW"; // NOI18N
+                return "P_NEW";
             case P_NEW_FLUSHED:
-                return "P_NEW_FLUSHED"; // NOI18N
+                return "P_NEW_FLUSHED";
             case P_NEW_FLUSHED_DELETED:
-                return "P_NEW_FLUSHED_DELETED"; // NOI18N
+                return "P_NEW_FLUSHED_DELETED";
             case P_NEW_DELETED:
-                return "P_NEW_DELETED"; // NOI18N
+                return "P_NEW_DELETED";
             case P_DELETED:
-                return "P_DELETED"; // NOI18N
+                return "P_DELETED";
             case P_DELETED_FLUSHED:
-                return "P_DELETED_FLUSHED"; // NOI18N
+                return "P_DELETED_FLUSHED";
             case AP_NEW:
-                return "AP_NEW"; // NOI18N
+                return "AP_NEW";
             case AP_NEW_PENDING:
-                return "AP_NEW_PENDING"; // NOI18N
+                return "AP_NEW_PENDING";
             case AP_NEW_FLUSHED:
-                return "AP_NEW_FLUSHED"; // NOI18N
+                return "AP_NEW_FLUSHED";
             case AP_NEW_FLUSHED_PENDING:
-                return "AP_NEW_FLUSHED_PENDING"; // NOI18N
+                return "AP_NEW_FLUSHED_PENDING";
             case AP_NEW_FLUSHED_DELETED:
-                return "AP_NEW_FLUSHED_DELETED"; // NOI18N
+                return "AP_NEW_FLUSHED_DELETED";
             case AP_NEW_DELETED:
-                return "AP_NEW_DELETED"; //NOI18N
+                return "AP_NEW_DELETED";
         }
 
         return null;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * NameMapper.java
- *
- * Created on December 11, 2001, 9:51 AM
  */
 
 package com.sun.jdo.spi.persistence.support.ejb.model.util;
@@ -47,13 +42,13 @@ import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;
  * also adds methods which are used during deployment time but not needed
  * during development time and therefore, not in the abstract superclass.
  *
- * @author Rochelle Raccah
+ * @author Rochelle Raccah 2001
  */
 public abstract class NameMapper extends AbstractNameMapper
 {
     private EjbBundleDescriptorImpl _bundleDescriptor;
-    private Map _generatedRelToInverseRelMap;
-    private Map _relToInverseGeneratedRelMap;
+    private Map<List<String>, List<String>> _generatedRelToInverseRelMap;
+    private Map<List<String>, List<String>> _relToInverseGeneratedRelMap;
 
     /** Creates a new instance of NameMapper
      * @param bundleDescriptor the EjbBundleDescriptor which defines the
@@ -68,31 +63,33 @@ public abstract class NameMapper extends AbstractNameMapper
     private void initGeneratedRelationshipMaps ()
     {
         EjbBundleDescriptorImpl bundleDescriptor = getBundleDescriptor();
-        Set relationships = bundleDescriptor.getRelationships();
+        Set<RelationshipDescriptor> relationships = bundleDescriptor.getRelationships();
 
-        _generatedRelToInverseRelMap = new HashMap();
-        _relToInverseGeneratedRelMap = new HashMap();
+        _generatedRelToInverseRelMap = new HashMap<>();
+        _relToInverseGeneratedRelMap = new HashMap<>();
 
         // during development time this code may attempt to get the
         // iterator even with no relationships, so protect it by a
         // null check
         if (relationships != null)
         {
-            Iterator iterator = relationships.iterator();
-            List generatedRels = new ArrayList();
+            Iterator<RelationshipDescriptor> iterator = relationships.iterator();
+            List<RelationshipDescriptor> generatedRels = new ArrayList<>();
             int counter = 0;
 
             // gather list of generated cmr fields by examining source and sink
             while (iterator.hasNext())
             {
                 RelationshipDescriptor relationship =
-                    (RelationshipDescriptor)iterator.next();
+                    iterator.next();
 
-                if (relationship.getSource().getCMRField() == null)
+                if (relationship.getSource().getCMRField() == null) {
                     generatedRels.add(relationship);
+                }
 
-                if (relationship.getSink().getCMRField() == null)
+                if (relationship.getSink().getCMRField() == null) {
                     generatedRels.add(relationship);
+                }
             }
 
             // now update the maps to contain this info
@@ -100,7 +97,7 @@ public abstract class NameMapper extends AbstractNameMapper
             while (iterator.hasNext())
             {
                 RelationshipDescriptor relationship =
-                    (RelationshipDescriptor)iterator.next();
+                    iterator.next();
                 RelationRoleDescriptor source = relationship.getSource();
                 String sourceEjbName = source.getOwner().getName();
                 String sourceCMRField = source.getCMRField();
@@ -110,12 +107,12 @@ public abstract class NameMapper extends AbstractNameMapper
                 String ejbName = (sourceIsNull ? sourceEjbName : sinkEjbName);
                 String otherEjbName =
                     (sourceIsNull ? sinkEjbName : sourceEjbName);
-                List ejbField = Arrays.asList(new String[]{otherEjbName,
+                List<String> ejbField = Arrays.asList(new String[]{otherEjbName,
                     (sourceIsNull ? sink.getCMRField() : sourceCMRField)});
                 PersistenceDescriptor pDescriptor = ((EjbCMPEntityDescriptor)
                     bundleDescriptor.getEjbByName(ejbName)).
                     getPersistenceDescriptor();
-                List generatedField = null;
+                List<String> generatedField = null;
                 String uniqueName = null;
 
                 // make sure the user doesn't already have a field
@@ -134,17 +131,24 @@ public abstract class NameMapper extends AbstractNameMapper
         }
     }
 
-    protected Map getGeneratedFieldsMap ()
-    {
+
+    @Override
+    protected Map<List<String>, List<String>> getGeneratedFieldsMap() {
         return _generatedRelToInverseRelMap;
     }
-    protected Map getInverseFieldsMap () { return _relToInverseGeneratedRelMap; }
+
+
+    @Override
+    protected Map<List<String>, List<String>> getInverseFieldsMap() {
+        return _relToInverseGeneratedRelMap;
+    }
+
 
     // isCMPField does not return true for relationships, so we use getTypeFor
     private boolean hasField (PersistenceDescriptor persistenceDescriptor,
         String fieldName)
     {
-        Class fieldType = null;
+        Class<?> fieldType = null;
 
         try
         {
@@ -180,6 +184,7 @@ public abstract class NameMapper extends AbstractNameMapper
      * @return the key class type, one of {@link #USER_DEFINED_KEY_CLASS},
      * {@link #PRIMARY_KEY_FIELD}, or {@link #UNKNOWN_KEY_CLASS}
      */
+    @Override
     public int getKeyClassTypeForEjbName (String name)
     {
         String keyClass = getKeyClassForEjbName(name);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * EJBBundleInfoHelper.java
- *
- * Created on October 15, 2004, 1:51 PM
  */
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
@@ -43,14 +38,14 @@ import org.netbeans.modules.dbschema.SchemaElement;
 /** This is a class which implements the EJBInfoHelper interface
  * based on EjbBundleDescriptor and other DOL classes.
  *
- * @author Rochelle Raccah
+ * @author Rochelle Raccah 2004
  */
 public class EJBBundleInfoHelper implements EJBInfoHelper {
-    private static final char UNDERLINE = '_'; // NOI18N
-    private static final char DOT = '.'; // NOI18N
+    private static final char UNDERLINE = '_';
+    private static final char DOT = '.';
 
     private final EjbBundleDescriptorImpl bundleDescriptor;
-    private Collection availableSchemaNames;
+    private Collection<String> availableSchemaNames;
     private NameMapper nameMapper;    // standard one
     private Model model;
 
@@ -60,8 +55,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
      * @param availableSchemaNames a Collection of available schemas
      * in the application - used only during development
      */
-    public EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor,
-            Collection availableSchemaNames) {
+    public EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor, Collection<String> availableSchemaNames) {
         this(bundleDescriptor, null, null, availableSchemaNames);
     }
 
@@ -79,7 +73,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
      */
     EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor,
             NameMapper nameMapper, Model model,
-            Collection availableSchemaNames) {
+            Collection<String> availableSchemaNames) {
         this.bundleDescriptor = bundleDescriptor;
         this.nameMapper = nameMapper;
         this.model = model;
@@ -98,6 +92,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#getEjbJarDisplayName
      */
+    @Override
     public String getEjbJarDisplayName() {
         return bundleDescriptor.getName();
     }
@@ -107,7 +102,8 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
      * the constructor or <code>null</code> if there was none supplied.
      * @return a collection schema names
      */
-    public Collection getAvailableSchemaNames () {
+    @Override
+    public Collection<String> getAvailableSchemaNames () {
         return availableSchemaNames;
     }
 
@@ -115,6 +111,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
      * uses a combo of app name, module name, etc.
      * @return the name to use for schema generation
      */
+    @Override
     public String getSchemaNameToGenerate() {
         // make sure there is no '.' in schema name
         return DeploymentHelper.getDDLNamePrefix(
@@ -127,6 +124,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
      * @param schemaName the name of the schema to be loaded
      * @return the schema object
      */
+    @Override
     public SchemaElement getSchema(String schemaName) {
         return SchemaElement.forName(schemaName, getClassLoader());
     }
@@ -134,15 +132,17 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#getEjbNames
      */
-    public Collection getEjbNames() {
-        Iterator iterator = getBundleDescriptor().getEjbs().iterator();
-        ArrayList returnList = new ArrayList();
+    @Override
+    public Collection<String> getEjbNames() {
+        Iterator<EjbDescriptor> iterator = getBundleDescriptor().getEjbs().iterator();
+        ArrayList<String> returnList = new ArrayList<>();
 
         while (iterator.hasNext()) {
-            EjbDescriptor ejb = (EjbDescriptor)iterator.next();
+            EjbDescriptor ejb = iterator.next();
 
-            if (ejb instanceof EjbCMPEntityDescriptor)
+            if (ejb instanceof EjbCMPEntityDescriptor) {
                 returnList.add(ejb.getName());
+            }
         }
 
         return returnList;
@@ -151,12 +151,14 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#getFieldsForEjb
      */
-    public Collection getFieldsForEjb(String ejbName) {
-        Iterator iterator = getModel().getFields(ejbName).iterator();
-        ArrayList returnList = new ArrayList();
+    @Override
+    public Collection<String> getFieldsForEjb(String ejbName) {
+        Iterator<String> iterator = getModel().getFields(ejbName).iterator();
+        ArrayList<String> returnList = new ArrayList<>();
 
-        while (iterator.hasNext())
+        while (iterator.hasNext()) {
             returnList.add(iterator.next());
+        }
 
         return returnList;
     }
@@ -164,9 +166,10 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#getRelationshipsForEjb
      */
-    public Collection getRelationshipsForEjb(String ejbName) {
-        Iterator iterator = getBundleDescriptor().getRelationships().iterator();
-        ArrayList returnList = new ArrayList();
+    @Override
+    public Collection<String> getRelationshipsForEjb(String ejbName) {
+        Iterator<RelationshipDescriptor> iterator = getBundleDescriptor().getRelationships().iterator();
+        ArrayList<String> returnList = new ArrayList<>();
 
         // TODO: issue of usage of this - several iterations of this if
         // iterating all the bean - but, I think it can change, so can't
@@ -174,21 +177,23 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
         // getFieldsForEjb)
         while (iterator.hasNext()) {
             RelationshipDescriptor relD =
-                (RelationshipDescriptor)iterator.next();
+                iterator.next();
             RelationRoleDescriptor testRole = relD.getSource();
             String cmrField = null;
 
             if (ejbName.equals(testRole.getOwner().getName())) {
                 cmrField = testRole.getCMRField();
-                if (cmrField != null)
+                if (cmrField != null) {
                     returnList.add(cmrField);
+                }
             }
 
             testRole = relD.getSink();
             if (ejbName.equals(testRole.getOwner().getName())) {
                 cmrField = testRole.getCMRField();
-                if (cmrField != null)
+                if (cmrField != null) {
                     returnList.add(cmrField);
+                }
             }
         }
 
@@ -198,6 +203,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /** Gets the class loader which corresponds to this ejb bundle.
      * @return the class loader which corresponds to this ejb bundle
      */
+    @Override
     public ClassLoader getClassLoader() {
         return bundleDescriptor.getClassLoader();
     }
@@ -205,6 +211,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#getNameMapper
      */
+    @Override
     public AbstractNameMapper getNameMapper() {
         return getNameMapperInternal();
     }
@@ -212,13 +219,15 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#createUniqueNameMapper
      */
+    @Override
     public AbstractNameMapper createUniqueNameMapper() {
         return new NameMapper(bundleDescriptor);
     }
 
     private NameMapper getNameMapperInternal() {
-        if (nameMapper == null)
+        if (nameMapper == null) {
             nameMapper = new NameMapper(bundleDescriptor, false);
+        }
 
         return nameMapper;
     }
@@ -226,6 +235,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#createConversionHelper
      */
+    @Override
     public ConversionHelper createConversionHelper() {
         return new EjbConversionHelper(getNameMapperInternal());
     }
@@ -233,6 +243,7 @@ public class EJBBundleInfoHelper implements EJBInfoHelper {
     /**
      * @see EJBInfoHelper#getModel
      */
+    @Override
     public Model getModel() {
         if (model == null) {
             model = new DeploymentDescriptorModel(getNameMapperInternal(),

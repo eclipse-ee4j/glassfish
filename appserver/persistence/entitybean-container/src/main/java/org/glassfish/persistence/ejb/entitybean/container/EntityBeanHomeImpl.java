@@ -32,7 +32,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  */
 public class EntityBeanHomeImpl extends EJBHomeInvocationHandler {
 
-    EntityBeanHomeImpl(EjbDescriptor ejbDescriptor, Class homeIntfClass) throws Exception {
+    EntityBeanHomeImpl(EjbDescriptor ejbDescriptor, Class<?> homeIntfClass) throws Exception {
         super(ejbDescriptor, homeIntfClass);
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SymbolTable.java
- *
- * Created on March 8, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.scope;
 
 import java.util.Hashtable;
@@ -29,7 +24,7 @@ import java.util.Stack;
 /**
  * The symbol table handling declared identifies.
  *
- * @author  Michael Bouschen
+ * @author  Michael Bouschen 2000
  * @version 0.1
  */
 public class SymbolTable
@@ -42,12 +37,12 @@ public class SymbolTable
     /**
      * Stack of old definitions.
      */
-    protected Stack nestings = new Stack();
+    protected Stack<Nesting> nestings = new Stack<>();
 
     /**
      * The table of declared identifier (symbols).
      */
-    protected Hashtable symbols = new Hashtable();
+    protected Hashtable<String, Definition> symbols = new Hashtable<>();
 
     /**
      * Opens a new scope.
@@ -66,7 +61,7 @@ public class SymbolTable
      */
     public void leaveScope()
     {
-        forgetNesting((Nesting)nestings.pop());
+        forgetNesting(nestings.pop());
         actualScope--;
     }
 
@@ -94,11 +89,11 @@ public class SymbolTable
      */
     public Definition declare(String ident, Definition def)
     {
-        Definition old = (Definition)symbols.get(ident);
+        Definition old = symbols.get(ident);
         def.setScope(actualScope);
         if ((old == null) || (old.getScope() < actualScope))
         {
-            Nesting nest = (Nesting)nestings.peek();
+            Nesting nest = nestings.peek();
             nest.add(ident, old); // save old definition in nesting
             symbols.put(ident, def); // install new definition as actual definition
             return null;
@@ -130,7 +125,7 @@ public class SymbolTable
      */
     public Definition getDefinition(String ident)
     {
-        return (Definition)symbols.get(ident);
+        return symbols.get(ident);
     }
 
     /**
@@ -146,13 +141,13 @@ public class SymbolTable
         String ident = null;
         Definition hidden = null;
 
-        Iterator idents = nesting.getIdents();
-        Iterator hiddenDefs = nesting.getHiddenDefinitions();
+        Iterator<String> idents = nesting.getIdents();
+        Iterator<Definition> hiddenDefs = nesting.getHiddenDefinitions();
 
         while (idents.hasNext())
         {
-            ident = (String) idents.next();
-            hidden = (Definition) hiddenDefs.next();
+            ident = idents.next();
+            hidden = hiddenDefs.next();
             if (hidden == null)
             {
                 symbols.remove(ident);

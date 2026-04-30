@@ -516,7 +516,7 @@
         <!-- schema2beans - both CMP and LB admin now depend on it -->
         <dependency>
             <groupId>org.glassfish.external</groupId>
-            <artifactId>schema2beans</artifactId>
+            <artifactId>schema2beans-osgi</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

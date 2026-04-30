@@ -17,6 +17,7 @@
 
 package org.glassfish.admin.rest.generator;
 
+import java.lang.System.Logger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +32,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.DomDocument;
 
+import static java.lang.System.Logger.Level.TRACE;
 import static java.util.Map.entry;
 
 /**
@@ -39,6 +41,7 @@ import static java.util.Map.entry;
  */
 public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
 
+    private static final Logger LOG = System.getLogger(ResourcesGeneratorBase.class.getName());
     private static final Set<String> alreadyGenerated = new HashSet<>();
     ServiceLocator habitat;
 
@@ -50,7 +53,6 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
      * Generate REST resource for a single config model.
      */
     @Override
-    @SuppressWarnings("rawtypes")
     public void generateSingle(ConfigModel model, DomDocument domDocument) {
         configModelVisited(model);
         //processRedirectsAnnotation(model); // TODO need to extract info from RestRedirect Annotations
@@ -58,8 +60,10 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         String serverConfigName = ResourceUtil.getUnqualifiedTypeName(model.targetTypeName);
         String beanName = getBeanName(serverConfigName);
         String className = getClassName(beanName);
+        LOG.log(TRACE, () -> "Processing bean " + beanName + ", class " + className);
 
         if (alreadyGenerated(className)) {
+            LOG.log(TRACE, () -> "Nothing to do, already generated: " + className);
             return;
         }
 
@@ -72,58 +76,59 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         }
 
         ClassWriter classWriter = getClassWriter(className, baseClassName, resourcePath);
-
-        if (classWriter != null) {
-            generateCommandResources(beanName, classWriter);
-
-            generateGetDeleteCommandMethod(beanName, classWriter);
-
-            generateCustomResourceMapping(beanName, classWriter);
-
-            for (String elementName : model.getElementNames()) {
-                ConfigModel.Property childElement = model.getElement(elementName);
-                if (elementName.equals("*")) {
-                    ConfigModel.Node node = (ConfigModel.Node) childElement;
-                    ConfigModel childModel = node.getModel();
-                    List<ConfigModel> subChildConfigModels = ResourceUtil.getRealChildConfigModels(childModel, domDocument);
-                    for (ConfigModel subChildConfigModel : subChildConfigModels) {
-                        if (ResourceUtil.isOnlyATag(childModel) || ResourceUtil.isOnlyATag(subChildConfigModel)
-                                || subChildConfigModel.getAttributeNames().isEmpty() || hasSingletonAnnotation(subChildConfigModel)) {
-                            String childResourceClassName = getClassName(
-                                    ResourceUtil.getUnqualifiedTypeName(subChildConfigModel.targetTypeName));
-                            String childPath = subChildConfigModel.getTagName();
-                            classWriter.createGetChildResource(childPath, childResourceClassName);
-                            generateSingle(subChildConfigModel, domDocument);
-                        } else {
-                            processNonLeafChildConfigModel(subChildConfigModel, childElement, domDocument, classWriter);
-
-                        }
-                    }
-                } else if (childElement.isLeaf()) {
-                    if (childElement.isCollection()) {
-                        // handle the CollectionLeaf config objects.
-                        // JVM Options is an example of CollectionLeaf object.
-                        String childResourceBeanName = getBeanName(elementName);
-                        String childResourceClassName = getClassName(childResourceBeanName);
-                        classWriter.createGetChildResource(elementName, childResourceClassName);
-
-                        // create resource class
-                        generateCollectionLeafResource(childResourceBeanName);
-                    } else {
-                        String childResourceBeanName = getBeanName(elementName);
-                        String childResourceClassName = getClassName(childResourceBeanName);
-                        classWriter.createGetChildResource(elementName, childResourceClassName);
-
-                        // create resource class
-                        generateLeafResource(childResourceBeanName);
-                    }
-                } else { // => !childElement.isLeaf()
-                    processNonLeafChildElement(elementName, childElement, domDocument, classWriter);
-                }
-            }
-
-            classWriter.done();
+        if (classWriter == null) {
+            LOG.log(TRACE, () -> "Nothing to do, retrieved null classWriter for " + className);
+            return;
         }
+        generateCommandResources(beanName, classWriter);
+
+        generateGetDeleteCommandMethod(beanName, classWriter);
+
+        generateCustomResourceMapping(beanName, classWriter);
+
+        for (String elementName : model.getElementNames()) {
+            ConfigModel.Property childElement = model.getElement(elementName);
+            if (elementName.equals("*")) {
+                ConfigModel.Node node = (ConfigModel.Node) childElement;
+                ConfigModel childModel = node.getModel();
+                List<ConfigModel> subChildConfigModels = ResourceUtil.getRealChildConfigModels(childModel, domDocument);
+                for (ConfigModel subChildConfigModel : subChildConfigModels) {
+                    if (ResourceUtil.isOnlyATag(childModel) || ResourceUtil.isOnlyATag(subChildConfigModel)
+                            || subChildConfigModel.getAttributeNames().isEmpty() || hasSingletonAnnotation(subChildConfigModel)) {
+                        String childResourceClassName = getClassName(
+                                ResourceUtil.getUnqualifiedTypeName(subChildConfigModel.targetTypeName));
+                        String childPath = subChildConfigModel.getTagName();
+                        classWriter.createGetChildResource(childPath, childResourceClassName);
+                        generateSingle(subChildConfigModel, domDocument);
+                    } else {
+                        processNonLeafChildConfigModel(subChildConfigModel, childElement, domDocument, classWriter);
+
+                    }
+                }
+            } else if (childElement.isLeaf()) {
+                if (childElement.isCollection()) {
+                    // handle the CollectionLeaf config objects.
+                    // JVM Options is an example of CollectionLeaf object.
+                    String childResourceBeanName = getBeanName(elementName);
+                    String childResourceClassName = getClassName(childResourceBeanName);
+                    classWriter.createGetChildResource(elementName, childResourceClassName);
+
+                    // create resource class
+                    generateCollectionLeafResource(childResourceBeanName);
+                } else {
+                    String childResourceBeanName = getBeanName(elementName);
+                    String childResourceClassName = getClassName(childResourceBeanName);
+                    classWriter.createGetChildResource(elementName, childResourceClassName);
+
+                    // create resource class
+                    generateLeafResource(childResourceBeanName);
+                }
+            } else { // => !childElement.isLeaf()
+                processNonLeafChildElement(elementName, childElement, domDocument, classWriter);
+            }
+        }
+
+        classWriter.done();
     }
 
     public void generateList(ConfigModel model, DomDocument domDocument) {
@@ -284,23 +289,25 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
      */
     private void generateCommandResources(String parentBeanName, ClassWriter parentWriter) {
         List<CommandResourceMetaData> commandMetaData = CommandResourceMetaData.getMetaData(parentBeanName);
-        if (commandMetaData.size() > 0) {
-            for (CommandResourceMetaData metaData : commandMetaData) {
-                if (ResourceUtil.commandIsPresent(habitat, metaData.command)) { // only if the command really exists
-                    String commandResourceName = parentBeanName + getBeanName(metaData.resourcePath);
-                    String commandResourceClassName = getClassName(commandResourceName);
-
-                    // Generate command resource class
-                    generateCommandResourceClass(parentBeanName, metaData);
-
-                    // Generate getCommandResource() method in parent
-                    parentWriter.createGetCommandResource(commandResourceClassName, metaData.resourcePath);
-                }
-
-            }
-            // Generate GetCommandResourcePaths() method in parent
-            parentWriter.createGetCommandResourcePaths(commandMetaData);
+        if (commandMetaData.isEmpty()) {
+            LOG.log(TRACE, () -> "Nothing to do, null command data for parent bean name: " + parentBeanName);
+            return;
         }
+        for (CommandResourceMetaData metaData : commandMetaData) {
+            if (ResourceUtil.commandIsPresent(habitat, metaData.command)) { // only if the command really exists
+                String commandResourceName = parentBeanName + getBeanName(metaData.resourcePath);
+                String commandResourceClassName = getClassName(commandResourceName);
+
+                // Generate command resource class
+                generateCommandResourceClass(parentBeanName, metaData);
+
+                // Generate getCommandResource() method in parent
+                parentWriter.createGetCommandResource(commandResourceClassName, metaData.resourcePath);
+            }
+
+        }
+        // Generate GetCommandResourcePaths() method in parent
+        parentWriter.createGetCommandResourcePaths(commandMetaData);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.Binder;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jersey.jettison.JettisonFeature;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.MessageProperties;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -79,30 +80,12 @@ public abstract class AbstractRestResourceProvider implements RestResourceProvid
         ResourceConfig rc = new ResourceConfig(classes);
         rc.property(ServerProperties.MEDIA_TYPE_MAPPINGS, getMimeMappings());
         rc.register(CsrfProtectionFilter.class);
-
-        //        TODO - JERSEY2
-        //        RestConfig restConf = ResourceUtil.getRestConfig(habitat);
-        //        if (restConf != null) {
-        //            if (restConf.getLogOutput().equalsIgnoreCase("true")) { //enable output logging
-        //                rc.getContainerResponseFilters().add(LoggingFilter.class);
-        //            }
-        //            if (restConf.getLogInput().equalsIgnoreCase("true")) { //enable input logging
-        //                rc.getContainerRequestFilters().add(LoggingFilter.class);
-        //            }
-        //            if (restConf.getWadlGeneration().equalsIgnoreCase("false")) { //disable WADL
-        //                rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
-        //            }
-        //        }
-        //        else {
-        //                 rc.getFeatures().put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE);
-        //        }
-        //
+        rc.register(LoggingFeature.class);
         final Reloader reloader = new Reloader();
         rc.register(new CdiBridge(serviceLocator, reloader, serverContext));
         rc.register(reloader);
         rc.register(ReloadResource.class);
         rc.register(new MultiPartFeature());
-        //rc.register(getJsonFeature());
 
         for (Binder binder : additionalBinders) {
             rc.register(binder);

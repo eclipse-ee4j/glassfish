@@ -29,7 +29,6 @@ import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
@@ -55,6 +54,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static java.util.logging.Level.FINE;
 
 /**
  *
@@ -233,6 +234,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
         // create lb ref
         createLBRef(lbconfigs, target, config);
         if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
+
             return;
         }
 
@@ -288,9 +290,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
     }
 
     public void createLBRef(LbConfigs lbconfigs, String target, String configName) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("[LB-ADMIN] createLBRef called for target " + target);
-        }
+        logger.log(FINE, "createLBRef(target=" + target + ", configName=" + configName + ")");
 
         // target is a cluster
         if (tgt.isCluster(target)) {
@@ -314,6 +314,8 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
     }
 
     private void addServerToLBConfig(final LbConfigs lbconfigs, final String configName, final String serverName) {
+        logger.log(FINE,
+            () -> "addServerToLBConfig(lbconfigs, configName=" + configName + ", serverName=" + serverName + ")");
         LbConfig lbConfig = lbconfigs.getLbConfig(configName);
 
         ServerRef sRef = lbConfig.getRefByRef(ServerRef.class, serverName);

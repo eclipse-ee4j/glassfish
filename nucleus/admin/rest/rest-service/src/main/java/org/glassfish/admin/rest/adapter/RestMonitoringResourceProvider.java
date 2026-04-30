@@ -30,9 +30,6 @@ public class RestMonitoringResourceProvider extends AbstractRestResourceProvider
 
     @Override
     public Set<Class<?>> getResourceClasses(ServiceLocator habitat) {
-        //        return getLazyJersey().getResourcesConfigForMonitoring(habitat);
-        //    @Override
-        //    public Set<Class<?>> getResourcesConfigForMonitoring(ServiceLocator habitat) {
         final Set<Class<?>> r = new HashSet<>();
         r.add(org.glassfish.admin.rest.resources.MonitoringResource.class);
 

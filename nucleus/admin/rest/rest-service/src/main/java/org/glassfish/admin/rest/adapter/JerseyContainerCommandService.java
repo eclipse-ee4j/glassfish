@@ -38,8 +38,6 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.grizzly.http.server.HttpHandler;
-import org.glassfish.grizzly.http.server.Request;
-import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -143,12 +141,7 @@ public class JerseyContainerCommandService implements PostConstruct {
             final GrizzlyHttpContainer httpHandler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
             final ServiceLocator jerseyLocator = httpHandler.getApplicationHandler().getInjectionManager().getInstance(ServiceLocator.class);
             ExtrasUtilities.enableTopicDistribution(jerseyLocator);
-        return new JerseyContainer() {
-                @Override
-                public void service(Request request, Response response) throws Exception {
-                    httpHandler.service(request, response);
-                }
-            };
+            return httpHandler::service;
         } finally {
             iteratorProvider.disable();
         }

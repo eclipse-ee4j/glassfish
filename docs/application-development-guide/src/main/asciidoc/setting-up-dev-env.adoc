@@ -28,7 +28,7 @@ The following topics are addressed here:
 === Installing and Preparing the Server for Development
 
 For more information about {productName} installation, see the
-xref:installation-guide.adoc#GSING[
+xref:installation-guide.adoc[
 {productName} Installation Guide].
 
 The following components are included in the full installation.
@@ -67,7 +67,7 @@ in {productName} Administration Guide.
 === High Availability Features
 
 High availability features such as load balancing and session failover
-are discussed in detail in the xref:ha-administration-guide.adoc#GSHAG[{productName}
+are discussed in detail in the xref:ha-administration-guide.adoc[{productName}
 High Availability Administration Guide]. This book describes the
 following features in the following sections:
 

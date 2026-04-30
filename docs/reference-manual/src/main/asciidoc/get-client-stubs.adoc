@@ -90,7 +90,7 @@ xref:undeploy.adoc#undeploy[`undeploy`(1)]
 xref:appclient.adoc#appclient[`appclient`(1M)],
 xref:package-appclient.adoc#package-appclient[`package-appclient`(1M)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

@@ -144,7 +144,7 @@ initial context to which all the resources are bound.
 === Deploying a Lifecycle Module
 
 For instructions on how to deploy a lifecycle module, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide], or see the `asadmin create-lifecycle-module` command in the
 xref:reference-manual.adoc#create-lifecycle-module[{productName} Reference Manual].
 

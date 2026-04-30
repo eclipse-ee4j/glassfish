@@ -89,7 +89,7 @@ The test page feature is enabled by default and described in
 xref:#the-web-service-uri-wsdl-file-and-test-page[The Web Service URI, WSDL File, and Test Page].
 
 For more information about deployment, autodeployment, and deployment
-descriptors, see the xref:application-deployment-guide.adoc#GSDPG[
+descriptors, see the xref:application-deployment-guide.adoc[
 {productName} Application Deployment Guide].
 For more information about the
 `asadmin deploy` command, see the xref:reference-manual.adoc#deploy[
@@ -154,7 +154,7 @@ Generation of the test page is enabled by default. You can disable the
 test page for a web service by setting the value of the
 `debugging-enabled` element in the `glassfish-web.xml` and
 `glassfish-ejb-jar.xml` deployment descriptor to `false`. For more
-information, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
+information, see the xref:application-deployment-guide.adoc[{productName}
 Application Deployment Guide].
 
 [[the-databinding-provider]]

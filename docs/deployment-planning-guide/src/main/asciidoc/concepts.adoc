@@ -524,7 +524,7 @@ For more information, see xref:planning.adoc#design-decisions[Design Decisions].
 
 3. Install {productName} and related subcomponents such as a web server. +
 For more information, see the following documentation:
-* xref:installation-guide.adoc#GSING[{productName} Installation Guide]
+* xref:installation-guide.adoc[{productName} Installation Guide]
 * Installation guides for related subcomponents, for example, Oracle
 iPlanet Web Server 7.0.9 Installation and Migration Guide
 (`http://docs.oracle.com/cd/E19146-01/821-1832/index.html`)
@@ -564,4 +564,4 @@ Guide
 * link:{mq-admin-guide-url}[Open Message Queue Administration Guide]
 
 9. Deploy applications and configure them for high availability and session failover. +
-For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].

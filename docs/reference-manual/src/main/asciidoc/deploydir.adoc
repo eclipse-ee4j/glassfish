@@ -413,7 +413,7 @@ xref:redeploy.adoc#redeploy[`redeploy`(1)],
 xref:set.adoc#set[`set`(1)],
 xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

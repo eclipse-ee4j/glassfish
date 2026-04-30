@@ -105,7 +105,7 @@ xref:disable.adoc#disable[`disable`(1)],
 xref:enable.adoc#enable[`enable`(1)],
 xref:list-components.adoc#list-components[`list-components`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

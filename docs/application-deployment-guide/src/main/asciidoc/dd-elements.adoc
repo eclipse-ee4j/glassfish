@@ -2447,7 +2447,7 @@ module. If none is specified, a default is generated; see
 xref:#java-web-start-access[`java-web-start-access`].
 
 If you are setting up load balancing, web module context roots must be
-unique within a server instance. See the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability Administration Guide] for more
+unique within a server instance. See the xref:ha-administration-guide.adoc[{productName} High Availability Administration Guide] for more
 information about load balancing.
 
 [[superelements-44]]
@@ -3692,7 +3692,7 @@ resource.
 Specifies the fully qualified name of the factory class, which
 implements javax.naming.spi.InitialContextFactory .
 
-For more information about JNDI, see the xref:application-development-guide.adoc#GSDVG[{productName} Application Development Guide].
+For more information about JNDI, see the xref:application-development-guide.adoc[{productName} Application Development Guide].
 
 |`object-type` |`user` a|
 (optional) Defines the type of the resource. Allowed values are:

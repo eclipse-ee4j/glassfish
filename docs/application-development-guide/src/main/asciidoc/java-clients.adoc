@@ -183,7 +183,7 @@ see xref:jndi.adoc#mapping-references[Mapping References].
 
 3. Deploy the application client and EJB component together in an application. +
 For more information on deployment, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 To get the client JAR file, use the `--retrieve` option of the `asadmin deploy` command. +
 To retrieve the stubs and ties generated during deployment, use the
 `asadmin get-client-stubs` command. +
@@ -338,7 +338,7 @@ Java Web Start is enabled for all application clients by default.
 The application developer or deployer can specify that Java Web Start is
 always disabled for an application client by setting the value of the
 `eligible` element to `false` in the `glassfish-application-client.xml`
-file. See the xref:application-deployment-guide.adoc#GSDPG[{productName}
+file. See the xref:application-deployment-guide.adoc[{productName}
 Application Deployment Guide].
 
 The {productName} administrator can disable Java Web Start for a
@@ -438,7 +438,7 @@ naming, see "xref:application-deployment-guide.adoc#naming-standards[Naming Stan
 To set a different URL for an application client, use the `context-root`
 subelement of the `java-web-start-access` element in the
 `glassfish-application-client.xml` file. This overrides the
-appclient-module-id or application-id. See the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+appclient-module-id or application-id. See the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 You can also pass arguments to the ACC or to the application client's
 `main` method as query parameters in the URL. If multiple application
@@ -689,7 +689,7 @@ The following example vendor element contains only a text string:
 The default value is the text string `Application Client`.
 
 For more information about the `glassfish-application-client.xml` file,
-see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application
+see the xref:application-deployment-guide.adoc[{productName} Application
 Deployment Guide].
 
 You can also specify a vendor-specific icon, splash screen, text string,
@@ -1221,7 +1221,7 @@ ProgrammaticLogin Class] mechanism.
 ----
 
 For more information about the `glassfish-ejb-jar.xml` and `sun-acc.xml`
-files, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
+files, see the xref:application-deployment-guide.adoc[{productName}
 Application Deployment Guide].
 
 To use a client certificate, configure the `ior-security-config` element

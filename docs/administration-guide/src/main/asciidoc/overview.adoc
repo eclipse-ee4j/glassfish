@@ -1178,6 +1178,6 @@ system, use backslashes (\) instead. For example:
 The following additional documents address specific administration areas:
 
 * Verifying and deploying applications
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide]
+xref:application-deployment-guide.adoc[{productName} Application Deployment Guide]
 
 

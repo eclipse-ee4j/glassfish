@@ -114,7 +114,7 @@ Application Development Guide.
 +
 The {productName} supports a variety of JDBC XA drivers. For a list
 of the JDBC drivers currently supported by the {productName}, see the
-xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
+xref:release-notes.adoc[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 xref:jdbc.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers].
 * Java Message Service (JMS) Providers - Use of transactions ensures

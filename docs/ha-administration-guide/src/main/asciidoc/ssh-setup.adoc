@@ -1256,7 +1256,7 @@ installation on each host.
 
 * If you require complete control over the installation on each host,
 install the software from a {productName} distribution on each host
-individually. For more information, see xref:installation-guide.adoc#GSING[{productName} Installation Guide].
+individually. For more information, see xref:installation-guide.adoc[{productName} Installation Guide].
 * If the same set up on each host is acceptable, copy an existing
 {productName} installation to the hosts. For more information, see
 xref:#to-copy-a-glassfish-server-installation-to-multiple-hosts[To Copy a {productName} Installation to Multiple Hosts].

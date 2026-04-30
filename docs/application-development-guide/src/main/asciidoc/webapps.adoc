@@ -627,7 +627,7 @@ application. For more about the properties you can configure, see
 
 For information about configuring default session properties for the
 entire web container, see xref:#GSDVG00410[Using the `default-web.xml` File]
-and the xref:ha-administration-guide.adoc#GSHAG[{productName} High
+and the xref:ha-administration-guide.adoc[{productName} High
 Availability Administration Guide].
 
 [[coordinating-session-access]]
@@ -742,7 +742,7 @@ list of the types of references that `HTTPSession` failover supports.
 * References to open files or network connections are lost.
 
 For information about how to work around these limitations, see the
-xref:deployment-planning-guide.adoc#GSPLG[{productName} Deployment Planning
+xref:deployment-planning-guide.adoc[{productName} Deployment Planning
 Guide].
 
 In the following table, No indicates that failover for the object type
@@ -864,7 +864,7 @@ this behavior, specify an empty string as the value of
 `sessionFilename`. The default value is an empty string.
 
 For more information about the `glassfish-web.xml` file, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide].
 
 [[the-file-persistence-type]]
@@ -917,7 +917,7 @@ and supports the `directory` store property listed under
 "xref:application-deployment-guide.adoc#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide].
 
 [[the-replicated-persistence-type]]
@@ -940,7 +940,7 @@ Service box. To enable availability for the web container, select the
 Web Container Availability tab, then check the Availability Service box.
 All instances in an {productName} cluster should have the same
 availability settings to ensure consistent behavior. For details, see
-the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability
+the xref:ha-administration-guide.adoc[{productName} High Availability
 Administration Guide].
 
 To change settings such as persistence frequency and persistence scope
@@ -990,7 +990,7 @@ listed under "xref:application-deployment-guide.adoc#manager-properties[manager-
 listed under "xref:application-deployment-guide.adoc#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide].
 
 To specify that web sessions for which high availability is enabled are
@@ -1352,7 +1352,7 @@ http://localhost:8080/cometd/index.html
 See Also
 
 For more information about deployment in the {productName}, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide].
 
 For more information about the Bayeux protocol, see
@@ -1491,7 +1491,7 @@ The default value is `delegate="true"`, which causes the web application
 class loader to delegate in the same manner as the other class loaders.
 Use `delegate="true"` for a web application that accesses EJB components
 or that acts as a web service client or endpoint. For details about
-`glassfish-web.xml`, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+`glassfish-web.xml`, see the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
@@ -2103,7 +2103,7 @@ To work with a native executable, do the following:
 3. Use directory deployment to deploy the web module. Do not deploy it
 as a WAR file, because the executable bit information is lost during the
 process of `jar` and `unjar`. For more information about directory
-deployment, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
+deployment, see the xref:application-deployment-guide.adoc[{productName}
 Application Deployment Guide].
 
 

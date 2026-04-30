@@ -101,7 +101,7 @@ The following topics are addressed here:
 
 1. Install a supported database product.
 +
-To see the current list of database products supported by {productName}, refer to the xref:release-notes.adoc#GSRLN[{productName} Release Notes].
+To see the current list of database products supported by {productName}, refer to the xref:release-notes.adoc[{productName} Release Notes].
 
 2. Install a supported JDBC driver for the database product.
 +
@@ -514,7 +514,7 @@ xref:overview.adoc#configuration-changes-that-require-restart[Configuration Chan
 See Also
 
 For information about how to tune a connection pool, see the
-xref:performance-tuning-guide.adoc#GSPTG[{productName} Performance Tuning
+xref:performance-tuning-guide.adoc[{productName} Performance Tuning
 Guide].
 
 [[to-delete-a-jdbc-connection-pool]]
@@ -1037,7 +1037,7 @@ these topics:
 ===== Supported Database Drivers
 
 Supported JDBC drivers are those that have been fully tested by Oracle.
-For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 <<Configuration Specifics for JDBC Drivers>>.
 

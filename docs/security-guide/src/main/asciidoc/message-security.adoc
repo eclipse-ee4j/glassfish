@@ -58,7 +58,7 @@ references declared by client applications.
 Message-level security can be configured for the entire {productName}
 or for specific applications or methods. Configuring message security at
 the application level is discussed in the
-xref:application-development-guide.adoc#GSDVG[
+xref:application-development-guide.adoc[
 {productName} Application Development Guide].
 
 The following topics are addressed here:

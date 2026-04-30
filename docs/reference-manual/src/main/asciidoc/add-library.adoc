@@ -1,18 +1,3 @@
-//
-// Copyright (c) 2026 Contributors to the Eclipse Foundation
-//
-// This program and the accompanying materials are made available under the
-// terms of the Eclipse Public License v. 2.0, which is available at
-// http://www.eclipse.org/legal/epl-2.0.
-//
-// This Source Code may also be made available under the following Secondary
-// Licenses when the conditions for such availability set forth in the
-// Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
-// version 2 with the GNU Classpath Exception, which is available at
-// https://www.gnu.org/software/classpath/license.html.
-//
-// SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-//
 type=page
 status=published
 title=add-library
@@ -51,7 +36,9 @@ paths separated by spaces.
 
 [NOTE]
 ====
-The library archive file is added to the DAS. No need to restart the server in recent {productName} versions. To add the libraries to other server instances,
+The library archive file is added to the DAS. For common and extension
+libraries, you must restart the DAS so the libraries are picked up by
+the server runtime. To add the libraries to other server instances,
 synchronize the instances with the DAS by restarting them.
 ====
 
@@ -83,7 +70,7 @@ asadmin-options::
 
 +
 For more information about these directories, see
-"xref:application-development-guide.adoc#class-loaders[Class Loaders]"
+"link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]"
 in {productName} Application Development Guide.
 
 `--upload`::
@@ -146,6 +133,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:list-libraries.adoc#list-libraries[`list-libraries`(1)],
 xref:remove-library.adoc#remove-library[`remove-library`(1)]
 
-"xref:application-development-guide.adoc#class-loaders[Class Loaders]" in {productName} Application Development Guide
+"link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide
 
 

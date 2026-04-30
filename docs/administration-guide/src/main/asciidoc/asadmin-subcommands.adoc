@@ -29,7 +29,7 @@ this release of the {productName} {product-majorVersion} software.
 
 For information and instructions on using the `asadmin` application
 deployment subcommands, see
-the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 Documentation help for the `asadmin` subcommands can be invoked on the command
 line, for example, `asadmin create-domain --help`.

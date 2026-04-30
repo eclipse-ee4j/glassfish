@@ -447,7 +447,7 @@ typing `asadmin help start-cluster` at the command line.
 Next Steps
 
 After starting a cluster, you can deploy applications to the cluster.
-For more information, see xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+For more information, see xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 [[to-stop-a-cluster]]
 
@@ -567,7 +567,7 @@ typing `asadmin help start-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 [[to-stop-an-individual-instance-centrally]]
 
@@ -1094,7 +1094,7 @@ typing `asadmin help start-local-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 [[to-stop-an-individual-instance-locally]]
 

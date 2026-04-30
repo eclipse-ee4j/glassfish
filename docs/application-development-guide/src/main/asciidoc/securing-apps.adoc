@@ -14,7 +14,7 @@ This chapter describes how to write secure Jakarta EE applications, which
 contain components that perform user authentication and access
 authorization for the business logic of Jakarta EE components.
 
-For information about administrative security for the {productName}, see the xref:security-guide.adoc#GSSCG[{productName}
+For information about administrative security for the {productName}, see the xref:security-guide.adoc[{productName}
 Server Security Guide].
 
 For general information about Jakarta EE security, see
@@ -132,7 +132,7 @@ The {productName} supports the deployment descriptors specified by
 Jakarta EE and has additional security elements included in its own
 deployment descriptors. Declarative security is the application
 deployer's responsibility. For more information about {productName}
-deployment descriptors, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
+deployment descriptors, see the xref:application-deployment-guide.adoc[{productName} Application Deployment Guide].
 
 There are two levels of declarative security, as follows:
 
@@ -1092,7 +1092,7 @@ For more information about message security, see the following:
 
 * "https://jakarta.ee/learn/docs/jakartaee-tutorial/current/security/security.html[Introduction to
 Security in the Jakarta EE Platform]" in The Jakarta EE Tutorial
-* xref:security-guide.adoc#GSSCG[{productName} Server Security Guide]
+* xref:security-guide.adoc[{productName} Server Security Guide]
 * http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
 (`http://www.jcp.org/en/jsr/detail?id=196`), Java Authentication Service
 Provider Interface for Containers
@@ -1168,10 +1168,10 @@ The WS-I BSP specification can be viewed at
 `http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html`.
 
 For more information about the {productName} deployment descriptor
-files, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
+files, see the xref:application-deployment-guide.adoc[{productName}
 Application Deployment Guide].
 
-For information about configuring these providers in the {productName}, see the xref:security-guide.adoc#GSSCG[{productName}
+For information about configuring these providers in the {productName}, see the xref:security-guide.adoc[{productName}
 Server Security Guide]. For additional information about overriding provider
 settings, see xref:#application-specific-message-protection[Application-Specific Message Protection].
 
@@ -1310,7 +1310,7 @@ databases. Certificates and private keys are stored in key stores and
 are managed with `keytool`. If Network Security Services (NSS) is
 installed, certificates and private keys are stored in an NSS database,
 where they are managed using `certutil`. System administrator tasks are
-discussed in the xref:security-guide.adoc#GSSCG[{productName}
+discussed in the xref:security-guide.adoc[{productName}
 Server Security Guide].
 
 [[application-specific-message-protection]]
@@ -1364,7 +1364,7 @@ update the `message-security-binding` element for the EJB web service
 endpoint in the application's `glassfish-ejb-jar.xml` file. In this
 file, add `request-protection` and `response-protection` elements, which
 are analogous to the `request-policy` and `response-policy` elements
-discussed in the xref:security-guide.adoc#GSSCG[{productName}
+discussed in the xref:security-guide.adoc[{productName}
 Server Security Guide]. To apply the same protection mechanisms for all
 methods, leave the method-name element blank. xref:#configuring-message-protection-for-a-specific-method-based-on-digital-signatures[Configuring
 Message Protection for a Specific Method Based on Digital Signatures]
@@ -1428,7 +1428,7 @@ the EJB web service endpoint in the application's
 `glassfish-ejb-jar.xml` file. To this file, add `request-protection` and
 `response-protection` elements, which are analogous to the
 `request-policy` and `response-policy` elements discussed in the
-xref:security-guide.adoc#GSSCG[{productName} Server Security Guide]. The
+xref:security-guide.adoc[{productName} Server Security Guide]. The
 administration guide includes a table listing the set and order of
 security operations for different request and response policy
 configurations.
@@ -2500,7 +2500,7 @@ using the `glassfish-web.xml` file. Set the value of the
 `httpservlet-security-provider` attribute of the `glassfish-web-app`
 element to the SAM's configured provider ID, for example, `MySAM`. For
 more information about the `glassfish-web.xml` file, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]. This option leverages the native `AuthConfigProvider`
 implementation that ships with the {productName}.
 * Another approach is to develop your own `AuthConfigProvider` and

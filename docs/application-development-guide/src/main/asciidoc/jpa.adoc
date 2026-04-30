@@ -239,7 +239,7 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
     </persistence>
 ----
 
-For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.

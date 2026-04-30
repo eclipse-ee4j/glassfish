@@ -366,7 +366,7 @@ Template `glassfish-resources.xml` files for these built-in factories
 and a `README` file are available at
 as-install``/lib/install/templates/resources/custom/``. For more
 information about the `glassfish-resources.xml` file, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide].
 
 [[javabeanfactory]]

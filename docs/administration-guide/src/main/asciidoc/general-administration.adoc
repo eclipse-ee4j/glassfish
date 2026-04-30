@@ -2996,7 +2996,7 @@ message-id::
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
   identifier. For more information, see the
-  xref:error-messages-reference.adoc#GSEMR[
+  xref:error-messages-reference.adoc[
   {productName} Error Message Reference].
 message-text::
   The text of the log message.
@@ -3100,7 +3100,7 @@ message-id::
   A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
-  identifier. For more information, see the xref:error-messages-reference.adoc#GSEMR[{productName} Error Message Reference].
+  identifier. For more information, see the xref:error-messages-reference.adoc[{productName} Error Message Reference].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::

@@ -241,7 +241,7 @@ preconfigured to use an embedded version of the Apache Derby database.
 The EJB Timer Service configuration can store persistent timer
 information in any database supported by the {productName} for
 persistence. For a list of the JDBC drivers currently supported by the
-{productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For configurations of supported and other
+{productName}, see the xref:release-notes.adoc[{productName} Release Notes]. For configurations of supported and other
 drivers, see "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC
 Drivers]" in {productName} Administration Guide.
 
@@ -661,7 +661,7 @@ Service box. All instances in an {productName} cluster should have
 the same availability settings to ensure consistent behavior.
 
 For more information about SFSB state persistence, see the
-xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability
+xref:ha-administration-guide.adoc[{productName} High Availability
 Administration Guide].
 
 [[using-the---keepstate-option]]

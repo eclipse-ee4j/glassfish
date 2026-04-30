@@ -40,7 +40,7 @@ https://jakarta.ee/learn/docs/jakartaee-tutorial/current/supporttechs/connectors
 Resource Adapters and Contracts] in The Jakarta EE Tutorial.
 
 For information about deploying a connector to the {productName}, see
-the xref:application-deployment-guide.adoc#GSDPG[
+the xref:application-deployment-guide.adoc[
 {productName} Application Deployment Guide].
 
 The following topics are addressed here:

@@ -45,23 +45,21 @@ public abstract class SimpleDeployer<T extends Container, U extends ApplicationC
      * portable artifacts and other application specific tasks. Failure to prepare should throw an exception which will
      * cause the overall deployment to fail.
      *
-     * @param dc deployment context
+     * @param deploymentContext deployment context
      * @return true if the prepare phase was successful
      *
      */
     @Override
-    public boolean prepare(DeploymentContext dc) {
+    public boolean prepare(DeploymentContext deploymentContext) {
         try {
-            if (!dc.getCommandParameters(OpsParams.class).origin.isArtifactsPresent()) {
+            if (!deploymentContext.getCommandParameters(OpsParams.class).origin.isArtifactsPresent()) {
                 // only generate artifacts when no artifacts are present
-                generateArtifacts(dc);
+                generateArtifacts(deploymentContext);
             }
             return true;
         } catch (Exception ex) {
             // re-throw all the exceptions as runtime exceptions
-            RuntimeException re = new RuntimeException(ex.getMessage());
-            re.initCause(ex);
-            throw re;
+            throw new RuntimeException(ex.getMessage(), ex);
         }
     }
 

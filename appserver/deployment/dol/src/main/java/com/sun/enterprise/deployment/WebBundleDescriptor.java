@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.event.EventTypes;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.grizzly.http.util.MimeType;
 
@@ -66,10 +65,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     private static final long serialVersionUID = 5599255661969873669L;
 
     private static final String DEPLOYMENT_DESCRIPTOR_DIR = "WEB-INF";
-
-    /** Used by the deployer and the web container */
-    public static final EventTypes<WebBundleDescriptor> AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT = EventTypes
-        .create("After_Servlet_Context_Initialized", WebBundleDescriptor.class);
 
     private String contextRoot;
     private boolean denyUncoveredHttpMethods;

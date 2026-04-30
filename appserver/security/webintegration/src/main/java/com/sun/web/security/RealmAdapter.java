@@ -490,7 +490,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                 ex.printStackTrace();
             }
 
-            webSecurityManager = webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext);
+            webSecurityManager = webSecurityManagerFactory.createManager(null, webBundleDescriptor, true, serverContext);
             LOG.log(FINE, "WebSecurityManager for {0} has been updated", contextId);
         }
     }
@@ -1727,7 +1727,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
      */
     protected void configureSecurity(WebBundleDescriptor webBundleDescriptor, boolean isSystem) {
         try {
-            webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext)
+            webSecurityManagerFactory.createManager(null, webBundleDescriptor, true, serverContext)
                                      .getAuthorizationService()
                                      .commitPolicy();
 

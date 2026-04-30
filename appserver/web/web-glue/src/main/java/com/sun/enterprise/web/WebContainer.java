@@ -31,6 +31,7 @@ import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleRuntimeContext;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.security.integration.RealmInitializer;
 import com.sun.enterprise.server.logging.ServerLogFileManager;
@@ -93,7 +94,6 @@ import org.apache.catalina.util.RequestUtil;
 import org.apache.catalina.util.ServerInfo;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.web.TldProvider;
@@ -112,7 +112,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.grizzly.ContextMapper;
 import org.glassfish.wasp.runtime.JspFactoryImpl;
 import org.glassfish.wasp.xmlparser.ParserUtils;
@@ -137,17 +136,23 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.types.Property;
 import org.xml.sax.EntityResolver;
 
+import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
+import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_LOAD_INITIALIZED_EVENT;
 import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
 import static java.text.MessageFormat.format;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
+import static org.glassfish.internal.deployment.Deployment.ALL_APPLICATIONS_PROCESSED;
 import static org.glassfish.web.LogFacade.DEFAULT_WEB_MODULE_CONFLICT;
 import static org.glassfish.web.LogFacade.DUPLICATE_CONTEXT_ROOT;
 import static org.glassfish.web.LogFacade.INVALID_ENCODED_CONTEXT_ROOT;
 import static org.glassfish.web.LogFacade.UNABLE_TO_SET_CONTEXT_ROOT;
+import static org.glassfish.web.LogFacade.UNABLE_TO_STOP_WEB_CONTAINER;
 
 /**
  * Web container service
@@ -184,10 +189,10 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     // ----------------------------------------------------- Instance Variables
 
     @Inject
-    protected ServerEnvironment instance;
+    protected ServerEnvironment serverEnvironment;
 
     @Inject
-    private ApplicationRegistry appRegistry;
+    private ApplicationRegistry applicationRegistry;
 
     @Inject
     private ClassLoaderHierarchy classLoaderHierarchy;
@@ -219,11 +224,11 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     private CDIService cdiService;
 
     @Inject
-    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Named(DEFAULT_INSTANCE_NAME)
     private Config serverConfig;
 
     @Inject
-    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Named(DEFAULT_INSTANCE_NAME)
     private Server server;
 
     @Inject
@@ -234,6 +239,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
     @Inject
     private ServerLogFileManager serverLogFileManager;
+
+    @Inject
+    ServerConfigLookup serverConfigLookup;
 
     private final HashMap<String, WebConnector> connectorMap = new HashMap<>();
 
@@ -306,9 +314,6 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      */
     boolean instanceEnableCookies = true;
 
-    @Inject
-    ServerConfigLookup serverConfigLookup;
-
     protected JspProbeProvider jspProbeProvider;
     protected RequestProbeProvider requestProbeProvider;
     protected ServletProbeProvider servletProbeProvider;
@@ -368,9 +373,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
             setJspFactory();
 
-            _appsWorkRoot = instance.getApplicationCompileJspPath().getAbsolutePath();
-            _modulesRoot = instance.getApplicationRepositoryPath();
-            appsStubRoot = instance.getApplicationStubPath().getAbsolutePath();
+            _appsWorkRoot = serverEnvironment.getApplicationCompileJspPath().getAbsolutePath();
+            _modulesRoot = serverEnvironment.getApplicationRepositoryPath();
+            appsStubRoot = serverEnvironment.getApplicationStubPath().getAbsolutePath();
 
             // TODO: ParserUtils should become a @Service and it should initialize itself.
             // TODO: there should be only one EntityResolver for both DigesterFactory
@@ -423,6 +428,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             if (level != null) {
                 logLevel = level.getName();
             }
+
             _embedded = serviceLocator.getService(EmbeddedWebContainer.class);
             _embedded.setWebContainer(this);
             _embedded.setLogServiceFile(logServiceFile);
@@ -430,8 +436,8 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             _embedded.setFileLoggerHandlerFactory(fileLoggerHandlerFactory);
             _embedded.setWebContainerFeatureFactory(webContainerFeatureFactory);
 
-            _embedded.setCatalinaHome(instance.getInstanceRoot().getAbsolutePath());
-            _embedded.setCatalinaBase(instance.getInstanceRoot().getAbsolutePath());
+            _embedded.setCatalinaHome(serverEnvironment.getInstanceRoot().getAbsolutePath());
+            _embedded.setCatalinaBase(serverEnvironment.getInstanceRoot().getAbsolutePath());
             _embedded.setUseNaming(false);
             if (_debug > 1) {
                 _embedded.setDebug(_debug);
@@ -553,11 +559,11 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
     @Override
     public void event(Event<?> event) {
-        if (event.is(Deployment.ALL_APPLICATIONS_PROCESSED)) {
+        if (event.is(ALL_APPLICATIONS_PROCESSED)) {
             // configure default web modules for virtual servers after all
             // applications are processed
             loadDefaultWebModulesAfterAllAppsProcessed();
-        } else if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
+        } else if (event.is(PREPARE_SHUTDOWN)) {
             isShutdown = true;
         }
     }
@@ -566,8 +572,12 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * Notifies any interested listeners that all ServletContextListeners of the web module represented by the given
      * WebBundleDescriptor have been invoked at their contextInitialized method
      */
-    void afterServletContextInitializedEvent(WebBundleDescriptor wbd) {
-        events.send(new Event<>(WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT, wbd), false);
+    void afterServletContextInitializedEvent(WebBundleRuntimeContext webBundleRuntimeContext) {
+        events.send(new Event<>(AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT, webBundleRuntimeContext), false);
+    }
+
+    void afterServletLoadInitializedEvent(WebBundleRuntimeContext webBundleRuntimeContext) {
+        events.send(new Event<>(AFTER_SERVLET_LOAD_INITIALIZED_EVENT, webBundleRuntimeContext), false);
     }
 
     @Override
@@ -579,7 +589,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             _embedded.removeEngine(getEngine());
             _embedded.destroy();
         } catch (LifecycleException le) {
-            logger.log(SEVERE, LogFacade.UNABLE_TO_STOP_WEB_CONTAINER, le);
+            logger.log(SEVERE, UNABLE_TO_STOP_WEB_CONTAINER, le);
             return;
         }
     }
@@ -1335,7 +1345,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 if (org.glassfish.api.web.Constants.ADMIN_VS.equals(vs.getName())) {
                     continue;
                 }
-                WebModuleConfig wmInfo = vs.getDefaultWebModule(domain, serviceLocator.<WebArchivist>getService(WebArchivist.class), appRegistry);
+                WebModuleConfig wmInfo = vs.getDefaultWebModule(domain, serviceLocator.<WebArchivist>getService(WebArchivist.class), applicationRegistry);
                 if (wmInfo != null) {
                     defaultPath = wmInfo.getContextPath();
                     // Virtual server declares default-web-module
@@ -1378,7 +1388,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     public void loadDefaultWebModule(VirtualServer vs) {
 
         String defaultPath = null;
-        WebModuleConfig wmInfo = vs.getDefaultWebModule(domain, serviceLocator.<WebArchivist>getService(WebArchivist.class), appRegistry);
+        WebModuleConfig wmInfo = vs.getDefaultWebModule(domain, serviceLocator.<WebArchivist>getService(WebArchivist.class), applicationRegistry);
         if (wmInfo != null) {
             defaultPath = wmInfo.getContextPath();
             // Virtual server declares default-web-module
@@ -1865,7 +1875,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     }
 
     File getLibPath() {
-        return instance.getLibPath();
+        return serverEnvironment.getLibPath();
     }
 
     /**
@@ -1945,11 +1955,14 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                         msg = MessageFormat.format(msg, contextRoot, host.getName());
                         logger.log(WARNING, msg, ex);
                     }
+
                     if (logger.isLoggable(FINEST)) {
                         logger.log(FINEST, LogFacade.CONTEXT_UNDEPLOYED, new Object[] { contextRoot, host });
                     }
+
                     hasBeenUndeployed = true;
                     host.fireContainerEvent(Deployer.REMOVE_EVENT, context);
+
                     /*
                      * If the web module that has been unloaded contained any mappings for ad-hoc paths, those mappings must be preserved by
                      * registering an ad-hoc web module at the same context root
@@ -1959,12 +1972,14 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                         wm.addAdHocPaths(context.getAdHocPaths());
                         wm.addAdHocSubtrees(context.getAdHocSubtrees());
                     }
+
                     // START GlassFish 141
                     if (!dummy && !isShutdown) {
-                        WebModuleConfig wmInfo = host
-                                .createSystemDefaultWebModuleIfNecessary(serviceLocator.<WebArchivist>getService(WebArchivist.class));
-                        if (wmInfo != null) {
-                            loadStandaloneWebModule(host, wmInfo);
+                        WebModuleConfig webModuleConfig =
+                            host.createSystemDefaultWebModuleIfNecessary(serviceLocator.<WebArchivist>getService(WebArchivist.class));
+
+                        if (webModuleConfig != null) {
+                            loadStandaloneWebModule(host, webModuleConfig);
                         }
                     }
                     // END GlassFish 141
@@ -2352,39 +2367,40 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     /**
      * Updates a virtual-server element.
      *
-     * @param vsBean the virtual-server config bean.
+     * @param virtualServerConfigBean the virtual-server config bean.
      */
-    public void updateHost(com.sun.enterprise.config.serverbeans.VirtualServer vsBean) throws LifecycleException {
+    public void updateHost(com.sun.enterprise.config.serverbeans.VirtualServer virtualServerConfigBean) throws LifecycleException {
 
-        if (org.glassfish.api.web.Constants.ADMIN_VS.equals(vsBean.getId())) {
+        if (org.glassfish.api.web.Constants.ADMIN_VS.equals(virtualServerConfigBean.getId())) {
             return;
         }
-        final VirtualServer vs = (VirtualServer) getEngine().findChild(vsBean.getId());
 
-        if (vs == null) {
-            logger.log(WARNING, LogFacade.CANNOT_UPDATE_NON_EXISTENCE_VS, vsBean.getId());
+        final VirtualServer virtualServer = (VirtualServer) getEngine().findChild(virtualServerConfigBean.getId());
+
+        if (virtualServer == null) {
+            logger.log(WARNING, LogFacade.CANNOT_UPDATE_NON_EXISTENCE_VS, virtualServerConfigBean.getId());
             return;
         }
 
         boolean updateListeners = false;
 
         // Only update connectors if virtual-server.http-listeners is changed dynamically
-        if (vs.getNetworkListeners() == null) {
-            if (vsBean.getNetworkListeners() == null) {
+        if (virtualServer.getNetworkListeners() == null) {
+            if (virtualServerConfigBean.getNetworkListeners() == null) {
                 updateListeners = false;
             } else {
                 updateListeners = true;
             }
-        } else if (vs.getNetworkListeners().equals(vsBean.getNetworkListeners())) {
+        } else if (virtualServer.getNetworkListeners().equals(virtualServerConfigBean.getNetworkListeners())) {
             updateListeners = false;
         } else {
-            List<String> vsList = StringUtils.parseStringList(vs.getNetworkListeners(), ",");
-            List<String> vsBeanList = StringUtils.parseStringList(vsBean.getNetworkListeners(), ",");
+            List<String> vsList = StringUtils.parseStringList(virtualServer.getNetworkListeners(), ",");
+            List<String> vsBeanList = StringUtils.parseStringList(virtualServerConfigBean.getNetworkListeners(), ",");
             for (String vsBeanName : vsBeanList) {
                 if (!vsList.contains(vsBeanName)) {
                     updateListeners = true;
                     if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, LogFacade.UPDATE_LISTENER, new Object[] { vsBeanName, vs.getNetworkListeners() });
+                        logger.log(FINE, LogFacade.UPDATE_LISTENER, new Object[] { vsBeanName, virtualServer.getNetworkListeners() });
                     }
                     break;
                 }
@@ -2394,39 +2410,39 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         // Must retrieve the old default-web-module before updating the
         // virtual server with the new vsBean, because default-web-module is
         // read from vsBean
-        String oldDefaultWebModule = vs.getDefaultWebModuleID();
+        String oldDefaultWebModule = virtualServer.getDefaultWebModuleID();
 
-        vs.setBean(vsBean);
+        virtualServer.setBean(virtualServerConfigBean);
 
-        String vsLogFile = vsBean.getLogFile();
-        vs.setLogFile(vsLogFile, logLevel, logServiceFile);
+        String vsLogFile = virtualServerConfigBean.getLogFile();
+        virtualServer.setLogFile(vsLogFile, logLevel, logServiceFile);
 
-        vs.configureState();
+        virtualServer.configureState();
 
-        vs.clearAliases();
-        vs.configureAliases();
+        virtualServer.clearAliases();
+        virtualServer.configureAliases();
 
         // support both docroot property and attribute
-        String docroot = vsBean.getPropertyValue("docroot");
+        String docroot = virtualServerConfigBean.getPropertyValue("docroot");
         if (docroot == null) {
-            docroot = vsBean.getDocroot();
+            docroot = virtualServerConfigBean.getDocroot();
         }
         if (docroot != null) {
             // Only update docroot if it is modified
-            if (!vs.getDocRoot().getAbsolutePath().equals(docroot)) {
-                updateDocroot(docroot, vs, vsBean);
+            if (!virtualServer.getDocRoot().getAbsolutePath().equals(docroot)) {
+                updateDocroot(docroot, virtualServer, virtualServerConfigBean);
             }
         }
 
-        List<Property> props = vs.getProperties();
+        List<Property> props = virtualServer.getProperties();
         for (Property prop : props) {
-            updateHostProperties(vsBean, prop.getName(), prop.getValue(), securityService, vs);
+            updateHostProperties(virtualServerConfigBean, prop.getName(), prop.getValue(), securityService, virtualServer);
         }
-        vs.configureSingleSignOn(globalSSOEnabled, webContainerFeatureFactory, isSsoFailoverEnabled());
-        vs.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
+        virtualServer.configureSingleSignOn(globalSSOEnabled, webContainerFeatureFactory, isSsoFailoverEnabled());
+        virtualServer.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
 
         // old listener names
-        List<String> oldListenerList = StringUtils.parseStringList(vsBean.getNetworkListeners(), ",");
+        List<String> oldListenerList = StringUtils.parseStringList(virtualServerConfigBean.getNetworkListeners(), ",");
         String[] oldListeners = (oldListenerList != null) ? oldListenerList.toArray(new String[oldListenerList.size()]) : new String[0];
         // new listener config
         HashSet<NetworkListener> networkListeners = new HashSet<>();
@@ -2442,16 +2458,16 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 }
                 if (!found) {
                     String msg = rb.getString(LogFacade.LISTENER_REFERENCED_BY_HOST_NOT_EXIST);
-                    msg = MessageFormat.format(msg, listener, vs.getName());
+                    msg = MessageFormat.format(msg, listener, virtualServer.getName());
                     logger.log(SEVERE, msg);
                 }
             }
             // Update the port numbers with which the virtual server is
             // associated
-            configureHostPortNumbers(vs, networkListeners);
+            configureHostPortNumbers(virtualServer, networkListeners);
         } else {
             // The virtual server is not associated with any http listeners
-            vs.setNetworkListenerNames(new String[0]);
+            virtualServer.setNetworkListenerNames(new String[0]);
         }
 
         // Disassociate the virtual server from all http listeners that
@@ -2470,7 +2486,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                     WebConnector conn = (WebConnector) connector;
                     if (oldListener.equals(conn.getName())) {
                         try {
-                            conn.getMapperListener().unregisterHost(vs.getJmxName());
+                            conn.getMapperListener().unregisterHost(virtualServer.getJmxName());
                         } catch (Exception e) {
                             throw new LifecycleException(e);
                         }
@@ -2499,7 +2515,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                             conn.start();
                         }
                         try {
-                            conn.getMapperListener().registerHost(vs);
+                            conn.getMapperListener().registerHost(virtualServer);
                         } catch (Exception e) {
                             throw new LifecycleException(e);
                         }
@@ -2511,31 +2527,31 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         // Remove the old default web module if one was configured, by
         // passing in "null" as the default context path
         if (oldDefaultWebModule != null) {
-            updateDefaultWebModule(vs, oldListeners, null);
+            updateDefaultWebModule(virtualServer, oldListeners, null);
         }
 
         /*
          * Add default web module if one has been configured for the virtual server. If the module declared as the default web
          * module has already been deployed at the root context, we don't have to do anything.
          */
-        WebModuleConfig wmInfo = vs.getDefaultWebModule(domain, serviceLocator.<WebArchivist>getService(WebArchivist.class), appRegistry);
+        WebModuleConfig wmInfo = virtualServer.getDefaultWebModule(domain, serviceLocator.<WebArchivist>getService(WebArchivist.class), applicationRegistry);
         if ((wmInfo != null) && (wmInfo.getContextPath() != null) && !"".equals(wmInfo.getContextPath())
                 && !"/".equals(wmInfo.getContextPath())) {
             // Remove dummy context that was created off of docroot, if such
             // a context exists
-            removeDummyModule(vs);
-            updateDefaultWebModule(vs, vs.getNetworkListenerNames(), wmInfo);
+            removeDummyModule(virtualServer);
+            updateDefaultWebModule(virtualServer, virtualServer.getNetworkListenerNames(), wmInfo);
         } else {
-            WebModuleConfig wmc = vs.createSystemDefaultWebModuleIfNecessary(serviceLocator.<WebArchivist>getService(WebArchivist.class));
+            WebModuleConfig wmc = virtualServer.createSystemDefaultWebModuleIfNecessary(serviceLocator.<WebArchivist>getService(WebArchivist.class));
             if (wmc != null) {
-                loadStandaloneWebModule(vs, wmc);
+                loadStandaloneWebModule(virtualServer, wmc);
             }
         }
 
         if (updateListeners) {
             if (logger.isLoggable(FINE)) {
                 logger.log(FINE, LogFacade.VS_UPDATED_NETWORK_LISTENERS,
-                        new Object[] { vs.getName(), vs.getNetworkListeners(), vsBean.getNetworkListeners() });
+                        new Object[] { virtualServer.getName(), virtualServer.getNetworkListeners(), virtualServerConfigBean.getNetworkListeners() });
             }
             /*
              * Need to update connector and mapper restart is required when virtual-server.http-listeners is changed dynamically
@@ -2553,45 +2569,45 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     /**
      * Update virtual-server properties.
      */
-    public void updateHostProperties(com.sun.enterprise.config.serverbeans.VirtualServer vsBean, String name, String value,
-            SecurityService securityService, final VirtualServer vs) {
-        if (vs == null) {
+    public void updateHostProperties(com.sun.enterprise.config.serverbeans.VirtualServer virtualServerConfigBean, String name, String value,
+            SecurityService securityService, final VirtualServer virtualServer) {
+        if (virtualServer == null) {
             return;
         }
-        vs.setBean(vsBean);
+        virtualServer.setBean(virtualServerConfigBean);
 
         if (name == null) {
             return;
         }
 
         if (name.startsWith("alternatedocroot_")) {
-            updateAlternateDocroot(vs);
+            updateAlternateDocroot(virtualServer);
         } else if ("setCacheControl".equals(name)) {
-            vs.configureCacheControl(value);
+            virtualServer.configureCacheControl(value);
         } else if (Constants.ACCESS_LOGGING_ENABLED.equals(name)) {
-            vs.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
+            virtualServer.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
         } else if (Constants.ACCESS_LOG_PROPERTY.equals(name)) {
-            vs.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
+            virtualServer.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
         } else if (Constants.ACCESS_LOG_WRITE_INTERVAL_PROPERTY.equals(name)) {
-            vs.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
+            virtualServer.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
         } else if (Constants.ACCESS_LOG_BUFFER_SIZE_PROPERTY.equals(name)) {
-            vs.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
+            virtualServer.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain, globalAccessLoggingEnabled);
         } else if ("allowRemoteHost".equals(name) || "denyRemoteHost".equals(name)) {
-            vs.configureRemoteHostFilterValve();
+            virtualServer.configureRemoteHostFilterValve();
         } else if ("allowRemoteAddress".equals(name) || "denyRemoteAddress".equals(name)) {
-            vs.configureRemoteAddressFilterValve();
+            virtualServer.configureRemoteAddressFilterValve();
         } else if (Constants.SSO_ENABLED.equals(name)) {
-            vs.configureSingleSignOn(globalSSOEnabled, webContainerFeatureFactory, isSsoFailoverEnabled());
+            virtualServer.configureSingleSignOn(globalSSOEnabled, webContainerFeatureFactory, isSsoFailoverEnabled());
         } else if ("authRealm".equals(name)) {
-            vs.configureAuthRealm(securityService);
+            virtualServer.configureAuthRealm(securityService);
         } else if (name.startsWith("send-error")) {
-            vs.configureErrorPage();
+            virtualServer.configureErrorPage();
         } else if (Constants.ERROR_REPORT_VALVE.equals(name)) {
-            vs.setErrorReportValveClass(value);
+            virtualServer.setErrorReportValveClass(value);
         } else if (name.startsWith("redirect")) {
-            vs.configureRedirect();
+            virtualServer.configureRedirect();
         } else if (name.startsWith("contextXmlDefault")) {
-            vs.setDefaultContextXmlLocation(value);
+            virtualServer.setDefaultContextXmlLocation(value);
         }
     }
 
@@ -2605,7 +2621,6 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * Processes an update to the http-service element
      */
     public void updateHttpService(HttpService httpService) throws LifecycleException {
-
         if (httpService == null) {
             return;
         }
@@ -2621,14 +2636,25 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         // for availability-service.web-container-availability
         webContainerFeatureFactory = getWebContainerFeatureFactory();
 
-        List<com.sun.enterprise.config.serverbeans.VirtualServer> virtualServers = httpService.getVirtualServer();
-        for (com.sun.enterprise.config.serverbeans.VirtualServer virtualServer : virtualServers) {
-            final VirtualServer vs = (VirtualServer) getEngine().findChild(virtualServer.getId());
-            if (vs != null) {
-                vs.configureSingleSignOn(globalSSOEnabled, webContainerFeatureFactory, isSsoFailoverEnabled());
-                vs.reconfigureAccessLog(globalAccessLogBufferSize, globalAccessLogWriteInterval, serviceLocator, domain,
-                        globalAccessLoggingEnabled);
-                updateHost(virtualServer);
+        var virtualServerConfigBeans = httpService.getVirtualServer();
+        for (var virtualServerConfigBean : virtualServerConfigBeans) {
+            final VirtualServer virtualServer = (VirtualServer)
+                getEngine().findChild(virtualServerConfigBean.getId());
+
+            if (virtualServer != null) {
+                virtualServer.configureSingleSignOn(
+                    globalSSOEnabled,
+                    webContainerFeatureFactory,
+                    isSsoFailoverEnabled());
+
+                virtualServer.reconfigureAccessLog(
+                    globalAccessLogBufferSize,
+                    globalAccessLogWriteInterval,
+                    serviceLocator,
+                    domain,
+                    globalAccessLoggingEnabled);
+
+                updateHost(virtualServerConfigBean);
             }
         }
 
@@ -2642,7 +2668,6 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * @param propValue the property value
      */
     public void updateConnectorProperty(NetworkListener listener, String propName, String propValue) throws LifecycleException {
-
         WebConnector connector = connectorMap.get(listener.getName());
         if (connector != null) {
             connector.configHttpProperties(listener.findHttpProtocol().getHttp(), listener.findTransport(),
@@ -2712,7 +2737,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             if (virtualServers != null) {
                 Mapper mapper = connector.getMapper();
                 for (VirtualServer vs : virtualServers) {
-                    String defaultWebModulePath = vs.getDefaultContextPath(domain, appRegistry);
+                    String defaultWebModulePath = vs.getDefaultContextPath(domain, applicationRegistry);
                     if (defaultWebModulePath != null) {
                         try {
                             mapper.setDefaultContextPath(vs.getName(), defaultWebModulePath);

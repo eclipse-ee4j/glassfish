@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.event.EventTypes;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.grizzly.http.util.MimeType;
 

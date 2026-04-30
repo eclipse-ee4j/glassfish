@@ -4456,7 +4456,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             contextListenerStart();
 
             // Start manager
-            if ((manager != null) && (manager instanceof Lifecycle)) {
+            if (manager instanceof Lifecycle) {
                 ((Lifecycle) getManager()).start();
             }
 

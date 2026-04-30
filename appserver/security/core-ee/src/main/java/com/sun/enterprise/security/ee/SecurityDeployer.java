@@ -20,6 +20,7 @@ package com.sun.enterprise.security.ee;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleRuntimeContext;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.security.AppCNonceCacheMap;
 import com.sun.enterprise.security.CNonceCacheFactory;
@@ -33,6 +34,7 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
+import jakarta.servlet.ServletContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,9 +59,11 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ModuleInfo;
 import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.HAUtil;
+import org.glassfish.soteria.rest.RestPermissions;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.deployment.WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
+import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
+import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_LOAD_INITIALIZED_EVENT;
 import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.getContextID;
 import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.removeRoleMapper;
 import static com.sun.enterprise.util.Utility.isEmpty;
@@ -76,6 +80,8 @@ import static org.glassfish.internal.deployment.Deployment.MODULE_LOADED;
 public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApplication> implements PostConstruct {
 
     private static final Logger LOGGER = LogDomains.getLogger(SecurityDeployer.class, LogDomains.SECURITY_LOGGER);
+
+    private static final String WEBBUNDLE_KEY = "org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl";
 
     @Inject
     private ServerContext serverContext;
@@ -115,15 +121,31 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         public void event(Event<?> event) {
             Application application;
 
+            // Overview of the events regarding to the Policy permissions:
+            //
+            //  MODULE_LOADED / generateArtifacts
+            //   -> initial policy translation without ServletContext
+            //
+            //  APPLICATION_LOADED
+            //   -> link web/EJB policies
+            //   -> commit EJB policies
+            //
+            //  AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT
+            //   -> if ServletContextListeners modified security, retranslate + commit
+            //
+            //  AFTER_SERVLET_LOAD_INITIALIZED_EVENT
+            //   -> if Jersey/Soteria staged REST permissions, retranslate + final commit
+
             if (MODULE_LOADED.equals(event.type())) {
                 ModuleInfo moduleInfo = (ModuleInfo) event.hook();
                 if (moduleInfo instanceof ApplicationInfo) {
                     return;
                 }
 
-                WebBundleDescriptor webBundleDescriptor = (WebBundleDescriptor)
-                    moduleInfo.getMetaData("org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl");
-                loadWebPolicy(webBundleDescriptor, false);
+                loadWebPolicy(
+                    null,
+                    (WebBundleDescriptor) moduleInfo.getMetaData(WEBBUNDLE_KEY),
+                    false);
 
             } else if (APPLICATION_LOADED.equals(event.type())) {
                 ApplicationInfo applicationInfo = (ApplicationInfo) event.hook();
@@ -144,8 +166,8 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                         handler.register();
                     }
                 }
-            } else if (AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT.equals(event.type())) {
-                commitWebPolicy((WebBundleDescriptor) event.hook());
+            } else if (AFTER_SERVLET_LOAD_INITIALIZED_EVENT.equals(event.type()) || AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT.equals(event.type())) {
+                commitWebPolicy((WebBundleRuntimeContext) event.hook());
             }
         }
     }
@@ -168,21 +190,22 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
             return;
         }
 
-        String applicationName = params.name();
         try {
-            Application application = deploymentContext.getModuleMetaData(Application.class);
-            Set<WebBundleDescriptor> webBundleDescriptors = application.getBundleDescriptors(WebBundleDescriptor.class);
+            Set<WebBundleDescriptor> webBundleDescriptors =
+                deploymentContext.getModuleMetaData(Application.class)
+                                 .getBundleDescriptors(WebBundleDescriptor.class);
+
             if (webBundleDescriptors == null) {
                 return;
             }
 
             for (WebBundleDescriptor webBundleDescriptor : webBundleDescriptors) {
                 webBundleDescriptor.setApplicationClassLoader(deploymentContext.getFinalClassLoader());
-                loadWebPolicy(webBundleDescriptor, false);
+                loadWebPolicy(null, webBundleDescriptor, false);
             }
 
         } catch (Exception se) {
-            throw new DeploymentException("Error in generating security policy for " + applicationName, se);
+            throw new DeploymentException("Error in generating security policy for " + params.name(), se);
         }
     }
 
@@ -231,7 +254,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
      * @param remove boolean indicated whether any existing policy statements are removed form context before translation
      * @throws DeploymentException
      */
-    private void loadWebPolicy(WebBundleDescriptor webBundleDescriptor, boolean remove) throws DeploymentException {
+    private void loadWebPolicy(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean remove) throws DeploymentException {
         try {
             if (webBundleDescriptor != null) {
                 if (remove) {
@@ -241,7 +264,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                         webSecurityManager.release();
                     }
                 }
-                webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext);
+                webSecurityManagerFactory.createManager(servletContext, webBundleDescriptor, true, serverContext);
             }
 
         } catch (Exception se) {
@@ -251,17 +274,34 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
     }
 
     /**
-     * Puts Web Bundle Policy In Service, repeats translation if Descriptor indicates policy was changed by ContextListener.
+     * Commits the web policy at servlet lifecycle milestones.
      *
-     * @param webBundleDescriptor
+     * <p>
+     * This method may commit more than once during startup. The first commit, after
+     * ServletContextListener processing, makes the policy available to subsequent
+     * initialization code such as filter init and load-on-startup servlet init.
+     *
+     * <p>
+     * Later, load-on-startup servlet initialization may discover additional security
+     * metadata, notably Jakarta REST endpoint security staged by Soteria. If so, the
+     * policy is reopened, rebuilt from the full effective web model, and committed
+     * again before the module is made available for requests.
+     *
+     * @param webBundleRuntimeContext
      * @throws DeploymentException
      */
-    private void commitWebPolicy(WebBundleDescriptor webBundleDescriptor) throws DeploymentException {
+    private void commitWebPolicy(WebBundleRuntimeContext webBundleRuntimeContext) throws DeploymentException {
+        WebBundleDescriptor webBundleDescriptor = webBundleRuntimeContext.webBundleDescriptor();
+        ServletContext servletContext = webBundleRuntimeContext.servletContext();
+
         try {
             if (webBundleDescriptor != null) {
-                if (webBundleDescriptor.isPolicyModified()) {
+                if (webBundleDescriptor.isPolicyModified() || RestPermissions.hasPermissions(servletContext)) {
                     // Redo policy translation for web module
-                    loadWebPolicy(webBundleDescriptor, true);
+                    loadWebPolicy(servletContext, webBundleDescriptor, true);
+
+                    webBundleDescriptor.setPolicyModified(false);
+                    RestPermissions.clear(servletContext);
                 }
 
                 String contextId = getContextID(webBundleDescriptor);

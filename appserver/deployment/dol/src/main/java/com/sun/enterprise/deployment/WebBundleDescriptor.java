@@ -67,10 +67,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     private static final String DEPLOYMENT_DESCRIPTOR_DIR = "WEB-INF";
 
-    /** Used by the deployer and the web container */
-    public static final EventTypes<WebBundleDescriptor> AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT = EventTypes
-        .create("After_Servlet_Context_Initialized", WebBundleDescriptor.class);
-
     private String contextRoot;
     private boolean denyUncoveredHttpMethods;
     private boolean distributable;

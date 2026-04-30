@@ -29,6 +29,7 @@ import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
 import com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService;
 
 import jakarta.security.jacc.PolicyContextException;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
@@ -59,9 +60,9 @@ public class WebSecurityManager {
     private final WebSecurityManagerFactory webSecurityManagerFactory;
     private final String contextId;
 
-    WebSecurityManager(WebBundleDescriptor webBundleDescriptor, ServerContext serverContext, WebSecurityManagerFactory webSecurityManagerFactory, boolean register) throws PolicyContextException {
+    WebSecurityManager(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, ServerContext serverContext, WebSecurityManagerFactory webSecurityManagerFactory, boolean register) throws PolicyContextException {
         // Sets-up Jakarta Authorization
-        this.authorizationService = new GlassFishAuthorizationService(webBundleDescriptor, register);
+        this.authorizationService = new GlassFishAuthorizationService(servletContext, webBundleDescriptor, register);
 
         this.webSecurityManagerFactory = webSecurityManagerFactory;
         this.contextId = AuthorizationUtil.getContextID(webBundleDescriptor);

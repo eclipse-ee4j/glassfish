@@ -22,6 +22,7 @@ import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleRuntimeContext;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
@@ -605,8 +606,7 @@ public class WebModule extends PwcWebModule implements Context {
         }
 
         for (ServletRegistrationImpl servletRegistration : servletRegistrationMap.values()) {
-            if (servletRegistration instanceof DynamicWebServletRegistrationImpl) {
-                DynamicWebServletRegistrationImpl dynamicWebServletRegistration = (DynamicWebServletRegistrationImpl) servletRegistration;
+            if (servletRegistration instanceof DynamicWebServletRegistrationImpl dynamicWebServletRegistration) {
                 dynamicWebServletRegistration.postProcessAnnotations();
             }
         }
@@ -619,7 +619,14 @@ public class WebModule extends PwcWebModule implements Context {
             }
         }
 
-        webContainer.afterServletContextInitializedEvent(webBundleDescriptor);
+        webContainer.afterServletContextInitializedEvent(new WebBundleRuntimeContext(webBundleDescriptor, getServletContext()));
+    }
+
+    @Override
+    public void loadOnStartup(Container[] children) throws LifecycleException {
+        super.loadOnStartup(children);
+
+        webContainer.afterServletLoadInitializedEvent(new WebBundleRuntimeContext(webBundleDescriptor, getServletContext()));
     }
 
     @Override
@@ -2076,22 +2083,21 @@ public class WebModule extends PwcWebModule implements Context {
 
             var securityConstraint = new SecurityConstraintImpl();
 
-            Set<org.glassfish.embeddable.web.config.WebResourceCollection> wrcs = configSecurityConstraint.getWebResourceCollection();
-            for (org.glassfish.embeddable.web.config.WebResourceCollection wrc : wrcs) {
+            var webResourceCollections = configSecurityConstraint.getWebResourceCollection();
+            for (var webResourceCollection : webResourceCollections) {
 
-                WebResourceCollectionImpl webResourceColl = new WebResourceCollectionImpl();
-                webResourceColl.setDisplayName(wrc.getName());
-                for (String urlPattern : wrc.getUrlPatterns()) {
-                    webResourceColl.addUrlPattern(urlPattern);
+                WebResourceCollectionImpl webResourceCollectionImpl = new WebResourceCollectionImpl();
+                webResourceCollectionImpl.setDisplayName(webResourceCollection.getName());
+                for (String urlPattern : webResourceCollection.getUrlPatterns()) {
+                    webResourceCollectionImpl.addUrlPattern(urlPattern);
                 }
-                securityConstraint.addWebResourceCollection(webResourceColl);
+                securityConstraint.addWebResourceCollection(webResourceCollectionImpl);
 
                 AuthorizationConstraintImpl authorizationConstraint = null;
                 if (configSecurityConstraint.getAuthConstraint() != null && configSecurityConstraint.getAuthConstraint().length > 0) {
                     authorizationConstraint = new AuthorizationConstraintImpl();
                     for (String roleName : configSecurityConstraint.getAuthConstraint()) {
-                        Role role = new Role(roleName);
-                        getWebBundleDescriptor().addRole(role);
+                        getWebBundleDescriptor().addRole(new Role(roleName));
                         authorizationConstraint.addSecurityRole(roleName);
                     }
                 } else { // DENY
@@ -2104,15 +2110,15 @@ public class WebModule extends PwcWebModule implements Context {
                         configSecurityConstraint.getDataConstraint() == CONFIDENTIAL ? CONFIDENTIAL_TRANSPORT : NONE_TRANSPORT);
                 securityConstraint.setUserDataConstraint(userDataConstraint);
 
-                if (wrc.getHttpMethods() != null) {
-                    for (String httpMethod : wrc.getHttpMethods()) {
-                        webResourceColl.addHttpMethod(httpMethod);
+                if (webResourceCollection.getHttpMethods() != null) {
+                    for (String httpMethod : webResourceCollection.getHttpMethods()) {
+                        webResourceCollectionImpl.addHttpMethod(httpMethod);
                     }
                 }
 
-                if (wrc.getHttpMethodOmissions() != null) {
-                    for (String httpMethod : wrc.getHttpMethodOmissions()) {
-                        webResourceColl.addHttpMethodOmission(httpMethod);
+                if (webResourceCollection.getHttpMethodOmissions() != null) {
+                    for (String httpMethod : webResourceCollection.getHttpMethodOmissions()) {
+                        webResourceCollectionImpl.addHttpMethodOmission(httpMethod);
                     }
                 }
 
@@ -2123,7 +2129,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         if (pipeline != null) {
             GlassFishValve basic = pipeline.getBasic();
-            if ((basic != null) && (basic instanceof Authenticator)) {
+            if (basic instanceof Authenticator) {
                 removeValve(basic);
             }
 

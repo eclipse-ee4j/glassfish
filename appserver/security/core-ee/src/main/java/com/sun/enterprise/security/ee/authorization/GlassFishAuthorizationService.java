@@ -35,6 +35,7 @@ import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.PolicyFactory;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Permission;
@@ -48,6 +49,7 @@ import org.glassfish.exousia.AuthorizationService;
 
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static com.sun.enterprise.security.ee.authorization.SoteriaToExousiaConverter.getStagedPermissionsFromContext;
 import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toSet;
@@ -96,7 +98,7 @@ public class GlassFishAuthorizationService {
     private final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
     private final AuthorizationService exousiaAuthorizationService;
 
-    public GlassFishAuthorizationService(WebBundleDescriptor webBundleDescriptor, boolean register) throws PolicyContextException {
+    public GlassFishAuthorizationService(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean register) throws PolicyContextException {
         this.register = register;
         this.contextId = AuthorizationUtil.getContextID(webBundleDescriptor);
 
@@ -104,6 +106,9 @@ public class GlassFishAuthorizationService {
         SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory().setAppNameForContext(appName, contextId);
 
         initPermissionCache();
+
+        // Check if the user has specified alternative implementations for the
+        // PolicyConfigurationFactory and PolicyFactory via a web.xml parameter
 
         webBundleDescriptor.getContextParameters()
                            .stream()
@@ -119,22 +124,41 @@ public class GlassFishAuthorizationService {
                            .map(param -> loadFactory(webBundleDescriptor, param.getValue()))
                            .ifPresent(clazz -> installPolicyFactory(webBundleDescriptor, clazz));
 
+        // Create the Exousia AuthorizationService. This implements the Jakarta Authorization
+        // APIs.
+        //
+        // We provide it with a way to get hold of the Subject, which is GF specific, and an
+        // implementation of the principal mapper (role mapper) which is also GF specific.
         exousiaAuthorizationService = new AuthorizationService(
             contextId,
             () -> SecurityContext.getCurrent().getSubject(),
             () -> new GlassFishPrincipalMapper(contextId));
 
         exousiaAuthorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
+
+        // For the web / servlet environment we additionally provide Exousia with a way
+        // to obtain the HTTPServletRequest for a given invocation
         exousiaAuthorizationService.setRequestSupplier(contextId,
             () -> currentRequest.get());
 
         exousiaAuthorizationService.addConstraintsToPolicy(
+            // Permissions collected and staged by Soteria from REST endpoints
+            getStagedPermissionsFromContext(servletContext),
+
+            // Constraints collected by GlassFish / Catalina from Servlets and web.xml
             getConstraintsFromBundle(webBundleDescriptor),
+
+            // All declared roles; discovered by GlassFish and additionally by Soteria
             webBundleDescriptor.getRoles()
                .stream()
                .map(e -> e.getName())
                .collect(toSet()),
+
+            // The web.xml directive to set whether HTTP methods (GET, POST, etc)
+            // which are not explicitly defined are denied / excluded or not.
             webBundleDescriptor.isDenyUncoveredHttpMethods(),
+
+            // Role-reffing; ancient feature where Servlets can define role aliases.
             getSecurityRoleRefsFromBundle(webBundleDescriptor));
     }
 

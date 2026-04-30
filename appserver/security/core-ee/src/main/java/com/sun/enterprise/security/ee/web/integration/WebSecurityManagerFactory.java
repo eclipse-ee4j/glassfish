@@ -24,6 +24,7 @@ import com.sun.enterprise.security.factory.SecurityManagerFactory;
 
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.PolicyContextException;
+import jakarta.servlet.ServletContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
     private final Map<String, ArrayList<String>> CONTEXT_IDS = new HashMap<>();
     private final Map<String, Map<String, WebSecurityManager>> SECURITY_MANAGERS = new HashMap<>();
 
-    public WebSecurityManager createManager(WebBundleDescriptor webBundleDescriptor, boolean register, ServerContext context) {
+    public WebSecurityManager createManager(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean register, ServerContext context) {
         String contextId = AuthorizationUtil.getContextID(webBundleDescriptor);
 
         WebSecurityManager manager = null;
@@ -67,7 +68,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
         if (manager == null || !register) {
             try {
                 probeProvider.securityManagerCreationStartedEvent(webBundleDescriptor.getModuleID());
-                manager = new WebSecurityManager(webBundleDescriptor, context, this, register);
+                manager = new WebSecurityManager(servletContext, webBundleDescriptor, context, this, register);
                 probeProvider.securityManagerCreationEndedEvent(webBundleDescriptor.getModuleID());
 
                 if (register) {

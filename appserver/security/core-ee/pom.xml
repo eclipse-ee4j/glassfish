@@ -68,7 +68,11 @@
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
         </dependency>
-
+        
+        <dependency>
+            <groupId>org.glassfish.soteria</groupId>
+            <artifactId>soteria</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.exousia</groupId>
             <artifactId>exousia</artifactId>

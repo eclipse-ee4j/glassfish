@@ -30,6 +30,7 @@ import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.security.web.GlassFishSingleSignOn;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.v3.common.PlainTextActionReporter;
 import com.sun.enterprise.v3.services.impl.GrizzlyProxy;
 import com.sun.enterprise.v3.services.impl.GrizzlyService;
@@ -135,6 +136,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import static com.sun.enterprise.util.Utility.isEmpty;
 import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
 import static com.sun.enterprise.web.Constants.ERROR_REPORT_VALVE;
 import static java.util.logging.Level.FINE;
@@ -243,7 +245,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     /**
      * The config bean associated with this VirtualServer
      */
-    private com.sun.enterprise.config.serverbeans.VirtualServer vsBean;
+    private com.sun.enterprise.config.serverbeans.VirtualServer virtualServerConfigBean;
 
     /**
      * The mime mapping associated with this VirtualServer
@@ -372,14 +374,14 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * @return the config bean associated with this VirtualServer.
      */
     public com.sun.enterprise.config.serverbeans.VirtualServer getBean() {
-        return vsBean;
+        return virtualServerConfigBean;
     }
 
     /**
      * @param vsBean the config bean for this VirtualServer
      */
     public void setBean(com.sun.enterprise.config.serverbeans.VirtualServer vsBean) {
-        this.vsBean = vsBean;
+        this.virtualServerConfigBean = vsBean;
     }
 
     /**
@@ -618,12 +620,14 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         if (getDefaultWebModuleID() == null && findChild("") == null && docroot != null) {
 
             WebBundleDescriptorImpl webBundleDescriptor = webArchivist.getDefaultWebXmlBundleDescriptor();
-            webModuleConfig = new WebModuleConfig();
             webBundleDescriptor.setModuleID(DEFAULT_WEB_MODULE_NAME);
             webBundleDescriptor.setContextRoot("");
+
+            webModuleConfig = new WebModuleConfig();
             webModuleConfig.setLocation(new File(docroot));
             webModuleConfig.setDescriptor(webBundleDescriptor);
             webModuleConfig.setParentLoader(serverContext.getCommonClassLoader());
+
             WebappClassLoader loader = new WebappClassLoader(serverContext.getCommonClassLoader());
             loader.start();
             webModuleConfig.setAppClassLoader(loader);
@@ -644,7 +648,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * of the 'virtual-server' element.
      */
     protected String getDefaultWebModuleID() {
-        String webModuleID = vsBean.getDefaultWebModule();
+        String webModuleID = virtualServerConfigBean.getDefaultWebModule();
         if ("".equals(webModuleID)) {
             webModuleID = null;
         }
@@ -785,7 +789,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * @return The properties of this virtual server
      */
     List<Property> getProperties() {
-        return vsBean.getProperty();
+        return virtualServerConfigBean.getProperty();
     }
 
     /**
@@ -843,7 +847,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * Configures the valve_ and listener_ properties of this VirtualServer.
      */
     protected void configureCatalinaProperties() {
-        List<Property> props = vsBean.getProperty();
+        List<Property> props = virtualServerConfigBean.getProperty();
         if (props == null) {
             return;
         }
@@ -965,7 +969,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * Adds each host name from the 'hosts' attribute as an alias
      */
     void configureAliases() {
-        List<String> hosts = StringUtils.parseStringList(vsBean.getHosts(), ",");
+        List<String> hosts = StringUtils.parseStringList(virtualServerConfigBean.getHosts(), ",");
         for (String host : hosts) {
             if (!host.equalsIgnoreCase("localhost") && !host.equalsIgnoreCase("localhost.localdomain")) {
                 addAlias(host);
@@ -990,18 +994,18 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * @param securityService The security-service element from domain.xml
      */
     void configureAuthRealm(SecurityService securityService) {
-        List<Property> properties = vsBean.getProperty();
-        if (properties != null && !properties.isEmpty()) {
-            for (Property p : properties) {
-                if (p != null && "authRealm".equals(p.getName())) {
-                    authRealmName = p.getValue();
+        List<Property> properties = virtualServerConfigBean.getProperty();
+        if (!isEmpty(properties)) {
+            for (Property property : properties) {
+                if (property != null && "authRealm".equals(property.getName())) {
+                    authRealmName = property.getValue();
                     if (authRealmName != null) {
                         AuthRealm realm = null;
-                        List<AuthRealm> rs = securityService.getAuthRealm();
-                        if (rs != null && rs.size() > 0) {
-                            for (AuthRealm r : rs) {
-                                if (r != null && r.getName().equals(authRealmName)) {
-                                    realm = r;
+                        List<AuthRealm> authRealms = securityService.getAuthRealm();
+                        if (!isEmpty(authRealms)) {
+                            for (AuthRealm authRealm : authRealms) {
+                                if (authRealm != null && authRealm.getName().equals(authRealmName)) {
+                                    realm = authRealm;
                                     break;
                                 }
                             }
@@ -1087,7 +1091,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     void configureErrorPage() {
         ErrorPage errorPage = null;
 
-        List<Property> props = vsBean.getProperty();
+        List<Property> props = virtualServerConfigBean.getProperty();
         if (props == null) {
             return;
         }
@@ -1156,7 +1160,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     void configureRedirect() {
         vsPipeline.clearRedirects();
 
-        List<Property> props = vsBean.getProperty();
+        List<Property> props = virtualServerConfigBean.getProperty();
         if (props == null) {
             return;
         }
@@ -1311,7 +1315,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             }
 
             // set max idle time if given
-            Property idle = vsBean.getProperty(SSO_MAX_IDLE);
+            Property idle = virtualServerConfigBean.getProperty(SSO_MAX_IDLE);
             if (idle != null && idle.getValue() != null) {
                 if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE, SSO_MAX_INACTIVE_SET, new Object[] { idle.getValue(), getID() });
@@ -1320,7 +1324,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             }
 
             // set expirer thread sleep time if given
-            Property expireTime = vsBean.getProperty(SSO_REAP_INTERVAL);
+            Property expireTime = virtualServerConfigBean.getProperty(SSO_REAP_INTERVAL);
             if (expireTime != null && expireTime.getValue() != null) {
                 if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE, SSO_REAP_INTERVAL_SET);
@@ -1337,7 +1341,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * Configures this VirtualServer with its state (on | off | disabled).
      */
     void configureState() {
-        String stateValue = vsBean.getState();
+        String stateValue = virtualServerConfigBean.getState();
         if (!stateValue.equalsIgnoreCase(ON) && getName().equalsIgnoreCase(org.glassfish.api.web.Constants.ADMIN_VS)) {
             throw new IllegalArgumentException(
                 "virtual-server " + ADMIN_VS + " state property cannot be modified");
@@ -1360,8 +1364,8 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * This valve enforces request accpetance/denial based on the string representation of the remote client's IP address.
      */
     void configureRemoteAddressFilterValve() {
-        Property allow = vsBean.getProperty("allowRemoteAddress");
-        Property deny = vsBean.getProperty("denyRemoteAddress");
+        Property allow = virtualServerConfigBean.getProperty("allowRemoteAddress");
+        Property deny = virtualServerConfigBean.getProperty("denyRemoteAddress");
         String allowStr = null;
         String denyStr = null;
         if (allow != null) {
@@ -1419,8 +1423,8 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * This valve enforces request acceptance/denial based on the name of the remote host from where the request originated.
      */
     void configureRemoteHostFilterValve() {
-        Property allow = vsBean.getProperty("allowRemoteHost");
-        Property deny = vsBean.getProperty("denyRemoteHost");
+        Property allow = virtualServerConfigBean.getProperty("allowRemoteHost");
+        Property deny = virtualServerConfigBean.getProperty("denyRemoteHost");
         String allowStr = null;
         String denyStr = null;
 
@@ -1523,7 +1527,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             if (accessLogValve.isStarted()) {
                 accessLogValve.stop();
             }
-            boolean start = accessLogValve.updateVirtualServerProperties(vsBean.getId(), vsBean, domain, services,
+            boolean start = accessLogValve.updateVirtualServerProperties(virtualServerConfigBean.getId(), virtualServerConfigBean, domain, services,
                     globalAccessLogBufferSize, globalAccessLogWriteInterval);
             if (start && isAccessLoggingEnabled(globalAccessLoggingEnabled)) {
                 enableAccessLogging();
@@ -1637,8 +1641,8 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      */
     private boolean isSSOEnabled(boolean globalSSOEnabled) {
         String ssoEnabled = "inherit";
-        if (vsBean != null) {
-            ssoEnabled = vsBean.getSsoEnabled();
+        if (virtualServerConfigBean != null) {
+            ssoEnabled = virtualServerConfigBean.getSsoEnabled();
         }
 
         return "inherit".equals(ssoEnabled) && globalSSOEnabled || ConfigBeansUtilities.toBoolean(ssoEnabled);
@@ -1666,7 +1670,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * @return true if access logging is enabled for this virtual server, false otherwise.
      */
     boolean isAccessLoggingEnabled(boolean globalAccessLoggingEnabled) {
-        String enabled = vsBean.getAccessLoggingEnabled();
+        String enabled = virtualServerConfigBean.getAccessLoggingEnabled();
         return "inherit".equals(enabled) && globalAccessLoggingEnabled || ConfigBeansUtilities.toBoolean(enabled);
     }
 
@@ -1685,7 +1689,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * attribute
      */
     private void configureSingleSignOnCookieSecure() {
-        String cookieSecure = vsBean.getSsoCookieSecure();
+        String cookieSecure = virtualServerConfigBean.getSsoCookieSecure();
         if (!"true".equalsIgnoreCase(cookieSecure) && !"false".equalsIgnoreCase(cookieSecure)
                 && !cookieSecure.equalsIgnoreCase(SessionCookieConfig.DYNAMIC_SECURE)) {
             _logger.log(WARNING, INVALID_SSO_COOKIE_SECURE, new Object[] { cookieSecure, getID() });
@@ -1695,7 +1699,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     private void configureSingleSignOnCookieHttpOnly() {
-        ssoCookieHttpOnly = Boolean.parseBoolean(vsBean.getSsoCookieHttpOnly());
+        ssoCookieHttpOnly = Boolean.parseBoolean(virtualServerConfigBean.getSsoCookieHttpOnly());
     }
 
     /**
@@ -1707,7 +1711,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * therefore the container's default error page mechanism for error responses.
      */
     void configureErrorReportValve() {
-        Property prop = vsBean.getProperty(ERROR_REPORT_VALVE);
+        Property prop = virtualServerConfigBean.getProperty(ERROR_REPORT_VALVE);
         if (prop != null) {
             setErrorReportValveClass(prop.getValue());
         }
@@ -2290,7 +2294,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     private List<NetworkListener> getGrizzlyNetworkListeners() {
-        List<String> listenerList = StringUtils.parseStringList(vsBean.getNetworkListeners(), ",");
+        List<String> listenerList = StringUtils.parseStringList(virtualServerConfigBean.getNetworkListeners(), ",");
         String[] listeners = (listenerList != null) ? listenerList.toArray(new String[listenerList.size()]) : new String[0];
         List<NetworkListener> networkListeners = new ArrayList<>();
 

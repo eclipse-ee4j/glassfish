@@ -1494,10 +1494,10 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
      * Start the background thread that will periodically check for session timeouts.
      */
     protected void threadStart() {
-
         if (thread != null) {
             return;
         }
+
         if (backgroundProcessorDelay <= 0) {
             return;
         }
@@ -1507,7 +1507,6 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         thread = new Thread(new ContainerBackgroundProcessor(), threadName);
         thread.setDaemon(true);
         thread.start();
-
     }
 
     /**

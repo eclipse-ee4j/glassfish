@@ -103,7 +103,7 @@ asadmin> create-jvm-options --target=target
 ----
 where target is the {productName} instance or cluster for which you
 are disabling LDAP group search. For more information about the
-`create-jvm-options` subcommand, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+`create-jvm-options` subcommand, see the xref:reference-manual.adoc#create-jvm-options[{productName} Reference Manual].
 ====
 
 JDBC realm::

@@ -80,7 +80,7 @@ information, see the GlassFish Plugins page:
 
 ==== How Do I Develop Add-On Components?
 
-See the xref:add-on-component-development-guide.adoc#GSACG[{productName} Add-On
+See the xref:add-on-component-development-guide.adoc[{productName} Add-On
 Component Development Guide] for complete details.
 
 [[how-do-i-add-containers]]

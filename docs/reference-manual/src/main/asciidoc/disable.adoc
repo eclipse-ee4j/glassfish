@@ -95,7 +95,7 @@ xref:deploy.adoc#deploy[`deploy`(1)],
 xref:enable.adoc#enable[`enable`(1)],
 xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

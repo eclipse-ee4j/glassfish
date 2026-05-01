@@ -59,7 +59,7 @@ information about {productName} and other entities mentioned in this
 guide, see xref:#for-more-information[For More Information].
 
 To review additional details about this release before you begin using
-the software, see the xref:release-notes.adoc#GSRLN[{productName}
+the software, see the xref:release-notes.adoc[{productName}
 Release Notes]. The Release Notes provide important information about
 the {productName} {product-majorVersion} release, including details about new features,
 information about known issues and possible workarounds, and tips for
@@ -390,7 +390,7 @@ For more information about the `deploy` subcommand, see
 xref:reference-manual.adoc#deploy[`deploy`(1)].
 
 For more information about deploying applications from the command line,
-see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application
+see the xref:application-deployment-guide.adoc[{productName} Application
 Deployment Guide].
 
 [[to-list-deployed-applications-from-the-command-line]]
@@ -720,7 +720,7 @@ The following resources are described here:
 Comprehensive product documentation is available and includes the
 following.
 
-* xref:release-notes.adoc#GSRLN[{productName} Release Notes]:
+* xref:release-notes.adoc[{productName} Release Notes]:
 Latest details about new features, known issues, and tips for installing
 and working with {productName} software.
 * https://glassfish.org/docs/[{productName}]

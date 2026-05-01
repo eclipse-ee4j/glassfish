@@ -748,11 +748,11 @@ are the following:
 The following product documentation might be relevant to some aspects of
 application deployment:
 
-* xref:application-development-guide.adoc#GSDVG[
+* xref:application-development-guide.adoc[
 {productName} Application Development Guide]
-* xref:administration-guide.adoc#GSADG[
+* xref:administration-guide.adoc[
 {productName} Administration Guide]
-* xref:add-on-component-development-guide.adoc#GSACG[
+* xref:add-on-component-development-guide.adoc[
 {productName} Add-On Component Development Guide]
 * xref:reference-manual.adoc[
 {productName} Reference Manual]

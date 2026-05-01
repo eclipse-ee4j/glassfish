@@ -810,7 +810,7 @@ asadmin help restart-domain
 ----
 
 A collection of the `asadmin` help pages is available in HTML and PDF
-format in the xref:reference-manual.adoc#GSRFM[{productName} Reference
+format in the xref:reference-manual.adoc[{productName} Reference
 Manual].
 
 [[rest-interfaces]]
@@ -1178,6 +1178,6 @@ system, use backslashes (\) instead. For example:
 The following additional documents address specific administration areas:
 
 * Verifying and deploying applications
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide]
+xref:application-deployment-guide.adoc[{productName} Application Deployment Guide]
 
 

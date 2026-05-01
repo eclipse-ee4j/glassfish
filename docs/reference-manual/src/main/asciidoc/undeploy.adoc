@@ -137,7 +137,7 @@ xref:deploy.adoc#deploy[`deploy`(1)],
 xref:list-components.adoc#list-components[`list-components`(1)],
 xref:redeploy.adoc#redeploy[`redeploy`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

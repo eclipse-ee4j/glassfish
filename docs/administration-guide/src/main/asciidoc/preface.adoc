@@ -45,24 +45,24 @@ These guides apply to all {productName} variants.
 |===
 |Book Title |Description
 
-|xref:release-notes.adoc#GSRLN[Release Notes]
+|xref:release-notes.adoc[Release Notes]
 |Provides late-breaking information about the software and the documentation and includes a comprehensive,
 table-based summary of the supported hardware, operating system, Java Development Kit (JDK), and database drivers.
 
-|xref:application-development-guide.adoc#GSDVG[Application Development Guide]
+|xref:application-development-guide.adoc[Application Development Guide]
 |Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
 applications that are intended to run on the {productName}.
 These applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs).
 This guide provides information about developer tools, security, and debugging.
 
-|xref:error-messages-reference.adoc#GSEMR[Error Message Reference]
+|xref:error-messages-reference.adoc[Error Message Reference]
 |Describes error messages that you might encounter when using {productName}.
 
-|xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide]
+|xref:performance-tuning-guide.adoc[Performance Tuning Guide]
 |Explains how to optimize the performance of {productName}.
 
-|xref:reference-manual.adoc#GSRFM[Reference Manual]
+|xref:reference-manual.adoc[Reference Manual]
 |Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 |===
@@ -75,45 +75,45 @@ These guides are specific to the {productName} Server installation.
 |===
 |Book Title |Description
 
-|xref:quick-start-guide.adoc#GSQSG[Server Quick Start Guide]
+|xref:quick-start-guide.adoc[Server Quick Start Guide]
 |Explains how to get started with the {productName} Server.
 
-|xref:installation-guide.adoc#GSING[Installation Guide]
+|xref:installation-guide.adoc[Installation Guide]
 |Explains how to install the software and its components.
 
-|xref:upgrade-guide.adoc#GSUPG[Upgrade Guide]
+|xref:upgrade-guide.adoc[Upgrade Guide]
 |Explains how to upgrade to the latest version of {productName}.
 This guide also describes differences between adjacent product releases and configuration
 options that can result in incompatibility with the product specifications.
 
-|xref:deployment-planning-guide.adoc#GSPLG[Deployment Planning Guide]
+|xref:deployment-planning-guide.adoc[Deployment Planning Guide]
 |Explains how to build a production deployment of {productName} that meets the requirements of
 your system and enterprise.
 
-|xref:administration-guide.adoc#GSADG[Administration Guide]
+|xref:administration-guide.adoc[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
 from the command line by using the xref:reference-manual.adoc#asadmin[`asadmin`] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
-|xref:security-guide.adoc#GSSCG[Server Security Guide]
+|xref:security-guide.adoc[Server Security Guide]
 |Provides instructions for configuring and administering {productName} Server security.
 
-|xref:application-deployment-guide.adoc#GSDPG[Application Deployment Guide]
+|xref:application-deployment-guide.adoc[Application Deployment Guide]
 |Explains how to assemble and deploy applications to the {productName} and provides information
 about deployment descriptors.
 
-|xref:add-on-component-development-guide.adoc#GSACG[Add-On Component Development Guide]
+|xref:add-on-component-development-guide.adoc[Add-On Component Development Guide]
 |Explains how to use published interfaces of {productName} to develop add-on components
 for {productName}.
 This document explains how to perform only those tasks that ensure that the add-on component
 is suitable for {productName}.
 
-|xref:ha-administration-guide.adoc#GSHAG[High Availability Administration Guide]
+|xref:ha-administration-guide.adoc[High Availability Administration Guide]
 |Explains how to configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
-|xref:troubleshooting-guide.adoc#GSTSG[Server Troubleshooting Guide]
+|xref:troubleshooting-guide.adoc[Server Troubleshooting Guide]
 |Describes common problems that you might encounter when using {productName} Server and explains how to solve them.
 |===
 
@@ -126,7 +126,7 @@ containers, and embedding in applications.
 |===
 |Book Title |Description
 
-|xref:embedded-server-guide.adoc#GSESG[Embedded Server Guide]
+|xref:embedded-server-guide.adoc[Embedded Server Guide]
 |Explains how to run applications with Embedded {productName} from the command line or as a library,
 suitable for cloud deployments, containers, and integration testing.
 |===

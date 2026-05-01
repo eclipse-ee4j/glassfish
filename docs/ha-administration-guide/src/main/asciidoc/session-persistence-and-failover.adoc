@@ -110,7 +110,7 @@ with dynamic deployment, dynamic reloading, and autodeployment. These
 features are for development, not production environments, so you must
 disable them before enabling the session persistence service.
 For information about how to disable these features, see the
-xref:application-deployment-guide.adoc#GSDPG[
+xref:application-deployment-guide.adoc[
 {productName} Application Deployment Guide].
 
 * {productName} {product-majorVersion} does not support High Availability Database

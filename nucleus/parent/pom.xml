@@ -187,7 +187,7 @@
         <angus.mail.version>2.1.0-M1</angus.mail.version>
 
         <!-- Jakarta Activation -->
-        <jakarta.activation-api.version>2.2.0-M1</jakarta.activation-api.version>
+        <jakarta.activation-api.version>2.2.0-M2</jakarta.activation-api.version>
         <angus.activation.version>2.1.0-M1</angus.activation.version>
 
         <!-- Jakarta Annotations -->
@@ -227,7 +227,7 @@
         <jakarta.data.spec.version>1.0</jakarta.data.spec.version>
         <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
         <jakarta.nosql.spec.version>1.0.1</jakarta.nosql.spec.version>
-        <jnosql.version>1.1.12</jnosql.version>
+        <jnosql.version>1.1.13</jnosql.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -282,19 +282,19 @@
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
-        <commons-io.version>2.21.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.3.Final</jboss.logging.version>
-        <javassist.version>3.30.2-GA</javassist.version>
+        <javassist.version>3.31.0-GA</javassist.version>
         <asm.version>9.9.1</asm.version>
-        <jsch.version>2.28.0</jsch.version>
+        <jsch.version>2.28.2</jsch.version>
         <antlr2.version>2.7.7</antlr2.version>
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
         <ant.version>1.10.16</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.21.2</jackson.version>
+        <jackson.version>2.21.3</jackson.version>
         <jackson.version2>2.21</jackson.version2>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
@@ -1474,7 +1474,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>9.0.2</version>
+                    <version>10.0.0</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JDOConcreteBeanGenerator.java
- *
- * Created on November 20, 2001
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 
 import com.sun.jdo.api.persistence.model.Model;
@@ -30,16 +25,17 @@ import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
 import com.sun.jdo.spi.persistence.support.ejb.model.DeploymentDescriptorModel;
 import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
 import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaClassWriter;
 import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaFileWriter;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
@@ -52,15 +48,17 @@ import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 
+import static java.lang.System.Logger.Level.DEBUG;
+
 /*
  * This is the base class for JDO specific generator for the concrete CMP
  * beans.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2001
  */
 abstract class JDOConcreteBeanGenerator {
 
-    static final Logger logger = LogHelperEJBCompiler.getLogger();
+    private static final Logger LOG = System.getLogger(JDOConcreteBeanGenerator.class.getName());
 
     // used to transform b/w various ejb names and pc class names
     NameMapper nameMapper = null;
@@ -84,9 +82,9 @@ abstract class JDOConcreteBeanGenerator {
     String[] pcnameParam = new String[1];
     String[] pkClassParam = new String[1];
 
-    static String[] objectType = new String[]{CMPTemplateFormatter.Object_};
-    static String[] param0 = new String[]{CMPTemplateFormatter.param0_};
-    static String[] param0PM = new String[] {CMPTemplateFormatter.param0_,
+    static String[] objectType = new String[]{JavaClassWriterHelper.Object_};
+    static String[] param0 = new String[]{JavaClassWriterHelper.param0_};
+    static String[] param0PM = new String[] {JavaClassWriterHelper.param0_,
                     CMPTemplateFormatter.jdoPersistenceManager_};
 
     // Generic parameters
@@ -118,14 +116,14 @@ abstract class JDOConcreteBeanGenerator {
 
     /** Name of the SUPPORT_TRAILING_SPACES_IN_VARCHAR_PK_COLUMNS property. */
     public static final String SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS_PROPERTY =
-        "com.sun.jdo.spi.persistence.support.ejb.ejbc.SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS"; // NOI18N
+        "com.sun.jdo.spi.persistence.support.ejb.ejbc.SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS";
 
     /**
      * Property to swich on/off support for trailing spaces for pk of String types. Note, the default is false, meaning
      * we trip trailing spaces in pk columns
      */
     private static final boolean SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS = Boolean.valueOf(
-        System.getProperty(SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS_PROPERTY, "false")).booleanValue(); // NOI18N
+        System.getProperty(SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS_PROPERTY, "false")).booleanValue();
 
 
     /**
@@ -169,8 +167,8 @@ abstract class JDOConcreteBeanGenerator {
      * each failed validation. This implementation returns an empty collection
      * because generic validation always succeeds.
      */
-    Collection validate(AbstractMethodHelper methodHelper, String beanName) {
-        return new ArrayList();
+    Collection<Exception> validate(AbstractMethodHelper methodHelper, String beanName) {
+        return new ArrayList<>();
     }
 
     /**
@@ -194,9 +192,9 @@ abstract class JDOConcreteBeanGenerator {
         this.appName = appName;
         this.abstractBean = nameMapper.getAbstractBeanClassForEjbName(beanName);
 
-        String pkgName = CMPTemplateFormatter.getPackageName(abstractBean);
+        String pkgName = JavaTypeHelper.getPackageName(abstractBean);
         concreteImplName = nameMapper.getConcreteBeanClassForEjbName(beanName);
-        String shortCmpName = CMPTemplateFormatter.getShortClassName(concreteImplName);
+        String shortCmpName = JavaTypeHelper.getShortClassName(concreteImplName);
 
         pcname = nameMapper.getPersistenceClassForEjbName(beanName);
         pcnameParam[0] = pcname;
@@ -213,24 +211,24 @@ abstract class JDOConcreteBeanGenerator {
         String prefix = srcout.getPath() + File.separator +
             concreteImplName.replace('.', File.separatorChar);
 
-        String cmp_file_name = prefix + CMPTemplateFormatter.javaExtension_;
+        String cmp_file_name = prefix + JavaClassWriterHelper.javaExtension_;
 
-        String hlp_file_name = prefix + CMPTemplateFormatter.Helper_ +
-            CMPTemplateFormatter.javaExtension_;
+        String hlp_file_name = prefix + JavaClassWriterHelper.Helper_ +
+            JavaClassWriterHelper.javaExtension_;
 
         hasLocalInterface =
             (nameMapper.getLocalInterfaceForEjbName(beanName) != null);
         hasRemoteInterface =
             (nameMapper.getRemoteInterfaceForEjbName(beanName) != null);
 
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("allFields: " +                              // NOI18N
+        if (LOG.isLoggable(DEBUG)) {
+            LOG.log(DEBUG, () -> "allFields: " +
                 ((allFields != null) ? allFields.length : 0));
-            logger.fine("cmp_file_name: " + cmp_file_name); // NOI18N
-            logger.fine("hlp_file_name: " + hlp_file_name); // NOI18N
-            logger.fine("cmp_name: " + concreteImplName); // NOI18N
-            logger.fine("pkClass: " + pkClass); // NOI18N
-            logger.fine("PCname: " + pcname); // NOI18N
+            LOG.log(DEBUG, () -> "cmp_file_name: " + cmp_file_name);
+            LOG.log(DEBUG, () -> "hlp_file_name: " + hlp_file_name);
+            LOG.log(DEBUG, () -> "cmp_name: " + concreteImplName);
+            LOG.log(DEBUG, () -> "pkClass: " + pkClass);
+            LOG.log(DEBUG, () -> "PCname: " + pcname);
         }
 
         File cmp_file = new File(cmp_file_name);
@@ -263,14 +261,14 @@ abstract class JDOConcreteBeanGenerator {
         // Add no-arg constructor.
         concreteImplWriter.addConstructor(shortCmpName,
             Modifier.PUBLIC, null, null, null,
-            CMPTemplateFormatter.super_, null);
+            JavaClassWriterHelper.super_, null);
 
         // Add helper class.
-        helperName = shortCmpName + CMPTemplateFormatter.Helper_;
+        helperName = shortCmpName + JavaClassWriterHelper.Helper_;
 
         oneParam[0] = shortCmpName;
         jdoHelperWriter.setClassDeclaration(Modifier.PUBLIC,
-            helperName, CMPTemplateFormatter.getBodyAsStrings(
+            helperName, JavaClassWriterHelper.getBodyAsStrings(
                 CMPTemplateFormatter.hcomformatter.format(oneParam)));
 
         setHelperSuperclass();
@@ -405,13 +403,13 @@ abstract class JDOConcreteBeanGenerator {
     void generateFields() throws IOException {
 
         // Add private transient fields:
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.privatetransientvformatter.format(pcnameParam),
             Modifier.TRANSIENT,
             concreteImplWriter);
 
         // Add private static fields:
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.privateStaticVariablesTemplate,
             Modifier.STATIC,
             concreteImplWriter);
@@ -419,7 +417,7 @@ abstract class JDOConcreteBeanGenerator {
         // Add private static final fields:
         twoParams[0] = pcname;
         twoParams[1] = beanName;
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.privatestaticfinalvformatter.format(twoParams),
             Modifier.STATIC + Modifier.FINAL,
             concreteImplWriter);
@@ -427,7 +425,7 @@ abstract class JDOConcreteBeanGenerator {
         // Add public static final variables for signatures
         twoParams[0] = generatorClassesSignature;
         twoParams[1] = inputFilesSignature;
-        CMPTemplateFormatter.addFields(
+        JavaClassWriterHelper.addFields(
              CMPTemplateFormatter.publicstaticfinalvformatter.format(twoParams),
              Modifier.PUBLIC + Modifier.STATIC + Modifier.FINAL,
              concreteImplWriter);
@@ -435,14 +433,14 @@ abstract class JDOConcreteBeanGenerator {
         // The static fields holding the Query variables and their monitors
         // are generated during finder/selector method handling.
 
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.otherVariablesTemplate,
             0, concreteImplWriter);
 
         threeParams[0] = concreteImplName;
         threeParams[1] = beanName;
         threeParams[2] = appName;
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.hvformatter.format(threeParams),
             Modifier.TRANSIENT+Modifier.STATIC,
             jdoHelperWriter);
@@ -450,13 +448,13 @@ abstract class JDOConcreteBeanGenerator {
         // Add read-only fields:
         if (!isUpdateable) {
             // private transient fields:
-            CMPTemplateFormatter.addPrivateField(
+            JavaClassWriterHelper.addPrivateField(
                 CMPROTemplateFormatter.privatetransientvformatter.format(pcnameParam),
                 Modifier.TRANSIENT,
                 concreteImplWriter);
 
             // private static fields:
-            CMPTemplateFormatter.addPrivateField(
+            JavaClassWriterHelper.addPrivateField(
                 CMPROTemplateFormatter.privateStaticFinalVariablesTemplate,
                 Modifier.STATIC + Modifier.FINAL,
                 concreteImplWriter);
@@ -469,21 +467,17 @@ abstract class JDOConcreteBeanGenerator {
     void generateFinders(AbstractMethodHelper methodHelper)
             throws IOException {
 
-        boolean debug = logger.isLoggable(Logger.FINE);
-        List finders = methodHelper.getFinders();
+        List<Method> finders = methodHelper.getFinders();
         for (int i = 0; i < finders.size(); i++) {
-            Method m = (Method)finders.get(i);
+            Method m = finders.get(i);
             String mname = CMPTemplateFormatter.ejb_ +
                 StringHelper.getCapitalizedString(m.getName());
 
-            if (debug) {
-                logger.fine("Finder: " + mname); // NOI18N
-            }
+            LOG.log(DEBUG, () -> "Finder: " + mname);
 
             if (mname.equals(CMPTemplateFormatter.ejbFindByPrimaryKey_)) {
                 // ejbFindByPrimaryKey
-                String[] exceptionTypes =
-                    CMPTemplateFormatter.getExceptionNames(m);
+                String[] exceptionTypes = JavaClassWriterHelper.getExceptionNames(m);
 
                 oneParam[0] = CMPTemplateFormatter.key_;
 
@@ -502,7 +496,7 @@ abstract class JDOConcreteBeanGenerator {
                 // check for single-object finder vs. multi-object finder
                 String returnType = isSingleObjectFinder(m) ?
                     pkClass : m.getReturnType().getName();
-                CMPTemplateFormatter.addGenericMethod(
+                JavaClassWriterHelper.addGenericMethod(
                     m, mname, returnType,
                     generateFinderMethodBody(methodHelper, rs, mname, m, returnType, i),
                     concreteImplWriter);
@@ -523,8 +517,8 @@ abstract class JDOConcreteBeanGenerator {
 
     /** Adds ejbCreate<XXX> methods.
      */
-    private void generateCreateMethods(List createMethods) throws IOException {
-        Class beanClass = null;
+    private void generateCreateMethods(List<Method> createMethods) throws IOException {
+        Class<?> beanClass = null;
         try {
             beanClass = Class.forName(abstractBean, true, loader);
         } catch (Exception e) {
@@ -532,10 +526,10 @@ abstract class JDOConcreteBeanGenerator {
         }
 
         // Store generated getters to avoid duplicates.
-        HashSet generated = new HashSet();
+        HashSet<Method> generated = new HashSet<>();
 
         for (int i = 0; i < createMethods.size(); i++) {
-            Method m = (Method)createMethods.get(i);
+            Method m = createMethods.get(i);
             Method m1 = m;
 
             // Method name is ejbCreate<Method>
@@ -547,16 +541,16 @@ abstract class JDOConcreteBeanGenerator {
                 postCreateName += suffix;
             }
 
-            boolean debug = logger.isLoggable(Logger.FINE);
+            boolean debug = LOG.isLoggable(DEBUG);
             if (debug) {
-                logger.fine("CreateMethod: " + abstractBean + "" + m.getName()); // NOI18N
-                logger.fine("ejbCreateMethod: " + createName); // NOI18N
-                logger.fine("ejbPostCreateMethod: " + postCreateName); // NOI18N
+                LOG.log(DEBUG, "CreateMethod: " + abstractBean + "" + m.getName());
+                LOG.log(DEBUG, "ejbCreateMethod: " + createName);
+                LOG.log(DEBUG, "ejbPostCreateMethod: " + postCreateName);
             }
 
             // Get actual method in the bean and resolve exception type to generate...
             try {
-                Class[] params = m.getParameterTypes();
+                Class<?>[] params = m.getParameterTypes();
 
                 // This is a work around the case when the parameter class loader
                 // differs from the given class loader ("loader").
@@ -569,9 +563,9 @@ abstract class JDOConcreteBeanGenerator {
                     String pname = params[j].getName();
 
                     if (debug) {
-                        logger.fine("Replacing parameter class for: " + pname); // NOI18N
-                        logger.fine("Param ClassLoader: " + params[j].getClassLoader());
-                        logger.fine("Need ClassLoader: " + loader);
+                        LOG.log(DEBUG, "Replacing parameter class for: " + pname);
+                        LOG.log(DEBUG, "Param ClassLoader: " + params[j].getClassLoader());
+                        LOG.log(DEBUG, "Need ClassLoader: " + loader);
                     }
 
                     params[j] = Class.forName(pname, true, loader);
@@ -585,7 +579,7 @@ abstract class JDOConcreteBeanGenerator {
                 if (generated.contains(m)) {
                     // Called from more than one interface - skip it.
                     if (debug) {
-                        logger.fine("...generated..."); // NOI18N
+                        LOG.log(DEBUG, () -> "...generated...");
                     }
 
                     continue;
@@ -598,24 +592,18 @@ abstract class JDOConcreteBeanGenerator {
                 continue;
             }
 
-            String[] exc = CMPTemplateFormatter.getExceptionNames(m);
-            String parametersList = CMPTemplateFormatter.getParametersList(m);
+            String[] exc = JavaClassWriterHelper.getExceptionNames(m);
+            String parametersList = JavaClassWriterHelper.getParametersList(m);
             String parametersListWithSeparator = makeLiteral(
-                    CMPTemplateFormatter.getParametersListWithSeparator(
-                            m, CMPTemplateFormatter.paramConcatenator_ ));
+                JavaClassWriterHelper.getParametersListWithSeparator(m, JavaClassWriterHelper.paramConcatenator_));
 
-            String body = getEJBCreateMethodBody(createName, exc,
-                    parametersList, parametersListWithSeparator);
+            String body = getEJBCreateMethodBody(createName, exc, parametersList, parametersListWithSeparator);
 
-            CMPTemplateFormatter.addGenericMethod(
-                    m, createName, pkClass, body, concreteImplWriter);
+            JavaClassWriterHelper.addGenericMethod(m, createName, pkClass, body, concreteImplWriter);
 
-            body = getEJBPostCreateMethodBody(postCreateName,
-                    parametersList, parametersListWithSeparator);
+            body = getEJBPostCreateMethodBody(postCreateName, parametersList, parametersListWithSeparator);
 
-            CMPTemplateFormatter.addGenericMethod(
-                    m1, postCreateName, CMPTemplateFormatter.void_,
-                    body, concreteImplWriter);
+            JavaClassWriterHelper.addGenericMethod(m1, postCreateName, JavaClassWriterHelper.void_, body, concreteImplWriter);
         }
     }
 
@@ -679,20 +667,20 @@ abstract class JDOConcreteBeanGenerator {
 
             concreteImplWriter.addMethod(mname, // name
                 Modifier.PUBLIC, // modifiers
-                CMPTemplateFormatter.void_, // returnType
+                JavaClassWriterHelper.void_, // returnType
                 null, // parameterNames
                 null,// parameterTypes
                 exc,// exceptions
-                CMPTemplateFormatter.getBodyAsStrings(body), // body
+                JavaClassWriterHelper.getBodyAsStrings(body), // body
                 null);// comments
 
         }
 
         // This is a cleanup method that is public, but has int param.
-        oneParam[0] = CMPTemplateFormatter.int_;
+        oneParam[0] = JavaClassWriterHelper.int_;
         concreteImplWriter.addMethod(CMPTemplateFormatter.afterCompletion_, // name
             Modifier.PUBLIC, // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             oneParam,// parameterTypes
             null,// exceptions
@@ -701,7 +689,7 @@ abstract class JDOConcreteBeanGenerator {
 
         concreteImplWriter.addMethod(CMPTemplateFormatter.ejb__remove_, // name
             Modifier.PUBLIC , // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             objectType, //parameterTypes
             null,// exceptions
@@ -716,30 +704,30 @@ abstract class JDOConcreteBeanGenerator {
             String mname = st[i];
             body = CMPTemplateFormatter.helpers.getProperty(mname);
 
-            CMPTemplateFormatter.addGenericMethod(mname,
-                CMPTemplateFormatter.getBodyAsStrings(body), concreteImplWriter);
+            JavaClassWriterHelper.addGenericMethod(mname,
+                JavaClassWriterHelper.getBodyAsStrings(body), concreteImplWriter);
         }
 
         // Add jdoArrayCopy to return byte[].
-        oneParam[0] = CMPTemplateFormatter.byte_;
+        oneParam[0] = JavaClassWriterHelper.byte_;
         body = CMPTemplateFormatter.jdoarraycopyformatter.format(oneParam);
 
-        oneParam[0] = CMPTemplateFormatter.byteArray_;
+        oneParam[0] = JavaClassWriterHelper.byteArray_;
         concreteImplWriter.addMethod(
             CMPTemplateFormatter.jdoArrayCopy_, // name
             Modifier.PRIVATE, // modifiers
-            CMPTemplateFormatter.byteArray_, // returnType
+            JavaClassWriterHelper.byteArray_, // returnType
             param0, // parameterNames
             oneParam,// parameterTypes
             null,// exceptions
-            CMPTemplateFormatter.getBodyAsStrings(body), // body
+            JavaClassWriterHelper.getBodyAsStrings(body), // body
             null);// comments
 
         // Add setEntityContext
         oneParam[0] = CMPTemplateFormatter.EntityContext_;
         concreteImplWriter.addMethod(CMPTemplateFormatter.setEntityContext_, // name
             Modifier.PUBLIC, // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             oneParam,// parameterTypes
             getExceptionList(methodHelper,
@@ -755,21 +743,21 @@ abstract class JDOConcreteBeanGenerator {
 
         concreteImplWriter.addMethod(CMPTemplateFormatter.getObjectId_, // name
             Modifier.PRIVATE , // modifiers
-            CMPTemplateFormatter.Object_, // returnType
+            JavaClassWriterHelper.Object_, // returnType
             oneParam, // parameterNames
             pkClassParam,// parameterTypes
             null,// exceptions
-            CMPTemplateFormatter.getBodyAsStrings(
+            JavaClassWriterHelper.getBodyAsStrings(
                 CMPTemplateFormatter.goidformatter.format(param)), // body
             null);// comments
 
         // Add jdoGetJdoInstanceClass
         oneParam[0] = CMPTemplateFormatter.jdoGetJdoInstanceClassTemplate;
 
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.jdoGetJdoInstanceClass_,
                 Modifier.PUBLIC + Modifier.STATIC,
-                CMPTemplateFormatter.Class_, oneParam,
+                JavaClassWriterHelper.Class_, oneParam,
                 concreteImplWriter);
 
         generateSpecialKnownMethods();
@@ -789,17 +777,17 @@ abstract class JDOConcreteBeanGenerator {
         if (isUpdateable) {
             body = CMPTemplateFormatter.assertPersistenceManagerIsNullBody;
         }
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.assertPersistenceManagerIsNull_,
                 body, concreteImplWriter);
 
         // assertInTransaction
         if (isUpdateable) {
-            oneParam[0] = I18NHelper.getMessage(messages, "EXC_TransactionNotActive"); // NOI18N
-            body = CMPTemplateFormatter.getBodyAsStrings(
+            oneParam[0] = I18NHelper.getMessage(messages, "EXC_TransactionNotActive");
+            body = JavaClassWriterHelper.getBodyAsStrings(
                 CMPTemplateFormatter.intxformatter.format(oneParam));
         }
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.assertInTransaction_,
                 body, concreteImplWriter);
 
@@ -813,7 +801,7 @@ abstract class JDOConcreteBeanGenerator {
             body = CMPROTemplateFormatter.jdoClosePersistenceManagerBody;
         }
 
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.jdoClosePersistenceManager_,
                 body, concreteImplWriter);
 
@@ -823,7 +811,7 @@ abstract class JDOConcreteBeanGenerator {
         } else {
             body = CMPROTemplateFormatter.jdoGetPersistenceManagerBody;
         }
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.jdoGetPersistenceManager_,
                 CMPTemplateFormatter.jdoPersistenceManagerClass_,
                 body, concreteImplWriter);
@@ -867,17 +855,17 @@ abstract class JDOConcreteBeanGenerator {
         concreteImplWriter.addMethod(
                 CMPTemplateFormatter.jdoLookupPersistenceManagerFactory_,
                 Modifier.PRIVATE + Modifier.STATIC + Modifier.SYNCHRONIZED, // modifiers
-                CMPTemplateFormatter.void_, // returnType
+                JavaClassWriterHelper.void_, // returnType
                 param0, // parameterNames
                 objectType, // parameterTypes
                 null,// exceptions
-                CMPTemplateFormatter.getBodyAsStrings(mformat.format(oneParam)),
+                JavaClassWriterHelper.getBodyAsStrings(mformat.format(oneParam)),
                 null);// comments
 
         // Add jdoGetInstance
         threeParams[0] = pkClass;
         threeParams[1] = pcname;
-        threeParams[2] = CMPTemplateFormatter.none_; // will be ignored for updateable beans
+        threeParams[2] = JavaClassWriterHelper.none_; // will be ignored for updateable beans
         if (isUpdateable) {
             mformat = CMPTemplateFormatter.giformatter;
         } else {
@@ -886,9 +874,9 @@ abstract class JDOConcreteBeanGenerator {
             }
             mformat = CMPROTemplateFormatter.giformatter;
         }
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.getInstance_,
-                CMPTemplateFormatter.getBodyAsStrings(mformat.format(threeParams)),
+                JavaClassWriterHelper.getBodyAsStrings(mformat.format(threeParams)),
                 concreteImplWriter);
 
         // These are methods that do have arguments.
@@ -898,12 +886,12 @@ abstract class JDOConcreteBeanGenerator {
             body = null;
         } else {
             // Reuse threeParams from getInstance_
-            body = CMPTemplateFormatter.getBodyAsStrings(
+            body = JavaClassWriterHelper.getBodyAsStrings(
                 CMPROTemplateFormatter.ejb__refreshformatter.format(threeParams));
         }
         concreteImplWriter.addMethod(CMPTemplateFormatter.ejb__refresh_, // name
             Modifier.PUBLIC , // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             objectType, //parameterTypes
             null,// exceptions
@@ -915,7 +903,7 @@ abstract class JDOConcreteBeanGenerator {
         oneParam[0] = CMPTemplateFormatter.jdoPersistenceManagerClass_;
         concreteImplWriter.addMethod(CMPTemplateFormatter.jdoReleasePersistenceManager_, // name
             Modifier.PRIVATE, // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             oneParam,// parameterTypes
             null,// exceptions
@@ -932,7 +920,7 @@ abstract class JDOConcreteBeanGenerator {
         }
         concreteImplWriter.addMethod(CMPTemplateFormatter.jdoReleasePersistenceManager0_, // name
             Modifier.PRIVATE, // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             oneParam,// parameterTypes
             null,// exceptions
@@ -950,7 +938,7 @@ abstract class JDOConcreteBeanGenerator {
 
         jdoHelperWriter.addMethod(CMPTemplateFormatter.assertInstanceOfRemoteInterfaceImpl_, // name
             Modifier.PUBLIC, // modifiers
-            CMPTemplateFormatter.void_, // returnType
+            JavaClassWriterHelper.void_, // returnType
             param0, // parameterNames
             objectType,// parameterTypes
             null,// exceptions
@@ -959,42 +947,43 @@ abstract class JDOConcreteBeanGenerator {
 
         // Add Helper.getHelperInstance() method.
         oneParam[0] = CMPTemplateFormatter.getHelperInstanceTemplate;
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.getHelperInstance_,
                 Modifier.PUBLIC + Modifier.STATIC,
                 helperName, oneParam,
                 jdoHelperWriter);
 
         // Add Helper.getContainer() method.
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.getContainer_,
-                Modifier.PUBLIC, CMPTemplateFormatter.Object_,
+                Modifier.PUBLIC, JavaClassWriterHelper.Object_,
                 CMPTemplateFormatter.getContainerBody,
                 jdoHelperWriter);
 
         // Add getPCCLass to the helper class
         oneParam[0] = concreteImplName;
-        CMPTemplateFormatter.addGenericMethod(
+        JavaClassWriterHelper.addGenericMethod(
                 CMPTemplateFormatter.getPCClass_,
-                Modifier.PUBLIC, CMPTemplateFormatter.Class_,
-                CMPTemplateFormatter.getBodyAsStrings(
+                Modifier.PUBLIC, JavaClassWriterHelper.Class_,
+                JavaClassWriterHelper.getBodyAsStrings(
                     CMPTemplateFormatter.pcclassgetterformatter.format(
                     oneParam)),
                 jdoHelperWriter);
     }
 
     private String[] getKeyFields(PersistenceFieldElement[] fields) {
-        List returnList = new ArrayList();
+        List<String> returnList = new ArrayList<>();
         int i, count = ((fields != null) ? fields.length : 0);
 
         for (i = 0; i < count; i++) {
             PersistenceFieldElement pfe = fields[i];
 
-            if (pfe.isKey())
+            if (pfe.isKey()) {
                 returnList.add(pfe.getName());
+            }
         }
 
-        return (String[])returnList.toArray(new String[returnList.size()]);
+        return (String[])returnList.toArray(String[]::new);
     }
 
     /** Adds ObjectId/PrimaryKey conversion methods to the helper class.
@@ -1014,7 +1003,6 @@ abstract class JDOConcreteBeanGenerator {
         getPK.append(CMPTemplateFormatter.assertOidNotNullTemplate).
             append(CMPTemplateFormatter.oidcformatter.format(pcnameParam));
 
-        boolean debug = logger.isLoggable(Logger.FINE);
         if (length == 1) {
             // only one key field - we don't know yet if there is a special PK class.
 
@@ -1023,9 +1011,7 @@ abstract class JDOConcreteBeanGenerator {
             String pkfieldType = model.getFieldType(pcname, pkfield);
             pkfieldParam[0] = pkfield;
 
-            if (debug) {
-                logger.fine("pkfield: " + pkfield); // NOI18N
-            }
+            LOG.log(DEBUG, () -> "pkfield: " + pkfield);
 
             if (model.isPrimitive(pcname, pkfield) ||
                 (!pkClass.equals(pkfieldType) &&
@@ -1078,9 +1064,7 @@ abstract class JDOConcreteBeanGenerator {
                 String pkfield = keyFields[i];
                 pkfieldParam[0] = pkfield;
 
-                if (debug) {
-                    logger.fine("pkfield: " + pkfield); // NOI18N
-                }
+                LOG.log(DEBUG, () -> "pkfield: " + pkfield);
 
                 if (!model.isPrimitive(pcname, pkfield)) {
                     getOid.append(
@@ -1110,20 +1094,20 @@ abstract class JDOConcreteBeanGenerator {
         // Add ones that can be used for Collection conversion.
         jdoHelperWriter.addMethod(CMPTemplateFormatter.convertPrimaryKeyToObjectId_, // name
             Modifier.PUBLIC, // modifiers
-            CMPTemplateFormatter.Object_, // returnType
+            JavaClassWriterHelper.Object_, // returnType
             param0, // parameterNames
             objectType,// parameterTypes
             null,// exceptions
-            CMPTemplateFormatter.getBodyAsStrings(getOid.toString()), // body
+            JavaClassWriterHelper.getBodyAsStrings(getOid.toString()), // body
             null);// comments
 
         jdoHelperWriter.addMethod(CMPTemplateFormatter.convertObjectIdToPrimaryKey_, // name
             Modifier.PUBLIC, // modifiers
-            CMPTemplateFormatter.Object_, // returnType
+            JavaClassWriterHelper.Object_, // returnType
             param0, // parameterNames
             objectType,// parameterTypes
             null,// exceptions
-            CMPTemplateFormatter.getBodyAsStrings(getPK.toString()), // body
+            JavaClassWriterHelper.getBodyAsStrings(getPK.toString()), // body
             null);// comments
 
     }
@@ -1146,7 +1130,7 @@ abstract class JDOConcreteBeanGenerator {
     void generateConversions() throws IOException {
         String[] pcParams = new String[] {CMPTemplateFormatter.pc_,
                     CMPTemplateFormatter.jdoPersistenceManager_};
-        String[] pcParamTypes = new String[] {CMPTemplateFormatter.Object_,
+        String[] pcParamTypes = new String[] {JavaClassWriterHelper.Object_,
                     CMPTemplateFormatter.jdoPersistenceManagerClass_};
 
         // For PC - PK conversion.
@@ -1154,8 +1138,8 @@ abstract class JDOConcreteBeanGenerator {
 
         // Generate for Remote object conversion.
         if (hasRemoteInterface == false) {
-            body = CMPTemplateFormatter.getBodyAsStrings(
-                CMPTemplateFormatter.returnNull_ );
+            body = JavaClassWriterHelper.getBodyAsStrings(
+                JavaClassWriterHelper.returnNull_ );
 
             jdoHelperWriter.addMethod(CMPTemplateFormatter.convertPCToEJBObject_, // name
                 Modifier.PUBLIC, // modifiers
@@ -1170,7 +1154,7 @@ abstract class JDOConcreteBeanGenerator {
             twoParams[1] = CMPTemplateFormatter.jdoPersistenceManagerClass_;
             jdoHelperWriter.addMethod(CMPTemplateFormatter.convertEJBObjectToPC_, // name
                 Modifier.PUBLIC, // modifiers
-                CMPTemplateFormatter.Object_, // returnType
+                JavaClassWriterHelper.Object_, // returnType
                 param0PM, // parameterNames
                 twoParams,// parameterTypes
                 null,// exceptions
@@ -1269,7 +1253,7 @@ abstract class JDOConcreteBeanGenerator {
 
         StringBuffer body = new StringBuffer();
         body.append(CMPTemplateFormatter.assertPersistenceManagerIsNullTemplate);
-        body.append(CMPTemplateFormatter.endLine_);
+        body.append(JavaClassWriterHelper.endLine_);
         body.append(generateFinderSelectorCommonBody(methodHelper,
                                                      jdoqlElements,
                                                      mname,
@@ -1334,11 +1318,11 @@ abstract class JDOConcreteBeanGenerator {
         // add private static query variables and their monitors
         // no need to check ejbFindByPrimaryKey here
         oneParam[0] = queryVariableQualifier;
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.finderselectorstaticvformatter.format(oneParam),
             Modifier.STATIC,
             concreteImplWriter);
-        CMPTemplateFormatter.addPrivateField(
+        JavaClassWriterHelper.addPrivateField(
             CMPTemplateFormatter.finderselectorstaticfinalvformatter.format(oneParam),
             Modifier.STATIC + Modifier.FINAL,
             concreteImplWriter);
@@ -1371,7 +1355,7 @@ abstract class JDOConcreteBeanGenerator {
 
         if (jdoqlElements.isAggregate()) {
             if (queryParam == null) {
-               oneParam[0] = CMPTemplateFormatter.none_;
+               oneParam[0] = JavaClassWriterHelper.none_;
                body.append(CMPTemplateFormatter.aggqueryexecformatter.format(oneParam));
             } else {
                oneParam[0] = queryParam;
@@ -1380,7 +1364,7 @@ abstract class JDOConcreteBeanGenerator {
             }
         } else {
             if (queryParam == null) {
-               oneParam[0] = CMPTemplateFormatter.none_;
+               oneParam[0] = JavaClassWriterHelper.none_;
                body.append(CMPTemplateFormatter.queryexecformatter.format(oneParam));
             } else {
                oneParam[0] = queryParam;
@@ -1414,7 +1398,7 @@ abstract class JDOConcreteBeanGenerator {
      */
     String generateQueryIgnoreCache()
     {
-        return CMPTemplateFormatter.none_;
+        return JavaClassWriterHelper.none_;
     }
 
     /**
@@ -1437,7 +1421,7 @@ abstract class JDOConcreteBeanGenerator {
     private String generateParamConvBody(Method m, String[] parameterEjbNames) {
 
         StringBuffer paramString = new StringBuffer();
-        Class[] paramTypes = m.getParameterTypes();
+        Class<?>[] paramTypes = m.getParameterTypes();
         int paramLength = paramTypes.length;
         MessageFormat mformat = null;
         String paramClassName = null;
@@ -1464,7 +1448,7 @@ abstract class JDOConcreteBeanGenerator {
                             CMPTemplateFormatter.convertEJBObjectToPC_;
                         paramString.append(mformat.format(threeParams));
                     } else {
-                        paramString.append(CMPTemplateFormatter.param_ + i);
+                        paramString.append(JavaClassWriterHelper.param_ + i);
                     }
 
                 // if primitive type, do some wrapping
@@ -1477,13 +1461,17 @@ abstract class JDOConcreteBeanGenerator {
 
                 // else take the param as it is
                 } else {
-                    paramString.append(CMPTemplateFormatter.param_ + i);
+                    paramString.append(JavaClassWriterHelper.param_ + i);
                 }
                 // normal delimiter
-                if (i < paramLength - 1) paramString.append(
-                                          CMPTemplateFormatter.paramSeparator_);
+                if (i < paramLength - 1) {
+                    paramString.append(
+                                              JavaClassWriterHelper.paramSeparator_);
+                }
             }
-        } else return null;
+        } else {
+            return null;
+        }
 
         return paramString.toString();
     }
@@ -1502,15 +1490,14 @@ abstract class JDOConcreteBeanGenerator {
                                       String mname,
                                       String[] paramTypeNames) {
         String[] rc = null;
-        Class[] paramTypes = null;
+        Class<?>[] paramTypes = null;
 
-        Map methodNames = methodHelper.getMethodNames();
-        Method m = (Method) methodNames.get(mname);
+        Map<String, Method> methodNames = methodHelper.getMethodNames();
+        Method m = methodNames.get(mname);
 
-        boolean debug = logger.isLoggable(Logger.FINE);
-        if (debug) {
-            logger.fine("Processing method: " + mname);
-            logger.fine("Known method: " + m);
+        if (LOG.isLoggable(DEBUG)) {
+            LOG.log(DEBUG, "Processing method: " + mname);
+            LOG.log(DEBUG, "Known method: " + m);
         }
 
         if (m == null) {
@@ -1527,11 +1514,9 @@ abstract class JDOConcreteBeanGenerator {
             }
 
             try {
-                Class beanClass = Class.forName(abstractBean, true, loader);
+                Class<?> beanClass = Class.forName(abstractBean, true, loader);
                 m = beanClass.getMethod(mname, paramTypes);
-                if (debug) {
-                    logger.fine("Found method: " + m);
-                }
+                LOG.log(DEBUG, "Found method: " + m);
 
             } catch (Exception e) {
                 // Ignore. Generate what we know.
@@ -1539,7 +1524,7 @@ abstract class JDOConcreteBeanGenerator {
         }
 
         if (m != null) {
-            rc = CMPTemplateFormatter.getExceptionNames(m);
+            rc = JavaClassWriterHelper.getExceptionNames(m);
         }
 
         return rc;
@@ -1565,8 +1550,8 @@ abstract class JDOConcreteBeanGenerator {
      */
     private String makeLiteral(String st) {
         return (StringHelper.isEmpty(st)) ?
-            CMPTemplateFormatter.escapedEmptyString_ :
-            CMPTemplateFormatter.paramInitializer_ + st;
+            JavaClassWriterHelper.escapedEmptyString_ :
+            JavaClassWriterHelper.paramInitializer_ + st;
     }
 
     /**
@@ -1598,10 +1583,10 @@ abstract class JDOConcreteBeanGenerator {
      * @return <code>true</code> if field type requires clone.
      */
     boolean requireCloneOnGetAndSet(String fieldType) {
-        return (CMPTemplateFormatter.Date_.equals(fieldType) ||
-            CMPTemplateFormatter.SqlDate_.equals(fieldType) ||
-            CMPTemplateFormatter.SqlTime_.equals(fieldType) ||
-            CMPTemplateFormatter.SqlTimestamp_.equals(fieldType));
+        return (JavaClassWriterHelper.Date_.equals(fieldType) ||
+            JavaClassWriterHelper.SqlDate_.equals(fieldType) ||
+            JavaClassWriterHelper.SqlTime_.equals(fieldType) ||
+            JavaClassWriterHelper.SqlTimestamp_.equals(fieldType));
     }
 
     /** Verifies if this field type requires trim on set operation.
@@ -1610,7 +1595,7 @@ abstract class JDOConcreteBeanGenerator {
      */
     boolean requireTrimOnSet(String fieldType) {
          // Strings require trim on set
-         boolean requireTrimOnSet = CMPTemplateFormatter.String_.equals(fieldType);
+         boolean requireTrimOnSet = JavaClassWriterHelper.String_.equals(fieldType);
          // do not trim if user has overriden it by specifying to support trailing spaces in pk columns
          // See https://glassfish.dev.java.net/issues/show_bug.cgi?id=7491 for more details
          return requireTrimOnSet && !SUPPORT_TRAILING_SPACES_IN_STRING_PK_COLUMNS;
@@ -1658,13 +1643,10 @@ abstract class JDOConcreteBeanGenerator {
             name = nameMapper.getEjbFieldForPersistenceField(pcname, pfn);
 
             String fname = StringHelper.getCapitalizedString(name);
-            getter = CMPTemplateFormatter.get_ + fname;
-            setter = CMPTemplateFormatter.set_ + fname;
+            getter = JavaClassWriterHelper.get_ + fname;
+            setter = JavaClassWriterHelper.set_ + fname;
 
-            boolean debug = logger.isLoggable(Logger.FINE);
-            if (debug) {
-                logger.fine("-Methods: " + getter + " " + setter); // NOI18N
-            }
+            LOG.log(DEBUG, () -> "-Methods: " + getter + " " + setter);
 
             isKey = pfe.isKey();
             isPrimitive = model.isPrimitive(pcname, pfn);
@@ -1678,9 +1660,7 @@ abstract class JDOConcreteBeanGenerator {
                 type = model.getFieldType(beanName, name);
             }
 
-            if (debug) {
-                logger.fine("Field: " + name + " " + type); // NOI18N
-            }
+            LOG.log(DEBUG, () -> "Field: " + name + " " + type);
 
             requireCloneOnGetAndSet = requireCloneOnGetAndSet(type);
             isGeneratedField = nameMapper.isGeneratedField(beanName, name);

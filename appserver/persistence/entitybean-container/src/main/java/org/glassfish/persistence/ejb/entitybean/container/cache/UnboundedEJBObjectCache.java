@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,14 +29,15 @@ import java.util.Properties;
  *
  * @author Mahesh Kannan
  */
-public class UnboundedEJBObjectCache
-    extends BaseCache
-    implements EJBObjectCache
-{
+public class UnboundedEJBObjectCache<K, V> extends BaseCache<K, V> implements EJBObjectCache<K, V> {
+
     /**
      * default constructor
      */
-    public UnboundedEJBObjectCache(String name) { super(); }
+    public UnboundedEJBObjectCache(String name) {
+        super();
+    }
+
 
     /**
      * constructor with specified timeout
@@ -44,34 +46,42 @@ public class UnboundedEJBObjectCache
         super();
     }
 
+
+    @Override
     public void init(int maxEntries, int numberOfVictimsToSelect,
             long timeout, float loadFactor, Properties props)
     {
         super.init(maxEntries, loadFactor, props);
     }
 
-    public Object get(Object key, boolean incrementRefCount) {
+    @Override
+    public V get(K key, boolean incrementRefCount) {
         return super.get(key);
     }
 
-    public Object put(Object key, Object value, boolean linkWithLru) {
+    @Override
+    public V put(K key, V value, boolean linkWithLru) {
         return super.put(key, value);
     }
 
-    public Object remove(Object key, boolean decrementRefCount) {
+    @Override
+    public V remove(K key, boolean decrementRefCount) {
         return super.remove(key);
     }
 
+    @Override
     public void setEJBObjectCacheListener(EJBObjectCacheListener listener) {
         //do nothing
     }
 
-    protected void trimItem(CacheItem item) {
+    @Override
+    protected void trimItem(CacheItem<K, V> item) {
 
     }
 
-    public Map getStats() {
-        Map map = new HashMap();
+    @Override
+    public Map<String, Object> getStats() {
+        Map<String, Object> map = new HashMap<>();
         StringBuffer sbuf = new StringBuffer();
         sbuf.append("(listSize = 0")
         .append("; cacheSize = ").append(getEntryCount())

@@ -73,7 +73,7 @@ public interface PersistenceManager
      * @param cls the Class of the candidate instances
      * @return the new Query
      */
-    Query newQuery(Class cls);
+    Query newQuery(Class<?> cls);
 
     /** Create a new Query with the Class of the candidate instances and candidate Collection.
      * specified.
@@ -81,7 +81,7 @@ public interface PersistenceManager
      * @param cln the Collection of candidate instances
      * @return the new Query
      */
-    Query newQuery(Class cls,Collection cln);
+    Query newQuery(Class<?> cls, Collection<?> cln);
 
     /** Create a new Query with the Class of the candidate instances and Filter.
      * specified.
@@ -89,7 +89,7 @@ public interface PersistenceManager
      * @param filter the Filter for candidate instances
      * @return the new Query
      */
-    Query newQuery (Class cls, String filter);
+    Query newQuery (Class<?> cls, String filter);
 
     /** Create a new Query with the Class of the candidate instances, candidate Collection,
      * and Filter.
@@ -98,7 +98,7 @@ public interface PersistenceManager
      * @param filter the Filter for candidate instances
      * @return the new Query
      */
-    Query newQuery (Class cls, Collection cln, String filter);
+    Query newQuery (Class<?> cls, Collection<?> cln, String filter);
 
     /** The PersistenceManager may manage a collection of instances in the data
      * store based on the class of the instances.  This method returns a
@@ -109,7 +109,7 @@ public interface PersistenceManager
      * @return a Collection of instances
      * @see Query
      */
-    Collection getExtent(Class persistenceCapableClass,boolean subclasses);
+    Collection<?> getExtent(Class<?> persistenceCapableClass,boolean subclasses);
 
     /** This method locates a persistent instance in the cache of instances
      * managed by this PersistenceManager.  If an instance with the same ObjectId
@@ -164,7 +164,7 @@ public interface PersistenceManager
      * @param pcs a Collection of transient instances
      * @see #makePersistent(Object pc)
      */
-    void makePersistent (Collection pcs);
+    void makePersistent (Collection<?> pcs);
 
     /** Delete the persistent instance from the data store.
      * This method must be called in an active transaction.
@@ -190,7 +190,7 @@ public interface PersistenceManager
      * @param pcs a Collection of persistent instances
      * @see #deletePersistent(Object pc)
      */
-    void deletePersistent (Collection pcs);
+    void deletePersistent (Collection<?> pcs);
 
     /** This method returns the PersistenceManagerFactory used to create
      * this PersistenceManager.  It returns null if this instance was
@@ -231,7 +231,7 @@ public interface PersistenceManager
      * @param cls the PersistenceCapable Class
      * @return the Class of the ObjectId of the parameter
      */
-    Class getObjectIdClass(Class cls);
+    Class<?> getObjectIdClass(Class<?> cls);
 
 
     /**
@@ -245,7 +245,7 @@ public interface PersistenceManager
      * @param fieldName the field to notify upon changes
      * @return the object of the class type
      */
-    Object newSCOInstance (Class type, Object owner, String fieldName);
+    Object newSCOInstance (Class<?> type, Object owner, String fieldName);
 
 
     /**
@@ -264,8 +264,8 @@ public interface PersistenceManager
      * @param initialSize initial size of the Collection
      * @return the object of the class type
      */
-    Object newCollectionInstance (Class type, Object owner, String fieldName,
-        Class elementType, boolean allowNulls, int initialSize);
+    Object newCollectionInstance (Class<?> type, Object owner, String fieldName,
+        Class<?> elementType, boolean allowNulls, int initialSize);
 
 
     /** This method locates a persistent instance in the cache of instances

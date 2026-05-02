@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,19 +22,22 @@ import com.sun.ejb.codegen.ClassGenerator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
-import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.objectweb.asm.Opcodes.AASTORE;
 import static org.objectweb.asm.Opcodes.ACC_PROTECTED;
@@ -73,20 +76,18 @@ public class ASMClassWriter implements ClassWriter {
     private final static String CREATE_AND_INITIALIZE_SIG = "(Ljava/lang/Class;)Ljava/lang/Object;";
 
     private final org.objectweb.asm.ClassWriter cw = new org.objectweb.asm.ClassWriter(0);
+    private static final Logger LOG = System.getLogger(ASMClassWriter.class.getName());
     private String className;
     private ServiceLocator habitat;
     private final String generatedPath;
     private final Map<String, String> generatedMethods = new HashMap<>();
-    //  private String baseClassName;
-    //  private String resourcePath;
 
     public ASMClassWriter(ServiceLocator habitat, String generatedPath, String className, String baseClassName, String resourcePath) {
         this.habitat = habitat;
         this.className = className;
         this.generatedPath = generatedPath;
-        //     this.baseClassName = baseClassName;
-        //     this.resourcePath = resourcePath;
-        if (baseClassName.indexOf("TemplateCommand") != -1) { //constructor is created in createCommandResourceConstructor
+        if (baseClassName.indexOf("TemplateCommand") != -1) {
+            // constructor is created in createCommandResourceConstructor
             return;
         }
         if (baseClassName.indexOf(".") != -1) {
@@ -97,7 +98,7 @@ public class ASMClassWriter implements ClassWriter {
         cw.visit(V17, ACC_PUBLIC + ACC_SUPER, generatedPath + className, null, baseClassName, null);
 
         if (resourcePath != null) {
-            RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (1)", resourcePath);
+            LOG.log(DEBUG, "Creating resource with path {0} (in constructor)", resourcePath);
             AnnotationVisitor av0 = cw.visitAnnotation("Ljakarta/ws/rs/Path;", true);
             av0.visit("value", "/" + resourcePath + "/");
             av0.visitEnd();
@@ -121,7 +122,7 @@ public class ASMClassWriter implements ClassWriter {
         String baseClassName = generatedPath + className;
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get" + resourceClassName, "()L" + completeName + ";", null, null);
 
-        RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (2)", mappingPath);
+        LOG.log(DEBUG, "Creating resource with path {0} (in createCustomResourceMapping)", mappingPath);
         AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta/ws/rs/Path;", true);
         av0.visit("value", mappingPath + "/");
         av0.visitEnd();
@@ -229,7 +230,7 @@ public class ASMClassWriter implements ClassWriter {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get" + commandResourceClassName,
                 "()L" + generatedPath + commandResourceClassName + ";", null, null);
 
-        RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (3)", resourcePath);
+        LOG.log(DEBUG, "Creating resource with path {0} (in createGetCommandResource)", resourcePath);
         AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta/ws/rs/Path;", true);
         av0.visit("value", resourcePath + "/");
         av0.visitEnd();
@@ -331,12 +332,12 @@ public class ASMClassWriter implements ClassWriter {
     public void done() {
         cw.visitEnd();
         try {
-            defineClass(this.getClass(), cw.toByteArray());
+            defineClass(getClass(), cw.toByteArray());
             if ("true".equals(System.getenv("REST_DEBUG"))) {
                 debug(className, cw.toByteArray());
             }
         } catch (Exception ex) {
-            RestLogging.restLogger.log(Level.SEVERE, null, ex);
+            LOG.log(ERROR, "Failed to define " + getClass(), ex);
         }
 
     }
@@ -378,7 +379,7 @@ public class ASMClassWriter implements ClassWriter {
         generatedMethods.put(methodName, childClass);
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, methodName, "()L" + childClass + ";", null, null);
 
-        RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (4)", path);
+        LOG.log(DEBUG, "Creating resource with path {0} (in createGetChildResource)", path);
         AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta/ws/rs/Path;", true);
         av0.visit("value", path + "/");
         av0.visitEnd();
@@ -406,7 +407,7 @@ public class ASMClassWriter implements ClassWriter {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get" + childResourceClassName,
                 "(Ljava/lang/String;)L" + generatedPath + childResourceClassName + ";", null, null);
 
-        RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (5)", keyAttributeName);
+        LOG.log(DEBUG, "Creating resource with path {0} (in createGetChildResourceForListResources)", keyAttributeName);
         AnnotationVisitor av0 = mv.visitAnnotation("Ljakarta/ws/rs/Path;", true);
         av0.visit("value", "{" + keyAttributeName + "}/");
         av0.visitEnd();
@@ -472,14 +473,13 @@ public class ASMClassWriter implements ClassWriter {
 
     private void defineClass(Class similarClass, byte[] classBytes) throws Exception {
         String generatedClassName = "org.glassfish.admin.rest.resources.generatedASM." + className;
-        RestLogging.restLogger.log(Level.FINEST, "Generating class {0}", generatedClassName);
+        LOG.log(DEBUG, "Generating class {0}", generatedClassName);
         ClassLoader loader = similarClass.getClassLoader();
         ProtectionDomain pd = similarClass.getProtectionDomain();
-        byte[] byteContent = getByteClass();
-        ClassGenerator.defineClass(loader, generatedClassName, byteContent, pd);
+        ClassGenerator.defineClass(loader, generatedClassName, getByteClass(), pd);
         try {
             loader.loadClass(generatedClassName);
-        } catch (ClassNotFoundException cnfEx) {
+        } catch (Exception cnfEx) {
             throw new GeneratorException(cnfEx);
         }
     }
@@ -500,31 +500,21 @@ public class ASMClassWriter implements ClassWriter {
             clsName = clsName.substring(index + 1);
         }
 
-        FileOutputStream fos = null;
-        try {
-            String rootPath = System.getProperty(INSTALL_ROOT.getSystemPropertyName()) + File.separator
-                + "lib" + File.separator + "rest" + File.separator;
-            File parentDir = new File(rootPath);
-            if (!parentDir.exists()) {
-                if (!parentDir.mkdirs()) {
-                    throw new RuntimeException("Unable to create parent directory for generated class file logging");
-                }
-            }
-
-            fos = new FileOutputStream(new File(parentDir, clsName + ".class"));
-            fos.write(classData);
-            fos.flush();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException ex) {
-                    RestLogging.restLogger.log(Level.SEVERE, null, ex);
-                }
+        Path parentDir = Path.of(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).resolve(Path.of("lib", "rest"));
+        if (!Files.isDirectory(parentDir)) {
+            try {
+                Files.createDirectories(parentDir);
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to create parent directory for generated class file logging", e);
             }
         }
-    }
 
+        File classFile = parentDir.resolve(clsName + ".class").toFile();
+        try (FileOutputStream fos = new FileOutputStream(classFile)) {
+            fos.write(classData);
+            fos.flush();
+        } catch (Exception e) {
+            LOG.log(ERROR, "Failed to write the generated class to " + classFile, e);
+        }
+    }
 }

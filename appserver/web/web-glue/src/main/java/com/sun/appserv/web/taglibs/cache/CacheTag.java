@@ -37,14 +37,17 @@ import org.glassfish.web.LogFacade;
  * or not.
  *
  * Usage Example:
- * <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %>
- * <ias:cache key="<%= cacheKey %>" usecached="<%= useCached %>"
- *            refresh="<%= reload %>" timeout="3600">
- *   ... expensive operation ...
- * </ias:cache>
+ * <pre>
+ * {@code <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %>}
+ * {@code <ias:cache key="<%= cacheKey %>" usecached="<%= useCached %>"}
+ * {@code           refresh="<%= reload %>" timeout="3600">}
+ * {@code  ... expensive operation ...}
+ * {@code </ias:cache>}
+ * </pre>
  */
-public class CacheTag extends BodyTagSupport
-{
+public class CacheTag extends BodyTagSupport {
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constants used to calculate the timeout
      */
@@ -121,6 +124,7 @@ public class CacheTag extends BodyTagSupport
      *         ensures that the BodyContent is created and the tag body
      *         is evaluated into it.
      */
+    @Override
     public int doStartTag()
         throws JspException
     {
@@ -131,16 +135,18 @@ public class CacheTag extends BodyTagSupport
         // key is specified, a position specific key suffix is used
         _key = CacheUtil.generateKey(_keyExpr, pageContext);
 
-        if (_logger.isLoggable(Level.FINE))
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, LogFacade.CACHETAG_TIMEOUT, new Object[] {_key, _timeout});
+        }
 
         // if useCachedResponse is false, we do not check for any
         // cached response and just evaluate the tag body
         if (_useCachedResponse) {
 
             _cache = CacheUtil.getCache(pageContext, _scope);
-            if (_cache == null)
+            if (_cache == null) {
                 throw new JspException(_rb.getString(LogFacade.TAGLIBS_CACHE_NO_CACHE));
+            }
 
             // if refreshCache is true, we want to re-evaluate the
             // tag body and refresh the cached entry
@@ -190,6 +196,7 @@ public class CacheTag extends BodyTagSupport
      * @throws JspException the standard exception thrown
      * @return always returns SKIP_BODY since we dont do any iteration
      */
+    @Override
     public int doAfterBody()
         throws JspException
     {
@@ -223,6 +230,7 @@ public class CacheTag extends BodyTagSupport
      * @throws JspException the standard exception thrown
      * @return always returns EVAL_PAGE since we want the entire jsp evaluated
      */
+    @Override
     public int doEndTag()
         throws JspException
     {
@@ -245,8 +253,9 @@ public class CacheTag extends BodyTagSupport
      * the cache.
      */
     public void setKey(String key) {
-        if (key != null && key.length() > 0)
+        if (key != null && key.length() > 0) {
             _keyExpr = key;
+        }
     }
 
     /**
@@ -266,8 +275,9 @@ public class CacheTag extends BodyTagSupport
                 // try to parse it as 1sec, 1min, 1 hour and 1day formats
                 int i = 0;
                 while (i < timeout.length() &&
-                       Character.isDigit(timeout.charAt(i)))
+                       Character.isDigit(timeout.charAt(i))) {
                     i++;
+                }
 
                 if (i > 0) {
                     _timeout = Integer.parseInt(timeout.substring(0, i));
@@ -298,8 +308,9 @@ public class CacheTag extends BodyTagSupport
      * either.
      */
     public void setNocache(boolean noCache) {
-        if (noCache)
+        if (noCache) {
             _useCachedResponse = false;
+        }
     }
 
     /**

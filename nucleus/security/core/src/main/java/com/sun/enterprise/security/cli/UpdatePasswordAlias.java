@@ -47,8 +47,13 @@ import org.jvnet.hk2.annotations.Service;
  * <domain-dir>/<domain-name>/config/domain-passwords.p12 file gets updated with the new alias password
  *
  * domain.xml example entry is:
- * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type
- * ="client"> <property name="password" value="${ALIAS=myalias}/> </provider-config>
+ * <pre>{@code
+ * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule"
+ *   provider-id="XWS_ClientProvider"
+ *   provider-type="client">
+ *     <property name="password" value="${ALIAS=myalias}/>
+ * </provider-config>
+ * }</pre>
  *
  * @author Nandini Ektare
  */

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,18 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * NumericWrapperClassType.java
- *
- * Created on April 14, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
 /**
  *
- * @author  Michael Bouschen
- * @version 0.1
+ * @author  Michael Bouschen 2000
  */
 public class NumericWrapperClassType
     extends WrapperClassType
@@ -34,7 +28,7 @@ public class NumericWrapperClassType
     /**
      *
      */
-    public NumericWrapperClassType(String name, Class clazz, int enumType,
+    public NumericWrapperClassType(String name, Class<?> clazz, int enumType,
                                    PrimitiveType primitiveType, TypeTable typetab)
     {
         super(name, clazz, enumType, primitiveType, typetab);
@@ -43,6 +37,7 @@ public class NumericWrapperClassType
     /**
      * A numeric wrapper class type defines an ordering.
      */
+    @Override
     public boolean isOrderable()
     {
         return true;
@@ -55,6 +50,7 @@ public class NumericWrapperClassType
      * @param value value to be converted
      * @return converted value
      */
+    @Override
     public Number getValue(Number value)
     {
         return ((NumericType)primitiveType).getValue(value);
@@ -65,6 +61,7 @@ public class NumericWrapperClassType
      * @param value value to be negated
      * @return -value
      */
+    @Override
     public Number negate(Number value)
     {
         return ((NumericType)primitiveType).negate(value);

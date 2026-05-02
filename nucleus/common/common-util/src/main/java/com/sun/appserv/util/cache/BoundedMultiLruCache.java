@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +29,7 @@ import java.util.Properties;
  * Underlying Hashtable is made into logical segments, with each segment
  * having its own LRU list.
  */
-public class BoundedMultiLruCache extends MultiLruCache {
+public class BoundedMultiLruCache<K, V> extends MultiLruCache<K, V> {
 
     // upper bound on the cache size
     protected long maxSize = Constants.DEFAULT_MAX_CACHE_SIZE;
@@ -39,6 +40,7 @@ public class BoundedMultiLruCache extends MultiLruCache {
      * initialize the LRU cache
      * @param maxCapacity maximum number of entries this cache may hold
      */
+    @Override
     public void init(int maxCapacity, Properties props) throws Exception {
         super.init(maxCapacity, props);
         currentSize = 0;
@@ -70,9 +72,9 @@ public class BoundedMultiLruCache extends MultiLruCache {
             }
 
             // sanity check and convert
-            if (size > 0)
+            if (size > 0) {
                 maxSize = (size * multiplier);
-            else  {
+            } else  {
                 String msg = CULoggerInfo.getString(CULoggerInfo.boundedMultiLruCacheIllegalMaxSize);
 
                 Object[] params = { strMaxSize };
@@ -90,8 +92,9 @@ public class BoundedMultiLruCache extends MultiLruCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected CacheItem itemAdded(CacheItem item) {
-        LruCacheItem overflow = (LruCacheItem) super.itemAdded(item);
+    @Override
+    protected CacheItem<K, V> itemAdded(CacheItem<K, V> item) {
+        LruCacheItem<K, V> overflow = (LruCacheItem<K, V>) super.itemAdded(item);
 
         // update the size
         if (overflow != null) {
@@ -108,7 +111,8 @@ public class BoundedMultiLruCache extends MultiLruCache {
      * @param oldSize size of the previous value that was refreshed
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemRefreshed(CacheItem item, int oldSize) {
+    @Override
+    protected void itemRefreshed(CacheItem<K, V> item, int oldSize) {
         super.itemRefreshed(item, oldSize);
 
         /** reduce the cache by the size of the size of the previous value
@@ -124,7 +128,8 @@ public class BoundedMultiLruCache extends MultiLruCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemRemoved(CacheItem item) {
+    @Override
+    protected void itemRemoved(CacheItem<K, V> item) {
         super.itemRemoved(item);
 
         // update the size
@@ -135,6 +140,7 @@ public class BoundedMultiLruCache extends MultiLruCache {
      * has cache reached its threshold
      * @return true when the cache reached its threshold
      */
+    @Override
     protected boolean isThresholdReached() {
         return (currentSize > maxSize || super.isThresholdReached());
     }
@@ -164,37 +170,26 @@ public class BoundedMultiLruCache extends MultiLruCache {
      * @return an Object corresponding to the stat
      * See also: Constant.java for the key
      */
+    @Override
     public Object getStatByName(String key) {
         Object stat = super.getStatByName(key);
-
         if (stat == null && key != null) {
-            if (key.equals(Constants.STAT_BOUNDEDMULTILRUCACHE_CURRENT_SIZE))
+            if (key.equals(Constants.STAT_BOUNDEDMULTILRUCACHE_CURRENT_SIZE)) {
                 stat = Long.valueOf(currentSize);
-            else if (key.equals(Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE)) {
-                if (maxSize == Constants.DEFAULT_MAX_CACHE_SIZE)
-                    stat = Constants.STAT_DEFAULT;
-                else
-                    stat = Long.valueOf(maxSize);
+            } else if (key.equals(Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE)) {
+                stat = Long.valueOf(maxSize);
             }
         }
 
         return stat;
     }
 
-    public Map getStats() {
-        Map stats = super.getStats();
-
+    @Override
+    public Map<String, Object> getStats() {
+        Map<String, Object> stats = super.getStats();
         // cache size in KB
-        stats.put(Constants.STAT_BOUNDEDMULTILRUCACHE_CURRENT_SIZE,
-                  Long.valueOf(currentSize));
-        if (maxSize == Constants.DEFAULT_MAX_CACHE_SIZE) {
-            stats.put(Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE,
-                      Constants.STAT_DEFAULT);
-        }
-        else {
-            stats.put(Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE,
-                      Long.valueOf(maxSize));
-        }
+        stats.put(Constants.STAT_BOUNDEDMULTILRUCACHE_CURRENT_SIZE, currentSize);
+        stats.put(Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE, maxSize);
         return stats;
     }
 }

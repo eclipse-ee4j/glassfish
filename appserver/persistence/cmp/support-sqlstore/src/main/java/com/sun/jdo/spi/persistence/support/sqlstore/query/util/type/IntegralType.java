@@ -35,7 +35,7 @@ public class IntegralType
     /**
      *
      */
-    public IntegralType(String name, Class clazz, int enumType)
+    public IntegralType(String name, Class<?> clazz, int enumType)
     {
         super(name, clazz, enumType);
     }
@@ -47,20 +47,22 @@ public class IntegralType
      * @param value value to be converted
      * @return converted value
      */
+    @Override
     public Number getValue(Number value)
     {
         Number ret = null;
 
-        if (value == null)
+        if (value == null) {
             ret = null;
-        else if ("int".equals(getName()))
+        } else if ("int".equals(getName())) {
             ret = new Integer(value.intValue());
-        else if ("long".equals(getName()))
+        } else if ("long".equals(getName())) {
             ret = new Long(value.longValue());
-        else if ("byte".equals(getName()))
+        } else if ("byte".equals(getName())) {
             ret = new Byte(value.byteValue());
-        else if ("short".equals(getName()))
+        } else if ("short".equals(getName())) {
             ret = new Short(value.shortValue());
+        }
 
         return ret;
     }
@@ -70,20 +72,22 @@ public class IntegralType
      * @param value value to be negated
      * @return -value
      */
+    @Override
     public Number negate(Number value)
     {
         Number ret = null;
 
-        if (value == null)
+        if (value == null) {
             ret = null;
-        else if ("int".equals(getName()))
+        } else if ("int".equals(getName())) {
             ret = new Integer(-value.intValue());
-        else if ("long".equals(getName()))
+        } else if ("long".equals(getName())) {
             ret = new Long(-value.longValue());
-        else if ("byte".equals(getName()))
+        } else if ("byte".equals(getName())) {
             ret = new Byte((byte)-value.byteValue());
-        else if ("short".equals(getName()))
+        } else if ("short".equals(getName())) {
             ret = new Short((short)-value.shortValue());
+        }
 
         return ret;
     }

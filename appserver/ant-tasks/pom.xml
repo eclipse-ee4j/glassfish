@@ -34,7 +34,7 @@
     <dependencies>
        <dependency>
            <groupId>org.glassfish.external</groupId>
-           <artifactId>ant</artifactId>
+           <artifactId>ant-osgi</artifactId>
            <optional>true</optional>
        </dependency>
 

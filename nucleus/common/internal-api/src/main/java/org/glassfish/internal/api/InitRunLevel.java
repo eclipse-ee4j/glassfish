@@ -29,7 +29,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * The meta annotation representing the Init RunLevel.
  *
  * @author Jeff Trent
- * @see {@link RunLevelService} in Hk2
+ * @see RunLevel in Hk2
  */
 @Retention(RUNTIME)
 @Target(TYPE)

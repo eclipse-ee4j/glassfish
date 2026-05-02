@@ -41,17 +41,17 @@ Table 1-1 Performance Tuning Roadmap
 |Step |Description of Task |Location of Instructions
 |1
 |Design: Decide on the high-availability topology and set up {productName}.
-a|xref:deployment-planning-guide.adoc#GSPLG[
+a|xref:deployment-planning-guide.adoc[
 {productName} Deployment Planning Guide]
 
 |2
 |Capacity Planning: Make sure the systems have sufficient resources to perform well.
-a|xref:deployment-planning-guide.adoc#GSPLG[
+a|xref:deployment-planning-guide.adoc[
 {productName} Deployment Planning Guide]
 
 |3
 |Installation: Configure your DAS, clusters, and clustered server instances.
-a|xref:installation-guide.adoc#GSING[
+a|xref:installation-guide.adoc[
 {productName} Installation Guide]
 
 |4
@@ -59,15 +59,15 @@ a|xref:installation-guide.adoc#GSING[
 Familiarize yourself with how to configure and administer the {productName}.
 a|The following books:
 
-* xref:application-deployment-guide.adoc#GSDPG[
+* xref:application-deployment-guide.adoc[
 {productName} Application Deployment Guide]
-* xref:administration-guide.adoc#GSADG[
+* xref:administration-guide.adoc[
 {productName} Administration Guide]
 
 |5
 |High Availability Configuration: Configuring your DAS, clusters, and
 clustered server instances for high availability and failover
-a|xref:ha-administration-guide.adoc#GSHAG[
+a|xref:ha-administration-guide.adoc[
 {productName} High Availability Administration Guide]
 
 |6
@@ -279,7 +279,7 @@ minimum application downtime and enhanced transactional security.
 See xref:tuning-java.adoc#tuning-high-availability-persistence[Tuning High Availability Persistence] for
 high availability persistence tuning recommendations.
 
-See the xref:ha-administration-guide.adoc#GSHAG[{productName} High
+See the xref:ha-administration-guide.adoc[{productName} High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
 features in {productName} {product-majorVersion}.
@@ -339,7 +339,7 @@ can host different URL domains on a single {productName} process for
 efficient administration.
 
 For detailed information on administration, see the
-xref:administration-guide.adoc#GSADG[{productName} Administration Guide].
+xref:administration-guide.adoc[{productName} Administration Guide].
 
 [[general-tuning-concepts]]
 
@@ -512,7 +512,7 @@ http://java.sun.com/docs/performance[Java Performance Documentation]
 http://java.sun.com/blueprints/performance/index.html[Java Performance
 BluePrints] (`http://java.sun.com/blueprints/performance/index.html`).
 * For more information about performance tuning for high availability
-configurations, see the xref:ha-administration-guide.adoc#GSHAG[{productName}
+configurations, see the xref:ha-administration-guide.adoc[{productName}
 High Availability Administration Guide].
 * For complete information about using the Performance Tuning features
 available through the {productName} Administration Console, refer to

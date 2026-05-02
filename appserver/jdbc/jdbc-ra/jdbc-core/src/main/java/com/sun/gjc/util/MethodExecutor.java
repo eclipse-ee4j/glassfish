@@ -40,7 +40,6 @@ import static java.util.logging.Level.SEVERE;
  * Execute the methods based on the parameters.
  *
  * @author Binod P.G
- * @version 1.0, 02/07/23
  */
 public class MethodExecutor implements Serializable {
 
@@ -55,10 +54,9 @@ public class MethodExecutor implements Serializable {
      * Exceute a simple set Method.
      *
      * @param value Value to be set.
-     * @param method <code>Method</code> object.
+     * @param method {@link Method} object.
      * @param obj Object on which the method to be executed.
-     * @throws <code>ResourceException</code>, in case of the mismatch of parameter
-     * values or a security violation.
+     * @throws ResourceException in case of the mismatch of parameter values or a security violation.
      */
     public void runJavaBeanMethod(String value, Method method, Object obj) throws ResourceException {
         if (value == null || value.trim().equals("")) {
@@ -90,11 +88,10 @@ public class MethodExecutor implements Serializable {
     /**
      * Executes the method.
      *
-     * @param method <code>Method</code> object.
+     * @param method {@link Method} object.
      * @param obj Object on which the method to be executed.
      * @param values Parameter values for executing the method.
-     * @throws <code>ResourceException</code>, in case of the mismatch of parameter
-     * values or a security violation.
+     * @throws ResourceException in case of the mismatch of parameter values or a security violation.
      */
     public void runMethod(Method method, Object obj, List<String> values) throws ResourceException {
         Class<?>[] parameters = method.getParameterTypes();
@@ -134,8 +131,7 @@ public class MethodExecutor implements Serializable {
      * @param type Class name to which the conversion is required.
      * @param parameter String value to be converted.
      * @return Converted value.
-     * @throws <code>ResourceException</code>, in case of the mismatch of parameter
-     * values or a security violation.
+     * @throws ResourceException in case of the mismatch of parameter values or a security violation.
      */
     private Object convertType(Class<?> type, String parameter) throws ResourceException {
         try {
@@ -182,8 +178,9 @@ public class MethodExecutor implements Serializable {
 
             if (typeName.equals("java.util.Properties")) {
                 Properties p = stringToProperties(parameter);
-                if (p != null)
+                if (p != null) {
                     return p;
+                }
             }
 
             return parameter;
@@ -221,8 +218,9 @@ public class MethodExecutor implements Serializable {
     }
 
     private Properties stringToProperties(String parameter) {
-        if (parameter == null)
+        if (parameter == null) {
             return null;
+        }
         String s = parameter.trim();
         if (!((s.startsWith("(") && s.endsWith(")")))) {
             return null; // not a "( .... )" syntax

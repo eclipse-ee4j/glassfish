@@ -22,6 +22,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -49,6 +50,7 @@ class EnhancerModel extends Model {
      * @return <code>true</code> if this class name represents an interface;
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean isInterface (String className) {
         throw new UnsupportedOperationException();
     }
@@ -65,6 +67,7 @@ class EnhancerModel extends Model {
      * @return the input stream for the specified resource, <code>null</code>
      * if an error occurs or none exists
      */
+    @Override
     protected BufferedInputStream getInputStreamForResource (String className,
         ClassLoader classLoader, String resourceName)
     {
@@ -91,6 +94,7 @@ class EnhancerModel extends Model {
      * @return the top non-Object superclass for className,
      * <code>className</code> if an error occurs or none exists
      */
+    @Override
     protected String findPenultimateSuperclass (String className) {
         debug("findPenultimateSuperclass(" + className + ")");    // NOI18N
         throw new UnsupportedOperationException();
@@ -102,6 +106,7 @@ class EnhancerModel extends Model {
      * @return the superclass for className, <code>null</code> if an error
      * occurs or none exists
      */
+    @Override
     protected String getSuperclass (String className) {
         debug("getSuperclass (" + className + ")");    // NOI18N
         return null;    // "java.lang.Object";        // NOI18N
@@ -120,11 +125,12 @@ class EnhancerModel extends Model {
      *
      * @exception IOException if there is some error creating the file
      */
-    protected BufferedOutputStream createFile (String className, String baseFileName,
-        String extension) throws IOException
-    {
+    @Override
+    protected BufferedOutputStream createFile(String className, String baseFileName, String extension)
+        throws IOException {
         throw new UnsupportedOperationException();
     }
+
 
     /**
      * Deletes the file with the given file name which is parallel
@@ -133,9 +139,8 @@ class EnhancerModel extends Model {
      * @param fileName the name of the file
      * @exception IOException if there is some error deleting the file
      */
-    protected void deleteFile (String className, String fileName)
-        throws IOException
-    {
+    @Override
+    protected void deleteFile(String className, String fileName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
@@ -144,8 +149,8 @@ class EnhancerModel extends Model {
      * @param classLoader the class loader used to check the class
      * @return the class element for the specified className
      */
-    public Object getClass (String className, ClassLoader classLoader)
-    {
+    @Override
+    public Class<?> getClass(String className, ClassLoader classLoader) {
         throw new UnsupportedOperationException();
     }
 
@@ -159,9 +164,8 @@ class EnhancerModel extends Model {
      * <code>false</code> otherwise.
      * @see #getClass
      */
-    public boolean implementsInterface (Object classElement,
-        String interfaceName)
-    {
+    @Override
+    public boolean implementsInterface(Object classElement, String interfaceName) {
         throw new UnsupportedOperationException();
     }
 
@@ -171,8 +175,8 @@ class EnhancerModel extends Model {
      * <code>false</code> otherwise.
      * @see #getClass
      */
-    public boolean hasConstructor (String className)
-    {
+    @Override
+    public boolean hasConstructor(String className) {
         throw new UnsupportedOperationException();
     }
 
@@ -186,8 +190,8 @@ class EnhancerModel extends Model {
      * @return the constructor element
      * @see #getClass
      */
-    public Object getConstructor (String className, String[] argTypeNames)
-    {
+    @Override
+    public Object getConstructor(String className, String[] argTypeNames) {
         throw new UnsupportedOperationException();
     }
 
@@ -202,9 +206,8 @@ class EnhancerModel extends Model {
      * @return the method element
      * @see #getClass
      */
-    public Object getMethod (String className, String methodName,
-       String[] argTypeNames)
-    {
+    @Override
+    public Object getMethod(String className, String methodName, String[] argTypeNames) {
         throw new UnsupportedOperationException();
     }
 
@@ -219,8 +222,8 @@ class EnhancerModel extends Model {
      * @see #getField
      * @see #getMethod
      */
-    public String getType (Object element)
-    {
+    @Override
+    public String getType(Object element) {
         throw new UnsupportedOperationException();
     }
 
@@ -230,7 +233,8 @@ class EnhancerModel extends Model {
      * @param className the fully qualified name of the class to be checked
      * @return the names of the field elements for the specified class
      */
-    public List getFields (String className) {
+    @Override
+    public List<String> getFields (String className) {
         throw new UnsupportedOperationException();
     }
 
@@ -242,7 +246,8 @@ class EnhancerModel extends Model {
      * @param fieldName the name of the field to be checked
      * @return the field element for the specified fieldName
      */
-    public Object getField (String className, String fieldName) {
+    @Override
+    public Field getField (String className, String fieldName) {
         throw new UnsupportedOperationException();
     }
 
@@ -257,8 +262,8 @@ class EnhancerModel extends Model {
      * <code>false</code> otherwise.
      * @see #getField
      */
-    public boolean isSerializable (Object fieldElement)
-    {
+    @Override
+    public boolean isSerializable(Object fieldElement) {
         throw new UnsupportedOperationException();
     }
 
@@ -272,6 +277,7 @@ class EnhancerModel extends Model {
      * field; <code>false</code> otherwise.
      * @see #getFieldType
      */
+    @Override
     public boolean isArray (String className, String fieldName) {
         throw new UnsupportedOperationException();
     }
@@ -290,6 +296,7 @@ class EnhancerModel extends Model {
      * @see #getConstructor
      * @see #getMethod
      */
+    @Override
     public String getDeclaringClass (Object memberElement)
     {
         throw new UnsupportedOperationException();
@@ -308,6 +315,7 @@ class EnhancerModel extends Model {
      * @see #getConstructor
      * @see #getMethod
      */
+    @Override
     public int getModifiers (Object memberElement)
     {
         throw new UnsupportedOperationException();
@@ -322,6 +330,7 @@ class EnhancerModel extends Model {
      * @return the PersistenceFieldElement for the specified field,
      * <code>null</code> if an error occurs or none exists
      */
+    @Override
     public PersistenceFieldElement getPersistenceField(String className,
         String fieldName)
     {
@@ -337,6 +346,7 @@ class EnhancerModel extends Model {
      * @return <code>true</code> if this field name represents a key field;
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean isKey (String className, String fieldName)
     {
         PersistenceFieldElement field =
@@ -346,7 +356,8 @@ class EnhancerModel extends Model {
     }
 
     private void debug (Object o) {
-        if (DEBUG)
+        if (DEBUG) {
             System.out.println("EnhancerModel::" + o);    // NOI18N
+        }
     }
 }

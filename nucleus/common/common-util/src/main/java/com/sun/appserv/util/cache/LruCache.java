@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,14 +25,14 @@ import java.util.Properties;
  * LRUCache
  * in-memory bounded cache with an LRU list
  */
-public class LruCache extends BaseCache {
+public class LruCache<K, V> extends BaseCache<K, V> {
 
     // the item never expires
     public static final long NO_TIMEOUT = -1;
 
     // LRU list
-    protected LruCacheItem head;
-    protected LruCacheItem tail;
+    protected LruCacheItem<K, V> head;
+    protected LruCacheItem<K, V> tail;
 
     // the number of times the cache was trimmed
     protected int trimCount;
@@ -84,8 +85,9 @@ public class LruCache extends BaseCache {
      */
     public void setTimeout(long timeout) {
         // accept a positive timeout
-        if (timeout > 0)
+        if (timeout > 0) {
             this.timeout = timeout;
+        }
     }
 
     /**
@@ -98,9 +100,9 @@ public class LruCache extends BaseCache {
      * subclasses may override to provide their own CacheItem extensions
      * e.g. one that permits persistence.
      */
-    protected CacheItem createItem(int hashCode, Object key,
-                                        Object value, int size) {
-        return new LruCacheItem(hashCode, key, value, size);
+    @Override
+    protected CacheItem<K, V> createItem(int hashCode, K key, V value, int size) {
+        return new LruCacheItem<>(hashCode, key, value, size);
     }
 
     /**
@@ -110,12 +112,13 @@ public class LruCache extends BaseCache {
      *
      * list synchronization is handled by the caller
      */
-    protected CacheItem trimLru(long currentTime) {
+    protected CacheItem<K, V> trimLru(long currentTime) {
 
-        if(tail == null)
+        if(tail == null) {
             return null;
+        }
 
-        LruCacheItem trimItem = tail;
+        LruCacheItem<K, V> trimItem = tail;
 
         if (tail != head) {
             tail = trimItem.lPrev;
@@ -149,12 +152,14 @@ public class LruCache extends BaseCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected CacheItem itemAdded(CacheItem item) {
+    @Override
+    protected CacheItem<K, V> itemAdded(CacheItem<K, V> item) {
         boolean updateThreshold = false;
-        CacheItem overflow = null;
-        if(! (item instanceof LruCacheItem))
+        CacheItem<K, V> overflow = null;
+        if(! (item instanceof LruCacheItem)) {
             return null;
-        LruCacheItem lc = (LruCacheItem) item;
+        }
+        LruCacheItem<K, V> lc = (LruCacheItem<K, V>) item;
 
         // set the timestamp
         lc.lastAccessed = System.currentTimeMillis();
@@ -175,16 +180,18 @@ public class LruCache extends BaseCache {
             listSize++;
 
             if (isThresholdReached()) {
-                if (!isUnbounded)
+                if (!isUnbounded) {
                     overflow = trimLru(lc.lastAccessed);
-                else
+                } else {
                     updateThreshold = true;
+                }
             }
         }
 
         // update the base cache threshold if needed
-        if (updateThreshold)
+        if (updateThreshold) {
             super.handleOverflow();
+        }
 
         return overflow;
     }
@@ -195,26 +202,31 @@ public class LruCache extends BaseCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemAccessed(CacheItem item) {
-        if(head == null)
+    @Override
+    protected void itemAccessed(CacheItem<K, V> item) {
+        if(head == null) {
             return;
-        if(item == null)
+        }
+        if(item == null) {
             return;
-        if(! (item instanceof LruCacheItem))
+        }
+        if(! (item instanceof LruCacheItem)) {
             return;
-        LruCacheItem lc = (LruCacheItem) item;
+        }
+        LruCacheItem<K, V> lc = (LruCacheItem<K, V>) item;
 
         synchronized (this) {
 
             // if the item is already trimmed from the LRU list, nothing to do.
-            if (lc.isTrimmed)
+            if (lc.isTrimmed) {
                 return;
+            }
 
             // update the timestamp
             lc.lastAccessed = System.currentTimeMillis();
 
-            LruCacheItem prev = lc.lPrev;
-            LruCacheItem next = lc.lNext;
+            LruCacheItem<K, V> prev = lc.lPrev;
+            LruCacheItem<K, V> next = lc.lNext;
             // update the LRU list
             if (prev != null) {
                 // put the item at the head of LRU list
@@ -225,10 +237,11 @@ public class LruCache extends BaseCache {
 
                 // patch up the previous neighbors
                 prev.lNext = next;
-                if (next != null)
+                if (next != null) {
                     next.lPrev = prev;
-                else
+                } else {
                     tail = prev;
+                }
            }
         }
     }
@@ -239,7 +252,8 @@ public class LruCache extends BaseCache {
      * @param oldSize size of the previous value that was refreshed
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemRefreshed(CacheItem item, int oldSize) {
+    @Override
+    protected void itemRefreshed(CacheItem<K, V> item, int oldSize) {
         itemAccessed(item);
     }
 
@@ -249,30 +263,35 @@ public class LruCache extends BaseCache {
      *
      * Cache bucket is already synchronized by the caller
      */
-    protected void itemRemoved(CacheItem item) {
-        if(! (item instanceof LruCacheItem))
+    @Override
+    protected void itemRemoved(CacheItem<K, V> item) {
+        if(! (item instanceof LruCacheItem)) {
             return;
-        LruCacheItem l = (LruCacheItem) item;
+        }
+        LruCacheItem<K, V> l = (LruCacheItem<K, V>) item;
 
         // remove the item from the LRU list
         synchronized (this) {
-            LruCacheItem prev = l.lPrev;
-            LruCacheItem next = l.lNext;
+            LruCacheItem<K, V> prev = l.lPrev;
+            LruCacheItem<K, V> next = l.lNext;
 
             // if the item is already trimmed from the LRU list, nothing to do.
-            if (l.isTrimmed)
+            if (l.isTrimmed) {
                 return;
+            }
 
             // patch up the neighbors and make sure head/tail are correct
-            if (prev != null)
+            if (prev != null) {
                 prev.lNext = next;
-            else
+            } else {
                 head = next;
+            }
 
-            if (next != null)
+            if (next != null) {
                 next.lPrev = prev;
-            else
+            } else {
                 tail = prev;
+            }
 
             l.lPrev = l.lNext = null;
             listSize--;
@@ -288,12 +307,13 @@ public class LruCache extends BaseCache {
      * NOTE: this algorithm assumes that all the entries in the cache have
      * identical timeout (otherwise traversing from tail won't be right).
      */
+    @Override
     public void trimExpiredEntries(int maxCount) {
 
         int count = 0;
-        LruCacheItem item;
+        LruCacheItem<K, V> item;
         long currentTime = System.currentTimeMillis();
-        ArrayList list = new ArrayList();
+        ArrayList<LruCacheItem<K, V>> list = new ArrayList<>();
 
         synchronized (this) {
             // traverse LRU list till we reach a valid item; remove them at once
@@ -313,10 +333,11 @@ public class LruCache extends BaseCache {
 
             // if there was at least one invalid item then item != tail.
             if (item != tail) {
-                if (item != null)
+                if (item != null) {
                     item.lNext = null;
-                else
+                } else {
                     head = null;
+                }
 
                 tail = item;
             }
@@ -326,7 +347,7 @@ public class LruCache extends BaseCache {
 
         // trim the items from the BaseCache from the old tail backwards
         for (int index=list.size()-1; index >= 0; index--) {
-            trimItem((LruCacheItem) list.get(index));
+            trimItem(list.get(index));
         }
     }
 
@@ -341,66 +362,66 @@ public class LruCache extends BaseCache {
      * @return an Object corresponding to the stat
      * See also: Constant.java for the key
      */
+    @Override
     public Object getStatByName(String key) {
         Object stat = super.getStatByName(key);
 
         if (stat == null && key != null) {
-            if (key.equals(Constants.STAT_LRUCACHE_LIST_LENGTH))
+            if (key.equals(Constants.STAT_LRUCACHE_LIST_LENGTH)) {
                 stat = Integer.valueOf(listSize);
-            else if (key.equals(Constants.STAT_LRUCACHE_TRIM_COUNT))
+            } else if (key.equals(Constants.STAT_LRUCACHE_TRIM_COUNT)) {
                 stat = Integer.valueOf(trimCount);
+            }
         }
         return stat;
     }
 
-    public Map getStats() {
-        Map stats = super.getStats();
-        stats.put(Constants.STAT_LRUCACHE_LIST_LENGTH,
-                  Integer.valueOf(listSize));
-        stats.put(Constants.STAT_LRUCACHE_TRIM_COUNT,
-                  Integer.valueOf(trimCount));
-
+    @Override
+    public Map<String, Object> getStats() {
+        Map<String, Object> stats = super.getStats();
+        stats.put(Constants.STAT_LRUCACHE_LIST_LENGTH, Integer.valueOf(listSize));
+        stats.put(Constants.STAT_LRUCACHE_TRIM_COUNT, Integer.valueOf(trimCount));
         return stats;
     }
 
     /** default CacheItem class implementation  ***/
-    protected static class LruCacheItem extends CacheItem {
+    protected static class LruCacheItem<K, V> extends CacheItem<K, V> {
 
         // double linked LRU list
-        protected LruCacheItem lNext;
-        protected LruCacheItem lPrev;
+        protected LruCacheItem<K, V> lNext;
+        protected LruCacheItem<K, V> lPrev;
         protected boolean isTrimmed;
         protected long lastAccessed;
 
-        protected LruCacheItem(int hashCode, Object key, Object value, int size) {
+        protected LruCacheItem(int hashCode, K key, V value, int size) {
             super(hashCode, key, value, size);
         }
 
         /**
          * Return the next item
          */
-         public LruCacheItem getLNext() {
+         public LruCacheItem<K, V> getLNext() {
              return lNext;
          }
 
         /**
          * Reset the next item reference
          */
-         public void setLNext(LruCacheItem item) {
+         public void setLNext(LruCacheItem<K, V> item) {
              lNext = item;
          }
 
         /**
          * Return the previous item
          */
-         public LruCacheItem getLPrev() {
+         public LruCacheItem<K, V> getLPrev() {
              return lPrev;
          }
 
         /**
          * Reset the previous item reference
          */
-         public void setLPrev(LruCacheItem item) {
+         public void setLPrev(LruCacheItem<K, V> item) {
              lPrev = item;
          }
 

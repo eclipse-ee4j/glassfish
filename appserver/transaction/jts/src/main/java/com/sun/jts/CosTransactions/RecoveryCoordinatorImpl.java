@@ -61,7 +61,6 @@ import org.omg.PortableServer.POA;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -100,9 +99,7 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
      * @param globalTID  The global transaction identifier.
      * @param sequence   An internal sequence number to differentiate objects.
      *
-     * @return
      *
-     * @see
      */
     RecoveryCoordinatorImpl(GlobalTID globalTID, int sequence) {
 
@@ -137,7 +134,6 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
      * @exception NotPrepared  The transaction for which the
      *   RecoveryCoordinator was created has not prepared.
      *
-     * @see
      */
     public Status replay_completion(Resource res) throws NotPrepared {
 
@@ -377,9 +373,7 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
      *
      * @param res  The Resource to be rolled back.
      *
-     * @return
      *
-     * @see
      */
     void rollbackOrphan(Resource res) {
 
@@ -417,9 +411,7 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
      *
      * @param key  The key for the object.
      *
-     * @return
      *
-     * @see
      */
     RecoveryCoordinatorImpl(byte[] key) {
 
@@ -445,11 +437,9 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
     /**
      * Returns the CORBA Object which represents this object.
      *
-     * @param
      *
      * @return  The CORBA object.
      *
-     * @see
      */
     synchronized final RecoveryCoordinator object() {
 
@@ -502,11 +492,8 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
     /**
      * Destroys the RecoveryCoordinatorImpl object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized final void destroy() {
 
@@ -555,7 +542,6 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 class OrphanRollbackThread extends Thread {
     Resource resource = null;
@@ -567,9 +553,7 @@ class OrphanRollbackThread extends Thread {
      * @param recovery
      * @param resource
      *
-     * @return
      *
-     * @see
      */
     OrphanRollbackThread(RecoveryCoordinatorImpl recovery,
             Resource resource) {
@@ -581,11 +565,8 @@ class OrphanRollbackThread extends Thread {
     /**
      * Calls the RecoveryCoordinator to rollback the Resource.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void run() {
         recovery.rollbackOrphan(resource);

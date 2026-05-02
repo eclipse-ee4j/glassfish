@@ -41,7 +41,7 @@ but the names of those features and the associated data can be defined in a more
 FeatureAvailability.registerFeature( FeatureAvailability.MBEAN_SERVER_FEATURE, mbeanServer );
 </pre><p>
 <b>Client Example</b><br>
-(arbitrary number of clients, multiple calls OK)</br>
+(arbitrary number of clients, multiple calls OK)
 <pre>
 ...client runs until feature is needed...
 final MBeanServer mbeanServer = (MBeanServer)

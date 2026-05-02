@@ -17,13 +17,15 @@
 
 package org.jvnet.hk2.config;
 
+import jakarta.inject.Inject;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 /**
  * Implementation of this abstract class are handling injection resolution
- * for a particular injection annotation {@see Inject}
+ * for a particular injection annotation {@link Inject}
  *
  * Injection targets are identified by the generic parameter and the constructor
  * of this class. Potential injection targets are fields and methods of the
@@ -69,7 +71,7 @@ public abstract class InjectionResolver<U extends Annotation> implements Injecti
      * @param annotated is the annotated java element {@link java.lang.reflect.Method}
      * or {@link java.lang.reflect.Field}
      * @param annotation the injection metadata
-     * @return true if the {@see getValue()} can return null without generating a
+     * @return true if the <code>getValue()</code> can return null without generating a
      * faulty injection operation
      */
     public boolean isOptional(AnnotatedElement annotated, U annotation) {

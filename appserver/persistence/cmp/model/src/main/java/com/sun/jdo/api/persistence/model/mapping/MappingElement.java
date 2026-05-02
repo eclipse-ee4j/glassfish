@@ -32,7 +32,7 @@ import java.beans.VetoableChangeListener;
  * @author raccah
  * @version %I%
  */
-public interface MappingElement extends MappingElementProperties, Comparable
+public interface MappingElement extends MappingElementProperties, Comparable<MappingElement>
 {
     /** Add a property change listener.
      * @param l the listener to add

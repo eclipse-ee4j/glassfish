@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -189,311 +189,6 @@ class MethodBuilder
 
         return nullMethod;
     }
-
-    /**
-     * Build the initializeContents method for the class
-     */
-//@olsen: dropped method
-/*
-    ClassMethod makeInitializeContents(ClassAction ca) {
-        final ConstantPool pool = ca.classFile().pool();
-        final ConstClass thisClass = ca.classFile().className();
-
-        final AttributeVector methodAttrs = new AttributeVector();
-        ClassMethod initializeContentsMethod =
-            new ClassMethod(ACCPublic,
-                            pool.addUtf8("initializeContents"),
-                            pool.addUtf8("(Lcom/sun/forte4j/persistence/internal/ObjectContents;)V"),
-                            methodAttrs);
-
-        // begin of method body
-        Insn begin = new InsnTarget();
-        Insn insn = begin;
-
-        // Allocated reg 2 as cached ClassInfo*
-        insn = insn.append(
-            Insn.create(opc_getstatic,
-                        pool.addFieldRef(thisClass.asString(),
-                                         ca.getClassInfoMember(),
-                                         "Lcom/sun/forte4j/persistence/internal/ClassInfo;")));
-        insn = insn.append(Insn.create(opc_astore_2));
-
-        for (Iterator e = ca.fieldActions(); e.hasNext();) {
-            FieldAction act = (FieldAction)e.next();
-            if (act.isPersistent()) {
-                int idx = act.index();
-                // get this
-                insn = insn.append(Insn.create(opc_aload_0));
-                // get GenericObject
-                insn = insn.append(Insn.create(opc_aload_1));
-                // get field index
-                insn = insn.append(InsnUtils.integerConstant(idx, pool));
-                // get ClassInfo
-                insn = insn.append(Insn.create(opc_aload_2));
-                // call the get method
-                insn = insn.append(Insn.create(opc_invokevirtual,
-                                               pool.addMethodRef("com/sun/forte4j/persistence/internal/ObjectContents",
-                                                                 act.getMethod(), act.getMethodSig())));
-
-                switch(act.getMethodReturn()) {
-                case T_DOUBLE:
-                case T_LONG:
-                case T_BOOLEAN:
-                case T_CHAR:
-                case T_FLOAT:
-                case T_BYTE:
-                case T_SHORT:
-                case T_INT:
-                case TC_STRING:
-                    // The above types are assumed to be accurate, with no
-                    // conversions required
-                    break;
-
-                case TC_OBJECT:
-                case TC_INTERFACE:
-                    if (!act.typeDescriptor().equals("Ljava/lang/Object;")) {
-                        ConstClass fieldType = pool.addClass(act.typeName());
-                        // Add a cast to the appropriate type
-                        insn = insn.append(Insn.create(opc_checkcast, fieldType));
-                    }
-                    break;
-                default:
-                    throw new InternalError("Unexpected return type");
-                }
-
-                // finally, store the result
-                insn = insn.append(Insn.create(opc_putfield,
-                                               pool.addFieldRef(thisClass.asString(), act.fieldName(),
-                                                                act.typeDescriptor())));
-            }
-        }
-
-        ConstClass superClass = ca.classFile().superName();
-        if (!ca.getImplementsPersistence()) {
-            // Need to invoke initializeContents on super
-            // get this
-            insn = insn.append(Insn.create(opc_aload_0));
-            // get generic object
-            insn = insn.append(Insn.create(opc_aload_1));
-            // do the invoke
-            insn = insn.append(Insn.create(opc_invokespecial,
-                                           pool.addMethodRef(superClass.asString(),
-                                                             "initializeContents", "(Lcom/sun/forte4j/persistence/internal/ObjectContents;)V")));
-        }
-
-        // end of method body
-        insn = insn.append(Insn.create(opc_return));
-
-        methodAttrs.addElement(
-            new CodeAttribute(pool.addUtf8(CodeAttribute.expectedAttrName),
-                              4, // maxStack
-                              3, // maxLocals
-                              begin,
-                              new ExceptionTable(),
-                              new AttributeVector()));
-        return initializeContentsMethod;
-    }
-*/
-
-    /**
-     * Build the flushContents method for the class
-     */
-//@olsen: dropped method
-/*
-    ClassMethod makeFlushContents(ClassAction ca) {
-        final ConstantPool pool = ca.classFile().pool();
-        final ConstClass thisClass = ca.classFile().className();
-
-        final AttributeVector methodAttrs = new AttributeVector();
-        ClassMethod flushContentsMethod =
-            new ClassMethod(ACCPublic,
-                            pool.addUtf8("flushContents"),
-                            pool.addUtf8("(Lcom/sun/forte4j/persistence/internal/ObjectContents;)V"),
-                            methodAttrs);
-
-        // begin of method body
-        Insn begin = new InsnTarget();
-        Insn insn = begin;
-
-        // Allocated reg 2 as cached ClassInfo*
-        insn = insn.append(
-            Insn.create(opc_getstatic,
-                        pool.addFieldRef(thisClass.asString(),
-                                         ca.getClassInfoMember(),
-                                         "Lcom/sun/forte4j/persistence/internal/ClassInfo;")));
-        insn = insn.append(Insn.create(opc_astore_2));
-
-        for (Iterator e = ca.fieldActions(); e.hasNext();) {
-            FieldAction act = (FieldAction)e.next();
-            if (act.isPersistent()) {
-                int idx = act.index();
-                // get GenericObject
-                insn = insn.append(Insn.create(opc_aload_1));
-                // get field index
-                insn = insn.append(InsnUtils.integerConstant(idx, pool));
-                // get this
-                insn = insn.append(Insn.create(opc_aload_0));
-                // get the field value
-                insn = insn = insn.append(Insn.create(opc_getfield,
-                                                      pool.addFieldRef(thisClass.asString(), act.fieldName(),
-                                                                       act.typeDescriptor())));
-                // get ClassInfo
-                insn = insn.append(Insn.create(opc_aload_2));
-
-                // call the set method
-                insn = insn.append(Insn.create(opc_invokevirtual,
-                                               pool.addMethodRef("com/sun/forte4j/persistence/internal/ObjectContents",
-                                                                 act.setMethod(), act.setMethodSig())));
-            }
-        }
-
-        ConstClass superClass = ca.classFile().superName();
-        if (!ca.getImplementsPersistence()) {
-            // Need to invoke flushContents on super
-            // get this
-            insn = insn.append(Insn.create(opc_aload_0));
-            // get generic object
-            insn = insn.append(Insn.create(opc_aload_1));
-            // do the invoke
-            insn = insn.append(Insn.create(opc_invokespecial,
-                                           pool.addMethodRef(superClass.asString(),
-                                                             "flushContents", "(Lcom/sun/forte4j/persistence/internal/ObjectContents;)V")));
-        }
-
-        // end of method body
-        insn = insn.append(Insn.create(opc_return));
-
-        methodAttrs.addElement(
-            new CodeAttribute(pool.addUtf8(CodeAttribute.expectedAttrName),
-                              6, // maxStack (might actually be 5, but ok)
-                              3, // maxLocals
-                              begin,
-                              new ExceptionTable(),
-                              new AttributeVector()));
-        return flushContentsMethod;
-    }
-*/
-
-    /**
-     * Build the clearContents method for the class
-     */
-//@olsen: dropped method
-/*
-    ClassMethod makeClearContents(ClassAction ca) {
-        final ConstantPool pool = ca.classFile().pool();
-        final ConstClass thisClass = ca.classFile().className();
-
-        final AttributeVector methodAttrs = new AttributeVector();
-        ClassMethod clearContentsMethod =
-            new ClassMethod(ACCPublic,
-                            pool.addUtf8("clearContents"),
-                            pool.addUtf8("()V"),
-                            methodAttrs);
-
-        // begin of method body
-        Insn begin = new InsnTarget();
-        Insn insn = begin;
-
-        for (Iterator e = ca.fieldActions(); e.hasNext();) {
-            FieldAction act = (FieldAction)e.next();
-            if (act.isPersistent()) {
-                int idx = act.index();
-                // get this
-                insn = insn.append(Insn.create(opc_aload_0));
-
-                // Use the getMethodReturn type to decide how to initialize
-                switch(act.getMethodReturn()) {
-                case T_DOUBLE:
-                    insn = insn.append(Insn.create(opc_dconst_0));
-                    break;
-                case T_LONG:
-                    insn = insn.append(Insn.create(opc_lconst_0));
-                    break;
-                case T_FLOAT:
-                    insn = insn.append(Insn.create(opc_fconst_0));
-                    break;
-                case T_BOOLEAN:
-                case T_CHAR:
-                case T_BYTE:
-                case T_SHORT:
-                case T_INT:
-                    insn = insn.append(Insn.create(opc_iconst_0));
-                    break;
-                case TC_STRING:
-                case TC_OBJECT:
-                case TC_INTERFACE:
-                    insn = insn.append(Insn.create(opc_aconst_null));
-                    break;
-                default:
-                    throw new InternalError("Unexpected return type");
-                }
-
-                // finally, store the result
-                insn = insn.append(Insn.create(opc_putfield,
-                                               pool.addFieldRef(thisClass.asString(), act.fieldName(),
-                                                                act.typeDescriptor())));
-            }
-        }
-
-        ConstClass superClass = ca.classFile().superName();
-        if (!ca.getImplementsPersistence()) {
-            // Need to invoke clearContents on super
-            // get this
-            insn = insn.append(Insn.create(opc_aload_0));
-            // do the invoke
-            insn = insn.append(Insn.create(opc_invokespecial,
-                                           pool.addMethodRef(superClass.asString(),
-                                                             "clearContents", "()V")));
-        }
-
-        // end of method body
-        insn = insn.append(Insn.create(opc_return));
-
-        methodAttrs.addElement(
-            new CodeAttribute(pool.addUtf8(CodeAttribute.expectedAttrName),
-                              3, // maxStack (maybe only 2 - ok)
-                              1, // maxLocals
-                              begin,
-                              new ExceptionTable(),
-                              new AttributeVector()));
-        return clearContentsMethod;
-    }
-*/
-
-    /**
-     * Build an empty class initializer method for this class
-     */
-//@olsen: dropped method
-/*
-    ClassMethod makeClassInit(ClassAction ca) {
-        final ConstantPool pool = ca.classFile().pool();
-        final ConstClass thisClass = ca.classFile().className();
-
-        final AttributeVector methodAttrs = new AttributeVector();
-        ClassMethod classInitMethod =
-            new ClassMethod(ACCStatic,
-                            pool.addUtf8("<clinit>"),
-                            pool.addUtf8("()V"),
-                            methodAttrs);
-
-        // begin of method body
-        Insn begin = new InsnTarget();
-        Insn insn = begin;
-
-        // return from the initializer
-        // end of method body
-        insn = insn.append(Insn.create(opc_return));
-
-        methodAttrs.addElement(
-            new CodeAttribute(pool.addUtf8(CodeAttribute.expectedAttrName),
-                              0,
-                              0, // maxLocals
-                              begin,
-                              new ExceptionTable(),
-                              new AttributeVector()));
-        return classInitMethod;
-    }
-*/
 
     /**
      * Build the jdoGetStateManager method for the class.
@@ -1385,8 +1080,8 @@ class MethodBuilder
         }
 
         // iterate over all declared fields of the class
-        for (Iterator e = ca.fieldActions(); e.hasNext();) {
-            final FieldAction act = (FieldAction)e.next();
+        for (Iterator<FieldAction> e = ca.fieldActions(); e.hasNext();) {
+            final FieldAction act = e.next();
             //printFieldAction(act);
             //System.out.println();
 
@@ -1799,9 +1494,9 @@ class MethodBuilder
         final InsnTarget defaultOp = new InsnTarget();
         if (nofFields > 0) {
             // get the declared, persistent fields from the class
-            final HashMap fieldsByName = new HashMap();
-            for (Iterator e = ca.fieldActions(); e.hasNext();) {
-                final FieldAction act = (FieldAction)e.next();
+            final HashMap<String, FieldAction> fieldsByName = new HashMap<>();
+            for (Iterator<FieldAction> e = ca.fieldActions(); e.hasNext();) {
+                final FieldAction act = e.next();
                 fieldsByName.put(act.fieldName(), act);
             }
 
@@ -1821,7 +1516,7 @@ class MethodBuilder
                 insn = insn.append(targetsOp[i]);
 
                 final FieldAction act
-                    = (FieldAction)fieldsByName.get(fieldNames[i]);
+                    = fieldsByName.get(fieldNames[i]);
                 affirm(act,
                        ("Field '" + fieldNames[i]//NOI18N
                         + "' returned by JDOMetaData is not known by class '"//NOI18N
@@ -2040,9 +1735,9 @@ class MethodBuilder
         final InsnTarget defaultOp = new InsnTarget();
         if (nofFields > 0) {
             // get the declared, persistent fields from the class
-            final HashMap fieldsByName = new HashMap();
-            for (Iterator e = ca.fieldActions(); e.hasNext();) {
-                final FieldAction act = (FieldAction)e.next();
+            final HashMap<String, FieldAction> fieldsByName = new HashMap<>();
+            for (Iterator<FieldAction> e = ca.fieldActions(); e.hasNext();) {
+                final FieldAction act = e.next();
                 fieldsByName.put(act.fieldName(), act);
             }
 
@@ -2062,7 +1757,7 @@ class MethodBuilder
                 insn = insn.append(targetsOp[i]);
 
                 final FieldAction act
-                    = (FieldAction)fieldsByName.get(fieldNames[i]);
+                    = fieldsByName.get(fieldNames[i]);
                 affirm(act,
                        ("Field '"//NOI18N
                         + fieldNames[i]
@@ -2384,31 +2079,6 @@ class MethodBuilder
                 pool.addClass("java/lang/CloneNotSupportedException")));//NOI18N
 
         return cloneMethod;
-    }
-
-    // for debugging
-    static private void printFieldAction(FieldAction act) {
-        System.out.println("fieldName() = " + act.fieldName());//NOI18N
-        System.out.println("userFieldName() = " + act.userFieldName());//NOI18N
-        System.out.println("typeDescriptor() = " + act.typeDescriptor());//NOI18N
-        System.out.println("typeName() = " + act.typeName());//NOI18N
-        System.out.println("fieldClassName() = " + act.fieldClassName());//NOI18N
-        System.out.println("isPersistent() = " + act.isPersistent());//NOI18N
-        System.out.println("isPrimaryKey() = " + act.isPrimaryKey());//NOI18N
-        System.out.println("isMutableSCO() = " + act.isMutableSCO());//NOI18N
-        System.out.println("isSynthetic() = " + act.isSynthetic());//NOI18N
-        //System.out.println("index() = " + act.index());
-        System.out.println("nDims() = " + act.nDims());//NOI18N
-        System.out.println("createMethod() = " + act.createMethod());//NOI18N
-        System.out.println("createMethodSig() = " + act.createMethodSig());//NOI18N
-        System.out.println("setMethod() = " + act.setMethod());//NOI18N
-        System.out.println("setMethodSig() = " + act.setMethodSig());//NOI18N
-        System.out.println("setMethodArg() = "//NOI18N
-                           + typeToString(act.setMethodArg()));
-        System.out.println("getMethod() = " + act.getMethod());//NOI18N
-        System.out.println("getMethodSig() = " + act.getMethodSig());//NOI18N
-        System.out.println("getMethodReturn() = "//NOI18N
-                           + typeToString(act.getMethodReturn()));
     }
 
     // for debugging

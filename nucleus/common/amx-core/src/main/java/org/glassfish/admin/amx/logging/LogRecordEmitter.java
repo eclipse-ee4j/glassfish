@@ -46,11 +46,9 @@ import org.glassfish.external.arc.Taxonomy;
  * transmitted. Instead, its important fields are extracted and placed into a Map
  * obtained as follows:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  *    final Map<String,Object>    fields  = (Map<String,Object>)notif.getUserData();
- * </code>
- * </pre>
+ * }</pre>
  *
  * Alternately, you may use {@link Util#getAMXNotificationValue} to extract any]
  * particular field.
@@ -61,12 +59,13 @@ import org.glassfish.external.arc.Taxonomy;
  * </ul>
  * <p>
  * Here is an example of how to retrieve the LogRecord information when a Notification is received:
- * <code><pre>
-final Notifcation notif        = <the notification>;
-final String type       = notif.getType();
-final LogRecord logRecord        = (LogRecord){@link Util#getAMXNotificationValue}( notif, LOG_RECORD_KEY );
-final String    logRecordString        = (String){@link Util#getAMXNotificationValue}( notif, LOG_RECORD_STRING_KEY );
-</pre></code>
+ *
+ * <pre>{@code
+final Notifcation notif = <the notification>;
+final String type = notif.getType();
+final LogRecord logRecord = (LogRecord){@link Util#getAMXNotificationValue}( notif, LOG_RECORD_KEY );
+final String logRecordString = (String){@link Util#getAMXNotificationValue}( notif, LOG_RECORD_STRING_KEY );
+}</pre>
  *
  * @since AS 9.0
  */

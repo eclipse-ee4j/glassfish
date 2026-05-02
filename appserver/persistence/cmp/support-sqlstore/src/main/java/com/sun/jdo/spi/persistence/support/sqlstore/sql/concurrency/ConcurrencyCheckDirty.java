@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ConcurrencyCheckDirty.java
- *
- * Created on March 19, 2002
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
@@ -31,33 +25,35 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.QueryTable;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.Statement;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPlan;
 
-import java.util.ArrayList;
+import java.lang.System.Logger;
 import java.util.BitSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.ColumnElement;
+
+import static com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore.RESOURCE_BUNDLE;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  */
 public class ConcurrencyCheckDirty extends ConcurrencyDBNative {
 
-    public void commit(UpdateObjectDesc updateDesc,
-                       SQLStateManager beforeImage,
-                       SQLStateManager afterImage,
-                       int logReason) {
+    private static final Logger LOG = System.getLogger(ConcurrencyCheckDirty.class.getName(), RESOURCE_BUNDLE);
+
+    @Override
+    public void commit(UpdateObjectDesc updateDesc, SQLStateManager beforeImage, SQLStateManager afterImage,
+        int logReason) {
         this.beforeImage = beforeImage;
         this.afterImage = afterImage;
     }
 
+    @Override
     public void update(UpdateQueryPlan plan) {
-        boolean debug = logger.isLoggable();
-
-        if (debug) {
-            logger.fine("sqlstore.sql.concurrency.concurrencychkdirty", beforeImage); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sql.concurrency.concurrencychkdirty", beforeImage);
 
         if (beforeImage != null) {
-            ArrayList fields = plan.getConfig().fields;
+            List<FieldDesc> fields = plan.getConfig().fields;
             BitSet verifyGroupMask = prepareVerifyGroupMask(plan);
 
             for (int i = 0; i < 2; i++) {
@@ -73,7 +69,7 @@ public class ConcurrencyCheckDirty extends ConcurrencyDBNative {
                 }
 
                 for (int j = 0; j < fields.size(); j++) {
-                    FieldDesc f = (FieldDesc) fields.get(j);
+                    FieldDesc f = fields.get(j);
 
                     if (f instanceof LocalFieldDesc) {
                         LocalFieldDesc lf = (LocalFieldDesc) f;
@@ -97,18 +93,16 @@ public class ConcurrencyCheckDirty extends ConcurrencyDBNative {
             }
         }
 
-        if (debug) {
-            logger.fine("sqlstore.sql.concurrency.concurrencychkdirty.exit"); // NOI18N
-        }
+        LOG.log(DEBUG, "sqlstore.sql.concurrency.concurrencychkdirty.exit");
     }
 
     protected BitSet prepareVerifyGroupMask(UpdateQueryPlan plan) {
         return null;
     }
 
-    protected boolean isFieldVerificationRequired(LocalFieldDesc lf,
-                                                  BitSet verifyGroupMask) {
-         return true;
+
+    protected boolean isFieldVerificationRequired(LocalFieldDesc lf, BitSet verifyGroupMask) {
+        return true;
     }
 
     /**
@@ -116,14 +110,14 @@ public class ConcurrencyCheckDirty extends ConcurrencyDBNative {
      * to the corresponding statements in UpdateQueryPlan <CODE>plan</CODE>.
      */
     private static void addConstraint(UpdateQueryPlan plan, LocalFieldDesc lf, Object val) {
-        for (Iterator iter = lf.getColumnElements(); iter.hasNext(); ) {
-            ColumnElement c = (ColumnElement) iter.next();
+        for (Iterator<ColumnElement> iter = lf.getColumnElements(); iter.hasNext(); ) {
+            ColumnElement c = iter.next();
 
             for (int i = 0; i < plan.statements.size(); i++) {
-                Statement s = (Statement) plan.statements.get(i);
+                Statement s = plan.statements.get(i);
 
                 for (int j = 0; j < s.tableList.size(); j++) {
-                    QueryTable t = (QueryTable) s.tableList.get(j);
+                    QueryTable t = s.tableList.get(j);
 
                     if (t.getTableDesc().getTableElement() == c.getDeclaringTable()) {
                         s.addConstraint(lf, val);
@@ -133,13 +127,8 @@ public class ConcurrencyCheckDirty extends ConcurrencyDBNative {
         }
     }
 
+    @Override
     public Object clone() {
         return new ConcurrencyCheckDirty();
     }
 }
-
-
-
-
-
-

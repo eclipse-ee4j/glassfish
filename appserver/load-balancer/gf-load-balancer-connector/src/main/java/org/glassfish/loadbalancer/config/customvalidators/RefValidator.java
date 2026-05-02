@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,15 +42,12 @@ public class RefValidator
     @Override
     public boolean isValid(final LbConfig bean,
         final ConstraintValidatorContext constraintValidatorContext) {
-        if (bean == null) return true;
-
+        if (bean == null) {
+            return true;
+        }
         List<ServerRef> sRefs = bean.getRefs(ServerRef.class);
         List<ClusterRef> cRefs = bean.getRefs(ClusterRef.class);
-
-        if (sRefs.size() > 0 && cRefs.size() > 0) {
-            return false;
-        }
-        return true;
+        return sRefs.isEmpty() || cRefs.isEmpty();
     }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.System.Logger;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,14 +46,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 
 import org.glassfish.admin.rest.Constants;
-import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData;
 import org.glassfish.admin.rest.provider.MethodMetaData;
 import org.glassfish.admin.rest.provider.ParameterMetaData;
@@ -82,6 +81,9 @@ import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
 import static org.glassfish.admin.rest.utils.Util.eleminateHypen;
 import static org.glassfish.admin.rest.utils.Util.getHtml;
@@ -96,7 +98,7 @@ import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
  * @author Rajeshwar Patil
  */
 public class ResourceUtil {
-
+    private static final Logger LOG = System.getLogger(ResourceUtil.class.getName());
     private static final String MESSAGE_PARAMETERS = "messageParameters";
     private static RestConfig restConfig = null;
     // TODO: this is copied from org.jvnet.hk2.config.Dom. If we are not able to encapsulate the conversion in Dom,
@@ -125,7 +127,7 @@ public class ResourceUtil {
             buffer.flush();
             bytes = buffer.toByteArray();
         } catch (IOException ex) {
-            RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex);
+            LOG.log(ERROR, "Failed reading from stream.", ex);
         }
 
         return bytes;
@@ -385,7 +387,7 @@ public class ResourceUtil {
                 }
             }
         } catch (MultiException e) {
-            e.printStackTrace();
+            LOG.log(ERROR, "Metadata loading failed for model " + configBeanModel, e);
         }
 
         return methodMetaData;
@@ -427,6 +429,7 @@ public class ResourceUtil {
                             copyParameterMetaDataAttribute(localParam, parameterMetaData, Constants.OPTIONAL);
                         }
                     } catch (NoSuchMethodException e) {
+                        LOG.log(TRACE, () -> "Method not found: " + methodName, e);
                     }
                 }
 
@@ -442,6 +445,7 @@ public class ResourceUtil {
                         copyParameterMetaDataAttribute(localParam, parameterMetaData, Constants.OPTIONAL);
                     }
                 } catch (NoSuchMethodException e) {
+                    LOG.log(TRACE, () -> "Method not found: " + methodName, e);
                 }
 
                 methodMetaData.putParameterMetaData(attributeName, parameterMetaData);
@@ -475,7 +479,7 @@ public class ResourceUtil {
             habitat.getService(AdminCommand.class, commandName);
             return true;
         } catch (Exception e) {
-
+            LOG.log(WARNING, () -> "Command service could not be loaded: " + commandName, e);
         }
         return false;
     }
@@ -817,7 +821,7 @@ public class ResourceUtil {
             Deprecated dep = cbp.getAnnotation(Deprecated.class);
             return dep != null;
         } catch (MultiException e) {
-            // e.printStackTrace();
+            LOG.log(TRACE, "Deprecation check failed.", e);
         }
         return false;
 

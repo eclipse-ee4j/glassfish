@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,15 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-//JDOMetaDataProperties - Java Source
-
-
 //***************** package ***********************************************
 
 package com.sun.jdo.api.persistence.enhancer.meta;
-
-
-//***************** import ************************************************
 
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
@@ -30,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -146,7 +140,7 @@ public final class JDOMetaDataProperties {
      *  classnames, the values are the appropriate
      *  <code>JDOClass</code>-object.
      */
-    private final Map cachedJDOClasses = new HashMap ();
+    private final Map<String, JDOClass> cachedJDOClasses = new HashMap<>();
 
 
     /**
@@ -160,7 +154,7 @@ public final class JDOMetaDataProperties {
      *  A temporary vector (this is the reason why the implementation is not
      *  thread safe).
      */
-    private final List tmpTokens = new ArrayList ();
+    private final List<Property> tmpTokens = new ArrayList<>();
 
 
     /**********************************************************************
@@ -190,7 +184,7 @@ public final class JDOMetaDataProperties {
 
     public JDOClass getJDOClass(String classname) throws JDOMetaDataUserException {
         classname = toCanonicalClassName(classname);
-        JDOClass clazz = (JDOClass) this.cachedJDOClasses.get(classname);
+        JDOClass clazz = this.cachedJDOClasses.get(classname);
         if (clazz == NULL) // already searched but not found
         {
             return null;
@@ -245,15 +239,14 @@ public final class JDOMetaDataProperties {
      *********************************************************************/
 
     public String[] getKnownClassNames() {
-        Collection classnames = new HashSet();
-        for (Enumeration names = this.properties.propertyNames(); names.hasMoreElements();) {
-            String name = (String) names.nextElement();
+        Collection<String> classnames = new HashSet<>();
+        for (String name : this.properties.stringPropertyNames()) {
             if (name.indexOf(FIELD_DELIMITER) < 0) {
                 classnames.add(fromCanonicalClassName(name));
             }
         }
 
-        return (String[]) classnames.toArray(new String[classnames.size()]);
+        return (String[]) classnames.toArray(String[]::new);
     }  //JDOMetaDataProperties.getKnownClassNames()
 
 
@@ -303,11 +296,11 @@ public final class JDOMetaDataProperties {
      *********************************************************************/
 
     private JDOClass parseJDOClass(String classname, String attributes) throws JDOMetaDataUserException {
-        List props = parseProperties(attributes);
+        List<Property> props = parseProperties(attributes);
 
         //check each property
         for (int i = 0; i < props.size(); i++) {
-            Property prop = (Property) props.get(i);
+            Property prop = props.get(i);
             validateClassProperty(prop, classname);
         }
 
@@ -317,7 +310,7 @@ public final class JDOMetaDataProperties {
         //properties are OK - assign them to the JDOClass object
         JDOClass clazz = new JDOClass(classname);
         for (int i = 0; i < props.size(); i++) {
-            Property prop = (Property) props.get(i);
+            Property prop = props.get(i);
             if (prop.name.equals(PROPERTY_ACCESS_MODIFIER)) {
                 clazz.modifiers = getModifiers(prop.value);
             } else if (prop.name.equals(PROPERTY_JDO_MODIFIER)) {
@@ -364,7 +357,6 @@ public final class JDOMetaDataProperties {
             }
         } else {
             //do we have a valid property name?
-            String name = prop.name;
             checkPropertyName (prop.name, new String []
                                               {
                                                 PROPERTY_OID_CLASSNAME,
@@ -404,10 +396,9 @@ public final class JDOMetaDataProperties {
 
     private void parseJDOFields(JDOClass clazz) throws JDOMetaDataUserException {
         // search for fields of the class
-        for (Enumeration names = this.properties.propertyNames(); names.hasMoreElements();) {
-            String name = (String) names.nextElement();
-            if (name.startsWith(clazz.getName() + FIELD_DELIMITER)) // field found
-            {
+        for (String name : properties.stringPropertyNames()) {
+            if (name.startsWith(clazz.getName() + FIELD_DELIMITER)) {
+                // field found
                 String fieldname = name.substring(name.indexOf(FIELD_DELIMITER) + 1, name.length());
                 validateFieldName(fieldname, clazz.getName());
                 clazz.addField(parseJDOField(this.properties.getProperty(name), fieldname, clazz));
@@ -431,11 +422,11 @@ public final class JDOMetaDataProperties {
 
     private JDOField parseJDOField(String attributes, String fieldname, JDOClass clazz)
         throws JDOMetaDataUserException {
-        List props = parseProperties(attributes);
+        List<Property> props = parseProperties(attributes);
 
         // check each property
         for (int i = 0; i < props.size(); i++) {
-            Property prop = (Property) props.get(i);
+            Property prop = props.get(i);
             validateFieldProperty(prop, fieldname, clazz.getName());
         }
 
@@ -445,7 +436,7 @@ public final class JDOMetaDataProperties {
         //properties are OK - assign them to the JDOField object
         JDOField field = new JDOField(fieldname);
         for (int i = 0; i < props.size(); i++) {
-            Property prop = (Property) props.get(i);
+            Property prop = props.get(i);
             if (prop.name.equals(PROPERTY_ACCESS_MODIFIER)) {
                 field.modifiers = getModifiers(prop.value);
             } else if (prop.name.equals(PROPERTY_JDO_MODIFIER)) {
@@ -556,7 +547,7 @@ public final class JDOMetaDataProperties {
 
     private void validateDependencies(JDOClass clazz) throws JDOMetaDataUserException {
         for (int i = clazz.fields.size() - 1; i >= 0; i--) {
-            JDOField field = (JDOField) clazz.fields.get(i);
+            JDOField field = clazz.fields.get(i);
 
             // set the jdo field modifier according to the jdo class modifier (if jdo field not set
             // yet)
@@ -635,11 +626,11 @@ public final class JDOMetaDataProperties {
      *  @throws  JDOMetaDataUserException  If the check fails.
      *********************************************************************/
 
-    private static void checkForDuplicateProperties(List props, String entry) throws JDOMetaDataUserException {
+    private static void checkForDuplicateProperties(List<Property> props, String entry) throws JDOMetaDataUserException {
         for (int i = 0; i < props.size(); i++) {
             for (int j = i + 1; j < props.size(); j++) {
-                Property p1 = (Property) props.get(i);
-                Property p2 = (Property) props.get(j);
+                Property p1 = props.get(i);
+                Property p2 = props.get(j);
                 if (p1.name.equals(p2.name) && !p1.value.equals(p2.value)) {
                     throw new JDOMetaDataUserException(getErrorMsg(IErrorMessages.ERR_DUPLICATE_PROPERTY_NAME,
                         new String[] {entry, p1.name, p1.value, p2.value}));
@@ -729,7 +720,7 @@ public final class JDOMetaDataProperties {
      *  @exception  JDOMetaDataUserException  If the parsing fails.
      *********************************************************************/
 
-    List parseProperties(String attributes) throws JDOMetaDataUserException {
+    List<Property> parseProperties(String attributes) throws JDOMetaDataUserException {
         this.tmpTokens.clear();
         StringTokenizer t = new StringTokenizer(attributes, PROPERTY_DELIMITERS);
         while (t.hasMoreTokens()) {
@@ -889,8 +880,6 @@ public final class JDOMetaDataProperties {
                             PREFIX + "A non-persistent class cannot have a transactional field (class ''{0}'' with field ''{1})''.";
         String ERR_TRANSIENT_CLASS_WITH_ANNOTATED_FIELD =
                             PREFIX + "A non-persistent class cannot have an annotated field (''{1}'' of class ''{0}'') can''t have a fetch group.";
-        String ERR_NON_PERSISTENT_ANNOTATED_FIELD =
-                            PREFIX + "A non-persistent field (''{1}'' of class ''{0}'') can''t be a annotated.";
 
 
     }  //IErrorMessages
@@ -932,7 +921,7 @@ public final class JDOMetaDataProperties {
         /**
          * A list of all parsed fields.
          */
-        private final List fields = new ArrayList();
+        private final List<JDOField> fields = new ArrayList<>();
 
         /**
          *
@@ -1094,7 +1083,7 @@ public final class JDOMetaDataProperties {
 
         public int getIndexOfField(String name) {
             for (int i = 0; i < this.fields.size(); i++) {
-                JDOField field = (JDOField) this.fields.get(i);
+                JDOField field = this.fields.get(i);
                 if (field.getName().equals(name)) {
                     return i;
                 }
@@ -1113,11 +1102,11 @@ public final class JDOMetaDataProperties {
         public String[] getFields() {
             if (this.fieldNames == null) {
                 final int n = this.fields.size();
-                String[] fields = new String[n];
+                String[] fieldsTmp = new String[n];
                 for (int i = 0; i < n; i++) {
-                    fields[i] = ((JDOField) this.fields.get(i)).getName();
+                    fieldsTmp[i] = this.fields.get(i).getName();
                 }
-                this.fieldNames = fields;
+                this.fieldNames = fieldsTmp;
             }
             return this.fieldNames;
         } // JDOClass.getFields()
@@ -1132,7 +1121,7 @@ public final class JDOMetaDataProperties {
          *****************************************************************/
 
         private void sortFields() {
-            Collections.sort(this.fields, new Comparator() {
+            Collections.sort(this.fields, new Comparator<Object>() {
 
                 @Override
                 public final int compare(Object f1, Object f2) {
@@ -1160,9 +1149,9 @@ public final class JDOMetaDataProperties {
         public String[] getManagedFieldNames() {
             if (this.managedFieldNames == null) {
                 final int n = this.fields.size();
-                List tmp = new ArrayList(n);
+                List<String> tmp = new ArrayList<>(n);
                 for (int i = 0; i < n; i++) {
-                    JDOField field = (JDOField) this.fields.get(i);
+                    JDOField field = this.fields.get(i);
                     if (field.isManaged()) {
                         tmp.add(field.getName());
                     }

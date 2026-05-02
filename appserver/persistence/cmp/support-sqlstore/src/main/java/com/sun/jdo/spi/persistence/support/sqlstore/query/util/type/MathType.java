@@ -39,7 +39,7 @@ public class MathType
     /**
      *
      */
-    public MathType(String name, Class clazz, int enumType, TypeTable typetab)
+    public MathType(String name, Class<?> clazz, int enumType, TypeTable typetab)
     {
         super(name, clazz, enumType, typetab);
     }
@@ -47,6 +47,7 @@ public class MathType
     /**
      * A numeric wrapper class type defines an ordering.
      */
+    @Override
     public boolean isOrderable()
     {
         return true;
@@ -59,35 +60,38 @@ public class MathType
      * @param value value to be converted
      * @return converted value
      */
+    @Override
     public Number getValue(Number value)
     {
         Number ret = null;
 
-        if (value == null)
+        if (value == null) {
             ret = null;
-        else if ("java.math.BigDecimal".equals(getName()))
+        } else if ("java.math.BigDecimal".equals(getName()))
         {
-            if (value instanceof BigDecimal)
+            if (value instanceof BigDecimal) {
                 ret = value;
-            else if (value instanceof BigInteger)
+            } else if (value instanceof BigInteger) {
                 ret = new BigDecimal((BigInteger)value);
-            else if (value instanceof Double)
+            } else if (value instanceof Double) {
                 ret = new BigDecimal(((Double)value).toString());
-            else if (value instanceof Float)
+            } else if (value instanceof Float) {
                 ret = new BigDecimal(((Float)value).toString());
-            else if (value instanceof Number)
-                ret = BigDecimal.valueOf(((Number)value).longValue());
+            } else if (value instanceof Number) {
+                ret = BigDecimal.valueOf(value.longValue());
+            }
         }
         else if ("java.math.BigInteger".equals(getName()))
         {
-            if (value instanceof BigInteger)
+            if (value instanceof BigInteger) {
                 ret = value;
-            else if (value instanceof Double)
+            } else if (value instanceof Double) {
                 ret = (new BigDecimal(((Double)value).toString())).toBigInteger();
-            else if (value instanceof Float)
+            } else if (value instanceof Float) {
                 ret = (new BigDecimal(((Float)value).toString())).toBigInteger();
-            else if (value instanceof Number)
-                ret = BigInteger.valueOf(((Number)value).longValue());
+            } else if (value instanceof Number) {
+                ret = BigInteger.valueOf(value.longValue());
+            }
         }
 
         return ret;
@@ -98,35 +102,38 @@ public class MathType
      * @param value value to be negated
      * @return -value
      */
+    @Override
     public Number negate(Number value)
     {
         Number ret = null;
 
-        if (value == null)
+        if (value == null) {
             ret = null;
-        else if ("java.math.BigDecimal".equals(getName()))
+        } else if ("java.math.BigDecimal".equals(getName()))
         {
-            if (value instanceof BigDecimal)
+            if (value instanceof BigDecimal) {
                 ret = ((BigDecimal)value).negate();
-            else if (value instanceof BigInteger)
+            } else if (value instanceof BigInteger) {
                 ret = new BigDecimal(((BigInteger)value).negate());
-            else if (value instanceof Double)
+            } else if (value instanceof Double) {
                 ret = (new BigDecimal(((Double)value).toString())).negate();
-            else if (value instanceof Float)
+            } else if (value instanceof Float) {
                 ret = (new BigDecimal(((Float)value).toString())).negate();
-            else if (value instanceof Number)
-                ret = BigDecimal.valueOf(-((Number)value).longValue());
+            } else if (value instanceof Number) {
+                ret = BigDecimal.valueOf(-value.longValue());
+            }
         }
         else if ("java.math.BigInteger".equals(getName()))
         {
-            if (value instanceof BigInteger)
+            if (value instanceof BigInteger) {
                 ret = ((BigInteger)value).negate();
-            else if (value instanceof Double)
+            } else if (value instanceof Double) {
                 ret = (new BigDecimal(((Double)value).toString())).negate().toBigInteger();
-            else if (value instanceof Float)
+            } else if (value instanceof Float) {
                 ret = (new BigDecimal(((Float)value).toString())).negate().toBigInteger();
-            else if (value instanceof Number)
-                ret = BigInteger.valueOf(-((Number)value).longValue());
+            } else if (value instanceof Number) {
+                ret = BigInteger.valueOf(-value.longValue());
+            }
         }
 
         return ret;

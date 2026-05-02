@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,22 +32,17 @@ import java.util.logging.Logger;
  *
  * @author Mahesh Kannan
  */
-public class FIFOEJBObjectCache
-    extends LruEJBCache
-    implements EJBObjectCache
-{
+public class FIFOEJBObjectCache<K, V> extends LruEJBCache<K, V> implements EJBObjectCache<K, V> {
+
     protected int maxCacheSize;
     protected String name;
     protected EJBObjectCacheListener listener;
 
     protected Object refCountLock = new Object();
     protected int totalRefCount = 0;
-    protected static final boolean _printRefCount =
-        Boolean.getBoolean("cache.printrefcount");
+    protected static final boolean _printRefCount = Boolean.getBoolean("cache.printrefcount");
 
-
-    private static final Logger _logger =
-        LogDomains.getLogger(FIFOEJBObjectCache.class, LogDomains.EJB_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(FIFOEJBObjectCache.class, LogDomains.EJB_LOGGER);
 
     /**
      * default constructor
@@ -65,6 +60,7 @@ public class FIFOEJBObjectCache
         this.name = name;
     }
 
+    @Override
     public void init(int maxEntries, int numberOfVictimsToSelect, long timeout,
             float loadFactor, Properties props)
     {
@@ -74,54 +70,67 @@ public class FIFOEJBObjectCache
         _logger.log(Level.FINE, name + ": FIFOEJBObject cache created....");
     }
 
+    @Override
     public void setEJBObjectCacheListener(EJBObjectCacheListener listener) {
         this.listener = listener;
     }
 
-    public Object get(Object key) {
+    @Override
+    public V get(K key) {
         int hashCode = hash(key);
 
         return internalGet(hashCode, key, false);
     }
 
 
-    public Object get(Object key, boolean incrementRefCount) {
+    @Override
+    public V get(K key, boolean incrementRefCount) {
         int hashCode = hash(key);
 
         return internalGet(hashCode, key, incrementRefCount);
     }
 
-    public Object put(Object key, Object value) {
+    @Override
+    public V put(K key, V value) {
         int hashCode = hash(key);
 
         return internalPut(hashCode, key, value, -1, false);
     }
 
-    public Object put(Object key, Object value, boolean incrementRefCount) {
+    @Override
+    public V put(K key, V value, boolean incrementRefCount) {
         int hashCode = hash(key);
 
         return internalPut(hashCode, key, value, -1, incrementRefCount);
     }
 
 
-    public Object remove(Object key) {
+    @Override
+    public V remove(K key) {
         return internalRemove(key, true);
     }
 
-    public Object remove(Object key, boolean decrementRefCount) {
+    @Override
+    public V remove(K key, boolean decrementRefCount) {
         return internalRemove(key, decrementRefCount);
     }
 
+    @Override
     protected boolean isThresholdReached() {
         return listSize > maxCacheSize;
     }
 
-    protected void itemAccessed(CacheItem item) { }
 
-    protected void itemRemoved(CacheItem item) {
+    @Override
+    protected void itemAccessed(CacheItem<K, V> item) {
+    }
+
+
+    @Override
+    protected void itemRemoved(CacheItem<K, V> item) {
         // LruCacheItem(more specifically EJBObjectCacheItem) should always be used in conjunction with FIFOEJBObjectCache
         assert item instanceof LruCacheItem;
-        LruCacheItem l = (LruCacheItem) item;
+        LruCacheItem<K, V> l = (LruCacheItem<K, V>) item;
 
         // remove the item from the LRU list
         synchronized (this) {
@@ -130,21 +139,23 @@ public class FIFOEJBObjectCache
                 return;
             }
 
-            LruCacheItem prev = l.getLPrev();
-            LruCacheItem next = l.getLNext();
+            LruCacheItem<K, V> prev = l.getLPrev();
+            LruCacheItem<K, V> next = l.getLNext();
 
             l.setTrimmed(true);
 
             // patch up the neighbors and make sure head/tail are correct
-            if (prev != null)
+            if (prev != null) {
                 prev.setLNext(next);
-            else
+            } else {
                 head = next;
+            }
 
-            if (next != null)
+            if (next != null) {
                 next.setLPrev(prev);
-            else
+            } else {
                 tail = prev;
+            }
 
             l.setLNext(null);
             l.setLPrev(null);
@@ -153,12 +164,11 @@ public class FIFOEJBObjectCache
         }
     }
 
-    protected Object internalGet(int hashCode, Object key,
-                                 boolean incrementRefCount) {
 
+    protected V internalGet(int hashCode, K key, boolean incrementRefCount) {
         int index = getIndex(hashCode);
-        Object value = null;
-        CacheItem item = null;
+        V value = null;
+        CacheItem<K, V> item = null;
 
         synchronized (bucketLocks[index]) {
             item = buckets[index];
@@ -175,7 +185,7 @@ public class FIFOEJBObjectCache
                 if (incrementRefCount) {
                     // EJBObjectCacheItem should always be used in conjunction with FIFOEJBObjectCache
                     assert item instanceof EJBObjectCacheItem;
-                    EJBObjectCacheItem eoItem = (EJBObjectCacheItem) item;
+                    EJBObjectCacheItem<K, V> eoItem = (EJBObjectCacheItem<K, V>) item;
                     eoItem.refCount++;
                     if (_printRefCount) {
                         incrementReferenceCount();
@@ -187,23 +197,22 @@ public class FIFOEJBObjectCache
             }
         }
 
-        if (item != null)
+        if (item != null) {
             incrementHitCount();
-        else
+        } else {
             incrementMissCount();
+        }
 
         return value;
     }
 
-    protected Object internalPut(int hashCode, Object key, Object value,
-                                 int size, boolean incrementRefCount)
-    {
 
+    protected V internalPut(int hashCode, K key, V value, int size, boolean incrementRefCount) {
         int index = getIndex(hashCode);
 
-        CacheItem item, oldItem = null, overflow = null;
-        EJBObjectCacheItem newItem = null;
-        Object oldValue = null;
+        CacheItem<K, V> item, oldItem = null, overflow = null;
+        EJBObjectCacheItem<K, V> newItem = null;
+        V oldValue = null;
 
         // lookup the item
         synchronized (bucketLocks[index]) {
@@ -216,12 +225,11 @@ public class FIFOEJBObjectCache
 
             // if there was no item in the cache, insert the given item
             if (oldItem == null) {
-                newItem = (EJBObjectCacheItem)
-                    createItem(hashCode, key, value, size);
+                newItem = (EJBObjectCacheItem<K, V>) createItem(hashCode, key, value, size);
                 newItem.setTrimmed(incrementRefCount);
 
                 // add the item at the head of the bucket list
-                newItem.setNext( buckets[index] );
+                newItem.setNext(buckets[index]);
                 buckets[index] = newItem;
 
                 if (incrementRefCount) {
@@ -235,9 +243,10 @@ public class FIFOEJBObjectCache
             } else {
                 oldValue = oldItem.getValue();
                 if (incrementRefCount) {
-                    // EJBObjectCacheItem should always be used in conjunction with FIFOEJBObjectCache
+                    // EJBObjectCacheItem should always be used in conjunction with
+                    // FIFOEJBObjectCache
                     assert oldItem instanceof EJBObjectCacheItem;
-                    EJBObjectCacheItem oldEJBO = (EJBObjectCacheItem) oldItem;
+                    EJBObjectCacheItem<K, V> oldEJBO = (EJBObjectCacheItem<K, V>) oldItem;
                     oldEJBO.refCount++;
                     if (_printRefCount) {
                         incrementReferenceCount();
@@ -261,25 +270,25 @@ public class FIFOEJBObjectCache
     public void print() {
         System.out.println("EJBObjectCache:: size: " + getEntryCount() +
                            "; listSize: " + listSize);
-        for (LruCacheItem run = head; run!=null; run=run.getLNext()) {
+        for (LruCacheItem<K, V> run = head; run!=null; run=run.getLNext()) {
             System.out.print("("+run.getKey()+", "+run.getValue()+") ");
         }
         System.out.println();
     }
 
-    protected Object internalRemove(Object key, boolean decrementRefCount) {
+    protected V internalRemove(K key, boolean decrementRefCount) {
 
         int hashCode = hash(key);
         int index = getIndex(hashCode);
 
-        CacheItem prev = null, item = null;
+        CacheItem<K, V> prev = null, item = null;
 
         synchronized (bucketLocks[index]) {
             for (item = buckets[index]; item != null; item = item.getNext()) {
                 if (hashCode == item.getHashCode() && key.equals(item.getKey())) {
                     // EJBObjectCacheItem should always be used in conjunction with FIFOEJBObjectCache
                     assert item instanceof EJBObjectCacheItem;
-                    EJBObjectCacheItem eoItem = (EJBObjectCacheItem) item;
+                    EJBObjectCacheItem<K, V> eoItem = (EJBObjectCacheItem<K, V>) item;
                     if (decrementRefCount) {
                         if (eoItem.refCount > 0) {
                             eoItem.refCount--;
@@ -326,23 +335,22 @@ public class FIFOEJBObjectCache
     }
      */
 
-    protected CacheItem createItem(int hashCode, Object key, Object value,
-                                   int size) {
-        return new EJBObjectCacheItem(hashCode, key, value, size);
+    @Override
+    protected CacheItem<K, V> createItem(int hashCode, K key, V value, int size) {
+        return new EJBObjectCacheItem<>(hashCode, key, value, size);
     }
 
-    protected static class EJBObjectCacheItem
-    extends LruCacheItem {
+    protected static class EJBObjectCacheItem<K, V> extends LruCacheItem<K, V> {
         protected int refCount;
 
-        protected EJBObjectCacheItem(int hashCode, Object key, Object value,
-                                     int size) {
+        protected EJBObjectCacheItem(int hashCode, K key, V value, int size) {
             super(hashCode, key, value, size);
         }
     }
 
-    public Map getStats() {
-        Map map = new HashMap();
+    @Override
+    public Map<String, Object> getStats() {
+        Map<String, Object> map = new HashMap<>();
         StringBuffer sbuf = new StringBuffer();
 
         sbuf.append("(totalRef=").append(totalRefCount).append("; ");
@@ -358,6 +366,7 @@ public class FIFOEJBObjectCache
         return map;
     }
 
+    @Override
     public void trimExpiredEntries(int maxCount) {
 
         int count = 0;
@@ -384,10 +393,11 @@ public class FIFOEJBObjectCache
             if (item != tail) {
                 lastItem.setLPrev(null);
 
-                if (item != null)
+                if (item != null) {
                     item.setLNext(null);
-                else
+                } else {
                     head = null;
+                }
 
                 lastItem = tail; // record the old tail
                 tail = item;
@@ -398,7 +408,7 @@ public class FIFOEJBObjectCache
 
         if (count > 0) {
 
-            ArrayList localVictims = new ArrayList(count);
+            ArrayList<Object> localVictims = new ArrayList<>(count);
             // trim the items from the BaseCache from the old tail backwards
             for (item = lastItem; item != null; item = item.getLPrev()) {
                 localVictims.add(item.getKey());

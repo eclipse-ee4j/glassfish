@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * TypeSupport.java
- *
- * Created on November 22, 2001
  */
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
@@ -39,8 +34,8 @@ import org.glassfish.persistence.common.I18NHelper;
  * as type info. The helper uses a model instance to access meta model info and
  * uses a NameMapper to map EJB names to JDO names and vice versa.
  *
- * @author  Michael Bouschen
- * @author  Shing Wai Chan
+ * @author  Michael Bouschen 2001
+ * @author  Shing Wai Chan 2001
  */
 public class TypeSupport
 {
@@ -105,13 +100,13 @@ public class TypeSupport
     public static final Object bigIntegerType = "java.math.BigInteger";
 
     /** Set of names of numeric types. */
-    protected static final Set numericTypes = new HashSet();
+    protected static final Set<Object> numericTypes = new HashSet<>();
 
     /** Set of names of numeric wrapper classes. */
-    protected static final Set numericWrapperTypes = new HashSet();
+    protected static final Set<Object> numericWrapperTypes = new HashSet<>();
 
     /** Set of names of date and time types. */
-    protected static final Set dateTimeTypes = new HashSet();
+    protected static final Set<String> dateTimeTypes = new HashSet<>();
 
     /** Meta data access. */
     protected Model model;
@@ -142,10 +137,10 @@ public class TypeSupport
         numericWrapperTypes.add(floatClassType);
         numericWrapperTypes.add(doubleClassType);
 
-        dateTimeTypes.add("java.util.Date"); //NOI18N
-        dateTimeTypes.add("java.sql.Date"); //NOI18N
-        dateTimeTypes.add("java.sql.Time"); //NOI18N
-        dateTimeTypes.add("java.sql.Timestamp"); //NOI18N
+        dateTimeTypes.add("java.util.Date");
+        dateTimeTypes.add("java.sql.Date");
+        dateTimeTypes.add("java.sql.Time");
+        dateTimeTypes.add("java.sql.Timestamp");
     }
 
     /**
@@ -172,7 +167,7 @@ public class TypeSupport
     /**
      * The method returns a type info by type name by class object.
      */
-    public Object getTypeInfo(Class clazz)
+    public Object getTypeInfo(Class<?> clazz)
     {
         return getTypeInfo(clazz.getName());
     }
@@ -294,22 +289,23 @@ public class TypeSupport
     public static Object getPrimitiveType(Object type)
     {
         Object result = errorType;
-        if (type.equals(booleanClassType))
+        if (type.equals(booleanClassType)) {
             result = booleanType;
-        else if (type.equals(integerClassType))
+        } else if (type.equals(integerClassType)) {
             result = intType;
-        else if (type.equals(longClassType))
+        } else if (type.equals(longClassType)) {
             result = longType;
-        else if (type.equals(floatClassType))
+        } else if (type.equals(floatClassType)) {
             result = floatType;
-        else if (type.equals(doubleClassType))
+        } else if (type.equals(doubleClassType)) {
             result = doubleType;
-        else if (type.equals(byteClassType))
+        } else if (type.equals(byteClassType)) {
             result = byteType;
-        else if (type.equals(shortClassType))
+        } else if (type.equals(shortClassType)) {
             result = shortType;
-        else if (type.equals(characterClassType))
+        } else if (type.equals(characterClassType)) {
             result = charType;
+        }
         return result;
     }
 
@@ -320,22 +316,23 @@ public class TypeSupport
     public static Object getWrapperType(Object type)
     {
         Object result = errorType;
-        if (type.equals(booleanType))
+        if (type.equals(booleanType)) {
             result = booleanClassType;
-        else if (type.equals(intType))
+        } else if (type.equals(intType)) {
             result = integerClassType;
-        else if (type.equals(longType))
+        } else if (type.equals(longType)) {
             result = longClassType;
-        else if (type.equals(floatType))
+        } else if (type.equals(floatType)) {
             result = floatClassType;
-        else if (type.equals(doubleType))
+        } else if (type.equals(doubleType)) {
             result = doubleClassType;
-        else if (type.equals(byteType))
+        } else if (type.equals(byteType)) {
             result = byteClassType;
-        else if (type.equals(shortType))
+        } else if (type.equals(shortType)) {
             result = shortClassType;
-        else if (type.equals(charType))
+        } else if (type.equals(charType)) {
             result = characterClassType;
+        }
         return result;
     }
 
@@ -346,14 +343,15 @@ public class TypeSupport
     public static Object binaryNumericPromotion(Object left, Object right)
     {
         if (isNumericType(left) && isNumericType(right)) {
-            if (left.equals(doubleType) || right.equals(doubleType))
+            if (left.equals(doubleType) || right.equals(doubleType)) {
                 return doubleType;
-            else if (left.equals(floatType) || right.equals(floatType))
+            } else if (left.equals(floatType) || right.equals(floatType)) {
                 return floatType;
-            else if (left.equals(longType) || right.equals(longType))
+            } else if (left.equals(longType) || right.equals(longType)) {
                 return longType;
-            else
+            } else {
                 return intType;
+            }
         }
         return errorType;
     }
@@ -388,17 +386,18 @@ public class TypeSupport
         String rightTypeName = getTypeName(right);
 
         if (nameMapper.isLocalInterface(leftTypeName) &&
-            nameMapper.isEjbName(rightTypeName))
+            nameMapper.isEjbName(rightTypeName)) {
             rightTypeName = nameMapper.getLocalInterfaceForEjbName(rightTypeName);
-        else if (nameMapper.isRemoteInterface(leftTypeName) &&
-            nameMapper.isEjbName(rightTypeName))
+        } else if (nameMapper.isRemoteInterface(leftTypeName) &&
+            nameMapper.isEjbName(rightTypeName)) {
             rightTypeName = nameMapper.getRemoteInterfaceForEjbName(rightTypeName);
-        else if (nameMapper.isLocalInterface(rightTypeName) &&
-            nameMapper.isEjbName(leftTypeName))
+        } else if (nameMapper.isLocalInterface(rightTypeName) &&
+            nameMapper.isEjbName(leftTypeName)) {
             leftTypeName = nameMapper.getLocalInterfaceForEjbName(leftTypeName);
-        else if (nameMapper.isRemoteInterface(rightTypeName) &&
-            nameMapper.isEjbName(leftTypeName))
+        } else if (nameMapper.isRemoteInterface(rightTypeName) &&
+            nameMapper.isEjbName(leftTypeName)) {
             leftTypeName = nameMapper.getRemoteInterfaceForEjbName(leftTypeName);
+        }
 
         // does not handle inheritance!
         return leftTypeName.equals(rightTypeName);
@@ -431,8 +430,8 @@ public class TypeSupport
         String typeName = getTypeName(typeInfo);
         if (!nameMapper.isEjbName(typeName)) {
             ErrorMsg.fatal(I18NHelper.getMessage(
-                msgs, "ERR_EjbNameExpected", //NOI18N
-                "TypeSupport.getFieldType", typeName)); //NOI18N
+                msgs, "ERR_EjbNameExpected",
+                "TypeSupport.getFieldType", typeName));
         }
 
         String fieldType = model.getFieldType(typeName, fieldName);
@@ -460,8 +459,8 @@ public class TypeSupport
         String typeName = getTypeName(typeInfo);
         if (!nameMapper.isEjbName(typeName)) {
             ErrorMsg.fatal(I18NHelper.getMessage(
-                msgs, "ERR__EjbNameExpected", //NOI18N
-                "TypeSupport.getFieldInfo", typeName)); //NOI18N
+                msgs, "ERR__EjbNameExpected",
+                "TypeSupport.getFieldInfo", typeName));
         }
         String pcClassName = nameMapper.getPersistenceClassForEjbName(typeName);
         String pcFieldName = nameMapper.getPersistenceFieldForEjbField(
@@ -491,9 +490,9 @@ public class TypeSupport
         if ((fieldInfo != null) && (fieldInfo instanceof RelationshipElement)) {
             String elementClass = ((RelationshipElement)fieldInfo).getElementClass();
             return nameMapper.getEjbNameForPersistenceClass(elementClass);
-        }
-        else
+        } else {
             return null;
+        }
     }
 
     /**

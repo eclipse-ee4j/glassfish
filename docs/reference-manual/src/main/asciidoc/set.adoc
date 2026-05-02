@@ -128,6 +128,6 @@ xref:get.adoc#get[`get`(1)], xref:list.adoc#list[`list`(1)]
 
 xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
-xref:administration-guide.adoc#GSADG[{productName} Administration Guide]
+xref:administration-guide.adoc[{productName} Administration Guide]
 
 

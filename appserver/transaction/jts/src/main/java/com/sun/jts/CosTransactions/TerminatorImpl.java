@@ -69,7 +69,6 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 
 //----------------------------------------------------------------------------
@@ -95,11 +94,8 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
     /**
      * Default TerminatorImpl constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     TerminatorImpl() {}
 
@@ -111,9 +107,7 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
      * @param coordinator  The Coordinator for the transaction.
      * @param subtran  A flag indicating whether the transaction is a child.
      *
-     * @return
      *
-     * @see
      */
     TerminatorImpl (CoordinatorImpl coordinator, boolean subtran) {
 
@@ -189,7 +183,6 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
      * @param reportHeuristics  Indicates whether heuristic exceptions
      *   should be passed to the caller.
      *
-     * @return
      *
      * @exception HeuristicHazard  Heuristic action may have been taken by a
      *   participant in the transaction.
@@ -198,7 +191,6 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
      *   of the transaction has been rolled back.
      * @exception SystemException  The operation failed.
      *
-     * @see
      */
     synchronized public void commit(boolean reportHeuristics)
         throws HeuristicMixed, HeuristicHazard, TRANSACTION_ROLLEDBACK {
@@ -251,13 +243,10 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
      * This operation is part of the OMG interface and must not return
      * any exceptions other than those defined in the OMG interface.
      *
-     * @param
      *
-     * @return
      *
      * @exception SystemException  The operation failed.
      *
-     * @see
      */
     public void rollback() throws SystemException {
 
@@ -294,11 +283,9 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
     /**
      * Returns the CORBA Object which represents this object.
      *
-     * @param
      *
      * @return  The CORBA object.
      *
-     * @see
      */
     synchronized final Terminator object() {
         if (thisRef == null) {
@@ -335,11 +322,8 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
     /**
      * Destroys the TerminatorImpl object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized final void destroy() {
         if (poa != null && thisRef != null) {

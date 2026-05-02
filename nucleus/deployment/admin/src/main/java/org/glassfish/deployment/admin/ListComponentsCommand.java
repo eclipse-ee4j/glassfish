@@ -149,6 +149,7 @@ public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListComponentsCommand.class);
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -273,7 +274,7 @@ public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity
 
     /**
      * return all user visible sniffer engines in an application.
-     * The return format is <sniffer1, sniffer2, ...>
+     * The return format is {@code <sniffer1, sniffer2, ...>}
      * @param module - Application's module
      * @return sniffer engines
      */
@@ -283,7 +284,7 @@ public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity
 
     /**
      * return all user visible sniffer engines in an application.
-     * The return format is <sniffer1, sniffer2, ...>
+     * The return format is {@code <sniffer1, sniffer2, ...>}
      * @param module - Application's module
      * @return sniffer engines
      */

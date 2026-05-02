@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * MappingGenerator.java
- *
- * Created on Aug 18, 2003
  */
 
 package com.sun.jdo.api.persistence.mapping.ejb;
@@ -35,6 +30,7 @@ import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
 import com.sun.jdo.api.persistence.model.mapping.MappingFieldElement;
 import com.sun.jdo.spi.persistence.generator.database.DatabaseGenerator;
+import com.sun.jdo.spi.persistence.generator.database.DatabaseGenerator.NameTuple;
 import com.sun.jdo.spi.persistence.generator.database.MappingPolicy;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
@@ -63,15 +59,15 @@ import org.netbeans.modules.schema2beans.Schema2BeansException;
  * classes based on ejb-jar.xml, bean classes and policy by invoking the
  * database generation backend.
  *
- * @author Jie Leng
+ * @author Jie Leng 2003
  */
 public class MappingGenerator {
 
     // Since "_JDOState" is defined as private in IASEjbCMPEntityDescriptor,
     // redefined here for passing it in DatabaseGenerator.
-    private static final String CLASS_SUFFIX = "_JDOState"; // NOI18N
+    private static final String CLASS_SUFFIX = "_JDOState";
 
-    private static final String FAKE_NAME = "fakename"; // NOI18N
+    private static final String FAKE_NAME = "fakename";
 
     private final EJBInfoHelper infoHelper;
     private final Model model;
@@ -85,7 +81,7 @@ public class MappingGenerator {
     private boolean skipGeneratedFields = false;
 
     //hold strong reference to mapping class elements
-    private List strongRefs = new ArrayList();
+    private List<MappingClassElement> strongRefs = new ArrayList<>();
 
     /**
      * Constructor
@@ -145,9 +141,9 @@ public class MappingGenerator {
         // sun-cmp-mappings.xml does not exist, use DatabaseGenerator
         // to generate sun-cmp-mappings.xml, *.dbschema
 
-        List pcClasses = new ArrayList();
+        List<NameTuple> pcClasses = new ArrayList<>();
         sunCmpMappings = getPartialSunCmpMappings(pcClasses,
-                (uniqueTableNames != null)? uniqueTableNames.booleanValue() : false);
+            uniqueTableNames == null ? false : uniqueTableNames.booleanValue());
 
         // load real jdo model and fake mapping model in memory
         ddHelper.setEnsureValidation(false);
@@ -155,6 +151,7 @@ public class MappingGenerator {
         // create fake schema for partial mapping
         SchemaElement fakeSchema = new SchemaElement(new SchemaElementImpl());
         fakeSchema.setName(DBIdentifier.create(FAKE_NAME));
+        fakeSchema.setDriver(FAKE_NAME);
 
         // add newly created fake schema to SchemaElement cache
         SchemaElement.addToCache(fakeSchema);
@@ -163,11 +160,10 @@ public class MappingGenerator {
         // from cache not from disk.
         loadMappingClasses(sunCmpMappings, null);
 
-        DatabaseGenerator.Results results = generateSchema(pcClasses,
-                dbName, uniqueTableNames, userPolicy);
+        DatabaseGenerator.Results results = generateSchema(pcClasses, dbName, uniqueTableNames, userPolicy);
 
         SchemaElement schema = results.getSchema();
-        Set mappingClasses = results.getMappingClasses();
+        Set<MappingClassElement> mappingClasses = results.getMappingClasses();
 
         // remove fake schema from cache since the correct schema is generated.
         SchemaElement.removeFromCache(FAKE_NAME);
@@ -187,19 +183,17 @@ public class MappingGenerator {
         // Remove generated fields from jdo model and mapping
         // model before returning the result.
         if (skipGeneratedFields) {
-            Iterator iter = mappingClasses.iterator();
+            Iterator<MappingClassElement> iter = mappingClasses.iterator();
             while (iter.hasNext()) {
-                MappingClassElement mapClassElt = (MappingClassElement)iter.next();
+                MappingClassElement mapClassElt = iter.next();
                 if (mapClassElt != null) {
                     String className = mapClassElt.getName();
-                    String ejbName = nameMapper.getEjbNameForPersistenceClass(
-                        className);
+                    String ejbName = nameMapper.getEjbNameForPersistenceClass(className);
 
-                    PersistenceClassElement pce = (PersistenceClassElement)
-                            model.getPersistenceClass(className);
+                    PersistenceClassElement pce = model.getPersistenceClass(className);
                     PersistenceFieldElement[] allFields = pce.getFields();
                     if (allFields != null) {
-                        List generatedFieldList = new ArrayList();
+                        List<PersistenceFieldElement> generatedFieldList = new ArrayList<>();
 
                         // In order to avoid concurrentmod exception,
                         // loop through all persistence fields to put generated
@@ -209,11 +203,8 @@ public class MappingGenerator {
                             PersistenceFieldElement pfe = allFields[i];
                             if (pfe != null) {
                                 String pFieldName = pfe.getName();
-                                String ejbFieldName = nameMapper.
-                                    getEjbFieldForPersistenceField(className,
-                                    pFieldName);
-                                if (nameMapper.isGeneratedField(ejbName,
-                                    ejbFieldName)) {
+                                String ejbFieldName = nameMapper.getEjbFieldForPersistenceField(className, pFieldName);
+                                if (nameMapper.isGeneratedField(ejbName, ejbFieldName)) {
                                     generatedFieldList.add(pfe);
                                 }
                             }
@@ -222,12 +213,10 @@ public class MappingGenerator {
                         // If the field is a version field, don't remove it
                         // from the model even though it is generated because
                         // it is needed to hold the version column information.
-                        Iterator iterator = generatedFieldList.iterator();
+                        Iterator<PersistenceFieldElement> iterator = generatedFieldList.iterator();
                         while (iterator.hasNext()) {
-                            PersistenceFieldElement pfe =
-                                (PersistenceFieldElement)iterator.next();
-                            MappingFieldElement mfe = mapClassElt.
-                                 getField(pfe.getName());
+                            PersistenceFieldElement pfe = iterator.next();
+                            MappingFieldElement mfe = mapClassElt.getField(pfe.getName());
                             if (mfe != null && (!mfe.isVersion())) {
                                 model.removeFieldElement(pfe);
                                 mapClassElt.removeField(mfe);
@@ -251,15 +240,11 @@ public class MappingGenerator {
      * @throws ModelException
      * @throws ConversionException
      */
-    protected Map loadMappingClasses(SunCmpMappings sunMapping,
-        ClassLoader classLoader)
+    protected Map<String, MappingClassElement> loadMappingClasses(SunCmpMappings sunMapping, ClassLoader classLoader)
         throws DBException, ModelException, ConversionException {
         MappingFile mapFile = new MappingFile(classLoader);
-
-        Map allMappings = mapFile.intoMappingClasses(sunMapping, ddHelper);
-
+        Map<String, MappingClassElement> allMappings = mapFile.intoMappingClasses(sunMapping, ddHelper);
         updateMappingClasses(allMappings.values());
-
         return allMappings;
     }
 
@@ -287,11 +272,8 @@ public class MappingGenerator {
      * @throws DBException
      * @throws ModelException
      */
-    private DatabaseGenerator.Results generateSchema(List pcClasses,
-            String dbName, Boolean useUniqueTableNames,
-            Properties userPolicy)
-            throws IOException, DBException, ModelException {
-
+    private DatabaseGenerator.Results generateSchema(List<NameTuple> pcClasses, String dbName,
+        Boolean useUniqueTableNames, Properties userPolicy) throws IOException, DBException, ModelException {
         MappingPolicy mappingPolicy = MappingPolicy.getMappingPolicy(dbName);
         mappingPolicy.setUserPolicy(userPolicy);
 
@@ -309,10 +291,10 @@ public class MappingGenerator {
      * Puts mapping classes into model's cache
      * @param mappingClasses a collection of mapping classes
      */
-    private void updateMappingClasses(Collection mappingClasses) {
-        Iterator iter = mappingClasses.iterator();
+    private void updateMappingClasses(Collection<MappingClassElement> mappingClasses) {
+        Iterator<MappingClassElement> iter = mappingClasses.iterator();
         while (iter.hasNext()) {
-            MappingClassElement mapClassElt = (MappingClassElement)iter.next();
+            MappingClassElement mapClassElt = iter.next();
             //put it in the models' cache
             model.updateKeyForClass(mapClassElt, null);
             //keep a strong ref
@@ -329,7 +311,7 @@ public class MappingGenerator {
      * @return a SunCmpMappings object
      * @throws Schema2BeansException
      */
-    private SunCmpMappings getPartialSunCmpMappings(List pcClasses,
+    private SunCmpMappings getPartialSunCmpMappings(List<NameTuple> pcClasses,
              boolean useUniqueTableNames) throws Schema2BeansException {
 
        // Create a new name mapper with perisistence class name differing
@@ -590,8 +572,9 @@ public class MappingGenerator {
          */
         public static boolean hasScale(int jdbcType) {
             if (getAttribute(jdbcType).equals(SCALE_ATTRIBUTE)
-                    || getAttribute(jdbcType).equals(SCALE_PRECISION_ATTRIBUTE))
+                    || getAttribute(jdbcType).equals(SCALE_PRECISION_ATTRIBUTE)) {
                 return true;
+            }
             return false;
         }
 
@@ -603,8 +586,9 @@ public class MappingGenerator {
          * <code>false</code> otherwise
          */
         public static boolean hasPrecision(int jdbcType) {
-            if (getAttribute(jdbcType).equals(SCALE_PRECISION_ATTRIBUTE))
+            if (getAttribute(jdbcType).equals(SCALE_PRECISION_ATTRIBUTE)) {
                 return true;
+            }
             return false;
         }
 
@@ -615,8 +599,9 @@ public class MappingGenerator {
          * <code>false</code> otherwise
          */
         public static boolean hasLength(int jdbcType) {
-            if (getAttribute(jdbcType).equals(LENGTH_ATTRIBUTE))
+            if (getAttribute(jdbcType).equals(LENGTH_ATTRIBUTE)) {
                 return true;
+            }
             return false;
         }
 

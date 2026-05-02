@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,9 +24,9 @@
 header
 {
     package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
-    
+
     import java.util.*;
-    
+
     import java.math.BigDecimal;
     import java.math.BigInteger;
 
@@ -45,7 +46,7 @@ header
  * This class defines the optimizer pass of the JQL compiler.
  * It takes the typed AST as produced by the smenatic analysis and
  * converts it into a simpler but equivalent typed AST.
- * 
+ *
  * @author  Michael Bouschen
  * @version 0.1
  */
@@ -56,26 +57,26 @@ options
     importVocab = JQL;
     buildAST = true;
     defaultErrorHandler = false;
-    ASTLabelType = "JQLAST"; //NOI18N
+    ASTLabelType = "JQLAST";
 }
 
 {
     /**
      * I18N support
      */
-    protected final static ResourceBundle messages = 
+    protected final static ResourceBundle messages =
         I18NHelper.loadBundle(Optimizer.class);
-    
+
     /**
-     * type table 
+     * type table
      */
     protected TypeTable typetab;
-    
+
     /**
      * query parameter table
      */
     protected ParameterTable paramtab;
-    
+
     /**
      *
      */
@@ -84,7 +85,7 @@ options
     /**
      *
      */
-    public void init(TypeTable typetab, ParameterTable paramtab, 
+    public void init(TypeTable typetab, ParameterTable paramtab,
                      ErrorMsg errorMsg)
     {
         this.typetab = typetab;
@@ -96,14 +97,14 @@ options
      *
      */
     public void reportError(RecognitionException ex) {
-        errorMsg.fatal("Optimizer error", ex); //NOI18N
+        errorMsg.fatal("Optimizer error", ex);
     }
 
     /**
      *
      */
     public void reportError(String s) {
-        errorMsg.fatal("Optimizer error: " + s); //NOI18N
+        errorMsg.fatal("Optimizer error: " + s);
     }
 
     /**
@@ -123,33 +124,33 @@ options
             case 't': return '\t';
             case 'b': return '\b';
             case 'f': return '\f';
-            case 'u': 
+            case 'u':
                 // unicode spec
                 return (char)Integer.parseInt(text.substring(2, text.length()), 16);
-            case '0':            
+            case '0':
             case '1':
             case '2':
-            case '3':            
+            case '3':
             case '4':
-            case '5':            
+            case '5':
             case '6':
-            case '7': 
-                // octal spec 
+            case '7':
+                // octal spec
                 return (char)Integer.parseInt(text.substring(1, text.length()), 8);
             default : return second;
             }
         }
         return first;
     }
-    
+
 
     /**
-     * Check an AND operation (BAND, AND) for constant operands 
+     * Check an AND operation (BAND, AND) for constant operands
      * that could be optimized.
      * @param op the AND operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkAnd(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -167,12 +168,12 @@ options
     }
 
     /**
-     * Check an OR operation (BOR, OR) for constant operands 
+     * Check an OR operation (BOR, OR) for constant operands
      * that could be optimized.
      * @param op the OR operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkOr(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -196,14 +197,14 @@ options
      * @param left the left operand
      * @param right the right operand
      * @param negate true for not equal operation, false otherwise
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
-    protected JQLAST checkEqualityOp(JQLAST op, JQLAST left, JQLAST right, 
+    protected JQLAST checkEqualityOp(JQLAST op, JQLAST left, JQLAST right,
                                      boolean negate)
     {
         JQLAST ast = op;
 
-        // case <VALUE> <op> <VALUE> 
+        // case <VALUE> <op> <VALUE>
         if ((left.getType() == VALUE) && (right.getType() == VALUE))
         {
             ast = handleValueEqValue(op, left, right, negate);
@@ -222,13 +223,13 @@ options
     }
 
     /**
-     * Check a object equality operation (OBJECT_EQUAL, OBJECT_NOT_EQUAL) 
+     * Check a object equality operation (OBJECT_EQUAL, OBJECT_NOT_EQUAL)
      * for constant operands that could be optimized.
      * @param op the object equality operator
      * @param left the left operand
      * @param right the right operand
      * @param negate true for not equal operation, false otherwise
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkObjectEqualityOp(JQLAST op, JQLAST left, JQLAST right,
                                            boolean negate)
@@ -243,29 +244,29 @@ options
     }
 
     /**
-     * Check a collection equality operation (COLLECTION_EQUAL, 
+     * Check a collection equality operation (COLLECTION_EQUAL,
      * COLLECTION_NOT_EQUAL) for constant operands that could be optimized.
      * @param op the collection equality operator
      * @param left the left operand
      * @param right the right operand
      * @param negate true for not equal operation, false otherwise
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
-    protected JQLAST checkCollectionEqualityOp(JQLAST op, JQLAST left, 
+    protected JQLAST checkCollectionEqualityOp(JQLAST op, JQLAST left,
                                                JQLAST right, boolean negate)
     {
         JQLAST ast = op;
         boolean isLeftConstant = (left.getType() == VALUE);
         boolean isRightConstant = (right.getType() == VALUE);
-        
+
         if (isLeftConstant && isRightConstant)
         {
             ast = handleValueEqValue(op, left, right, negate);
         }
-        else if ((isLeftConstant && (left.getValue() == null) && isNonConstantCollection(right)) || 
-                 (isRightConstant && (right.getValue() == null) && isNonConstantCollection(left))) 
+        else if ((isLeftConstant && (left.getValue() == null) && isNonConstantCollection(right)) ||
+                 (isRightConstant && (right.getValue() == null) && isNonConstantCollection(left)))
         {
-            // This optimization is datastore dependend. 
+            // This optimization is datastore dependend.
             // In TP we know a collection returned by the datastore is never null.
             // null == <collection field> -> false
             // <collection field> == null -> false
@@ -280,11 +281,11 @@ options
     }
 
     /**
-     * Check a logical not operation (LNOT) for a constant operand 
+     * Check a logical not operation (LNOT) for a constant operand
      * that could be optimized.
      * @param op the logical not operator
      * @param arg the operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkLogicalNotOp(JQLAST op, JQLAST arg)
     {
@@ -294,7 +295,7 @@ options
         {
             // !value may be calculated at compile time.
             Object valueObj = arg.getValue();
-            boolean value = (valueObj instanceof Boolean) ? 
+            boolean value = (valueObj instanceof Boolean) ?
                             ((Boolean)valueObj).booleanValue() : false;
             arg.setType(VALUE);
             arg.setValue(new Boolean(!value));
@@ -314,7 +315,7 @@ options
      * @param op the plus operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkBinaryPlusOp(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -332,21 +333,21 @@ options
             else
             {
                 Type type = op.getJQLType();
-                
+
                 if (type instanceof NumericWrapperClassType)
                     type = ((NumericWrapperClassType)type).getPrimitiveType();
-                
+
                 if (type.equals(typetab.intType))
-                    value = new Integer(((Number)leftValue).intValue() + 
+                    value = new Integer(((Number)leftValue).intValue() +
                         ((Number)rightValue).intValue());
                 else if (type.equals(typetab.longType))
-                    value = new Long(((Number)leftValue).longValue() + 
+                    value = new Long(((Number)leftValue).longValue() +
                         ((Number)rightValue).longValue());
                 else if (type.equals(typetab.floatType))
-                    value = new Float(((Number)leftValue).floatValue() + 
+                    value = new Float(((Number)leftValue).floatValue() +
                         ((Number)rightValue).floatValue());
                 else if (type.equals(typetab.doubleType))
-                    value = new Double(((Number)leftValue).doubleValue() + 
+                    value = new Double(((Number)leftValue).doubleValue() +
                         ((Number)rightValue).doubleValue());
                 else if (type.equals(typetab.bigDecimalType))
                     value = getBigDecimalValue(leftValue).add(
@@ -354,9 +355,9 @@ options
                 else if (type.equals(typetab.bigIntegerType))
                     value = getBigIntegerValue(leftValue).add(
                         getBigIntegerValue(rightValue));
-                else 
+                else
                     errorMsg.fatal(I18NHelper.getMessage(messages,
-                        "jqlc.optimizer.checkbinaryplusop.invalidtype", //NOI18N
+                        "jqlc.optimizer.checkbinaryplusop.invalidtype",
                         String.valueOf(type)));
             }
             ast.setType(VALUE);
@@ -365,14 +366,14 @@ options
         }
         return ast;
     }
-    
+
     /**
      * Check a string concatenation operation (CONCAT) for constant operands
      * that could be optimized.
      * @param op the concat operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkConcatOp(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -387,7 +388,7 @@ options
                 value = rightValue;
             else if (rightValue == null)
                 value = leftValue;
-            else 
+            else
                 value = leftValue.toString() + rightValue.toString();
             ast.setType(VALUE);
             ast.setValue(value);
@@ -402,7 +403,7 @@ options
      * @param op the minus operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkBinaryMinusOp(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -419,12 +420,12 @@ options
             {
                 if (leftValue == null)
                     leftValue = new Integer(0);
-                
+
                 Type type = op.getJQLType();
-                
+
                 if (type instanceof NumericWrapperClassType)
                     type = ((NumericWrapperClassType)type).getPrimitiveType();
-                
+
                 if (type.equals(typetab.intType))
                     value = new Integer(((Number)leftValue).intValue() -
                         ((Number)rightValue).intValue());
@@ -432,10 +433,10 @@ options
                     value = new Long(((Number)leftValue).longValue() -
                         ((Number)rightValue).longValue());
                 else if (type.equals(typetab.floatType))
-                    value = new Float(((Number)leftValue).floatValue() - 
+                    value = new Float(((Number)leftValue).floatValue() -
                         ((Number)rightValue).floatValue());
                 else if (type.equals(typetab.doubleType))
-                    value = new Double(((Number)leftValue).doubleValue() - 
+                    value = new Double(((Number)leftValue).doubleValue() -
                         ((Number)rightValue).doubleValue());
                 else if (type.equals(typetab.bigDecimalType))
                     value = getBigDecimalValue(leftValue).subtract(
@@ -443,9 +444,9 @@ options
                 else if (type.equals(typetab.bigIntegerType))
                     value = getBigIntegerValue(leftValue).subtract(
                         getBigIntegerValue(rightValue));
-                else 
+                else
                     errorMsg.fatal(I18NHelper.getMessage(messages,
-                        "jqlc.optimizer.checkbinaryminusop.invalidtype", //NOI18N
+                        "jqlc.optimizer.checkbinaryminusop.invalidtype",
                         String.valueOf(type)));
             }
             ast.setType(VALUE);
@@ -454,14 +455,14 @@ options
         }
         return ast;
     }
-    
+
     /**
      * Check a binary multiplication operation (STAR) for constant operands
      * that could be optimized.
      * @param op the multiplication operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkMultiplicationOp(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -477,10 +478,10 @@ options
             if (rightValue == null)
                 rightValue = new Integer(0);
             Type type = op.getJQLType();
-                
+
             if (type instanceof NumericWrapperClassType)
                 type = ((NumericWrapperClassType)type).getPrimitiveType();
-                
+
             if (type.equals(typetab.intType))
                 value = new Integer(((Number)leftValue).intValue() *
                     ((Number)rightValue).intValue());
@@ -488,10 +489,10 @@ options
                 value = new Long(((Number)leftValue).longValue() *
                     ((Number)rightValue).longValue());
             else if (type.equals(typetab.floatType))
-                value = new Float(((Number)leftValue).floatValue() * 
+                value = new Float(((Number)leftValue).floatValue() *
                     ((Number)rightValue).floatValue());
             else if (type.equals(typetab.doubleType))
-                value = new Double(((Number)leftValue).doubleValue() * 
+                value = new Double(((Number)leftValue).doubleValue() *
                     ((Number)rightValue).doubleValue());
             else if (type.equals(typetab.bigDecimalType))
                 value = getBigDecimalValue(leftValue).multiply(
@@ -499,9 +500,9 @@ options
             else if (type.equals(typetab.bigIntegerType))
                 value = getBigIntegerValue(leftValue).multiply(
                     getBigIntegerValue(rightValue));
-            else 
+            else
                 errorMsg.fatal(I18NHelper.getMessage(messages,
-                    "jqlc.optimizer.checkmultiplicationop.invalidtype", //NOI18N
+                    "jqlc.optimizer.checkmultiplicationop.invalidtype",
                     String.valueOf(type)));
 
             ast.setType(VALUE);
@@ -510,14 +511,14 @@ options
         }
         return ast;
     }
-    
+
     /**
      * Check a binary division operation (DIV) for constant operands
      * that could be optimized.
      * @param op the division operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkDivisionOp(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -535,10 +536,10 @@ options
                 rightValue = new Integer(0);
 
             Type type = op.getJQLType();
-            
+
             if (type instanceof NumericWrapperClassType)
                 type = ((NumericWrapperClassType)type).getPrimitiveType();
-                
+
             if (type.equals(typetab.intType))
                 value = new Integer(((Number)leftValue).intValue() /
                     ((Number)rightValue).intValue());
@@ -546,10 +547,10 @@ options
                 value = new Long(((Number)leftValue).longValue() /
                     ((Number)rightValue).longValue());
             else if (type.equals(typetab.floatType))
-                value = new Float(((Number)leftValue).floatValue() / 
+                value = new Float(((Number)leftValue).floatValue() /
                     ((Number)rightValue).floatValue());
             else if (type.equals(typetab.doubleType))
-                value = new Double(((Number)leftValue).doubleValue() / 
+                value = new Double(((Number)leftValue).doubleValue() /
                     ((Number)rightValue).doubleValue());
             else if (type.equals(typetab.bigDecimalType))
                 value = getBigDecimalValue(leftValue).divide(
@@ -557,9 +558,9 @@ options
             else if (type.equals(typetab.bigIntegerType))
                 value = getBigIntegerValue(leftValue).divide(
                     getBigIntegerValue(rightValue));
-            else 
+            else
                 errorMsg.fatal(I18NHelper.getMessage(messages,
-                    "jqlc.optimizer.checkdivisionop.invalidtype", //NOI18N
+                    "jqlc.optimizer.checkdivisionop.invalidtype",
                     String.valueOf(type)));
 
             ast.setType(VALUE);
@@ -568,14 +569,14 @@ options
         }
         return ast;
     }
-    
+
     /**
      * Check a binary modular operation (MOD) for constant operands
      * that could be optimized.
      * @param op the mod operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkModOp(JQLAST op, JQLAST left, JQLAST right)
     {
@@ -593,10 +594,10 @@ options
                 rightValue = new Integer(0);
 
             Type type = op.getJQLType();
-            
+
             if (type instanceof NumericWrapperClassType)
                 type = ((NumericWrapperClassType)type).getPrimitiveType();
-                
+
             if (type.equals(typetab.intType))
                 value = new Integer(((Number)leftValue).intValue() %
                     ((Number)rightValue).intValue());
@@ -604,10 +605,10 @@ options
                 value = new Long(((Number)leftValue).longValue() %
                     ((Number)rightValue).longValue());
             else if (type.equals(typetab.floatType))
-                value = new Float(((Number)leftValue).floatValue() % 
+                value = new Float(((Number)leftValue).floatValue() %
                     ((Number)rightValue).floatValue());
             else if (type.equals(typetab.doubleType))
-                value = new Double(((Number)leftValue).doubleValue() % 
+                value = new Double(((Number)leftValue).doubleValue() %
                     ((Number)rightValue).doubleValue());
             else if (type.equals(typetab.bigDecimalType))
             {
@@ -622,9 +623,9 @@ options
             else if (type.equals(typetab.bigIntegerType))
                 value = getBigIntegerValue(leftValue).remainder(
                     getBigIntegerValue(rightValue));
-            else 
+            else
                 errorMsg.fatal(I18NHelper.getMessage(messages,
-                    "jqlc.optimizer.checkmodop.invalidtype", //NOI18N
+                    "jqlc.optimizer.checkmodop.invalidtype",
                     String.valueOf(type)));
 
             ast.setType(VALUE);
@@ -639,25 +640,25 @@ options
      * that could be optimized.
      * @param op the unary minus operator
      * @param arg the operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkUnaryMinusOp(JQLAST op, JQLAST arg)
     {
         JQLAST ast = op;
-        
+
         if (arg.getType() == VALUE)
         {
             Object value = arg.getValue();
             Type type = op.getJQLType();
             Object negate = null;
-            
+
             if (type instanceof NumberType)
                 negate = ((NumberType)type).negate((Number)value);
-            else 
+            else
                 errorMsg.fatal(I18NHelper.getMessage(messages,
-                    "jqlc.optimizer.checkunaryminusop.invalidtype", //NOI18N
+                    "jqlc.optimizer.checkunaryminusop.invalidtype",
                     String.valueOf(type)));
-            
+
             ast.setType(VALUE);
             ast.setValue(negate);
             ast.setFirstChild(null);
@@ -671,19 +672,19 @@ options
      * @param op the cast operator
      * @param castType the cast type
      * @param expr the non constant operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     protected JQLAST checkCastOp(JQLAST op, JQLAST castType, JQLAST expr)
     {
         JQLAST ast = op;
-        
+
         if (expr.getType() == VALUE)
         {
             Object value = expr.getValue();
             Type type = op.getJQLType();
             if (type instanceof NumericWrapperClassType)
                 type = ((NumericWrapperClassType)type).getPrimitiveType();
-                
+
             if (type.equals(typetab.intType))
                 value = new Integer(((Number)value).intValue());
             else if (type.equals(typetab.longType))
@@ -702,7 +703,7 @@ options
                 value = new Short((short)((Number)value).intValue());
             else if (type.equals(typetab.charType))
                 value = new Character((char)((Number)value).intValue());
-            
+
             // If non of the above type applies, leave the value as it is
 
             // convert the TYPECAST op into a VALUE
@@ -714,7 +715,7 @@ options
     }
 
     /**
-     * Converts the specified value into a BigDecimal value. 
+     * Converts the specified value into a BigDecimal value.
      * @param value value to be converted
      * @return BigDecimal representation
      */
@@ -725,14 +726,14 @@ options
             ret = (BigDecimal)typetab.bigDecimalType.getValue((Number)value);
         else
             errorMsg.fatal(I18NHelper.getMessage(messages,
-                "jqlc.optimizer.getbigdecimalvalue.notnumber", //NOI18N
+                "jqlc.optimizer.getbigdecimalvalue.notnumber",
                 String.valueOf(value)));
 
         return ret;
     }
 
     /**
-     * Converts the specified value into a BigInteger value. 
+     * Converts the specified value into a BigInteger value.
      * @param value value to be converted
      * @return BigInteger representation
      */
@@ -744,29 +745,29 @@ options
             ret = (BigInteger)typetab.bigIntegerType.getValue((Number)value);
         else
             errorMsg.fatal(I18NHelper.getMessage(messages,
-                "jqlc.optimizer.getbigintegervalue.notnumber", //NOI18N
+                "jqlc.optimizer.getbigintegervalue.notnumber",
                 String.valueOf(value)));
 
         return ret;
     }
-    
+
     /**
-     * This method is called in the case of an equality operation having two 
-     * constant operands. It calculates the result of this constant operation 
+     * This method is called in the case of an equality operation having two
+     * constant operands. It calculates the result of this constant operation
      * and returns a JQLAST node representing a constant boolean value.
      * @param op the equality operator
      * @param left the left operand
      * @param right the right operand
      * @param negate true for not equal operation, false otherwise
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
-    protected JQLAST handleValueEqValue(JQLAST op, JQLAST left, JQLAST right, 
+    protected JQLAST handleValueEqValue(JQLAST op, JQLAST left, JQLAST right,
                                         boolean negate)
     {
         Object leftValue = left.getValue();
         Object rightValue = right.getValue();
         boolean value = false;
-        
+
         if ((leftValue == null) && (rightValue == null))
         {
             // both values are null -> true
@@ -782,7 +783,7 @@ options
             // one value is null, the other is not null -> false
             value = false;
         }
-        if (negate) 
+        if (negate)
         {
             value = !value;
         }
@@ -793,21 +794,21 @@ options
     }
 
     /**
-     * This method is called in the case of an equality operation having 
-     * a boolean constant operand and a non constant operand. 
-     * It returns the non constant operand either as it is or inverted, 
+     * This method is called in the case of an equality operation having
+     * a boolean constant operand and a non constant operand.
+     * It returns the non constant operand either as it is or inverted,
      * depending on the equality operation.
      * @param op the equality operator
      * @param value the contant boolean value
      * @param expr the non constant operand
      * @param negate true for not equal operation, false otherwise
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
-    private JQLAST handleBooleanValueEqExpr(JQLAST op, Object value, 
+    private JQLAST handleBooleanValueEqExpr(JQLAST op, Object value,
                                             JQLAST expr, boolean negate)
     {
         JQLAST ast;
-        boolean skip = (value instanceof Boolean) ? 
+        boolean skip = (value instanceof Boolean) ?
                        ((Boolean)value).booleanValue() : false;
         if (negate) skip = !skip;
 
@@ -817,7 +818,7 @@ options
             // expr != false -> expr
             ast = expr;
         }
-        else 
+        else
         {
             // if expr is a equality op or a not op the invert operation may be "inlined":
             //   (expr1 == expr2) != true -> expr1 != expr2
@@ -831,12 +832,12 @@ options
             {
             case EQUAL:
                 expr.setType(NOT_EQUAL);
-                expr.setText("!="); //NOI18N
+                expr.setText("!=");
                 ast = expr;
                 break;
             case NOT_EQUAL:
                 expr.setType(EQUAL);
-                expr.setText("=="); //NOI18N
+                expr.setText("==");
                 ast = expr;
                 break;
             case LNOT:
@@ -844,7 +845,7 @@ options
                 break;
             default:
                 op.setType(LNOT);
-                op.setText("!"); //NOI18N
+                op.setText("!");
                 op.setFirstChild(expr);
                 ast = op;
             }
@@ -854,14 +855,14 @@ options
     }
 
     /**
-     * This method is called in the case of an AND operation having at least 
-     * one constant operand. If the constant operand evaluates to true it 
+     * This method is called in the case of an AND operation having at least
+     * one constant operand. If the constant operand evaluates to true it
      * returns the other operand. If it evaluates to false it returns an AST
      * representing the constant boolean value false.
      * @param op the AND operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     private JQLAST handleValueAndExpr(JQLAST op, Object value, JQLAST expr)
     {
@@ -879,7 +880,7 @@ options
             // false AND expr -> false
             // expr AND false -> false
             op.setType(VALUE);
-            op.setText("false"); //NOI18N
+            op.setText("false");
             op.setValue(new Boolean(false));
             op.setFirstChild(null);
             ast = op;
@@ -888,14 +889,14 @@ options
     }
 
     /**
-     * This method is called in the case of an OR operation having at least 
-     * one constant operand. If the constant operand evaluates to false it 
+     * This method is called in the case of an OR operation having at least
+     * one constant operand. If the constant operand evaluates to false it
      * returns the other operand. If it evaluates to true it returns an AST
      * representing the constant boolean value true.
      * @param op the AND operator
      * @param left the left operand
      * @param right the right operand
-     * @return optimized JQLAST 
+     * @return optimized JQLAST
      */
     private JQLAST handleValueOrExpr(JQLAST op, Object value, JQLAST expr)
     {
@@ -906,7 +907,7 @@ options
             // true OR expr -> true
             // expr OR true -> true
             op.setType(VALUE);
-            op.setText("true"); //NOI18N
+            op.setText("true");
             op.setValue(new Boolean(true));
             op.setFirstChild(null);
             ast = op;
@@ -926,12 +927,12 @@ options
      */
     protected boolean isBooleanValueAST(JQLAST ast)
     {
-        return (ast.getType() == VALUE) && 
+        return (ast.getType() == VALUE) &&
                (typetab.booleanType.equals(ast.getJQLType()));
     }
 
     /**
-     * Returns true if the specified AST represents a datastore value. 
+     * Returns true if the specified AST represents a datastore value.
      */
     protected boolean isNonConstantCollection(JQLAST ast)
     {
@@ -949,7 +950,7 @@ options
     }
 
     /**
-     * Implements DeMorgans rule: 
+     * Implements DeMorgans rule:
      * <br>
      * NOT (a AND b) -> NOT a OR NOT b
      * <br>
@@ -957,8 +958,8 @@ options
      * <br>
      * NOT (NOT a) -> a
      * <br>
-     * The method assumes that the tree passed as an argument does not include 
-     * the initial NOT. Note, this method checks for contains clauses, because 
+     * The method assumes that the tree passed as an argument does not include
+     * the initial NOT. Note, this method checks for contains clauses, because
      * they require special treatement.
      */
     protected JQLAST deMorgan(JQLAST tree)
@@ -966,7 +967,7 @@ options
         JQLAST result = null;
         JQLAST left = null;
         JQLAST right = null;
-        switch (tree.getType()) 
+        switch (tree.getType())
         {
         case AND:
         case BAND:
@@ -1007,12 +1008,12 @@ options
             // wrap arg into not operator
             result = buildAST(new JQLAST(LNOT, "!", typetab.booleanType), tree);
             break;
-        }       
+        }
         return result;
     }
 
     /**
-     * This overloaded deMorgan method implements special treatment of variable 
+     * This overloaded deMorgan method implements special treatment of variable
      * access expressions in the case of !contains. The method keeps an expression
      * accessing the specified variable as it is, but it inverts an expression NOT
      * accessing the variable following regular DeMorgan rules.
@@ -1020,7 +1021,7 @@ options
     protected JQLAST deMorgan(JQLAST tree, String var)
     {
         JQLAST result = tree;
-        switch (tree.getType()) 
+        switch (tree.getType())
         {
         case AND:
         case BAND:
@@ -1045,8 +1046,8 @@ options
         return result;
     }
 
-    /** 
-     * Checks the specified tree being a CONATAINS clause. If yes it returns 
+    /**
+     * Checks the specified tree being a CONATAINS clause. If yes it returns
      * the variable used in the contains clause. Otherwise it returns null.
      */
     protected String getVariableFromContainsClause(JQLAST tree)
@@ -1060,11 +1061,11 @@ options
             return null;
         }
     }
-    
+
     /**
-     * Checks whether the specified tree accesses the variable with the 
-     * specified name. Accessing means either this node or of of the subnodes 
-     * has the type VARIABLE. 
+     * Checks whether the specified tree accesses the variable with the
+     * specified name. Accessing means either this node or of of the subnodes
+     * has the type VARIABLE.
      * NOTE, the method is intended to be used in the ! contains case only!
      * If it find a variable access node of the form
      * <br>
@@ -1081,7 +1082,7 @@ options
 
         boolean found = false;
         JQLAST child = (JQLAST)tree.getFirstChild();
-        if ((tree.getType() == VARIABLE) && (tree.getText().equals(var)) && 
+        if ((tree.getType() == VARIABLE) && (tree.getText().equals(var)) &&
             (child != null))
         {
             found = true;
@@ -1099,7 +1100,7 @@ options
         return found;
     }
 
-    /** 
+    /**
      * Inverts the specified node: AND -> OR, == -> !=, etc.
      */
     protected void invertNode(JQLAST node)
@@ -1185,8 +1186,8 @@ query
 // ----------------------------------
 
 candidateClass
-{   
-    errorMsg.setContext("setCandidates"); //NOI18N
+{
+    errorMsg.setContext("setCandidates");
 }
     :   CLASS_DEF
     ;
@@ -1196,8 +1197,8 @@ candidateClass
 // ----------------------------------
 
 parameters
-{   
-    errorMsg.setContext("declareParameters"); //NOI18N
+{
+    errorMsg.setContext("declareParameters");
 }
     :   ( declareParameter )*
     ;
@@ -1210,9 +1211,9 @@ declareParameter
 // rules: variable declaration
 // ----------------------------------
 
-variables 
-{ 
-    errorMsg.setContext("declareVariables"); //NOI18N
+variables
+{
+    errorMsg.setContext("declareVariables");
 }
     :   ( declareVariable )*
     ;
@@ -1225,9 +1226,9 @@ declareVariable
 // rules: ordering specification
 // ----------------------------------
 
-ordering 
-{   
-    errorMsg.setContext("setOrdering"); //NOI18N
+ordering
+{
+    errorMsg.setContext("setOrdering");
 }
     :   ( orderSpec )*
     ;
@@ -1241,8 +1242,8 @@ orderSpec
 // ----------------------------------
 
 result
-{   
-    errorMsg.setContext("setResult"); //NOI18N
+{
+    errorMsg.setContext("setResult");
 }
     :   #( r:RESULT_DEF resultExpr )
     |   // empty rule
@@ -1263,13 +1264,13 @@ resultExpr
 // ----------------------------------
 
 filter
-{   
-    errorMsg.setContext("setFilter"); //NOI18N
+{
+    errorMsg.setContext("setFilter");
 }
     :   #( FILTER_DEF expression )
     ;
 
-expression 
+expression
     :   primary
     |   bitwiseExpr
     |   conditionalExpr
@@ -1279,7 +1280,7 @@ expression
     |   complementExpr
     ;
 
-bitwiseExpr 
+bitwiseExpr
     :   #( op1:BAND left1:expression right1:expression )
         {
             #bitwiseExpr = checkAnd(#op1, #left1, #right1);
@@ -1291,7 +1292,7 @@ bitwiseExpr
     |   #( op3:BXOR left3:expression right3:expression )
     ;
 
-conditionalExpr 
+conditionalExpr
     :   #( op1:AND left1:expression right1:expression )
         {
             #conditionalExpr = checkAnd(#op1, #left1, #right1);
@@ -1311,7 +1312,7 @@ relationalExpr
         {
             #relationalExpr = checkEqualityOp(#op2, #left2, #right2, true);
         }
-    |   #( op3:OBJECT_EQUAL left3:expression right3:expression ) 
+    |   #( op3:OBJECT_EQUAL left3:expression right3:expression )
         {
             #relationalExpr = checkObjectEqualityOp(#op3, #left3, #right3, false);
         }
@@ -1333,7 +1334,7 @@ relationalExpr
     |   #( GE expression expression )
     ;
 
-binaryArithmeticExpr 
+binaryArithmeticExpr
     :   #( op1:PLUS   left1:expression right1:expression )
         {
             #binaryArithmeticExpr = checkBinaryPlusOp(#op1, #left1, #right1);
@@ -1360,7 +1361,7 @@ binaryArithmeticExpr
         }
     ;
 
-unaryArithmeticExpr 
+unaryArithmeticExpr
     :   #( UNARY_PLUS expression )
     |   ( unaryMinusLiteralExpr )=> unaryMinusLiteralExpr
     |   #( op2:UNARY_MINUS arg2:expression )
@@ -1382,7 +1383,7 @@ unaryMinusLiteralExpr
         }
     ;
 
-complementExpr 
+complementExpr
     :   #( op1:BNOT arg1:expression )
     |   #( op2:LNOT arg2:expression )
         {
@@ -1390,7 +1391,7 @@ complementExpr
         }
     ;
 
-primary 
+primary
     :   castExpr
     |   literal
     |   VALUE
@@ -1421,8 +1422,8 @@ castExpr
     ;
 
 literal
-{ 
-    Object value = null; 
+{
+    Object value = null;
 }
     :   value = l:literalHelper
         {
@@ -1432,8 +1433,8 @@ literal
     ;
 
 literalHelper returns [Object value]
-{ 
-    value = null; 
+{
+    value = null;
 }
     :   TRUE
         { value = new Boolean(true); }
@@ -1448,13 +1449,13 @@ literalHelper returns [Object value]
             catch (NumberFormatException ex)
             {
                 errorMsg.error(i.getLine(), i.getColumn(),
-                    I18NHelper.getMessage(messages, 
-                        "jqlc.optimizer.literal.invalid",  //NOI18N
+                    I18NHelper.getMessage(messages,
+                        "jqlc.optimizer.literal.invalid",
                         i.getJQLType().getName(), i.getText()));
             }
         }
     |   l:LONG_LITERAL
-        {   
+        {
             String txt = l.getText();
             char last = txt.charAt(txt.length() - 1);
             if ((last == 'l') || (last == 'L'))
@@ -1468,13 +1469,13 @@ literalHelper returns [Object value]
             catch (NumberFormatException ex)
             {
                 errorMsg.error(l.getLine(), l.getColumn(),
-                    I18NHelper.getMessage(messages, 
-                        "jqlc.optimizer.literal.invalid",  //NOI18N
+                    I18NHelper.getMessage(messages,
+                        "jqlc.optimizer.literal.invalid",
                         l.getJQLType().getName(), l.getText()));
             }
         }
     |   f:FLOAT_LITERAL
-        {  
+        {
             String txt = f.getText();
             char last = txt.charAt(txt.length() - 1);
             if ((last == 'f') || (last == 'F'))
@@ -1488,13 +1489,13 @@ literalHelper returns [Object value]
             catch (NumberFormatException ex)
             {
                 errorMsg.error(f.getLine(), f.getColumn(),
-                    I18NHelper.getMessage(messages, 
-                        "jqlc.optimizer.literal.invalid",  //NOI18N
+                    I18NHelper.getMessage(messages,
+                        "jqlc.optimizer.literal.invalid",
                         f.getJQLType().getName(), f.getText()));
             }
         }
     |   d:DOUBLE_LITERAL
-        {  
+        {
             String txt = d.getText();
             char last = txt.charAt(txt.length() - 1);
             if ((last == 'd') || (last == 'd'))
@@ -1508,8 +1509,8 @@ literalHelper returns [Object value]
             catch (NumberFormatException ex)
             {
                 errorMsg.error(d.getLine(), d.getColumn(),
-                    I18NHelper.getMessage(messages, 
-                        "jqlc.optimizer.literal.invalid",  //NOI18N
+                    I18NHelper.getMessage(messages,
+                        "jqlc.optimizer.literal.invalid",
                         d.getJQLType().getName(), d.getText()));
             }
         }
@@ -1523,17 +1524,17 @@ literalHelper returns [Object value]
 
 parameter
     :   p:PARAMETER
-        { 
+        {
             if (paramtab.inline(#p.getText())) {
                 #p.setType(VALUE);
-                #p.setValue(paramtab.getValueByName(#p.getText()));     
+                #p.setValue(paramtab.getValueByName(#p.getText()));
             }
         }
     ;
 
 staticFieldAccess
-{   
-    Object value = null; 
+{
+    Object value = null;
 }
     :   #( s:STATIC_FIELD_ACCESS t:TYPENAME i:IDENT)
         {
@@ -1548,11 +1549,11 @@ staticFieldAccess
                 #s.setValue(value);
                 #s.setFirstChild(null);
             }
-            catch (IllegalAccessException e) 
+            catch (IllegalAccessException e)
             {
                 throw new JDOFatalUserException(
-                    I18NHelper.getMessage(messages, 
-                        "jqlc.optimizer.staticfieldaccess.illegal",  //NOI18N
+                    I18NHelper.getMessage(messages,
+                        "jqlc.optimizer.staticfieldaccess.illegal",
                         i.getText(), classType.getName()), e);
             }
         }
@@ -1563,12 +1564,12 @@ fieldAccess
         {
             if (#o.getType() == VALUE)
             {
-                // If the object of the field access is a constant value, 
-                // evaluate the field access at compile time and 
+                // If the object of the field access is a constant value,
+                // evaluate the field access at compile time and
                 // treat the expression as constant value.
                 Object object = #o.getValue();
                 ClassType classType = (ClassType)#o.getJQLType();
-                Object value = CodeGeneration.getFieldValue(classType, object, 
+                Object value = CodeGeneration.getFieldValue(classType, object,
                                                             #name.getText());
                 #f.setType(VALUE);
                 #f.setValue(value);
@@ -1582,12 +1583,12 @@ navigation
         {
             if (#o.getType() == VALUE)
             {
-                // If the object of the navigation is a constant value, 
-                // evaluate the field access at compile time and 
+                // If the object of the navigation is a constant value,
+                // evaluate the field access at compile time and
                 // treat the expression as constant value.
                 Object object = #o.getValue();
                 ClassType classType = (ClassType)#o.getJQLType();
-                Object value = CodeGeneration.getFieldValue(classType, object, 
+                Object value = CodeGeneration.getFieldValue(classType, object,
                                                             #name.getText());
                 #n.setType(VALUE);
                 #n.setValue(value);
@@ -1601,11 +1602,11 @@ variableAccess
     ;
 
 startsWith
-    :   #( STARTS_WITH expression expression ) 
+    :   #( STARTS_WITH expression expression )
     ;
 
 endsWith
-    :   #( ENDS_WITH expression expression ) 
+    :   #( ENDS_WITH expression expression )
     ;
 
 isEmpty
@@ -1613,8 +1614,8 @@ isEmpty
         {
             if (#e.getType() == VALUE)
             {
-                // If the expression that specifies the collection is a constant value, 
-                // evaluate the isEmpty call at compile time and treat the expression 
+                // If the expression that specifies the collection is a constant value,
+                // evaluate the isEmpty call at compile time and treat the expression
                 // as constant value.
                 Object object = #e.getValue();
                 Object value = null;
@@ -1628,7 +1629,7 @@ isEmpty
                 }
                 else
                 {
-                    errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.optimizer.isempty.requirecollection")); //NOI18N
+                    errorMsg.fatal(I18NHelper.getMessage(messages, "jqlc.optimizer.isempty.requirecollection"));
                 }
                 #op.setType(VALUE);
                 #op.setValue(value);
@@ -1638,15 +1639,15 @@ isEmpty
     ;
 
 like
-    :   #( LIKE expression expression ( expression )? ) 
+    :   #( LIKE expression expression ( expression )? )
     ;
 
 substring
-    :   #( SUBSTRING expression expression expression ) 
+    :   #( SUBSTRING expression expression expression )
     ;
 
 indexOf
-    :   #( INDEXOF expression expression ( expression )? ) 
+    :   #( INDEXOF expression expression ( expression )? )
     ;
 
 length

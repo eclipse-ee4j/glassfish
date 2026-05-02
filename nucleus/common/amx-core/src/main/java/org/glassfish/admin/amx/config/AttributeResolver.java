@@ -44,7 +44,7 @@ public interface AttributeResolver {
      * If the String is a template string, resolve its value if it can be resolved, or 'null'
      * if it cannot be resolved.
      * <p>
-     * Examples:</br>
+     * Examples:
      *
      * <pre>
      "${com.sun.aas.installRoot}" => "/glassfish"
@@ -57,6 +57,7 @@ public interface AttributeResolver {
      * @param value any String
      * @return resolved value
      */
+    @Deprecated
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Resolve a (possible) ${...} attribute *value* to a real value")
     String resolveAttributeValue(
@@ -65,6 +66,7 @@ public interface AttributeResolver {
 
 
     /** calls getAttribute(), then returns the resolved value or null */
+    @Deprecated
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Get and resolve a (possible) ${...} attribute to a real value")
     String resolveAttribute(
@@ -73,6 +75,7 @@ public interface AttributeResolver {
 
 
     /** Get the Attribute and resolve it to a Boolean or null */
+    @Deprecated
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Get and resolve a (possible)  ${...} attribute to a Boolean, returns null if not found")
     Boolean resolveBoolean(
@@ -81,6 +84,7 @@ public interface AttributeResolver {
 
 
     /** Get the Attribute and resolve it to a Long or null */
+    @Deprecated
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Get and resolve a (possible)  ${...} attribute to a Long, returns null if not found")
     Long resolveLong(
@@ -93,6 +97,7 @@ public interface AttributeResolver {
      * have been annotated with @ResolveTo, then the value is of the correct type
      * (eg String, Boolean, Integer).
      */
+    @Deprecated
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Get and resolve attributes to values")
     AttributeList resolveAttributes(

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,21 +15,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * PersistenceConfig.java
- *
- * Created on March 3, 2000
- *
- */
 package com.sun.jdo.spi.persistence.support.sqlstore;
+
+import java.lang.reflect.Constructor;
 
 /**
  */
 public interface PersistenceConfig
 {
-    Class getPersistenceCapableClass();
+    Class<?> getPersistenceCapableClass();
 
-    Class getOidClass();
+    Class<?> getOidClass();
 
     java.lang.reflect.Field[] getKeyFields();
 
@@ -38,5 +35,5 @@ public interface PersistenceConfig
 
     boolean hasLocalNonDFGFields();
 
-    java.lang.reflect.Constructor getConstructor();
+    Constructor<?> getConstructor();
 }

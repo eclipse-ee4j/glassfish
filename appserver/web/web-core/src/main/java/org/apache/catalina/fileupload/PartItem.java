@@ -54,11 +54,11 @@ import org.apache.catalina.util.RequestUtil;
  * This class implements java.servlet.http.Part.
  *
  * Original authors:
- * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
- * @author <a href="mailto:sean@informage.net">Sean Legassick</a>
- * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
+ * @author Rafal Krzewski
+ * @author Sean Legassick
+ * @author Jason van Zyl
  * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
- * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
+ * @author Martin Cooper
  * @author Sean C. Sullivan
  *
  * Adopted for Glassfish:

@@ -55,7 +55,6 @@ import org.omg.CosTransactions.Status;
  *
  * @author Sankara Rao Bhogi
  *
- * @see
  */
 
 public class DelegatedRecoveryManager {
@@ -426,7 +425,6 @@ public class DelegatedRecoveryManager {
      *
      * @return  The Coordinator object.
      *
-     * @see
      */
 
     static CoordinatorImpl getLocalCoordinator(Long localTID, String logPath) {
@@ -448,7 +446,6 @@ public class DelegatedRecoveryManager {
      *
      * @return  Indicates the local transaction identifier is valid.
      *
-     * @see
      */
 
     static boolean validLocalTID(Long localTID, String logPath) {
@@ -469,9 +466,7 @@ public class DelegatedRecoveryManager {
      *
      * @param immediate  Indicates whether to stop immediately.
      *
-     * @return
      *
-     * @see
      */
     static void shutdown(boolean immediate) {
 
@@ -723,7 +718,6 @@ public class DelegatedRecoveryManager {
      *
      * @return  The array of Coordinators.
      *
-     * @see
      */
     static CoordinatorImpl[] getCoordinators(String logPath) {
 
@@ -765,9 +759,7 @@ public class DelegatedRecoveryManager {
      *
      * @param logPath  log location for which the delegated recovery is done
      *
-     * @return
      *
-     * @see
      */
     public static void waitForResync(String logPath) {
         final RecoveryStateHolder state = (RecoveryStateHolder)recoveryStatetable.get(logPath);

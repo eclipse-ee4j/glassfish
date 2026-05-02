@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,28 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * DateType.java
- *
- * Created on April 14, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
 /**
  * Instances of this type represent the types java.util.Date,
  * java.sql.Date, java.sql.Time or java.sql.Timestamp.
  *
- * @author  Michael Bouschen
+ * @author  Michael Bouschen 2000
  */
-public class DateType
-    extends ClassType
-{
+public class DateType extends ClassType {
+
     /**
      *
      */
-    public DateType(String name, Class clazz, int enumType, TypeTable typetab)
-    {
+    public DateType(String name, Class<?> clazz, int enumType, TypeTable typetab) {
         super(name, clazz, enumType, typetab);
     }
 }

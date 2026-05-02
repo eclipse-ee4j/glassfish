@@ -47,7 +47,6 @@ import java.util.logging.Logger;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -219,11 +218,8 @@ class TransactionState {
     /**
      * Default TransactionState constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     TransactionState() {}
 
@@ -240,9 +236,7 @@ class TransactionState {
      *
      * @param log  The CoordinatorLog object for the transaction.
      *
-     * @return
      *
-     * @see
      */
     TransactionState(CoordinatorLog log) {
 
@@ -288,9 +282,7 @@ class TransactionState {
      * @param globalTID  The global identifier for the transaction.
      * @param log        The CoordinatorLog for a top-level transaction.
      *
-     * @return
      *
-     * @see
      */
     TransactionState(GlobalTID globalTID, CoordinatorLog log) {
 
@@ -330,9 +322,7 @@ class TransactionState {
      * @param parentLocalTID   The parent's local identifier.
      * @param parentGlobalTID  The parent's global identifier.
      *
-     * @return
      *
-     * @see
      */
     TransactionState(Long parentLocalTID, GlobalTID parentGlobalTID) {
 
@@ -368,7 +358,6 @@ class TransactionState {
      *
      * @return  The current state of the transaction.
      *
-     * @see
      */
     int reconstruct(CoordinatorLog log) {
 
@@ -448,7 +437,6 @@ class TransactionState {
      *
      * @return  Indicates if the state change is possible.
      *
-     * @see
      */
     boolean setState(int newState) {
 
@@ -756,11 +744,9 @@ class TransactionState {
     /**
      * Returns the current transaction sequence number and increments it.
      *
-     * @param
      *
      * @return  The current transaction sequence number.
      *
-     * @see
      */
     private static synchronized long getSequenceNumber() {
 
@@ -770,11 +756,9 @@ class TransactionState {
     /**
      * Returns the current epoch number.
      *
-     * @param
      *
      * @return  The current epoch number.
      *
-     * @see
      */
     /*private static int getEpochNumber() {
 
@@ -786,11 +770,9 @@ class TransactionState {
     /**
      * Returns a flag indicating whether any transactions may be in doubt.
      *
-     * @param
      *
      * @return  The in doubt indicator.
      *
-     * @see
      */
     static boolean inDoubt() {
         return inDoubt;
@@ -801,9 +783,7 @@ class TransactionState {
      *
      * @param value  The new value of the indicator.
      *
-     * @return
      *
-     * @see
      */
     static void setInDoubt(boolean value) {
         inDoubt = value;
@@ -816,9 +796,7 @@ class TransactionState {
      * @param epoch       The epoch number.
      * @param serverName  The server name.
      *
-     * @return
      *
-     * @see
      */
     private static final byte[] generateTID(long localTID) {
         if (TIDTemplate == null) {

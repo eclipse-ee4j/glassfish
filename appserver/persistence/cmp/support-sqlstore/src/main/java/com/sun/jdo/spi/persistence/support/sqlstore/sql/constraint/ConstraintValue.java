@@ -33,7 +33,7 @@ public class ConstraintValue extends ConstraintNode {
 
     /** The local field to which this value constraint is bound. Please note
      * that we have this information only for constraints that corresponds to simple
-     * expressions ( like <field> <op> <value | param> ) in query filter.
+     * expressions ( like {@code <field> <op> <value | param> )} in query filter.
      * Do not rely on this information to be always present for any optimizations.
      */
     private LocalFieldDesc localField;

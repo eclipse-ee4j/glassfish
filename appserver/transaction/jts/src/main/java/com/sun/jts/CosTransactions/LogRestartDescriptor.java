@@ -54,11 +54,8 @@ class LogRestartDescriptor implements Serializable {
     /**
      * Default LogRestartDescriptor constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     LogRestartDescriptor() {}
 
@@ -69,9 +66,7 @@ class LogRestartDescriptor implements Serializable {
      *              to be constructed.
      * @param index The index in the array where copy is to start.
      *
-     * @return
      *
-     * @see
      */
     LogRestartDescriptor(byte[] bytes, int  index) {
         restartValid =  (bytes[index++]&255) +
@@ -98,7 +93,6 @@ class LogRestartDescriptor implements Serializable {
      *
      * @return  Number of bytes copied.
      *
-     * @see
      */
     final int toBytes(byte[] bytes, int index) {
         bytes[index++] = (byte) restartValid;
@@ -124,7 +118,6 @@ class LogRestartDescriptor implements Serializable {
      *
      * @return  Indicates whether the objects are equal.
      *
-     * @see
      */
     final boolean equals(LogRestartDescriptor other) {
         return (restartValid      == other.restartValid &&
@@ -136,11 +129,9 @@ class LogRestartDescriptor implements Serializable {
      * This method is called to direct the object to format its state
      * to a String.
      *
-     * @param
      *
      * @return  The formatted representation of the object.
      *
-     * @see
      */
     public final String toString() {
         return "LRD(valid="/*#Frozen*/ + restartValid +

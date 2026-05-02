@@ -29,19 +29,17 @@ import java.util.Properties;
  */
 public class LifecycleListenerImpl implements LifecycleListener {
 
-    /** receive a server lifecycle event
-     *  @param event associated event
-     *  @throws <code>ServerLifecycleException</code> for exceptional condition.
-     *
+    /**
      *  Configure this module as a lifecycle-module in server.xml:
-     *
+     *  <pre>{@code
      *  <applications>
      *    <lifecycle-module name="test"
-     *               class-name="com.sun.appserv.server.LifecycleListenerImpl"
-                     is-failure-fatal="false">
+     *        class-name="com.sun.appserv.server.LifecycleListenerImpl"
+     *        is-failure-fatal="false">
      *      <property name="foo" value="fooval"/>
      *    </lifecycle-module>
      *  </applications>
+     *  }</pre>
      *
      *  Set<code>is-failure-fatal</code>in server.xml to <code>true</code> for
      *  fatal conditions.

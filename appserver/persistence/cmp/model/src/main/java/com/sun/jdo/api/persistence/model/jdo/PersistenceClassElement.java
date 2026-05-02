@@ -30,6 +30,10 @@ import java.util.ArrayList;
 
 import org.glassfish.persistence.common.I18NHelper;
 
+import static com.sun.jdo.api.persistence.model.jdo.PersistenceElement.Impl.ADD;
+import static com.sun.jdo.api.persistence.model.jdo.PersistenceElement.Impl.REMOVE;
+import static com.sun.jdo.api.persistence.model.jdo.PersistenceElement.Impl.SET;
+
 /* TODO:
     1. throw ModelException on add duplicate field or concurrency group (will
      need I18N for message)
@@ -89,12 +93,11 @@ public class PersistenceClassElement extends PersistenceElement
      * @return the package
      * @see PersistenceElement#getName
      */
-    public String getPackage ()
-    {
+    public String getPackage() {
         String className = getName();
         int index = className.lastIndexOf('.');
 
-        return ((index != -1) ? className.substring(0, index) : "");    // NOI18N
+        return index != -1 ? className.substring(0, index) : "";
     }
 
     /** Gets the modified flag for this persistence class.
@@ -157,8 +160,9 @@ public class PersistenceClassElement extends PersistenceElement
     {
         boolean hasValue = (name != null);
 
-        if (hasValue)
+        if (hasValue) {
             name = name.trim();
+        }
 
         if (hasValue && (name.length() > 0))
         {
@@ -167,12 +171,12 @@ public class PersistenceClassElement extends PersistenceElement
             String nameSuffix = ((hasPrefix) ?
                 name.substring(className.length()) : name);
 
-            if (!hasPrefix || (!nameSuffix.equalsIgnoreCase("Key") &&     // NOI18N
-                !nameSuffix.equalsIgnoreCase(".OID")                    // NOI18N
-                && !nameSuffix.equalsIgnoreCase("$OID")))                // NOI18N
+            if (!hasPrefix || (!nameSuffix.equalsIgnoreCase("Key") &&
+                !nameSuffix.equalsIgnoreCase(".OID")
+                && !nameSuffix.equalsIgnoreCase("$OID")))
             {
                 throw new ModelException(I18NHelper.getMessage(getMessages(),
-                    "jdo.class.key_class_invalid",                         // NOI18N
+                    "jdo.class.key_class_invalid",
                     new Object[]{name, className}));
             }
         }
@@ -186,6 +190,7 @@ public class PersistenceClassElement extends PersistenceElement
      * @param name the name
      * @exception ModelException if impossible
      */
+    @Override
     public void setName (String name) throws ModelException
     {
         String oldName = getName();
@@ -197,8 +202,9 @@ public class PersistenceClassElement extends PersistenceElement
             String oldKeyClass = getKeyClass();
 
             // a rename -- set the key class too
-            if ((oldKeyClass != null) && oldKeyClass.startsWith(oldName))
+            if ((oldKeyClass != null) && oldKeyClass.startsWith(oldName)) {
                 setKeyClass(name + oldKeyClass.substring(oldName.length()));
+            }
         }
     }
 
@@ -210,6 +216,7 @@ public class PersistenceClassElement extends PersistenceElement
      * @param field the field to be added
      * @exception ModelException if impossible
      */
+    @Override
     public void addField (PersistenceFieldElement field)
         throws ModelException
     {
@@ -221,10 +228,11 @@ public class PersistenceClassElement extends PersistenceElement
      * @param fields the array of fields to be added
      * @exception ModelException if impossible
      */
+    @Override
     public void addFields(PersistenceFieldElement[] fields)
         throws ModelException
     {
-        getClassImpl().changeFields(fields, Impl.ADD);
+        getClassImpl().changeFields(fields, ADD);
     }
 
     /** Remove the supplied field from the collection of fields maintained by
@@ -232,9 +240,8 @@ public class PersistenceClassElement extends PersistenceElement
      * @param field the field to be removed
      * @exception ModelException if impossible
      */
-    public void removeField (PersistenceFieldElement field)
-        throws ModelException
-    {
+    @Override
+    public void removeField(PersistenceFieldElement field) throws ModelException {
         removeFields(new PersistenceFieldElement[]{field});
     }
 
@@ -243,23 +250,22 @@ public class PersistenceClassElement extends PersistenceElement
      * @param fields the array of fields to be removed
      * @exception ModelException if impossible
      */
-    public void removeFields (PersistenceFieldElement[] fields)
-        throws ModelException
-    {
+    @Override
+    public void removeFields(PersistenceFieldElement[] fields) throws ModelException {
         int i, count = ((fields != null) ? fields.length : 0);
 
         // first remove the fields from this class
-        getClassImpl().changeFields(fields, Impl.REMOVE);
+        getClassImpl().changeFields(fields, REMOVE);
 
         // now remove the fields from any concurrency groups
-        for (i = 0; i < count; i++)
-        {
+        for (i = 0; i < count; i++) {
             PersistenceFieldElement field = fields[i];
             ConcurrencyGroupElement[] groups = field.getConcurrencyGroups();
             int j, groupCount = ((groups != null) ? groups.length : 0);
 
-            for (j = 0; j < groupCount; j++)
+            for (j = 0; j < groupCount; j++) {
                 groups[j].removeField(field);
+            }
         }
     }
 
@@ -267,40 +273,46 @@ public class PersistenceClassElement extends PersistenceElement
      * of an array.
      * @return the fields maintained by this holder
      */
-    public PersistenceFieldElement[] getFields ()
-    {
+    @Override
+    public PersistenceFieldElement[] getFields() {
         return getClassImpl().getFields();
     }
+
 
     /** Sets the collection of fields maintained by this holder to the contents
      * of the supplied array.
      * @param fields the fields maintained by this holder
      * @exception ModelException if impossible
      */
-    public void setFields (PersistenceFieldElement[] fields)
-        throws ModelException
-    {
-        getClassImpl().changeFields(fields, Impl.SET);
+    @Override
+    public void setFields(PersistenceFieldElement[] fields) throws ModelException {
+        getClassImpl().changeFields(fields, SET);
     }
 
-    /** Returns the field with the supplied name from the collection of fields
+
+    /**
+     * Returns the field with the supplied name from the collection of fields
      * maintained by this holder.
+     *
      * @param name the name of the field to be found
      * @return the field with the supplied name, <code>null</code> if none
-     * exists
+     *         exists
      */
-    public PersistenceFieldElement getField (String name)
-    {
+    @Override
+    public PersistenceFieldElement getField(String name) {
         return getClassImpl().getField(name);
     }
 
-    /** Tests whether the supplied field is in the collection of fields
+
+    /**
+     * Tests whether the supplied field is in the collection of fields
      * maintained by this holder.
+     *
      * @param field the field to be tested
      */
-    public boolean containsField (PersistenceFieldElement field)
-    {
-        return (getClassImpl().getField(field.getName()) != null);
+    @Override
+    public boolean containsField(PersistenceFieldElement field) {
+        return getClassImpl().getField(field.getName()) != null;
     }
 
     //================== Relationships ===============================
@@ -310,24 +322,20 @@ public class PersistenceClassElement extends PersistenceElement
      * @return the relationship fields maintained by this holder
      * @see PersistenceClassElement#getFields
      */
-    public RelationshipElement[] getRelationships ()
-    {
+    public RelationshipElement[] getRelationships() {
         PersistenceFieldElement[] fields = getFields();
         int i, count = ((fields != null) ? fields.length : 0);
-        ArrayList relationships = new ArrayList(count);
-
-        for (i = 0; i < count; i++)
-        {
+        ArrayList<RelationshipElement> relationships = new ArrayList<>(count);
+        for (i = 0; i < count; i++) {
             PersistenceFieldElement field = fields[i];
-
-            if (field instanceof RelationshipElement)
-                relationships.add(field);
+            if (field instanceof RelationshipElement) {
+                relationships.add((RelationshipElement) field);
+            }
         }
 
         count = relationships.size();
 
-        return ((RelationshipElement[])relationships.toArray(
-            new RelationshipElement[count]));
+        return relationships.toArray(RelationshipElement[]::new);
     }
 
     /** Returns the relationship with the supplied name from the collection of
@@ -338,17 +346,16 @@ public class PersistenceClassElement extends PersistenceElement
      * @see PersistenceClassElement#getRelationships
      * @see PersistenceClassElement#getField
     */
-    public RelationshipElement getRelationship (String name)
-    {
+    public RelationshipElement getRelationship(String name) {
         RelationshipElement[] relationships = getRelationships();
         int i, count = ((relationships != null) ? relationships.length : 0);
 
-        for (i = 0; i < count; i++)
-        {
+        for (i = 0; i < count; i++) {
             RelationshipElement relationship = relationships[i];
 
-            if (name.equals(relationship.getName()))
+            if (name.equals(relationship.getName())) {
                 return relationship;
+            }
         }
 
         return null;
@@ -376,7 +383,7 @@ public class PersistenceClassElement extends PersistenceElement
     public void addConcurrencyGroups (ConcurrencyGroupElement[] groups)
         throws ModelException
     {
-        getClassImpl().changeConcurrencyGroups(groups, Impl.ADD);
+        getClassImpl().changeConcurrencyGroups(groups, ADD);
     }
 
     /** Remove the supplied group from the collection of concurrency groups for
@@ -398,7 +405,7 @@ public class PersistenceClassElement extends PersistenceElement
     public void removeConcurrencyGroups (ConcurrencyGroupElement[] groups)
         throws ModelException
     {
-        getClassImpl().changeConcurrencyGroups(groups, Impl.REMOVE);
+        getClassImpl().changeConcurrencyGroups(groups, REMOVE);
     }
 
     /** Returns the collection of fields groups by this class in the form
@@ -418,7 +425,7 @@ public class PersistenceClassElement extends PersistenceElement
     public void setConcurrencyGroups (ConcurrencyGroupElement[] groups)
         throws ModelException
     {
-        getClassImpl().changeConcurrencyGroups(groups, Impl.SET);
+        getClassImpl().changeConcurrencyGroups(groups, SET);
     }
 
     /** Returns the concurrency group with the supplied name from the

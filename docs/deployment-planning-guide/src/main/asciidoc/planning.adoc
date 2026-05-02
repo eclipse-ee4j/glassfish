@@ -804,7 +804,7 @@ Use the following `asadmin` commands:
 ** `asadmin list-jms-resources`
 
 +
-For more information on these commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual] or the corresponding man pages.
+For more information on these commands, see the xref:reference-manual.adoc[{productName} Reference Manual] or the corresponding man pages.
 
 [[default-jms-host]]
 

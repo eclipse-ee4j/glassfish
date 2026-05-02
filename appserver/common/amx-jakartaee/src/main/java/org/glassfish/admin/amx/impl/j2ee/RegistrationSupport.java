@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -76,6 +76,8 @@ import org.glassfish.admin.amx.j2ee.WebModule;
 import org.glassfish.admin.amx.util.ClassUtil;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.api.admin.config.Named;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.EjbArchiveType;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.jvnet.hk2.config.ConfigBean;
@@ -265,10 +267,13 @@ final class RegistrationSupport {
             final com.sun.enterprise.config.serverbeans.Application appConfig,
             final EjbBundleDescriptor ejbBundleDescriptor )
     {
-        final String xmlDesc = getDeploymentDescriptor(ejbBundleDescriptor);
-        if ( xmlDesc != null )
-        {
-            meta.setDeploymentDescriptor( xmlDesc );
+        ArchiveType type = ejbBundleDescriptor.getModuleDescriptor().getModuleType();
+        if (EjbArchiveType.EJB_ARCHIVE.equals(type)) {
+            final String xmlDesc = getDeploymentDescriptor(ejbBundleDescriptor);
+            if ( xmlDesc != null )
+            {
+                meta.setDeploymentDescriptor( xmlDesc );
+            }
         }
         final String moduleName = ejbBundleDescriptor.getModuleName();
 

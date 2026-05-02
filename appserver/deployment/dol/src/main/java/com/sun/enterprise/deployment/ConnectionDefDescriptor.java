@@ -21,12 +21,13 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Deployment Information for connection-definition
- *
+ * <p>
+ * {@code
  * <!ELEMENT connection-definition (
  * managedconnectionfactory-class, connectionfactory-intf,
  * connection-intf, config-property*, connectionfactory-impl, connection-impl
  * )>
- *
+ * }
  * @author Sheetal Vartak
  */
 public class ConnectionDefDescriptor extends Descriptor implements ConnectorConfigPropertySetDescriptor {

@@ -42,7 +42,6 @@ import java.io.File;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -112,9 +111,7 @@ class LogExtent extends Object {
      * @param extent   The number of the extent.
      * @param extentFH The handle of the extent file.
      *
-     * @return
      *
-     * @see
      */
     LogExtent( int           extent,
                LogFileHandle extentFH,
@@ -126,11 +123,8 @@ class LogExtent extends Object {
 
     /**Default LogExtent destructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     public void doFinalize() {
         try {
@@ -147,7 +141,6 @@ class LogExtent extends Object {
      *
      * @return  The modulated extent number.
      *
-     * @see
      */
     final static int modExtent( int ext ) {
         return (ext % MAX_NO_OF_EXTENTS);

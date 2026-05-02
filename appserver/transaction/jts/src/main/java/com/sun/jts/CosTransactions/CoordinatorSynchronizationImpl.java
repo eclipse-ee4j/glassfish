@@ -58,7 +58,6 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -81,11 +80,8 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
 
     /**Default CoordinatorSynchronizationImpl constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     CoordinatorSynchronizationImpl() {
     }
@@ -95,9 +91,7 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
      *
      * @param coord  The Coordinator for the transaction.
      *
-     * @return
      *
-     * @see
      */
     CoordinatorSynchronizationImpl( TopCoordinator coord ) {
 
@@ -112,14 +106,11 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
 
     /**Passes on the before completion operation to the Coordinator.
      *
-     * @param
      *
-     * @return
      *
      * @exception SystemException  The operation failed.  The minor code provides
      *                             a reason for the failure.
      *
-     * @see
      */
     public void before_completion()
         throws SystemException {
@@ -142,12 +133,10 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
      *
      * @param status  The state of the transaction.
      *
-     * @return
      *
      * @exception SystemException  The operation failed.  The minor code provides
      *                             a reason for the failure.
      *
-     * @see
      */
     public void after_completion( Status status )
         throws SystemException {
@@ -170,11 +159,9 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
 
     /**Returns the CORBA Object which represents this object.
      *
-     * @param
      *
      * @return  The CORBA object.
      *
-     * @see
      */
     Synchronization object() {
         if( poa == null ) poa = Configuration.getPOA("transient"/*#Frozen*/);
@@ -213,11 +200,8 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
 
     /**Destroys the CoordinatorSynchronizationImpl object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void destroy() {
         if( poa != null &&
@@ -240,7 +224,6 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
      *
      * @return  The CoordinatorSynchronizationImpl object which serves it.
      *
-     * @see
      */
     synchronized static final CoordinatorSynchronizationImpl servant(Synchronization sync) {
         CoordinatorSynchronizationImpl result = null;

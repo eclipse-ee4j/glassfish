@@ -95,7 +95,7 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:create-application-ref.adoc#create-application-ref[`create-application-ref`(1)],
 xref:delete-application-ref.adoc#delete-application-ref[`delete-application-ref`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

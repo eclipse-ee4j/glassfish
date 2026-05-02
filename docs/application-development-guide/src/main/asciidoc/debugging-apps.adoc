@@ -113,7 +113,7 @@ To generate a Java stack trace for debugging, use the
 `asadmin generate-jvm-report --type=thread` command. The stack trace
 goes to the domain-dir`/logs/server.log` file and also appears on the
 command prompt screen. For more information about the
-`asadmin generate-jvm-report` command, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+`asadmin generate-jvm-report` command, see the xref:reference-manual.adoc#generate-jvm-report[{productName} Reference Manual].
 
 [[application-client-debugging]]
 
@@ -139,7 +139,7 @@ debugging both concurrently. For details about setting the port, see
 xref:#jpda-options[JPDA Options].
 
 You can also include JVM options in the `appclient` script directly. For
-information about the `appclient` script, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+information about the `appclient` script, see the xref:reference-manual.adoc#appclient[{productName} Reference Manual].
 
 
 [NOTE]

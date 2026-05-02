@@ -26,10 +26,10 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * The meta annotation representing the {@link PostStartup} RunLevel.
+ * The meta annotation representing the Post Startup RunLevel.
  *
  * @author Jeff Trent
- * @see {@link RunLevelService} in Hk2
+ * @see RunLevel in Hk2
  */
 @Retention(RUNTIME)
 @Target(TYPE)

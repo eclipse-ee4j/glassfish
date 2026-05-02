@@ -740,8 +740,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             initEjbInterceptors();
         } catch (Exception ex) {
-            _logger.log(FINE, "Exception creating BaseContainer : [{0}]", containerInfo);
-            _logger.log(FINE, "", ex);
+            _logger.log(FINE, "Exception creating BaseContainer [" + containerInfo + "]", ex);
             throw ex;
         }
         _logger.log(FINE, "Successfuly initialized: {0}", debugDescription);
@@ -2674,7 +2673,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     // default impl
     protected void adjustInvocationInfo(InvocationInfo invInfo, Method method, int txAttr, boolean flushEnabled, String methodIntf,
-            Class originalIntf) throws EJBException {
+            Class<?> originalIntf) throws EJBException {
         // Nothing todo
     }
 
@@ -2761,7 +2760,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     // default impl
-    protected void adjustHomeTargetMethodInfo(InvocationInfo invInfo, String methodName, Class[] paramTypes) throws NoSuchMethodException {
+    protected void adjustHomeTargetMethodInfo(InvocationInfo invInfo, String methodName, Class<?>[] paramTypes) throws NoSuchMethodException {
         // Nothing todo
     }
 
@@ -3105,7 +3104,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     // default impl
-    protected EJBHomeInvocationHandler getEJBHomeInvocationHandler(Class homeIntfClass) throws Exception {
+    protected EJBHomeInvocationHandler getEJBHomeInvocationHandler(Class<?> homeIntfClass) throws Exception {
         return new EJBHomeInvocationHandler(ejbDescriptor, homeIntfClass);
     }
 
@@ -3159,7 +3158,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     // default impl
-    protected EJBLocalHomeInvocationHandler getEJBLocalHomeInvocationHandler(Class homeIntfClass) throws Exception {
+    protected EJBLocalHomeInvocationHandler getEJBLocalHomeInvocationHandler(Class<?> homeIntfClass) throws Exception {
         return new EJBLocalHomeInvocationHandler(ejbDescriptor, homeIntfClass);
     }
 

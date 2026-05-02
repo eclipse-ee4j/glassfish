@@ -30,23 +30,23 @@ import java.util.Vector;
 public class ConstantPool implements VMConstants {
 
     /* The actual pool */
-    private Vector pool = new Vector();
+    private Vector<ConstBasic> pool = new Vector<>();
 
     /* uniqifier tables */
     private boolean hashed = false;
-    private Hashtable utfTable = new Hashtable(11);
-    private Hashtable unicodeTable = new Hashtable(3);
-    private Hashtable stringTable = new Hashtable(11);
-    private Hashtable classTable = new Hashtable(11);
-    private Hashtable intTable = new Hashtable(3);
-    private Hashtable floatTable = new Hashtable(3);
-    private Hashtable longTable = new Hashtable(3);
-    private Hashtable doubleTable = new Hashtable(3);
+    private Hashtable<String, ConstBasic> utfTable = new Hashtable<>(11);
+    private Hashtable<String, ConstBasic> unicodeTable = new Hashtable<>(3);
+    private Hashtable<String, ConstBasic> stringTable = new Hashtable<>(11);
+    private Hashtable<String, ConstBasic> classTable = new Hashtable<>(11);
+    private Hashtable<Integer, ConstBasic> intTable = new Hashtable<>(3);
+    private Hashtable<Float, ConstBasic> floatTable = new Hashtable<>(3);
+    private Hashtable<Long, ConstBasic> longTable = new Hashtable<>(3);
+    private Hashtable<Double, ConstBasic> doubleTable = new Hashtable<>(3);
 
-    private Vector methodRefTable = new Vector();
-    private Vector fieldRefTable = new Vector();
-    private Vector ifaceMethodRefTable = new Vector();
-    private Vector nameAndTypeTable = new Vector();
+    private Vector<ConstBasic> methodRefTable = new Vector<>();
+    private Vector<ConstBasic> fieldRefTable = new Vector<>();
+    private Vector<ConstBasic> ifaceMethodRefTable = new Vector<>();
+    private Vector<ConstBasic> nameAndTypeTable = new Vector<>();
 
     /* public accessors */
 
@@ -61,7 +61,7 @@ public class ConstantPool implements VMConstants {
      * Return the constant in the pool at the specified entry index
      */
     public ConstBasic constantAt (int index) {
-        return (ConstBasic) pool.elementAt(index);
+        return pool.elementAt(index);
     }
 
     /**
@@ -205,8 +205,9 @@ public class ConstantPool implements VMConstants {
         for (int i=0; i<nameAndTypeTable.size(); i++) {
             ConstNameAndType nt = (ConstNameAndType) nameAndTypeTable.elementAt(i);
             if (nt.name().asString().equals(name) &&
-                nt.signature().asString().equals(type))
+                nt.signature().asString().equals(type)) {
                 return nt;
+            }
         }
 
         ConstNameAndType nt =
@@ -251,8 +252,9 @@ public class ConstantPool implements VMConstants {
     ConstantPool(DataInputStream input) throws IOException {
         pool.addElement(null);
         int nconstants = input.readUnsignedShort()-1;
-        while (nconstants > 0)
+        while (nconstants > 0) {
             nconstants -= readConstant(input);
+        }
 
         resolvePool();
     }
@@ -286,7 +288,7 @@ public class ConstantPool implements VMConstants {
     void write (DataOutputStream buff) throws IOException {
         buff.writeShort(pool.size());
         for (int i=1; i<pool.size(); i++) {
-            ConstBasic cb = (ConstBasic) pool.elementAt(i);
+            ConstBasic cb = pool.elementAt(i);
             if (cb != null) {
                 buff.writeByte((byte) cb.tag());
                 cb.formatData(buff);
@@ -308,8 +310,9 @@ public class ConstantPool implements VMConstants {
     }
 
     private void hashConstants() {
-        if (hashed)
+        if (hashed) {
             return;
+        }
 
         /* Enter objects into the hash tables */
         for (int j=0; j<pool.size(); j++) {
@@ -372,8 +375,9 @@ public class ConstantPool implements VMConstants {
         }
 
         pool.addElement(basic);
-        if (slots > 1)
+        if (slots > 1) {
             pool.addElement(null);
+        }
         return slots;
     }
 
@@ -428,14 +432,15 @@ public class ConstantPool implements VMConstants {
         }
     }
 
-    private ConstBasicMemberRef searchTable(Vector table, String cname,
+    private ConstBasicMemberRef searchTable(Vector<ConstBasic> table, String cname,
         String mname, String sig) {
         for (int i=0; i<table.size(); i++) {
             ConstBasicMemberRef memRef = (ConstBasicMemberRef) table.elementAt(i);
             if (memRef.className().asString().equals(cname) &&
                 memRef.nameAndType().name().asString().equals(mname) &&
-                memRef.nameAndType().signature().asString().equals(sig))
+                memRef.nameAndType().signature().asString().equals(sig)) {
                 return memRef;
+            }
         }
         return null;
     }

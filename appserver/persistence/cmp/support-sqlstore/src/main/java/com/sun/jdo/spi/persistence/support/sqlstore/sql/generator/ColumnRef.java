@@ -57,15 +57,14 @@ public class ColumnRef extends Object implements FieldMapping {
     //
     private String name;
 
-    public ColumnRef(ColumnElement columnElement,
-                     QueryTable table) {
+    public ColumnRef(ColumnElement columnElement, QueryTable table) {
         this.columnElement = columnElement;
         name = columnElement.getName().getName();
         this.table = table;
     }
 
-    public ColumnRef(ColumnElement columnElement,
-                     Object value) {
+
+    public ColumnRef(ColumnElement columnElement, Object value) {
         this.columnElement = columnElement;
         name = columnElement.getName().getName();
         this.value = value;
@@ -117,21 +116,24 @@ public class ColumnRef extends Object implements FieldMapping {
      /**
       * This method return int corresponding to java.sql.Types.
       */
-     public int getColumnType() {
+     @Override
+    public int getColumnType() {
          return columnElement.getType();
      }
 
      /**
       * This method return the name of the column.
       */
-     public String getColumnName() {
+     @Override
+    public String getColumnName() {
          return name;
      }
 
      /**
       * This method return the length of the column and -1 if unknown.
       */
-     public int getColumnLength() {
+     @Override
+    public int getColumnLength() {
          Integer len = columnElement.getLength();
          return (len != null) ? len.intValue(): -1;
      }

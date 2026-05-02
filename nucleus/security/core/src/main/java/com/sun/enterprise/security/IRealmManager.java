@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+
 /**
  * This is an remote interface provided to the RealmManager This allows the realms to be updated while the server is running.
  *
@@ -26,7 +28,7 @@ public interface IRealmManager extends java.rmi.Remote {
     /**
      * This refreshes the realm information. This is used by a client program e.g. realmtool. The client manipulates the realm
      * information and then calls this method. This then updates the realm information in an already running server. If the server is
-     * not running the call should not be made. This interface is obtained by looking up the <i>RealmManager</> from the Naming
+     * not running the call should not be made. This interface is obtained by looking up the {@link RealmsManager} from the Naming
      * service.
      *
      * @param String realmName

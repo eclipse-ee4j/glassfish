@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.SchemaElement;
@@ -52,11 +53,11 @@ public class RuntimeModel extends Model {
     /** Extension of the class file, used to figure out the path for handling
      * the mapping file.
      */
-    private static final String CLASS_EXTENSION = "class";            // NOI18N
+    private static final String CLASS_EXTENSION = "class";
 
     /** Constant which represents the prefix of the java package.
      */
-    private static final String JAVA_PACKAGE = "java.";                // NOI18N
+    private static final String JAVA_PACKAGE = "java.";
 
     /** Constant which represents the serializable interface.
      */
@@ -65,7 +66,7 @@ public class RuntimeModel extends Model {
     /** Map of class loader used to find classes and mapping information. Keys
      * are fully qualified class names.
      */
-    private HashMap classLoaders = new HashMap();
+    private Map<String, ClassLoader> classLoaders = new HashMap<>();
 
     /** Creates a new RuntimeModel. This constructor should not be called
      * directly; instead, the static instance accesible from the Model class
@@ -83,11 +84,9 @@ public class RuntimeModel extends Model {
      * <code>false</code> otherwise.
      */
     @Override
-    public boolean isInterface (String className)
-    {
-        Class classElement = (Class)getClass(className);
-
-        return ((classElement != null) ? classElement.isInterface() : false);
+    public boolean isInterface(String className) {
+        Class<?> classElement = getClass(className);
+        return classElement == null ? false : classElement.isInterface();
     }
 
     /** Returns the input stream with the supplied resource name found with
@@ -103,17 +102,14 @@ public class RuntimeModel extends Model {
      * if an error occurs or none exists
      */
     @Override
-    protected BufferedInputStream getInputStreamForResource (String className,
-        ClassLoader classLoader, String resourceName)
-    {
-        InputStream is = ((className != null) ?
-                          classLoader.getResourceAsStream(resourceName) : null);
-
-        BufferedInputStream rc = null;
-        if (is != null && !(is instanceof BufferedInputStream)) {
-            rc = new BufferedInputStream(is);
+    protected BufferedInputStream getInputStreamForResource(String className, ClassLoader classLoader,
+        String resourceName) {
+        InputStream is = className == null ? null : classLoader.getResourceAsStream(resourceName);
+        BufferedInputStream rc;
+        if (is == null || is instanceof BufferedInputStream) {
+            rc = (BufferedInputStream) is;
         } else {
-            rc = (BufferedInputStream)is;
+            rc = new BufferedInputStream(is);
         }
         return rc;
     }
@@ -124,9 +120,8 @@ public class RuntimeModel extends Model {
      * @return the class name (without package) for the supplied
      * class name
      */
-    private String getShortClassName (String className)
-    {
-         return JavaTypeHelper.getShortClassName(className);
+    private String getShortClassName(String className) {
+        return JavaTypeHelper.getShortClassName(className);
     }
 
     /** Returns the name of the second to top (top excluding java.lang.Object)
@@ -136,18 +131,15 @@ public class RuntimeModel extends Model {
      * <code>className</code> if an error occurs or none exists
      */
     @Override
-    protected String findPenultimateSuperclass (String className)
-    {
-        Class classElement = (Class)getClass(className);
-        Class objectClass = java.lang.Object.class;
-        Class testClass = null;
-
+    protected String findPenultimateSuperclass(String className) {
+        Class<?> classElement = getClass(className);
         if (classElement == null) {
             return className;
         }
 
-        while ((testClass = classElement.getSuperclass()) != null)
-        {
+        Class<Object> objectClass = java.lang.Object.class;
+        Class<?> testClass;
+        while ((testClass = classElement.getSuperclass()) != null) {
             if (testClass.equals(objectClass)) {
                 break;
             }
@@ -166,13 +158,13 @@ public class RuntimeModel extends Model {
     @Override
     protected String getSuperclass (String className)
     {
-        Class classElement = (Class)getClass(className);
+        Class<?> classElement = getClass(className);
 
         if (classElement != null) {
             classElement = classElement.getSuperclass();
         }
 
-        return ((classElement != null) ? classElement.getName() : null);
+        return classElement == null ? null : classElement.getName();
     }
 
     /** Returns the MappingClassElement created for the specified class name.
@@ -185,9 +177,7 @@ public class RuntimeModel extends Model {
      * @see com.sun.jdo.api.persistence.model.mapping.impl.MappingClassElementImpl#forName(String, Model)
      */
     @Override
-    public MappingClassElement getMappingClass (String className,
-        ClassLoader classLoader)
-    {
+    public MappingClassElement getMappingClass(String className, ClassLoader classLoader) {
         MappingClassElement mappingClass = null;
 
         // First check class loader. This has to be done before the super call!
@@ -196,8 +186,7 @@ public class RuntimeModel extends Model {
         // same class name. So we have to check the multiple class loader first.
         classLoader = findClassLoader(className, classLoader);
         mappingClass = super.getMappingClass(className, classLoader);
-        if ((mappingClass != null) && (classLoader != null))
-        {
+        if (mappingClass != null && classLoader != null) {
             // Lookup the SchemElement connected to mappingClass. This reads
             // the .dbschema file using the specified classLoader and stores the
             // SchemaElement in the SchemaElement cache. Any subsequent
@@ -210,12 +199,9 @@ public class RuntimeModel extends Model {
             // (mapped once, unmapped now), but if the databaseRoot is
             // not null or empty and we can't find the schema, throw a
             // RuntimeException to notify the user that something is wrong.
-            if (!StringHelper.isEmpty(databaseRoot) &&
-                (SchemaElement.forName(databaseRoot, classLoader) == null))
-            {
-                throw new RuntimeException(I18NHelper.getMessage(
-                    getMessages(), "dbschema.not_found", // NOI18N
-                    databaseRoot, className));
+            if (!StringHelper.isEmpty(databaseRoot) && SchemaElement.forName(databaseRoot, classLoader) == null) {
+                throw new RuntimeException(
+                    I18NHelper.getMessage(getMessages(), "dbschema.not_found", databaseRoot, className));
             }
         }
 
@@ -226,8 +212,7 @@ public class RuntimeModel extends Model {
      * @return unmodifiable ClassLoader cache
      */
     @Override
-    public Map getClassLoaderCache ()
-    {
+    public Map<String, ClassLoader> getClassLoaderCache() {
         return Collections.unmodifiableMap(classLoaders);
     }
 
@@ -240,19 +225,15 @@ public class RuntimeModel extends Model {
      * @param classLoader used to determine the classes to be removed
      */
     @Override
-    public void removeResourcesFromCaches (ClassLoader classLoader)
-    {
-        Collection classNames = new HashSet();
+    public void removeResourcesFromCaches(ClassLoader classLoader) {
+        Collection<String> classNames = new HashSet<>();
 
-        synchronized(classLoaders)
-        {
-            for (Iterator i = classLoaders.entrySet().iterator(); i.hasNext();)
-            {
-                Map.Entry next = (Map.Entry)i.next();
+        synchronized (classLoaders) {
+            for (Iterator<Entry<String, ClassLoader>> i = classLoaders.entrySet().iterator(); i.hasNext();) {
+                Entry<String, ClassLoader> next = i.next();
 
                 // check the cached class loader
-                if (next.getValue() == classLoader)
-                {
+                if (next.getValue() == classLoader) {
                     // add className to the collection of classNames to be
                     // removed
                     classNames.add(next.getKey());
@@ -275,32 +256,24 @@ public class RuntimeModel extends Model {
      * @exception IOException if there is some error creating the file
      */
     @Override
-    protected BufferedOutputStream createFile (String className, String baseFileName,
-        String extension) throws IOException
-    {
+    protected BufferedOutputStream createFile(String className, String baseFileName, String extension)
+        throws IOException {
         char extensionCharacter = '.';
-        File file = getFile(className,
-            baseFileName + extensionCharacter + extension);
+        File file = getFile(className, baseFileName + extensionCharacter + extension);
 
-        if (file == null)
-        {
-            Class classElement = (Class)getClass(className);
-
-            if (classElement != null)
-            {
+        if (file == null) {
+            Class<?> classElement = getClass(className);
+            if (classElement != null) {
                 // need to find the path before the package name
-                String path = classElement.getResource(
-                    getShortClassName(className) + extensionCharacter +
-                    CLASS_EXTENSION).getFile();
+                String path = classElement
+                    .getResource(getShortClassName(className) + extensionCharacter + CLASS_EXTENSION).getFile();
                 int index = path.lastIndexOf(extensionCharacter) + 1;
 
                 file = new File(path.substring(0, index) + extension);
                 file.createNewFile();
             }
         }
-        return ((file != null)
-                ? (new BufferedOutputStream(new FileOutputStream(file)))
-                : null);
+        return file == null ? null : new BufferedOutputStream(new FileOutputStream(file));
     }
 
     /** Deletes the file with the given file name which is parallel
@@ -310,9 +283,7 @@ public class RuntimeModel extends Model {
      * @exception IOException if there is some error deleting the file
      */
     @Override
-    protected void deleteFile (String className, String fileName)
-        throws IOException
-    {
+    protected void deleteFile(String className, String fileName) throws IOException {
         File file = getFile(className, fileName);
 
         if ((file != null) && file.exists()) {
@@ -328,13 +299,10 @@ public class RuntimeModel extends Model {
      * if an error occurs
      * @exception IOException if there is some error getting the file
      */
-    protected File getFile (String className, String fileName)
-        throws IOException
-    {
-        Class classElement = (Class)getClass(className);
+    protected File getFile(String className, String fileName) throws IOException {
+        Class<?> classElement = getClass(className);
 
-        if (classElement != null)
-        {
+        if (classElement != null) {
             // need to find the path before the package name
             URL path = classElement.getResource(fileName.substring(
                 fileName.lastIndexOf(getShortClassName(className))));
@@ -353,19 +321,14 @@ public class RuntimeModel extends Model {
      * if an error occurs or none exists
      */
     @Override
-    public Object getClass (String className, ClassLoader classLoader)
-    {
+    public Class<?> getClass(String className, ClassLoader classLoader) {
         if (className == null) {
             return null;
         }
-
-        try
-        {
+        try {
             classLoader = findClassLoader(className, classLoader);
             return Class.forName(className, true, classLoader);
-        }
-        catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             return null;
         }
     }
@@ -383,9 +346,7 @@ public class RuntimeModel extends Model {
      * specified className
      * @exception IllegalArgumentException if there is class loader problem
      */
-    protected ClassLoader findClassLoader (String className,
-        ClassLoader classLoader) throws IllegalArgumentException
-    {
+    protected ClassLoader findClassLoader(String className, ClassLoader classLoader) throws IllegalArgumentException {
         ClassLoader cached = null;
 
         if (className == null) {
@@ -397,36 +358,28 @@ public class RuntimeModel extends Model {
             return getClass().getClassLoader();
         }
 
-        synchronized (classLoaders)
-        {
-            cached = (ClassLoader)classLoaders.get(className);
+        synchronized (classLoaders) {
+            cached = classLoaders.get(className);
 
-            if (classLoader == null)
-            {
+            if (classLoader == null) {
                 // Case 1: specified class loader is null =>
                 // return cached class loader if available, if not
                 // take current class loader
-                classLoader =
-                    (cached != null) ? cached : getClass().getClassLoader();
-            }
-            else if (cached == null)
-            {
+                classLoader = (cached != null) ? cached : getClass().getClassLoader();
+            } else if (cached == null) {
                 // Case 2: specified class loader is NOT null AND
                 // no class loader cached for the class name =>
                 // put specified class loader in cache
                 classLoaders.put(className, classLoader);
-            }
-            else if (classLoader != cached)
-            {
+            } else if (classLoader != cached) {
                 // Case 3: specified class loader is NOT null AND
                 // cache contains class loader for this class name AND
                 // both class loaders are not identical =>
                 // pontential conflict
-                Class clazz = null;
-                Class cachedClazz  = null;
+                Class<?> clazz = null;
+                Class<?> cachedClazz = null;
 
-                try
-                {
+                try {
                     String prop = ClassLoaderStrategy.getStrategy();
 
                     // Load the class using specified and cached class loader.
@@ -435,22 +388,17 @@ public class RuntimeModel extends Model {
                     clazz = Class.forName(className, true, classLoader);
                     cachedClazz = Class.forName(className, true, cached);
 
-                    if (clazz.getClassLoader() == cachedClazz.getClassLoader())
-                    {
+                    if (clazz.getClassLoader() == cachedClazz.getClassLoader()) {
                         // Case 3a: both class loaders are the same =>
                         // return it
                         return cached;
-                    }
-                    else if (ClassLoaderStrategy.MULTIPLE_CLASS_LOADERS_IGNORE.equals(prop))
-                    {
+                    } else if (ClassLoaderStrategy.MULTIPLE_CLASS_LOADERS_IGNORE.equals(prop)) {
                         // Case 3b: both class loaders are different and
                         // the system property is defined as ignore =>
                         // ignore the specified class loader and return
                         // the cached class loader
                         return cached;
-                    }
-                    else if (ClassLoaderStrategy.MULTIPLE_CLASS_LOADERS_RELOAD.equals(prop))
-                    {
+                    } else if (ClassLoaderStrategy.MULTIPLE_CLASS_LOADERS_RELOAD.equals(prop)) {
                         // Case 3c: both class loaders are different and
                         // the system property is defined as reload =>
                         // discard the cached class loader and replace it
@@ -458,24 +406,19 @@ public class RuntimeModel extends Model {
                         removeResourcesFromCaches(cachedClazz.getClassLoader());
                         classLoaders.put(className, classLoader);
                         return classLoader;
-                    }
-                    else
-                    {
+                    } else {
                         // Case 3d: both class loaders are different and
                         // the system property is defined as error or
                         // any other value =>
                         // throw exception
-                        throw new IllegalArgumentException(I18NHelper.getMessage(
-                            getMessages(), "classloader.multiple", // NOI18N
+                        throw new IllegalArgumentException(I18NHelper.getMessage(getMessages(), "classloader.multiple",
                             className));
                     }
-                }
-                catch (ClassNotFoundException ex)
-                {
+                } catch (ClassNotFoundException ex) {
                     // At least one of the class loader could not find the class.
                     // Update the classLoader map, if the specified class loader
                     // could find it, but the cached could not.
-                    if ((clazz != null) && (cachedClazz == null)) {
+                    if (clazz != null) {
                         classLoaders.put(className, classLoader);
                     }
                 }
@@ -497,17 +440,12 @@ public class RuntimeModel extends Model {
      * @see #getClass
      */
     @Override
-    public boolean implementsInterface (Object classElement,
-        String interfaceName)
-    {
-        Class interfaceClass = (Class)getClass(interfaceName);
-
-        if ((classElement == null) || !(classElement instanceof Class) ||
-            (interfaceClass == null)) {
-            return false;
+    public boolean implementsInterface(Object classElement, String interfaceName) {
+        Class<?> interfaceClass = getClass(interfaceName);
+        if (classElement != null && classElement instanceof Class && interfaceClass != null) {
+            return interfaceClass.isAssignableFrom((Class<?>) classElement);
         }
-
-        return interfaceClass.isAssignableFrom((Class)classElement);
+        return false;
     }
 
     /** Determines if the class with the specified name declares a constructor.
@@ -518,7 +456,7 @@ public class RuntimeModel extends Model {
      */
     @Override
     public boolean hasConstructor(final String className) {
-        final Class classElement = (Class)getClass(className);
+        final Class<?> classElement = getClass(className);
         if (classElement != null) {
             Boolean b = JavaTypeHelper.valueOf(classElement.getDeclaredConstructors().length != 0);
             return b.booleanValue();
@@ -538,9 +476,9 @@ public class RuntimeModel extends Model {
      */
     @Override
     public Object getConstructor(final String className, String[] argTypeNames) {
-        final Class classElement = (Class) getClass(className);
+        final Class<?> classElement = getClass(className);
         if (classElement != null) {
-            final Class[] argTypes = getTypesForNames(argTypeNames);
+            final Class<?>[] argTypes = getTypesForNames(argTypeNames);
             try {
                 return classElement.getDeclaredConstructor(argTypes);
             } catch (NoSuchMethodException ex) {
@@ -564,9 +502,9 @@ public class RuntimeModel extends Model {
      */
     @Override
     public Object getMethod(final String className, final String methodName, String[] argTypeNames) {
-        final Class classElement = (Class) getClass(className);
+        final Class<?> classElement = getClass(className);
         if (classElement != null) {
-            final Class[] argTypes = getTypesForNames(argTypeNames);
+            final Class<?>[] argTypes = getTypesForNames(argTypeNames);
             try {
                 return classElement.getDeclaredMethod(methodName, argTypes);
             } catch (NoSuchMethodException ex) {
@@ -590,8 +528,7 @@ public class RuntimeModel extends Model {
      * @see #getMethod
      */
     @Override
-    public String getType (Object element)
-    {
+    public String getType(Object element) {
         return getNameForType(getTypeObject(element));
     }
 
@@ -601,9 +538,9 @@ public class RuntimeModel extends Model {
      * @return the names of the field elements for the specified class
      */
     @Override
-    public List getFields(String className) {
-        List returnList = new ArrayList();
-        final Class classElement = (Class) getClass(className);
+    public List<String> getFields(String className) {
+        List<String> returnList = new ArrayList<>();
+        final Class<?> classElement = getClass(className);
 
         if (classElement != null) {
             Field[] fields = classElement.getDeclaredFields();
@@ -626,7 +563,7 @@ public class RuntimeModel extends Model {
      */
     @Override
     public Object getField(String className, final String fieldName) {
-        final Class classElement = (Class) getClass(className);
+        final Class<?> classElement = getClass(className);
         if (classElement != null) {
             try {
                 return classElement.getDeclaredField(fieldName);
@@ -652,9 +589,8 @@ public class RuntimeModel extends Model {
      * @see #getField
      */
     @Override
-    public boolean isSerializable (Object fieldElement)
-    {
-        Class type = getTypeObject(fieldElement);
+    public boolean isSerializable(Object fieldElement) {
+        Class<?> type = getTypeObject(fieldElement);
 
         // check if the topmost element type is serializable
         while ((type != null) && type.isArray()) {
@@ -700,15 +636,14 @@ public class RuntimeModel extends Model {
      * @see #getMethod
      */
     @Override
-    public String getDeclaringClass (Object memberElement)
-    {
-        Class classElement = null;
-
-        if ((memberElement != null) && (memberElement instanceof Member)) {
-            classElement = ((Member)memberElement).getDeclaringClass();
+    public String getDeclaringClass(Object memberElement) {
+        Class<?> classElement;
+        if (memberElement != null && memberElement instanceof Member) {
+            classElement = ((Member) memberElement).getDeclaringClass();
+        } else {
+            classElement = null;
         }
-
-        return ((classElement != null) ? classElement.getName() : null);
+        return classElement == null ? null : classElement.getName();
     }
 
     /** Returns the modifier mask for the specified member element.
@@ -726,19 +661,14 @@ public class RuntimeModel extends Model {
      * @see #getMethod
      */
     @Override
-    public int getModifiers (Object memberElement)
-    {
+    public int getModifiers(Object memberElement) {
         int modifiers = 0;
 
-        if (memberElement != null)
-        {
-            if (memberElement instanceof Class)
-            {
-                modifiers = ((Class)memberElement).getModifiers();
-            }
-            else if (memberElement instanceof Member)
-            {
-                modifiers = ((Member)memberElement).getModifiers();
+        if (memberElement != null) {
+            if (memberElement instanceof Class) {
+                modifiers = ((Class<?>) memberElement).getModifiers();
+            } else if (memberElement instanceof Member) {
+                modifiers = ((Member) memberElement).getModifiers();
             }
         }
 
@@ -756,32 +686,25 @@ public class RuntimeModel extends Model {
      * @see #getField
      * @see #getMethod
      */
-    protected Class getTypeObject (Object element)
-    {
-        Class type = null;
-
-        if (element != null)
-        {
+    protected Class<?> getTypeObject(Object element) {
+        if (element != null) {
             if (element instanceof Field) {
-                type = ((Field)element).getType();
+                return ((Field) element).getType();
             } else if (element instanceof Method) {
-                type = ((Method)element).getReturnType();
+                return ((Method) element).getReturnType();
             }
         }
 
-        return type;
+        return null;
     }
 
-    private String getNameForType (Class type)
-    {
+
+    private String getNameForType(Class<?> type) {
         String typeName = null;
 
-        if (type != null)
-        {
-            if (type.isArray())
-            {
-                typeName = getNameForType(
-                    type.getComponentType()) + "[]";    // NOI18N
+        if (type != null) {
+            if (type.isArray()) {
+                typeName = getNameForType(type.getComponentType()) + "[]";
             } else {
                 typeName = type.getName();
             }
@@ -792,9 +715,8 @@ public class RuntimeModel extends Model {
 
     /** Converts the array of type names into an array of Class objects.
      */
-    private Class[] getTypesForNames (String[] typeNames)
-    {
-        Class[] classes = new Class[typeNames.length];
+    private Class<?>[] getTypesForNames(String[] typeNames) {
+        Class<?>[] classes = new Class[typeNames.length];
 
         for (int i = 0; i < classes.length; i++) {
             classes[i] = getTypeForName(typeNames[i]);
@@ -803,15 +725,16 @@ public class RuntimeModel extends Model {
         return classes;
     }
 
-    /** Converts the specified type name into its corresponding java.lang.Class
+
+    /**
+     * Converts the specified type name into its corresponding java.lang.Class
      * representation.
      */
-    private Class getTypeForName (String typeName)
-    {
-        Class clazz = JavaTypeHelper.getPrimitiveClass(typeName);
+    private Class<?> getTypeForName(String typeName) {
+        Class<?> clazz = JavaTypeHelper.getPrimitiveClass(typeName);
 
         if (clazz == null) {
-            clazz = (Class)getClass(typeName);
+            clazz = getClass(typeName);
         }
 
         return clazz;

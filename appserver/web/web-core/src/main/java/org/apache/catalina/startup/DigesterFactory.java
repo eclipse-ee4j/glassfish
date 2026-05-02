@@ -71,7 +71,7 @@ public class DigesterFactory {
      * Create a <code>Digester</code> parser.
      * @param xmlValidation turn on/off xml validation
      * @param xmlNamespaceAware turn on/off namespace validation
-     * @param rule an instance of <code>Rule</code??? used for parsing the xml.
+     * @param rule an instance of <code>Rule</code> used for parsing the xml.
      */
     public Digester newDigester(boolean xmlValidation,
                                 boolean xmlNamespaceAware,
@@ -99,8 +99,9 @@ public class DigesterFactory {
         }
 
         digester.setEntityResolver(entityResolver);
-        if ( rule != null )
+        if ( rule != null ) {
             digester.addRuleSet(rule);
+        }
 
         return (digester);
     }

@@ -96,7 +96,6 @@ public class SecurityHandler {
         attrMap.put("Name", realmMap.get("name"));
         attrMap.put("fileJaax", "fileRealm");
         attrMap.put("ldapJaax", "ldapRealm" );
-        attrMap.put("solarisJaax", "solarisRealm");
         attrMap.put("jdbcJaax", "jdbcRealm");
 
         String classname = (String) realmMap.get("classname");
@@ -118,10 +117,6 @@ public class SecurityHandler {
                 attrMap.put("ldapAsGroups", origProps.get("assign-groups"));
                 attrMap.put("directory", origProps.get("directory"));
                 attrMap.put("baseDn", origProps.get("base-dn"));
-            }else
-            if(classname.indexOf("SolarisRealm")!= -1){
-                attrMap.put("solarisJaax", origProps.get("jaas-context"));
-                attrMap.put("solarisAsGroups", origProps.get("assign-groups"));
             }else
             if(classname.indexOf("PamRealm")!= -1){
                 attrMap.put("pamJaax", origProps.get("jaas-context"));
@@ -236,10 +231,6 @@ public class SecurityHandler {
                 putOptional(attrMap, propList, "base-dn", "baseDn");
                 putOptional(attrMap, propList, "directory", "directory");
                 putOptional(attrMap, propList, "assign-groups", "ldapAsGroups");
-            }else
-            if(classname.indexOf("SolarisRealm")!= -1){
-                putOptional(attrMap, propList, "jaas-context", "solarisJaax");
-                putOptional(attrMap, propList, "assign-groups", "solarisAsGroups");
             }else
             if(classname.indexOf("PamRealm")!= -1){
                 putOptional(attrMap, propList, "jaas-context", "pamJaax");

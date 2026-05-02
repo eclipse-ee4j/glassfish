@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -93,10 +93,9 @@ public interface ClassLoaderHierarchy {
      * @return class loader that has visibility to appropriate
      * application specific libraries.
      * @throws MalformedURLException
-     * @see #getAppLibClassFinder(List<URI>)
+     * @see #getAppLibClassFinder(List)
      */
-    ClassLoader getAppLibClassLoader(String application, List<URI> libURIs)
-            throws MalformedURLException;
+    ClassLoader getAppLibClassLoader(String application, List<URI> libURIs) throws MalformedURLException;
 
     /**
      * Returns ApplibClassFinder. As the name suggests, this class finder
@@ -113,10 +112,9 @@ public interface ClassLoaderHierarchy {
      * @return class loader that has visibility to appropriate
      * application specific libraries.
      * @throws MalformedURLException
-     * @see #getAppLibClassLoader(String, List<URI>)
+     * @see #getAppLibClassLoader(String, List)
      */
-    DelegatingClassLoader.ClassFinder getAppLibClassFinder(List<URI> libURIs)
-            throws MalformedURLException;
+    DelegatingClassLoader.ClassFinder getAppLibClassFinder(List<URI> libURIs) throws MalformedURLException;
 
 
     /**

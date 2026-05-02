@@ -38,7 +38,6 @@ import com.sun.enterprise.util.i18n.StringManager;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -127,9 +126,7 @@ class LogException extends Exception {
      * @param err   The error code.
      * @param point The throw point.
      *
-     * @return
      *
-     * @see
      */
     LogException(Object dummy /* COMMENT(Ram J) - used to be trace object */,
                   int   err,
@@ -146,9 +143,7 @@ class LogException extends Exception {
      * @param point  The throw point.
      * @param extra  Extra information.
      *
-     * @return
      *
-     * @see
      */
     LogException(Object dummy /* COMMENT(Ram J) - used to be trace object */,
                   int    err,

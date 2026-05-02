@@ -52,7 +52,6 @@ import org.omg.CosTransactions.Synchronization;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -74,11 +73,8 @@ class RegisteredSyncs {
     /**
      * Default RegisteredSyncs constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     RegisteredSyncs() {}
 
@@ -88,11 +84,9 @@ class RegisteredSyncs {
      * <p>
      * Returns a boolean to indicate success/failure.
      *
-     * @param
      *
      * @return  Indicates success of the operation.
      *
-     * @see
      */
     boolean distributeBefore() {
 
@@ -131,9 +125,7 @@ class RegisteredSyncs {
      *
      * @param status  Indicates whether the transaction committed.
      *
-     * @return
      *
-     * @see
      */
     void distributeAfter(Status status) {
 
@@ -192,9 +184,7 @@ class RegisteredSyncs {
      *
      * @param obj  The Synchronization object to be added.
      *
-     * @return
      *
-     * @see
      */
     void addSync(Synchronization obj) {
         registered.addElement(obj);
@@ -203,11 +193,8 @@ class RegisteredSyncs {
     /**
      * Empties the set of registered Synchronization objects.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void empty() {
         registered.removeAllElements();
@@ -218,11 +205,9 @@ class RegisteredSyncs {
      * <p>
      * If there are, the operation returns true, otherwise false.
      *
-     * @param
      *
      * @return  Indicates whether any objects are registered.
      *
-     * @see
      */
     boolean involved() {
 

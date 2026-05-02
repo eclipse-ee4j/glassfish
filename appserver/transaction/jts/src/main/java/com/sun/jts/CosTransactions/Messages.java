@@ -41,7 +41,6 @@ import java.util.ListResourceBundle;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------

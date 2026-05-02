@@ -25,8 +25,11 @@ import org.glassfish.deployment.common.Descriptor;
  * to keep track of the changes in inbound ra element
  * as well as encapsulate the concept of inbound ra.
  *
+ * <p>
+ * {@code
  * <!ELEMENT inbound-resourceadapter (messageadapter?)>
  * <!ELEMENT messageadapter (messagelistener+)>
+ * }
  *
  * @author    Qingqing Ouyang
  */

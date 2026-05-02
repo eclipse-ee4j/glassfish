@@ -36,7 +36,6 @@ import java.io.OutputStream;
  *  This wrapper is necessary to determine the classname outside the enhancer,
  *  after the class has been enhanced, since do do not always know the
  *  classname of an opened input stream.
- *  </p>
  */
 //#########################################################################
 

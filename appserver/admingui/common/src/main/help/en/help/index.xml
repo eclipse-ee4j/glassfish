@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -299,7 +300,6 @@
     <indexitem text="message security provider configurations" target="ref-messagesecurityproviderconfigprops"></indexitem>
     <indexitem text="PAM realm" target="ref-pamrealmprop"></indexitem>
     <indexitem text="predefined system" target="ref-preconfiguredprops"></indexitem>
-    <indexitem text="Solaris realm" target="ref-solarisrealmprop"></indexitem>
     <indexitem text="system (reference)" target="ref-systemproperties"></indexitem>
     <indexitem text="system (task)" target="task-systemproperties"></indexitem>
   </indexitem>
@@ -342,9 +342,6 @@
   <indexitem text="server log">
     <indexitem text="viewing (reference)" target="ref-logviewer"></indexitem>
     <indexitem text="viewing (task)" target="task-logviewer"></indexitem>
-  </indexitem>
-  <indexitem text="Solaris realm">
-    <indexitem text="properties" target="ref-solarisrealmprop"></indexitem>
   </indexitem>
   <indexitem text="SSL settings">
     <indexitem text="JMX connector (reference)" target="ref-jmxconnectorssledit"></indexitem>

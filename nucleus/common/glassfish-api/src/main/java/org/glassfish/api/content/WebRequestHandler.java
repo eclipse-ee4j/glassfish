@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,7 @@ import java.lang.annotation.Target;
  * this particular context as it can be file servicing, or any other type of behaviour. The type of handling the
  * annotated class will usually be defined by an interface the class implements
  *
- * @see {link:FileServer}
+ * @see FileServer
  *
  * @author Jerome Dochez
  */

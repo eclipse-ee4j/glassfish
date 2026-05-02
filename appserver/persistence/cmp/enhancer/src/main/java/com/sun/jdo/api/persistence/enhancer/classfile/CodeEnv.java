@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,7 @@ class CodeEnv {
     private ConstantPool constantPool;
 
     /* hash table mapping byte code offset to InsnTarget */
-    private Hashtable targets = new Hashtable(7);
+    private Hashtable<Integer, InsnTarget> targets = new Hashtable<>(7);
 
     CodeEnv(ConstantPool constantPool) {
         this.constantPool = constantPool;
@@ -34,7 +35,7 @@ class CodeEnv {
 
     final InsnTarget getTarget(int offset) {
         Integer off = new Integer(offset);
-        InsnTarget targ = (InsnTarget)targets.get(off);
+        InsnTarget targ = targets.get(off);
         if (targ == null) {
             targ = new InsnTarget(offset);
             targets.put(off, targ);
@@ -44,7 +45,7 @@ class CodeEnv {
 
     final InsnTarget findTarget(int offset) {
         Integer off = new Integer(offset);
-        return (InsnTarget)targets.get(off);
+        return targets.get(off);
     }
 
     final ConstantPool pool() {

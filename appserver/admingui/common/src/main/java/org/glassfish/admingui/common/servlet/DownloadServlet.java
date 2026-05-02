@@ -41,15 +41,15 @@ import org.glassfish.common.util.InputValidationUtil;
  * Server to the client.  It provides the ability to set the content type
  * of the downloaded file, if not specified, it will attempt to guess
  * based on the extension (if possible).  It requires the
- * {@link DownloadServlet#ContentSource} of the data to download to be
+ * {@link #getContentSource(ServletRequest)} of the data to download to be
  * specified by passing in a <code>ServletRequest</code> parameter named
  * {@link DownloadServlet#CONTENT_SOURCE_ID}.  The
- * {@link DownloadServlet.ContentSource} provides a plugable means
+ * {@link ContentSource} provides a plugable means
  * of obtaining data from an arbitrary source (i.e. the filesystem,
  * generated on the fly, from some network location, etc.).  The available
- * {@link DownloadServlet.ContentSource} implemenatations must be
+ * {@link ContentSource} implemenatations must be
  * specified via a <code>Servlet</code> init parameter named
- * {@link DownloadServlet#CONTENT_SOURCES}.</p>
+ * {@link #CONTENT_SOURCES}.</p>
  */
 public class DownloadServlet extends HttpServlet {
 
@@ -63,6 +63,7 @@ public class DownloadServlet extends HttpServlet {
     /**
      * <p> Servlet initialization method.</p>
      */
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
@@ -70,7 +71,7 @@ public class DownloadServlet extends HttpServlet {
         String sources = config.getInitParameter(CONTENT_SOURCES);
         if ((sources == null) || (sources.trim().length() == 0)) {
             throw new ServletException("No ContentSources specified!  Ensure "
-                    + "at least 1 DownloadServlet.ContentSource is provided as"
+                    + "at least 1 ContentSource is provided as"
                     + " a Servlet init parameter (key: " + CONTENT_SOURCES
                     + ").");
         }
@@ -81,10 +82,12 @@ public class DownloadServlet extends HttpServlet {
     }
 
     /**
-     * <p> This method registers the given class name as a
-     *     {@link DownloadServlet#ContentSource}.  This method will attempt
-     *     to resolve and instantiate the class using the current
-     *     classloader.</p>
+     * <p>
+     * This method registers the given class name as a
+     * {@link ContentSource}.
+     * This method will attempt to resolve and instantiate the class using the current
+     * classloader.
+     * </p>
      */
     public void registerContentSource(String className) {
         // Sanity Check
@@ -101,16 +104,19 @@ public class DownloadServlet extends HttpServlet {
         registerContentSource(cls);
     }
 
+
     /**
-     * <p> This method registers the given class name as a
-     *     {@link DownloadServlet#ContentSource}.  This method will attempt
-     *     to instantiate the class via the default constructor.</p>
+     * <p>
+     * This method registers the given class name as a
+     * {@link ContentSource}.
+     * This method will attempt to instantiate the class via the default constructor.
+     * </p>
      */
     public void registerContentSource(Class cls) {
         // Create a new instance
-        DownloadServlet.ContentSource source = null;
+        ContentSource source = null;
         try {
-            source = (DownloadServlet.ContentSource) cls.newInstance();
+            source = (ContentSource) cls.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -119,17 +125,18 @@ public class DownloadServlet extends HttpServlet {
     }
 
     /**
-     * <p> This method looks up a DownloadServlet.ContentSource given its id.
-     *     The {@link DownloadServlet#ContentSource} must be previously
+     * <p> This method looks up a {@link ContentSource} given its id.
+     *     The {@link ContentSource} must be previously
      *     registered.</p>
      */
-    public DownloadServlet.ContentSource getContentSource(String id) {
+    public ContentSource getContentSource(String id) {
         return _contentSources.get(id);
     }
 
     /**
-     * <p> This method delegates to the {@link #doPost()} method.</p>
+     * <p> This method delegates to the {@link #doPost(HttpServletRequest, HttpServletResponse)} method.</p>
      */
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
@@ -137,11 +144,12 @@ public class DownloadServlet extends HttpServlet {
     /**
      * <p> This method is the main method for this class when used in an
      *     <code>HttpServlet</code> environment.  It drives the process, which
-     *     includes creating a {@link DownloadServet#Context}, choosing the
-     *     appropriate {@link DownloadServlet#ContentSource}, and copying the
-     *     output of the {@link DownloadServlet#ContentSource} to the
+     *     includes creating a {@link Context}, choosing the
+     *     appropriate {@link ContentSource}, and copying the
+     *     output of the {@link ContentSource} to the
      *     <code>ServletResponse</code>'s <code>OutputStream</code>.</p>
      */
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get the Download Context
         DownloadServlet.Context context = getDownloadContext(request, response);
@@ -157,7 +165,7 @@ public class DownloadServlet extends HttpServlet {
     }
 
     /**
-     * <p> This method instantiates a {@link DownloadServlet.Context} and
+     * <p> This method instantiates a {@link Context} and
      *     initializes it with the Servlet, ServletConfig, ServletRequest,
      *     and ServletResponse.</p>
      */
@@ -182,13 +190,13 @@ public class DownloadServlet extends HttpServlet {
 
     /**
      * <p> This method locates the appropriate
-     *     {@link DownloadServlet#ContentSource} for this request.  It uses
+     *     {@link ContentSource} for this request.  It uses
      *     the given <code>ServletRequest</code> to look for a
      *     <b>ServletRequest Parameter</b> named {@link #CONTENT_SOURCE_ID}.
      *     This value is used as the key when looking up registered
-     *     {@link DownloadServlet#ContentSource} implementations.
+     *     {@link ContentSource} implementations.
      */
-    protected DownloadServlet.ContentSource getContentSource(ServletRequest request) {
+    protected ContentSource getContentSource(ServletRequest request) {
         // Get the ContentSource id
         String id = request.getParameter(CONTENT_SOURCE_ID);
         if (id == null) {
@@ -200,7 +208,7 @@ public class DownloadServlet extends HttpServlet {
         }
 
         // Get the ContentSource
-        DownloadServlet.ContentSource src = getContentSource(id);
+        ContentSource src = getContentSource(id);
         if (src == null) {
             throw new RuntimeException("The ContentSource with id '" + id
                     + "' is not registered!");
@@ -214,7 +222,7 @@ public class DownloadServlet extends HttpServlet {
      * <p> This method is responsible for setting the response header
      *     information.</p>
      */
-    protected void writeHeader(DownloadServlet.ContentSource source, DownloadServlet.Context context)
+    protected void writeHeader(ContentSource source, DownloadServlet.Context context)
                         throws IOException {
         ServletResponse resp = context.getServletResponse();
         if (!(resp instanceof HttpServletResponse)) {
@@ -277,9 +285,9 @@ public class DownloadServlet extends HttpServlet {
      * <p> This method is responsible for copying the data from the given
      *     <code>InputStream</code> to the <code>ServletResponse</code>'s
      *     <code>OutputStream</code>.  The <code>InputStream</code> should be
-     *     the from the {@link DownloadServlet#ContentSource}.</p>
+     *     the from the {@link ContentSource}.</p>
      */
-    protected void writeContent(DownloadServlet.ContentSource source, DownloadServlet.Context context) {
+    protected void writeContent(ContentSource source, DownloadServlet.Context context) {
       // Get the InputStream
       InputStream in = source.getInputStream(context);
 
@@ -350,8 +358,8 @@ public class DownloadServlet extends HttpServlet {
          *  <p>This method is responsible for generating the content and
          * returning an InputStream to that content.  It is also
          * responsible for setting any attribute values in the
-         * {@link DownloadServlet#Context}, such as {@link EXTENSION} or
-         * {@link CONTENT_TYPE}.</p>
+         * {@link Context}, such as {@link #EXTENSION} or
+         * {@link #CONTENT_TYPE}.</p>
          */
         public InputStream getInputStream(DownloadServlet.Context ctx);
 
@@ -373,10 +381,10 @@ public class DownloadServlet extends HttpServlet {
 
     /**
      * <p> This class provides information about the request that may be
-     *     necessary for the <code>DownloadServlet.ContentSource</code> to
+     *     necessary for the <code>ContentSource</code> to
      *     provide content.  The <code>DownloadServlet</code> is responsible
      *     for supplying this object to the
-     *     <code>DownloadServlet.ContentSource</code>.</p>
+     *     <code>ContentSource</code>.</p>
      */
     public static class Context {
 
@@ -389,7 +397,7 @@ public class DownloadServlet extends HttpServlet {
         /**
          *  <p>This method may be used to manage arbitrary information between
          * the <code>DownloadServlet</code> and the
-         * <code>DownloadServlet.ContentSource</code>.  This method
+         * <code>ContentSource</code>.  This method
          * retrieves an attribute.</p>
          */
         public Object getAttribute(String name) {
@@ -411,7 +419,7 @@ public class DownloadServlet extends HttpServlet {
         /**
          *  <p>This method may be used to manage arbitrary information between
          * the <code>DownloadServlet</code> and the
-         * <code>DownloadServlet.ContentSource</code>.  This method sets
+         * <code>ContentSource</code>.  This method sets
          * an attribute.</p>
          */
         public void setAttribute(String name, Object value) {
@@ -423,7 +431,7 @@ public class DownloadServlet extends HttpServlet {
         /**
          *  <p>This method may be used to manage arbitrary information between
          * the <code>DownloadServlet</code> and the
-         * <code>DownloadServlet.ContentSource</code>.  This method
+         * <code>ContentSource</code>.  This method
          * removes an attribute.</p>
          */
         public void removeAttribute(String name) {
@@ -505,10 +513,11 @@ public class DownloadServlet extends HttpServlet {
 
     /**
      * <p> This method gets called before the doGet/doPost method.  The
-     *     requires us to create the {@link DownloadServlet#Context} here.
+     *     requires us to create the {@link Context} here.
      *     However, we do not have the <code>HttpServletResponse</code> yet,
      *     so it will be null.</p>
      */
+    @Override
     protected long getLastModified(HttpServletRequest request) {
         // Get the DownloadServlet Context
         DownloadServlet.Context context = getDownloadContext(request, null);
@@ -642,40 +651,45 @@ public class DownloadServlet extends HttpServlet {
     }
 
 
-    private static Map<String, DownloadServlet.ContentSource> _contentSources =
-            new HashMap<String, DownloadServlet.ContentSource>();
+    private static Map<String, ContentSource> _contentSources =
+            new HashMap<String, ContentSource>();
 
     /**
-     * <p> This String ("downloadContext") is the name if the
-     *     <b>ServletRequest Attribute</b> used to store the
-     *     {@link DownloadServlet#Context} object for this request.</p>
+     * <p>
+     * This String ("downloadContext") is the name if the
+     * <b>ServletRequest Attribute</b> used to store the
+     * {@link Context} object
+     * for this request.
+     * </p>
      */
     public static final String DOWNLOAD_CONTEXT            = "downloadContext";
 
     /**
      * <p> This String ("ContentSources") is the name if the <b>Servlet Init
      *     Parameter</b> that should be used to register all available
-     *     {@link DownloadServlet#ContentSource} implementations.</p>
+     *     {@link ContentSource} implementations.</p>
      */
     public static final String CONTENT_SOURCES            = "ContentSources";
 
     /**
      * <p> This is the <b>ServletRequest Parameter</b> that should be provided
-     *     to identify the <code>DownloadServlet.ContentSource</code>
+     *     to identify the <code>ContentSource</code>
      *     implementation that should be used.  This value must match the
-     *     value returned by the <code>DownloadServlet.ContentSource</code>
+     *     value returned by the <code>ContentSource</code>
      *     implementation's <code>getId()</code> method.</p>
      */
     public static final String CONTENT_SOURCE_ID    = "contentSourceId";
 
     /**
-     * <p> The Content-type ("ContentType").  This is the
-     *     {@link DownloadServlet#Context} attribute used to specify an
-     *     explicit "Content-type".  It may be set by the
-     *     {@link DownloadServlet#ContentSource}, or may be passed in via a
-     *     request parameter.  If not specified, the {@link #EXTENSION} will
-     *     be used.  If that fails, the {@link #DEFAULT_CONTENT_TYPE} will
-     *     apply.</p>
+     * <p>
+     * The Content-type ("ContentType"). This is the
+     * {@link Context} attribute
+     * used to specify an explicit "Content-type". It may be set by the
+     * {@link ContentSource}, or may be passed in via a
+     * request parameter. If not specified, the {@link #EXTENSION} will
+     * be used. If that fails, the {@link #DEFAULT_CONTENT_TYPE} will
+     * apply.
+     * </p>
      */
     public static final String CONTENT_TYPE = "ContentType";
 
@@ -686,18 +700,21 @@ public class DownloadServlet extends HttpServlet {
             "application/octet-stream";
 
     /**
-     * <p> This is the {@link DownloadServlet#Context} attribute name used to
-     *     specify the filename extension of the content.  It is the
-     *     responsibility of the {@link DownloadServlet#ContentSource} to set
-     *     this value.  The value should represent the filename extension of
-     *     the content if it were saved to a filesystem.</p>
+     * <p>
+     * This is the
+     * {@link Context} attribute
+     * name used to specify the filename extension of the content. It is the
+     * responsibility of the {@link ContentSource} to set
+     * this value. The value should represent the filename extension of
+     * the content if it were saved to a filesystem.
+     * </p>
      */
     public static final String EXTENSION = "extension";
 
     /**
-     *  <p> This is the {@link DownloadServlet#Context} attribute name used to
+     *  <p> This is the {@link Context} attribute name used to
      *      specify optional additional headers.  It must be set to
-     *      <codde>Map<String, String></code> object when needed.</p>
+     *      {@code Map<String, String>} object when needed.</p>
      */
     public static final String HEADERS = "Headers";
 }

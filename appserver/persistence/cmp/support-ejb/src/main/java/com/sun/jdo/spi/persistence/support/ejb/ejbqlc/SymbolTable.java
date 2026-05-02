@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SymbolTable.java
- *
- * Created on November 19, 2001
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
 import java.util.HashMap;
@@ -28,14 +23,14 @@ import java.util.Map;
 /**
  * The symbol table handling declared identifies.
  *
- * @author  Michael Bouschen
+ * @author  Michael Bouschen 2001
  */
 public class SymbolTable
 {
     /**
      * The table of declared identifier (symbols).
      */
-    protected Map symbols = new HashMap();
+    protected Map<String, Object> symbols = new HashMap<>();
 
     /**
      * This method adds the specified identifier to this SymbolTable.

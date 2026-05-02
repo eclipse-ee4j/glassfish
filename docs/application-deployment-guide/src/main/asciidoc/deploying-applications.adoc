@@ -1190,9 +1190,9 @@ deployment option was set to true. This option is not supported and
 ignored in a clustered environment. See xref:#gijzm[Example 2-8].
 +
 For information about HTTP session persistence, see the
-xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability
+xref:ha-administration-guide.adoc[{productName} High Availability
 Administration Guide].
-* Load Balancing. See the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability Administration Guide] for information about
+* Load Balancing. See the xref:ha-administration-guide.adoc[{productName} High Availability Administration Guide] for information about
 load balancing.
 * JSP Precompilation. You can precompile JSP files during deployment by
 checking the appropriate box in the Administration Console, or by using

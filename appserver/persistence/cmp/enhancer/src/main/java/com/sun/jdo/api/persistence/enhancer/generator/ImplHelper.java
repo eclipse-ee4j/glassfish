@@ -63,7 +63,7 @@ final class ImplHelper extends Assertion {
     static final String METHODNAME_JDO_IS_DIRTY = "jdoIsDirty";
     static final String METHODNAME_JDO_IS_DELETED = "jdoIsDeleted";
 
-    static private final HashMap typeNameConversion = new HashMap();
+    static private final HashMap<String, String> typeNameConversion = new HashMap<>();
     static {
         typeNameConversion.put(int.class.getName(), "Int");
         typeNameConversion.put(long.class.getName(), "Long");
@@ -84,22 +84,14 @@ final class ImplHelper extends Assertion {
 
 
     static private String getConvertedTypeName(String fieldType) {
-        final String name = (String) typeNameConversion.get(fieldType);
+        final String name = typeNameConversion.get(fieldType);
         return (name != null ? name : JavaClassWriterHelper.Object_);
-    }
-
-
-    static private String getMethodNameGetField(String fieldType) {
-        return JavaClassWriterHelper.get_ + getConvertedTypeName(fieldType) + "Field";
     }
 
 
     static private String getMethodNameSetField(String fieldType) {
         return JavaClassWriterHelper.set_ + getConvertedTypeName(fieldType) + "Field";
     }
-
-    // Create bodies of methods.
-
 
     static String[] getJDOManagedFieldCountImpl(int fieldcount) {
         return new String[] {FIELDNAME_JDO_INHERITED_FIELD_COUNT + " + " + fieldcount + JavaClassWriterHelper.delim_};
@@ -231,7 +223,7 @@ final class ImplHelper extends Assertion {
 
 
     static String[] getJDOClearImpl(String className, ExtendedJDOMetaData meta, String[] fieldNames, String[] fieldTypes) {
-        final List impl = new ArrayList(20);
+        final List<String> impl = new ArrayList<>(20);
         for (int i = 0; i < fieldNames.length; i++) {
             String fieldTypeClassPath = fieldTypes[i];
             String fieldType = normalizeClassName(fieldTypes[i]);
@@ -265,7 +257,7 @@ final class ImplHelper extends Assertion {
 
 
     static String[] getJDOGetFieldImpl(String fieldNumber, String[] fieldNames, String[] fieldTypes) {
-        final List impl = new ArrayList(20);
+        final List<String> impl = new ArrayList<>(20);
         impl.add("switch (" + fieldNumber + ") {");
         for (int i = 0; i < fieldNames.length; i++) {
             String fieldType = normalizeClassName(fieldTypes[i]);
@@ -288,7 +280,7 @@ final class ImplHelper extends Assertion {
 
 
     static String[] getJDOSetFieldImpl(String fieldNumber, String objName, String[] fieldNames, String[] fieldTypes) {
-        final List impl = new ArrayList(20);
+        final List<String> impl = new ArrayList<>(20);
         impl.add("switch (" + fieldNumber + ") {");
         for (int i = 0; i < fieldNames.length; i++) {
             String fieldType = normalizeClassName(fieldTypes[i]);
@@ -305,7 +297,7 @@ final class ImplHelper extends Assertion {
                           .append(fieldNames[i])
                           .append(" = ((").append(primClass)
                           .append(")").append(objName).append(").")
-                          .append(((String)typeNameConversion.get(fieldType)).toLowerCase())
+                          .append(typeNameConversion.get(fieldType).toLowerCase())
                           .append("Value();").toString());
             }
             impl.add("    return;");
@@ -319,7 +311,7 @@ final class ImplHelper extends Assertion {
 
     // returnType = null means void
     private static String[] getJDOStateManagerDelegationImpl(String delegation, String returnType) {
-        final List impl = new ArrayList(7);
+        final List<String> impl = new ArrayList<>(7);
         impl.add((new StringBuffer("final "))
                  .append(CLASSNAME_JDO_STATE_MANAGER)
                  .append(" stateManager = this.")
@@ -337,7 +329,7 @@ final class ImplHelper extends Assertion {
         if (returnType != null) {
             impl.add((new StringBuffer("return ")).append(returnType)
                         .append(";").toString());
-        };
+        }
         String[] strArr = new String[impl.size()];
         return (String[])impl.toArray(strArr);
     }
@@ -359,7 +351,7 @@ final class ImplHelper extends Assertion {
 
 
     static String[] getOidHashCodeImpl(String[] pknames, String[] pktypes, boolean isRoot) {
-        final List impl = new ArrayList(3);
+        final List<String> impl = new ArrayList<>(3);
         if (isRoot) {
             impl.add("int hash = 0;");
         } else {
@@ -387,7 +379,7 @@ final class ImplHelper extends Assertion {
 
     static String[] getOidEqualsImpl(String oidClassName, String[] pknames, String[] pktypes, String pk,
         boolean isRoot) {
-        final List impl = new ArrayList(31);
+        final List<String> impl = new ArrayList<>(31);
         if (isRoot) {
             impl.add("if (" + pk + " == null || !this.getClass().equals("
                      + pk + ".getClass())) {");

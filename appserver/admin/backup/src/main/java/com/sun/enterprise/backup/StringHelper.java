@@ -50,7 +50,7 @@ class StringHelper
      * Convenience method which calls get(String, Object[])
      * @return the String from LocalStrings or the supplied String if it doesn't exist --
      * using the one supplied argument
-     * @see get(String, Object[])
+     * @see #get(String, Object[])
      */
     static String get(String s, Object o)
     {
@@ -61,7 +61,7 @@ class StringHelper
      * Convenience method which calls get(String, Object[])
      * @return the String from LocalStrings or the supplied String if it doesn't exist --
      * using the two supplied arguments
-     * @see get(String, Object[])
+     * @see #get(String, Object[])
      */
     static String get(String s, Object o1, Object o2)
     {
@@ -72,7 +72,7 @@ class StringHelper
      * Convenience method which calls get(String, Object[])
      * @return the String from LocalStrings or the supplied String if it doesn't exist --
      * using the three supplied arguments
-     * @see get(String, Object[])
+     * @see #get(String, Object[])
      */
     static String get(String s, Object o1, Object o2, Object o3)
     {

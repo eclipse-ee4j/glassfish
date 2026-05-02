@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +45,7 @@ public interface CMPGenerator {
      * @throws GeneratorException if there is a problem initializing bean
      * processing.
      */
+    @Deprecated
     void init(EjbBundleDescriptorImpl ejbBundleDescriptor, ClassLoader cl,
         String bundlePathName) throws GeneratorException;
 
@@ -90,6 +92,6 @@ public interface CMPGenerator {
      * @return a Collection of Exceptions if there are any problems processing the bean.
      * Returns an empty Collection if validation succeeds.
      */
-    Collection validate(IASEjbCMPEntityDescriptor descr);
+    Collection<Exception> validate(IASEjbCMPEntityDescriptor descr);
 
 }

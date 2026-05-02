@@ -42,9 +42,9 @@ public class MethodExecutor implements java.io.Serializable{
      * Exceute a simple set Method.
      *
      * @param        value        Value to be set.
-     * @param        method        <code>Method</code> object.
+     * @param        method        {@link Method} object.
      * @param        obj        Object on which the method to be executed.
-     * @throws  <code>ResourceException</code>, in case of the mismatch of parameter values or
+     * @throws  ResourceException, in case of the mismatch of parameter values or
      *                a security violation.
      */
     public void runJavaBeanMethod(String value, Method method, Object obj) throws ResourceException{
@@ -73,10 +73,10 @@ public class MethodExecutor implements java.io.Serializable{
     /**
      * Executes the method.
      *
-     * @param        method <code>Method</code> object.
+     * @param        method {@link Method} object.
      * @param        obj        Object on which the method to be executed.
      * @param        values        Parameter values for executing the method.
-     * @throws  <code>ResourceException</code>, in case of the mismatch of parameter values or
+     * @throws  ResourceException, in case of the mismatch of parameter values or
      *                a security violation.
      */
     public void runMethod(Method method, Object obj, Vector values) throws ResourceException{
@@ -113,7 +113,7 @@ public class MethodExecutor implements java.io.Serializable{
      * @param        type                Class name to which the conversion is required.
      * @param        parameter        String value to be converted.
      * @return        Converted value.
-     * @throws  <code>ResourceException</code>, in case of the mismatch of parameter values or
+     * @throws  ResourceException, in case of the mismatch of parameter values or
      *                a security violation.
      */
     private Object convertType(Class type, String parameter) throws ResourceException{

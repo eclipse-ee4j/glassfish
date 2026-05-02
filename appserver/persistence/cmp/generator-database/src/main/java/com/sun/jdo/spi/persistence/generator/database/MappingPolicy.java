@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,21 +15,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingPolicy.java
- *
- * Created on Jan 14, 2003
- */
-
 package com.sun.jdo.spi.persistence.generator.database;
 
 import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
 import java.sql.Types;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -45,6 +39,10 @@ import java.util.TreeSet;
 import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.I18NHelper;
 import org.glassfish.persistence.common.database.DBVendorTypeHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 
 // XXX Capitalization of acronyms such as Jdbc vs. JDBC is inconsistent
 // throught out this package.
@@ -77,18 +75,18 @@ public class MappingPolicy implements Cloneable {
     //
 
     /** Base name to denote a class. */
-    private static final String CLASS_BASE = "{class-name}"; //NOI18N
+    private static final String CLASS_BASE = "{class-name}";
 
     /** Base name to denote a field. */
-    private static final String FIELD_BASE = "{field-name}"; //NOI18N
+    private static final String FIELD_BASE = "{field-name}";
 
     /** Base name to denote a relationship field. */
     private static final String RELATIONSHIP_BASE =
-            "{relationship-field-name}"; //NOI18N
+            "{relationship-field-name}";
 
 
     /** Represents a '.' in a regular expression */
-    private static String REGEXP_DOT = "\\."; // NOI18N
+    private static String REGEXP_DOT = "\\.";
 
     /** Synonym for DatabaseGenerationConstants.INDICATOR_JDBC_PREFIX. */
     private static final String INDICATOR_JDBC_PREFIX =
@@ -109,19 +107,19 @@ public class MappingPolicy implements Cloneable {
 
     /** Indicator that property is for a table name. */
     private static final String INDICATOR_TABLE_NAME =
-        "table-name"; //NOI18N
+        "table-name";
 
     /** Indicator that property is for a column name. */
     private static final String INDICATOR_COLUMN_NAME =
-        "column-name"; //NOI18N
+        "column-name";
 
     /** Indicator that property is for a join table name. */
     private static final String INDICATOR_JOIN_TABLE_NAME =
-        "join-table-name"; //NOI18N
+        "join-table-name";
 
     /** Indicator that property is for a constraint name. */
     private static final String INDICATOR_CONSTRAINT_NAME =
-        "constraint-name"; //NOI18N
+        "constraint-name";
 
 
     //
@@ -162,7 +160,7 @@ public class MappingPolicy implements Cloneable {
 
     /** Property value indicating table name must be same as class name. */
     private static final String TABLE_NAME_AS_CLASSNAME =
-        "{className}"; //NOI18N
+        "{className}";
 
     /** Property value indicating table name must be upper case. */
     private static final String TABLE_NAME_UPPERCASE =
@@ -170,11 +168,11 @@ public class MappingPolicy implements Cloneable {
 
     /** Property value indicating table name must be uppercase and unique. */
     private static final String TABLE_NAME_HASH_UPPERCASE =
-        "{HASH-CLASSNAME}"; //NOI18N
+        "{HASH-CLASSNAME}";
 
     /** Property value indicating colum name must be same as field name. */
     private static final String COLUMN_NAME_AS_FIELDNAME =
-        "{fieldName}"; //NOI18N
+        "{fieldName}";
 
     /** Property value indicating column name must be uppercase. */
     private static final String COLUMN_NAME_UPPERCASE =
@@ -182,11 +180,11 @@ public class MappingPolicy implements Cloneable {
 
     /** Property value indicating join table name must be uppercase. */
     private static final String JOIN_TABLE_NAME_UPPERCASE =
-        "{CLASSNAMES}"; //NOI18N
+        "{CLASSNAMES}";
 
     /** Property value indicating constraint name must be uppercase. */
     private static final String CONSTRAINT_NAME_UPPERCASE =
-        "{FIELDNAMES}"; //NOI18N
+        "{FIELDNAMES}";
 
 
     //
@@ -195,74 +193,74 @@ public class MappingPolicy implements Cloneable {
     //
 
     /** Indicator that property is for formatting SQL */
-    private static final String INDICATOR_SQL_FORMAT = "sql-format"; //NOI18N
+    private static final String INDICATOR_SQL_FORMAT = "sql-format";
 
     /** The indicator for a statement separator. */
     private static final String STATEMENT_SEPARATOR_INDICATOR =
-        "statementSeparator"; // NOI18N
+        "statementSeparator";
 
     /** The indicator for starting a "create table". */
     private static final String CREATE_TABLE_START_INDICATOR =
-        "createTableStart"; // NOI18N
+        "createTableStart";
 
     /** The indicator for ending a "create table". */
     private static final String CREATE_TABLE_END_INDICATOR =
-        "createTableEnd"; // NOI18N
+        "createTableEnd";
 
     /** The indicator for "create index". Added for Symfoware support as */
     /** indexes on primary keys are mandatory */
     private static final String CREATE_INDEX_INDICATOR =
-        "createIndex"; // NOI18N
+        "createIndex";
 
     /** The indicator for starting a "drop table". */
     private static final String DROP_TABLE_INDICATOR =
-        "dropTable"; // NOI18N
+        "dropTable";
 
     /** The indicator for "add constraint". */
     private static final String ALTER_TABLE_ADD_CONSTRAINT_START_INDICATOR =
-        "alterTableAddConstraintStart"; // NOI18N
+        "alterTableAddConstraintStart";
 
     /** The indicator for "drop constraint". */
     private static final String ALTER_TABLE_DROP_CONSTRAINT_INDICATOR =
-        "alterTableDropConstraint"; // NOI18N
+        "alterTableDropConstraint";
 
     /** The indicator for adding a primary key constraint. */
     private static final String PRIMARY_KEY_CONSTRAINT_INDICATOR =
-        "primaryKeyConstraint"; // NOI18N
+        "primaryKeyConstraint";
 
     /** The indicator for adding a foreign key constraint. */
     private static final String FOREIGN_KEY_CONSTRAINT_INDICATOR =
-        "foreignKeyConstraint"; // NOI18N
+        "foreignKeyConstraint";
 
     /** The indicator for verbose nullability. */
     private static final String COLUMN_NULLABILITY_INDICATOR =
-        "columnNullability"; // NOI18N
+        "columnNullability";
 
     /** The indicator for information used with LOB columns. */
     private static final String LOB_LOGGING_INDICATOR =
-        "LOBLogging"; // NOI18N
+        "LOBLogging";
 
     //
     // The remaining constants are neither bases nor indicators.
     //
 
     /** Prefix of column names which are primary key columns. */
-    private static final String PK_PREFIX = "PK_"; //NOI18N
+    private static final String PK_PREFIX = "PK_";
 
     /** Prefix of column names which are foreign key columns. */
-    private static final String FK_PREFIX = "FK_"; //NOI18N
+    private static final String FK_PREFIX = "FK_";
 
     /** Name of the "global" namespace. */
-    private static final String GLOBAL_NAMING_SPACE = "GLOBAL"; //NOI18N
+    private static final String GLOBAL_NAMING_SPACE = "GLOBAL";
 
     /** Property name which indicates unique table names should be generated. */
-    public static final String USE_UNIQUE_TABLE_NAMES = "use-unique-table-names"; // NOI18N
+    public static final String USE_UNIQUE_TABLE_NAMES = "use-unique-table-names";
 
     /** Property name which indicates reserved words. */
-    private static final String RESERVED_WORDS = "reserved-words";// NOI18N
+    private static final String RESERVED_WORDS = "reserved-words";
 
     /** When appended to a reserved word, causes it to be not-reserved. */
-    private static final String RESERVED_WORD_UNRESERVER = "9"; // NOI18N
+    private static final String RESERVED_WORD_UNRESERVER = "9";
 
     /**
      * Maximum length of the counter used to create unique names with a
@@ -279,10 +277,10 @@ public class MappingPolicy implements Cloneable {
      * are located.
      */
     private static final String PROPERTY_FILE_DIR =
-        "com/sun/jdo/spi/persistence/generator/database/"; // NOI18N
+        "com/sun/jdo/spi/persistence/generator/database/";
 
     /** Extension used by properties files. */
-    private static final String PROPERTY_FILE_EXT = ".properties"; // NOI18N
+    private static final String PROPERTY_FILE_EXT = ".properties";
 
     //
     // The above are all constants; below things get "interesting".
@@ -305,13 +303,14 @@ public class MappingPolicy implements Cloneable {
      * Map from String names to the Integer-boxed values from
      * java.sql.Types.
      */
-    private static final Map jdbcTypes = new HashMap();
+    private static final Map<String, Integer> jdbcTypes = new HashMap<>();
 
     /**
      * Maps from Integer-boxed values from java.sql.Types to String names.
      */
-    private static final Map jdbcTypeNames = new HashMap();
+    private static final Map<Integer, String> jdbcTypeNames = new HashMap<>();
 
+    private static final Logger LOG = System.getLogger(MappingPolicy.class.getName());
 
     /**
      * Global counter for creating unique names in each of the namespaces.
@@ -323,7 +322,7 @@ public class MappingPolicy implements Cloneable {
      * Map from namespaces to Set of names defined in each namespace.  Used
      * to ensure uniqueness within namespaces.
      */
-    private Map namespaces = new HashMap();
+    private Map<String, Set<String>> namespaces = new HashMap<>();
 
     /**
      * Indicates whether or not generated table names should include a
@@ -334,12 +333,12 @@ public class MappingPolicy implements Cloneable {
     /**
      * Set of reserved words for a particular policy.
      */
-    private final Set reservedWords = new TreeSet();
+    private final Set<String> reservedWords = new TreeSet<>();
 
     /**
      * Set of reserved words for the default database.
      */
-    private static Set defaultReservedWords;
+    private static Set<String> defaultReservedWords;
 
     /**
      * Map from the string names of the java types (e.g. "java.lang.String")
@@ -347,20 +346,20 @@ public class MappingPolicy implements Cloneable {
      * type.  Different for different dbvendor types, but the same instance,
      * per dbvendor, is shared by all MappingPolicy instances.
      */
-    private final Map dbJdbcInfoMap = new HashMap();
+    private final Map<String, JDBCInfo> dbJdbcInfoMap = new HashMap<>();
 
     /**
      * Similar to {@link #dbJdbcInfoMap}, but is reinitialized by each
      * clone().  Contains user-provided overrides of the information in
      * dbjdbcInfoMap.
      */
-    private Map userJdbcInfoMap = new HashMap();
+    private Map<String, JDBCInfo> userJdbcInfoMap = new HashMap<>();
 
     /**
      * Map from a boxed value based on fields in java.sql.Types to the String
      * name of a SQL type.
      */
-    private final Map sqlInfo = new HashMap();
+    private final Map<Integer, String> sqlInfo = new HashMap<>();
 
 
     //
@@ -425,15 +424,10 @@ public class MappingPolicy implements Cloneable {
     private final Map namingPolicy = new HashMap();
 
     /** Map from database vendor names to instances of MappingPolicy. */
-    private static final Map instances = new HashMap();
-
-     /** Logger for warning & error messages */
-    private static final Logger logger =
-            LogHelperDatabaseGenerator.getLogger();
+    private static final Map<String, MappingPolicy> instances = new HashMap<>();
 
     /** I18N message handler */
-    private final static ResourceBundle messages =
-            I18NHelper.loadBundle(MappingPolicy.class);
+    private static final ResourceBundle messages = I18NHelper.loadBundle(MappingPolicy.class);
 
     //
     // Initialize the JDBC String to Integer map and the default (SQL92)
@@ -449,43 +443,43 @@ public class MappingPolicy implements Cloneable {
     // is given: Error?  Warning, continue running?
     static {
         // Initialize jdbcType map.
-        jdbcTypes.put("BIGINT", new Integer(Types.BIGINT)); // NOI18N
-        jdbcTypes.put("BIT", new Integer(Types.BIT)); // NOI18N
-        jdbcTypes.put("BLOB", new Integer(Types.BLOB)); // NOI18N
-        jdbcTypes.put("CHAR", new Integer(Types.CHAR)); // NOI18N
-        jdbcTypes.put("CLOB", new Integer(Types.CLOB)); // NOI18N
-        jdbcTypes.put("DATE", new Integer(Types.DATE)); // NOI18N
-        jdbcTypes.put("DECIMAL", new Integer(Types.DECIMAL)); // NOI18N
-        jdbcTypes.put("DOUBLE", new Integer(Types.DOUBLE)); // NOI18N
-        jdbcTypes.put("INTEGER", new Integer(Types.INTEGER)); // NOI18N
-        jdbcTypes.put("LONGVARBINARY", new Integer(Types.LONGVARBINARY)); // NOI18N
-        jdbcTypes.put("LONGVARCHAR", new Integer(Types.LONGVARCHAR)); // NOI18N
-        jdbcTypes.put("NULL", new Integer(Types.NULL)); // NOI18N
-        jdbcTypes.put("REAL", new Integer(Types.REAL)); // NOI18N
-        jdbcTypes.put("SMALLINT", new Integer(Types.SMALLINT)); // NOI18N
-        jdbcTypes.put("TIME", new Integer(Types.TIME)); // NOI18N
-        jdbcTypes.put("TIMESTAMP", new Integer(Types.TIMESTAMP)); // NOI18N
-        jdbcTypes.put("TINYINT", new Integer(Types.TINYINT)); // NOI18N
-        jdbcTypes.put("VARCHAR", new Integer(Types.VARCHAR)); // NOI18N
+        jdbcTypes.put("BIGINT", Integer.valueOf(Types.BIGINT));
+        jdbcTypes.put("BIT", Integer.valueOf(Types.BIT));
+        jdbcTypes.put("BLOB", Integer.valueOf(Types.BLOB));
+        jdbcTypes.put("CHAR", Integer.valueOf(Types.CHAR));
+        jdbcTypes.put("CLOB", Integer.valueOf(Types.CLOB));
+        jdbcTypes.put("DATE", Integer.valueOf(Types.DATE));
+        jdbcTypes.put("DECIMAL", Integer.valueOf(Types.DECIMAL));
+        jdbcTypes.put("DOUBLE", Integer.valueOf(Types.DOUBLE));
+        jdbcTypes.put("INTEGER", Integer.valueOf(Types.INTEGER));
+        jdbcTypes.put("LONGVARBINARY", Integer.valueOf(Types.LONGVARBINARY));
+        jdbcTypes.put("LONGVARCHAR", Integer.valueOf(Types.LONGVARCHAR));
+        jdbcTypes.put("NULL", Integer.valueOf(Types.NULL));
+        jdbcTypes.put("REAL", Integer.valueOf(Types.REAL));
+        jdbcTypes.put("SMALLINT", Integer.valueOf(Types.SMALLINT));
+        jdbcTypes.put("TIME", Integer.valueOf(Types.TIME));
+        jdbcTypes.put("TIMESTAMP", Integer.valueOf(Types.TIMESTAMP));
+        jdbcTypes.put("TINYINT", Integer.valueOf(Types.TINYINT));
+        jdbcTypes.put("VARCHAR", Integer.valueOf(Types.VARCHAR));
 
-        jdbcTypeNames.put(new Integer(Types.BIGINT), "BIGINT"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.BIT), "BIT"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.BLOB), "BLOB"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.CHAR), "CHAR"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.CLOB), "CLOB"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.DATE), "DATE"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.DECIMAL), "DECIMAL"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.DOUBLE), "DOUBLE"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.INTEGER), "INTEGER"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.LONGVARBINARY), "LONGVARBINARY"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.LONGVARCHAR), "LONGVARCHAR"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.NULL), "NULL"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.REAL), "REAL"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.SMALLINT), "SMALLINT"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.TIME), "TIME"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.TIMESTAMP), "TIMESTAMP"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.TINYINT), "TINYINT"); // NOI18N
-        jdbcTypeNames.put(new Integer(Types.VARCHAR), "VARCHAR"); // NOI18N
+        jdbcTypeNames.put(Integer.valueOf(Types.BIGINT), "BIGINT");
+        jdbcTypeNames.put(Integer.valueOf(Types.BIT), "BIT");
+        jdbcTypeNames.put(Integer.valueOf(Types.BLOB), "BLOB");
+        jdbcTypeNames.put(Integer.valueOf(Types.CHAR), "CHAR");
+        jdbcTypeNames.put(Integer.valueOf(Types.CLOB), "CLOB");
+        jdbcTypeNames.put(Integer.valueOf(Types.DATE), "DATE");
+        jdbcTypeNames.put(Integer.valueOf(Types.DECIMAL), "DECIMAL");
+        jdbcTypeNames.put(Integer.valueOf(Types.DOUBLE), "DOUBLE");
+        jdbcTypeNames.put(Integer.valueOf(Types.INTEGER), "INTEGER");
+        jdbcTypeNames.put(Integer.valueOf(Types.LONGVARBINARY), "LONGVARBINARY");
+        jdbcTypeNames.put(Integer.valueOf(Types.LONGVARCHAR), "LONGVARCHAR");
+        jdbcTypeNames.put(Integer.valueOf(Types.NULL), "NULL");
+        jdbcTypeNames.put(Integer.valueOf(Types.REAL), "REAL");
+        jdbcTypeNames.put(Integer.valueOf(Types.SMALLINT), "SMALLINT");
+        jdbcTypeNames.put(Integer.valueOf(Types.TIME), "TIME");
+        jdbcTypeNames.put(Integer.valueOf(Types.TIMESTAMP), "TIMESTAMP");
+        jdbcTypeNames.put(Integer.valueOf(Types.TINYINT), "TINYINT");
+        jdbcTypeNames.put(Integer.valueOf(Types.VARCHAR), "VARCHAR");
 
         try {
 
@@ -493,11 +487,8 @@ public class MappingPolicy implements Cloneable {
             new MappingPolicy();
 
         } catch (Throwable ex) {
-            logger.log(Logger.SEVERE,
-                       I18NHelper.getMessage(
-                               messages,
-                               "EXC_MappingPolicyNotFound",  //NOI18N
-                               DBVendorTypeHelper.DEFAULT_DB));
+            LOG.log(ERROR,
+                () -> I18NHelper.getMessage(messages, "EXC_MappingPolicyNotFound", DBVendorTypeHelper.DEFAULT_DB));
         }
     }
 
@@ -507,8 +498,7 @@ public class MappingPolicy implements Cloneable {
     // This should be invoked only once per JVM.  See the class static
     // block of code above.
     private MappingPolicy() throws IOException {
-        load(getPropertyFileName(DBVendorTypeHelper.DEFAULT_DB),
-             defaultProps, false);
+        load(getPropertyFileName(DBVendorTypeHelper.DEFAULT_DB), defaultProps, false);
         init(defaultProps);
 
         // The DEFAULT_DB has reserved words for the default database type.
@@ -518,9 +508,7 @@ public class MappingPolicy implements Cloneable {
 
         instances.put(DBVendorTypeHelper.DEFAULT_DB, this);
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("new MappingPolicy():\n" + toString()); // NOI18N
-        }
+        LOG.log(DEBUG, () -> "new MappingPolicy():\n" + toString());
     }
 
     /**
@@ -537,10 +525,7 @@ public class MappingPolicy implements Cloneable {
         init(mergedProp);
         instances.put(databaseType, this);
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("new MappingPolicy(" // NOI18N
-                + databaseType + "):\n" + toString()); // NOI18N
-        }
+        LOG.log(DEBUG, () -> "new MappingPolicy(" + databaseType + "):\n" + toString());
     }
 
     /**
@@ -553,12 +538,8 @@ public class MappingPolicy implements Cloneable {
      * @throws IOException if there are problems reading the vendor-
      * specific mappinng policy file
      */
-    public synchronized static MappingPolicy getMappingPolicy(
-           String databaseType) throws IOException {
-
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("get MappingPolicy"+databaseType); // NOI18N
-        }
+    public synchronized static MappingPolicy getMappingPolicy(String databaseType) throws IOException {
+        LOG.log(DEBUG, "get MappingPolicy {0}", databaseType);
 
         MappingPolicy mappingPolicy = null;
         try {
@@ -568,7 +549,7 @@ public class MappingPolicy implements Cloneable {
                 // are *not* using databaseType given, that we are using
                 // SQL92 instead, and provide list of recognized names.
             }
-            mappingPolicy = (MappingPolicy) instances.get(databaseType);
+            mappingPolicy = instances.get(databaseType);
             if (mappingPolicy == null) {
                 mappingPolicy = new MappingPolicy(databaseType);
             }
@@ -608,9 +589,7 @@ public class MappingPolicy implements Cloneable {
             final String resourceName, Properties properties, boolean override)
             throws IOException {
 
-        if (logger.isLoggable(Logger.FINE)) {
-            logger.fine("load resource:" + resourceName); // NOI18N
-        }
+        LOG.log(DEBUG, () ->"load resource: " + resourceName);
 
         InputStream bin = null;
         InputStream in = null;
@@ -632,15 +611,13 @@ public class MappingPolicy implements Cloneable {
 
                 if (in == null) {
                     throw new IOException(I18NHelper.getMessage(messages,
-                        "EXC_ResourceNotFound", resourceName));// NOI18N
+                        "EXC_ResourceNotFound", resourceName));
                 }
             }
 
             bin = new BufferedInputStream(in);
             properties.load(bin);
-            if (logger.isLoggable(Logger.FINE)) {
-                logger.fine("load "+resourceName + " successfuly"); // NOI18N
-            }
+            LOG.log(DEBUG, () -> "load " + resourceName + " successfuly");
         } finally {
             try {
                 bin.close();
@@ -666,43 +643,34 @@ public class MappingPolicy implements Cloneable {
      * @param props Properties which override built in defaults.
      */
     public void setUserPolicy(Properties props) {
-        if (null != props) {
-
-            // Look for and set JDBCInfo entries.  Use Enumeration instead of
-            // iterator because former gets default values while latter does
-            // not.
-            for (Enumeration e = props.propertyNames(); e.hasMoreElements();) {
-                String name = (String) e.nextElement();
-                String value = props.getProperty(name);
-
-                if (name.equals(USE_UNIQUE_TABLE_NAMES)) {
-                    if (! StringHelper.isEmpty(value)) {
-                        uniqueTableName =
-                            Boolean.valueOf(value).booleanValue();
-                    }
-                    continue;
+        if (props == null) {
+            return;
+        }
+        // Look for and set JDBCInfo entries.  Use Enumeration instead of
+        // iterator because former gets default values while latter does
+        // not.
+        for (String name : props.stringPropertyNames()) {
+            String value = props.getProperty(name);
+            if (name.equals(USE_UNIQUE_TABLE_NAMES)) {
+                if (!StringHelper.isEmpty(value)) {
+                    uniqueTableName = Boolean.valueOf(value).booleanValue();
                 }
+                continue;
+            }
 
-                StringTokenizer nameParser =
-                    new StringTokenizer(name, String.valueOf(DOT));
+            StringTokenizer nameParser = new StringTokenizer(name, String.valueOf(DOT));
 
-                // Get the last element from key which is separated by DOT.
-                String indicator = null;
-                while (nameParser.hasMoreTokens()) {
-                    indicator = nameParser.nextToken();
-                }
+            // Get the last element from key which is separated by DOT.
+            String indicator = null;
+            while (nameParser.hasMoreTokens()) {
+                indicator = nameParser.nextToken();
+            }
 
-                if (indicator.startsWith(INDICATOR_JDBC_PREFIX)) {
-                    setJDBCInfoEntry(userJdbcInfoMap, name, value, indicator);
-                } else {
-                    if (logger.isLoggable(Logger.INFO)) {
-                        logger.info(
-                                I18NHelper.getMessage(
-                                        messages,
-                                        "MSG_UnexpectedUserProp", // NOI18N
-                                        name, value)); // NOI18N
-                    }
-                }
+            if (indicator.startsWith(INDICATOR_JDBC_PREFIX)) {
+                setJDBCInfoEntry(userJdbcInfoMap, name, value, indicator);
+            } else {
+                LOG.log(INFO, () -> I18NHelper.getMessage(messages, "MSG_UnexpectedUserProp", name, value));
+
             }
         }
     }
@@ -722,19 +690,14 @@ public class MappingPolicy implements Cloneable {
      * @return Name of SQL type corresponding to given jdbcType.
      */
     public String getSQLTypeName(int jdbcType) {
-        String rc = null;
-
         // The name is in sqlInfo if it was loaded from one of our
         // vendor-specific properties files.
-        Object o = sqlInfo.get(new Integer(jdbcType));
-        if (null != o) {
-            rc = (String) o;
-        } else {
-            // Otherwise, user has overriden, e.g. java.lang.String -> CLOB.
-            rc = getJdbcTypeName(jdbcType);
+        String stringType = sqlInfo.get(Integer.valueOf(jdbcType));
+        if (stringType == null) {
+            // Otherwise, user has overridden, e.g. java.lang.String -> CLOB.
+            return getJdbcTypeName(jdbcType);
         }
-
-        return rc;
+        return stringType;
     }
 
     /**
@@ -762,18 +725,15 @@ public class MappingPolicy implements Cloneable {
     public JDBCInfo getJDBCInfo(String fieldName, String fieldType) {
         JDBCInfo rc = null;
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("Entering MappingPolicy.getJDBCInfo: " // NOI18N
-                          + fieldName + ", " + fieldType); // NOI18N
-        }
+        LOG.log(DEBUG, () -> "Entering MappingPolicy.getJDBCInfo: " + fieldName + ", " + fieldType);
 
-        if (null != fieldName) {
+        if (fieldName != null) {
 
             // If fieldName is given, try to find a JDBCInfo using that name.
             // Looking up fieldName only makes sense in userJdbcInfoMap
             // which contains the user's overrides.
-            rc = (JDBCInfo) userJdbcInfoMap.get(fieldName);
-            if (null != rc && (! rc.isComplete())) {
+            rc = userJdbcInfoMap.get(fieldName);
+            if (rc != null && (! rc.isComplete())) {
 
                 // There is an override for the field named fieldName, but
                 // it is not complete, i.e., not all possible information
@@ -796,7 +756,7 @@ public class MappingPolicy implements Cloneable {
             }
         }
 
-        if (null == rc) {
+        if (rc == null) {
 
             // Either fieldName is null, or there is no JDBCInfo specific to
             // fieldName, so use fieldType.
@@ -811,12 +771,8 @@ public class MappingPolicy implements Cloneable {
         JDBCInfo ji = getdbJDBCInfo(rc.getJdbcType());
         rc.override(ji);
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest("Leaving MappingPolicy.getJDBCInfo: " // NOI18N
-                          + fieldName + ", " + fieldType // NOI18N
-                          + " => " + rc); // NOI18N
-        }
-
+        final JDBCInfo jdbcInfo = rc;
+        LOG.log(DEBUG, () -> "Leaving MappingPolicy.getJDBCInfo: " + fieldName + ", " + fieldType + " => " + jdbcInfo);
         return rc;
     }
 
@@ -832,7 +788,7 @@ public class MappingPolicy implements Cloneable {
      */
     private JDBCInfo getdbJDBCInfo(int jdbcType) {
         String typename = getJdbcTypeName(jdbcType);
-        return (JDBCInfo) dbJdbcInfoMap.get(typename);
+        return dbJdbcInfoMap.get(typename);
     }
 
     /**
@@ -841,13 +797,13 @@ public class MappingPolicy implements Cloneable {
      * @return a JDBCInfo for the given fieldType
      */
     private JDBCInfo getdbJDBCInfo(String fieldType) {
-        JDBCInfo rc = (JDBCInfo) dbJdbcInfoMap.get(fieldType);
+        JDBCInfo rc = dbJdbcInfoMap.get(fieldType);
 
         if (null == rc) {
 
             // There is also nothing provided for the field's
             // type, so use a BLOB.
-            rc = (JDBCInfo) dbJdbcInfoMap.get("BLOB"); // NOI18N
+            rc = dbJdbcInfoMap.get("BLOB");
         }
         return rc;
     }
@@ -860,7 +816,7 @@ public class MappingPolicy implements Cloneable {
      * jdbcTypeName is not that of a recognized JDBC type.
      */
     static Integer getJdbcType(String jdbcTypeName) {
-        return (Integer) jdbcTypes.get(jdbcTypeName.toUpperCase());
+        return jdbcTypes.get(jdbcTypeName.toUpperCase());
     }
 
     /**
@@ -954,7 +910,7 @@ public class MappingPolicy implements Cloneable {
      */
     public static String getJdbcTypeName(int type) throws
             IllegalArgumentException {
-        String rc = (String) jdbcTypeNames.get(new Integer(type));
+        String rc = jdbcTypeNames.get(Integer.valueOf(type));
         if (null == rc) {
             throw new IllegalArgumentException();
         }
@@ -1085,12 +1041,8 @@ public class MappingPolicy implements Cloneable {
         }
 
         rc = getUniqueGlobalName(rc, constraintNameMaxLength);
-
-        if (logger.isLoggable(Logger.FINER)) {
-            logger.finer("MappingPolicy.getConstraintName: " // NOI8N
-                         + relName + " -> " + rc); // NOI18N
-        }
-
+        String constraintName = rc;
+        LOG.log(DEBUG, () -> "MappingPolicy.getConstraintName: " + relName + " -> " + constraintName);
         return rc;
     }
 
@@ -1185,12 +1137,12 @@ public class MappingPolicy implements Cloneable {
             rc += RESERVED_WORD_UNRESERVER;
         }
 
-        Set names = (Set) namespaces.get(namespace);
+        Set<String> names = namespaces.get(namespace);
 
         if (names == null) {
             // Name is first entry in namespace, therefore already unique, no
             // need to append counter.
-            names = new HashSet();
+            names = new HashSet<>();
             names.add(nameUpper);
             namespaces.put(namespace, names);
 
@@ -1409,7 +1361,7 @@ public class MappingPolicy implements Cloneable {
      * @param value Value to be bound to that property.
      */
     private void setJDBCInfoEntry(
-            Map jdbcInfoMap, String name, String value, String indicator) {
+            Map<String, JDBCInfo> jdbcInfoMap, String name, String value, String indicator) {
 
         if (value != null) {
 
@@ -1421,7 +1373,7 @@ public class MappingPolicy implements Cloneable {
                 fieldOrType = name.substring(0, i);
             }
 
-            JDBCInfo ji = (JDBCInfo) jdbcInfoMap.get(fieldOrType);
+            JDBCInfo ji = jdbcInfoMap.get(fieldOrType);
 
             try {
                 if (null != ji) {
@@ -1432,11 +1384,7 @@ public class MappingPolicy implements Cloneable {
                     jdbcInfoMap.put(fieldOrType, ji);
                 }
             } catch (JDBCInfo.IllegalJDBCTypeException ex) {
-                String msg = I18NHelper.getMessage(
-                        messages,
-                        "EXC_InvalidJDBCTypeName", // NOI18N
-                        value, fieldOrType);
-                logger.log(Logger.SEVERE, msg);
+                String msg = I18NHelper.getMessage(messages, "EXC_InvalidJDBCTypeName", value, fieldOrType);
                 throw new IllegalArgumentException(msg);
             }
         }
@@ -1503,29 +1451,29 @@ public class MappingPolicy implements Cloneable {
     @Override
     public String toString() {
         StringBuffer rc = new StringBuffer(
-            "statementSeparator=" + statementSeparator // NOI18N
-            + "\ncreateTableStart=" + createTableStart // NOI18N
-            + "\ncreateTableEnd=" + createTableEnd // NOI18N
-            + "\ncreateIndex=" + createIndex // NOI18N
-            + "\ndropTable=" + dropTable // NOI18N
-            + "\nalterTableAddConstraintStart=" + alterTableAddConstraintStart // NOI18N
-            + "\nalterTableDropConstraint=" + alterTableDropConstraint // NOI18N
-            + "\nprimaryKeyConstraint=" + primaryKeyConstraint // NOI18N
-            + "\nforeignKeyConstraint=" + foreignKeyConstraint // NOI18N
-            + "\ncolumnNullability=" + columnNullability // NOI18N
-            + "\nlobLogging=" + lobLogging // NOI18N
-            + "\ntableNameMaxLength=" + tableNameMaxLength // NOI18N
-            + "\ncolumnNameMaxLength=" + columnNameMaxLength // NOI18N
-            + "\nconstraintNameMaxLength=" + constraintNameMaxLength // NOI18N
-            + "\nuniqueTableName=" + uniqueTableName // NOI18N
-            + "\ncounter=" + counter // NOI18N
-            + "\n\n"); // NOI18N
-        rc.append("    dbJdbcInfoMap:\n").append(stringifyMap(dbJdbcInfoMap)); // NOI18N
-        rc.append("    userJdbcInfoMap:\n").append(stringifyMap(userJdbcInfoMap)); // NOI18N
-        rc.append("    sqlInfo:\n").append(stringifyMap(sqlInfo)); // NOI18N
-        rc.append("    namingPolicy:\n").append(stringifyMap(namingPolicy)); // NOI18N
-        rc.append("    namespaces:\n").append(stringifyMap(namespaces)); // NOI18N
-        rc.append("    reservedWords:\n").append(stringifySet(reservedWords)); // NOI18N
+            "statementSeparator=" + statementSeparator
+            + "\ncreateTableStart=" + createTableStart
+            + "\ncreateTableEnd=" + createTableEnd
+            + "\ncreateIndex=" + createIndex
+            + "\ndropTable=" + dropTable
+            + "\nalterTableAddConstraintStart=" + alterTableAddConstraintStart
+            + "\nalterTableDropConstraint=" + alterTableDropConstraint
+            + "\nprimaryKeyConstraint=" + primaryKeyConstraint
+            + "\nforeignKeyConstraint=" + foreignKeyConstraint
+            + "\ncolumnNullability=" + columnNullability
+            + "\nlobLogging=" + lobLogging
+            + "\ntableNameMaxLength=" + tableNameMaxLength
+            + "\ncolumnNameMaxLength=" + columnNameMaxLength
+            + "\nconstraintNameMaxLength=" + constraintNameMaxLength
+            + "\nuniqueTableName=" + uniqueTableName
+            + "\ncounter=" + counter
+            + "\n\n");
+        rc.append("    dbJdbcInfoMap:\n").append(stringifyMap(dbJdbcInfoMap));
+        rc.append("    userJdbcInfoMap:\n").append(stringifyMap(userJdbcInfoMap));
+        rc.append("    sqlInfo:\n").append(stringifyMap(sqlInfo));
+        rc.append("    namingPolicy:\n").append(stringifyMap(namingPolicy));
+        rc.append("    namespaces:\n").append(stringifyMap(namespaces));
+        rc.append("    reservedWords:\n").append(stringifySet(reservedWords));
         return rc.toString();
     }
 
@@ -1539,8 +1487,8 @@ public class MappingPolicy implements Cloneable {
         StringBuffer rc = new StringBuffer();
         for (Iterator i = m.entrySet().iterator(); i.hasNext();) {
             Map.Entry e = (Map.Entry) i.next();
-            rc.append(e.getKey()).append("=") // NOI18N
-                .append(e.getValue()).append("\n"); // NOI18N
+            rc.append(e.getKey()).append("=")
+                .append(e.getValue()).append("\n");
         }
         return rc.toString();
     }
@@ -1555,9 +1503,9 @@ public class MappingPolicy implements Cloneable {
         StringBuffer rc = new StringBuffer();
         int count = 0;
         for (Iterator i = s.iterator(); i.hasNext();) {
-            rc.append(i.next()).append(" "); // NOI18N
+            rc.append(i.next()).append(" ");
             if (count++ > 6) {
-                rc.append("\n"); // NOI18N
+                rc.append("\n");
                 count = 0;
             }
         }

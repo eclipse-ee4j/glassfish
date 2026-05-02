@@ -26,46 +26,36 @@ import java.util.Map;
 
 /**
  * Abstraction for a Scattered Jakarta EE Application.
- * <p/>
- * <p/>
+ * <p>
  * Usage example :
- * <p/>
- * <style type="text/css">
- * .ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
- * .s0 { color: rgb(128,128,128); }
- * .s1 { }
- * .s2 { color: rgb(0,0,255); }
- * .s3 { color: rgb(128,128,128); font-weight: bold; }
- * .s4 { color: rgb(255,0,255); }
- * </style>
- * <pre>
- * <a name="l56">        GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
- * <a name="l57">        glassfish.start();
- * <a name="l58">
- * <a name="l59">        </span><span class="s0">// Create a scattered web application.</span><span class="s1">
- * <a name="l60">        ScatteredArchive webmodule = </span><span class="s2">new </span><span class="s1">ScatteredArchive(</span><span class="s4">&quot;testweb&quot;</span><span class="s1">, ScatteredArchive.Type.WAR);
- * <a name="l61">        </span><span class="s0">// target/classes directory contains my complied servlets</span><span class="s1">
- * <a name="l62">        webmodule.addClassPath(</span><span class="s2">new </span><span class="s1">File(</span><span class="s4">&quot;target&quot;</span><span class="s1">, </span><span class="s4">&quot;classes&quot;</span><span class="s1">));
- * <a name="l63">        </span><span class="s0">// resources/sun-web.xml is my WEB-INF/sun-web.xml</span><span class="s1">
- * <a name="l64">        webmodule.addMetadata(</span><span class="s2">new </span><span class="s1">File(</span><span class="s4">&quot;resources&quot;</span><span class="s1">, </span><span class="s4">&quot;sun-web.xml&quot;</span><span class="s1">));
- * <a name="l65">
- * <a name="l66">        </span><span class="s0">// Create a scattered enterprise archive.</span><span class="s1">
- * <a name="l67">        ScatteredEnterpriseArchive archive = </span><span class="s2">new </span><span class="s1">ScatteredEnterpriseArchive(</span><span class="s4">&quot;testapp&quot;</span><span class="s1">);
- * <a name="l68">        </span><span class="s0">// src/application.xml is my META-INF/application.xml</span><span class="s1">
- * <a name="l69">        archive.addMetadata(</span><span class="s2">new </span><span class="s1">File(</span><span class="s4">&quot;src&quot;</span><span class="s1">, </span><span class="s4">&quot;application.xml&quot;</span><span class="s1">));
- * <a name="l70">        </span><span class="s0">// Add scattered web module to the scattered enterprise archive.</span><span class="s1">
- * <a name="l71">        </span><span class="s0">// src/application.xml references Web module as &quot;scattered.war&quot;. Hence specify the name while adding the archive.</span><span class="s1">
- * <a name="l72">        archive.addArchive(webmodule.toURI(), </span><span class="s4">&quot;scattered.war&quot;</span><span class="s1">);
- * <a name="l73">        </span><span class="s0">// lib/mylibrary.jar is a library JAR file.</span><span class="s1">
- * <a name="l74">        archive.addArchive(</span><span class="s2">new </span><span class="s1">File(</span><span class="s4">&quot;lib&quot;</span><span class="s1">, </span><span class="s4">&quot;mylibrary.jar&quot;</span><span class="s1">));
- * <a name="l75">        </span><span class="s0">// target/ejbclasses contain my compiled EJB module.</span><span class="s1">
- * <a name="l76">        </span><span class="s0">// src/application.xml references EJB module as &quot;ejb.jar&quot;. Hence specify the name while adding the archive.</span><span class="s1">
- * <a name="l77">        archive.addArchive(</span><span class="s2">new </span><span class="s1">File(</span><span class="s4">&quot;target&quot;</span><span class="s1">, </span><span class="s4">&quot;ejbclasses&quot;</span><span class="s1">), </span><span class="s4">&quot;ejb.jar&quot;</span><span class="s1">);
- * <a name="l78">
- * <a name="l79">        Deployer deployer = glassfish.getDeployer();
- * <a name="l80">        </span><span class="s0">// Deploy my scattered web application</span><span class="s1">
- * <a name="l81">        deployer.deploy(webmodule.toURI());
- * </pre>
+
+ * <pre>{@code
+ * GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
+ * glassfish.start();
+ * // Create a scattered web application.
+ * ScatteredArchive webmodule = new ScatteredArchive("testweb", ScatteredArchive.Type.WAR);
+ * // target/classes directory contains my complied servlets
+ * webmodule.addClassPath(new File("target", "classes"));
+ * // resources/sun-web.xml is my WEB-INF/sun-web.xml
+ * webmodule.addMetadata(new File("resources", "sun-web.xml"));
+ *
+ * // Create a scattered enterprise archive.
+ * ScatteredEnterpriseArchive archive = new ScatteredEnterpriseArchive("testapp");
+ * // src/application.xml is my META-INF/application.xml
+ * archive.addMetadata(new File("src", "application.xml"));
+ * // Add scattered web module to the scattered enterprise archive.
+ * // src/application.xml references Web module as "scattered.war". Hence specify the name while adding the archive.
+ * archive.addArchive(webmodule.toURI(), "scattered.war");
+ * // lib/mylibrary.jar is a library JAR file.
+ * archive.addArchive(new File("lib", "mylibrary.jar"));
+ * // target/ejbclasses contain my compiled EJB module.
+ * // src/application.xml references EJB module as "ejb.jar". Hence specify the name while adding the archive.
+ * archive.addArchive(new File("target", "ejbclasses"), "ejb.jar");
+ *
+ * Deployer deployer = glassfish.getDeployer();
+ * // Deploy my scattered web application
+ * deployer.deploy(webmodule.toURI());
+ * }</pre>
  *
  * @author bhavanishankar@java.net
  */
@@ -122,30 +112,6 @@ public class ScatteredEnterpriseArchive {
     public void addArchive(URI archiveURI, String name) throws IOException {
         addArchive(archiveURI != null ? new File(archiveURI) : null, name);
     }
-
-    /**
-     * Add a module or a library to this scattered enterprise archive.
-     * <p/>
-     * The addArchive(archive) method has the same effect as:
-     * <pre>
-     *      addArchive(archive, null)
-     * </pre>
-     * Follows the same semantics as {@link #addArchive(File, String)} method.
-     * archive must be a file location.
-     */
-//    public void addArchive(String archive) {
-//        addArchive(archive, null);
-//    }
-
-    /**
-     * Add a module or a library to this scattered enterprise archive.
-     * <p/>
-     * Follows the same semantics as {@link #addArchive(File, String)} method.
-     * archive must be a file location.
-     */
-//    public void addArchive(String archive, String name) {
-//        addArchive(archive != null ? new File(archive) : null, name);
-//    }
 
     /**
      * Add a module or a library to this scattered enterprise archive.

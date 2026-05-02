@@ -59,7 +59,6 @@ import org.omg.CosTransactions.PropagationContextHolder;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -80,11 +79,8 @@ class SenderReceiver implements Sender, Receiver {
     /**
      * Default constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     SenderReceiver() {}
 
@@ -94,14 +90,12 @@ class SenderReceiver implements Sender, Receiver {
      * @param id      The request identifier.
      * @param holder  The completed context object.
      *
-     * @return
      *
      * @exception TRANSACTION_ROLLEDBACK  The current transaction
      *   has been rolled back.  The message should not be sent and
      *   TRANSACTION_ROLLEDBACK should be returned to the caller.
      * @exception TRANSACTION_REQUIRED  There is no current transaction.
      *
-     * @see
      */
     @Override
     public void sending_request(int id, PropagationContextHolder holder)
@@ -133,12 +127,10 @@ class SenderReceiver implements Sender, Receiver {
      * @param context  The PropagationContext from the message.
      * @param ex       The exception on the message.
      *
-     * @return
      *
      * @exception WrongTransaction  The context returned on the reply is for a
      *   different transaction from the current one on the thread.
      *
-     * @see
      */
     @Override
     public void received_reply(int id, PropagationContext context,
@@ -170,9 +162,7 @@ class SenderReceiver implements Sender, Receiver {
      * @param id       The request identifier.
      * @param context  The PropagationContext from the message.
      *
-     * @return
      *
-     * @see
      */
     @Override
     public void received_request(int id, PropagationContext context) {
@@ -202,7 +192,6 @@ class SenderReceiver implements Sender, Receiver {
      * @param id      The request identifier.
      * @param holder  The context to be returned on the reply.
      *
-     * @return
      *
      * @exception INVALID_TRANSACTION  The current transaction has
      *   outstanding work on this reply, and has been marked rollback-only,
@@ -211,7 +200,6 @@ class SenderReceiver implements Sender, Receiver {
      * @exception TRANSACTION_ROLLEDBACK  The current transaction has
      *   already been rolled back.
      *
-     * @see
      */
     @Override
     public void sending_reply(int id, PropagationContextHolder holder)
@@ -240,9 +228,7 @@ class SenderReceiver implements Sender, Receiver {
      *
      * @param ident  The TSIdentification object.
      *
-     * @return
      *
-     * @see
      */
     static void identify(TSIdentification ident) {
         try {

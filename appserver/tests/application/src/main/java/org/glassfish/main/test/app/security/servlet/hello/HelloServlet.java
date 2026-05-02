@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +29,7 @@ import java.io.PrintWriter;
  * Simple servlet to validate that the Hello, World example can execute servlets. In the web application deployment
  * descriptor, this servlet must be mapped to correspond to the link in the "index.html" file.
  *
- * @author Craig R. McClanahan <Craig.McClanahan@eng.sun.com>
+ * @author Craig R. McClanahan
  */
 public final class HelloServlet extends HttpServlet {
 
@@ -40,8 +41,8 @@ public final class HelloServlet extends HttpServlet {
      * @param request The servlet request we are processing
      * @param response The servlet response we are producing
      *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
+     * @throws IOException if an input/output error occurs
+     * @throws ServletException if a servlet error occurs
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

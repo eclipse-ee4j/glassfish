@@ -57,7 +57,7 @@ public class ExceptionFilter implements ContainerResponseFilter {
             return;
         }
 
-        // Normally the cliend sends in an X-Skip-Resource-Links header
+        // Normally the client sends in an X-Skip-Resource-Links header
         // to say that resource links should not be returned, and the resource
         // looks for that header in the request and, if present, tells
         // the ResponseBody constructor to ignore resource links.

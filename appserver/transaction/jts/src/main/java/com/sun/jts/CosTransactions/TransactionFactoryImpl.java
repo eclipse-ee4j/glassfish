@@ -70,7 +70,6 @@ import org.omg.PortableServer.POA;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -93,11 +92,8 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      * Constructor for the TransactionFactoryImpl.  Passes through
      * to the parent constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     TransactionFactoryImpl() {
 
@@ -117,7 +113,6 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      *
      * @exception SystemException  An error occurred.
      *
-     * @see
      */
     public Control create(int timeOut) throws SystemException {
 
@@ -148,7 +143,6 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      *
      * @exception SystemException  An error occurred.
      *
-     * @see
      */
     public ControlImpl localCreate(int timeOut) throws SystemException {
 
@@ -232,7 +226,6 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      *
      * @exception SystemException  An error occurred.
      *
-     * @see
      */
     public Control recreate(PropagationContext context)
             throws SystemException {
@@ -525,11 +518,8 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
     /**
      * Prevents any further transactional activity in the process.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static void deactivate() {
 
@@ -544,11 +534,9 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
 
     /**Returns the CORBA Object which represents this object.
      *
-     * @param
      *
      * @return  The CORBA object.
      *
-     * @see
      */
     synchronized TransactionFactory object() {
         if (thisRef == null) {
@@ -602,7 +590,6 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
      *
      * @return  The TransactionFactoryImpl object which serves it.
      *
-     * @see
      */
     synchronized static final TransactionFactoryImpl servant(TransactionFactory factory) {
         TransactionFactoryImpl result = null;

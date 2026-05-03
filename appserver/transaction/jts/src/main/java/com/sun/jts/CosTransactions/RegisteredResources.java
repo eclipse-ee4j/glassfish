@@ -72,7 +72,6 @@ import org.omg.CosTransactions.Vote;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -129,9 +128,7 @@ class RegisteredResources {
      *
      * @param log  The CoordinatorLog object for the transaction.
      *
-     * @return
      *
-     * @see
      */
     RegisteredResources(CoordinatorLog log, CoordinatorImpl coord) {
 
@@ -158,11 +155,8 @@ class RegisteredResources {
     /**
      * Default RegisteredResources constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     RegisteredResources(CoordinatorImpl coord) { this.coord = coord;}
 
@@ -174,9 +168,7 @@ class RegisteredResources {
      *
      * @param log  The CoordinatorLog holding the RegisteredResources state.
      *
-     * @return
      *
-     * @see
      */
 
     void reconstruct(CoordinatorLog log) {
@@ -338,7 +330,6 @@ class RegisteredResources {
      *
      * @return  The number of registered Resource objects.
      *
-     * @see
      */
     int addRes(Resource obj) {
 
@@ -361,11 +352,8 @@ class RegisteredResources {
     /**
      * Empties the list of registered Resources.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     /*
     void empty() {
@@ -383,11 +371,9 @@ class RegisteredResources {
      * <p>
      * If there are, the operation returns true, otherwise false.
      *
-     * @param
      *
      * @return  Indicates whether any Resources registered.
      *
-     * @see
      */
     boolean involved() {
 
@@ -399,11 +385,9 @@ class RegisteredResources {
     /**
      * Returns the number of Resources currently in the list.
      *
-     * @param
      *
      * @return  The number of registered Resources.
      *
-     * @see
      */
     int numRegistered() {
 
@@ -419,7 +403,6 @@ class RegisteredResources {
      * All Resources that return VoteReadOnly have their state set to
      * completed. The consolidated result is returned.
      *
-     * @param
      *
      * @return  The vote for the transaction.
      *
@@ -430,7 +413,6 @@ class RegisteredResources {
      *   roll the transaction back, but one or more others may have
      *   already heuristically committed.
      *
-     * @see
      */
     Vote distributePrepare() throws HeuristicMixed, HeuristicHazard {
         Vote result = Vote.VoteReadOnly;
@@ -644,7 +626,6 @@ class RegisteredResources {
      * their state is set to completed, and the CoordinatorLog object
      * is forced to the physical log.
      *
-     * @param
      *
      * @exception HeuristicMixed  Indicates that heuristic decisions have been
      *   taken which have resulted in part of the transaction
@@ -653,7 +634,6 @@ class RegisteredResources {
      *   been taken which have resulted in part of the transaction
      *   being rolled back.
      *
-     * @see
      */
     void distributeCommit() throws HeuristicMixed, HeuristicHazard, NotPrepared {
         boolean infiniteRetry = true;
@@ -910,7 +890,6 @@ class RegisteredResources {
      *   already been thrown for this transaction, and that forget
      *   processing should proceed.
      *
-     * @return
      *
      * @exception HeuristicMixed  Indicates that heuristic decisions have been
      *   taken which have resulted in part of the transaction
@@ -919,7 +898,6 @@ class RegisteredResources {
      *   may have been taken which have resulted in part of the transaction
      *   being rolled back.
      *
-     * @see
      */
     void distributeRollback(boolean heuristicException)
         throws HeuristicMixed, HeuristicHazard {
@@ -1153,7 +1131,6 @@ class RegisteredResources {
      * @param retries   The number of times to retry the forget operation.
      * @param infinite  indicates infinite retry.
      *
-     * @return
      *
      * @exception HeuristicMixed  Indicates that heuristic decisions have been
      *   taken which have resulted in part of the transaction
@@ -1162,7 +1139,6 @@ class RegisteredResources {
      *   been taken which have resulted in part of the transaction being
      *   rolled back.
      *
-     * @see
      */
     private void distributeForget(int retries, boolean infinite,
         boolean heuristicHazard, boolean heuristicMixed) throws HeuristicMixed, HeuristicHazard {
@@ -1279,13 +1255,11 @@ class RegisteredResources {
      *
      * @param parent  The parent's Coordinator reference.
      *
-     * @return
      *
      * @exception TRANSACTION_ROLLEDBACK  The subtransaction could not be
      *   committed. Some participants may have committed and some may have
      *   rolled back.
      *
-     * @see
      */
     void distributeSubcommit(Coordinator parent) throws TRANSACTION_ROLLEDBACK {
 
@@ -1344,11 +1318,8 @@ class RegisteredResources {
      * Distributes rollbackSubtransaction messages to all registered
      * SubtransactionAwareResources.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void distributeSubrollback() {
         // Browse through the participants, rolling them back. The following is
@@ -1390,9 +1361,7 @@ class RegisteredResources {
      * @param resources  The object to hold the objects.
      * @param states     The object to hold the states.
      *
-     * @return
      *
-     * @see
      */
     /* COMMENT(Ram J) - we do not support Admin package anymore.
     void getResources(ResourceSequenceHolder resources,
@@ -1413,7 +1382,6 @@ class RegisteredResources {
      *
      * @return void
      *
-     * @see
      */
     void commitOnePhase() throws HeuristicMixed, HeuristicHazard {
 

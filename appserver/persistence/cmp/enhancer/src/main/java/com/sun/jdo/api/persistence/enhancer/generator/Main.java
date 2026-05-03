@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
+ * Copyright 2021, 2026 Contributors to the Eclipse Foundation
+ * Copyright 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,6 @@
 
 package com.sun.jdo.api.persistence.enhancer.generator;
 
-import com.sun.jdo.api.persistence.enhancer.LogHelperEnhancer;
 import com.sun.jdo.api.persistence.enhancer.meta.ExtendedJDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataPropertyImpl;
 import com.sun.jdo.api.persistence.enhancer.util.Assertion;
@@ -26,7 +25,6 @@ import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
 import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaClassWriter;
 import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaFileWriter;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,11 +32,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.lang.System.Logger;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 
 
 /**
@@ -57,7 +59,7 @@ public final class Main extends Assertion {
     //
 
      /** The logger */
-    private static final Logger logger = LogHelperEnhancer.getLogger();
+    private static final Logger LOG = System.getLogger(Main.class.getName());
     private static final String dotLine =
         "----------------------------------------------------------------------";
     /**
@@ -92,7 +94,7 @@ public final class Main extends Assertion {
     /**
      * I18N message handler
      */
-    private final static ResourceBundle messages = I18NHelper.loadBundle("com.sun.jdo.api.persistence.enhancer.Bundle"); // NOI18N
+    private final static ResourceBundle messages = I18NHelper.loadBundle("com.sun.jdo.api.persistence.enhancer.Bundle");
 
     public Main() {
     }
@@ -114,8 +116,9 @@ public final class Main extends Assertion {
             gen.opts.processArgs(argv);
             gen.init();
             gen.generate();
-        } catch(Exception ex) {
-            gen.printError(null, ex);
+        } catch(Exception e) {
+            LOG.log(ERROR, "Generator failed.", e);
+            System.exit(1);
         }
     }
 
@@ -126,7 +129,6 @@ public final class Main extends Assertion {
         // final Collection inputFileNames = new ArrayList();
         String destinationDirectory = null;
         String jdoPropertiesFileName = null;
-        boolean verbose = false;
 
         /**
          * Print a usage message to System.err
@@ -152,12 +154,12 @@ public final class Main extends Assertion {
             for (int i = 0; i < argv.length; i++) {
                 final String arg = argv[i];
                 if (arg.equals("-v") || arg.equals("--verbose")) {
-                    verbose = true;
+                    // Was not used, we will ignore it for backward compatibility
                     continue;
                 }
                 if (arg.equals("-d") || arg.equals("--dest")) {
                     if (argv.length - i < 2) {
-                        printError("Missing argument to the -d/-dest option", null);
+                        LOG.log(ERROR, "Missing argument to the -d/-dest option");
                         usage();
                     }
                     destinationDirectory = argv[++i];
@@ -165,18 +167,18 @@ public final class Main extends Assertion {
                 }
                 if (arg.equals("-p") || arg.equals("--properties")) {
                     if (argv.length - i < 2) {
-                        printError("Missing argument to the -p/--properties option", null);
+                        LOG.log(ERROR, "Missing argument to the -p/--properties option");
                         usage();
                     }
                     jdoPropertiesFileName = argv[++i];
                     continue;
                 }
                 if (arg.length() > 0 && arg.charAt(0) == '-') {
-                    printError("Unrecognized option:" + arg, null);
+                    LOG.log(ERROR, "Unrecognized option: " + arg);
                     usage();
                 }
                 if (arg.length() == 0) {
-                    printMessage("Ignoring empty command line argument.");
+                    LOG.log(DEBUG, "Ignoring empty command line argument.");
                     continue;
                 }
 
@@ -185,13 +187,13 @@ public final class Main extends Assertion {
 
             // The user must specify a destination directory
             if (jdoPropertiesFileName == null) {
-                printError("No destination directory specified", null);
+                LOG.log(ERROR, "No destination directory specified");
                 usage();
             }
 
             // The user must specify a destination directory
             if (destinationDirectory == null) {
-                printError("No destination directory specified", null);
+                LOG.log(ERROR, "No destination directory specified");
                 usage();
             }
 
@@ -214,7 +216,7 @@ public final class Main extends Assertion {
                 try {
                     finput.close();
                 } catch(Exception ex) {
-                    printError(ex.getMessage(), ex);
+                    LOG.log(ERROR, ex.getMessage(), ex);
                 }
             }
         }
@@ -248,7 +250,7 @@ public final class Main extends Assertion {
     // at the beginning of this class.
     public File generate(final String className) throws IOException {
         affirm(className != null);
-        printMessage("generating '" + className + "'...");
+        LOG.log(DEBUG, () -> "generating '" + className + "'...");
 
         //@olsen, 4653156: fixed file name
         final String filePath = className.replace('/', File.separatorChar);
@@ -267,7 +269,7 @@ public final class Main extends Assertion {
         writer = new IOJavaClassWriter();
         generateClass(className);
         fWriter.addClass(writer);
-        printMessage("DONE generating '" + className + "'...");
+        LOG.log(DEBUG, () -> "DONE generating '" + className + "'...");
 
         //@olsen: moved from finally{} to main block
         // by JavaFileWriter, no stale resources remain allocated ever
@@ -358,7 +360,7 @@ public final class Main extends Assertion {
 
         // write the fields and with their bean getters/setters
         for (int i = 0; i < n; i++) {
-            final String fieldName = (String)fieldNames[i];
+            final String fieldName = fieldNames[i];
             writeFieldMember(className, fieldName);
         }
     }
@@ -705,22 +707,5 @@ public final class Main extends Assertion {
 
     static private String createMethodName(final String prefix, final String fieldName) {
         return (prefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1));
-    }
-
-
-    // XXX use common logger later
-    private void printMessage(String msg) {
-        logger.finest("TP PCClassGen: " + msg); // NOI18N
-    }
-
-
-    private void printError(String msg, Throwable ex) {
-        if (msg != null) {
-            String errmsg = msg + (ex != null ? ": " + ex.getMessage() : ""); // NOI18N
-            logger.log(Logger.SEVERE, "CME.generic_exception", errmsg); // NOI18N
-        }
-        if (ex != null) {
-            logger.log(Logger.SEVERE, "CME.generic_exception_stack", ex); // NOI18N
-        }
     }
 }

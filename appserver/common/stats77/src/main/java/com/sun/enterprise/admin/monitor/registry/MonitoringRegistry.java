@@ -52,10 +52,10 @@ import org.glassfish.j2ee.statistics.Stats;
  * Registered Stats implementations can be unregistered through the component
  * specific unregister() methods.
  *
- * @see com.sun.enterprise.admin.monitor.registry.MonitoringLevelListener.java
- * @see com.sun.enterprise.admin.monitor.registry.MonitoringLevel.java
+ * @see MonitoringLevelListener
+ * @see MonitoringLevel
+ *
  * @author  Shreedhar Ganapathy
- * @version $Revision: 1.4 $
  */
 public interface MonitoringRegistry {
 
@@ -438,9 +438,10 @@ public interface MonitoringRegistry {
      * between a <em> Stats </em> object and a <em> MonitoringLevelListener </em> object.
      * Thus all the listeners that register through this method will receive null as the Stats parameter
      * value in MonitoringLevelListener#changeLevel method.
-     * @param            {@link MonitoringLevelListener} that is interested in a specific type (may not be null)
-     * @param            {@link MonitoredObjectType} that indicates a specific monitored object
-     * @throws            RuntimeException if the registration fails
+     *
+     * @param listener {@link MonitoringLevelListener} that is interested in a specific type (may not be null)
+     * @param objType {@link MonitoredObjectType} that indicates a specific monitored object
+     * @throws RuntimeException if the registration fails
      */
     public void registerMonitoringLevelListener(MonitoringLevelListener listener,
     com.sun.enterprise.admin.monitor.registry.MonitoredObjectType objType);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -122,38 +122,10 @@
         </resources>
         <plugins>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-installed</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>solarisrealm</groupId>
-                                    <artifactId>libsolx86auth</artifactId>
-                                    <version>1.0</version>
-                                    <type>so</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <stripVersion>true</stripVersion>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Bundle-NativeCode>
-                            libsolx86auth.so; osname=SunOS; osname=Solaris; processor=x86,
-                            *
-                        </Bundle-NativeCode>
                         <Export-Package>
                             com.sun.enterprise.common.iiop.security,
                             com.sun.enterprise.security,
@@ -167,7 +139,6 @@
                             com.sun.enterprise.security.auth.realm.certificate,
                             com.sun.enterprise.security.auth.realm.file,
                             com.sun.enterprise.security.auth.realm.ldap,
-                            com.sun.enterprise.security.auth.realm.solaris,
                             com.sun.enterprise.security.common,
                             com.sun.enterprise.security.factory,
                             com.sun.enterprise.security.ssl,

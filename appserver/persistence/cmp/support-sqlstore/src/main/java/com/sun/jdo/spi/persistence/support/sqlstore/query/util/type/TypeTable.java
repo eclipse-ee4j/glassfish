@@ -116,16 +116,16 @@ public class TypeTable
     /**
      * The list of actual known types.
      */
-    protected Map types = new HashMap();
+    protected Map<String, Type> types = new HashMap<>();
 
     /** Map of TypeTable instances. Key is a classLoader. */
-    private static Map typeTables = new HashMap();
+    private static Map<ClassLoader, TypeTable> typeTables = new HashMap<>();
 
     /** */
     public static TypeTable getInstance(ClassLoader classLoader)
     {
         synchronized (typeTables) {
-            TypeTable typeTable = (TypeTable)typeTables.get(classLoader);
+            TypeTable typeTable = typeTables.get(classLoader);
             if (typeTable == null) {
                 typeTable = new TypeTable(classLoader);
                 typeTables.put(classLoader, typeTable);
@@ -155,47 +155,47 @@ public class TypeTable
 
         booleanType = new BooleanType();
         types.put(booleanType.getName(), booleanType);
-        charType = new IntegralType("char", char.class, FieldTypeEnumeration.CHARACTER_PRIMITIVE); //NOI18N
+        charType = new IntegralType("char", char.class, FieldTypeEnumeration.CHARACTER_PRIMITIVE);
         types.put(charType.getName(), charType);
-        byteType = new IntegralType("byte", byte.class, FieldTypeEnumeration.BYTE_PRIMITIVE); //NOI18N
+        byteType = new IntegralType("byte", byte.class, FieldTypeEnumeration.BYTE_PRIMITIVE);
         types.put(byteType.getName(), byteType);
-        shortType = new IntegralType("short", short.class, FieldTypeEnumeration.SHORT_PRIMITIVE); //NOI18N
+        shortType = new IntegralType("short", short.class, FieldTypeEnumeration.SHORT_PRIMITIVE);
         types.put(shortType.getName(), shortType);
-        intType = new IntegralType("int", int.class, FieldTypeEnumeration.INTEGER_PRIMITIVE); //NOI18N
+        intType = new IntegralType("int", int.class, FieldTypeEnumeration.INTEGER_PRIMITIVE);
         types.put(intType.getName(), intType);
-        longType = new IntegralType("long", long.class, FieldTypeEnumeration.LONG_PRIMITIVE); //NOI18N
+        longType = new IntegralType("long", long.class, FieldTypeEnumeration.LONG_PRIMITIVE);
         types.put(longType.getName(), longType);
-        floatType = new FloatingPointType("float",  float.class, FieldTypeEnumeration.FLOAT_PRIMITIVE); //NOI18N
+        floatType = new FloatingPointType("float",  float.class, FieldTypeEnumeration.FLOAT_PRIMITIVE);
         types.put(floatType.getName(), floatType);
-        doubleType = new FloatingPointType("double", double.class, FieldTypeEnumeration.DOUBLE_PRIMITIVE); //NOI18N
+        doubleType = new FloatingPointType("double", double.class, FieldTypeEnumeration.DOUBLE_PRIMITIVE);
         types.put(doubleType.getName(), doubleType);
 
         stringType = new StringType(this);
         types.put(stringType.getName(), stringType);
 
         WrapperClassType booleanClassType =
-            new WrapperClassType("java.lang.Boolean", Boolean.class, FieldTypeEnumeration.BOOLEAN, booleanType, this); //NOI18N
+            new WrapperClassType("java.lang.Boolean", Boolean.class, FieldTypeEnumeration.BOOLEAN, booleanType, this);
         types.put(booleanClassType.getName(), booleanClassType);
         NumericWrapperClassType byteClassType =
-            new NumericWrapperClassType("java.lang.Byte", Byte.class, FieldTypeEnumeration.BYTE, byteType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Byte", Byte.class, FieldTypeEnumeration.BYTE, byteType, this);
         types.put(byteClassType.getName(), byteClassType);
         NumericWrapperClassType shortClassType =
-            new NumericWrapperClassType("java.lang.Short", Short.class, FieldTypeEnumeration.SHORT, shortType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Short", Short.class, FieldTypeEnumeration.SHORT, shortType, this);
         types.put(shortClassType.getName(), shortClassType);
         NumericWrapperClassType intClassType =
-            new NumericWrapperClassType("java.lang.Integer", Integer.class, FieldTypeEnumeration.INTEGER, intType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Integer", Integer.class, FieldTypeEnumeration.INTEGER, intType, this);
         types.put(intClassType.getName(), intClassType);
         NumericWrapperClassType longClassType =
-            new NumericWrapperClassType("java.lang.Long", Long.class, FieldTypeEnumeration.LONG, longType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Long", Long.class, FieldTypeEnumeration.LONG, longType, this);
         types.put(longClassType.getName(), longClassType);
         NumericWrapperClassType charClassType =
-            new NumericWrapperClassType("java.lang.Character", Character.class, FieldTypeEnumeration.CHARACTER, charType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Character", Character.class, FieldTypeEnumeration.CHARACTER, charType, this);
         types.put(charClassType.getName(), charClassType);
         NumericWrapperClassType floatClassType =
-            new NumericWrapperClassType("java.lang.Float", Float.class, FieldTypeEnumeration.FLOAT, floatType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Float", Float.class, FieldTypeEnumeration.FLOAT, floatType, this);
         types.put(floatClassType.getName(), floatClassType);
         NumericWrapperClassType doubleClassType =
-            new NumericWrapperClassType("java.lang.Double", Double.class, FieldTypeEnumeration.DOUBLE, doubleType, this); //NOI18N
+            new NumericWrapperClassType("java.lang.Double", Double.class, FieldTypeEnumeration.DOUBLE, doubleType, this);
         types.put(doubleClassType.getName(), doubleClassType);
 
         booleanType.setWrapper(booleanClassType);
@@ -207,9 +207,9 @@ public class TypeTable
         floatType.setWrapper(floatClassType);
         doubleType.setWrapper(doubleClassType);
 
-        bigDecimalType = new MathType("java.math.BigDecimal", BigDecimal.class, FieldTypeEnumeration.BIGDECIMAL, this); //NOI18N
+        bigDecimalType = new MathType("java.math.BigDecimal", BigDecimal.class, FieldTypeEnumeration.BIGDECIMAL, this);
         types.put(bigDecimalType.getName(), bigDecimalType);
-        bigIntegerType = new MathType("java.math.BigInteger", BigInteger.class, FieldTypeEnumeration.BIGINTEGER, this); //NOI18N
+        bigIntegerType = new MathType("java.math.BigInteger", BigInteger.class, FieldTypeEnumeration.BIGINTEGER, this);
         types.put(bigIntegerType.getName(), bigIntegerType);
 
         // Date types
@@ -240,13 +240,13 @@ public class TypeTable
     {
         synchronized(types)
         {
-            Type result = (Type)types.get(name);
+            Type result = types.get(name);
             if (result == null)
             {
                 // type not found => check repository
                 try
                 {
-                    Class clazz = Class.forName(name, true, classLoader);
+                    Class<?> clazz = Class.forName(name, true, classLoader);
                     result = new ClassType(name, clazz, this);
                     types.put(name, result);
                 }
@@ -272,14 +272,15 @@ public class TypeTable
      * @return the Type object representing the type with the
      *         specified name or null when the type was not found.
      */
-    public Type checkType(Class clazz)
+    public Type checkType(Class<?> clazz)
     {
-        if (clazz == null)
+        if (clazz == null) {
             return null;
+        }
         String name = clazz.getName();
         synchronized (types)
         {
-            Type result = (Type)types.get(name);
+            Type result = types.get(name);
 
             if (result == null)
             {
@@ -298,14 +299,15 @@ public class TypeTable
     {
         if ((left instanceof NumericType) && (right instanceof NumericType))
         {
-            if (left.equals(doubleType) || right.equals(doubleType))
+            if (left.equals(doubleType) || right.equals(doubleType)) {
                 return doubleType;
-            else if (left.equals(floatType) || right.equals(floatType))
+            } else if (left.equals(floatType) || right.equals(floatType)) {
                 return floatType;
-            else if (left.equals(longType) || right.equals(longType))
+            } else if (left.equals(longType) || right.equals(longType)) {
                 return longType;
-            else
+            } else {
                 return intType;
+            }
         }
         else
         {
@@ -340,8 +342,8 @@ public class TypeTable
      */
     public boolean isNumberType(Type type)
     {
-        Type numberType = checkType("java.lang.Number"); //NOI18N
-        Type characterType = checkType("java.lang.Character"); //NOI18N
+        Type numberType = checkType("java.lang.Number");
+        Type characterType = checkType("java.lang.Character");
         return (type instanceof NumericType) ||
                (type.isCompatibleWith(numberType)) ||
                (type.isCompatibleWith(characterType));
@@ -353,10 +355,11 @@ public class TypeTable
      */
     public boolean isIntegralType(Type type)
     {
-        if (type instanceof IntegralType)
+        if (type instanceof IntegralType) {
             return true;
-        else if (type instanceof NumericWrapperClassType)
+        } else if (type instanceof NumericWrapperClassType) {
             return ((NumericWrapperClassType)type).getPrimitiveType() instanceof IntegralType;
+        }
         return false;
     }
 
@@ -366,10 +369,11 @@ public class TypeTable
      */
     public boolean isFloatingPointType(Type type)
     {
-        if (type instanceof FloatingPointType)
+        if (type instanceof FloatingPointType) {
             return true;
-        else if (type instanceof NumericWrapperClassType)
+        } else if (type instanceof NumericWrapperClassType) {
             return ((NumericWrapperClassType)type).getPrimitiveType() instanceof FloatingPointType;
+        }
         return false;
     }
 
@@ -423,7 +427,7 @@ public class TypeTable
      */
     public boolean isCollectionType(Type type)
     {
-        Type collectionType = checkType("java.util.Collection"); //NOI18N
+        Type collectionType = checkType("java.util.Collection");
         return (type instanceof ClassType) && type.isCompatibleWith(collectionType);
     }
 
@@ -434,7 +438,7 @@ public class TypeTable
      */
     public boolean isJavaLangMathType(Type type)
     {
-        Type mathType = checkType("java.lang.Math"); //NOI18N
+        Type mathType = checkType("java.lang.Math");
         return (type instanceof ClassType) && type.isCompatibleWith(mathType);
     }
 

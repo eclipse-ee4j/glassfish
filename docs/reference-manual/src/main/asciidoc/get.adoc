@@ -189,6 +189,6 @@ xref:list.adoc#list[`list`(1)], xref:set.adoc#set[`set`(1)]
 
 xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
-xref:administration-guide.adoc#GSADG[{productName} Administration Guide]
+xref:administration-guide.adoc[{productName} Administration Guide]
 
 

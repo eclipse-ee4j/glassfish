@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingTableElementImpl.java
- *
- * Created on March 3, 2000, 1:11 PM
- */
-
 package com.sun.jdo.api.persistence.model.mapping.impl;
 
 import com.sun.jdo.api.persistence.model.ModelException;
@@ -31,6 +26,7 @@ import com.sun.jdo.api.persistence.model.mapping.MappingTableElement;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.glassfish.persistence.common.I18NHelper;
@@ -39,50 +35,50 @@ import org.netbeans.modules.dbschema.TableElement;
 import org.netbeans.modules.dbschema.util.NameUtil;
 
 /**
- *
- * @author Mark Munro
- * @author Rochelle Raccah
- * @version %I%
+ * @author Mark Munro 2000
+ * @author Rochelle Raccah 2000
  */
 public class MappingTableElementImpl extends MappingMemberElementImpl
     implements MappingTableElement
 {
-    private ArrayList _key;    // array of column names
+    private List<String> _key;    // array of column names
     //@olsen: made transient to prevent from serializing into mapping files
-    private transient ArrayList _keyObjects;    // array of ColumnElement (for runtime)
-    private ArrayList _referencingKeys;    // array of MappingReferenceKeyElement
+    private transient List<ColumnElement> _keyObjects;    // array of ColumnElement (for runtime)
+    private List<MappingReferenceKeyElement> _referencingKeys;    // array of MappingReferenceKeyElement
     private String _table;
     //@olsen: made transient to prevent from serializing into mapping files
     private transient TableElement _tableObject;    // for runtime
 
-    /** Create new MappingTableElementImpl with no corresponding name or
-     * declaring class.  This constructor should only be used for cloning and
+    /**
+     * Create new MappingTableElementImpl with no corresponding name or
+     * declaring class. This constructor should only be used for cloning and
      * archiving.
      */
-    public MappingTableElementImpl ()
-    {
-        this((String)null, null);
+    public MappingTableElementImpl() {
+        this((String) null, null);
     }
 
-    /** Create new MappingTableElementImpl with the corresponding name and
+
+    /**
+     * Create new MappingTableElementImpl with the corresponding name and
      * declaring class.
+     *
      * @param name the name of the element
      * @param declaringClass the class to attach to
      */
-    public MappingTableElementImpl (String name,
-        MappingClassElement declaringClass)
-    {
+    public MappingTableElementImpl(String name, MappingClassElement declaringClass) {
         super(name, declaringClass);
     }
 
-    /** Creates new MappingTableElementImpl with a corresponding
+
+    /**
+     * Creates new MappingTableElementImpl with a corresponding
      * table and declaring class.
+     *
      * @param table table element to be used by the mapping table.
      * @param declaringClass the class to attach to
      */
-    public MappingTableElementImpl (TableElement table,
-        MappingClassElement declaringClass) throws ModelException
-    {
+    public MappingTableElementImpl(TableElement table, MappingClassElement declaringClass) {
         this(table.toString(), declaringClass);
 
         // don't use setTable so as not to fire property change events
@@ -94,19 +90,21 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
     /** Returns the name of the table element used by this mapping table.
      * @return the table name for this mapping table
      */
-    public String getTable () { return _table; }
+    @Override
+    public String getTable() {
+        return _table;
+    }
 
     /** Set the table element for this mapping table to the supplied table.
      * @param table table element to be used by the mapping table.
      * @exception ModelException if impossible
      */
-    public void setTable (TableElement table) throws ModelException
-    {
+    @Override
+    public void setTable(TableElement table) throws ModelException {
         String old = getTable();
         String newName = table.toString();
 
-        try
-        {
+        try {
             fireVetoableChange(PROP_TABLE, old, newName);
             _table = newName;
             firePropertyChange(PROP_TABLE, old, newName);
@@ -115,9 +113,7 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
             // sync up runtime's object too: force next
             // access to getTableObject to recompute it
             _tableObject = null;
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
@@ -127,12 +123,12 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @param name the name
      * @exception ModelException if impossible
      */
-    public void setName (String name) throws ModelException
-    {
+    @Override
+    public void setName(String name) throws ModelException {
         super.setName(name);
-
-        if (getTable() == null)
+        if (getTable() == null) {
             _table = name;
+        }
     }
 
     /** Returns true if the table element used by this mapping table is equal
@@ -140,8 +136,8 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @return <code>true</code> if table elements are equal,
      * <code>false</code> otherwise.
      */
-    public boolean isEqual (TableElement table)
-    {
+    @Override
+    public boolean isEqual(TableElement table) {
         return ((table != null) ? getTable().equals(table.toString()) : false);
     }
 
@@ -152,10 +148,11 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @return the names of the columns in the primary key for this mapping
      * table
      */
-    public ArrayList getKey ()
-    {
-        if (_key == null)
-            _key = new ArrayList();
+    @Override
+    public List<String> getKey() {
+        if (_key == null) {
+            _key = new ArrayList<>();
+        }
 
         return _key;
     }
@@ -167,24 +164,17 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @param column column element to be added
      * @exception ModelException if impossible
      */
-    public void addKeyColumn (ColumnElement column) throws ModelException
-    {
-        if (column != null)
-        {
-            String columnName = NameUtil.getRelativeMemberName(
-                column.getName().getFullName());
-
-            if (!getKey().contains(columnName))
-                addKeyColumnInternal(column);
-            else
-            {
-                // this part was blank -- do we want an error or skip here?
-            }
+    @Override
+    public void addKeyColumn(ColumnElement column) throws ModelException {
+        if (column == null) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.element.null_argument"));
         }
-        else
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.element.null_argument"));                // NOI18N
+        String columnName = NameUtil.getRelativeMemberName(column.getName().getFullName());
+
+        if (!getKey().contains(columnName)) {
+            addKeyColumnInternal(column);
+        } else {
+            // this part was blank -- do we want an error or skip here?
         }
     }
 
@@ -196,25 +186,20 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @param column column element to be added
      * @exception ModelException if impossible
      */
-    protected void addKeyColumnInternal (ColumnElement column) throws ModelException
-    {
-        ArrayList key = getKey();
-        String columnName = NameUtil.getRelativeMemberName(
-            column.getName().getFullName());
+    protected void addKeyColumnInternal(ColumnElement column) throws ModelException {
+        List<String> key = getKey();
+        String columnName = NameUtil.getRelativeMemberName(column.getName().getFullName());
 
-        try
-        {
+        try {
             fireVetoableChange(PROP_KEY_COLUMNS, null, null);
             key.add(columnName);
             firePropertyChange(PROP_KEY_COLUMNS, null, null);
 
             // sync up runtime's object list too
-            //@olsen: rather clear objects instead of maintaining them
-            //getKeyObjects().add(column);
+            // @olsen: rather clear objects instead of maintaining them
+            // getKeyObjects().add(column);
             _keyObjects = null;
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
@@ -226,31 +211,24 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @param columnName the relative name of the column to be removed
      * @exception ModelException if impossible
      */
-    public void removeKeyColumn (String columnName) throws ModelException
-    {
-        if (columnName != null)
-        {
-            try
-            {
+    @Override
+    public void removeKeyColumn(String columnName) throws ModelException {
+        if (columnName != null) {
+            try {
                 fireVetoableChange(PROP_KEY_COLUMNS, null, null);
 
-                if (!getKey().remove(columnName))
-                {
+                if (!getKey().remove(columnName)) {
                     throw new ModelException(
-                        I18NHelper.getMessage(getMessages(),
-                        "mapping.element.element_not_removed",        // NOI18N
-                        columnName));
+                        I18NHelper.getMessage(getMessages(), "mapping.element.element_not_removed", columnName));
                 }
 
                 firePropertyChange(PROP_KEY_COLUMNS, null, null);
 
                 // sync up runtime's object list too
-                //@olsen: rather clear objects instead of maintaining them
-                //getKeyObjects().remove(column);
+                // @olsen: rather clear objects instead of maintaining them
+                // getKeyObjects().remove(column);
                 _keyObjects = null;
-            }
-            catch (PropertyVetoException e)
-            {
+            } catch (PropertyVetoException e) {
                 throw new ModelVetoException(e);
             }
         }
@@ -263,29 +241,29 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * keys.
      * @return the reference key elements for this mapping table
      */
-    public ArrayList getReferencingKeys ()
-    {
-        if (_referencingKeys == null)
-            _referencingKeys = new ArrayList();
+    @Override
+    public List<MappingReferenceKeyElement> getReferencingKeys() {
+        if (_referencingKeys == null) {
+            _referencingKeys = new ArrayList<>();
+        }
 
         return _referencingKeys;
     }
 
-    /** Adds a referencing key to the list of keys in this mapping table.
+
+    /**
+     * Adds a referencing key to the list of keys in this mapping table.
+     *
      * @param referencingKey referencing key element to be added
      * @exception ModelException if impossible
      */
-    public void addReferencingKey (MappingReferenceKeyElement referencingKey)
-        throws ModelException
-    {
-        try
-        {
+    @Override
+    public void addReferencingKey(MappingReferenceKeyElement referencingKey) throws ModelException {
+        try {
             fireVetoableChange(PROP_REFERENCING_KEYS, null, null);
             getReferencingKeys().add(referencingKey);
             firePropertyChange(PROP_REFERENCING_KEYS, null, null);
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
@@ -295,37 +273,23 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * @param table mapping table element for which to remove referencing keys
      * @exception ModelException if impossible
      */
-    public void removeReference (MappingTableElement table)
-        throws ModelException
-    {
-        if (table != null)
-        {
-            Iterator keyIterator = getReferencingKeys().iterator();
-
-            while (keyIterator.hasNext())
-            {
-                MappingReferenceKeyElement nextKey =
-                    (MappingReferenceKeyElement)keyIterator.next();
-
-                if (nextKey.getTable().equals(table))
-                {
-                    try
-                    {
-                        fireVetoableChange(PROP_REFERENCING_KEYS, null, null);
-                        keyIterator.remove();
-                        firePropertyChange(PROP_REFERENCING_KEYS, null, null);
-                    }
-                    catch (PropertyVetoException e)
-                    {
-                        throw new ModelVetoException(e);
-                    }
+    @Override
+    public void removeReference(MappingTableElement table) throws ModelException {
+        if (table == null) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.element.null_argument"));
+        }
+        Iterator<MappingReferenceKeyElement> keyIterator = getReferencingKeys().iterator();
+        while (keyIterator.hasNext()) {
+            MappingReferenceKeyElement nextKey = keyIterator.next();
+            if (nextKey.getTable().equals(table)) {
+                try {
+                    fireVetoableChange(PROP_REFERENCING_KEYS, null, null);
+                    keyIterator.remove();
+                    firePropertyChange(PROP_REFERENCING_KEYS, null, null);
+                } catch (PropertyVetoException e) {
+                    throw new ModelVetoException(e);
                 }
             }
-        }
-        else
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.element.null_argument"));                    // NOI18N
         }
     }
 
@@ -335,6 +299,7 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * table.  This method should only be used by the runtime.
      * @return the table element for this mapping table
      */
+    @Override
     public TableElement getTableObject ()
     {
         if (_tableObject == null)
@@ -352,15 +317,12 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * this mapping table.  This method should only be used by the runtime.
      * @return the column elements in the primary key for this mapping table
      */
-    public ArrayList getKeyObjects ()
-    {
-        if (_keyObjects == null)
-        {
-            //@olsen: calculate the key objects based on
-            //        the key names as stored in _key
-            //_keyObjects = new ArrayList();
-            _keyObjects = MappingClassElementImpl.toColumnObjects(
-                getDeclaringClass().getDatabaseRoot(), getKey());
+    public List<ColumnElement> getKeyObjects() {
+        if (_keyObjects == null) {
+            // @olsen: calculate the key objects based on
+            // the key names as stored in _key
+            // _keyObjects = new ArrayList();
+            _keyObjects = MappingClassElementImpl.toColumnObjects(getDeclaringClass().getDatabaseRoot(), getKey());
         }
 
         return _keyObjects;
@@ -372,27 +334,32 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * method should only be used internally and for cloning and archiving.
      * @param table the table name for this mapping table
      */
-    public void setTable (String table)
-    {
+    public void setTable(String table) {
         _table = table;
     }
 
-    /** Set the list of column names in the primary key for this mapping
-     * table.  This method should only be used internally and for cloning
-     * and archiving.
-     * @param key the list of names of the columns in the primary key for
-     * this mapping table
-     */
-    public void setKey (ArrayList key) { _key = key; }
 
-    /** Set the list of keys (MappingReferenceKeyElements) for this mapping
-     * table.  This method should only be used internally and for cloning
+    /**
+     * Set the list of column names in the primary key for this mapping
+     * table. This method should only be used internally and for cloning
      * and archiving.
-     * @param referencingKeys the list of reference key elements for this
-     * mapping table
+     *
+     * @param key the list of names of the columns in the primary key for
+     *            this mapping table
      */
-    public void setReferencingKeys (ArrayList referencingKeys)
-    {
+    public void setKey(ArrayList<String> key) {
+        _key = key;
+    }
+
+
+    /**
+     * Set the list of keys (MappingReferenceKeyElements) for this mapping
+     * table. This method should only be used internally and for cloning
+     * and archiving.
+     *
+     * @param referencingKeys the list of reference key elements for this mapping table
+     */
+    public void setReferencingKeys(List<MappingReferenceKeyElement> referencingKeys) {
         _referencingKeys = referencingKeys;
     }
 
@@ -404,8 +371,8 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
      * The method is recursively called for all MappingReferenceKeyElements
      * attached to this MappingTableElement.
      */
-    protected void stripSchemaName ()
-    {
+    @Override
+    public void stripSchemaName() {
         // handle _name
         _name = NameUtil.getRelativeTableName(_name);
 
@@ -415,29 +382,25 @@ public class MappingTableElementImpl extends MappingMemberElementImpl
         // handle _referencingKeys
         // call method stripSchemaName on the MappingReferenceKeyElementImpl
         // objects
-        if (_referencingKeys != null)
-        {
-            Iterator i = _referencingKeys.iterator();
+        if (_referencingKeys != null) {
+            Iterator<MappingReferenceKeyElement> i = _referencingKeys.iterator();
 
-            while (i.hasNext())
-            {
-                MappingReferenceKeyElementImpl refKey =
-                    (MappingReferenceKeyElementImpl)i.next();
-
+            while (i.hasNext()) {
+                MappingReferenceKeyElementImpl refKey = (MappingReferenceKeyElementImpl) i.next();
                 refKey.stripSchemaName();
             }
         }
 
         // handle _key
-        if (_key != null)
-        {
+        if (_key != null) {
             // Use ListIterator here, because I want to replace the value
-            // stored in the ArrayList.  The ListIterator returned by
+            // stored in the ArrayList. The ListIterator returned by
             // ArrayList.listIterator() supports the set method.
-            ListIterator i = _key.listIterator();
+            ListIterator<String> i = _key.listIterator();
 
-            while (i.hasNext())
-                i.set(NameUtil.getRelativeMemberName((String)i.next()));
+            while (i.hasNext()) {
+                i.set(NameUtil.getRelativeMemberName(i.next()));
+            }
         }
     }
 }

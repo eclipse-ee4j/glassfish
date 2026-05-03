@@ -199,7 +199,7 @@ asadmin> create-jvm-options -Djava.naming.factory.initial=org.glassfish.jndi.cos
 ----
 
 For details about `asadmin create-jvm-options`, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#create-jvm-options[{productName} Reference Manual].
 
 Or you can set this property in the code, as follows:
 
@@ -330,7 +330,7 @@ External Resources. For details, click the Help button in the
 Administration Console.
 * To create an external JNDI resource, use the
 `asadmin create-jndi-resource` command. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#create-jndi-resource[{productName} Reference Manual].
 
 [[custom-resources]]
 
@@ -348,7 +348,7 @@ Resources component, open the JNDI component, and select Custom
 Resources. For details, click the Help button in the Administration
 Console.
 * To create a custom resource, use the `asadmin create-custom-resource`
-command. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+command. For details, see the xref:reference-manual.adoc#create-custom-resource[{productName} Reference Manual].
 
 [[built-in-factories-for-custom-resources]]
 
@@ -366,7 +366,7 @@ Template `glassfish-resources.xml` files for these built-in factories
 and a `README` file are available at
 as-install``/lib/install/templates/resources/custom/``. For more
 information about the `glassfish-resources.xml` file, see the
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide].
 
 [[javabeanfactory]]

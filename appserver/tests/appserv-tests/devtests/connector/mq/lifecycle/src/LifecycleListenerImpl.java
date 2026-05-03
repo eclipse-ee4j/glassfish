@@ -50,7 +50,7 @@ public class LifecycleListenerImpl implements LifecycleListener {
     /**
      *  Receives a server lifecycle event
      *  @param event associated event
-     *  @throws <code>ServerLifecycleException</code> for exceptional condition.
+     *  @throws ServerLifecycleException for exceptional condition.
      */
     public void handleEvent(LifecycleEvent event)
                          throws ServerLifecycleException {

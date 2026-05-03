@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * MappingClassElementImpl.java
- *
- * Created on March 3, 2000, 1:11 PM
  */
 
 package com.sun.jdo.api.persistence.model.mapping.impl;
@@ -34,7 +29,6 @@ import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +36,7 @@ import java.util.List;
 import org.glassfish.persistence.common.I18NHelper;
 import org.netbeans.modules.dbschema.ColumnElement;
 import org.netbeans.modules.dbschema.DBIdentifier;
+import org.netbeans.modules.dbschema.DBMemberElement;
 import org.netbeans.modules.dbschema.ForeignKeyElement;
 import org.netbeans.modules.dbschema.SchemaElement;
 import org.netbeans.modules.dbschema.TableElement;
@@ -50,13 +45,11 @@ import org.netbeans.modules.dbschema.util.NameUtil;
 
 /**
  *
- * @author Mark Munro
- * @author Rochelle Raccah
- * @version %I%
+ * @author Mark Munro 2000
+ * @author Rochelle Raccah 2000
  */
-public class MappingClassElementImpl extends MappingElementImpl
-    implements MappingClassElement
-{
+public class MappingClassElementImpl extends MappingElementImpl implements MappingClassElement {
+
     // used in properties bitmask, jeff will check if used
     public static final int CLONE_FIELDS = 1;
     public static final int CLONE_DEEP = 2;
@@ -67,8 +60,8 @@ public class MappingClassElementImpl extends MappingElementImpl
 
     private boolean _isModified;
     private int _properties;
-    private ArrayList _tables;        // array of MappingTableElement
-    private ArrayList _fields;        // array of MappingFieldElement
+    private ArrayList<MappingTableElement> _tables;
+    private ArrayList<MappingFieldElement> _fields;
 
     /** The current version number.
      * Note: Please increment this if there are any changes in the
@@ -141,6 +134,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * the last save, NOT the version number of the memory representation.
      * @return version number
      */
+    @Override
     public int getVersionNumber () { return versionNo; }
 
     /** Set the version number of this MappingClassElement.
@@ -153,6 +147,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @see #getVersionNumber
      * @return true if it is in need of updating, false otherwise
      */
+    @Override
     public boolean hasOldVersionNumber ()
     {
         return (getVersionNumber() < CURRENT_VERSION_NO);
@@ -176,6 +171,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param o old value
      * @param n new value
      */
+    @Override
     protected final void firePropertyChange (String name, Object o, Object n)
     {
         // even though o == null and n == null will signify a change, that
@@ -185,8 +181,9 @@ public class MappingClassElementImpl extends MappingElementImpl
 
         super.firePropertyChange(name, o, n);
 
-        if (!(PROP_MODIFIED.equals(name)) && !noChange)
+        if (!(PROP_MODIFIED.equals(name)) && !noChange) {
             setModified(true);
+        }
     }
 
     /** Fires vetoable change event.  This method overrides that of
@@ -197,6 +194,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param n new value
      * @exception PropertyVetoException when the change is vetoed by a listener
      */
+    @Override
     protected final void fireVetoableChange (String name, Object o, Object n)
         throws PropertyVetoException
     {
@@ -207,8 +205,9 @@ public class MappingClassElementImpl extends MappingElementImpl
 
         super.fireVetoableChange(name, o, n);
 
-        if (!(PROP_MODIFIED.equals(name)) && !noChange)
+        if (!(PROP_MODIFIED.equals(name)) && !noChange) {
             fireVetoableChange(PROP_MODIFIED, Boolean.FALSE, Boolean.TRUE);
+        }
     }
 
     /** @return persistence class element for this mapping class element
@@ -243,6 +242,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @return <code>true</code> if there have been (property) changes to this
      * class, <code>false</code> otherwise.
      */
+    @Override
     public boolean isModified () { return _isModified; }
 
     /** Set the modified flag for this mapping class to flag.  This is usually
@@ -251,6 +251,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param flag if <code>true</code>, this class is marked as modified;
      * if <code>false</code>, it is marked as unmodified.
      */
+    @Override
     public void setModified (boolean flag)
     {
         boolean oldFlag = isModified();
@@ -273,6 +274,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * {@link #VERSION_CONSISTENCY}.
      * The default is {@link #NONE_CONSISTENCY}.
      */
+    @Override
     public int getConsistencyLevel () { return _consistencyLevel; }
 
     /** Set the consistency level of this mapping class.
@@ -285,6 +287,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * {@link #VERSION_CONSISTENCY}.
      * @exception ModelException if impossible.
      */
+    @Override
     public void setConsistencyLevel (int level)  throws ModelException
     {
         Integer old = new Integer(getConsistencyLevel());
@@ -306,6 +309,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * database used by the tables mapped to this mapping class.
      * @return the name of the database root for this mapping class
      */
+    @Override
     public String getDatabaseRoot () { return _databaseRoot; }
 
     /** Set the database root for this MappingClassElement.
@@ -314,6 +318,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param root the new database root
      * @exception ModelException if impossible
      */
+    @Override
     public void setDatabaseRoot (SchemaElement root) throws ModelException
     {
         String old = getDatabaseRoot();
@@ -335,10 +340,12 @@ public class MappingClassElementImpl extends MappingElementImpl
      * class.
      * @return the meta data tables for this mapping class
      */
-    public ArrayList getTables ()
+    @Override
+    public List<MappingTableElement> getTables ()
     {
-        if (_tables == null)
-            _tables = new ArrayList();
+        if (_tables == null) {
+            _tables = new ArrayList<>();
+        }
 
         return _tables;
     }
@@ -348,19 +355,15 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param name name of the table to find.
      * @return the meta data table whose name matches the name parameter
      */
-    public MappingTableElement getTable (String name)
-    {
-        Iterator tableIterator = getTables().iterator();
-
-        while (tableIterator.hasNext())
-        {
-            MappingTableElement table =
-                (MappingTableElement)tableIterator.next();
-
-            if (table.getName().equals(name))
+    @Override
+    public MappingTableElement getTable(String name) {
+        Iterator<MappingTableElement> tableIterator = getTables().iterator();
+        while (tableIterator.hasNext()) {
+            MappingTableElement table = tableIterator.next();
+            if (table.getName().equals(name)) {
                 return table;
+            }
         }
-
         return null;
     }
 
@@ -371,84 +374,62 @@ public class MappingClassElementImpl extends MappingElementImpl
      * table.
      * @exception ModelException if impossible
      */
-    public void addTable (TableElement table) throws ModelException
-    {
-        if (table != null)
-        {
-            ArrayList tables = getTables();
+    @Override
+    public void addTable(TableElement table) throws ModelException {
+        if (table == null) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.table.null_argument"));
+        }
+        List<MappingTableElement> tables = getTables();
 
-            // If the table list is empty, this should be the primary table
-            if (tables.isEmpty())
-                setPrimaryTable(table);
-            else
-            {
-                HashMap newSecondaryTables = new HashMap();
-                Iterator iterator = tables.iterator();
-                boolean found = false;
+        // If the table list is empty, this should be the primary table
+        if (tables.isEmpty()) {
+            setPrimaryTable(table);
+            return;
+        }
+        Iterator<MappingTableElement> iterator = tables.iterator();
+        // If this table has already been added just skip it and return
+        while (iterator.hasNext()) {
+            if (iterator.next().isEqual(table)) {
+                return;
+            }
+        }
 
-                // If this table has already been added just skip it and return
-                while (iterator.hasNext())
-                    if (((MappingTableElement)iterator.next()).isEqual(table))
-                        return;
+        HashMap<MappingTableElement, ForeignKeyElement> newSecondaryTables = new HashMap<>();
+        boolean found = false;
+        // Add the table as a secondary table as long as there are
+        // relevant fks setup. Otherwise, throw an exception
+        iterator = tables.iterator();
+        while (iterator.hasNext()) {
+            MappingTableElement mappingTable = iterator.next();
+            String absoluteTableName = NameUtil.getAbsoluteTableName(_databaseRoot, mappingTable.getTable());
+            ForeignKeyElement[] foreignKeys = TableElement.forName(absoluteTableName).getForeignKeys();
+            int i, count = ((foreignKeys != null) ? foreignKeys.length : 0);
 
-                // Add the table as a secondary table as long as there are
-                // relevant fks setup. Otherwise, throw an exception
-                iterator = tables.iterator();
-                while (iterator.hasNext())
-                {
-                    MappingTableElement mappingTable =
-                        (MappingTableElement)iterator.next();
-                    String absoluteTableName = NameUtil.getAbsoluteTableName(
-                        _databaseRoot, mappingTable.getTable());
-                    ForeignKeyElement[] foreignKeys = TableElement.forName(
-                        absoluteTableName).getForeignKeys();
-                    int i, count =
-                        ((foreignKeys != null) ? foreignKeys.length : 0);
+            for (i = 0; i < count; i++) {
+                ForeignKeyElement fk = foreignKeys[i];
 
-                    for (i = 0; i < count; i++)
-                    {
-                        ForeignKeyElement fk = foreignKeys[i];
-
-                        if (table == fk.getReferencedTable())
-                        {
-                            // store it so it can be added after we finish
-                            // iterating the array (can't now because of
-                            // concurrent modification restrictions)
-                            newSecondaryTables.put(mappingTable, fk);
-                            found = true;
-                        }
-                    }
-                }
-
-                if (found)    // add the secondary tables now
-                {
-                    iterator = newSecondaryTables.keySet().iterator();
-
-                    while (iterator.hasNext())
-                    {
-                        MappingTableElement mappingTable =
-                            (MappingTableElement)iterator.next();
-                        MappingReferenceKeyElement refKey =
-                            addSecondaryTable(mappingTable, table);
-
-                        refKey.addColumnPairs(((ForeignKeyElement)
-                            newSecondaryTables.get(mappingTable)).
-                            getColumnPairs());
-                    }
-
-                }
-                else
-                {
-                    throw new ModelException(I18NHelper.getMessage(
-                        getMessages(),
-                        "mapping.table.foreign_key_not_found", table)); // NOI18N
+                if (table == fk.getReferencedTable()) {
+                    // store it so it can be added after we finish
+                    // iterating the array (can't now because of
+                    // concurrent modification restrictions)
+                    newSecondaryTables.put(mappingTable, fk);
+                    found = true;
                 }
             }
         }
-        else
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.table.null_argument"));                    // NOI18N
+
+        if (!found) {
+            throw new ModelException(
+                I18NHelper.getMessage(getMessages(), "mapping.table.foreign_key_not_found", table));
+        }
+        // add the secondary tables now
+        iterator = newSecondaryTables.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            MappingTableElement mappingTable = iterator.next();
+            MappingReferenceKeyElement refKey = addSecondaryTable(mappingTable, table);
+
+            refKey.addColumnPairs(newSecondaryTables.get(mappingTable).getColumnPairs());
         }
     }
 
@@ -456,66 +437,53 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param table table element to be used as the primary table.
      * @exception ModelException if impossible
      */
-    public void setPrimaryTable (TableElement table) throws ModelException
-    {
-        ArrayList tables = getTables();
+    @Override
+    public void setPrimaryTable(TableElement table) throws ModelException {
+        List<MappingTableElement> tables = getTables();
 
-        if (!tables.isEmpty())
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.table.primary_table_defined", table));    // NOI18N
+        if (!tables.isEmpty()) {
+            throw new ModelException(
+                I18NHelper.getMessage(getMessages(), "mapping.table.primary_table_defined", table));
         }
-        else
-        {
-            UniqueKeyElement key = table.getPrimaryKey();
-            MappingTableElement mappingTable =
-                new MappingTableElementImpl(table, this);
-            SchemaElement schema = table.getDeclaringSchema();
-            String currentRoot = getDatabaseRoot();
+        UniqueKeyElement key = table.getPrimaryKey();
+        MappingTableElement mappingTable = new MappingTableElementImpl(table, this);
+        SchemaElement schema = table.getDeclaringSchema();
+        String currentRoot = getDatabaseRoot();
 
-            if (currentRoot == null)    // set database root
-                setDatabaseRoot(schema);
-            else if (!currentRoot.equals(schema.getName().getFullName()))
-            {
-                // if database root was set before, it must match
-                throw new ModelException(I18NHelper.getMessage(
-                    getMessages(), "mapping.table.schema_mismatch",    // NOI18N
-                    table.toString(), currentRoot));
+        if (currentRoot == null) { // set database root
+            setDatabaseRoot(schema);
+        } else if (!currentRoot.equals(schema.getName().getFullName())) {
+            // if database root was set before, it must match
+            throw new ModelException(
+                I18NHelper.getMessage(getMessages(), "mapping.table.schema_mismatch", table.toString(), currentRoot));
+        }
+
+        try {
+            fireVetoableChange(PROP_TABLES, null, null);
+            tables.add(mappingTable);
+            firePropertyChange(PROP_TABLES, null, null);
+        } catch (PropertyVetoException e) {
+            throw new ModelVetoException(e);
+        }
+
+        //    If can't find a primary key, settle for first unique key.
+        if (key == null) {
+            UniqueKeyElement[] uniqueKeys = table.getUniqueKeys();
+            if ((uniqueKeys != null) && (uniqueKeys.length > 0)) {
+                key = uniqueKeys[0];
             }
+        }
 
-            try
-            {
-                fireVetoableChange(PROP_TABLES, null, null);
-                tables.add(mappingTable);
-                firePropertyChange(PROP_TABLES, null, null);
-            }
-            catch (PropertyVetoException e)
-            {
-                throw new ModelVetoException(e);
-            }
+        if (key == null) {
+            // This is a warning -- we can still use the table but we
+            // cannot perform update operations on it. Also the user
+            // may define the key later.
+        } else {
+            ColumnElement[] columns = key.getColumns();
+            int i, count = ((columns != null) ? columns.length : 0);
 
-            //    If can't find a primary key, settle for first unique key.
-            if (key == null)
-            {
-                UniqueKeyElement[] uniqueKeys = table.getUniqueKeys();
-
-                if ((uniqueKeys != null) && (uniqueKeys.length > 0))
-                    key = uniqueKeys[0];
-            }
-
-            if (key == null)
-            {
-                //    This is a warning -- we can still use the table but we
-                //    cannot perform update operations on it.  Also the user
-                //    may define the key later.
-            }
-            else
-            {
-                ColumnElement[] columns = key.getColumns();
-                int i, count = ((columns != null) ? columns.length : 0);
-
-                for (i = 0; i < count; i++)
-                    mappingTable.addKeyColumn(columns[i]);
+            for (i = 0; i < count; i++) {
+                mappingTable.addKeyColumn(columns[i]);
             }
         }
     }
@@ -528,56 +496,41 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param table table element to be used as a secondary table.
      * @exception ModelException if impossible
      */
+    @Override
     public MappingReferenceKeyElement addSecondaryTable (MappingTableElement
         parentTable, TableElement table) throws ModelException
     {
-        ArrayList tables = getTables();
+        List<MappingTableElement> tables = getTables();
 
-        if ((parentTable == null) || (table == null))
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.element.null_argument"));                // NOI18N
-        }
-        else if (!tables.contains(parentTable))
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.table.parent_table_not_found",         // NOI18N
+        if ((parentTable == null) || (table == null)) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.element.null_argument"));
+        } else if (!tables.contains(parentTable)) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.table.parent_table_not_found",
                 parentTable.getTable()));
-        }
-        else
-        {
+        } else {
             // Check the parent table's reference keys to make sure that this
             // secondary table has not already been added to this parent table.
             // If it has, throw an exception
-            Iterator iterator = parentTable.getReferencingKeys().iterator();
-            MappingTableElement mappingTable =
-                new MappingTableElementImpl(table, this);
-            MappingReferenceKeyElement key =
-                new MappingReferenceKeyElementImpl(mappingTable);
+            Iterator<MappingReferenceKeyElement> iterator = parentTable.getReferencingKeys().iterator();
+            MappingTableElement mappingTable = new MappingTableElementImpl(table, this);
+            MappingReferenceKeyElement key = new MappingReferenceKeyElementImpl(mappingTable);
 
-            while (iterator.hasNext())
-            {
-                MappingTableElement compareTable =
-                    ((MappingReferenceKeyElement)iterator.next()).getTable();
+            while (iterator.hasNext()) {
+                MappingTableElement compareTable = iterator.next().getTable();
 
-                if (compareTable.isEqual(table))
-                {
-                    throw new ModelException(I18NHelper.getMessage(
-                        getMessages(),
-                        "mapping.table.secondary_table_defined",     // NOI18N
-                        new Object[]{table, parentTable.getTable()}));
+                if (compareTable.isEqual(table)) {
+                    throw new ModelException(
+                        I18NHelper.getMessage(getMessages(), "mapping.table.secondary_table_defined",
+                            new Object[] {table, parentTable.getTable()}));
                 }
             }
 
-            try
-            {
+            try {
                 fireVetoableChange(PROP_TABLES, null, null);
                 parentTable.addReferencingKey(key);
                 tables.add(mappingTable);
                 firePropertyChange(PROP_TABLES, null, null);
-            }
-            catch (PropertyVetoException e)
-            {
+            } catch (PropertyVetoException e) {
                 throw new ModelVetoException(e);
             }
 
@@ -591,79 +544,50 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param table mapping table element to be removed from this mapping class.
      * @exception ModelException if impossible
      */
-    public void removeTable (MappingTableElement table) throws ModelException
-    {
-        if (table != null)
-        {
-            Collection tables = getTables();
-            Iterator iterator = null;
-            boolean found = false;
+    @Override
+    public void removeTable(MappingTableElement table) throws ModelException {
+        if (table == null) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(), "mapping.element.null_argument"));
+        }
+        List<MappingTableElement> tables = getTables();
+        boolean found = false;
 
-            try
-            {
-                fireVetoableChange(PROP_TABLES, null, null);
-                found = tables.remove(table);
-                firePropertyChange(PROP_TABLES, null, null);
-            }
-            catch (PropertyVetoException e)
-            {
-                throw new ModelVetoException(e);
-            }
+        try {
+            fireVetoableChange(PROP_TABLES, null, null);
+            found = tables.remove(table);
+            firePropertyChange(PROP_TABLES, null, null);
+        } catch (PropertyVetoException e) {
+            throw new ModelVetoException(e);
+        }
 
-            // remove all references to this table
-            iterator = tables.iterator();
-            while (iterator.hasNext())
-            {
-                MappingTableElement nextTable =
-                    (MappingTableElement)iterator.next();
+        // remove all references to this table
+        for (MappingTableElement element : tables) {
+            element.removeReference(table);
+        }
 
-                nextTable.removeReference(table);
-            }
-
-            if (found)    // remove any fields mapped to that table
-            {
-                ArrayList fieldsToRemove = new ArrayList();
-
-                iterator = getFields().iterator();
-                while (iterator.hasNext())
-                {
-                    MappingFieldElementImpl mappingField =
-                        (MappingFieldElementImpl)iterator.next();
-
-                    if (mappingField.isMappedToTable(table))
-                        fieldsToRemove.add(mappingField);
-                }
-
-                iterator = fieldsToRemove.iterator();
-                while (iterator.hasNext())
-                {
-                    MappingFieldElement mappingField =
-                        (MappingFieldElement)iterator.next();
-                    boolean versionField = mappingField.isVersion();
-
-                    removeField(mappingField);
-
-                    // if it is a version field, add back an unmapped
-                    // field which retains the version flag setting
-                    if (versionField)
-                    {
-                        mappingField = new MappingFieldElementImpl(
-                            mappingField.getName(), this);
-                        mappingField.setVersion(true);
-                        addField(mappingField);
-                    }
-                }
-            }
-            else
-            {
-                throw new ModelException(I18NHelper.getMessage(getMessages(),
-                    "mapping.element.element_not_removed", table));    // NOI18N
+        // remove any fields mapped to that table
+        if (!found) {
+            throw new ModelException(I18NHelper.getMessage(getMessages(),
+                "mapping.element.element_not_removed", table));
+        }
+        List<MappingFieldElement> fieldsToRemove = new ArrayList<>();
+        for (MappingFieldElement mappingField : getFields()) {
+            if (mappingField.isMappedToTable(table)) {
+                fieldsToRemove.add(mappingField);
             }
         }
-        else
-        {
-            throw new ModelException(I18NHelper.getMessage(getMessages(),
-                "mapping.element.null_argument"));                // NOI18N
+
+        for (MappingFieldElement mappingField : fieldsToRemove) {
+            boolean versionField = mappingField.isVersion();
+            removeField(mappingField);
+
+            // if it is a version field, add back an unmapped
+            // field which retains the version flag setting
+            if (versionField) {
+                mappingField = new MappingFieldElementImpl(mappingField.getName(), this);
+                mappingField.setVersion(true);
+                addField(mappingField);
+            }
         }
     }
 
@@ -671,10 +595,12 @@ public class MappingClassElementImpl extends MappingElementImpl
      * class.  This list includes both local and relationship fields.
      * @return the mapping fields in this mapping class
      */
-    public ArrayList getFields ()
+    @Override
+    public List<MappingFieldElement> getFields ()
     {
-        if (_fields == null)
-            _fields = new ArrayList();
+        if (_fields == null) {
+            _fields = new ArrayList<>();
+        }
 
         return _fields;
     }
@@ -684,17 +610,16 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param name name of the field to find.
      * @return the mapping field whose name matches the name parameter
      */
-    public MappingFieldElement getField (String name)
-    {
-        Iterator fieldIterator = getFields().iterator();
+    @Override
+    public MappingFieldElement getField(String name) {
+        Iterator<MappingFieldElement> fieldIterator = getFields().iterator();
 
-        while (fieldIterator.hasNext())
-        {
-            MappingFieldElement field =
-                (MappingFieldElement)fieldIterator.next();
+        while (fieldIterator.hasNext()) {
+            MappingFieldElement field = fieldIterator.next();
 
-            if (name.equals(field.getName()))
+            if (name.equals(field.getName())) {
                 return field;
+            }
         }
 
         return null;
@@ -704,20 +629,16 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param field field element to be added
      * @exception ModelException if impossible
      */
-    public void addField (MappingFieldElement field) throws ModelException
-    {
-        ArrayList fields = getFields();
+    @Override
+    public void addField(MappingFieldElement field) throws ModelException {
+        List<MappingFieldElement> fields = getFields();
 
-        if (!fields.contains(field))
-        {
-            try
-            {
+        if (!fields.contains(field)) {
+            try {
                 fireVetoableChange(PROP_FIELDS, null, null);
                 fields.add(field);
                 firePropertyChange(PROP_FIELDS, null, null);
-            }
-            catch (PropertyVetoException e)
-            {
+            } catch (PropertyVetoException e) {
                 throw new ModelVetoException(e);
             }
         }
@@ -727,22 +648,18 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @param field field element to be removed
      * @exception ModelException if impossible
      */
-    public void removeField (MappingFieldElement field) throws ModelException
-    {
-        try
-        {
+    @Override
+    public void removeField(MappingFieldElement field) throws ModelException {
+        try {
             fireVetoableChange(PROP_FIELDS, null, null);
 
-            if (!getFields().remove(field))
-            {
-                throw new ModelException(I18NHelper.getMessage(getMessages(),
-                    "mapping.element.element_not_removed", field));    // NOI18N
+            if (!getFields().remove(field)) {
+                throw new ModelException(
+                    I18NHelper.getMessage(getMessages(), "mapping.element.element_not_removed", field));
             }
 
             firePropertyChange(PROP_FIELDS, null, null);
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
@@ -752,21 +669,19 @@ public class MappingClassElementImpl extends MappingElementImpl
      * level is {@link #VERSION_CONSISTENCY}.
      * @return the version fields in this mapping class
      */
-    public List getVersionFields ()
-    {
-        List versionFields = new ArrayList();
+    @Override
+    public List<MappingFieldElement> getVersionFields() {
+        List<MappingFieldElement> versionFields = new ArrayList<>();
 
-        if (VERSION_CONSISTENCY == getConsistencyLevel())
-        {
-            Iterator iterator = getFields().iterator();
+        if (VERSION_CONSISTENCY == getConsistencyLevel()) {
+            Iterator<MappingFieldElement> iterator = getFields().iterator();
 
-            while (iterator.hasNext())
-            {
-                MappingFieldElement fieldCandidate =
-                    (MappingFieldElement)iterator.next();
+            while (iterator.hasNext()) {
+                MappingFieldElement fieldCandidate = iterator.next();
 
-                if (fieldCandidate.isVersion())
+                if (fieldCandidate.isVersion()) {
                     versionFields.add(fieldCandidate);
+                }
             }
         }
 
@@ -778,6 +693,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * <code>false</code> if access to a non-fetched field will result in an
      * exception.  The default is <code>true</code>.
      */
+    @Override
     public boolean isNavigable () { return ((_properties & NAVIGABLE) > 0); }
 
     /** Set the navigable flag for this mapping class to flag.
@@ -786,20 +702,15 @@ public class MappingClassElementImpl extends MappingElementImpl
      * exception.
      * @exception ModelException if impossible
      */
-    public void setNavigable (boolean flag) throws ModelException
-    {
+    @Override
+    public void setNavigable(boolean flag) throws ModelException {
         Boolean old = JavaTypeHelper.valueOf(isNavigable());
         Boolean newFlag = JavaTypeHelper.valueOf(flag);
-
-        try
-        {
+        try {
             fireVetoableChange(PROP_NAVIGABLE, old, newFlag);
-            _properties = (flag) ?
-                (_properties | NAVIGABLE) : (_properties & ~NAVIGABLE);
+            _properties = (flag) ? (_properties | NAVIGABLE) : (_properties & ~NAVIGABLE);
             firePropertyChange(PROP_NAVIGABLE, old, newFlag);
-        }
-        catch (PropertyVetoException e)
-        {
+        } catch (PropertyVetoException e) {
             throw new ModelVetoException(e);
         }
     }
@@ -814,22 +725,15 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @see org.netbeans.modules.dbschema.TableElement#forName
      * @see org.netbeans.modules.dbschema.TableElement#getMember
      */
-    protected static ArrayList toColumnObjects (String schemaName,
-        ArrayList columnNames)
-    {
-        Iterator iterator = columnNames.iterator();
-        ArrayList objects = new ArrayList();
+    protected static <T extends DBMemberElement> List<T> toColumnObjects(String schemaName, List<String> columnNames) {
+        List<T> objects = new ArrayList<>();
+        Iterator<String> iterator = columnNames.iterator();
+        while (iterator.hasNext()) {
+            String columnName = iterator.next();
+            String absoluteColumnName = NameUtil.getAbsoluteMemberName(schemaName, columnName);
+            final TableElement table = TableElement.forName(NameUtil.getTableName(absoluteColumnName));
 
-        while (iterator.hasNext())
-        {
-            String columnName = (String)iterator.next();
-            String absoluteColumnName =
-                NameUtil.getAbsoluteMemberName(schemaName, columnName);
-            final TableElement table =
-                TableElement.forName(NameUtil.getTableName(absoluteColumnName));
-
-            objects.add(table.getMember(
-                DBIdentifier.create(absoluteColumnName)));
+            objects.add((T) table.getMember(DBIdentifier.create(absoluteColumnName)));
         }
 
         return objects;
@@ -846,8 +750,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * @see PersistenceClassElement#APPLICATION_IDENTITY
      *
      */
-    public String getKeyClass ()
-    {
+    public String getKeyClass() {
         return getPersistenceElement().getKeyClass();
     }
 
@@ -868,9 +771,13 @@ public class MappingClassElementImpl extends MappingElementImpl
      * and archiving.
      * @param fields the list of mapping fields in this mapping class
      */
-    public void setFields (ArrayList fields) { _fields = fields; }
+    public void setFields(ArrayList<MappingFieldElement> fields) {
+        _fields = fields;
+    }
 
-    public int getProperties () { return _properties; }
+    public int getProperties() {
+        return _properties;
+    }
 
     //======== to be used for reference in best guess implementation ==========
     // configure methods
@@ -1048,6 +955,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * (version number checking) and conversion after unarchiving.
      * @exception ModelException if impossible
      */
+    @Override
     public void postUnarchive () throws ModelException
     {
         // check version number
@@ -1079,6 +987,7 @@ public class MappingClassElementImpl extends MappingElementImpl
      * includes a throws clause (ModelException), but the actual implementation
      * does not throw an exception.
      */
+    @Override
     public void preArchive ()
     {
         // update version number
@@ -1102,7 +1011,7 @@ public class MappingClassElementImpl extends MappingElementImpl
         if (_tables != null && !_tables.isEmpty())
         {
             schemaName = NameUtil.getSchemaName(
-                ((MappingTableElement)_tables.get(0)).getTable());
+                _tables.get(0).getTable());
         }
 
         // set the schemaName as database root
@@ -1113,17 +1022,19 @@ public class MappingClassElementImpl extends MappingElementImpl
         // handle _tables
         if (_tables != null)
         {
-            Iterator i = _tables.iterator();
-            while (i.hasNext())
-                ((MappingTableElementImpl)i.next()).stripSchemaName();
+            Iterator<MappingTableElement> i = _tables.iterator();
+            while (i.hasNext()) {
+                i.next().stripSchemaName();
+            }
         }
 
         // handle _fields
         if (_fields != null)
         {
-            Iterator i = _fields.iterator();
-            while (i.hasNext())
-                ((MappingFieldElementImpl)i.next()).stripSchemaName();
+            Iterator<MappingFieldElement> i = _fields.iterator();
+            while (i.hasNext()) {
+                i.next().stripSchemaName();
+            }
         }
     }
 }

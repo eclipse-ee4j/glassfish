@@ -105,7 +105,6 @@ public final class ClassGenerator {
      */
     public static Class<?> defineClass(final Class<?> anchorClass, final String className, final byte[] classData) {
         LOG.log(CONFIG, "Defining class: {0} with anchorClass: {1}", new Object[] {className, anchorClass});
-
         try {
             return MethodHandles.privateLookupIn(anchorClass, MethodHandles.lookup())
                                 .defineClass(classData);

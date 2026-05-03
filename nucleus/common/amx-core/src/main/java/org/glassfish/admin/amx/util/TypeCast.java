@@ -86,7 +86,7 @@ public final class TypeCast
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> Collection<T> asCollection(final Object o)
     {
-        return (Collection<T>) Collection.class.cast(o);
+        return Collection.class.cast(o);
     }
 
     /**
@@ -106,20 +106,19 @@ public final class TypeCast
     The caller should take appropriate care that the type of keys/values
     is correct, and may want to call {@link #checkMap} instead if there is
     any doubt.
-    @return Map<K,V>
-    @return Map<K extends Serializable,V extends Serializable>
+    @return retyped original map
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <K, V> Map<K, V> asMap(final Object m)
     {
-        return (Map<K, V>) Map.class.cast(m);
+        return Map.class.cast(m);
     }
 
     /**
     The caller should take appropriate care that the type of keys/values
     is correct, and may want to call {@link #checkSerializable} instead if there is
     any doubt.
-    @return Map<K extends Serializable,V extends Serializable>
+    @return retyped original map
      */
     public static <K extends Serializable, V extends Serializable> Map<K, V> asSerializableMap(final Object m)
     {
@@ -133,12 +132,12 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call {@link #checkMap} instead if there is
     any doubt.
-    @return Hashtable<K,V>
+    @return retyped original {@link Hashtable}
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <K, V> Hashtable<K, V> asHashtable(final Object o)
     {
-        return (Hashtable<K, V>) Hashtable.class.cast(o);
+        return Hashtable.class.cast(o);
     }
 
     /**
@@ -150,7 +149,7 @@ public final class TypeCast
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> List<T> asList(final Object list)
     {
-        return (List<T>) List.class.cast(list);
+        return List.class.cast(list);
     }
 
     /**
@@ -175,7 +174,7 @@ public final class TypeCast
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> Set<T> asSet(final Object s)
     {
-        return (Set<T>) Set.class.cast(s);
+        return Set.class.cast(s);
     }
 
     /**
@@ -210,7 +209,7 @@ public final class TypeCast
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> Class<T> asClass(final Class<?> c)
     {
-        return (Class<T>) Class.class.cast(c);
+        return Class.class.cast(c);
     }
 
     /**
@@ -460,7 +459,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked Map<String,String>, first verifying that all keys
+    Create a checked {@code Map<String,String>}, first verifying that all keys
     and values are in fact String.
     @param m the Map
     @throws ClassCastException
@@ -507,7 +506,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked Map<String,String>, first verifying that all keys
+    Create a checked {@code Map<String,String>}, first verifying that all keys
     and values are in fact String.
     @param m the Map
     @throws ClassCastException
@@ -519,19 +518,3 @@ public final class TypeCast
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

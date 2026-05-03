@@ -66,7 +66,7 @@ public abstract class StaxParser {
      * Exception if the end of the document was reached
      * @return
      * @throws XMLStreamException
-     * @throws xml.StaxParser.EndDocumentException if the end of the document is here
+     * @throws EndDocumentException if the end of the document is here
      */
      protected int next() throws XMLStreamException, EndDocumentException {
         int event = parser.next();
@@ -83,7 +83,7 @@ public abstract class StaxParser {
      * sub-element with the same name as an outer element
      *
      * @param name the Element to skip to
-     * @throws javax.xml.stream.XMLStreamException
+     * @throws XMLStreamException
      */
     protected void skipTo(String name) throws XMLStreamException, EndDocumentException {
         while (true) {
@@ -101,7 +101,7 @@ public abstract class StaxParser {
     /**
      * The cursor must be pointing at a START_ELEMENT.  Returns all attributes
      * in a Map
-     * @return Map<String, String> of all attributes
+     * @return {@code Map<String, String>} of all attributes
      * @throws IllegalStateException if the cursor is not pointing at a START_ELEMENT
      */
 

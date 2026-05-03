@@ -65,9 +65,7 @@ public class LogControl {
      * @param readOnly      Read only log indicator.
      * @param logDirectory  Directory for log files.
      *
-     * @return
      *
-     * @see
      */
     synchronized void initLog( boolean coldStart,
                                boolean readOnly,
@@ -118,7 +116,6 @@ public class LogControl {
      *
      * @exception LogException  The open failed.
      *
-     * @see
      */
     synchronized LogHandle openFile( String          logFileName,
                                      LogUpcallTarget upcallTarget,
@@ -655,11 +652,9 @@ public class LogControl {
      *
      * @param logHandle  The log to clean up.
      *
-     * @return
      *
      * @exception LogException  The operation failed.
      *
-     * @see
      */
     synchronized void cleanUp( LogHandle logHandle )
         throws LogException {
@@ -704,7 +699,6 @@ public class LogControl {
      *
      * @return  Indicates whether the file exists.
      *
-     * @see
      */
 
     static boolean checkFileExists( String logId,
@@ -724,9 +718,7 @@ public class LogControl {
      *
      * @param logHandle
      *
-     * @return
      *
-     * @see
      */
     synchronized void removeFile( LogHandle logHandle ) {
 
@@ -742,11 +734,8 @@ public class LogControl {
 
     /**Dumps the state of the object.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     //----------------------------------------------------------------------------
     void dump() {
@@ -759,9 +748,7 @@ public class LogControl {
      *
      * @param logDir
      *
-     * @return
      *
-     * @see
      */
     static void clearDirectory( String logDir ) {
         // Find each control file in turn and then delete all files that
@@ -800,7 +787,6 @@ public class LogControl {
      *
      * @return  A File object representing the extent file.
      *
-     * @see
      */
     File extentFile(String logId, int extent) {
 
@@ -828,7 +814,6 @@ public class LogControl {
      *
      * @return  A File object representing the control file.
      *
-     * @see
      */
     final static File controlFile( String logId, String logDir ) {
         File result = new File(directory(logId,logDir),CONTROL_NAME);
@@ -841,7 +826,6 @@ public class LogControl {
      *
      * @return  A File object representing the cushion file.
      *
-     * @see
      */
     final File cushionFile( String logId ) {
 
@@ -857,7 +841,6 @@ public class LogControl {
      *
      * @return  A File object representing the directory.
      *
-     * @see
      */
     final static File directory( String logId, String logDir ) {
 

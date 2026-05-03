@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ClassDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.modules.dbschema.ColumnElement;
 
@@ -54,6 +55,7 @@ public abstract class CorrelatedSelectPlan extends SelectQueryPlan {
      * <li>A join constraint if the parent field uses join table</li>
      * </ul>
      */
+    @Override
     protected void processConstraints() {
 
         // Process the constraint on the stack.`
@@ -95,9 +97,8 @@ public abstract class CorrelatedSelectPlan extends SelectQueryPlan {
      * @param columnList List of columns.
      * @param config Class configuration corresponding to columns.
      */
-    protected void addQueryTables(ArrayList columnList, ClassDesc config) {
-        for (int i = 0; i < columnList.size(); i++) {
-            ColumnElement col = (ColumnElement) columnList.get(i);
+    protected void addQueryTables(List<ColumnElement> columnList, ClassDesc config) {
+        for (ColumnElement col : columnList) {
             addQueryTable(col.getDeclaringTable(), config);
         }
     }

@@ -68,7 +68,6 @@ import org.omg.CosTransactions.Unavailable;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -89,11 +88,8 @@ implements org.omg.CosTransactions.Current {
 
     /**Default CurrentImpl constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     CurrentImpl() {
 
@@ -112,9 +108,7 @@ implements org.omg.CosTransactions.Current {
      * Control that represents the parent transaction is stacked behind the new one,
      * which becomes the current one.
      *
-     * @param
      *
-     * @return
      *
      * @exception SubtransactionsUnavailable  A subtransaction cannot be begun,
      *   either because the Transaction Service does not support nested transactions
@@ -123,7 +117,6 @@ implements org.omg.CosTransactions.Current {
      *   current thread of control has pending non-transactional work.
      * @exception SystemException  The operation failed.
      *
-     * @see
      */
     @Override
     public void begin()
@@ -293,9 +286,7 @@ implements org.omg.CosTransactions.Current {
      * Control that represents the parent transaction is stacked behind the new one,
      * which becomes the current one.
      *
-     * @param
      *
-     * @return
      *
      * @exception SubtransactionsUnavailable  A subtransaction cannot be begun,
      *   either because the Transaction Service does not support nested transactions
@@ -304,7 +295,6 @@ implements org.omg.CosTransactions.Current {
      *   current thread of control has pending non-transactional work.
      * @exception SystemException  The operation failed.
      *
-     * @see
      */
     public void begin(int time_out)
         throws INVALID_TRANSACTION, SystemException, SubtransactionsUnavailable {
@@ -460,7 +450,6 @@ implements org.omg.CosTransactions.Current {
      * @param reportHeuristics  Indicates that heuristic exceptions should be
      *   passed back to the caller.
      *
-     * @return
      *
      * @exception NoTransaction  There is no current transaction to commit.
      * @exception INVALID_TRANSACTION  The current transaction has outstanding
@@ -475,7 +464,6 @@ implements org.omg.CosTransactions.Current {
      *   in the transaction.
      * @exception SystemException  The operation failed.
      *
-     * @see
      */
     @Override
     public void commit( boolean reportHeuristics )
@@ -609,9 +597,7 @@ implements org.omg.CosTransactions.Current {
      * <p>
      * This operation can only be called if there is a Terminator object available.
      *
-     * @param
      *
-     * @return
      *
      * @exception NoTransaction  There is no current transaction to rollback.
      * @exception INVALID_TRANSACTION  The current transaction has outstanding
@@ -622,7 +608,6 @@ implements org.omg.CosTransactions.Current {
      *   back.
      * @exception SystemException  The operation failed.
      *
-     * @see
      */
     @Override
     public void rollback()
@@ -755,14 +740,11 @@ implements org.omg.CosTransactions.Current {
     /**Marks the current transaction such that is cannot be committed and only
      * rolled back.
      *
-     * @param
      *
-     * @return
      *
      * @exception NoTransaction  There is no current transaction to mark rollback-
      *   only.
      *
-     * @see
      */
     @Override
     public void rollback_only()
@@ -785,12 +767,10 @@ implements org.omg.CosTransactions.Current {
 
     /**Returns the status of the current transaction.
      *
-     * @param
      *
      * @return  The current status of the transaction.  If there is no
      *   current transaction, the value StatusNoTransaction is returned.
      *
-     * @see
      */
     @Override
     public Status get_status() {
@@ -816,12 +796,10 @@ implements org.omg.CosTransactions.Current {
 
     /**Returns a printable string representing the current transaction.
      *
-     * @param
      *
      * @return  The transaction name.  If there is no current transaction,
      *   null is returned.
      *
-     * @see
      */
     @Override
     public String get_transaction_name() {
@@ -849,9 +827,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @param timeout  The timeout value in seconds.
      *
-     * @return
      *
-     * @see
      */
     @Override
     public void set_timeout( int timeout ) {
@@ -870,7 +846,6 @@ implements org.omg.CosTransactions.Current {
 
     /**Returns the current ControlImpl object.
      *
-     * @param
      *
      * @return  The Control object for the current transaction, or null
      *   if there is no current transaction.
@@ -878,7 +853,6 @@ implements org.omg.CosTransactions.Current {
      * @exception TRANSACTION_ROLLEDBACK  The current transaction has been rolled
      *   back.
      *
-     * @see
      */
     @Override
     public Control get_control()
@@ -905,12 +879,10 @@ implements org.omg.CosTransactions.Current {
 
     /**Disassociates the current ControlImpl from the calling thread.
      *
-     * @param
      *
      * @return  The Control object for the suspended transaction.  If
      *   there was no transaction, this will be null.
      *
-     * @see
      */
     @Override
     public Control suspend() {
@@ -940,7 +912,6 @@ implements org.omg.CosTransactions.Current {
      *
      * @param control  The Control object to be made current.
      *
-     * @return
      *
      * @exception InvalidControl  The Control object passed as a parameter is
      *   not valid.  This may be because the transaction it represents has
@@ -948,7 +919,6 @@ implements org.omg.CosTransactions.Current {
      * @exception INVALID_TRANSACTION  The transaction could not be begun as the
      *   current thread of control has pending non-transactional work.
      *
-     * @see
      */
     @Override
     public void resume( Control control )
@@ -1017,9 +987,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @param immediate  Indicates whether to ignore running transactions.
      *
-     * @return
      *
-     * @see
      */
 
     synchronized void shutdown( boolean immediate ) {
@@ -1032,11 +1000,8 @@ implements org.omg.CosTransactions.Current {
 
     /**Prevents any further transactional activity in the process.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     static void deactivate() {
         active = false;

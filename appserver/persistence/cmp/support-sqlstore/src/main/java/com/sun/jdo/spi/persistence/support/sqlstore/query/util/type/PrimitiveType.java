@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,20 +15,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * PrimitiveType.java
- *
- * Created on March 8, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
 /**
  * Super class for boolean type, char type,
  * and all numeric types.
  *
- * @author  Michael Bouschen
- * @version 0.1
+ * @author  Michael Bouschen 2000
  */
 public class PrimitiveType
   extends Type
@@ -40,7 +34,7 @@ public class PrimitiveType
     /**
      *
      */
-    public PrimitiveType(String name, Class clazz, int enumType)
+    public PrimitiveType(String name, Class<?> clazz, int enumType)
     {
         super(name, clazz, enumType);
     }
@@ -48,12 +42,14 @@ public class PrimitiveType
     /**
      *
      */
+    @Override
     public boolean isCompatibleWith(Type type)
     {
-        if (type instanceof PrimitiveType)
+        if (type instanceof PrimitiveType) {
             return ((PrimitiveType)type).clazz.isAssignableFrom(clazz);
-        else
+        } else {
             return false;
+        }
     }
 
     /**

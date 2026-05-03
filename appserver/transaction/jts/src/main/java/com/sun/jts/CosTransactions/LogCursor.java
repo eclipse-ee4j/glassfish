@@ -39,7 +39,6 @@ import com.sun.enterprise.util.i18n.StringManager;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -74,9 +73,7 @@ class LogCursor {
      * @param startLSN  The LSN for the start of the browse.
      * @param endLSN    The LSN for the end of the browse.
      *
-     * @return
      *
-     * @see
      */
     LogCursor( LogControl control,
                LogHandle  handle,
@@ -120,7 +117,6 @@ class LogCursor {
      *
      * @exception LogException  The operation failed.
      *
-     * @see
      */
     synchronized byte[] readCursor( int[/*1*/] type,
                                     LogLSN     LSNread )

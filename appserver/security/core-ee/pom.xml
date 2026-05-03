@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -217,30 +218,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-installed</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>solarisrealm</groupId>
-                                    <artifactId>libsolx86auth</artifactId>
-                                    <version>1.0</version>
-                                    <type>so</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <stripVersion>true</stripVersion>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

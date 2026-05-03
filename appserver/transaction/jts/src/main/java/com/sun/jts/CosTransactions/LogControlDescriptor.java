@@ -58,11 +58,8 @@ class LogControlDescriptor implements Serializable {
 
     /**Default LogControlDescriptor constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     LogControlDescriptor() {
         headLSN = new LogLSN();
@@ -75,9 +72,7 @@ class LogControlDescriptor implements Serializable {
      * @param bytes The array of bytes from which the object is to be constructed.
      * @param index The index in the array where copy is to start.
      *
-     * @return
      *
-     * @see
      */
     LogControlDescriptor( byte[] bytes,
                           int  index ) {
@@ -93,7 +88,6 @@ class LogControlDescriptor implements Serializable {
      *
      * @return  Number of bytes copied.
      *
-     * @see
      */
     final int toBytes( byte[] bytes,
                        int  index ) {
@@ -106,12 +100,10 @@ class LogControlDescriptor implements Serializable {
 
     /**This method is called to direct the object to format its state into a String.
      *
-     * @param
      *
      * @return  The formatted representation of the object.
-     *
-     * @see
      */
+    @Override
     public final String toString() {
         return "LCD(head="/*#Frozen*/+headLSN+",tail="/*#Frozen*/+tailLSN+",next="/*#Frozen*/+nextLSN+")"/*#Frozen*/;
     }

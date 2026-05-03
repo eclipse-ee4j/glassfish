@@ -41,7 +41,7 @@ public class ClassLoadingUtility {
      * @param the class name
      * @return the loaded class
      * @throws if the class is not found.
-     * @see getClassLoader()
+     * @see #getClassLoader()
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
         try{

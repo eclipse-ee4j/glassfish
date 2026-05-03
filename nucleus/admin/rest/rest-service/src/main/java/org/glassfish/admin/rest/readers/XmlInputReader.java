@@ -123,11 +123,13 @@ public class XmlInputReader extends InputReader {
         return e != null ? e : a + s + ";";
     }
 
+
     /**
-     * Returns the next XML meta token. This is used for skipping over <!...> and <?...?> structures.
+     * Returns the next XML meta token. This is used for skipping over {@code <!...>} and
+     * {@code <?...?>} structures.
      *
-     * @return Syntax characters (<code>< > / = ! ?</code>) are returned as Character, and strings and names are returned as
-     * Boolean. We don't care what the values actually are.
+     * @return Syntax characters (<code>< > / = ! ?</code>) are returned as Character, and strings
+     *         and names are returned as Boolean. We don't care what the values actually are.
      * @throws InputException If a string is not properly closed or if the XML is badly structured.
      */
     public Object nextMeta() throws InputException {

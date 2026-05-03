@@ -57,15 +57,15 @@ import jakarta.ejb.EntityContext;
      * should not be called and throws JDOFatalInternalException.
      * The info argument can be an array of Objects if necessary.
      *
-     * @see getEJBObject(Object, Object)
-     * @see getEJBLocalObject(Object, Object)
-     * @see getEJBLocalObject(Object, Object, EJBContext)
-     * @see removeByEJBLocalObject(EJBLocalObject, Object)
-     * @see removeByPK(Object, Object)
      * @param info Object with the request information that is application server
      * specific.
      * @throws JDOFatalInternalException.
      * @return a Container instance as an Object.
+     * @see #getEJBObject(Object, Object)
+     * @see #getEJBLocalObject(Object, Object)
+     * @see #getEJBLocalObject(Object, Object, EJBContext)
+     * @see #removeByEJBLocalObject(EJBLocalObject, Object)
+     * @see #removeByPK(Object, Object)
      */
     Object getContainer(Object info);
 
@@ -73,7 +73,7 @@ import jakarta.ejb.EntityContext;
      * primary key instance and Container instance. In a non-managed environment
      * is not called.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @return a corresponding EJBObject instance (as an Object) to be used by
@@ -84,7 +84,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP-supported environment to get an EJBLocalObject reference for this
      * primary key instance and Container instance. In a non-managed environment
      * is not called.
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @return a corresponding EJBLocalObject (as an Object) instance to be used
@@ -97,7 +97,7 @@ import jakarta.ejb.EntityContext;
      * Allows the container to check if this method is called during ejbRemove
      * that is part of a cascade-delete remove.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @param context an EJBContext of the calling bean.
@@ -110,7 +110,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP-supported environment to remove a bean for a given
      * EJBLocalObject and Container instance.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param ejb the EJBLocalObject for the bean to be removed.
      * @param containerHelper a Container instance for the request.
      */
@@ -119,7 +119,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP-supported environment to remove a bean for a given primary key
      * and Container instance.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key for the bean to be removed.
      * @param container a Container instance for the request.
      */
@@ -128,7 +128,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP-supported environment to verify that the specified object
      * is of a valid local interface type.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param o the instance to validate.
      * @param container a Container instance for the request.
      */
@@ -137,7 +137,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP-supported environment to verify that the specified object
      * is of a valid remote interface type.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param o the instance to validate.
      * @param container a Container instance for the request.
      */
@@ -156,7 +156,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP supported environment. Notifies the container that
      * ejbSelect had been called.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request.
      */
     void preSelect(Object container);
@@ -164,7 +164,7 @@ import jakarta.ejb.EntityContext;
     /** Called in a CMP environment to lookup PersistenceManagerFactory
      * referenced by this Container instance as the CMP resource.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request.
      */
     PersistenceManagerFactory getPersistenceManagerFactory(Object container);
@@ -172,7 +172,7 @@ import jakarta.ejb.EntityContext;
     /**
      * Called in CMP environment to get NumericConverter policy referenced
      * by this Container instance.
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request
      * @return a valid NumericConverter policy type
      */

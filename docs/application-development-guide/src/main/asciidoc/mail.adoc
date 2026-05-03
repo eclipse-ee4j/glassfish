@@ -67,7 +67,7 @@ You can create a Jakarta Mail session in the following ways:
 Jakarta Mail Sessions. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin create-mail-resource` command. For details, see
-the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#create-mail-resource[{productName} Reference Manual].
 
 [[jakarta-mail-session-properties]]
 

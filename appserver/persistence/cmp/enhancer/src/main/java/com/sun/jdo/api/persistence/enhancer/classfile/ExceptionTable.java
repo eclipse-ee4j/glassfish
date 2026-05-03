@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,7 +30,7 @@ import java.util.Vector;
  */
 public class ExceptionTable {
     /* A variable length list of ExceptionRange objects */
-    private Vector theVector = new Vector();
+    private Vector<ExceptionRange> theVector = new Vector<>();
 
     /* public accessors */
 
@@ -37,7 +38,7 @@ public class ExceptionTable {
      * Return an enumeration of the exception handlers
      * Each element in the enumeration is an ExceptionRange
      */
-    public Enumeration handlers() {
+    public Enumeration<ExceptionRange> handlers() {
         return theVector.elements();
     }
 
@@ -64,14 +65,16 @@ public class ExceptionTable {
 
     void write(DataOutputStream out) throws IOException {
         out.writeShort(theVector.size());
-        for (int i=0; i<theVector.size(); i++)
-            ((ExceptionRange) theVector.elementAt(i)).write(out);
+        for (int i=0; i<theVector.size(); i++) {
+            theVector.elementAt(i).write(out);
+        }
     }
 
     void print(PrintStream out, int indent) {
         ClassPrint.spaces(out, indent);
         out.println("Exception Table: ");//NOI18N
-        for (int i=0; i<theVector.size(); i++)
-            ((ExceptionRange) theVector.elementAt(i)).print(out, indent+2);
+        for (int i=0; i<theVector.size(); i++) {
+            theVector.elementAt(i).print(out, indent+2);
+        }
     }
 }

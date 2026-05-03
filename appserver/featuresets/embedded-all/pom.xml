@@ -185,7 +185,7 @@
 
         <dependency>
             <groupId>org.glassfish.external</groupId>
-            <artifactId>dbschema</artifactId>
+            <artifactId>dbschema-osgi</artifactId>
         </dependency>
 
         <dependency>

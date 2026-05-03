@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JDOEJB20Helper.java
- *
- * Created on January 17, 2002
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 import com.sun.jdo.api.persistence.support.PersistenceManager;
@@ -30,12 +25,12 @@ import jakarta.ejb.EJBLocalObject;
 import java.util.Collection;
 import java.util.Set;
 
-/*
+/**
  * This is the helper interface for conversion of persistence-capable instances
  * to and from EJB objects of type EJBLocalObject and Collections of those.
  * It extends generic interface JDOEJB11Helper for all other types of conversions.
  *
- * @author Marina Vatkina
+ * @author Marina Vatkina 2002
  */
 public interface JDOEJB20Helper extends JDOEJB11Helper {
 
@@ -77,7 +72,7 @@ public interface JDOEJB20Helper extends JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Collection of EJBLocalObjects.
      */
-    Collection convertCollectionPCToEJBLocalObject (Collection pcs, PersistenceManager pm);
+    Collection<Object> convertCollectionPCToEJBLocalObject (Collection<?> pcs, PersistenceManager pm);
 
     /**
      * Converts Collection of persistence-capable instances to a Set of
@@ -86,7 +81,7 @@ public interface JDOEJB20Helper extends JDOEJB11Helper {
      * @param pm the associated instance of PersistenceManager.
      * @return Set of EJBLocalObjects.
      */
-    Set convertCollectionPCToEJBLocalObjectSet (Collection pcs, PersistenceManager pm);
+    Set<Object> convertCollectionPCToEJBLocalObjectSet (Collection<?> pcs, PersistenceManager pm);
 
     /**
      * Converts Collection of EJBLocalObjects to a Collection of
@@ -98,8 +93,7 @@ public interface JDOEJB20Helper extends JDOEJB11Helper {
      * @throws IllegalArgumentException if validate is true and at least one instance does
      * not exist in the database or is deleted.
      */
-    Collection convertCollectionEJBLocalObjectToPC (Collection coll, PersistenceManager pm,
-        boolean validate);
+    Collection<Object> convertCollectionEJBLocalObjectToPC(Collection<?> coll, PersistenceManager pm, boolean validate);
 
     /**
      * Validates that this instance is of the correct implementation class

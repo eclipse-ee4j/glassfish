@@ -75,7 +75,7 @@ To do that:
 
 1. Perform new (not upgrade) {productName} {product-majorVersion} installations on each
 node host. {productName} {product-majorVersion} installation instructions are provided
-in the xref:installation-guide.adoc#GSING[
+in the xref:installation-guide.adoc[
 {productName} Installation Guide].
 
 2. Correct the node configuration on the upgraded DAS, if necessary.

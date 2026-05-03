@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,28 +15,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/**
- * @Version $Id: JmxBoundedMultiLruCache.java,v 1.5 2006/10/23 20:55:57 jluehe Exp $
- * Created on May 4, 2005 07:40 PM
- */
-
 package com.sun.appserv.util.cache.mbeans;
 
 import com.sun.appserv.util.cache.BoundedMultiLruCache;
 import com.sun.appserv.util.cache.Constants;
+
 /**
  * This class provides implementation for JmxLruCache MBean
  *
- * @author Krishnamohan Meduri (Krishna.Meduri@Sun.com)
- *
+ * @author Krishnamohan Meduri (Krishna.Meduri@Sun.com) 2005
  */
-public class JmxBoundedMultiLruCache extends JmxMultiLruCache
-                              implements JmxBoundedMultiLruCacheMBean {
+public class JmxBoundedMultiLruCache extends JmxMultiLruCache implements JmxBoundedMultiLruCacheMBean {
 
-    private BoundedMultiLruCache boundedMultiLruCache;
+    private BoundedMultiLruCache<?, ?> boundedMultiLruCache;
 
-    public JmxBoundedMultiLruCache(BoundedMultiLruCache boundedMultiLruCache,
-                                   String name) {
+    public JmxBoundedMultiLruCache(BoundedMultiLruCache<?, ?> boundedMultiLruCache, String name) {
         super(boundedMultiLruCache, name);
         this.boundedMultiLruCache = boundedMultiLruCache;
     }
@@ -43,6 +37,7 @@ public class JmxBoundedMultiLruCache extends JmxMultiLruCache
     /**
      * Returns the current size of the cache in bytes
      */
+    @Override
     public Long getCurrentSize() {
         return (Long) boundedMultiLruCache.getStatByName(
                                         Constants.STAT_BOUNDEDMULTILRUCACHE_CURRENT_SIZE);
@@ -51,6 +46,7 @@ public class JmxBoundedMultiLruCache extends JmxMultiLruCache
     /**
      * Returns the upper bound on the cache size
      */
+    @Override
     public Long getMaxSize() {
         Object object = boundedMultiLruCache.getStatByName(
                                         Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE);
@@ -59,11 +55,9 @@ public class JmxBoundedMultiLruCache extends JmxMultiLruCache
          * "default" if the maxSize == Constants.DEFAULT_MAX_CACHE_SIZE
          * To take care of this case, the if/else is added below
          */
-        if (object instanceof String &&
-            ((String) object).equals(Constants.STAT_DEFAULT)) {
+        if (object instanceof String && ((String) object).equals(Constants.STAT_DEFAULT)) {
             return Long.valueOf(Constants.DEFAULT_MAX_CACHE_SIZE);
-        }
-        else {
+        } else {
             return (Long) object;
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,10 +30,8 @@ import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.utility.NumericConverter;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import jakarta.ejb.EJBContext;
 import jakarta.ejb.EJBException;
@@ -67,14 +65,12 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
         "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
         SunContainerHelper.class.getClassLoader());
 
-    /** The logger */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
-
-    /** Garantees singleton.
+    /**
+     * Guarantees singleton.
      * Registers itself during initial load
      */
     static {
-        CMPHelper.registerContainerHelper (new SunContainerHelper());
+        CMPHelper.registerContainerHelper(new SunContainerHelper());
     }
 
     /** Default constructor should not be public */
@@ -86,14 +82,14 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * The info argument is an Object array that consistes of a class to use
      * for the class loader and concreteImpl bean class name.
-     * @see getEJBObject(Object, Object)
-     * @see getEJBLocalObject(Object, Object)
-     * @see getEJBLocalObject(Object, Object, EJBObject)
-     * @see removeByEJBLocalObject(EJBLocalObject, Object)
-     * @see removeByPK(Object, Object)
      * @param info Object with the request information that is application server
      * specific.
      * @return a Container helper instance as an Object.
+     * @see #getEJBObject(Object, Object)
+     * @see #getEJBLocalObject(Object, Object)
+     * @see #getEJBLocalObject(Object, Object, EJBContext)
+     * @see #removeByEJBLocalObject(EJBLocalObject, Object)
+     * @see #removeByPK(Object, Object)
      */
     @Override
     public Object getContainer(Object info) {
@@ -114,7 +110,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Get an EJBObject reference for this primary key and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @return a corresponding EJBObject instance to be used by the client.
@@ -131,7 +127,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Get an EJBLocalObject reference for this primary key and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a helper instance for the request.
      * @return a corresponding EJBLocalObject instance to be used by the client.
@@ -151,7 +147,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * that is part of a cascade-delete remove.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key instance.
      * @param container a helper instance for the request.
      * @param context an EJBContext of the calling bean.
@@ -172,7 +168,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Remove a bean for a given EJBLocalObject and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param ejb the EJBLocalObject for the bean to be removed.
      * @param container a Container instance for the request.
      */
@@ -188,7 +184,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /** Remove a bean for a given primary key and Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param pk the primary key for the bean to be removed.
      * @param container a Container instance for the request.
      */
@@ -205,7 +201,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * a given Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param o the instance to be verified.
      * @param container a Container instance for the request.
      */
@@ -218,7 +214,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * a given Container helper.
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param o the instance to be verified.
      * @param container a Container instance for the request.
      */
@@ -250,7 +246,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request.
      */
     @Override
@@ -263,7 +259,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * This is SunContainerHelper specific code.
      *
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request.
      */
     @Override
@@ -287,10 +283,10 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
                 pmf = new PersistenceManagerFactoryImpl();
                 pmf.setConnectionFactoryName(ConnectorsUtil.getPMJndiName(name));
 
-                Iterator it = cmpResource.getProperties();
+                Iterator<NameValuePairDescriptor> it = cmpResource.getProperties();
                 if (it != null) {
                     while (it.hasNext()) {
-                        NameValuePairDescriptor prop = (NameValuePairDescriptor)it.next();
+                        NameValuePairDescriptor prop = it.next();
                         String n = prop.getName();
 
                         // Any value that is not "true" is treated as "false":
@@ -304,15 +300,11 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
                 RuntimeException e = new JDOFatalUserException(I18NHelper.getMessage(
                     messages, "ejb.jndi.unexpectedinstance", //NOI18N
                     name, rc.getClass().getName()));
-                logger.severe(e.toString());
-
                 throw e;
             }
         } catch (javax.naming.NamingException ex) {
             RuntimeException e = new JDOFatalUserException(I18NHelper.getMessage(
                 messages, "ejb.jndi.lookupfailed", name), ex); //NOI18N
-            logger.severe(e.toString());
-
             throw e;
         }
 
@@ -323,7 +315,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
     /**
      * Called in CMP environment to get NumericConverter policy referenced
      * by this Container instance.
-     * @see getContainer(Object)
+     * @see #getContainer(Object)
      * @param container a Container instance for the request
      * @return a valid NumericConverter policy type
      */

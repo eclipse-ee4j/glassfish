@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,23 +19,22 @@ package org.glassfish.persistence.ejb.entitybean.container.cache;
 
 import com.sun.appserv.util.cache.Cache;
 
+import java.util.Properties;
+
 /**
  * An interface for accessing EJB(Local)Object caches
  *
  * @author Mahesh Kannan
  */
+public interface EJBObjectCache<K, V> extends Cache<K, V> {
 
-public interface EJBObjectCache
-    extends Cache
-{
-    public Object get(Object key, boolean incrementRefCount);
+    public Object get(K key, boolean incrementRefCount);
 
-    public Object put(Object key, Object value, boolean incrementRefCount);
+    public Object put(K key, V value, boolean incrementRefCount);
 
-    public Object remove(Object key, boolean decrementRefCount);
+    public Object remove(K key, boolean decrementRefCount);
 
-    public void init(int maxEntries, int numberOfVictimsToSelect,
-       long timeout, float loadFactor, java.util.Properties props);
+    public void init(int maxEntries, int numberOfVictimsToSelect, long timeout, float loadFactor, Properties props);
 
     public void setEJBObjectCacheListener(EJBObjectCacheListener listener);
 }

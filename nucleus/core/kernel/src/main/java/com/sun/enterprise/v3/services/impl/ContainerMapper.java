@@ -25,7 +25,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
-import org.glassfish.api.container.Adapter;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.logging.LogHelper;
@@ -78,7 +77,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
     private String defaultHostName = "server";
 
     /**
-     * Are we running multiple {@ Adapter} or {@link HttpHandlerChain}
+     * Are we running multiple {@link HttpHandler} or {@link HttpHandlerChain}
      */
     private boolean mapMultipleAdapter;
 
@@ -103,7 +102,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
     }
 
     /**
-     * Set the {@link ContextMapper} instance used for mapping the container and its associated {@link Adapter}.
+     * Set the {@link ContextMapper} instance used for mapping the container and its associated {@link HttpHandler}.
      *
      * @param mapper
      */
@@ -129,7 +128,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
     }
 
     /**
-     * Map the request to its associated {@link Adapter}.
+     * Map the request to its associated {@link HttpHandler}.
      *
      * @param request
      * @param response

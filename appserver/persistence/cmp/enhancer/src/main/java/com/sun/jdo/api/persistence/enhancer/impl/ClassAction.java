@@ -93,48 +93,48 @@ final class ClassAction
 */
 
     /* Constants for the class level annotation attribute */
-    private static final String AnnotatedAttribute = "com.sun.jdo.api.persistence.enhancer.annotated";//NOI18N
+    private static final String AnnotatedAttribute = "com.sun.jdo.api.persistence.enhancer.annotated";
     private static final short  AnnotatedVersion = 1;
 
     //@olsen: added method name constants
     static private final String jdoGetStateManagerName
-    = "jdoGetStateManager";//NOI18N
+    = "jdoGetStateManager";
     static private final String jdoSetStateManagerName
-    = "jdoSetStateManager";//NOI18N
+    = "jdoSetStateManager";
     static private final String jdoGetFlagsName
-    = "jdoGetFlags";//NOI18N
+    = "jdoGetFlags";
     static private final String jdoSetFlagsName
-    = "jdoSetFlags";//NOI18N
+    = "jdoSetFlags";
     static private final String jdoMakeDirtyName
-    = "jdoMakeDirty";//NOI18N
+    = "jdoMakeDirty";
     static private final String jdoIsDirtyName
-    = "jdoIsDirty";//NOI18N
+    = "jdoIsDirty";
     static private final String jdoIsTransactionalName
-    = "jdoIsTransactional";//NOI18N
+    = "jdoIsTransactional";
     static private final String jdoIsPersistentName
-    = "jdoIsPersistent";//NOI18N
+    = "jdoIsPersistent";
     static private final String jdoIsNewName
-    = "jdoIsNew";//NOI18N
+    = "jdoIsNew";
     static private final String jdoIsDeletedName
-    = "jdoIsDeleted";//NOI18N
+    = "jdoIsDeleted";
     static private final String jdoGetPersistenceManagerName
-    = "jdoGetPersistenceManager";//NOI18N
+    = "jdoGetPersistenceManager";
     static private final String jdoGetObjectIdName
-    = "jdoGetObjectId";//NOI18N
+    = "jdoGetObjectId";
     static private final String jdoConstructorName
-    = "<init>";//NOI18N
+    = "<init>";
     static private final String jdoNewInstanceName
-    = "jdoNewInstance";//NOI18N
+    = "jdoNewInstance";
     static private final String jdoClearName
-    = "jdoClear";//NOI18N
+    = "jdoClear";
     static private final String jdoCopyName
-    = "jdoCopy";//NOI18N
+    = "jdoCopy";
     static private final String jdoGetFieldName
-    = "jdoGetField";//NOI18N
+    = "jdoGetField";
     static private final String jdoSetFieldName
-    = "jdoSetField";//NOI18N
+    = "jdoSetField";
     static private final String jdoCloneName
-    = "clone";//NOI18N
+    = "clone";
 
     /* The class to be annotated */
     //@olsen: made final
@@ -153,12 +153,12 @@ final class ClassAction
     /* Hash table mapping ClassMethod to MethodAction  */
     //@olsen: made final
     //@olsen: subst: Hashtable -> HashMap
-    private final Map methodActionTable = new HashMap(11);
+    private final Map<ClassMethod, MethodAction> methodActionTable = new HashMap<>(11);
 
     /* Vector of FieldAction  */
     //@olsen: made final
     //@olsen: subst: Vector -> ArrayList
-    private final List fieldActionTable = new ArrayList();
+    private final List<FieldAction> fieldActionTable = new ArrayList<>();
 
     /* What should we generate for this class?
      * This is a combination of the GENXXXX constants defined above. */
@@ -186,8 +186,6 @@ final class ClassAction
     //@olsen: added fields
     private boolean sawImplementsPersistenceCapable = false;
     private boolean sawImplementsCloneable = false;
-    private boolean sawFieldJDOStateManager = false;
-    private boolean sawFieldJDOFlags = false;
     private boolean sawMethodJDOGetStateManager = false;
     private boolean sawMethodJDOSetStateManager = false;
     private boolean sawMethodJDOGetFlags = false;
@@ -205,7 +203,6 @@ final class ClassAction
     private boolean sawMethodJDOGetField = false;
     private boolean sawMethodJDOSetField = false;
     private boolean sawMethodJDOClear = false;
-    private boolean sawMethodJDOCopy = false;
     private boolean sawMethodJDOClone = false;
 
     /* True if the preDestroyPersistent() method needs to be generated
@@ -258,7 +255,7 @@ final class ClassAction
     //@olsen: dropped argument: boolean filterRequired
     public void scan1() {
         //@olsen: moved verbose output from ClassControl to ClassAction
-        env.message("scanning class " + control.userClassName());//NOI18N
+        env.message("scanning class " + control.userClassName());
 
         //@olsen: added constraints; ensured by ClassControl
         affirm(!classFile().isInterface());
@@ -300,11 +297,12 @@ final class ClassAction
     //@olsen: subst: augmentInterfaces -> augment
     //@olsen: dropped argument: boolean filterRequired
     public void augment() {
-        if (previouslyAnnotated)
+        if (previouslyAnnotated) {
             return;
+        }
 
         if (implementsPersistence) {
-            env.message("augmenting class " + control.userClassName());//NOI18N
+            env.message("augmenting class " + control.userClassName());
 
             if (!sawImplementsPersistenceCapable) {
                 augmentClassInterface(JDOMetaData.JDOPersistenceCapablePath);
@@ -432,16 +430,17 @@ final class ClassAction
      * Perform the annotation operations for this class
      */
     public void annotate() {
-        if (previouslyAnnotated)
+        if (previouslyAnnotated) {
             return;
+        }
 
         //@olsen: moved verbose output from ClassControl to ClassAction
-        env.message("annotating class " + control.userClassName());//NOI18N
+        env.message("annotating class " + control.userClassName());
 
         boolean updates = false;
 
-        for (Iterator e = methodActions(); e.hasNext(); ) {
-            MethodAction methodAction = (MethodAction)e.next();
+        for (Iterator<MethodAction> e = methodActions(); e.hasNext(); ) {
+            MethodAction methodAction = e.next();
             if (methodAction.needsAnnotation()) {
                 methodAction.annotate();
                 updates = true;
@@ -504,14 +503,14 @@ final class ClassAction
     /**
      * Return an Enumeration of the FieldActions for the class
      */
-    Iterator fieldActions() {
+    Iterator<FieldAction> fieldActions() {
         return fieldActionTable.iterator();
     }
 
     /**
      * Return an Enumeration of the MethodActions for the class
      */
-    Iterator methodActions() {
+    Iterator<MethodAction> methodActions() {
         return methodActionTable.values().iterator();
     }
 
@@ -566,61 +565,35 @@ final class ClassAction
      * This works even if scan1 hasn't run yet.
      */
     public boolean hasAnnotatedAttribute() {
-        if (previouslyAnnotated)
+        if (previouslyAnnotated) {
             return true;
+        }
 
-        Enumeration e = classFile().attributes().elements();
+        Enumeration<ClassAttribute> e = classFile().attributes().elements();
         while (e.hasMoreElements()) {
-            ClassAttribute attr = (ClassAttribute) e.nextElement();
-            if (attr.attrName().asString().equals(AnnotatedAttribute))
+            ClassAttribute attr = e.nextElement();
+            if (attr.attrName().asString().equals(AnnotatedAttribute)) {
                 return true;
+            }
         }
 
         return false;
     }
-
-    /**
-     * Check whether this class has a persistent field of the
-     * specified name.  This might be called when the FieldActions have
-     * not yet been built.
-     */
-//@olsen: disabled feature
-/*
-    boolean fieldIsPersistent(String fieldName) {
-        ClassField field = classFile().findField(fieldName);
-        if (field != null) {
-            String className = classFile().className().asString();
-            String fieldName = field.name().asString();
-            //@olsen: disabled feature
-            //return FieldAction.fieldIsPersistent(classFile(), field);
-            return env.getJDOMetaData().isPersistentField(className, fieldName);
-        }
-        return false;
-    }
-*/
-
-    // private methods
 
     /**
      * Scans the attributes of a ClassFile
      */
     private void scanAttributes() {
-        Enumeration e = classFile().attributes().elements();
+        Enumeration<ClassAttribute> e = classFile().attributes().elements();
         while (e.hasMoreElements()) {
-            ClassAttribute attr = (ClassAttribute) e.nextElement();
+            ClassAttribute attr = e.nextElement();
             if (attr.attrName().asString().equals(AnnotatedAttribute)) {
                 previouslyAnnotated = true;
 
-//@olsen: disabled feature
-/*
-                if (!control.isImplicitlyPersistent() && !env.updateInPlace()) {
-*/
-                {
-                    // At some point we may want to consider stripping old
-                    // annotations and re-annotating, but not yet
-                    env.message("ignoring previously enhanced class "//NOI18N
-                                + control.userClassName());
-                }
+                // At some point we may want to consider stripping old
+                // annotations and re-annotating, but not yet
+                env.message("ignoring previously enhanced class "
+                    + control.userClassName());
                 break;
             }
         }
@@ -640,16 +613,16 @@ final class ClassAction
      */
     //@olsen: added method
     private void scanForImplementsInterfaces() {
-        for (Iterator ifc = classFile().interfaces().iterator();
+        for (Iterator<ConstClass> ifc = classFile().interfaces().iterator();
              ifc.hasNext();) {
-            final ConstClass i = (ConstClass)ifc.next();
+            final ConstClass i = ifc.next();
             String interfaceNamePath = i.asString();
             if (interfaceNamePath.equals(JDOMetaData.JDOPersistenceCapablePath)) {
                 sawImplementsPersistenceCapable = true;
 
                 //@olsen: warn if user-defined 'implements PC' clause
                 env.warning(
-                    getI18N("enhancer.class_implements_jdo_pc",//NOI18N
+                    getI18N("enhancer.class_implements_jdo_pc",
                             new Object[]{
                                 userClassName(),
                                 JDOMetaData.JDOPersistenceCapableType
@@ -659,16 +632,6 @@ final class ClassAction
                 sawImplementsCloneable = true;
             }
         }
-
-//@olsen: disabled feature
-//@olsen: don't check whether this class implements PC indirectly
-/*
-        if (control.implementsPersistenceCapable())
-            env.warning(
-                getI18N("enhancer.class_implements_pc",
-                        userClassName(),
-                        meta.JDOPersistenceCapableType));
-*/
     }
 
     /**
@@ -676,9 +639,9 @@ final class ClassAction
      * If this is not a persistence capable class, do nothing.
      */
     private void scanFields() {
-        Enumeration e = classFile().fields().elements();
+        Enumeration<ClassField> e = classFile().fields().elements();
         while (e.hasMoreElements()) {
-            final ClassField f = (ClassField)e.nextElement();
+            final ClassField f = e.nextElement();
             final String fieldName = f.name().asString();
             final String fieldSig = f.signature().asString();
 
@@ -699,25 +662,23 @@ final class ClassAction
                                   String fieldSig) {
         if (fieldName.equals(JDOMetaData.JDOStateManagerFieldName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_field",//NOI18N
+                getI18N("enhancer.class_defines_jdo_field",
                         userClassName(),
                         JDOMetaData.JDOStateManagerFieldName));
-            sawFieldJDOStateManager = true;
             return;
         }
         if (fieldName.equals(JDOMetaData.JDOFlagsFieldName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_field",//NOI18N
+                getI18N("enhancer.class_defines_jdo_field",
                         userClassName(),
                         JDOMetaData.JDOFlagsFieldName));
-            sawFieldJDOFlags = true;
             return;
         }
         //@olsen: check whether member starts with the reserved jdo prefix
-        if (fieldName.startsWith("jdo")) {//NOI18N
+        if (fieldName.startsWith("jdo")) {
             //@olsen: issue a warning only
             env.warning(
-                getI18N("enhancer.class_has_jdo_like_member",//NOI18N
+                getI18N("enhancer.class_has_jdo_like_member",
                         userClassName(), fieldName));
             return;
         }
@@ -730,9 +691,9 @@ final class ClassAction
         final boolean isPersistent
             = (control.persistType() == ClassControl.PersistCapable);
 
-        Enumeration e = classFile().methods().elements();
+        Enumeration<ClassMethod> e = classFile().methods().elements();
         while (e.hasMoreElements()) {
-            final ClassMethod m = (ClassMethod)e.nextElement();
+            final ClassMethod m = e.nextElement();
             final String methodName = m.name().asString();
             final String methodSig = m.signature().asString();
 
@@ -755,84 +716,84 @@ final class ClassAction
                                    String methodSig) {
         if (methodName.equals(jdoGetStateManagerName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOGetStateManager = true;
             return;
         }
         if (methodName.equals(jdoSetStateManagerName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOSetStateManager = true;
             return;
         }
         if (methodName.equals(jdoGetFlagsName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOGetFlags = true;
             return;
         }
         if (methodName.equals(jdoSetFlagsName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOSetFlags = true;
             return;
         }
         if (methodName.equals(jdoMakeDirtyName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOMakeDirty = true;
             return;
         }
         if (methodName.equals(jdoIsDirtyName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOIsDirty = true;
             return;
         }
         if (methodName.equals(jdoIsTransactionalName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOIsTransactional = true;
             return;
         }
         if (methodName.equals(jdoIsPersistentName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOIsPersistent = true;
             return;
         }
         if (methodName.equals(jdoIsNewName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOIsNew = true;
             return;
         }
         if (methodName.equals(jdoIsDeletedName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOIsDeleted = true;
             return;
         }
         if (methodName.equals(jdoGetPersistenceManagerName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOGetPersistenceManager = true;
             return;
         }
         if (methodName.equals(jdoGetObjectIdName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOGetObjectId = true;
             return;
@@ -840,44 +801,43 @@ final class ClassAction
         //^olsen: get signature from method builder
         // for jdo constructor, check by name and signature
         if (methodName.equals(jdoConstructorName)
-            && methodSig.equals("(" + JDOMetaData.JDOStateManagerSig + ")V")) {//NOI18N
+            && methodSig.equals("(" + JDOMetaData.JDOStateManagerSig + ")V")) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOConstructor = true;
             return;
         }
         if (methodName.equals(jdoNewInstanceName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDONewInstance = true;
             return;
         }
         if (methodName.equals(jdoClearName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOClear = true;
             return;
         }
         if (methodName.equals(jdoCopyName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
-            sawMethodJDOCopy = true;
             return;
         }
         if (methodName.equals(jdoGetFieldName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOGetField = true;
             return;
         }
         if (methodName.equals(jdoSetFieldName)) {
             env.error(
-                getI18N("enhancer.class_defines_jdo_method",//NOI18N
+                getI18N("enhancer.class_defines_jdo_method",
                         userClassName(), methodName));
             sawMethodJDOSetField = true;
             return;
@@ -885,16 +845,16 @@ final class ClassAction
         //^olsen: get signature from method builder
         // for method clone(), check by name and signature
         if (methodName.equals(jdoCloneName)
-            && methodSig.equals("()Ljava/lang/Object;")) {//NOI18N
+            && methodSig.equals("()Ljava/lang/Object;")) {
             // it's OK to have a user-defined clone()
             sawMethodJDOClone = true;
             return;
         }
         //@olsen: check whether member starts with the reserved jdo prefix
-        if (methodName.startsWith("jdo")) {//NOI18N
+        if (methodName.startsWith("jdo")) {
             //@olsen: issue a warning only
             env.warning(
-                getI18N("enhancer.class_has_jdo_like_member",//NOI18N
+                getI18N("enhancer.class_has_jdo_like_member",
                         userClassName(), methodName));
             return;
         }
@@ -955,9 +915,9 @@ final class ClassAction
         control.noteUpdate();
 
         // create it
-        env.message("adding "//NOI18N
+        env.message("adding "
                     + control.userClassName() +
-                    "." + fieldName + " " + printableFieldSig);//NOI18N
+                    "." + fieldName + " " + printableFieldSig);
 
         final ClassFile cfile = classFile();
         final ConstantPool pool = cfile.pool();
@@ -985,160 +945,68 @@ final class ClassAction
 
         control.noteUpdate();
 
-        //@olsen: simplified generation of jdo[GS]etStateManager methods
+        // @olsen: simplified generation of jdo[GS]etStateManager methods
         affirm(!sawMethodJDOGetStateManager);
-        classFile().addMethod(
-            methodBuilder.makeJDOGetStateManager(
-                this,
-                jdoGetStateManagerName));
+        classFile().addMethod(methodBuilder.makeJDOGetStateManager(this, jdoGetStateManagerName));
 
         affirm(!sawMethodJDOSetStateManager);
-        classFile().addMethod(
-            methodBuilder.makeJDOSetStateManager(
-                this,
-                jdoSetStateManagerName));
+        classFile().addMethod(methodBuilder.makeJDOSetStateManager(this, jdoSetStateManagerName));
 
-        //@olsen: simplified generation of jdo[GS]etFlags methods
+        // @olsen: simplified generation of jdo[GS]etFlags methods
         affirm(!sawMethodJDOGetFlags);
-        classFile().addMethod(
-            methodBuilder.makeJDOGetFlags(
-                this,
-                jdoGetFlagsName));
+        classFile().addMethod(methodBuilder.makeJDOGetFlags(this, jdoGetFlagsName));
         affirm(!sawMethodJDOSetFlags);
-        classFile().addMethod(
-            methodBuilder.makeJDOSetFlags(
-                this,
-                jdoSetFlagsName));
+        classFile().addMethod(methodBuilder.makeJDOSetFlags(this, jdoSetFlagsName));
 
-        //@olsen: add generation of jdoMakeDirty() method
+        // @olsen: add generation of jdoMakeDirty() method
         affirm(!sawMethodJDOMakeDirty);
-        classFile().addMethod(
-            methodBuilder.makeJDOMakeDirtyMethod(
-                this,
-                jdoMakeDirtyName));
+        classFile().addMethod(methodBuilder.makeJDOMakeDirtyMethod(this, jdoMakeDirtyName));
 
-        //@olsen: add generation of JDO interrogative methods
+        // @olsen: add generation of JDO interrogative methods
         affirm(!sawMethodJDOIsDirty);
-        classFile().addMethod(
-            methodBuilder.makeJDOInterrogativeMethod(
-                this,
-                jdoIsDirtyName));
+        classFile().addMethod(methodBuilder.makeJDOInterrogativeMethod(this, jdoIsDirtyName));
         affirm(!sawMethodJDOIsTransactional);
-        classFile().addMethod(
-            methodBuilder.makeJDOInterrogativeMethod(
-                this,
-                jdoIsTransactionalName));
+        classFile().addMethod(methodBuilder.makeJDOInterrogativeMethod(this, jdoIsTransactionalName));
         affirm(!sawMethodJDOIsPersistent);
-        classFile().addMethod(
-            methodBuilder.makeJDOInterrogativeMethod(
-                this,
-                jdoIsPersistentName));
+        classFile().addMethod(methodBuilder.makeJDOInterrogativeMethod(this, jdoIsPersistentName));
         affirm(!sawMethodJDOIsNew);
-        classFile().addMethod(
-            methodBuilder.makeJDOInterrogativeMethod(
-                this,
-                jdoIsNewName));
+        classFile().addMethod(methodBuilder.makeJDOInterrogativeMethod(this, jdoIsNewName));
         affirm(!sawMethodJDOIsDeleted);
-        classFile().addMethod(
-            methodBuilder.makeJDOInterrogativeMethod(
-                this,
-                jdoIsDeletedName));
+        classFile().addMethod(methodBuilder.makeJDOInterrogativeMethod(this, jdoIsDeletedName));
 
-        //@olsen: add generation of jdoGetPersistenceManager method
+        // @olsen: add generation of jdoGetPersistenceManager method
         affirm(!sawMethodJDOGetPersistenceManager);
-        classFile().addMethod(
-            methodBuilder.makeJDOGetPersistenceManagerMethod(
-                this,
-                jdoGetPersistenceManagerName));
+        classFile().addMethod(methodBuilder.makeJDOGetPersistenceManagerMethod(this, jdoGetPersistenceManagerName));
 
-        //@olsen: add generation of jdoGetObjectId method
+        // @olsen: add generation of jdoGetObjectId method
         affirm(!sawMethodJDOGetObjectId);
-        classFile().addMethod(
-            methodBuilder.makeJDOGetObjectIdMethod(
-                this,
-                jdoGetObjectIdName));
+        classFile().addMethod(methodBuilder.makeJDOGetObjectIdMethod(this, jdoGetObjectIdName));
 
-        //@olsen: add generation of the JDO constructor
+        // @olsen: add generation of the JDO constructor
         affirm(!sawMethodJDOConstructor);
-        classFile().addMethod(
-            methodBuilder.makeJDOConstructor(
-                this,
-                jdoConstructorName));
+        classFile().addMethod(methodBuilder.makeJDOConstructor(this, jdoConstructorName));
 
-        //@olsen: add generation of the jdoNewInstance method
+        // @olsen: add generation of the jdoNewInstance method
         affirm(!sawMethodJDONewInstance);
-        classFile().addMethod(
-            methodBuilder.makeJDONewInstanceMethod(
-                this,
-                jdoNewInstanceName));
+        classFile().addMethod(methodBuilder.makeJDONewInstanceMethod(this, jdoNewInstanceName));
 
-        //@olsen: add generation of the jdoGetField method
+        // @olsen: add generation of the jdoGetField method
         affirm(!sawMethodJDOGetField);
-        classFile().addMethod(
-            methodBuilder.makeJDOGetFieldMethod(
-                this,
-                jdoGetFieldName));
+        classFile().addMethod(methodBuilder.makeJDOGetFieldMethod(this, jdoGetFieldName));
 
-        //@olsen: add generation of the jdoSetField method
+        // @olsen: add generation of the jdoSetField method
         affirm(!sawMethodJDOSetField);
-        classFile().addMethod(
-            methodBuilder.makeJDOSetFieldMethod(
-                this,
-                jdoSetFieldName));
+        classFile().addMethod(methodBuilder.makeJDOSetFieldMethod(this, jdoSetFieldName));
 
-        //@olsen: add generation of the jdoClear method
+        // @olsen: add generation of the jdoClear method
         affirm(!sawMethodJDOClear);
-        classFile().addMethod(
-            methodBuilder.makeJDOClearMethod(
-                this,
-                jdoClearName));
+        classFile().addMethod(methodBuilder.makeJDOClearMethod(this, jdoClearName));
 
-        //@lars: removed jdoCopy-method creation
-        //@olsen: add generation of the jdoCopy method
-        /*
-        affirm(!sawMethodJDOCopy);
-        classFile().addMethod(
-            methodBuilder.makeJDOCopyMethod(
-                this,
-                jdoCopyName));
-        */
-
-        //@olsen: generate method clone() if not present
+        // @olsen: generate method clone() if not present
         if (!sawMethodJDOClone) {
-            classFile().addMethod(
-                methodBuilder.makeJDOClone(
-                    this,
-                    jdoCloneName));
+            classFile().addMethod(methodBuilder.makeJDOClone(this, jdoCloneName));
         }
     }
-
-    /**
-     * Add all the methods required for com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapableHooks interface.
-     */
-//@olsen: disabled feature
-/*
-    private void insertPersistenceCapableHooksMethods() {
-        if (needsPreDestroyPersistent)
-            classFile().addMethod
-                (methodBuilder.makeNullMethod(this, "preDestroyPersistent"));
-
-        if (needsPostInitializeContents)
-            classFile().addMethod
-                (methodBuilder.makeNullMethod(this, "postInitializeContents"));
-
-        if (needsPreFlushContents)
-            classFile().addMethod
-                (methodBuilder.makeNullMethod(this, "preFlushContents"));
-
-        if (needsPreClearContents)
-            classFile().addMethod
-                (methodBuilder.makeNullMethod(this, "preClearContents"));
-
-        if (needsPreDestroyPersistent || needsPostInitializeContents
-            || needsPreFlushContents || needsPreClearContents)
-            control.noteUpdate();
-    }
-*/
 
     /**
      * Add the specified interface to list.
@@ -1148,8 +1016,7 @@ final class ClassAction
         ClassFile cfile = classFile();
         ConstClass iface = cfile.pool().addClass(interfaceName);
         //@olsen: moved output to here
-        env.message("adding implements "//NOI18N
-                    + ClassControl.userClassFromVMClass(interfaceName));
+        env.message("adding implements " + ClassControl.userClassFromVMClass(interfaceName));
         cfile.addInterface(iface);
     }
 }

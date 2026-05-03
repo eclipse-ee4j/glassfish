@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,23 +15,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * Type.java
- *
- * Created on March 8, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 
 /**
  *
- * @author  Michael Bouschen
- * @version 0.1
+ * @author  Michael Bouschen 2000
  */
-public abstract class Type
-{
+public abstract class Type {
     /**
      * The name of the type represented by this object.
      */
@@ -39,7 +32,7 @@ public abstract class Type
     /**
      * The corresponding class object.
      */
-    protected Class clazz;
+    protected Class<?> clazz;
 
     /**
      * The FieldTypeEnumeration constant for this Type.
@@ -51,7 +44,7 @@ public abstract class Type
      * @param name name of the type represented by this
      * @param clazz the class object for this type
      */
-    public Type(String name, Class clazz)
+    public Type(String name, Class<?> clazz)
     {
         this(name, clazz, FieldTypeEnumeration.NOT_ENUMERATED);
     }
@@ -62,7 +55,7 @@ public abstract class Type
      * @param clazz the class object for this type
      * @param enumType the FieldTypeEnumeration value for this type
      */
-    public Type(String name, Class clazz, int enumType)
+    public Type(String name, Class<?> clazz, int enumType)
     {
         this.name = name;
         this.clazz = clazz;
@@ -80,7 +73,7 @@ public abstract class Type
     /**
      * Returns the corresponding class object.
      */
-    public Class getJavaClass() {
+    public Class<?> getJavaClass() {
         return this.clazz;
     }
 
@@ -114,6 +107,7 @@ public abstract class Type
     /**
      * Representation of this type as a string.
      */
+    @Override
     public String toString()
     {
         return getName();
@@ -124,14 +118,16 @@ public abstract class Type
      *
      * Two types are equal if their names are equal.
      */
+    @Override
     public boolean equals(Object obj)
     {
-        if (obj == this)
+        if (obj == this) {
             return true;
-        else if (obj instanceof Type)
+        } else if (obj instanceof Type) {
             return this.name.equals(((Type)obj).name);
-        else
+        } else {
             return false;
+        }
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -175,7 +175,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
      * @return the class element for the specified className
      */
     @Override
-    public Object getClass(final String className, final ClassLoader classLoader) {
+    public Class<?> getClass(final String className, final ClassLoader classLoader) {
         String testClass = className;
 
         // translate the class name to corresponding ejb name's abstract
@@ -221,7 +221,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
     public Object getConstructor(final String className, String[] argTypeNames) {
         if ((AbstractNameMapper.PRIMARY_KEY_FIELD == getPersistenceKeyClassType(className))
             && Arrays.equals(argTypeNames, NO_ARGS)) {
-            return new MemberWrapper(className, null, Modifier.PUBLIC, (Class) getClass(className));
+            return new MemberWrapper(className, null, Modifier.PUBLIC, getClass(className));
         }
         Object returnObject = super.getConstructor(className, argTypeNames);
         if (returnObject instanceof Constructor) {
@@ -257,17 +257,17 @@ public class DeploymentDescriptorModel extends RuntimeModel {
         if (isPCClassName(className)) {
             if ((methodName.equals("readObject") && Arrays.equals(argTypeNames, getReadObjectArgs()))
                 || (methodName.equals("writeObject") && Arrays.equals(argTypeNames, getWriteObjectArgs()))) {
-                returnObject = new MemberWrapper(methodName, Void.TYPE, Modifier.PRIVATE, (Class<?>) getClass(className));
+                returnObject = new MemberWrapper(methodName, Void.TYPE, Modifier.PRIVATE, getClass(className));
             }
         }
         if ((AbstractNameMapper.UNKNOWN_KEY_CLASS == keyClassType)
             || (AbstractNameMapper.PRIMARY_KEY_FIELD == keyClassType)) {
             if (methodName.equals("equals") && Arrays.equals(argTypeNames, getEqualsArgs())) {
                 returnObject = new MemberWrapper(methodName, Boolean.TYPE, Modifier.PUBLIC,
-                    (Class<?>) getClass(className));
+                    getClass(className));
             } else if (methodName.equals("hashCode") && Arrays.equals(argTypeNames, NO_ARGS)) {
                 returnObject = new MemberWrapper(methodName, Integer.TYPE, Modifier.PUBLIC,
-                    (Class<?>) getClass(className));
+                    getClass(className));
             }
         }
 
@@ -319,7 +319,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
      * @return the names of the field elements for the specified class
      */
     @Override
-    public List getFields(final String className) {
+    public List<String> getFields(final String className) {
         final EjbCMPEntityDescriptor descriptor = getCMPDescriptor(className);
         String testClass = className;
         if (descriptor != null) {
@@ -371,7 +371,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
      * @return the names of the field elements for the specified class
      */
     @Override
-    public List getAllFields(String className) {
+    public List<String> getAllFields(String className) {
         // If the class name corresponds to a pk field (which means that
         // there is no user defined primary key class, we don't want to
         // climb the inheritance hierarchy, we only process this class.
@@ -600,7 +600,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
      * @see RuntimeModel#getMethod
      */
     @Override
-    protected Class getTypeObject(Object element) {
+    protected Class<?> getTypeObject(Object element) {
         Class<?> type = super.getTypeObject(element);
         if ((element != null) && (element instanceof MemberWrapper)) {
             type = ((MemberWrapper) element).getType();
@@ -670,7 +670,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
             // fieldType will be null - there is no such field
         }
         return fieldType == null ? null
-            : new MemberWrapper(fieldName, fieldType, Modifier.PRIVATE, (Class<?>) getClass(className));
+            : new MemberWrapper(fieldName, fieldType, Modifier.PRIVATE, getClass(className));
     }
 
 
@@ -691,7 +691,7 @@ public class DeploymentDescriptorModel extends RuntimeModel {
             if (field.isKey() && (ejbName != null)
                 && (nameMapper.getKeyClassTypeForEjbName(ejbName) == AbstractNameMapper.UNKNOWN_KEY_CLASS)) {
                 returnObject = new MemberWrapper(ejbFieldName, Long.class, Modifier.PRIVATE,
-                    (Class<?>) getClass(className));
+                    getClass(className));
             } else if ((field instanceof RelationshipElement)
                 && nameMapper.isGeneratedEjbRelationship(ejbName, ejbFieldName)) {
                 // Check if this is the auto-added field for 2 way managed rels
@@ -705,19 +705,19 @@ public class DeploymentDescriptorModel extends RuntimeModel {
                     classType = java.util.HashSet.class;
                 } else {
                     String[] inverse = nameMapper.getEjbFieldForGeneratedField(ejbName, ejbFieldName);
-                    classType = (Class<?>) getClass(inverse[0]);
+                    classType = getClass(inverse[0]);
                 }
 
                 if (classType != null) {
                     returnObject = new MemberWrapper(ejbFieldName, classType, Modifier.PRIVATE,
-                        (Class<?>) getClass(className));
+                        getClass(className));
                 }
             } else if (ejbFieldName.startsWith(AbstractNameMapper.GENERATED_VERSION_FIELD_PREFIX)
                 && nameMapper.isGeneratedField(ejbName, ejbFieldName)) {
                 // Check if this is the auto-added version field.
                 // If so, return a private field of type long.
                 returnObject = new MemberWrapper(ejbFieldName, Long.TYPE, Modifier.PRIVATE,
-                    (Class<?>) getClass(className));
+                    getClass(className));
             } else {
                 return null;
             }

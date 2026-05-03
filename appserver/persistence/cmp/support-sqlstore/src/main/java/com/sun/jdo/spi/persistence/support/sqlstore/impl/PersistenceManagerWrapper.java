@@ -52,7 +52,7 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             PersistenceManagerWrapper.class.getClassLoader());
 
     // Constructed by  com.sun.jdo.spi.persistence.support.sqlstore.SQLPersistenceManagerFactory
@@ -67,6 +67,7 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return if this PersistenceManager has been closed
      * @see #close()
      */
+    @Override
     public boolean isClosed() {
         if (isValid) {
             return pm.isClosed();
@@ -80,6 +81,7 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * <P>This method closes the PersistenceManager, which if pooled, releases it
      * to the pool of available PersistenceManagers.
      */
+    @Override
     public void close() {
         if (isValid) {
             isValid = false;
@@ -88,7 +90,7 @@ public class PersistenceManagerWrapper implements PersistenceManager {
             prev = null;
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -96,24 +98,26 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the Transaction associated with this
      * PersistenceManager.
      */
+    @Override
     public Transaction currentTransaction() {
         if (isValid) {
             return pm.currentTransaction();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
     /** Create a new Query with no elements.
      * @return a new Query instance with no elements.
      */
+    @Override
     public Query newQuery() {
         if (isValid) {
             return pm.newQuery();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -124,12 +128,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the new Query
      * @param compiled another Query from the same JDO implementation
      */
+    @Override
     public Query newQuery(Object compiled) {
         if (isValid) {
             return pm.newQuery(compiled);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -137,12 +142,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param cls the Class of the results
      * @return the new Query
      */
-    public Query newQuery(Class cls) {
+    @Override
+    public Query newQuery(Class<?> cls) {
         if (isValid) {
             return pm.newQuery(cls);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -152,12 +158,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param cln the Collection of candidate instances
      * @return the new Query
      */
-    public Query newQuery(Class cls, Collection cln) {
+    @Override
+    public Query newQuery(Class<?> cls, Collection<?> cln) {
         if (isValid) {
             return pm.newQuery(cls, cln);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -167,12 +174,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param filter the Filter for candidate instances
      * @return the new Query
      */
-    public Query newQuery(Class cls, String filter) {
+    @Override
+    public Query newQuery(Class<?> cls, String filter) {
         if (isValid) {
             return pm.newQuery(cls, filter);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -183,12 +191,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param filter the Filter for candidate instances
      * @return the new Query
      */
-    public Query newQuery(Class cls, Collection cln, String filter) {
+    @Override
+    public Query newQuery(Class<?> cls, Collection<?> cln, String filter) {
         if (isValid) {
             return pm.newQuery(cls, cln, filter);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -201,12 +210,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return a Collection of instances
      * @see Query
      */
-    public Collection getExtent(Class persistenceCapableClass, boolean subclasses) {
+    @Override
+    public Collection<?> getExtent(Class<?> persistenceCapableClass, boolean subclasses) {
         if (isValid) {
             return pm.getExtent(persistenceCapableClass, subclasses);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -222,12 +232,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the PersistenceCapable instance with the specified
      * ObjectId
      */
+    @Override
     public Object getObjectById(Object oid) {
         if (isValid) {
             return pm.getObjectById(oid);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -256,12 +267,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param oid an ObjectId
      * @param validate if the existence of the instance is to be validated
      */
+    @Override
     public Object getObjectById (Object oid, boolean validate) {
         if (isValid) {
             return pm.getObjectById(oid, validate);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -272,12 +284,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param pc the PersistenceCapable instance
      * @return the ObjectId of the instance
      */
+    @Override
     public Object getObjectId(Object pc) {
         if (isValid) {
             return pm.getObjectId(pc);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -288,12 +301,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the PersistenceCapable instance representing the
      * same data store object
      */
+    @Override
     public Object getTransactionalInstance(Object pc) {
         if (isValid) {
             return pm.getTransactionalInstance(pc);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -306,12 +320,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param pc a transient instance of a Class that implements
      * PersistenceCapable
      */
+    @Override
     public void makePersistent(Object pc) {
         if (isValid) {
             pm.makePersistent(pc);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -319,12 +334,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param pcs an array of transient instances
      * @see #makePersistent(Object pc)
      */
+    @Override
     public void makePersistent(Object[] pcs) {
         if (isValid) {
             pm.makePersistent(pcs);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -332,12 +348,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param pcs a Collection of transient instances
      * @see #makePersistent(Object pc)
      */
-    public void makePersistent(Collection pcs) {
+    @Override
+    public void makePersistent(Collection<?> pcs) {
         if (isValid) {
             pm.makePersistent(pcs);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -353,12 +370,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      *
      * @param pc a persistent instance
      */
+    @Override
     public void deletePersistent(Object pc) {
         if (isValid) {
             pm.deletePersistent(pc);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -366,12 +384,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param pcs a Collection of persistent instances
      * @see #deletePersistent(Object pc)
      */
+    @Override
     public void deletePersistent(Object[] pcs) {
         if (isValid) {
             pm.deletePersistent(pcs);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -379,12 +398,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param pcs a Collection of persistent instances
      * @see #deletePersistent(Object pc)
      */
-    public void deletePersistent(Collection pcs) {
+    @Override
+    public void deletePersistent(Collection<?> pcs) {
         if (isValid) {
             pm.deletePersistent(pcs);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -394,12 +414,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the PersistenceManagerFactory that created
      * this PersistenceManager
      */
+    @Override
     public PersistenceManagerFactory getPersistenceManagerFactory() {
         if (isValid) {
             return pm.getPersistenceManagerFactory();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -409,12 +430,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param o the user instance to be remembered by the PersistenceManager
      * @see #getUserObject
      */
+    @Override
     public void setUserObject(Object o) {
         if (isValid) {
             pm.setUserObject(o);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -424,12 +446,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the user object associated with this PersistenceManager
      * @see #setUserObject
      */
+    @Override
     public Object getUserObject() {
         if (isValid) {
             return pm.getUserObject();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -441,12 +464,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * <li>VersionNumber</li>
      * @return the Properties of this PersistenceManager
      */
+    @Override
     public Properties getProperties() {
         if (isValid) {
             return pm.getProperties();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -457,12 +481,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * Object Id.
      * @return      boolean supersedeDeletedInstance flag
      */
+    @Override
     public boolean getSupersedeDeletedInstance () {
         if (isValid) {
             return pm.getSupersedeDeletedInstance();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -471,12 +496,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * Sets the supersedeDeletedInstance flag for this PersistenceManager.
      * @param flag          boolean supersedeDeletedInstance flag
      */
+    @Override
     public void setSupersedeDeletedInstance (boolean flag) {
         if (isValid) {
             pm.setSupersedeDeletedInstance(flag);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -490,12 +516,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @see PersistenceManager#getObjectById(Object oid)
      * @return      boolean requireCopyObjectId flag
      */
+    @Override
     public boolean getRequireCopyObjectId() {
         if (isValid) {
             return pm.getRequireCopyObjectId();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -510,12 +537,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @see PersistenceManager#getObjectById(Object oid)
      * @param flag          boolean requireCopyObjectId flag
      */
+    @Override
     public void setRequireCopyObjectId (boolean flag) {
         if (isValid) {
             pm.setRequireCopyObjectId(flag);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -528,12 +556,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      *
      * @return      boolean requireTrackedSCO flag
      */
+    @Override
     public boolean getRequireTrackedSCO() {
         if (isValid) {
             return pm.getRequireTrackedSCO();
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -545,12 +574,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      *
      * @param flag          boolean requireTrackedSCO flag
      */
+    @Override
     public void setRequireTrackedSCO (boolean flag) {
         if (isValid) {
             pm.setRequireTrackedSCO(flag);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -560,12 +590,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param cls the PersistenceCapable Class
      * @return the Class of the ObjectId of the parameter
      */
-    public Class getObjectIdClass(Class cls) {
+    @Override
+    public Class<?> getObjectIdClass(Class<?> cls) {
         if (isValid) {
             return pm.getObjectIdClass(cls);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -581,12 +612,13 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param fieldName the field to notify upon changes
      * @return the object of the class type
      */
-    public Object newSCOInstance(Class type, Object owner, String fieldName) {
+    @Override
+    public Object newSCOInstance(Class<?> type, Object owner, String fieldName) {
         if (isValid) {
             return pm.newSCOInstance(type, owner, fieldName);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
@@ -607,18 +639,19 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @param initialSize initial size of the Collection
      * @return the object of the class type
      */
-    public Object newCollectionInstance(Class type, Object owner, String fieldName,
-                                        Class elementType, boolean allowNulls, int initialSize) {
+    @Override
+    public Object newCollectionInstance(Class<?> type, Object owner, String fieldName,
+                                        Class<?> elementType, boolean allowNulls, int initialSize) {
         if (isValid) {
             return pm.newCollectionInstance(type, owner, fieldName, elementType, allowNulls, initialSize);
         } else {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
+                    "jdo.persistencemanagerwrapper.invalidpm"));
         }
     }
 
 
     public PersistenceManager getPersistenceManager() {
-        return (PersistenceManager) pm;
+        return pm;
     }
 }

@@ -142,7 +142,7 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
         this.javaEETM = javaEETM;
         this.txId = txIdCounter.incrementAndGet();
         this.xid = new JavaEEXid(txId);
-        this.resourceTable = new HashMap();
+        this.resourceTable = new HashMap<>();
         localTxStatus = Status.STATUS_ACTIVE;
         startTime = System.currentTimeMillis();
         if (LOG.isLoggable(Level.FINE)) {

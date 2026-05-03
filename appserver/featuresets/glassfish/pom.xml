@@ -281,7 +281,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>
-            <artifactId>dbschema</artifactId>
+            <artifactId>dbschema-osgi</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -383,7 +383,7 @@
         </dependency>
         <dependency><!-- webservices-osgi depends on ant -->
             <groupId>org.glassfish.external</groupId>
-            <artifactId>ant</artifactId>
+            <artifactId>ant-osgi</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,17 +32,12 @@ import java.util.Properties;
  * Provides the JDO meta information based on properties.
  */
 //@olsen: new class
-public class JDOMetaDataPropertyImpl extends Support
-    implements ExtendedJDOMetaData
-{
-    // misc
-//    static final String nl = System.getProperty("line.separator", "\n");
-//    protected final PrintWriter out;
+public class JDOMetaDataPropertyImpl extends Support implements ExtendedJDOMetaData {
 
     // model
-    private static final HashSet transientTypePrefixes = new HashSet();
-    private static final HashSet secondClassObjectTypes = new HashSet();
-    private static final HashSet mutableSecondClassObjectTypes = new HashSet();
+    private static final HashSet<String> transientTypePrefixes = new HashSet<>();
+    private static final HashSet<String> secondClassObjectTypes = new HashSet<>();
+    private static final HashSet<String> mutableSecondClassObjectTypes = new HashSet<>();
 
 
     /**
@@ -56,37 +52,37 @@ public class JDOMetaDataPropertyImpl extends Support
 
     static
     {
-        transientTypePrefixes.add("java/");//NOI18N
-        transientTypePrefixes.add("javax/");//NOI18N
-        transientTypePrefixes.add("com/sun/jdo/");//NOI18N
+        transientTypePrefixes.add("java/");
+        transientTypePrefixes.add("javax/");
+        transientTypePrefixes.add("com/sun/jdo/");
 
-        mutableSecondClassObjectTypes.add("java/util/Date");//NOI18N
-        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/Date");//NOI18N
-        mutableSecondClassObjectTypes.add("java/sql/Date");//NOI18N
-        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/SqlTime");//NOI18N
-        mutableSecondClassObjectTypes.add("java/sql/Time");//NOI18N
-        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/SqlDate");//NOI18N
-        mutableSecondClassObjectTypes.add("java/sql/Timestamp");//NOI18N
-        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/SqlTimestamp");//NOI18N
-        mutableSecondClassObjectTypes.add("java/util/Collection");//NOI18N
-        mutableSecondClassObjectTypes.add("java/util/Set");//NOI18N
-        mutableSecondClassObjectTypes.add("java/util/List");//NOI18N
-        mutableSecondClassObjectTypes.add("java/util/HashSet");//NOI18N
-        mutableSecondClassObjectTypes.add("java/util/Vector");//NOI18N
-        mutableSecondClassObjectTypes.add("java/util/ArrayList");//NOI18N
+        mutableSecondClassObjectTypes.add("java/util/Date");
+        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/Date");
+        mutableSecondClassObjectTypes.add("java/sql/Date");
+        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/SqlTime");
+        mutableSecondClassObjectTypes.add("java/sql/Time");
+        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/SqlDate");
+        mutableSecondClassObjectTypes.add("java/sql/Timestamp");
+        mutableSecondClassObjectTypes.add("com/sun/jdo/spi/persistence/support/sqlstore/sco/SqlTimestamp");
+        mutableSecondClassObjectTypes.add("java/util/Collection");
+        mutableSecondClassObjectTypes.add("java/util/Set");
+        mutableSecondClassObjectTypes.add("java/util/List");
+        mutableSecondClassObjectTypes.add("java/util/HashSet");
+        mutableSecondClassObjectTypes.add("java/util/Vector");
+        mutableSecondClassObjectTypes.add("java/util/ArrayList");
 
-        secondClassObjectTypes.add("java/lang/Boolean");//NOI18N
-        secondClassObjectTypes.add("java/lang/Byte");//NOI18N
-        secondClassObjectTypes.add("java/lang/Short");//NOI18N
-        secondClassObjectTypes.add("java/lang/Integer");//NOI18N
-        secondClassObjectTypes.add("java/lang/Long");//NOI18N
-        secondClassObjectTypes.add("java/lang/Float");//NOI18N
-        secondClassObjectTypes.add("java/lang/Double");//NOI18N
-        secondClassObjectTypes.add("java/lang/Number");//NOI18N
-        secondClassObjectTypes.add("java/lang/Character");//NOI18N
-        secondClassObjectTypes.add("java/lang/String");//NOI18N
-        secondClassObjectTypes.add("java/math/BigInteger");//NOI18N
-        secondClassObjectTypes.add("java/math/BigDecimal");//NOI18N
+        secondClassObjectTypes.add("java/lang/Boolean");
+        secondClassObjectTypes.add("java/lang/Byte");
+        secondClassObjectTypes.add("java/lang/Short");
+        secondClassObjectTypes.add("java/lang/Integer");
+        secondClassObjectTypes.add("java/lang/Long");
+        secondClassObjectTypes.add("java/lang/Float");
+        secondClassObjectTypes.add("java/lang/Double");
+        secondClassObjectTypes.add("java/lang/Number");
+        secondClassObjectTypes.add("java/lang/Character");
+        secondClassObjectTypes.add("java/lang/String");
+        secondClassObjectTypes.add("java/math/BigInteger");
+        secondClassObjectTypes.add("java/math/BigDecimal");
         secondClassObjectTypes.addAll(mutableSecondClassObjectTypes);
 
     }  //JDOMetaDataPropertyImpl.<static>
@@ -103,13 +99,6 @@ public class JDOMetaDataPropertyImpl extends Support
             final String msg = "Initializing meta data: properties == null";// NOI18N
             throw new JDOMetaDataFatalError(msg);
         }
-        /*
-        if (out == null) {
-            final String msg
-                = "Initializing meta data: output stream == null";//NOI18N
-            throw new JDOMetaDataFatalError(msg);
-        }
-        */
 
         this.properties = new JDOMetaDataProperties (properties);
         readProperties ();
@@ -132,8 +121,8 @@ public class JDOMetaDataPropertyImpl extends Support
     @Override
     public boolean isPersistenceCapableClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         // check the transient prefixes
-        for (Iterator i = transientTypePrefixes.iterator(); i.hasNext();) {
-            final String typePrefix = (String) i.next();
+        for (Iterator<String> i = transientTypePrefixes.iterator(); i.hasNext();) {
+            final String typePrefix = i.next();
             if (classPath.startsWith(typePrefix)) {
                 return false;
             }
@@ -524,7 +513,7 @@ public class JDOMetaDataPropertyImpl extends Support
 
     @Override
     public String[] getKeyFields(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
-        final List keys = new ArrayList();
+        final List<String> keys = new ArrayList<>();
         final String[] fieldNames = getManagedFields(classPath);
         final int n = fieldNames.length;
         for (int i = 0; i < n; i++) {
@@ -568,68 +557,4 @@ public class JDOMetaDataPropertyImpl extends Support
         return null;
     }
 
-    /**********************************************************************
-     *
-     *********************************************************************/
-/*
-    public static void main (String [] argv)
-    {
-
-        if  (argv.length != 1)
-        {
-            System.err.println ("No property file specified.");
-            return;
-        }
-        Properties p = new Properties ();
-        try
-        {
-            java.io.InputStream  in = new java.io.FileInputStream (new java.io.File (argv [0]));
-            p.load (in);
-            in.close ();
-            System.out.println ("PROPERTIES: " + p);
-            System.out.println ("############");
-            JDOMetaDataProperties props = new JDOMetaDataProperties (p);
-        }
-        catch (Throwable ex)
-        {
-            ex.printStackTrace (System.err);
-        }
-
-        JDOMetaDataPropertyImpl jdo = new JDOMetaDataPropertyImpl (p, new PrintWriter (System.out));
-        String [] classnames = jdo.getKnownClasses ();
-        for  (int k = 0; k < classnames.length; k++)
-        {
-            String classname = classnames [k];
-            System.out.println ("CLASSNAME: " + classname);
-            System.out.println ("\tpersistent: " + jdo.isPersistenceCapableClass (classname));
-            System.out.println ("\tpersistent root: " + jdo.isPersistenceCapableRootClass (classname));
-            System.out.println ("\tpersistent root: " + jdo.getPersistenceCapableRootClass (classname));
-            String [] fieldnames = jdo.getKnownFields (classname);
-            for  (int j = 0; j < fieldnames.length; j++)
-            {
-                String fieldname = (String) fieldnames [j];
-                System.out.println ("FIELDNAME: " + fieldname);
-                System.out.println ("\tpersistent field: " + jdo.isPersistentField (classname, fieldname));
-                System.out.println ("\tpk field: " + jdo.isPrimaryKeyField (classname, fieldname));
-                System.out.println ("\tdfg field: " + jdo.isDefaultFetchGroupField (classname, fieldname));
-                System.out.println ("\tnumber: " + jdo.getFieldNo (classname, fieldname));
-                String [] names = jdo.getManagedFields (classname);
-                final int n = (fieldnames != null  ?  names.length  :  0);
-                System.out.println ("managed fields: number: " + n);
-                for  (int i = 0; i < n; i++)
-                {
-                    System.out.println (i + ": " + names [i] +
-                                        " number: " + jdo.getFieldNo (classname, names [i]) +
-                                        " pk: " + jdo.isPrimaryKeyField (classname, names [i]) +
-                                        " dfg: " + jdo.isDefaultFetchGroupField (classname, names [i]));
-                }
-            }
-        }
-
-    }  //JDOMetaDataPropertyImpl.main
-*/
-
-}  //JDOMetaDataPropertyImpl
-
-
-//JDOMetaDataPropertyImpl
+}

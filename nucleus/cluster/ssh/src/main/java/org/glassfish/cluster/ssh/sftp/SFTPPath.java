@@ -341,7 +341,7 @@ public final class SFTPPath implements Path {
      * Converts the file's path to a SFTP path.
      * If the file is absolute, the path will be absolute.
      * The root prefix is removed (ie. <code>C:\</code>).
-     * The file separator in SFTP is always </code>/</code>.
+     * The file separator in SFTP is always <code>/</code>.
      * The result is normalized.
      *
      * @param file
@@ -358,7 +358,7 @@ public final class SFTPPath implements Path {
      * Converts the file's path to a SFTP path.
      * If the file is absolute, the path will be absolute.
      * The root prefix is removed (ie. <code>C:\</code>).
-     * The file separator in SFTP is always </code>/</code>.
+     * The file separator in SFTP is always <code>/</code>.
      * The result is normalized.
      *
      * @param path

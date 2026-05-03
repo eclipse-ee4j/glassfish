@@ -38,6 +38,7 @@ install_bundles() {
   install_dependency "org.glassfish.main.distributions:glassfish:${GF_VERSION}:zip"
   install_dependency "org.glassfish.main.distributions:web:${GF_VERSION}:zip"
   install_dependency "org.jacoco:org.jacoco.agent:0.8.12:jar:runtime"
+  ls -la "${BUNDLES_DIR}/"
 }
 
 ####################################
@@ -89,9 +90,6 @@ else
    unset GLASSFISH_SUSPEND
 fi
 
-echo GF_VERSION=$GF_VERSION
-echo GLASSFISH_SUSPEND=$GLASSFISH_SUSPEND
-
 export JACOCO_ENABLED="true"
 export WORKSPACE="${WORKSPACE:-$(pwd)/target}"
 export BUNDLES_DIR="${BUNDLES_DIR:-${WORKSPACE}/bundles}"
@@ -115,4 +113,5 @@ rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
 rm -f ./appserver/tests/appserv-tests/test_results.xml
 
 ./appserver/tests/gftest.sh run_test "${test}"
-
+# QuickLook tests don't stop the domain.
+"${S1AS_HOME}"/bin/asadmin stop-domain --kill=true --force=true domain1 || true;

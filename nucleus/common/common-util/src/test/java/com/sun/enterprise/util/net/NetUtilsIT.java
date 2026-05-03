@@ -295,7 +295,7 @@ public class NetUtilsIT {
     }
 
     private GenericContainer<?> createContainerWitHosts(String hostFileContent, String containerClass) throws IOException {
-        String command = "echo \"" + hostFileContent + "\" > /etc/hosts && " + COMMAND_SUFFIX;
+        String command = "echo \"" + hostFileContent + "\" > /etc/hosts && echo \"hosts: files\" > /etc/nsswitch.conf && " + COMMAND_SUFFIX;
         return createContainer(command, containerClass);
     }
 

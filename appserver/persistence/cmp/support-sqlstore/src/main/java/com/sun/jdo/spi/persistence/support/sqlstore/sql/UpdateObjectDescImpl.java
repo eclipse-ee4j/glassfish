@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,18 +15,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * UpdateObjectDescImpl.java
- *
- * Created on March 3, 2000
- *
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.sql;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.UpdateObjectDesc;
@@ -34,8 +27,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.model.FieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.ForeignFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.model.LocalFieldDesc;
 import com.sun.jdo.spi.persistence.support.sqlstore.sql.concurrency.Concurrency;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,24 +39,27 @@ import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+
 /**
  * Stores the update information for the associated state manager.
  */
 public class UpdateObjectDescImpl implements UpdateObjectDesc {
 
     /** Array of Object. */
-    private List afterHiddenValues;
+    private List<Object> afterHiddenValues;
 
     private SQLStateManager afterImage;
 
     /** Array of Object. */
-    private List beforeHiddenValues;
+    private List<Object> beforeHiddenValues;
 
     private SQLStateManager beforeImage;
 
     private Concurrency concurrency;
 
-    private Class pcClass;
+    private Class<?> pcClass;
 
     private int updateAction;
 
@@ -71,27 +67,28 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
      * Array of LocalFieldDesc.
      * Fields contained in this array are written to the database.
      */
-    private List updatedFields;
+    private List<FieldDesc> updatedFields;
 
-    private Map updatedJoinTableRelationships;
+    private Map<ForeignFieldDesc, HashMap<SQLStateManager, UpdateJoinTableDesc>> updatedJoinTableRelationships;
 
     /** Marker for fast relationship update check. */
     private boolean relationshipChanged = false;
 
-    /** The logger. */
-    private static Logger logger = LogHelperSQLStore.getLogger();
-
     /** I18N message handler. */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",  // NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             UpdateObjectDescImpl.class.getClassLoader());
 
-    public UpdateObjectDescImpl(Class pcClass) {
+    /** The logger. */
+    private static final Logger LOG = System.getLogger(UpdateObjectDescImpl.class.getName(), messages);
+
+    public UpdateObjectDescImpl(Class<?> pcClass) {
         this.pcClass = pcClass;
-        updatedFields = new ArrayList();
+        updatedFields = new ArrayList<>();
     }
 
-    public Class getPersistenceCapableClass() {
+    @Override
+    public Class<?> getPersistenceCapableClass() {
         return pcClass;
     }
 
@@ -110,7 +107,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
         return (updatedFields.size() > 0);
     }
 
-    public Collection getUpdatedJoinTableFields() {
+    public Collection<ForeignFieldDesc> getUpdatedJoinTableFields() {
         if (updatedJoinTableRelationships == null) {
             return null;
         }
@@ -119,8 +116,8 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
     }
 
     // RESOLVE: Should return _all_ join table descs, not separatly by field.
-    public Collection getUpdateJoinTableDescs(FieldDesc fieldDesc) {
-        HashMap updateJoinTableDescs = (HashMap) updatedJoinTableRelationships.get(fieldDesc);
+    public Collection<UpdateJoinTableDesc> getUpdateJoinTableDescs(FieldDesc fieldDesc) {
+        HashMap<SQLStateManager, UpdateJoinTableDesc> updateJoinTableDescs = updatedJoinTableRelationships.get(fieldDesc);
 
         if (updateJoinTableDescs != null) {
             return updateJoinTableDescs.values();
@@ -140,7 +137,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
     public boolean hasModifiedLobField() {
 
         if (updatedFields != null) {
-            for (Iterator i = updatedFields.iterator(); i.hasNext(); ) {
+            for (Iterator<FieldDesc> i = updatedFields.iterator(); i.hasNext(); ) {
 
                 // The list updatedFields only contains LocalFieldDesc.
                 // Thus it's safe to cast to LocalFieldDesc below.
@@ -163,9 +160,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
      */
     public void markRelationshipChange(FieldDesc fieldDesc) {
         if (fieldDesc.isRelationshipField() || fieldDesc.isForeignKeyField()) {
-            if (logger.isLoggable(Logger.FINEST)) {
-                logger.finest("sqlstore.sql.updateobjdescimpl.markrelationshipchange"); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.sql.updateobjdescimpl.markrelationshipchange");
             // MARK THE RELATIONSHIP CHANGE for this instance.
             relationshipChanged = true;
         }
@@ -190,7 +185,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
 
         // Check for updated foreign key relationships.
         if (updatedFields != null) {
-            for (Iterator iter = updatedFields.iterator(); iter.hasNext(); ) {
+            for (Iterator<FieldDesc> iter = updatedFields.iterator(); iter.hasNext(); ) {
                 LocalFieldDesc field = (LocalFieldDesc) iter.next();
                 if (field.isForeignKeyField()) {
                     return true;
@@ -216,14 +211,14 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
     public boolean removeUpdatedJoinTableRelationship(ForeignFieldDesc fieldDesc,
                                                       SQLStateManager foreignSM,
                                                       int action) {
-        HashMap updateJoinTableDescs = null;
+        HashMap<SQLStateManager, UpdateJoinTableDesc> updateJoinTableDescs = null;
 
         if ((updatedJoinTableRelationships == null) ||
-                ((updateJoinTableDescs = (HashMap) updatedJoinTableRelationships.get(fieldDesc)) == null)) {
+                ((updateJoinTableDescs = updatedJoinTableRelationships.get(fieldDesc)) == null)) {
             return false;
         }
 
-        UpdateJoinTableDesc desc = (UpdateJoinTableDesc) updateJoinTableDescs.get(foreignSM);
+        UpdateJoinTableDesc desc = updateJoinTableDescs.get(foreignSM);
         if (desc != null && desc.getAction() == action) {
             return (updateJoinTableDescs.remove(foreignSM) != null);
         }
@@ -249,19 +244,19 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
                                                    SQLStateManager foreignSM,
                                                    int action) {
         if (updatedJoinTableRelationships == null) {
-            updatedJoinTableRelationships = new HashMap();
+            updatedJoinTableRelationships = new HashMap<>();
         }
 
-        HashMap updateJoinTableDescs = null;
+        HashMap<SQLStateManager, UpdateJoinTableDesc> updateJoinTableDescs = null;
 
-        if ((updateJoinTableDescs = (HashMap) updatedJoinTableRelationships.get(fieldDesc)) == null) {
-            updateJoinTableDescs = new HashMap();
+        if ((updateJoinTableDescs = updatedJoinTableRelationships.get(fieldDesc)) == null) {
+            updateJoinTableDescs = new HashMap<>();
             updatedJoinTableRelationships.put(fieldDesc, updateJoinTableDescs);
         }
 
         UpdateJoinTableDesc desc = null;
 
-        if ((desc = (UpdateJoinTableDesc) updateJoinTableDescs.get(foreignSM)) == null) {
+        if ((desc = updateJoinTableDescs.get(foreignSM)) == null) {
             desc = new UpdateJoinTableDesc(parentSM, foreignSM, action);
             updateJoinTableDescs.put(foreignSM, desc);
         }
@@ -272,11 +267,12 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
     }
 
     public void recordUpdatedField(LocalFieldDesc fieldDesc) {
-        if (!updatedFields.contains(fieldDesc))
+        if (!updatedFields.contains(fieldDesc)) {
             updatedFields.add(fieldDesc);
+        }
     }
 
-    public List getUpdatedFields() {
+    public List<FieldDesc> getUpdatedFields() {
         return updatedFields;
     }
 
@@ -348,6 +344,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
      * (except that we won't have an AfterImage for Deletes and we won't have
      * a BeforeImage for updates).
      */
+    @Override
     public void setObjectInfo(StateManager biStateManager,
                               StateManager aiStateManager,
                               int action) {
@@ -367,10 +364,8 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
         // These are attributes that are stored in this object and are not references
         // to other persistent objects.
 
-        boolean debug = logger.isLoggable(Logger.FINER);
-
         for (int i = 0; i < config.fields.size(); i++) {
-            FieldDesc f = (FieldDesc) config.fields.get(i);
+            FieldDesc f = config.fields.get(i);
             LocalFieldDesc lf = null;
             boolean updated = false;
 
@@ -411,9 +406,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
             }
 
             if (updated) {
-                if (debug) {
-                    logger.finer("sqlstore.sql.updateobjdescimpl.updated", f.getName()); // NOI18N
-                }
+                LOG.log(DEBUG, "sqlstore.sql.updateobjdescimpl.updated", f.getName());
 
                 updatedFields.add(lf);
             }

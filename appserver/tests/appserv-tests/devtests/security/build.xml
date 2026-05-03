@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -83,7 +84,7 @@
         <ant dir="ldap/simpleweb" target="all" />
         <ant dir="ldapRealmPerApp" target="all"/>
         -->
-<!--    <ant dir="solarisRealm" target="all"/>-->                  <!-- DISABLED -->
+
     </target>
 
     <target name="ejb">

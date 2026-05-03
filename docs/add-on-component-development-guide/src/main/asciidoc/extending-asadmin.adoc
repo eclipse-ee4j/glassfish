@@ -123,7 +123,7 @@ are installed, use the
 xref:reference-manual.adoc#list-commands[`list-commands`] subcommand.
 For a complete list of `asadmin` subcommands that are supplied in
 {productName} distributions, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc[{productName} Reference Manual].
 
 [[ensuring-that-an-admincommand-implementation-is-stateless]]
 

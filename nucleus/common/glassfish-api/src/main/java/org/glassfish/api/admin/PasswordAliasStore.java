@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,11 +25,13 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Represents a fully-functional password alias store.
  * <p>
- * If the implementation holds the aliases and passwords in memory, it handles loading and saving the in-memory contents
- * from and to persistent storage, at the discretion of the implementer. For example, loading would typically happen
- * when the password alias store implementation is first instantiated, although an implementation could choose to load
- * lazily on first read. Saving is at the discretion of the implementer as well, although to maximize reliability the
- * implementation should persist changes as they occur. The {@link #putAll ) methods can help optimize that.
+ * If the implementation holds the aliases and passwords in memory, it handles loading and saving
+ * the in-memory contents from and to persistent storage, at the discretion of the implementer.
+ * For example, loading would typically happen when the password alias store implementation is first
+ * instantiated, although an implementation could choose to load lazily on first read. Saving is at
+ * the discretion of the implementer as well, although to maximize reliability the implementation
+ * should persist changes as they occur.
+ * The {@link #putAll(Map)} and {@link #putAll(PasswordAliasStore)} can help optimize that.
  *
  * @author tjquinn
  */
@@ -52,23 +55,17 @@ public interface PasswordAliasStore {
     char[] get(String alias);
 
     /**
-     * Reports whether the alias store is empty.
-     *
-     * @return
+     * @return true if the alias store is empty.
      */
     boolean isEmpty();
 
     /**
-     * Returns an Iterator over aliases present in the alias store.
-     *
-     * @return
+     * @return an Iterator over aliases present in the alias store.
      */
     Iterator<String> keys();
 
     /**
-     * Reports the number of aliases present in the store.
-     *
-     * @return
+     * @return the number of aliases present in the store.
      */
     int size();
 
@@ -95,8 +92,9 @@ public interface PasswordAliasStore {
     /**
      * Adds a group of alias/password pairs in a single operation.
      * <p>
-     * Callers might prefer to invoke this method once rather than invoking {@link #put ) repeatedly, for example if an
-     * implementation persists each change as it is made.
+     * Callers might prefer to invoke this method once rather than invoking
+     * {@link #put(String, char[])} repeatedly, for example if an implementation persists each
+     * change as it is made.
      *
      * @param settings the alias/password pairs to add
      */

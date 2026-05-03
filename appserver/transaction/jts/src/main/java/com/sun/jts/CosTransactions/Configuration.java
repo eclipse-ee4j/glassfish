@@ -49,7 +49,6 @@ import org.omg.PortableServer.POA;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
 */
 // CHANGE HISTORY
 //
@@ -310,7 +309,6 @@ public class Configuration extends Object {
      * Non-recoverable servers may not have a name, in which case the method returns
      * null.
      *
-     * @param
      * @return The server name.
      */
     public static final String getServerName() {
@@ -352,7 +350,6 @@ public class Configuration extends Object {
      * Non-recoverable servers may not have a name, in which case the method returns
      * null.
      *
-     * @param
      * @return The server name (byte array).
      */
     public static final byte[] getServerNameByteArray() {
@@ -434,7 +431,6 @@ public class Configuration extends Object {
     /**
      * Returns the identity of the ORB.
      *
-     * @param
      * @return The ORB.
      */
     public static final org.omg.CORBA.ORB getORB() {
@@ -462,7 +458,6 @@ public class Configuration extends Object {
     /**
      * Returns the identity of the TransactionFactory.
      *
-     * @param
      * @return The TransactionFactory.
      */
     public static final TransactionFactory getFactory() {
@@ -475,7 +470,6 @@ public class Configuration extends Object {
     /**
      * Determines whether we hava a local factory or a remote factory.
      *
-     * @param
      * @return Indicates whether we have a local factory.
      */
     public static final boolean isLocalFactory() {
@@ -490,7 +484,6 @@ public class Configuration extends Object {
     /**
      * Determines whether the JTS instance is recoverable.
      *
-     * @param
      * @return Indicates whether the JTS is recoverable.
      */
     public static final boolean isRecoverable() {
@@ -518,7 +511,6 @@ public class Configuration extends Object {
     /**
      * Returns the identity of the ProxyChecker.
      *
-     * @param
      * @return The ProxyChecker.
      */
     public static final ProxyChecker getProxyChecker() {
@@ -542,7 +534,6 @@ public class Configuration extends Object {
     /**
      * Returns the identity of the LogFile for the process.
      *
-     * @param
      * @return The LogFile.
      */
     public static final LogFile getLogFile() {

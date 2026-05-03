@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * IOJavaFileWriter.java
- *
- * Created on November 14, 2001, 5:19 PM
  */
 
 package com.sun.jdo.spi.persistence.utility.generator.io;
@@ -42,18 +37,17 @@ import org.glassfish.persistence.common.I18NHelper;
  * Use this interface in conjunction with one or more {@link JavaClassWriter}
  * instances to describe the class(es) in a java file.
  *
- * @author raccah
+ * @author raccah 2001
  */
-public class IOJavaFileWriter implements JavaFileWriter
-{
+public class IOJavaFileWriter implements JavaFileWriter {
+
     /** I18N message handler */
-    private static final ResourceBundle _messages =
-        I18NHelper.loadBundle(IOJavaFileWriter.class);
+    private static final ResourceBundle _messages = I18NHelper.loadBundle(IOJavaFileWriter.class);
 
     private File _file;
     private String _packageBlock;
-    private List _importStatements = new ArrayList();
-    private List _classes = new ArrayList();
+    private List<String> _importStatements = new ArrayList<>();
+    private List<JavaClassWriter> _classes = new ArrayList<>();
 
     /** Creates a new instance of IOJavaFileWriter.
      * @param file The file object which will be used at save time.
@@ -75,6 +69,7 @@ public class IOJavaFileWriter implements JavaFileWriter
      * by the implementation.  Note that not all implementations will choose
      * to make use of this comment.
      */
+    @Override
     public void setPackage (final String packageName, final String[] comments)
     {
         final FormattedWriter writerHelper =  new FormattedWriter();
@@ -97,13 +92,15 @@ public class IOJavaFileWriter implements JavaFileWriter
      * by the implementation.  Note that not all implementations will choose
      * to make use of this comment.
      */
+    @Override
     public void addImport (final String importName, final String[] comments)
     {
         final FormattedWriter writerHelper =  new FormattedWriter();
 
         writerHelper.writeComments(comments);
-        if (importName != null && importName.length() > 0)
+        if (importName != null && importName.length() > 0) {
             writerHelper.writeln("import " + importName + ';');        // NOI18N
+        }
 
         _importStatements.add(writerHelper.toString());
     }
@@ -111,10 +108,12 @@ public class IOJavaFileWriter implements JavaFileWriter
     /** Adds a class to this source file.
      * @param classWriter The definition of the class.
      */
+    @Override
     public void addClass (final JavaClassWriter classWriter)
     {
-        if (classWriter != null)
+        if (classWriter != null) {
             _classes.add(classWriter);
+        }
     }
 
     /** Saves the file by writing out the source contents to whatever
@@ -122,6 +121,7 @@ public class IOJavaFileWriter implements JavaFileWriter
      * constructor of the implementation class.
      * @throws IOException If the file cannot be saved.
      */
+    @Override
     public void save () throws IOException
     {
         if (_file != null)
@@ -155,17 +155,19 @@ public class IOJavaFileWriter implements JavaFileWriter
     /** Returns a string representation of this object.
      * @return The string representation of the generated file.
      */
+    @Override
     public String toString ()
     {
         final FormattedWriter writerHelper =  new FormattedWriter();
 
         // package block
         writerHelper.writeln();
-        if (_packageBlock != null)
+        if (_packageBlock != null) {
             writerHelper.write(_packageBlock);
+        }
 
-        writerHelper.writeList(_importStatements);        // imports
-        writerHelper.writeList(_classes);                // classes
+        writerHelper.writeList(_importStatements);
+        writerHelper.writeList(_classes);
 
         return writerHelper.toString();
     }

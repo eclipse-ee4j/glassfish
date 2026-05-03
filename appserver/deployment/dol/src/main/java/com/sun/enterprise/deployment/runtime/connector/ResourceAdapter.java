@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
+ * Copyright 2021, 2026 Contributors to the Eclipse Foundation
+ * Copyright 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +31,6 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
  * to remove its dependencies on schema2beans libraries.
  *
  * @author Jerome Dochez
- * @version
  */
 public class ResourceAdapter extends RuntimeDescriptor {
 
@@ -44,55 +43,56 @@ public class ResourceAdapter extends RuntimeDescriptor {
     static public final String MAX_WAIT_TIME_IN_MILLIS = "MaxWaitTimeInMillis";
     static public final String IDLE_TIMEOUT_IN_SECONDS = "IdleTimeoutInSeconds";
 
-    // This attribute is an array, possibly empty
     public void setPropertyElement(int index, NameValuePairDescriptor value) {
         this.setValue(PROPERTY, index, value);
     }
 
 
-    //
     public boolean isPropertyElement(int index) {
         NameValuePairDescriptor ret = (NameValuePairDescriptor) this.getValue(PROPERTY, index);
         return ret != null;
     }
 
 
-    //
     public NameValuePairDescriptor[] getPropertyElement() {
         return (NameValuePairDescriptor[]) this.getValues(PROPERTY);
     }
 
 
-    // Return the number of properties
+    /** @return the number of properties */
     public int sizePropertyElement() {
         return this.size(PROPERTY);
     }
 
 
-    // Add a new element returning its index in the list
+    /** Add a new element returning its index in the list */
     public int addPropertyElement(NameValuePairDescriptor value) {
         return this.addValue(PROPERTY, value);
     }
 
 
-    //
-    // Remove an element using its reference
-    // Returns the index the element had in the list
-    //
+    /**
+     * Remove an element using its reference
+     * Returns the index the element had in the list
+     */
     public int removePropertyElement(NameValuePairDescriptor value) {
         return this.removeValue(PROPERTY, value);
     }
 
 
-    //
-    // Remove an element using its index
-    //
+    /**
+     * Remove an element using its index
+     */
     public void removePropertyElement(int index) {
         this.removeValue(PROPERTY, index);
     }
 
 
-    // This method verifies that the mandatory properties are set
+    /**
+     * This method verifies that the mandatory properties are set
+     *
+     * @return always true
+     */
     public boolean verify() {
         return true;
     }

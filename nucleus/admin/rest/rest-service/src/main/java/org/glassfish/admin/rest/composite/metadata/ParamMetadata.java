@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,34 @@
 
 package org.glassfish.admin.rest.composite.metadata;
 
+import java.lang.System.Logger;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.logging.Level;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.OptionsCapable;
-import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.jvnet.hk2.config.Attribute;
+
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  *
  * @author jdlee
  */
 public class ParamMetadata {
+    private static final Logger LOG = System.getLogger(ParamMetadata.class.getName());
+
     private String name;
     private Type type;
     private String help;
     private Object defaultValue;
-    private boolean readOnly = false;
-    private boolean confidential = false;
-    private boolean immutable = false;
-    private boolean createOnly = false;
+    private boolean readOnly;
+    private boolean confidential;
+    private boolean immutable;
+    private boolean createOnly;
     private OptionsCapable context;
 
     public ParamMetadata() {
@@ -157,16 +161,17 @@ public class ParamMetadata {
                             defval = ((DefaultsGenerator) context).getDefaultValue(name);
                         } else if (clazz != null && clazz != Void.class) {
                             if (DefaultsGenerator.class.isAssignableFrom(clazz)) {
-                                defval = ((DefaultsGenerator) clazz.newInstance()).getDefaultValue(name);
+                                defval = ((DefaultsGenerator) clazz.getDeclaredConstructor().newInstance()).getDefaultValue(name);
                             } else {
-                                RestLogging.restLogger.log(Level.SEVERE, RestLogging.DOESNT_IMPLEMENT_DEFAULTS_GENERATOR);
+                                LOG.log(ERROR,
+                                    "The " + clazz + " specified by generator does not implement DefaultsGenerator");
                             }
                         } else {
                             defval = parseValue(def.value());
                         }
                         break;
-                    } catch (Exception ex) {
-                        RestLogging.restLogger.log(Level.SEVERE, null, ex);
+                    } catch (Exception e) {
+                        LOG.log(ERROR, "Failed to resolve the default value for annotation " + annos, e);
                     }
                 } else if (Attribute.class.isAssignableFrom(annotation.getClass())) {
                     Attribute attr = (Attribute) annotation;
@@ -199,10 +204,9 @@ public class ParamMetadata {
             if (clazz.equals(Float.TYPE) || clazz.equals(Float.class)) {
                 return Float.valueOf(value);
             }
-            // TBD - arrays/lists of values
-            RestLogging.restLogger.log(Level.SEVERE, RestLogging.UNSUPPORTED_FIXED_VALUE);
+            LOG.log(ERROR, "The value '" + value + "' cannot be converted to the property " + type);
         } catch (NumberFormatException e) {
-            RestLogging.restLogger.log(Level.SEVERE, RestLogging.VALUE_DOES_NOT_MATCH_TYPE);
+            LOG.log(ERROR, "The value '" + value + "' cannot be converted to the property " + type);
         }
         return null;
     }

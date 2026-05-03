@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,15 +24,16 @@ import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.SQLStoreManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.VersionConsistencyCache;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.utility.BucketizedHashtable;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
+import jakarta.transaction.Transaction;
 
 import java.io.PrintWriter;
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -44,32 +45,25 @@ import javax.sql.DataSource;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.persistence.common.I18NHelper;
 
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+
 /**
  * @author  Marina Vatkina 2000
  */
 public class SQLPersistenceManagerFactory
         implements com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManagerFactory {
 
-    private PersistenceStore _store;
-    private ConnectionFactory _connectionFactory;
-    private Object _dataSource;
-    private PersistenceManagerFactory _persistenceManagerFactory;
-
-    /** Pooling size */
-    private int minPool;
-    private int maxPool;
-
-    /**
-     * The logger
-     */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
-
     /**
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", //NOI18N
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle",
             SQLPersistenceManagerFactory.class.getClassLoader());
+    /**
+     * The logger
+     */
+    private static final Logger LOG = System.getLogger(SQLPersistenceManagerFactory.class.getName(), messages);
 
     /**
      * bucket size for Transactional cache of PersistenceManager instances
@@ -83,27 +77,33 @@ public class SQLPersistenceManagerFactory
 
     static {
         pmCacheBucketSize = Integer.getInteger(
-                "com.sun.jdo.spi.persistence.support.sqlstore.impl.SQLPersistenceManagerFactory.pmCacheBucketSize", // NOI18N
+                "com.sun.jdo.spi.persistence.support.sqlstore.impl.SQLPersistenceManagerFactory.pmCacheBucketSize",
                 11).intValue();
 
         pmCacheInitialCapacity = Integer.getInteger(
-                "com.sun.jdo.spi.persistence.support.sqlstore.impl.SQLPersistenceManagerFactory.pmCacheInitialCapacity", // NOI18N
+                "com.sun.jdo.spi.persistence.support.sqlstore.impl.SQLPersistenceManagerFactory.pmCacheInitialCapacity",
                 11 * pmCacheBucketSize).intValue();
 
-        if (logger.isLoggable(Logger.FINEST)) {
-            logger.finest(
-                "sqlstore.sqlpersistencemgrfactory.pmCacheBucketSize", // NOI18N
+            LOG.log(TRACE,
+                "sqlstore.sqlpersistencemgrfactory.pmCacheBucketSize",
                  String.valueOf(pmCacheBucketSize));
-            logger.finest(
-                "sqlstore.sqlpersistencemgrfactory.pmCacheInitialCapacity", // NOI18N
+            LOG.log(TRACE,
+                "sqlstore.sqlpersistencemgrfactory.pmCacheInitialCapacity",
                  String.valueOf(pmCacheInitialCapacity));
-        }
     }
 
     /**
      * Transactional cache of PersistenceManager instances
      */
-    private final Map pmCache = new BucketizedHashtable(pmCacheBucketSize, pmCacheInitialCapacity);
+    private final Map<Transaction, PersistenceManager> pmCache = new BucketizedHashtable<>(pmCacheBucketSize, pmCacheInitialCapacity);
+    private PersistenceStore _store;
+    private ConnectionFactory _connectionFactory;
+    private Object _dataSource;
+    private PersistenceManagerFactory _persistenceManagerFactory;
+
+    /** Pooling size */
+    private int minPool;
+    private int maxPool;
 
     /**
      * Cache of StateManager instances that support version consistency
@@ -160,7 +160,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionUserName(String userName) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -179,7 +179,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionPassword(char[] password) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -189,7 +189,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionURL(String url) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -209,7 +209,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionDriverName(String driverName) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -229,7 +229,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionFactory(Object cf) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -252,7 +252,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setOptimistic(boolean flag) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -271,7 +271,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setRetainValues(boolean flag) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -291,7 +291,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setNontransactionalRead(boolean flag) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -313,7 +313,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setIgnoreCache(boolean flag) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -334,7 +334,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setQueryTimeout(int timeout) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -354,7 +354,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionMaxPool(int MaxPool) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -373,7 +373,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionMinPool(int MinPool) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -393,7 +393,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionMsWait(int MsWait) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -416,7 +416,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionMsInterval(int MsInterval) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -437,7 +437,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionLoginTimeout(int LoginTimeout) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -457,7 +457,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionLogWriter(PrintWriter pw) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -480,7 +480,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionTransactionIsolation(int level) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -499,7 +499,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setConnectionFactoryName(SimpleJndiName connectionFactoryName) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -518,7 +518,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setIdentifier(String identifier) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -547,7 +547,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setMaxPool(int MaxPool) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -567,7 +567,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setMinPool(int MinPool) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
 
@@ -579,7 +579,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setUpdateTimeout(int timeout) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -612,7 +612,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setSupersedeDeletedInstance (boolean flag) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -643,7 +643,7 @@ public class SQLPersistenceManagerFactory
      @Override
     public void setRequireCopyObjectId (boolean flag) {
          throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
      }
 
     /**
@@ -671,7 +671,7 @@ public class SQLPersistenceManagerFactory
     @Override
     public void setRequireTrackedSCO (boolean flag) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+                "jdo.persistencemanagerfactoryimpl.notsupported"));
     }
 
     /**
@@ -695,26 +695,19 @@ public class SQLPersistenceManagerFactory
      */
     @Override
     public PersistenceManager getPersistenceManager(String username, char[] password) {
-        boolean debug = logger.isLoggable(Logger.FINEST);
-
         if (_connectionFactory == null && _dataSource == null) {
             throw new JDOUserException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerfactoryimpl.getpersistencemanager.notconfigured"));// NOI18N
+                    "jdo.persistencemanagerfactoryimpl.getpersistencemanager.notconfigured"));
         }
 
-        if (debug) {
-             logger.finest("sqlstore.sqlpersistencemgrfactory.getpersistencemgr",Thread.currentThread()); // NOI18N
-        }
+         LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr",Thread.currentThread());
 
         // Check if we are in managed environment and PersistenceManager is cached
         PersistenceManagerImpl pm = null;
-        jakarta.transaction.Transaction t = EJBHelper.getTransaction();
+        Transaction t = EJBHelper.getTransaction();
 
         if (t != null) {
-            if (debug) {
-                Object[] items = new Object[] {Thread.currentThread(),t};
-                logger.finest("sqlstore.sqlpersistencemgrfactory.getpersistencemgr.found",items); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr.found", Thread.currentThread(), t);
 
             pm = (PersistenceManagerImpl) pmCache.get(t);
             if (pm == null) {
@@ -722,12 +715,10 @@ public class SQLPersistenceManagerFactory
                 pm = getFromPool(t, username, password);
                 pmCache.put(t, pm);
             } else if(pm.isClosed()) {
-                if (debug) {
-                     Object[] items = new Object[] {Thread.currentThread(),t};
-                     logger.finest("sqlstore.sqlpersistencemgrfactory.getpersistencemgr.pmclosedfor",items); // NOI18N
-                }
+                LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr.pmclosedfor",
+                    Thread.currentThread(), t);
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerfactoryimpl.getpersistencemanager.closed", // NOI18N
+                        "jdo.persistencemanagerfactoryimpl.getpersistencemanager.closed",
                         t));
             }
 
@@ -737,9 +728,7 @@ public class SQLPersistenceManagerFactory
 
             com.sun.jdo.spi.persistence.support.sqlstore.Transaction tx =
                     (com.sun.jdo.spi.persistence.support.sqlstore.Transaction) pm.currentTransaction();
-            if (debug) {
-                logger.finest("sqlstore.sqlpersistencemgrfactory.getpersistencemgr.jdotx",tx); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr.jdotx",tx);
 
             if (!tx.isActive()) {
                 tx.begin(t);
@@ -748,22 +737,17 @@ public class SQLPersistenceManagerFactory
             if (!(pm.verify(username, password))) {
 
                 throw new JDOUserException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerfactoryimpl.getpersistencemanager.error")); // NOI18N
+                        "jdo.persistencemanagerfactoryimpl.getpersistencemanager.error"));
             }
         } else {
-            if (debug) {
-                logger.finest("sqlstore.sqlpersistencemgrfactory.getpersistencemgr.jdotx.notfound"); // NOI18N
-            }
+            LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr.jdotx.notfound");
             // We don't know if we are in the managed environment or not
             // If Yes, it is BMT with JDO Transaction and it will register
             // itself at the begin().
             pm = getFromPool(null, username, password);
         }
 
-        if (debug) {
-            Object[] items = new Object[] {Thread.currentThread(),pm,t};
-            logger.finest("sqlstore.sqlpersistencemgrfactory.getpersistencemgr.pmt",items); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getpersistencemgr.pmt", Thread.currentThread(), pm, t);
 
         // Always return a wrapper
         return new PersistenceManagerWrapper(pm);
@@ -797,12 +781,8 @@ public class SQLPersistenceManagerFactory
             com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager pm,
             jakarta.transaction.Transaction t) {
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {pm,t};
-            logger.finest("sqlstore.sqlpersistencemgrfactory.registerpersistencemgr.pmt",items); // NOI18N
-        }
-        PersistenceManager pm1 = (PersistenceManager) pmCache.get(t);
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.registerpersistencemgr.pmt", pm,t);
+        PersistenceManager pm1 = pmCache.get(t);
         // double-check locking has been removed
         if (pm1 == null) {
             pmCache.put(t, pm);
@@ -810,13 +790,13 @@ public class SQLPersistenceManagerFactory
             return;
         }
 
-        if (pm1 != pm) {
+        if (pm1 == pm) {
+            // do nothing ???
+        } else {
             Object[] items = new Object[] {t, pm1};
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                    "jdo.persistencemanagerfactoryimpl.registerpm.registered", // NOI18N
+                    "jdo.persistencemanagerfactoryimpl.registerpm.registered",
                     items));
-        } else {
-            // do nothing ???
         }
     }
 
@@ -827,10 +807,7 @@ public class SQLPersistenceManagerFactory
     private PersistenceManagerImpl getFromPool(jakarta.transaction.Transaction tx,
                                                String username, char[] password) {
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            logger.finest("sqlstore.sqlpersistencemgrfactory.getfrompool"); // NOI18N
-        }
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getfrompool");
 
         synchronized (this) {
             if (_store == null) {
@@ -841,11 +818,7 @@ public class SQLPersistenceManagerFactory
         // create new PersistenceManager object and set its atributes
         PersistenceManagerImpl pm = new PersistenceManagerImpl(this, tx, username, password);
         pm.setStore(_store);
-        if (debug) {
-            Object[] items = new Object[] {pm,tx};
-            logger.finest("sqlstore.sqlpersistencemgrfactory.getfrompool.pmt",items); // NOI18N
-        }
-
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.getfrompool.pmt", pm, tx);
         return pm;
 
     }
@@ -855,7 +828,7 @@ public class SQLPersistenceManagerFactory
      */
     private void returnToPool(PersistenceManager pm) {
         // do nothing for now
-        logger.finest("sqlstore.sqlpersistencemgrfactory.returnToPool"); // NOI18N
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.returnToPool");
     }
 
     /** Releases closed PersistenceManager that is not in use
@@ -865,32 +838,27 @@ public class SQLPersistenceManagerFactory
                                           jakarta.transaction.Transaction t) {
 
 
-        boolean debug = logger.isLoggable(Logger.FINEST);
-        if (debug) {
-            Object[] items = new Object[] {pm,t};
-            logger.finest("sqlstore.sqlpersistencemgrfactory.releasepm.pmt",items); // NOI18N
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.releasepm.pmt", pm, t);
 
-        }
-
-        if (t != null) {
+        if (t == null) {
+            returnToPool(pm);
+        } else {
             // Managed environment
             // Deregister only
-            PersistenceManager pm1 = (PersistenceManager) pmCache.get(t);
-            if (pm1 == null || pm1 != pm) {
+            PersistenceManager pm1 = pmCache.get(t);
+            if (pm1 != null && pm1 == pm) {
+                pmCache.remove(t);
+            } else {
                 Object[] items = new Object[] {t, pm1};
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerfactoryimpl.registerpm.registered", // NOI18N
+                        "jdo.persistencemanagerfactoryimpl.registerpm.registered",
                         items));
-            } else {
-                pmCache.remove(t);
             }
-        } else {
-            returnToPool(pm);
         }
     }
 
     private void initialize() {
-        logger.finest("sqlstore.sqlpersistencemgrfactory.init"); // NOI18N
+        LOG.log(TRACE, "sqlstore.sqlpersistencemgrfactory.init");
         minPool = _persistenceManagerFactory.getMinPool();
         maxPool = _persistenceManagerFactory.getMaxPool();
     }
@@ -905,9 +873,7 @@ public class SQLPersistenceManagerFactory
                             getIdentifier() );
             }
         } catch(Exception e) {
-            if (logger.isLoggable(Logger.WARNING)) {
-                logger.log(Logger.WARNING, "jdo.sqlpersistencemanagerfactory.errorgettingDatabaseInfo", e); //NOI18N
-            }
+            LOG.log(WARNING, "jdo.sqlpersistencemanagerfactory.errorgettingDatabaseInfo", e);
 
             if (e instanceof JDOException) {
                 throw (JDOException) e;
@@ -982,7 +948,7 @@ public class SQLPersistenceManagerFactory
             if (_store == null) {
                 // Store should be configured already.
                 throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
-                        "jdo.persistencemanagerfactoryimpl.getversionconsistencycache.nullstore")); // NOI18N
+                        "jdo.persistencemanagerfactoryimpl.getversionconsistencycache.nullstore"));
             }
             vcCache = VersionConsistencyCacheImpl.create();
             _store.getConfigCache().setVersionConsistencyCache(vcCache);

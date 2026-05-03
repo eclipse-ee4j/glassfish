@@ -410,7 +410,7 @@ production environments.
 
 For information about planning a high-availability deployment, including
 assessing hardware requirements, planning network configuration, and
-selecting a topology, see the xref:deployment-planning-guide.adoc#GSPLG[{productName} Deployment Planning Guide]. This manual also provides a
+selecting a topology, see the xref:deployment-planning-guide.adoc[{productName} Deployment Planning Guide]. This manual also provides a
 high-level introduction to concepts such as:
 
 * {productName} components such as node agents, domains, and clusters
@@ -418,10 +418,10 @@ high-level introduction to concepts such as:
 * Message queue failover
 
 For more information about developing applications that take advantage
-of high availability features, see the xref:application-development-guide.adoc#GSDVG[{productName} Application Development Guide].
+of high availability features, see the xref:application-development-guide.adoc[{productName} Application Development Guide].
 
 For information on how to configure and tune applications and {productName} for best performance with high availability, see the
-xref:performance-tuning-guide.adoc#GSPTG[{productName} Performance Tuning
+xref:performance-tuning-guide.adoc[{productName} Performance Tuning
 Guide], which discusses topics such as:
 
 * Tuning persistence frequency and persistence scope

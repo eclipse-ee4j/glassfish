@@ -222,7 +222,6 @@ public class ResourceManagerImpl implements ResourceManager {
      *
      * @param resource <code>ResourceHandle</code> object
      * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
-     * @exception <code>PoolingException</code>
      */
     @Override
     public void delistResource(ResourceHandle resource, int xaresFlag) {
@@ -235,7 +234,6 @@ public class ResourceManagerImpl implements ResourceManager {
      *
      * @param resource <code>ResourceHandle</code> object
      * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
-     * @throws PoolingException
      */
     @Override
     public void unregisterResource(ResourceHandle resource, int xaresFlag) {

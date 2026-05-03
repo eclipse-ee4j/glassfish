@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,13 +26,13 @@ import java.util.Iterator;
  * A weak HashSet. An element stored in the WeakHashSet might be garbage collected,
  * if there is no strong reference to this element.
  */
-public class WeakHashSet
-    extends HashSet
-{
+public class WeakHashSet<T> extends HashSet<Object> {
+
+    private static final long serialVersionUID = -4493040266028957440L;
     /**
      * Helps to detect garbage collected values.
      */
-    ReferenceQueue queue = new ReferenceQueue();
+    ReferenceQueue<Object> queue = new ReferenceQueue<>();
 
     /**
      * Returns an iterator over the elements in this set.  The elements
@@ -39,28 +40,31 @@ public class WeakHashSet
      *
      * @return an Iterator over the elements in this set.
      */
-    public Iterator iterator ()
-    {
+    @Override
+    public Iterator<Object> iterator() {
         // remove garbage collected elements
         processQueue();
 
         // get an iterator of the superclass WeakHashSet
-        final Iterator i = super.iterator();
+        final Iterator<Object> i = super.iterator();
 
-        return new Iterator () {
-            public boolean hasNext ()
-            {
+        return new Iterator<>() {
+
+            @Override
+            public boolean hasNext() {
                 return i.hasNext();
             }
 
-            public Object next ()
-            {
+
+            @Override
+            public Object next() {
                 // unwrap the element
-                return getReferenceObject((WeakReference)i.next());
+                return getReferenceObject((WeakReference<Object>) i.next());
             }
 
-            public void remove ()
-            {
+
+            @Override
+            public void remove() {
                 // remove the element from the HashSet
                 i.remove();
             }
@@ -73,10 +77,11 @@ public class WeakHashSet
      * @param o element whose presence in this set is to be tested.
      * @return <code>true</code> if this set contains the specified element.
      */
-    public boolean contains (Object o)
-    {
+    @Override
+    public boolean contains(Object o) {
         return super.contains(WeakElement.create(o));
     }
+
 
     /**
      * Adds the specified element to this set if it is not already
@@ -84,13 +89,14 @@ public class WeakHashSet
      *
      * @param o element to be added to this set.
      * @return <code>true</code> if the set did not already contain the specified
-     * element.
+     *         element.
      */
-    public boolean add (Object o)
-    {
+    @Override
+    public boolean add(Object o) {
         processQueue();
         return super.add(WeakElement.create(o, this.queue));
     }
+
 
     /**
      * Removes the given element from this set if it is present.
@@ -98,33 +104,31 @@ public class WeakHashSet
      * @param o object to be removed from this set, if present.
      * @return <code>true</code> if the set contained the specified element.
      */
-    public boolean remove (Object o)
-    {
+    @Override
+    public boolean remove(Object o) {
         boolean ret = super.remove(WeakElement.create(o));
         processQueue();
         return ret;
     }
 
+
     /**
      * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
-    private final Object getReferenceObject (WeakReference ref)
-    {
+    private final Object getReferenceObject(WeakReference<Object> ref) {
         return ((ref != null) ? ref.get() : null);
     }
+
 
     /**
      * Removes all garbage collected values with their keys from the map.
      * Since we don't know how much the ReferenceQueue.poll() operation
      * costs, we should call it only in the put() method.
      */
-    private final void processQueue ()
-    {
+    private final void processQueue() {
         WeakElement wv = null;
-
-        while  ((wv = (WeakElement)this.queue.poll()) != null)
-        {
+        while ((wv = (WeakElement) this.queue.poll()) != null) {
             super.remove(wv);
         }
     }
@@ -136,53 +140,61 @@ public class WeakHashSet
      * It redefines equals and hashCode which delegate to the corresponding methods
      * of the wrapped element.
      */
-    static private class WeakElement
-        extends WeakReference
-    {
-        private int hash;    /* Hashcode of key, stored here since the key
-                               may be tossed by the GC */
+    static private class WeakElement extends WeakReference<Object> {
 
-        private WeakElement (Object o)
-        {
+        private int hash; /*
+                           * Hashcode of key, stored here since the key
+                           * may be tossed by the GC
+                           */
+
+        private WeakElement(Object o) {
             super(o);
             hash = o.hashCode();
         }
 
-        private WeakElement (Object o, ReferenceQueue q)
-        {
+
+        private WeakElement(Object o, ReferenceQueue<Object> q) {
             super(o, q);
             hash = o.hashCode();
         }
 
-        private static WeakElement create (Object o)
-        {
+
+        private static WeakElement create(Object o) {
             return (o == null) ? null : new WeakElement(o);
         }
 
-        private static WeakElement create (Object o, ReferenceQueue q)
-        {
+
+        private static WeakElement create(Object o, ReferenceQueue<Object> q) {
             return (o == null) ? null : new WeakElement(o, q);
         }
 
-        /* A WeakElement is equal to another WeakElement iff they both refer to objects
-               that are, in turn, equal according to their own equals methods */
-        public boolean equals (Object o)
-        {
-            if (this == o)
+
+        /*
+         * A WeakElement is equal to another WeakElement iff they both refer to objects
+         * that are, in turn, equal according to their own equals methods
+         */
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
                 return true;
-            if (!(o instanceof WeakElement))
+            }
+            if (!(o instanceof WeakElement)) {
                 return false;
+            }
             Object t = this.get();
-            Object u = ((WeakElement)o).get();
-            if ((t == null) || (u == null))
+            Object u = ((WeakElement) o).get();
+            if ((t == null) || (u == null)) {
                 return false;
-            if (t == u)
+            }
+            if (t == u) {
                 return true;
+            }
             return t.equals(u);
         }
 
-        public int hashCode ()
-        {
+
+        @Override
+        public int hashCode() {
             return hash;
         }
 

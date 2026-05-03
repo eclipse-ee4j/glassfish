@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,8 +75,9 @@ public class ClassPath {
         StringBuffer path = new StringBuffer();
         StringTokenizer parser = new StringTokenizer(className, "./", false);//NOI18N
         for (boolean first = true; parser.hasMoreElements(); first = false) {
-            if (!first)
+            if (!first) {
                 path.append(separator);
+            }
             path.append(parser.nextToken());
         }
         path.append(".class");//NOI18N
@@ -114,8 +116,9 @@ public class ClassPath {
             StringBuffer className = new StringBuffer();
             StringTokenizer parser = new StringTokenizer(fileName, "\\/", false);//NOI18N
             for (boolean first = true; parser.hasMoreElements(); first = false) {
-                if (!first)
+                if (!first) {
                     className.append('/');
+                }
                 className.append(parser.nextToken());
             }
             return className.toString();
@@ -133,10 +136,11 @@ public class ClassPath {
         for (ClassPathElement cpe = firstElement; cpe != null; cpe = cpe.next()) {
             if (cpe.matches(directory)) {
                 matched = true;
-                if (prevElement == null)
+                if (prevElement == null) {
                     firstElement = cpe.next();
-                else
+                } else {
                     prevElement.setNext(cpe.next());
+                }
             } else {
                 prevElement = cpe;
             }
@@ -156,10 +160,11 @@ public class ClassPath {
      * Append a class path element to the classpath.
      */
     public void append(ClassPathElement anElement) {
-        if (theClassPath == null)
+        if (theClassPath == null) {
             theClassPath = anElement;
-        else
+        } else {
             theClassPath.append(anElement);
+        }
     }
 
     /**
@@ -174,7 +179,7 @@ public class ClassPath {
      *    that the class name returned might not correspond the the
      *    name of the class in the file.
      */
-    public Enumeration classesInPackage(String packageName) {
+    public Enumeration<String> classesInPackage(String packageName) {
         return new ClassPackageEnumeration(this, packageName);
     }
 
@@ -196,10 +201,11 @@ public class ClassPath {
         while (parser.hasMoreElements()) {
             ClassPathElement anElement = ClassPathElement.create(parser.nextToken());
 
-            if (lastElement == null)
+            if (lastElement == null) {
                 theClassPath = anElement;
-            else
+            } else {
                 lastElement.append(anElement);
+            }
 
             lastElement = anElement;
         }
@@ -212,7 +218,7 @@ public class ClassPath {
  * can be found in a class path
  */
 
-class ClassPackageEnumeration implements Enumeration {
+class ClassPackageEnumeration implements Enumeration<String> {
     /* The next class path element to look for matches in once
      the current enumeration is complete */
     private ClassPathElement nextClassPathElement;
@@ -220,9 +226,8 @@ class ClassPackageEnumeration implements Enumeration {
     /* The package name */
     private String thePackageName;
 
-    /* The enumeration of matching class names in the current class path
-     element */
-    private Enumeration currentElementEnumeration;
+    /* The enumeration of matching class names in the current class path element */
+    private Enumeration<String> currentElementEnumeration;
 
     /**
      * Construct a ClassPackageEnumeration.
@@ -234,12 +239,11 @@ class ClassPackageEnumeration implements Enumeration {
         thePackageName = packageName;
     }
 
+    @Override
     public boolean hasMoreElements() {
-        while ((currentElementEnumeration == null ||
-            !currentElementEnumeration.hasMoreElements()) &&
-            nextClassPathElement != null) {
-            currentElementEnumeration =
-                nextClassPathElement.classesInPackage(thePackageName);
+        while ((currentElementEnumeration == null || !currentElementEnumeration.hasMoreElements())
+            && nextClassPathElement != null) {
+            currentElementEnumeration = nextClassPathElement.classesInPackage(thePackageName);
             nextClassPathElement = nextClassPathElement.next();
         }
 
@@ -247,9 +251,11 @@ class ClassPackageEnumeration implements Enumeration {
             currentElementEnumeration.hasMoreElements());
     }
 
-    public Object nextElement() {
-        if (hasMoreElements())
+    @Override
+    public String nextElement() {
+        if (hasMoreElements()) {
             return currentElementEnumeration.nextElement();
+        }
 
         throw new NoSuchElementException();
     }

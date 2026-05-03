@@ -26,7 +26,6 @@ import java.util.Map;
  * server with various service control mechanisms on various platforms.
  *
  * @since SJSAS 9.1
- * @see #isConfigValid
  * @author Kedar Mhaswade
  */
 public interface Service {
@@ -57,7 +56,7 @@ public interface Service {
      * Returns the tokens and values of the service as a map. This method converts a service into corresponding tokens and
      * their values.
      *
-     * @return tokens and values as a Map<String, String>.
+     * @return tokens and values as a {@code Map<String, String>}.
      */
     Map<String, String> tokensAndValues();
 

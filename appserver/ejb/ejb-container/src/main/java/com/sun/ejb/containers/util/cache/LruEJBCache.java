@@ -28,7 +28,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * LRUCache
  * in-memory bounded cache with an LRU list
  */
-public class LruEJBCache extends LruCache {
+public class LruEJBCache<K, V> extends LruCache<K, V> {
 
     protected static final Logger _logger  = LogFacade.getLogger();
 
@@ -45,9 +45,9 @@ public class LruEJBCache extends LruCache {
     public LruEJBCache() { }
 
     @Override
-    protected CacheItem trimLru(long currentTime) {
+    protected CacheItem<K, V> trimLru(long currentTime) {
 
-        LruCacheItem trimItem = tail;
+        LruCacheItem<K, V> trimItem = tail;
 
         if (tail != head) {
             tail = trimItem.getLPrev();
@@ -73,9 +73,9 @@ public class LruEJBCache extends LruCache {
     }
 
     @Override
-    protected CacheItem itemAdded(CacheItem item) {
+    protected CacheItem<K, V> itemAdded(CacheItem<K, V> item) {
         boolean wasUnbounded = isUnbounded;
-        CacheItem overflow = null;
+        CacheItem<K, V> overflow = null;
 
         // force not to check
         isUnbounded = false;

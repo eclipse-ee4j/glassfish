@@ -20,7 +20,9 @@ package com.sun.enterprise.deployment;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
+ * {@code
  * <!ELEMENT adminobject (adminobject-interface, adminobject-class, config-property*)>
+ * }
  *
  * @author Qingqing Ouyang
  * @author Sheetal Vartak

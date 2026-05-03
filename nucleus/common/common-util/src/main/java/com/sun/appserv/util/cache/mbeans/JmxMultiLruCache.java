@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,52 +15,49 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/**
- * @Version $Id: JmxMultiLruCache.java,v 1.4 2005/12/25 04:25:23 tcfujii Exp $
- * Created on May 4, 2005 02:30 PM
- */
-
 package com.sun.appserv.util.cache.mbeans;
 
 import com.sun.appserv.util.cache.Constants;
 import com.sun.appserv.util.cache.MultiLruCache;
+
 /**
  * This class provides implementation for JmxLruCache MBean
  *
- * @author Krishnamohan Meduri (Krishna.Meduri@Sun.com)
- *
+ * @author Krishnamohan Meduri (Krishna.Meduri@Sun.com) 2005
  */
-public class JmxMultiLruCache extends JmxBaseCache
-                              implements JmxMultiLruCacheMBean {
+public class JmxMultiLruCache extends JmxBaseCache implements JmxMultiLruCacheMBean {
 
     private MultiLruCache multiLruCache;
 
     public JmxMultiLruCache(MultiLruCache multiLruCache, String name) {
-        super(multiLruCache,name);
+        super(multiLruCache, name);
         this.multiLruCache = multiLruCache;
     }
+
 
     /**
      * Returns the number of entries that have been trimmed
      */
+    @Override
     public Integer getTrimCount() {
-        return (Integer) multiLruCache.getStatByName(
-                                        Constants.STAT_MULTILRUCACHE_TRIM_COUNT);
+        return (Integer) multiLruCache.getStatByName(Constants.STAT_MULTILRUCACHE_TRIM_COUNT);
     }
+
 
     /**
      * Returns the size of each segment
      */
+    @Override
     public Integer getSegmentSize() {
-        return (Integer) multiLruCache.getStatByName(
-                                        Constants.STAT_MULTILRUCACHE_SEGMENT_SIZE);
+        return (Integer) multiLruCache.getStatByName(Constants.STAT_MULTILRUCACHE_SEGMENT_SIZE);
     }
+
 
     /**
      * Returns the legnth of the segment list
      */
+    @Override
     public Integer[] getSegmentListLength() {
-        return (Integer[]) multiLruCache.getStatByName(
-                                        Constants.STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH);
+        return (Integer[]) multiLruCache.getStatByName(Constants.STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH);
     }
 }

@@ -49,7 +49,7 @@ public interface DataSource extends javax.sql.DataSource {
      *
      * @param con Connection obtained from <code>Datasource.getConnection()</code>
      * @return <code>java.sql.Connection</code> implementation of the driver.
-     * @throws <code>java.sql.SQLException</code> If connection cannot be obtained.
+     * @throws java.sql.SQLException If connection cannot be obtained.
      */
     Connection getConnection(Connection con) throws SQLException;
 

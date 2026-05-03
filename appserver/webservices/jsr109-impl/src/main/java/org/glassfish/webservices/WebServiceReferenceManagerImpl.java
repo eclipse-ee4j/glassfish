@@ -77,7 +77,7 @@ import static java.util.logging.Level.WARNING;
 
 /**
  * This class acts as a service to resolve the
- * </code>jakarta.xml.ws.WebServiceRef</code> references
+ * <code>jakarta.xml.ws.WebServiceRef</code> references
  * and also <code>jakarta.xml.ws.WebServiceContext</code>
  * Whenever a lookup is done from GlassfishNamingManagerImpl
  * these methods are invoked to resolve the references

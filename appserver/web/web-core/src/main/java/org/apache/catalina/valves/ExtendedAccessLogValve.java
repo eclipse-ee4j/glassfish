@@ -107,7 +107,7 @@ import org.apache.catalina.util.ServerInfo;
  * </p>
  *
  * <p>
- * For JMX junkies, a public method called </code>rotate</code> has
+ * For JMX junkies, a public method called <code>rotate</code> has
  * been made available to allow you to tell this instance to move
  * the existing log file to somewhere else start writing a new log file.
  * </p>

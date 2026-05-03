@@ -53,10 +53,9 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.database.oracle;
 
 import com.sun.jdo.api.persistence.support.FieldMapping;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
 import com.sun.jdo.spi.persistence.support.sqlstore.database.BaseSpecialDBOperation;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -64,6 +63,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 
 /**
  * OracleSpecialDBOperation is derived class for Oracle specific operation.
@@ -74,7 +76,7 @@ public class OracleSpecialDBOperation extends BaseSpecialDBOperation {
     /**
      * The logger
      */
-    private static Logger logger = LogHelperSQLStore.getLogger();
+    private static final Logger LOG = System.getLogger(OracleSpecialDBOperation.class.getName());
 
     /**
      * Interface used to handle driver specific implementation for various
@@ -142,45 +144,19 @@ public class OracleSpecialDBOperation extends BaseSpecialDBOperation {
      * characteristics of the jdbc driver used with this DataSource.
      */
     @Override
-    public void initialize(DatabaseMetaData metaData,
-        String identifier) throws SQLException {
+    public void initialize(DatabaseMetaData metaData, String identifier) throws SQLException {
         Connection con = metaData.getConnection();
         // Since the PreparedStatement obtained is directly through
         // con, there is no need to unwrap it.
-        PreparedStatement testPs = con.prepareStatement(TEST_STATEMENT);
-/*
-        if (oracle817ClassesAvailable &&
-            testPs instanceof oracle.jdbc.OraclePreparedStatement) {
-            // This DataSource uses a driver version 8.1.7 or higher.
-            // Oracle drivers for version 8.1.7 and higher define interface
-            // oracle.jdbc.OraclePreparedStatement.
-            // OraclePreparedStaement obtained from these drivers implement this
-            // interface. It is possible that in future Oracle might alter
-            // implementation class for OraclePreparedStatement. However, they
-            // should continue implementing this interface. Hence, this
-            // interface should be preferred to communicate with Oracle drivers.
-            dBDriverHandlerFactory = new OracleDriverHandlerFactory() {
-                public DBDriverHandler createDBDriverHandler(PreparedStatement ps) {
-                    return new Oracle817Handler(ps);
-                }
-            };
-        } else if (oracle816ClassesAvailable &&
-                    testPs instanceof oracle.jdbc.driver.OraclePreparedStatement) {
-            // This DataSource uses a driver version lower than 8.1.7.
-            // Currently all Oracle drivers return instance of
-            // oracle.jdbc.driver.OraclePreparedStatement for OraclePreparedStatement.
-            dBDriverHandlerFactory = new OracleDriverHandlerFactory() {
-                public DBDriverHandler createDBDriverHandler(PreparedStatement ps) {
-                    return new Oracle816Handler(ps);
-                }
-            };
-        } else */{
+        try (PreparedStatement testPs = con.prepareStatement(TEST_STATEMENT)) {
             // This DataSource uses a non oracle driver.
             dBDriverHandlerFactory = new DBDriverHandlerFactory() {
+
                 @Override
                 public DBDriverHandler createDBDriverHandler(PreparedStatement ps) {
                     return new NonOracleHandler(ps);
                 }
+
 
                 @Override
                 public boolean supportsDefineColumnType() {
@@ -188,15 +164,9 @@ public class OracleSpecialDBOperation extends BaseSpecialDBOperation {
                 }
             };
             // Warn the user Oracle specific features will be disabled.
-            if(logger.isLoggable(logger.CONFIG)) {
-                identifier = identifier == null ?
-                    "Connection Factory" : identifier;   //NOI18N
-                logger.log(logger.CONFIG,
-                           "sqlstore.database.oracle.nooracleavailable", //NOI18N
-                           identifier);
-            }
+            identifier = identifier == null ? "Connection Factory" : identifier;
+            LOG.log(DEBUG, "sqlstore.database.oracle.nooracleavailable", identifier);
         }
-        testPs.close();
     }
 
     /**
@@ -226,11 +196,7 @@ public class OracleSpecialDBOperation extends BaseSpecialDBOperation {
                         }
                     }
                 } catch (Exception ex) {
-                    if (logger.isLoggable(Logger.INFO)) {
-                        logger.log(Logger.INFO,
-                                   "sqlstore.database.oracle.defineCol", // NOI18N
-                                   ex);
-                    }
+                    LOG.log(INFO, "sqlstore.database.oracle.defineCol", ex);
                     driverHandler.clearDefines();
                 }
             }
@@ -342,10 +308,7 @@ public class OracleSpecialDBOperation extends BaseSpecialDBOperation {
             // padding the value with spaces to the length specified in the
             // dbschema metadata.
             ps.setString(index, padSpaceChar(strVal, length) );
-            if (logger.isLoggable(Logger.FINE) ) {
-                logger.log(Logger.FINE, "sqlstore.database.oracle.fixedcharpadded",
-                           strVal, new Integer(length) );
-            }
+            LOG.log(DEBUG, "sqlstore.database.oracle.fixedcharpadded", strVal, length);
         }
 
         private static final char SPACE_CHAR = ' ';

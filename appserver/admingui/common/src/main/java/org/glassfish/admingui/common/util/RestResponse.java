@@ -215,7 +215,7 @@ class JerseyRestResponse extends RestResponse {
 
     /**
      * <p>
-     * This method will create a Map<String, Object>. It will add all the attributes of the given root Element to the Map.
+     * This method will create a {@code Map<String, Object>}. It will add all the attributes of the given root Element to the Map.
      * It will then walk any child Elements and add the children as a <code>List&lt;Map&lt;String, Object&gt;&gt;</code> for
      * each unique element name.
      * </p>
@@ -262,7 +262,7 @@ class JerseyRestResponse extends RestResponse {
 
     /**
      * <p>
-     * This method returns a fully populated Map<String, Object> for the given "message-part" <code>Node</code>.
+     * This method returns a fully populated {@code Map<String, Object>} for the given "message-part" <code>Node</code>.
      * </p>
      */
     private Map<String, Object> processMessagePart(Node messageNode) {
@@ -319,7 +319,7 @@ class JerseyRestResponse extends RestResponse {
 
     /**
      * <p>
-     * This method returns a fully populated Map<String, Object> for the given "property" <code>Node</code>.
+     * This method returns a fully populated {@code Map<String, Object>} for the given "property" <code>Node</code>.
      * </p>
      */
     private Map<String, Object> processProperty(Node propertyNode) {

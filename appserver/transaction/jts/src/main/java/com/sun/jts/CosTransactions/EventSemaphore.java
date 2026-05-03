@@ -41,7 +41,6 @@ package com.sun.jts.CosTransactions;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 //----------------------------------------------------------------------------
 // CHANGE HISTORY
@@ -55,11 +54,8 @@ public class EventSemaphore {
 
     /**Default EventSemaphore constructor.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     EventSemaphore() {
     }
@@ -68,9 +64,7 @@ public class EventSemaphore {
      *
      * @param posted  Indicates whether the semaphore should be posted.
      *
-     * @return
      *
-     * @see
      */
     EventSemaphore( boolean posted ) {
         this.posted = posted;
@@ -87,13 +81,10 @@ public class EventSemaphore {
      * <p>
      * If the event has already been posted, then the operation returns immediately.
      *
-     * @param
      *
-     * @return
      *
      * @exception InterruptedException  The wait was interrupted.
      *
-     * @see
      */
     synchronized public void waitEvent()
             throws InterruptedException {
@@ -108,11 +99,9 @@ public class EventSemaphore {
      *
      * @param cmtTimeout - container managed transaction timeout
      *
-     * @return
      *
      * @exception InterruptedException  The wait was interrupted.
      *
-     * @see
      */
 
     synchronized public void waitTimeoutEvent(int cmtTimeout)
@@ -130,11 +119,8 @@ public class EventSemaphore {
      * <p>
      * All waiters are notified.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized void post() {
         if( !posted )
@@ -144,11 +130,8 @@ public class EventSemaphore {
 
     /**Clears a posted event semaphore.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     synchronized void clear() {
         posted = false;

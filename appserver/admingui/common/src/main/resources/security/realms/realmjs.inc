@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation
+    Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -60,8 +60,6 @@ function checkClassname() {
 	    return ( checkRequired(id="form1:ldapSection:jaax:jaax" , '#{reqMsg}') &&
 		checkRequired(id="form1:ldapSection:directory:directory" , '#{reqMsg}')  &&
 		checkRequired(id="form1:ldapSection:baseDn:baseDn" , '#{reqMsg}'))
-	} else if (type.match('SolarisRealm') != null) {
-	    return checkRequired(id="form1:solarisSection:jaax:jaax" , '#{reqMsg}') ;
 	} else if (type.match('JDBCRealm') != null) {
 	    return checkRequired(id="form1:jdbcSection:jaax:jaax" , '#{reqMsg}' ) &&
 		checkRequired(id="form1:jdbcSection:jndi:jndi" , '#{reqMsg}' )  &&
@@ -92,8 +90,7 @@ function showDisplay(testtype) {
     document.getElementById('#{fileSectionId}').style.display = 'none'; 
     document.getElementById('#{ldapSectionId}').style.display = 'none'; 
     document.getElementById('#{jdbcSectionId}').style.display = 'none'; 
-    document.getElementById('#{certSectionId}').style.display = 'none'; 
-    document.getElementById('#{solarisSectionId}').style.display = 'none';
+    document.getElementById('#{certSectionId}').style.display = 'none';
     document.getElementById('#{pamSectionId}').style.display = 'none';
     
     if (testtype.match('none')){  
@@ -109,12 +106,7 @@ function showDisplay(testtype) {
     if (rtype != null){  
         document.getElementById('#{ldapSectionId}').style.display = 'block';   
         return;  
-    }  
-    rtype = type.match('SolarisRealm');  
-    if (rtype != null){  
-        document.getElementById('#{solarisSectionId}').style.display = 'block';   
-        return;  
-    }  
+    }
     rtype = type.match('JDBCRealm');  
     if (rtype != null){  
         document.getElementById('#{jdbcSectionId}').style.display = 'block';   

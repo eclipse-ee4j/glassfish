@@ -125,7 +125,7 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:list-applications.adoc#list-applications[`list-applications`(1)],
 xref:show-component-status.adoc#show-component-status[`show-component-status`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[
+xref:application-deployment-guide.adoc[
 {productName} Application Deployment Guide]
 
 

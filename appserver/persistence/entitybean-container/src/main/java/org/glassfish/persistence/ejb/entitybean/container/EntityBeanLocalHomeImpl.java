@@ -34,7 +34,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  */
 public class EntityBeanLocalHomeImpl extends EJBLocalHomeInvocationHandler {
 
-    protected EntityBeanLocalHomeImpl(EjbDescriptor ejbDescriptor, Class localHomeIntf) throws Exception {
+    protected EntityBeanLocalHomeImpl(EjbDescriptor ejbDescriptor, Class<?> localHomeIntf) throws Exception {
         super(ejbDescriptor, localHomeIntf);
     }
 

@@ -42,7 +42,7 @@ public class XML {
     }
     /**
      *
-     * <code><!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)"></code>
+     * {@code <!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">}
      *
      * @param literal
      * @return

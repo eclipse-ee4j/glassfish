@@ -16,9 +16,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
-import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-
 /**
  *
  * @author  Michael Bouschen
@@ -38,11 +35,4 @@ public class LogHelperQueryCompilerJDO {
      */
     protected static final String bundleName =
         "com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc.Bundle"; // NOI18N
-
-    /** Return the logger for the sqlstore component
-     */
-    public static Logger getLogger() {
-        return LogHelper.getLogger (componentName, bundleName, loader);
-    }
-
 }

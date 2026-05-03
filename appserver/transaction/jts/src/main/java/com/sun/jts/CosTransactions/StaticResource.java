@@ -43,7 +43,6 @@ import org.omg.CosTransactions.Coordinator;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 //----------------------------------------------------------------------------
@@ -66,9 +65,7 @@ public abstract class StaticResource {
      * @param coord  The transaction whose association is starting.
      * @param begin  Indicates a begin rather than a resume.
      *
-     * @return
      *
-     * @see
      */
     public abstract void startAssociation(Coordinator coord, boolean begin);
 
@@ -83,9 +80,7 @@ public abstract class StaticResource {
      * @param coord     The transaction whose association is starting.
      * @param complete  Indicates a commit/rollback rather than a suspend.
      *
-     * @return
      *
-     * @see
      */
     public abstract void endAssociation(Coordinator coord, boolean complete);
 
@@ -95,11 +90,8 @@ public abstract class StaticResource {
      * Until this method is called, the StaticResource object will not receive
      * calls to start/endAssociation.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     protected void register() {
         CurrentTransaction.registerStatic(this);

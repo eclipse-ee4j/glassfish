@@ -56,9 +56,9 @@ public class DataSourceObjectBuilder implements java.io.Serializable{
     /**
      * Construct the DataSource Object from the spec.
      *
-     * @return        Object constructed using the DataSourceSpec.
-     * @throws        <code>ResourceException</code> if the class is not found or some issue in executing
-     *                some method.
+     * @return Object constructed using the DataSourceSpec.
+     * @throws ResourceException if the class is not found or some issue in executing
+     *             some method.
      */
     public Object constructDataSourceObject() throws ResourceException{
         driverProperties = parseDriverProperties(spec);
@@ -187,7 +187,7 @@ public class DataSourceObjectBuilder implements java.io.Serializable{
      * Creates a Datasource object according to the spec.
      *
      * @return Initial DataSource Object instance.
-     * @throws <code>ResourceException</code> If class name is wrong or classpath is not set
+     * @throws ResourceException If class name is wrong or classpath is not set
      * properly.
      */
     private Object getDataSourceObject() throws ResourceException{

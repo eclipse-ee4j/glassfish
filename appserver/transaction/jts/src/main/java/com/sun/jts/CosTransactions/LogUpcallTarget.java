@@ -39,7 +39,6 @@ package com.sun.jts.CosTransactions;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 
 interface LogUpcallTarget {
@@ -47,11 +46,8 @@ interface LogUpcallTarget {
     /**
      * This is the upcall which is called by the log file.
      *
-     * @param
      *
-     * @return
      *
-     * @see
      */
     void upcall(int reason);
 }

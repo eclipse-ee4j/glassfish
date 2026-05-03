@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,7 @@ import java.util.Properties;
  * Cache
  * Generic cache interface
  */
-public interface Cache {
+public interface Cache<K, V> {
 
     /**
      * initialize the cache
@@ -56,7 +57,7 @@ public interface Cache {
      * @param key of the entry
      * @return the index to be used in the cache
      */
-    public int getIndex(Object key);
+    public int getIndex(K key);
 
     /**
      * get the item stored at the key.
@@ -65,40 +66,40 @@ public interface Cache {
      *
      * This function returns first value, for a multi-valued key.
      */
-    public Object get(Object key);
+    public V get(K key);
 
     /**
      * get all the items with the given key.
      * @param key lookup key
      * @returns an Iterator over the items with the given key
      */
-    public Iterator getAll(Object key);
+    public Iterator<V> getAll(K key);
 
     /**
      * check if the cache contains the item at the key
      * @param key lookup key
      * @returns true if there is an item stored at the key; false if not.
      */
-    public boolean contains(Object key);
+    public boolean contains(K key);
 
     /**
      * get an Iterator for the keys stored in the cache
      * @returns an Iterator
      */
-    public Iterator keys();
+    public Iterator<K> keys();
 
     /**
      * get an Enumeration for the keys stored in the cache
      * @returns an Enumeration
      * XXX: should use Iterator which is based on Collections
      */
-    public Enumeration elements();
+    public Enumeration<K> elements();
 
     /**
      * get an Iterator for the values stored in the cache
      * @returns an Iterator
      */
-    public Iterator values();
+    public Iterator<V> values();
 
     /**
      * cache the given value at the specified key and return previous value
@@ -108,7 +109,7 @@ public interface Cache {
      *
      * This function replaces first value, for a multi-valued key.
      */
-    public Object put(Object key, Object value);
+    public V put(K key, V value);
 
     /**
      * cache the given value at the specified key and return previous value
@@ -119,7 +120,7 @@ public interface Cache {
      *
      * This function replaces first value, for a multi-valued key.
      */
-    public Object put(Object key, Object value, int size);
+    public V put(K key, V value, int size);
 
     /**
      * add the given value to the cache at the specified key
@@ -128,7 +129,7 @@ public interface Cache {
      *
      * This function is suitable for multi-valued keys.
      */
-    public void add(Object key, Object value);
+    public void add(K key, V value);
 
     /**
      * add the given value with specified size to the cache at specified key
@@ -138,7 +139,7 @@ public interface Cache {
      *
      * This function is suitable for multi-valued keys.
      */
-    public void add(Object key, Object value, int size);
+    public void add(K key, V value, int size);
 
     /**
      * remove the item with the given key.
@@ -147,7 +148,7 @@ public interface Cache {
      *
      * This function removes first value, for a multi-valued key.
      */
-    public Object remove(Object key);
+    public V remove(K key);
 
     /**
      * remove the given value stored at the key.
@@ -155,13 +156,13 @@ public interface Cache {
      * @param value to match (for multi-valued keys)
      * @returns the item stored at the key; null if not found.
      */
-    public Object remove(Object key, Object value);
+    public V remove(K key, V value);
 
     /**
      * remove all the item with the given key.
      * @param key lookup key
      */
-    public void removeAll(Object key);
+    public void removeAll(K key);
 
     /**
      * wait for a refresh on the object associated with the key
@@ -213,7 +214,7 @@ public interface Cache {
      * @return a Map of stats
      * See also: Constant.java for the keys
      */
-    public Map getStats();
+    public Map<String, Object> getStats();
 
     /**
      * clear all stats

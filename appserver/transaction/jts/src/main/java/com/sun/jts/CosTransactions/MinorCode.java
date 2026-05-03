@@ -38,7 +38,6 @@ package com.sun.jts.CosTransactions;
  *
  * @author Simon Holdsworth, IBM Corporation
  *
- * @see
  */
 public interface MinorCode  {
 

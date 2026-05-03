@@ -27,19 +27,25 @@ import org.jvnet.hk2.config.VariableResolver;
  * Helper to resolve attribute configuration values eg
  * ${com.sun.aas.installRoot} once they have already been obtained in "raw"
  * form. If the goal is to fetch the attribute values in already-resolved form,
- * do so directly via
+ * do so directly via @{link AttributeResolver#resolveAttribute}.
+ * <p>
+ * Values can be resolved into String, boolean or int.
+ * <p>
+ * Example usage:
  *
- * @{link AttributeResolver#resolveAttribute}. <p> Values can be resolved into
- * String, boolean or int. <p> Example usage:</b>
- * <pre>
+ * <pre>{@code
  * HTTPListenerConfig l = ...; // or any AMXConfigProxy sub-interface
  * AttributeResolverHelper h = new AttributeResolverHelper( l );
  * int port = h.resolveInt( l.getPort() );
- * </pre> Alternately, the static method form can be used:<br>
+ * }</pre>
+ *
+ * Alternately, the static method form can be used:
+ *
  * <pre>
+ * {@code
  * HTTPListenerConfig l = ...; // or any AMXConfigProxy sub-interface
  * int port = AttributeResolverHelper.resolveInt( l, value );
- * </pre>
+ * }</pre>
  */
 @Taxonomy( stability = Stability.UNCOMMITTED)
 public class AttributeResolverHelper extends VariableResolver {

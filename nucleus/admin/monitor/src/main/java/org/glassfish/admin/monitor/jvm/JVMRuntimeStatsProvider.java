@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,8 +40,6 @@ public class JVMRuntimeStatsProvider {
 
     private RuntimeMXBean rtBean = ManagementFactory.getRuntimeMXBean();
 
-    private StringStatisticImpl bootClassPath = new StringStatisticImpl("BootClassPath", "String",
-            "Boot class path that is used by the bootstrap class loader to search for class files");
     private StringStatisticImpl classPath = new StringStatisticImpl("ClassPath", "String",
             "Java class path that is used by the system class loader to search for class files");
     private StringStatisticImpl inputArguments = new StringStatisticImpl("InputArguments", "String",
@@ -59,13 +58,6 @@ public class JVMRuntimeStatsProvider {
     private StringStatisticImpl vmName = new StringStatisticImpl("VmName", "String", "Java virtual machine implementation name");
     private StringStatisticImpl vmVendor = new StringStatisticImpl("VmVendor", "String", "Java virtual machine implementation vendor");
     private StringStatisticImpl vmVersion = new StringStatisticImpl("VmVersion", "String", "Java virtual machine implementation version");
-
-    @ManagedAttribute(id = "bootclasspath-current")
-    @Description("boot class path that is used by the bootstrap class loader to search for class files")
-    public StringStatistic getBootClassPath() {
-        bootClassPath.setCurrent(rtBean.getBootClassPath());
-        return bootClassPath;
-    }
 
     @ManagedAttribute(id = "classpath-current")
     @Description("Java class path that is used by the system class loader to search for class files")

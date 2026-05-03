@@ -681,7 +681,7 @@ public final class JMXUtil
             final Attribute attr = (Attribute) attrs.get(i);
 
             final Object value = attr.getValue();
-            final String s = (String) (value == null ? null : "" + value);
+            final String s = value == null ? null : "" + value;
             map.put(attr.getName(), s);
         }
 
@@ -1741,7 +1741,7 @@ public final class JMXUtil
 
     /**
     Get a Map from the user data field of a Notification.
-    This variant requires Map<String,Serializable>.
+    This variant requires {@code Map<String,Serializable>}.
      */
     public static <T extends Serializable> Map<String, T> getUserDataMapString_Serializable(final Notification notif)
     {

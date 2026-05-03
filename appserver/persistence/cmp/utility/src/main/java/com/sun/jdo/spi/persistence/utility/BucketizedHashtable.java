@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,9 +31,9 @@ import java.util.Set;
  *
  * @author Shing Wai Chan
  */
-public class BucketizedHashtable implements Cloneable, Map, Serializable {
+public class BucketizedHashtable<K, V> implements Cloneable, Map<K, V>, Serializable {
     private int bucketSize;
-    private Hashtable[] hashtables = null;
+    private Hashtable<K, V>[] hashtables = null;
 
     /**
      * Constructs a new, empty BucketizedHashtable with the specified
@@ -41,8 +42,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @param initialCapacity the initial capacity of BucketizedHashtable
      * @param loadFactor      the load factor of hashtable
      */
-    public BucketizedHashtable(int bucketSize, int initialCapacity,
-            float loadFactor) {
+    public BucketizedHashtable(int bucketSize, int initialCapacity, float loadFactor) {
         if (bucketSize <= 0 || initialCapacity < 0) {
             throw new IllegalArgumentException();
         }
@@ -53,11 +53,10 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
 
         // always round up to the nearest integer so that it has at
         // least the initialCapacity
-        int initialHashtableSize =
-                (int)Math.ceil((double)initialCapacity / bucketSize);
+        int initialHashtableSize = (int) Math.ceil((double) initialCapacity / bucketSize);
 
         for (int i = 0; i < bucketSize; i++) {
-            hashtables[i] = new Hashtable(initialHashtableSize, loadFactor);
+            hashtables[i] = new Hashtable<>(initialHashtableSize, loadFactor);
         }
     }
 
@@ -96,7 +95,8 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @param  key  a key in the hashtable
      * @return the value to which the specified key is mapped.
      */
-    public Object get(Object key) {
+    @Override
+    public V get(Object key) {
         return hashtables[getBucketIndex(key)].get(key);
     }
 
@@ -106,7 +106,8 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return the value to which the key had been mapped,
      *         or <code>null</code> if the key did not have a mapping.
      */
-    public Object remove(Object key) {
+    @Override
+    public V remove(Object key) {
         return hashtables[getBucketIndex(key)].remove(key);
     }
 
@@ -119,7 +120,8 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return      the previous value of the specified key in hashtables,
      *              or <code>null</code> if it did not have one.
      */
-    public Object put(Object key, Object value) {
+    @Override
+    public V put(K key, V value) {
         return hashtables[getBucketIndex(key)].put(key, value);
     }
 
@@ -127,9 +129,10 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @param t  BucketizedHashtable
      *           or a Map with a supported operation entrySet
      */
-    public void putAll(Map t) {
+    @Override
+    public void putAll(Map<? extends K, ? extends V> t) {
         if (t instanceof BucketizedHashtable) {
-            BucketizedHashtable bt = (BucketizedHashtable)t;
+            BucketizedHashtable<? extends K, ? extends V> bt = (BucketizedHashtable<? extends K, ? extends V>) t;
             for (int i = 0; i < bt.bucketSize; i++) {
                 putAllFromMapWithEntrySet(bt.hashtables[i]);
             }
@@ -143,6 +146,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return true if and only if the specified object is a key in one of
      *         of the hashtables
      */
+    @Override
     public boolean containsKey(Object key) {
         return hashtables[getBucketIndex(key)].containsKey(key);
     }
@@ -152,6 +156,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return true if and only if the specified object is a value in one of
      *         of the hashtables
      */
+    @Override
     public boolean containsValue(Object value) {
         for (int i = 0; i < bucketSize; i++) {
             if (hashtables[i].containsValue(value)) {
@@ -164,6 +169,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * @return the total number of key-value mappings of all buckets
      */
+    @Override
     public int size() {
         int totalSize = 0;
         for (int i = 0; i < bucketSize; i++) {
@@ -175,6 +181,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * @return the hash code value for this map
      */
+    @Override
     public int hashCode() {
         int h = 0;
         for (int i = 0; i < bucketSize; i++) {
@@ -186,6 +193,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * @return true if this map contains no key-value mappings
      */
+    @Override
     public boolean isEmpty() {
         for (int i = 0; i < bucketSize; i++) {
              if (!hashtables[i].isEmpty()) {
@@ -198,6 +206,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * Clears this BucketizedHashtable so that it contains no key.
      */
+    @Override
     public void clear() {
         for (int i = 0; i < bucketSize; i++) {
             hashtables[i].clear();
@@ -210,7 +219,8 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return a set of Map.Entry when bucketSet equal 1
      * @exception UnsupportedOperationException when bucketSize is greater one
      */
-    public Set entrySet() {
+    @Override
+    public Set<Entry<K, V>> entrySet() {
         if (bucketSize == 1) {
             return hashtables[0].entrySet();
         } else {
@@ -224,7 +234,8 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return a set of keys when bucketSet equal 1
      * @exception UnsupportedOperationException when bucketSize is greater one
      */
-    public Set keySet() {
+    @Override
+    public Set<K> keySet() {
         if (bucketSize == 1) {
             return hashtables[0].keySet();
         } else {
@@ -238,7 +249,8 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return a collection of values when bucketSet equal 1
      * @exception UnsupportedOperationException when bucketSize is greater one
      */
-    public Collection values() {
+    @Override
+    public Collection<V> values() {
         if (bucketSize == 1) {
             return hashtables[0].values();
         } else {
@@ -251,6 +263,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * @return true if the specified object is a BucketizedHashtable
      *         with hashtables represent the same set of mappings.
      */
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -259,7 +272,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
         if (!(o instanceof BucketizedHashtable)) {
             return false;
         }
-        BucketizedHashtable bt = (BucketizedHashtable)o;
+        BucketizedHashtable<? extends K, ? extends V> bt = (BucketizedHashtable<? extends K, ? extends V>) o;
         if (bt.bucketSize != bucketSize || bt.size() != size()) {
             return false;
         }
@@ -278,13 +291,14 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      * The keys and values are not cloned.
      * @return  a clone of BucketizedHashtable
      */
+    @Override
     public Object clone() {
         try {
-            BucketizedHashtable bt = (BucketizedHashtable)super.clone();
+            BucketizedHashtable<K, V> bt = (BucketizedHashtable<K, V>) super.clone();
             bt.bucketSize = bucketSize;
             bt.hashtables = new Hashtable[bucketSize];
             for (int i = 0; i < bucketSize; i++) {
-                bt.hashtables[i] = (Hashtable)hashtables[i].clone();
+                bt.hashtables[i] = (Hashtable<K, V>) hashtables[i].clone();
             }
             return bt;
         } catch (CloneNotSupportedException e) {
@@ -297,6 +311,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * @return a string representation of this BucketizedHashtable
      */
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer("[");  // NOI18N
         //bucketSize always >= 1
@@ -312,10 +327,10 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * @param t  Map with a supported entrySet operation
      */
-    private void putAllFromMapWithEntrySet(Map t) {
-        Iterator iter = t.entrySet().iterator();
+    private <A extends K, B extends V> void putAllFromMapWithEntrySet(Map<A, B> t) {
+        Iterator<Entry<A, B>> iter = t.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry e = (Map.Entry)iter.next();
+            Entry<A, B> e = iter.next();
             put(e.getKey(), e.getValue());
         }
     }

@@ -25,7 +25,7 @@ import javax.naming.NamingException;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * This class acts as a contract to resolve the </code>jakarta.xml.ws.WebServiceRef</code> references and also
+ * This class acts as a contract to resolve the <code>jakarta.xml.ws.WebServiceRef</code> references and also
  * <code>jakarta.xml.ws.WebServiceContext</code> Whenever a lookup is done from GlassfishNamingManagerImpl these methods
  * are invoked to resolve the references
  *

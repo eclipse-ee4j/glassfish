@@ -617,7 +617,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      *
      * @param connectionDefinitionClassName The Connection Definition Java bean class for which overrideable properties are
      * required.
-     * @return Map<String, Object> String represents property name and Object is the defaultValue that is a primitive type
+     * @return {@code Map<String, Object>} String represents property name and Object is the defaultValue that is a primitive type
      * or String.
      */
     @Override

@@ -261,7 +261,7 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -302,7 +302,7 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -426,7 +426,7 @@ type (or a collection of such) can be the type of a CMR field.
 The following table contains the mappings of JDBC types to database
 vendor-specific types when automatic mapping is used. For a list of the
 JDBC drivers currently supported by the {productName}, see the
-xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
+xref:release-notes.adoc[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -643,7 +643,7 @@ in `glassfish-ejb-jar.xml` is used.
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the xref:reference-manual.adoc#deploy[{productName} Reference Manual].
 
 When command line and `glassfish-ejb-jar.xml` options are both
 specified, the `asadmin` options take precedence.
@@ -682,7 +682,7 @@ properly configured CMP resource. See xref:#configuring-the-cmp-resource[Configu
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
-xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#capture-schema[{productName} Reference Manual].
 
 The `capture-schema` utility does not modify the schema in any way. Its
 only purpose is to provide the persistence engine with information about
@@ -721,7 +721,7 @@ In the Administration Console, open the Resources component, then select
 JDBC. Click the Help button in the Administration Console for
 information on creating a new JDBC resource.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,19 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * NumericType.java
- *
- * Created on March 8, 2000
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
 /**
  * This class is the super class for all integral and floating point types.
  *
- * @author  Michael Bouschen
- * @version 0.1
+ * @author  Michael Bouschen 2000
  */
 public abstract class NumericType
     extends PrimitiveType
@@ -35,7 +29,7 @@ public abstract class NumericType
     /**
      *
      */
-    public NumericType(String name, Class clazz, int enumType)
+    public NumericType(String name, Class<?> clazz, int enumType)
     {
         super(name, clazz, enumType);
     }
@@ -43,6 +37,7 @@ public abstract class NumericType
     /**
      * A numeric type defines an ordering.
      */
+    @Override
     public boolean isOrderable()
     {
         return true;
@@ -55,6 +50,7 @@ public abstract class NumericType
      * @param value value to be converted
      * @return converted value
      */
+    @Override
     public abstract Number getValue(Number value);
 
     /**
@@ -62,6 +58,7 @@ public abstract class NumericType
      * @param value value to be negated
      * @return -value
      */
+    @Override
     public abstract Number negate(Number value);
 
 }

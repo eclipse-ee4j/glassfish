@@ -745,7 +745,7 @@ under your current directory. This `glassfish{product-majorVersion}` directory i
 throughout the {productName} documentation set as as-install-parent.
 
 4. Start {productName} Server using the instructions in the
-xref:quick-start-guide.adoc#GSQSG[Server Quick Start Guide].
+xref:quick-start-guide.adoc[Server Quick Start Guide].
 +
 The guide explains how to perform basic tasks such as starting the
 server, accessing the Administration Console, and deploying a sample application.

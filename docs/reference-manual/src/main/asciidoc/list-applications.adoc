@@ -118,7 +118,7 @@ xref:list-components.adoc#list-components[`list-components`(1)],
 xref:list-sub-components.adoc#list-sub-components[`list-sub-components`(1)],
 xref:show-component-status.adoc#show-component-status[`show-component-status`(1)]
 
-xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc[{productName} Application Deployment
 Guide]
 
 

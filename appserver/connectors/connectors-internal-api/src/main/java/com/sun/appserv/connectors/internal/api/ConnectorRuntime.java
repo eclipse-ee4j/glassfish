@@ -313,7 +313,7 @@ public interface ConnectorRuntime extends ConnectorConstants {
      * @param connectionDefinitionClassName The Connection Definition Java bean class for which
      *            overrideable properties are required.
      * @param resType resource-type
-     * @return Map<String, Object> String represents property name and Object is the defaultValue
+     * @return {@code Map<String, Object>} String represents property name and Object is the defaultValue
      *         that is a primitive type or String
      */
     Map<String, Object> getConnectionDefinitionPropertiesAndDefaults(String connectionDefinitionClassName,
@@ -628,7 +628,7 @@ public interface ConnectorRuntime extends ConnectorConstants {
 
     /**
      * Retrieve the "confidential" config properties of specified artifact from a
-     * resource-adapter</br>
+     * resource-adapter
      *
      * @param rarName resource-adapter name
      * @param type indicates the artifact type. Valid values are: ConnectorConstants.AOR, RA, MCF, MSL

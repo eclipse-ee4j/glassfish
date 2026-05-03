@@ -35,8 +35,8 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Works with {@link com.sun.enterprise.admin.util.CachedCommandModel} and
- * {@link com.sun.enterprise.admin.util.CommandModelData).<br/> This is <i>hand made</i> implementation which is focused
- * on human readability and fastness.
+ * {@link com.sun.enterprise.admin.util.CommandModelData}.<br/>
+ * This is <i>hand made</i> implementation which is focused on human readability and fastness.
  *
  * @author mmares
  */

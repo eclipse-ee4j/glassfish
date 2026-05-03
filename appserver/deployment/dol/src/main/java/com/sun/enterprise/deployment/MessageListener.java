@@ -21,7 +21,10 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * connector1.5
+ * <p>
+ * {@code
  * <!ELEMENT messagelistener (messagelistener-type, activationspec)>
+ * }
  *
  * @author Sheetal Vartak
  */

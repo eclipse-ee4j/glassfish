@@ -16,19 +16,19 @@
 
 -->
 
-<!-- full/mailResourceNew.jsf -->
+<!-- jmail/mailResourceNew.jsf -->
 
 <!initPage
-    setResourceBundle(key="i18njmail" bundle="org.glassfish.full.admingui.Strings");
-    setResourceBundle(key="help_jmail" bundle="org.glassfish.full.admingui.Helplinks")
+    setResourceBundle(key="i18njmail" bundle="org.glassfish.jmail.admingui.Strings");
+    setResourceBundle(key="help_jmail" bundle="org.glassfish.jmail.admingui.Helplinks")
 />
 <!composition template="/templates/default.layout"  guiTitle="$resource{i18njmail.javaMail.newPageTitle}" >
 <!define name="content">
     <event>
     <!beforeCreate
         getRequestValue(key="target" value="#{pageSession.targetValue}");
-        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/full/mailResourceNew.jsf");
-        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/full/mailResources.jsf");
+        setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/jmail/mailResourceNew.jsf");
+        setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/jmail/jakartaMailResources.jsf");
         setPageSessionAttribute(key="childType" value="mail-resource");
         
         setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
@@ -47,7 +47,7 @@
         mapPut(map="#{pageSession.valueMap2}" key="enabled" value="true");
     />
     </event>
-"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:mailResources");</script>
+"    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:jakartaMailResources");</script>
 
             <sun:form id="form">
 #include "/common/shared/alertMsg_1.inc"
@@ -55,8 +55,9 @@
     <!-- Page Title -->
     <sun:title id="propertyContentPage" title="$resource{i18njmail.javaMail.newPageTitle}" helpText="$resource{i18njmail.javaMail.newPageTitleHelp}">
 #include "/common/resourceNode/resourceEditPageButtons.inc"
+#include "/jmail/shared/sendTestEmailButton.inc"
     </sun:title>
-#include "/full/mailResourceAttr.inc"
+#include "/jmail/mailResourceAttr.inc"
 #include "/common/shared/propertyDescTable.inc"
 <event>
 <!afterCreate

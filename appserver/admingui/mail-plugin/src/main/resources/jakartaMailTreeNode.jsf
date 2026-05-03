@@ -16,15 +16,19 @@
 
 -->
 
-<dynamicTreeNode id="mailResources"
+<!initPage
+    setResourceBundle(key="i18njmail" bundle="org.glassfish.jmail.admingui.Strings")
+/>
+
+<dynamicTreeNode id="jakartaMailResources"
 	treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
 	children="#{requestScope.children}"
-	childImageURL="/resource/full/images/javaMailSession.gif"
+	childImageURL="/resource/jmail/images/javaMailSession.gif"
 	childExpanded="false"
-	childURL="/full/mailResourceEdit.jsf?name=#{$this{valueBinding}.text}"
-        imageURL="/resource/full/images/javaMailSession.gif"
-	text="$resource{i18n.tree.javaMailSessions}"
-	url="/full/mailResources.jsf">
+	childURL="/jmail/mailResourceEdit.jsf?name=#{$this{valueBinding}.text}"
+        imageURL="/resource/jmail/images/javaMailSession.gif"
+	text="$resource{i18njmail.tree.javaMailSessions}"
+	url="/jmail/jakartaMailResources.jsf">
     <ui:event type="beforeCreate">
 	gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/mail-resource.json" method="get" result="#{requestScope.resp}");
 	setAttribute(key="children" value="#{requestScope.resp.data.extraProperties.childResources}");

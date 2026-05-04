@@ -44,7 +44,7 @@
 
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
 
-        <omnifish.arquillian.version>2.1.2</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.1.3</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>

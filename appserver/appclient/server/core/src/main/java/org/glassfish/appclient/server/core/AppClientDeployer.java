@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -245,7 +245,9 @@ public class AppClientDeployer
         if (params != null) {
             final com.sun.enterprise.config.serverbeans.Application app =
                     applications.getApplication(params.name);
-            DeploymentUtils.downloadableArtifacts(app).clearArtifacts();
+            if (app != null) {
+                DeploymentUtils.downloadableArtifacts(app).clearArtifacts();
+            }
         }
     }
 

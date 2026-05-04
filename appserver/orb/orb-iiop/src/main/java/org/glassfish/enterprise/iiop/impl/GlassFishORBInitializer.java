@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +17,13 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-import com.sun.logging.LogDomains;
-
-import java.util.Collection;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+import java.util.List;
 
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.glassfish.enterprise.iiop.util.IIOPUtils;
+import org.glassfish.internal.api.Globals;
 import org.omg.IOP.Codec;
-import org.omg.IOP.CodecFactory;
 import org.omg.IOP.ENCODING_CDR_ENCAPS;
 import org.omg.IOP.Encoding;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
@@ -33,7 +31,7 @@ import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
-import static java.util.logging.Level.FINE;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * This file implements an initializer class for all portable interceptors
@@ -42,11 +40,11 @@ import static java.util.logging.Level.FINE;
  *
  * @author Vivek Nagar
  * @author Mahesh Kannan
- *
  */
 public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject implements ORBInitializer {
 
-    private static final Logger LOG = LogDomains.getLogger(GlassFishORBInitializer.class, LogDomains.CORBA_LOGGER);
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = System.getLogger(GlassFishORBInitializer.class.getName());
 
     /**
      * This method is called during ORB initialization.
@@ -67,32 +65,25 @@ public class GlassFishORBInitializer extends org.omg.CORBA.LocalObject implement
      */
     @Override
     public void post_init(ORBInitInfo info) {
-        LOG.log(FINE, "J2EE Initializer post_init");
-        LOG.log(FINE, "Creating Codec for CDR encoding");
-
-        CodecFactory cf = info.codec_factory();
-
+        LOG.log(DEBUG, "post_init(info={0})", info);
+        LOG.log(DEBUG, "Creating Codec for CDR encoding");
         byte major_version = 1;
         byte minor_version = 2;
-        Encoding encoding = new Encoding(ENCODING_CDR_ENCAPS.value,
-                major_version, minor_version);
+        Encoding encoding = new Encoding(ENCODING_CDR_ENCAPS.value, major_version, minor_version);
         try {
-            Codec codec = cf.create_codec(encoding);
-            IIOPUtils iiopUtils = IIOPUtils.getInstance();
-            Collection<IIOPInterceptorFactory> interceptorFactories = iiopUtils.getAllIIOPInterceptrFactories();
-
+            Codec codec = info.codec_factory().create_codec(encoding);
+            IIOPUtils iiopUtils = Globals.get(IIOPUtils.class);
+            List<IIOPInterceptorFactory> interceptorFactories = iiopUtils.getAllIIOPInterceptrFactories();
             for (IIOPInterceptorFactory factory : interceptorFactories) {
-                LOG.log(FINE, "Processing interceptor factory: {0}", factory);
-
+                LOG.log(DEBUG, "Processing interceptor factory: {0}", factory);
                 ClientRequestInterceptor clientReq = factory.createClientRequestInterceptor(info, codec);
-                ServerRequestInterceptor serverReq = factory.createServerRequestInterceptor(info, codec);
-
                 if (clientReq != null) {
-                    LOG.log(FINE, "Registering client interceptor: {0}", clientReq);
+                    LOG.log(DEBUG, "Registering client interceptor: {0}", clientReq);
                     info.add_client_request_interceptor(clientReq);
                 }
+                ServerRequestInterceptor serverReq = factory.createServerRequestInterceptor(info, codec);
                 if (serverReq != null) {
-                    LOG.log(FINE, "Registering server interceptor: {0}", serverReq);
+                    LOG.log(DEBUG, "Registering server interceptor: {0}", serverReq);
                     info.add_server_request_interceptor(serverReq);
                 }
             }

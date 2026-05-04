@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.ServerContext;
@@ -154,7 +154,7 @@ public class TransactionServiceProperties {
                     int jtsServerId = DEFAULT_SERVER_ID; // default value
 
                     if (isORBAvailable) {
-                        jtsServerId = serviceLocator.<GlassFishORBHelper>getService(GlassFishORBHelper.class).getORBInitialPort();
+                        jtsServerId = serviceLocator.getService(GlassFishORBFactory.class).getORBInitialPort();
                         if (jtsServerId == 0) {
                             // XXX Can this ever happen?
                             jtsServerId = DEFAULT_SERVER_ID; // default value

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -382,28 +382,25 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
      * @return
      */
     private String targetServerSetting(final Properties props) {
-        String result = null;
-        try {
-            result = orbFactory.getIIOPEndpoints();
-        } catch (NullPointerException npe) {
-            /*
-             * orbFactory.getIIOPEndpoints is supposed to return a valid
-             * answer whether this server is in a cluster or not.  A bug
-             * causes it to throw a NullPointerException in the non-cluster case.
-             * So catch that and use the configured listener for this server.
-             *
-             * Find the IIOP listener with the default listener ID.
-             */
-            String port = null;
-            for (IiopListener listener : iiopService.getIiopListener()) {
-                if (listener.getId().equals(DEFAULT_ORB_LISTENER_ID)) {
-                    port = listener.getPort();
-                    break;
-                }
-            }
-            result = props.getProperty("request.host") + ":" + port;
+        String result = orbFactory.getIIOPEndpoints();
+        if (result != null) {
+            return result;
         }
-        return result;
+        /*
+         * orbFactory.getIIOPEndpoints is supposed to return a valid
+         * answer whether this server is in a cluster or not. A bug
+         * causes it to throw a NullPointerException in the non-cluster case.
+         * So catch that and use the configured listener for this server.
+         * Find the IIOP listener with the default listener ID.
+         */
+        String port = null;
+        for (IiopListener listener : iiopService.getIiopListener()) {
+            if (listener.getId().equals(DEFAULT_ORB_LISTENER_ID)) {
+                port = listener.getPort();
+                break;
+            }
+        }
+        return props.getProperty("request.host") + ":" + port;
     }
 
     private void processQueryParameters(String queryString, final Properties answer) {

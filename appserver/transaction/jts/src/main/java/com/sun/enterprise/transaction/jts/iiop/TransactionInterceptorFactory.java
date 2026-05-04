@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,12 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
 import jakarta.inject.Inject;
 
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
@@ -34,28 +36,27 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
 @Service(name = "TransactionInterceptorFactory")
 public class TransactionInterceptorFactory implements IIOPInterceptorFactory {
 
-    private TransactionServerInterceptor tsi = null;
-    private TransactionClientInterceptor tci = null;
-
     @Inject
-    private ServiceLocator habitat;
+    private JavaEETransactionManager transactionManager;
+    @Inject
+    private GlassFishORBFactory orbFactory;
+
+    private TransactionServerInterceptor tsi;
+    private TransactionClientInterceptor tci;
 
     @Override
     public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (tci == null) {
-            tci = new TransactionClientInterceptor("TransactionClientInterceptor", 1, habitat);
+            tci = new TransactionClientInterceptor("TransactionClientInterceptor", 1, transactionManager);
         }
-
         return tci;
     }
 
     @Override
     public ServerRequestInterceptor createServerRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (tsi == null) {
-            tsi = new TransactionServerInterceptor(2, habitat);
+            tsi = new TransactionServerInterceptor(2, transactionManager, orbFactory);
         }
-
         return tsi;
     }
-
 }

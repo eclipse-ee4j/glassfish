@@ -18,6 +18,7 @@
 package com.sun.enterprise.iiop.security;
 
 import com.sun.corba.ee.spi.ior.IOR;
+import com.sun.corba.ee.spi.ior.TaggedComponent;
 import com.sun.corba.ee.spi.ior.iiop.AlternateIIOPAddressComponent;
 import com.sun.corba.ee.spi.ior.iiop.IIOPAddress;
 import com.sun.corba.ee.spi.ior.iiop.IIOPProfileTemplate;
@@ -48,10 +49,10 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
     // Maps primary address to list of alternate addresses.
     // Used to compare new IOR/primaries with ones already seen for
     // that primary. We expect them to be equal.
-    private final Map primaryToAddresses = new HashMap();
+    private final Map<SocketInfo, List<SocketInfo>> primaryToAddresses = new HashMap<>();
 
     // Maps primary to randomized list of alternate addresses.
-    private final Map primaryToRandomizedAddresses = new HashMap();
+    private final Map<SocketInfo, List<SocketInfo>> primaryToRandomizedAddresses = new HashMap<>();
 
     // ----- implements com.sun.corba.ee.spi.transport.IORToSocketInfo -----
     private final SecurityMechanismSelector selector;
@@ -61,10 +62,9 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
     }
 
     @Override
-    public List getSocketInfo(IOR ior, List previous) {
+    public List<? extends SocketInfo> getSocketInfo(IOR ior, List<? extends SocketInfo> previous) {
         try {
             LOG.entering(getClass().getName(), "getSocketInfo");
-            List result = new ArrayList();
 
             IIOPProfileTemplate iiopProfileTemplate = (IIOPProfileTemplate) ior.getProfile().getTaggedProfileTemplate();
             IIOPAddress primary = iiopProfileTemplate.getPrimaryAddress();
@@ -89,6 +89,7 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
             LOG.log(Level.FINE, "Connection Context: {0}", ctx);
             LOG.log(Level.FINE, "Endpoint: type={0}, host={1}, port={2}", new Object[] {type, host, port});
 
+            List<SocketInfo> result = new ArrayList<>();
             // for SSL
             if (socketInfo != null) {
                 result.add(socketInfo);
@@ -115,19 +116,12 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
                 return previous;
             }
 
-            //
             // Save and add primary address
-            //
-
             SocketInfo primarySocketInfo = createSocketInfo("primary", type, host, port);
             result.add(primarySocketInfo);
 
-            //
             // List alternate addresses.
-            //
-
-            Iterator iterator = iiopProfileTemplate.iteratorById(org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS.value);
-
+            Iterator<TaggedComponent> iterator = iiopProfileTemplate.iteratorById(org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS.value);
             while (iterator.hasNext()) {
                 AlternateIIOPAddressComponent alternate = (AlternateIIOPAddressComponent) iterator.next();
 
@@ -138,7 +132,7 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
             }
 
             synchronized (this) {
-                List existing = (List) primaryToAddresses.get(primarySocketInfo);
+                List<SocketInfo> existing = primaryToAddresses.get(primarySocketInfo);
                 if (existing == null) {
                     // First time we've seen this primary.
                     // Save unrandomized list with primary at head.
@@ -154,7 +148,7 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
                 }
                 if (result.equals(existing)) {
                     // The are the same so return the randomized version.
-                    result = (List) primaryToRandomizedAddresses.get(primarySocketInfo);
+                    result = primaryToRandomizedAddresses.get(primarySocketInfo);
                     LOG.log(Level.FINE, "Existing randomized result: {0}", result);
                     return result;
                 }
@@ -228,5 +222,3 @@ public class IORToSocketInfoImpl implements IORToSocketInfo {
         };
     }
 }
-
-// End of file.

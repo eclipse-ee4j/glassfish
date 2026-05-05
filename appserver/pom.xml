@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>8.0.2-SNAPSHOT</version>
+        <version>8.0.3-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -74,7 +74,7 @@
         <glassfish.version>${project.version}</glassfish.version>
 
         <!-- MicroProfile Config -->
-        <microprofile.config-api.version>3.1</microprofile.config-api.version>
+        <microprofile.config-api.version>3.1.1</microprofile.config-api.version>
         <helidon-config.version>4.4.1</helidon-config.version>
 
 
@@ -428,7 +428,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.21.0</version>
+                <version>1.22.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

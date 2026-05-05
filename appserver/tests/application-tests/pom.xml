@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>8.0.2-SNAPSHOT</version>
+        <version>8.0.3-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.tests.application-tests</groupId>
@@ -44,7 +44,7 @@
 
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
 
-        <omnifish.arquillian.version>2.1.2</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.1.3</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>

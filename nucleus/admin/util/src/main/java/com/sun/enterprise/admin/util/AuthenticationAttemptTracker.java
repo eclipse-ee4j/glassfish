@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.admin.util;
 
+import com.sun.enterprise.util.net.NetUtils;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
@@ -81,8 +83,8 @@ public class AuthenticationAttemptTracker {
      * concurrent requests are already being delayed. Must be called BEFORE attempting authentication.
      * <p>
      * Skips tracking for localhost — those are server-side proxy calls (Admin Console calling
-     * /management/sessions on behalf of a browser). The real remote host is passed via alternateHostname
-     * parameter in that case.
+     * /management/sessions on behalf of a browser). The real remote host is passed via
+     * X-GlassFish-Remote-Host header in that case.
      *
      * @param username the username attempting to authenticate
      * @param remoteHost the remote host from which the request originated
@@ -91,7 +93,7 @@ public class AuthenticationAttemptTracker {
      */
     public void checkBeforeAuthentication(String username, String remoteHost, char[] password) throws TooManyRequestsException {
         // Skip tracking for null/empty inputs and localhost (server-side proxy calls)
-        if (username == null || remoteHost == null || isEmptyPassword(password) || isLocalhost(remoteHost)) {
+        if (shouldIgnoreCheckes(username, remoteHost, password)) {
             return;
         }
 
@@ -107,11 +109,8 @@ public class AuthenticationAttemptTracker {
         }
     }
 
-    private static boolean isLocalhost(String host) {
-        return "localhost".equalsIgnoreCase(host)
-                || "127.0.0.1".equals(host)
-                || "::1".equals(host)
-                || "0:0:0:0:0:0:0:1".equals(host);
+    private static boolean shouldIgnoreCheckes(String username, String remoteHost, char[] password) {
+        return username == null || remoteHost == null || isEmptyPassword(password) || NetUtils.isLocal(remoteHost);
     }
 
     /**
@@ -124,7 +123,7 @@ public class AuthenticationAttemptTracker {
      */
     public void recordSuccess(String username, String remoteHost, char[] password) {
         // Skip tracking for null/empty inputs and localhost
-        if (username == null || remoteHost == null || isEmptyPassword(password) || isLocalhost(remoteHost)) {
+        if (shouldIgnoreCheckes(username, remoteHost, password)) {
             return;
         }
 
@@ -144,7 +143,7 @@ public class AuthenticationAttemptTracker {
      */
     public void recordFailureAndDelay(String username, String remoteHost, char[] password) {
         // Skip tracking for null/empty inputs and localhost
-        if (username == null || remoteHost == null || isEmptyPassword(password) || isLocalhost(remoteHost)) {
+        if (shouldIgnoreCheckes(username, remoteHost, password)) {
             return;
         }
 

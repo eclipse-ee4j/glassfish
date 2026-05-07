@@ -17,9 +17,11 @@
 
 package org.glassfish.admingui.common.security;
 
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.util.net.NetUtils;
 
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
@@ -55,7 +57,9 @@ import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestResponse;
 import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.common.util.InputValidationUtil;
+import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
@@ -120,10 +124,8 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
                 throw new AuthException(
                         "'loginErrorPage' " + "must be supplied as a property in the provider-config " + "in the domain.xml file!");
             }
-            ServiceLocator habitat = SecurityServicesUtil.getInstance().getHabitat();
-            Domain domain = habitat.getService(Domain.class);
-            NetworkListener adminListener = domain.getServerNamed("server").getConfig().getNetworkConfig()
-                    .getNetworkListener("admin-listener");
+            ServiceLocator habitat = getServiceLocator();
+            NetworkListener adminListener = getAdminListener();
             SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
 
             final String host = adminListener.getAddress();
@@ -131,6 +133,16 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
             this.restURL = (SecureAdmin.isEnabled(secureAdmin) ? "https://" : "http://")
                     + (host.equals("0.0.0.0") ? "localhost" : host) + ":" + adminListener.getPort() + "/management/sessions";
         }
+    }
+
+    private static ServiceLocator getServiceLocator() {
+        return SecurityServicesUtil.getInstance().getHabitat();
+    }
+
+    private static NetworkListener getAdminListener() {
+        Config config = getServiceLocator().getService(Domain.class)
+                .getServerNamed("server").getConfig();
+        return config.getAdminListener();
     }
 
     /**
@@ -206,11 +218,14 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         Client client2 = RestUtil.initialize(ClientBuilder.newBuilder()).build();
         WebTarget target = client2.target(restURL);
         target.register(HttpAuthenticationFeature.basic(username, new String(password)));
+
+        // Get the real remote host, checking for proxy headers if behind a reverse proxy
+        String remoteHost = getRemoteHost(request);
         MultivaluedMap payLoad = new MultivaluedHashMap();
-        payLoad.putSingle("remoteHostName", request.getRemoteHost());
+        payLoad.putSingle("remoteHostName", remoteHost);
 
         Response resp = target.request(RESPONSE_TYPE)
-                .header("X-GlassFish-Remote-Host", request.getRemoteHost())
+                .header("X-GlassFish-Remote-Host", remoteHost)
                 .post(Entity.entity(payLoad, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
         RestResponse restResp = RestResponse.getRestResponse(resp);
         Arrays.fill(password, ' ');
@@ -272,7 +287,11 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
             return AuthStatus.SEND_CONTINUE;
         } else {
             int status = restResp.getResponseCode();
-            if (status == 403) {
+            if (status == 429) {
+                // Too many concurrent requests - rate limited
+                request.setAttribute("errorText", GuiUtil.getMessage("alert.AuthenticationFailed"));
+                request.setAttribute("messageText", GuiUtil.getMessage("alert.TryAgainLater"));
+            } else if (status == 403) {
                 request.setAttribute("errorText", GuiUtil.getMessage("alert.ConfigurationError"));
                 request.setAttribute("messageText", GuiUtil.getMessage("alert.EnableSecureAdmin"));
             }
@@ -302,5 +321,32 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
 
     private boolean isMandatory(MessageInfo messageInfo) {
         return Boolean.valueOf((String) messageInfo.getMap().get("jakarta.security.auth.message.MessagePolicy.isMandatory"));
+    }
+
+    /**
+     * Gets the real remote host, checking for proxy headers if behind a reverse proxy.
+     * Only uses proxy headers when behindProxy is enabled in configuration.
+     */
+    private String getRemoteHost(HttpServletRequest request) {
+        // Check if behind proxy is enabled
+        Protocol protocol = getAdminListener().findHttpProtocol();
+        boolean behindProxy = protocol != null && protocol.getHttp() != null
+                && protocol.getHttp().isBehindProxy();
+
+        return NetUtils.getRemoteHost(
+            new NetUtils.RequestInfoProvider() {
+                    @Override
+                    public String getHeader(String name) {
+                        return request.getHeader(name);
+                    }
+
+                    @Override
+                    public String getRemoteHost() {
+                        return request.getRemoteHost();
+                    }
+
+                },
+            behindProxy
+        );
     }
 }

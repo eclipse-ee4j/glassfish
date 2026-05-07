@@ -19,6 +19,7 @@ package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.config.serverbeans.AdminService;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecurityService;
@@ -37,6 +38,7 @@ import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +50,10 @@ import javax.security.auth.login.LoginException;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.grizzly.config.dom.Http;
+import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -281,15 +287,45 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     // Check for X-GlassFish-Remote-Host header (set by AdminConsoleAuthModule in the Admin Console UI).
     // If present and request is from localhost, use the header value for tracking instead. Otherwise return remote host.
+    // Also check X-Real-IP and X-Forwarded-For headers when the serverName is configured (reverse proxy setup).
     private String detectRemoteHostForTracking(final AdminCallbackHandler cbh, final Request req) {
         String remoteHostForTracking = cbh.remoteHost();
+
         if (NetUtils.isLocal(req.getRemoteAddr())) {
             String forwardedHost = req.getHeader("X-GlassFish-Remote-Host");
-            if (forwardedHost != null && !forwardedHost.isEmpty()) {
-                remoteHostForTracking = forwardedHost;
+            if (forwardedHost != null && !forwardedHost.isBlank()) {
+                return forwardedHost;
             }
+        } else if (isBehindProxyEnabled()) {
+            return NetUtils.getRemoteHost(
+                new NetUtils.RequestInfoProvider() {
+                    @Override
+                    public String getHeader(String name) {
+                        return req.getHeader(name);
+                    }
+
+                    @Override
+                    public String getRemoteHost() {
+                        return remoteHostForTracking;
+                    }
+
+                },
+                true
+            );
         }
+
         return remoteHostForTracking;
+    }
+
+    /**
+     * Checks if behindProxy is enabled in the admin listener configuration.
+     * When enabled, the server trusts X-Real-IP and X-Forwarded-For headers.
+     */
+    private boolean isBehindProxyEnabled() {
+        Config config = domain.getServerNamed("server").getConfig();
+        Protocol protocol = config.getAdminListener().findHttpProtocol();
+        Http http = protocol != null ? protocol.getHttp() : null;
+        return http != null && http.isBehindProxy();
     }
 
     /*

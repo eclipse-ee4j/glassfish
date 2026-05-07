@@ -124,6 +124,9 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
     @Inject
     private AuthenticationService authService;
 
+    @Inject
+    private AuthenticationAttemptTracker attemptTracker;
+
     @Override
     public synchronized void postConstruct() {
         secureAdmin = domain.getSecureAdmin();
@@ -229,6 +232,11 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     private Subject authenticate(final Request req, final String alternateHostname) throws IOException, LoginException {
         final AdminCallbackHandler cbh = new AdminCallbackHandler(habitat, req, alternateHostname, getDefaultAdminUser(), localPassword);
+
+        String remoteHostForTracking = detectRemoteHostForTracking(cbh, req);
+
+        attemptTracker.checkBeforeAuthentication(cbh.pw().getUserName(), remoteHostForTracking, cbh.pw().getPassword());
+
         try {
             rejectRemoteAdminIfDisabled(cbh);
 
@@ -243,6 +251,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                                 cbh.tkn(), cbh.adminIndicator(), cbh.remoteHost() });
             }
 
+            attemptTracker.recordSuccess(cbh.pw().getUserName(), remoteHostForTracking, cbh.pw().getPassword());
             return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
@@ -265,8 +274,22 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                         new Object[] { cbh.pw().getUserName(), cbh.clientPrincipal() == null ? "null" : cbh.clientPrincipal().getName(),
                                 cbh.tkn(), cbh.adminIndicator(), cbh.remoteHost(), cmd });
             }
+            attemptTracker.recordFailureAndDelay(cbh.pw().getUserName(), remoteHostForTracking, cbh.pw().getPassword());
             throw lex;
         }
+    }
+
+    // Check for X-GlassFish-Remote-Host header (set by AdminConsoleAuthModule in the Admin Console UI).
+    // If present and request is from localhost, use the header value for tracking instead. Otherwise return remote host.
+    private String detectRemoteHostForTracking(final AdminCallbackHandler cbh, final Request req) {
+        String remoteHostForTracking = cbh.remoteHost();
+        if (NetUtils.isLocal(req.getRemoteAddr())) {
+            String forwardedHost = req.getHeader("X-GlassFish-Remote-Host");
+            if (forwardedHost != null && !forwardedHost.isEmpty()) {
+                remoteHostForTracking = forwardedHost;
+            }
+        }
+        return remoteHostForTracking;
     }
 
     /*
@@ -379,6 +402,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new LoginException();
         }
 
+        attemptTracker.checkBeforeAuthentication(user, host, password);
+
         Subject subject;
         try {
             rejectRemoteAdminIfDisabled(host);
@@ -386,6 +411,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
                 ADMSEC_LOGGER.log(Level.FINE, "*** Login worked\n  user={0}\n  host={1}\n", new Object[] { user, host });
             }
+            attemptTracker.recordSuccess(user, host, password);
             return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
@@ -402,6 +428,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                 ADMSEC_LOGGER.log(Level.FINE, "*** LoginException during auth\n  user={0}\n  host={1}\n  realm={2}",
                         new Object[] { user, host, realm });
             }
+            attemptTracker.recordFailureAndDelay(user, host, password);
             throw lex;
         }
     }
@@ -453,4 +480,5 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new SecurityException(e);
         }
     }
-}
+
+    }

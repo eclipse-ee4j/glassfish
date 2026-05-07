@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -209,7 +209,9 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         MultivaluedMap payLoad = new MultivaluedHashMap();
         payLoad.putSingle("remoteHostName", request.getRemoteHost());
 
-        Response resp = target.request(RESPONSE_TYPE).post(Entity.entity(payLoad, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+        Response resp = target.request(RESPONSE_TYPE)
+                .header("X-GlassFish-Remote-Host", request.getRemoteHost())
+                .post(Entity.entity(payLoad, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
         RestResponse restResp = RestResponse.getRestResponse(resp);
         Arrays.fill(password, ' ');
         // Check to see if successful..

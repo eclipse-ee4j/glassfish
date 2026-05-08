@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,30 +19,30 @@ package com.sun.enterprise.transaction.jts.iiop;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 public class TransactionServerInterceptor extends LocalObject implements ServerRequestInterceptor, Comparable<Object> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private static final String name = "TransactionServerInterceptor";
-    private int order;
 
-    private JavaEETransactionManager javaEETransactionManager;
-    private GlassFishORBHelper gfORBHelper;
+    private final int order;
+    private final JavaEETransactionManager javaEETransactionManager;
+    private final GlassFishORBFactory orbFactory;
 
     /**
      * Construct the interceptor.
      *
-     * @param the order in which the interceptor should run.
+     * @param order the order in which the interceptor should run.
      */
-    public TransactionServerInterceptor(int order, ServiceLocator serviceLocator) {
+    public TransactionServerInterceptor(int order, JavaEETransactionManager transactionManager,
+        GlassFishORBFactory orbFactory) {
         this.order = order;
-        gfORBHelper = serviceLocator.getService(GlassFishORBHelper.class);
-        javaEETransactionManager = serviceLocator.getService(JavaEETransactionManager.class);
+        this.javaEETransactionManager = transactionManager;
+        this.orbFactory = orbFactory;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class TransactionServerInterceptor extends LocalObject implements ServerR
                 javaEETransactionManager.checkTransactionImport();
             }
         } finally {
-            if (gfORBHelper.isEjbCall(sri)) {
+            if (orbFactory.isEjbCall(sri)) {
                 javaEETransactionManager.cleanTxnTimeout();
             }
         }

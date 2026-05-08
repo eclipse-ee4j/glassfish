@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,6 @@ import com.sun.corba.ee.spi.presentation.rmi.PresentationManager;
 import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.util.Utility;
-import com.sun.logging.LogDomains;
 
 import jakarta.ejb.NoSuchObjectLocalException;
 import jakarta.ejb.TransactionRequiredLocalException;
@@ -34,12 +34,12 @@ import jakarta.ejb.TransactionRolledbackLocalException;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.lang.System.Logger;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.rmi.CORBA.Tie;
 
@@ -47,7 +47,6 @@ import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
 import org.glassfish.enterprise.iiop.spi.EjbService;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.CompletionStatus;
 import org.omg.CORBA.INVALID_TRANSACTION;
@@ -67,6 +66,9 @@ import org.omg.PortableServer.Servant;
 import org.omg.PortableServer.ServantLocator;
 import org.omg.PortableServer.ServantLocatorPackage.CookieHolder;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static org.glassfish.enterprise.iiop.impl.POARemoteReferenceFactory.EJBID_OFFSET;
+
 /**
  * This class implements the ProtocolManager interface for the
  * RMI/IIOP ORB with POA (Portable Object Adapter).
@@ -78,28 +80,20 @@ import org.omg.PortableServer.ServantLocatorPackage.CookieHolder;
 @Service
 public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements ProtocolManager {
 
-    private static final Logger _logger = LogDomains.getLogger(POAProtocolMgr.class, LogDomains.CORBA_LOGGER);
+    private static final Logger LOG = System.getLogger(POAProtocolMgr.class.getName());
 
     private static final int MAPEXCEPTION_CODE = 9998;
 
     private ORB orb;
-
-    private ReferenceFactoryManager rfm = null ;
-
+    private ReferenceFactoryManager rfm ;
     private PresentationManager presentationMgr;
-
-    @Inject
-    private ServiceLocator services;
-
-    public POAProtocolMgr() {
-    }
 
     @Inject
     private Provider<EjbService> ejbServiceProvider;
 
     @Override
-    public void initialize(org.omg.CORBA.ORB o) {
-        this.orb = (ORB)o;
+    public void initialize(org.omg.CORBA.ORB orb) {
+        this.orb = (ORB) orb;
         this.presentationMgr = ORB.getPresentationManager();
     }
 
@@ -109,16 +103,15 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     public void initializePOAs() throws Exception {
         // NOTE:  The RootPOA manager used to be activated here.
         getRFM();
-        _logger.log(Level.FINE, "POAProtocolMgr.initializePOAs: RFM resolved and activated");
+        LOG.log(DEBUG, "POAProtocolMgr.initializePOAs: RFM resolved and activated");
     }
 
     private static class RemoteNamingServantLocator extends LocalObject implements ServantLocator {
 
-        private final ORB orb;
+        private static final long serialVersionUID = -2347290141818112109L;
         private final Servant servant;
 
-        public RemoteNamingServantLocator(ORB orb, Remote impl) {
-            this.orb = orb;
+        private RemoteNamingServantLocator(Remote impl) {
             Tie tie = ORB.getPresentationManager().getTie();
             tie.setTarget(impl);
             servant = Servant.class.cast(tie);
@@ -150,7 +143,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
 
 
     private org.omg.CORBA.Object getRemoteNamingReference(Remote remoteNamingProvider) {
-        final ServantLocator locator = new RemoteNamingServantLocator(orb, remoteNamingProvider);
+        final ServantLocator locator = new RemoteNamingServantLocator(remoteNamingProvider);
         final PresentationManager pm = ORB.getPresentationManager();
 
         String repositoryId;
@@ -185,10 +178,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
             NameComponent path[] = {nc};
             ncRef.rebind(path, provider);
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "enterprise_naming.excep_in_insertserialcontextprovider", ex);
-
-            RemoteException re = new RemoteException("initSerialCtxProvider error", ex);
-            throw re;
+            throw new RemoteException("initializeRemoteNaming error", ex);
         }
 
     }
@@ -198,7 +188,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     public void initializeNaming() throws Exception {
         // NOTE: The TransientNameService reference is NOT HA.
         // new TransientNameService((com.sun.corba.ee.spi.orb.ORB)orb);
-        // _logger.log(Level.FINE, "POAProtocolMgr.initializeNaming: complete");
+        // LOG.log(DEBUG, "POAProtocolMgr.initializeNaming: complete");
     }
 
 
@@ -213,8 +203,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     @Override
     public RemoteReferenceFactory getRemoteReferenceFactory(
         EjbContainerFacade container, boolean remoteHomeView, String id) {
-        RemoteReferenceFactory factory = new POARemoteReferenceFactory(container, this, orb, remoteHomeView, id);
-        return factory;
+        return new POARemoteReferenceFactory(container, orb, remoteHomeView, id);
     }
 
 
@@ -242,16 +231,13 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     @Override
     public byte[] getObjectID(org.omg.CORBA.Object obj) {
         IOR ior = orb.getIOR(obj, false);
-        java.util.Iterator iter = ior.iterator();
-
-        byte[] oid = null;
+        Iterator<TaggedProfile> iter = ior.iterator();
         if (iter.hasNext()) {
-            TaggedProfile profile = (TaggedProfile) iter.next();
+            TaggedProfile profile = iter.next();
             ObjectKey objKey = profile.getObjectKey();
-            oid = objKey.getId().getId();
+            return objKey.getId().getId();
         }
-
-        return oid;
+        return null;
     }
 
     /**
@@ -325,37 +311,19 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     @Override
     public EjbDescriptor getEjbDescriptor(byte[] ejbKey) {
         EjbDescriptor result = null;
-
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "POAProtocolMgr.getEjbDescriptor->: {0}", ejbKey);
-            }
-
-            if (ejbKey.length < POARemoteReferenceFactory.EJBID_OFFSET + 8) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "POAProtocolMgr.getEjbDescriptor: {0}: {1} < {2}{3}",
-                        new Object[] {ejbKey, ejbKey.length, POARemoteReferenceFactory.EJBID_OFFSET, 8});
-                }
-
+            LOG.log(DEBUG, "getEjbDescriptor->: {0}", ejbKey);
+            if (ejbKey.length < EJBID_OFFSET + 8) {
+                LOG.log(DEBUG, "getEjbDescriptor: {0}: {1} < {2}", ejbKey, ejbKey.length, EJBID_OFFSET + 8);
                 return null;
             }
-
-            long ejbId = Utility.bytesToLong(ejbKey, POARemoteReferenceFactory.EJBID_OFFSET);
-
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "POAProtocolMgr.getEjbDescriptor: {0}: ejbId: {1}",
-                    new Object[] {ejbKey, ejbId});
-            }
-
+            long ejbId = Utility.bytesToLong(ejbKey, EJBID_OFFSET);
+            LOG.log(DEBUG, "getEjbDescriptor: {0}: ejbId: {1}", ejbKey, ejbId);
             EjbService ejbService = ejbServiceProvider.get();
-
             result = ejbService.ejbIdToDescriptor(ejbId);
         } finally {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "POAProtocolMgr.getEjbDescriptor<-: {0}: {1}", new Object[] {ejbKey, result});
-            }
+            LOG.log(DEBUG, "getEjbDescriptor<-: {0}: {1}", ejbKey, result);
         }
-
         return result;
    }
 }

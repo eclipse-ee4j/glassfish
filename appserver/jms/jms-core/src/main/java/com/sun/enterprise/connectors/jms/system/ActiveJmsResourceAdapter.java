@@ -1127,7 +1127,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             return "";
         }
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             if(Character.isLetterOrDigit(s.charAt(i))){
                             //|| s.charAt(i) == '_'){
@@ -2108,7 +2108,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             connectorRuntime.createActiveResourceAdapter(loc, module, null);
             return true;
         } catch (ConnectorRuntimeException e) {
-            e.printStackTrace();
+            LOG.log(SEVERE, "Lazy initialization of the JMS service failed.", e);
             return false;
         }
     }

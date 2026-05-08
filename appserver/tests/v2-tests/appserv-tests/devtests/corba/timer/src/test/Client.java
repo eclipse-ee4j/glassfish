@@ -176,7 +176,7 @@ public class Client {
     Map<Timer, Statistics> makeData() {
         // Setup timing points and a top-level timer
         Properties props = new Properties();
-        props.setProperty("org.omg.CORBA.ORBClass", "com.sun.corba.ee.impl.orb.ORBImpl");
+        props.setProperty("org.omg.CORBA.ORBClass", "org.glassfish.enterprise.iiop.impl.GlassFishOrbImpl");
         ORB orb = (ORB) ORB.init(new String[0], props);
 
         try {

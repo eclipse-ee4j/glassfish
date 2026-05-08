@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,17 +20,14 @@ package org.glassfish.enterprise.iiop.impl;
 import com.sun.corba.ee.impl.folb.CSIv2SSLTaggedComponentHandler;
 import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
 import com.sun.corba.ee.spi.ior.IOR;
-import com.sun.corba.ee.spi.misc.ORBConstants;
 import com.sun.corba.ee.spi.orb.DataCollector;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.corba.ee.spi.orb.ORBConfigurator;
 import com.sun.corba.ee.spi.transport.SocketInfo;
-import com.sun.logging.LogDomains;
 
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 import org.glassfish.internal.api.Globals;
@@ -37,116 +35,63 @@ import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
+import static com.sun.corba.ee.spi.misc.ORBConstants.CSI_V2_SSL_TAGGED_COMPONENT_HANDLER;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+
 /**
  * @author Harold Carr, 2005
  */
 public class CSIv2SSLTaggedComponentHandlerImpl extends org.omg.CORBA.LocalObject
     implements CSIv2SSLTaggedComponentHandler, ORBConfigurator {
 
-    private static final Logger _logger = LogDomains.getLogger(
-        CSIv2SSLTaggedComponentHandlerImpl.class, LogDomains.CORBA_LOGGER);
-
-    private final String baseMsg = CSIv2SSLTaggedComponentHandlerImpl.class.getName();
-
-    private ORB orb;
-
-    ////////////////////////////////////////////////////
-    //
-    // CSIv2SSLTaggedComponentHandler
-    //
+    private static final Logger LOG = System.getLogger(CSIv2SSLTaggedComponentHandlerImpl.class.getName());
 
     @Override
     public TaggedComponent insert(IORInfo iorInfo, List<ClusterInstanceInfo> clusterInstanceInfo) {
-        try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "{0}.insert->:", baseMsg);
-            }
+        LOG.log(DEBUG, "insert(iorInfo={0}, clusterInstanceInfo={1})", iorInfo, clusterInstanceInfo);
 
-            List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos = new ArrayList<>();
-            for (ClusterInstanceInfo clInstInfo : clusterInstanceInfo) {
-                for (com.sun.corba.ee.spi.folb.SocketInfo sinfo : clInstInfo.endpoints()) {
-                    if (sinfo.type().equals("SSL") || sinfo.type().equals("SSL_MUTUALAUTH")) {
-                        socketInfos.add(sinfo);
-                    }
+        List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos = new ArrayList<>();
+        for (ClusterInstanceInfo clInstInfo : clusterInstanceInfo) {
+            for (com.sun.corba.ee.spi.folb.SocketInfo sinfo : clInstInfo.endpoints()) {
+                if (sinfo.type().equals("SSL") || sinfo.type().equals("SSL_MUTUALAUTH")) {
+                    socketInfos.add(sinfo);
                 }
             }
-            IIOPSSLUtil sslUtil = null;
-            if (Globals.getDefaultHabitat() != null) {
-                sslUtil = Globals.getDefaultHabitat().getService(IIOPSSLUtil.class);
-                return sslUtil.createSSLTaggedComponent(iorInfo, socketInfos);
-            } else {
-                return null;
-            }
-
-        } finally {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "{0}.insert<-: {1}", new Object[] {baseMsg, null});
-            }
         }
+        if (Globals.getDefaultHabitat() == null) {
+            return null;
+        }
+        IIOPSSLUtil sslUtil = Globals.getDefaultHabitat().getService(IIOPSSLUtil.class);
+        return sslUtil.createSSLTaggedComponent(iorInfo, socketInfos);
     }
 
 
     @Override
     public List<SocketInfo> extract(IOR ior) {
+        LOG.log(DEBUG, "extract(ior={0})", ior);
         List<SocketInfo> socketInfo = null;
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "{0}.extract->:", baseMsg);
-            }
-
-            // IIOPProfileTemplate iiopProfileTemplate =
-            // (IIOPProfileTemplate)ior.getProfile().getTaggedProfileTemplate();
-            // IIOPAddress primary = iiopProfileTemplate.getPrimaryAddress() ;
-            // String host = primary.getHost().toLowerCase(Locale.ENGLISH);
-
-            IIOPSSLUtil sslUtil = null;
             if (Globals.getDefaultHabitat() != null) {
-                sslUtil = Globals.getDefaultHabitat().getService(IIOPSSLUtil.class);
-                socketInfo = (List<SocketInfo>) sslUtil.getSSLPortsAsSocketInfo(ior);
+                IIOPSSLUtil sslUtil = Globals.getDefaultHabitat().getService(IIOPSSLUtil.class);
+                socketInfo = sslUtil.getSSLPortsAsSocketInfo(ior);
             }
-
-            if (socketInfo == null) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "{0}.extract: did not find SSL SocketInfo", baseMsg);
-                }
-            } else {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "{0}.extract: found SSL socketInfo", baseMsg);
-                }
-            }
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "{0}.extract: Connection Context", baseMsg);
-            }
-        } catch (Exception ex) {
-            _logger.log(Level.WARNING, "Exception getting SocketInfo", ex);
-        } finally {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "{0}.extract<-: {1}", new Object[] {baseMsg, socketInfo});
-            }
+            LOG.log(DEBUG, "Extracted socketInfo: {0}", socketInfo);
+            return socketInfo;
+        } catch (Exception e) {
+            throw new IllegalStateException("Exception getting SocketInfo for IOR: " + ior, e);
         }
-        return socketInfo;
     }
-
-    ////////////////////////////////////////////////////
-    //
-    // ORBConfigurator
-    //
 
     @Override
     public void configure(DataCollector collector, ORB orb) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, ".configure->:");
-        }
-
-        this.orb = orb;
+        LOG.log(TRACE, "configure(dc, orb)");
         try {
-            orb.register_initial_reference(ORBConstants.CSI_V2_SSL_TAGGED_COMPONENT_HANDLER, this);
+            orb.register_initial_reference(CSI_V2_SSL_TAGGED_COMPONENT_HANDLER, this);
         } catch (InvalidName e) {
-            _logger.log(Level.WARNING, ".configure: ", e);
-        }
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, ".configure<-:");
+            throw new IllegalStateException(
+                "Failed to register initial reference " + CSI_V2_SSL_TAGGED_COMPONENT_HANDLER + ". " + e.getMessage(),
+                e);
         }
     }
 }

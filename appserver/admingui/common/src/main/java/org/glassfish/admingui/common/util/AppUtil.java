@@ -192,7 +192,7 @@ public class AppUtil {
         appResTypesEdit.add("full/externalResourceEdit.jsf?name=");
         appResTypesEdit.add("full/customResourceEdit.jsf?name=");
         appResTypesEdit.add("jca/adminObjectEdit.jsf?name=");
-        appResTypesEdit.add("full/mailResourceEdit.jsf?name=");
+        appResTypesEdit.add("jmail/mailResourceEdit.jsf?name=");
         appResTypesEdit.add("jdbc/jdbcConnectionPoolEdit.jsf?name=");
         appResTypesEdit.add("jca/connectorConnectionPoolEdit.jsf?name=");
         appResTypesEdit.add("jca/resourceAdapterConfigEdit.jsf?name=");

@@ -93,6 +93,7 @@
         <module>jts</module>
         <module>jdbc</module>
         <module>jca</module>
+        <module>mail-plugin</module>
         <module>jms-plugin</module>
         <module>ejb</module>
         <module>ejb-lite</module>

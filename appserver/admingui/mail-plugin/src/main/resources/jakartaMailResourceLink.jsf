@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2026 Contributors to the Eclipse Foundation 
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +17,15 @@
 
 -->
 
+<!initPage
+    setResourceBundle(key="i18njmail" bundle="org.glassfish.jmail.admingui.Strings")
+/>
+
 <sun:property>
-    <sun:hyperlink
-        toolTip="$resource{i18n.tree.jndi.tooltip}"
-        url="/full/jndi.jsf" >
-        <sun:image url="/resource/images/jndi.gif" />
-        <sun:staticText text="$resource{i18n.tree.jndi}" />
+    <sun:hyperlink 
+        toolTip="$resource{i18njmail.tree.javaMailSessions.tooltip}"
+        url="/jmail/jakartaMailResources.jsf" >
+        <sun:image url="/resource/jmail/images/javaMailSession.gif" />
+        <sun:staticText text="$resource{i18njmail.tree.javaMailSessions}" />
     </sun:hyperlink>
 </sun:property>

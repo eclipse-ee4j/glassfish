@@ -24,12 +24,6 @@
     <tocitem target="task-group-batchruntime" text="Configuring the Batch Runtime" expand="false">
       <tocitem target="task-configurebatchruntime" text="To Configure the Batch Runtime" expand="false"></tocitem>
     </tocitem>
-    <tocitem target="task-group-javamailresources" text="Configuring JavaMail Sessions" expand="false">
-      <tocitem target="task-javamailsessioncreate" text="To Create a JavaMail Session" expand="false"></tocitem>
-      <tocitem target="task-javamailsessionsedit" text="To Edit a JavaMail Session" expand="false"></tocitem>
-      <tocitem target="task-javamailtargets" text="To Manage JavaMail Session Targets" expand="false"></tocitem>
-      <tocitem target="task-javamailsessionsdelete" text="To Delete a JavaMail Session" expand="false"></tocitem>
-    </tocitem>
     <tocitem target="task-group-jndiresources" text="Configuring JNDI Resources" expand="false">
       <tocitem target="task-jndicustomresourcenew" text="To Create a Custom JNDI Resource" expand="false"></tocitem>
       <tocitem target="task-jndicustomresourceedit" text="To Edit a Custom JNDI Resource" expand="false"></tocitem>
@@ -49,11 +43,6 @@
       </tocitem>
     </tocitem>
     <tocitem target="ref-group-resources" text="Resources" expand="false">
-      <tocitem target="ref-group-javamailresources" text="JavaMail Sessions" expand="false">
-        <tocitem target="ref-javamailsessions" text="JavaMail Sessions" expand="false"></tocitem>
-        <tocitem target="ref-javamailsessioncreate" text="New JavaMail Session" expand="false"></tocitem>
-        <tocitem target="ref-javamailsessionsedit" text="Edit JavaMail Session" expand="false"></tocitem>
-      </tocitem>
       <tocitem target="ref-group-jndi" text="JNDI" expand="false">
         <tocitem target="ref-jndi" text="JNDI" expand="false"></tocitem>
         <tocitem target="ref-group-jndicustomresources" text="Custom Resources" expand="false">

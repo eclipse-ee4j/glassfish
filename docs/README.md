@@ -1,7 +1,7 @@
 
 # Eclipse GlassFish User Guides
 
-## <a name="current">Current Release - 8.0.1</a>
+## <a name="current">Current Release - 8.0.2</a>
 
 * [Add On Component Development Guide](latest/add-on-component-development-guide.html)
   ([pdf](latest/add-on-component-development-guide.pdf))

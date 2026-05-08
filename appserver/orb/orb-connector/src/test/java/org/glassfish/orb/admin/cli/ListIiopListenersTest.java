@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 
 package org.glassfish.orb.admin.cli;
 
+import com.sun.enterprise.util.net.NetUtils;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
@@ -113,7 +114,7 @@ public class ListIiopListenersTest {
      */
     @Test
     public void testExecuteSuccessListListener() {
-        parameters.set("listeneraddress", "localhost");
+        parameters.set("listeneraddress", NetUtils.getHostName());
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "listener");
         CreateIiopListener createCommand = services.getService(CreateIiopListener.class);

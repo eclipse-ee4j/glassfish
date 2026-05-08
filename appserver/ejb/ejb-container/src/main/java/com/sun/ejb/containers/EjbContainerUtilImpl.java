@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -63,7 +63,7 @@ import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
 import org.glassfish.ejb.spi.CMPDeployer;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBLocator;
 import org.glassfish.flashlight.provider.ProbeProviderFactory;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
@@ -93,7 +93,7 @@ public class EjbContainerUtilImpl implements PostConstruct, PreDestroy, EjbConta
     private ServerContext serverContext;
 
     @Inject
-    JavaEEIOUtils javaEEIOUtils;
+    private JavaEEIOUtils javaEEIOUtils;
 
     private final Map<Long, BaseContainer> id2Container = new ConcurrentHashMap<>();
 
@@ -123,7 +123,7 @@ public class EjbContainerUtilImpl implements PostConstruct, PreDestroy, EjbConta
     private EjbContainer ejbContainer;
 
     @Inject
-    private GlassFishORBHelper orbHelper;
+    private GlassFishORBLocator orbLocator;
 
     @Inject
     private ServerEnvironmentImpl env;
@@ -138,13 +138,13 @@ public class EjbContainerUtilImpl implements PostConstruct, PreDestroy, EjbConta
     private EjbAsyncInvocationManager ejbAsyncInvocationManager;
 
     @Inject
-    ProbeProviderFactory probeProviderFactory;
+    private ProbeProviderFactory probeProviderFactory;
 
     @Inject
-    Domain domain;
+    private Domain domain;
 
     @Inject
-    Provider<Deployment> deploymentProvider;
+    private Provider<Deployment> deploymentProvider;
 
     @Inject
     private Provider<CMPDeployer> cmpDeployerProvider;
@@ -199,8 +199,8 @@ public class EjbContainerUtilImpl implements PostConstruct, PreDestroy, EjbConta
     }
 
     @Override
-    public GlassFishORBHelper getORBHelper() {
-        return orbHelper;
+    public GlassFishORBLocator getOrbLocator() {
+        return orbLocator;
     }
 
     @Override

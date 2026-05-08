@@ -140,7 +140,6 @@ import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.glassfish.ejb.spi.EjbContainerInterceptor;
 import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
@@ -565,7 +564,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             if (ejbDescriptor.isRemoteInterfacesSupported() || ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
                 assertFullProfile("exposes a Remote client view");
-                initializeProtocolManager();
+                this.protocolMgr = initializeOrb(ejbContainerUtilImpl);
             }
 
             if (ejbDescriptor.isRemoteInterfacesSupported()) {
@@ -627,7 +626,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 localBusinessHomeIntf = GenericEJBLocalHome.class;
 
                 for (String next : ejbDescriptor.getLocalBusinessClassNames()) {
-                    Class clz = loader.loadClass(next);
+                    Class<?> clz = loader.loadClass(next);
                     localBusinessIntfs.add(clz);
                     addToGeneratedMonitoredMethodInfo(clz);
                 }
@@ -638,7 +637,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 hasOptionalLocalBusinessView = true;
 
                 ejbOptionalLocalBusinessHomeIntf = GenericEJBLocalHome.class;
-                Class clz = loader.loadClass(ejbDescriptor.getEjbClassName());
+                Class<?> clz = loader.loadClass(ejbDescriptor.getEjbClassName());
                 addToGeneratedMonitoredMethodInfo(clz);
 
                 this.optIntfClassName = EJBUtils.getGeneratedOptionalInterfaceName(ejbClass.getName());
@@ -763,20 +762,17 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         monitoredGeneratedClasses.add(generatedClass);
     }
 
-    protected void initializeProtocolManager() {
+    private static ProtocolManager initializeOrb(EjbContainerUtil ejbContainerUtil) {
         try {
-            GlassFishORBHelper orbHelper = ejbContainerUtilImpl.getORBHelper();
-            protocolMgr = orbHelper.getProtocolManager();
-
-        } catch (Throwable t) {
+            return ejbContainerUtil.getOrbLocator().getProtocolManager();
+        } catch (Exception e) {
             throw new RuntimeException(
-                    "IIOP Protocol Manager initialization failed.  " + "Possible cause is that ORB is not available in this "
-                            + ((ejbContainerUtilImpl.isEmbeddedServer())
-                                    ? "embedded container, or server instance is running and required ports are in use"
-                                    : "container"),
-                    t);
+                "IIOP Protocol Manager initialization failed. Possible cause is that ORB is not available in this "
+                    + (ejbContainerUtil.isEmbeddedServer()
+                        ? "embedded container, or server instance is running and required ports are in use"
+                        : "container"),
+                e);
         }
-
     }
 
     protected void preInitialize(EjbDescriptor ejbDesc, ClassLoader loader) {

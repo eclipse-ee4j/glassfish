@@ -77,7 +77,7 @@ public class Btest{
     // to JDK
     private static void initializeSystemProperties( ) {
         System.setProperty( "org.omg.CORBA.ORBClass",
-            "com.sun.corba.ee.impl.orb.ORBImpl" );
+            "org.glassfish.enterprise.iiop.impl.GlassFishOrbImpl" );
         System.setProperty( "javax.rmi.CORBA.UtilClass",
             "com.sun.corba.ee.impl.javax.rmi.CORBA.Util" );
 

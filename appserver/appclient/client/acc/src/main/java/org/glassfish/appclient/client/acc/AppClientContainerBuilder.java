@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,7 @@ import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
 import org.glassfish.embeddable.client.UserError;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.xml.sax.SAXException;
 
 import static java.util.logging.Level.CONFIG;
@@ -86,8 +86,6 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     private ClientCredential clientCredential;
 
     private boolean sendPassword = true;
-
-    private GlassFishORBHelper orbHelper;
 
     /** caller-provided message security configurations */
     private final List<MessageSecurityConfig> messageSecurityConfigs = new ArrayList<>();
@@ -181,7 +179,6 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
     private void prepareHabitat() throws URISyntaxException {
         ACCModulesManager.initialize(Thread.currentThread().getContextClassLoader());
-        orbHelper = ACCModulesManager.getService(GlassFishORBHelper.class);
     }
 
     /**
@@ -218,11 +215,10 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         }
 
         if (isSSLRequired(targetServers, containerProperties)) {
-            orbHelper.setCSIv2Prop(ORB_SSL_CLIENT_REQUIRED, "true");
+            ACCModulesManager.getService(GlassFishORBFactory.class).setCSIv2Prop(ORB_SSL_CLIENT_REQUIRED, "true");
         }
 
         logger.log(CONFIG, "Using endpoint address(es): {0}", sb.toString());
-
     }
 
     /**

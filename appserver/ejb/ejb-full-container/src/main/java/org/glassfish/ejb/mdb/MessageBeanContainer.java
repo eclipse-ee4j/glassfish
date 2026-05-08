@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -138,14 +138,6 @@ public final class MessageBeanContainer extends BaseContainer implements Message
 
     MessageBeanContainer(EjbDescriptor ejbDescriptor, ClassLoader classLoader, SecurityManager securityManager) throws Exception {
         super(ContainerType.MESSAGE_DRIVEN, ejbDescriptor, classLoader, securityManager);
-
-        // Instantiate the ORB and Remote naming manager
-        // to allow client lookups of JMS queues/topics/connectionfactories
-        //
-        // TODO - implement the sniffer for DAS/cluster instance - listening on the naming port that will
-        // instantiate the orb/remote naming service on demand upon initial access.
-        // Once that's available, this call can be removed.
-        initializeProtocolManager();
 
         isMessageDriven = true;
 
@@ -402,7 +394,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
     }
 
     public String getMonitorAttributeValues() {
-        StringBuffer sbuf = new StringBuffer();
+        StringBuilder sbuf = new StringBuilder();
         sbuf.append("MESSAGEDRIVEN ");
         sbuf.append(appEJBName_);
 

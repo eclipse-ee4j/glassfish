@@ -234,7 +234,7 @@
 
         <!-- ORB -->
         <pfl.version>5.1.0</pfl.version>
-        <glassfish-corba.version>5.0.0</glassfish-corba.version>
+        <glassfish-corba.version>5.0.1</glassfish-corba.version>
         <gmbal.version>4.1.1</gmbal.version>
 
         <shoal.version>4.0.0</shoal.version>

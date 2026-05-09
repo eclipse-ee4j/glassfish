@@ -122,4 +122,10 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implem
         return "Eclipse_JNoSQL";
     }
 
+    @Override
+    public Set<Class<?>> projections() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

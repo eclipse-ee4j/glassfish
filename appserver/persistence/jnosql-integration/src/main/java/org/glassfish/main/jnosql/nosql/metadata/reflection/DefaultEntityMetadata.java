@@ -201,5 +201,11 @@ class DefaultEntityMetadata implements EntityMetadata {
         return new EntityMetadataBuilder();
     }
 
+    @Override
+    public String mappingName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 }

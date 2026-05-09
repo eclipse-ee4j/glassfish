@@ -124,4 +124,10 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
         return JNoSQLJakartaPersistence.PROVIDER;
     }
 
+    @Override
+    public Set<Class<?>> projections() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

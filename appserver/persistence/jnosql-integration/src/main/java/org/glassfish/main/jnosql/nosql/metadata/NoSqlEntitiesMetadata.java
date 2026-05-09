@@ -30,6 +30,7 @@ import org.eclipse.jnosql.mapping.metadata.ClassInformationNotFoundException;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
+import org.eclipse.jnosql.mapping.metadata.ProjectionMetadata;
 import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionClassConverter;
 import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionGroupEntityMetadata;
 
@@ -125,5 +126,17 @@ public class NoSqlEntitiesMetadata implements EntitiesMetadata {
                 ", classConverter=" + converter +
                 ", extension=" + extension +
                 '}';
+    }
+
+    @Override
+    public Optional<EntityMetadata> findByMappingName(String mappingName) {
+        // TODO Auto-generated method stub
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<ProjectionMetadata> projection(Class<?> projection) {
+        // TODO Auto-generated method stub
+        return Optional.empty();
     }
 }

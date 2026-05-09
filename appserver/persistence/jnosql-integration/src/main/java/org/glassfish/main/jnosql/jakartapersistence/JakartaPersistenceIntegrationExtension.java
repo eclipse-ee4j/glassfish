@@ -54,9 +54,15 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
  * pattern of defining GlassFish extensions there, for example
  * PersistenceExtension. Or maybe CDI integration is better in this module, so
  * that it can be disabled independent of other modules. Then it's probably also
- * good to move CDI-JPA integration from weld-integration into the jpa-container
+ * good to move CDI-Persistence integration from weld-integration into the
+ * Jakarta Persistence container
+ *
+ * <p>
  * TODO - rename to jakarta-data container, and implement a container, following
- * the JPA container in the jpa-container module TODO - If delegation is
+ * the Jakarta Persistence container in the jpa-container module
+ *
+ * <p>
+ * TODO - If delegation is
  * disabled, do not override JNoSQL beans if they are defined in the app
  *
  * @author Ondro Mihalyi

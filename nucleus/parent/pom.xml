@@ -1484,8 +1484,8 @@
                                         </rule>
 
                                         <!-- Jakarta EE 13 major versions to exclude -->
-                                        
-                                        <!-- 
+
+                                        <!--
                                         <rule>
                                             <groupId>jakarta.activation</groupId>
                                             <ignoreVersions>
@@ -2232,7 +2232,7 @@
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
-                                        
+
                                         -->
 
                                         <rule>

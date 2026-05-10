@@ -25,6 +25,7 @@ import org.eclipse.jnosql.mapping.metadata.ClassConverter;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
+import org.eclipse.jnosql.mapping.metadata.ProjectionMetadata;
 
 /**
  * The default implementation of {@link GroupEntityMetadata}.
@@ -62,6 +63,12 @@ public class ReflectionGroupEntityMetadata implements GroupEntityMetadata {
     @Override
     public Map<Class<?>, EntityMetadata> classes() {
         return this.classes;
+    }
+
+    @Override
+    public Map<Class<?>, ProjectionMetadata> projections() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

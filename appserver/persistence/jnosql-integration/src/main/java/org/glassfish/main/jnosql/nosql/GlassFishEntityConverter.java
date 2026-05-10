@@ -20,6 +20,7 @@ import jakarta.inject.Inject;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.eclipse.jnosql.mapping.semistructured.ProjectorConverter;
 import org.glassfish.main.jnosql.nosql.metadata.NoSqlEntitiesMetadata;
 
 /**
@@ -41,5 +42,11 @@ class GlassFishEntityConverter extends EntityConverter {
     @Override
     protected Converters converters() {
         return converters;
+    }
+
+    @Override
+    protected ProjectorConverter projectorConverter() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

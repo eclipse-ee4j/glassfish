@@ -107,7 +107,7 @@
         <jakarta.platform.version>11.0.0</jakarta.platform.version>
 
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>6.1.0-M1</jakarta.el-api.version>
+        <jakarta.el-api.version>6.1.0-M2</jakarta.el-api.version>
         <expressly.version>6.0.0</expressly.version>
 
         <!-- Jakarta Servlet -->
@@ -129,13 +129,13 @@
         <hk2.plugin.version>${hk2.version}</hk2.plugin.version>
 
         <!-- Jakarta CDI -->
-        <jakarta.cdi-api.version>5.0.0.Alpha3</jakarta.cdi-api.version>
+        <jakarta.cdi-api.version>5.0.0.Alpha6</jakarta.cdi-api.version>
         <weld.version>7.0.0.Alpha1</weld.version>
         <jboss.classfilewriter.version>1.3.1.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta XML Binding -->
-        <jakarta.xml.bind-api.version>4.0.5</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.7</jakarta.jaxb-impl.version>
+        <jakarta.xml.bind-api.version>4.1.0-M1</jakarta.xml.bind-api.version>
+        <jakarta.jaxb-impl.version>4.0.8</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>4.0.0</jakarta.rest-api.version>
@@ -184,14 +184,14 @@
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
-        <openmq.version>6.8.0</openmq.version>
+        <openmq.version>6.9.0</openmq.version>
 
         <!-- Jakarta Data / NoSQL -->
-        <jakarta.data-api.version>1.0.1</jakarta.data-api.version>
-        <jakarta.data.spec.version>1.0</jakarta.data.spec.version>
-        <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
-        <jakarta.nosql.spec.version>1.0.1</jakarta.nosql.spec.version>
-        <jnosql.version>1.1.13</jnosql.version>
+        <jakarta.data-api.version>1.1.0-M3</jakarta.data-api.version>
+        <jakarta.data.spec.version>1.1</jakarta.data.spec.version>
+        <jakarta.nosql-api.version>1.1.0-M2</jakarta.nosql-api.version>
+        <jakarta.nosql.spec.version>1.1.0</jakarta.nosql.spec.version>
+        <jnosql.version>1.2.0-SNAPSHOT</jnosql.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -233,9 +233,9 @@
         <glassfish-management-api.version>3.3.0</glassfish-management-api.version>
 
         <!-- ORB -->
-        <pfl.version>5.1.0</pfl.version>
-        <glassfish-corba.version>5.0.1</glassfish-corba.version>
-        <gmbal.version>4.1.1</gmbal.version>
+        <pfl.version>5.1.1</pfl.version>
+        <glassfish-corba.version>5.0.2</glassfish-corba.version>
+        <gmbal.version>4.1.2</gmbal.version>
 
         <shoal.version>4.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
@@ -264,18 +264,18 @@
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.5</jettison.version>
-        <mimepull.version>1.10.0</mimepull.version>
+        <mimepull.version>1.11.0</mimepull.version>
         <jna.version>5.18.1</jna.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.6.0</easymock.version>
-        <junit.version>6.0.3</junit.version>
+        <junit.version>6.1.0-RC1</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>3.0.0</osgi-resource-locator.version>
         <slf4j.version>2.0.17</slf4j.version>
         <shrinkwrap.version>3.3.5</shrinkwrap.version>
-        <testcontainers.version>2.0.4</testcontainers.version>
+        <testcontainers.version>2.0.5</testcontainers.version>
 
         <surefire.version>3.5.5</surefire.version>
         <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
@@ -1346,7 +1346,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.9.1</version>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1483,7 +1483,9 @@
                                             </ignoreVersions>
                                         </rule>
 
-                                        <!-- Jakarta EE 12 major versions to exclude -->
+                                        <!-- Jakarta EE 13 major versions to exclude -->
+
+                                        <!--
                                         <rule>
                                             <groupId>jakarta.activation</groupId>
                                             <ignoreVersions>
@@ -2230,6 +2232,8 @@
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
+
+                                        -->
 
                                         <rule>
                                             <groupId>org.slf4j</groupId>

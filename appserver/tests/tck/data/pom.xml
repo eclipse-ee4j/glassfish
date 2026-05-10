@@ -38,14 +38,14 @@
     </modules>
 
     <properties>
-        <glassfish.version.main>8</glassfish.version.main>
+        <glassfish.version.main>9</glassfish.version.main>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
 
-        <jakarta.data.tck.version>1.0.1</jakarta.data.tck.version>
+        <jakarta.data.tck.version>1.1.0-M3</jakarta.data.tck.version>
 
-        <weld.version>6.0.4.Final</weld.version>
+        <weld.version>7.0.0.Alpha1</weld.version>
     </properties>
 
     <dependencyManagement>

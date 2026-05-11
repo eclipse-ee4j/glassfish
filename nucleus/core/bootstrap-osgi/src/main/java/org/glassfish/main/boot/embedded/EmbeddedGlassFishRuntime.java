@@ -93,7 +93,7 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             properties.putAll(glassFishProperties.getProperties());
 
             final GlassFishProperties gfProps = new GlassFishProperties(properties);
-            setEnv(gfProps);
+            final OwnedSslProperties ownedSslProps = setEnv(gfProps);
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
             final ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
@@ -103,7 +103,10 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null,
                 startupContext);
 
-            final Consumer<GlassFish> onDispose = gf -> glassFishInstances.remove(gfProps.getInstanceRoot());
+            final Consumer<GlassFish> onDispose = gf -> {
+                glassFishInstances.remove(gfProps.getInstanceRoot());
+                ownedSslProps.clearIfStillOwned();
+            };
             final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose);
             glassFishInstances.put(gfProps.getInstanceRoot(), glassFish);
 
@@ -134,7 +137,7 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         }
     }
 
-    private void setEnv(GlassFishProperties gfProps) throws Exception {
+    private OwnedSslProperties setEnv(GlassFishProperties gfProps) throws Exception {
         String instanceRootValue = gfProps.getInstanceRoot();
         if (instanceRootValue == null) {
             instanceRootValue = createTempInstanceRoot(gfProps);
@@ -155,13 +158,10 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         validateConfiguredStorePath(KEYSTORE_FILE);
         validateConfiguredStorePath(TRUSTSTORE_FILE);
         File embeddedKeyStore = new File(instanceRoot, "config/keystore.p12");
-        if (embeddedKeyStore.isFile()) {
-            setProperty(KEYSTORE_FILE.getSystemPropertyName(), embeddedKeyStore.getAbsolutePath(), false);
-        }
+        String ownedKeyStore = setStoreSystemPropertyIfUnset(KEYSTORE_FILE, embeddedKeyStore);
         File embeddedTrustStore = new File(instanceRoot, "config/cacerts.p12");
-        if (embeddedTrustStore.isFile()) {
-            setProperty(TRUSTSTORE_FILE.getSystemPropertyName(), embeddedTrustStore.getAbsolutePath(), false);
-        }
+        String ownedTrustStore = setStoreSystemPropertyIfUnset(TRUSTSTORE_FILE, embeddedTrustStore);
+        OwnedSslProperties ownedSslProps = new OwnedSslProperties(ownedKeyStore, ownedTrustStore);
 
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
         if (installRootValue == null) {
@@ -181,6 +181,44 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
         gfProps.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.getAbsolutePath());
         gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+
+        return ownedSslProps;
+    }
+
+    /**
+     * Sets the JSSE store system property to {@code embeddedStore} only if it is unset and the
+     * file exists, returning the path so the caller can clear it again on dispose. Tracking
+     * ownership is what keeps a dangling path from leaking into the next embedded GlassFish
+     * instance started in the same JVM: when the temp instanceRoot is auto-deleted, leaving the
+     * system property pointing at it would later defeat both {@link #generateEmbeddedKeyPair}'s
+     * bail-out (which trusts the property) and the maven-embedded-glassfish-plugin's
+     * setSystemProperties (which skips already-set keys).
+     */
+    private static String setStoreSystemPropertyIfUnset(GlassFishVariable variable, File embeddedStore) {
+        if (!embeddedStore.isFile() || System.getProperty(variable.getSystemPropertyName()) != null) {
+            return null;
+        }
+        setProperty(variable.getSystemPropertyName(), embeddedStore.getAbsolutePath(), false);
+        return embeddedStore.getAbsolutePath();
+    }
+
+    /**
+     * The JSSE store system property paths that this GlassFish instance set on startup and is
+     * therefore responsible for clearing on dispose. A null path means the property was already
+     * set by the caller (or not set at all) and is not ours to touch.
+     */
+    private record OwnedSslProperties(String keyStorePath, String trustStorePath) {
+
+        void clearIfStillOwned() {
+            clear(KEYSTORE_FILE, keyStorePath);
+            clear(TRUSTSTORE_FILE, trustStorePath);
+        }
+
+        private static void clear(GlassFishVariable variable, String ownedPath) {
+            if (ownedPath != null && ownedPath.equals(System.getProperty(variable.getSystemPropertyName()))) {
+                System.clearProperty(variable.getSystemPropertyName());
+            }
+        }
     }
 
     private String createTempInstanceRoot(GlassFishProperties gfProps) throws Exception {

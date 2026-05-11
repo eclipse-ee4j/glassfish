@@ -43,6 +43,7 @@ import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.GlassFishVariable;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 import org.glassfish.main.boot.log.LogFacade;
@@ -147,7 +148,12 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         // The embedded domain.xml declares javax.net.ssl.keyStore/trustStore as jvm-options, but
         // those only take effect when the JVM is forked (standalone GlassFish). For in-process
         // embedded use we set them programmatically here, deferring to the caller's choice if
-        // they've already configured a keystore.
+        // they've already configured a keystore. If the caller set a path but the file does not
+        // exist we log a WARNING up front: SecuritySupport will still substitute an empty
+        // KeyStore (matching its own behaviour), so the handshake will still fail later, but the
+        // log now names the property and the offending path instead of an opaque TLS error.
+        validateConfiguredStorePath(KEYSTORE_FILE);
+        validateConfiguredStorePath(TRUSTSTORE_FILE);
         File embeddedKeyStore = new File(instanceRoot, "config/keystore.p12");
         if (embeddedKeyStore.isFile()) {
             setProperty(KEYSTORE_FILE.getSystemPropertyName(), embeddedKeyStore.getAbsolutePath(), false);
@@ -234,6 +240,16 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         String autoDelete = gfProps.getProperties().getProperty(AUTO_DELETE, "true");
         gfProps.setProperty(AUTO_DELETE, autoDelete);
         return instanceRoot.getAbsolutePath();
+    }
+
+    private static void validateConfiguredStorePath(GlassFishVariable variable) {
+        String configured = System.getProperty(variable.getSystemPropertyName());
+        if (configured != null && !new File(configured).isFile()) {
+            LOG.log(WARNING, "Configured {0}={1} does not exist or is not a regular file;"
+                + " SecuritySupport will fall back to an empty in-memory keystore and"
+                + " TLS handshakes will fail with an opaque error.",
+                new Object[] {variable.getSystemPropertyName(), configured});
+        }
     }
 
     private static void generateEmbeddedKeyPair(File instanceConfigDir) {

@@ -237,6 +237,11 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
     }
 
     private static void generateEmbeddedKeyPair(File instanceConfigDir) {
+        if (System.getProperty(KEYSTORE_FILE.getSystemPropertyName()) != null) {
+            // The caller already pointed JSSE at a keystore (e.g. via -Djavax.net.ssl.keyStore);
+            // don't generate a dev cert they won't use.
+            return;
+        }
         File keyStore = new File(instanceConfigDir, "keystore.p12");
         File trustStore = new File(instanceConfigDir, "cacerts.p12");
         if (keyStore.isFile() && trustStore.isFile()) {

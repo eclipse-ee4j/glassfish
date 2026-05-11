@@ -46,6 +46,7 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 import org.glassfish.main.boot.log.LogFacade;
+import org.glassfish.main.jdke.security.KeyTool;
 
 import static com.sun.enterprise.glassfish.bootstrap.cfg.BootstrapKeys.AUTO_DELETE;
 import static java.util.logging.Level.FINER;
@@ -53,6 +54,8 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
+import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
+import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
@@ -141,6 +144,19 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         setProperty(INSTANCE_ROOT.getSystemPropertyName(), instanceRoot.getAbsolutePath(), true);
         setProperty(BootstrapKeys.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString(), true);
 
+        // The embedded domain.xml declares javax.net.ssl.keyStore/trustStore as jvm-options, but
+        // those only take effect when the JVM is forked (standalone GlassFish). For in-process
+        // embedded use we set them programmatically here, deferring to the caller's choice if
+        // they've already configured a keystore.
+        File embeddedKeyStore = new File(instanceRoot, "config/keystore.p12");
+        if (embeddedKeyStore.isFile()) {
+            setProperty(KEYSTORE_FILE.getSystemPropertyName(), embeddedKeyStore.getAbsolutePath(), false);
+        }
+        File embeddedTrustStore = new File(instanceRoot, "config/cacerts.p12");
+        if (embeddedTrustStore.isFile()) {
+            setProperty(TRUSTSTORE_FILE.getSystemPropertyName(), embeddedTrustStore.getAbsolutePath(), false);
+        }
+
         String installRootValue = System.getProperty("org.glassfish.embeddable.installRoot");
         if (installRootValue == null) {
             installRootValue = instanceRoot.getAbsolutePath();
@@ -204,6 +220,13 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             if(configFileURI != null) {
                 copy(configFileURI.toURL(), new File(instanceConfigDir, "domain.xml"), true);
             }
+
+            // Generate a self-signed s1as keypair for the embedded HTTPS listener. Each embedded
+            // JVM gets its own fresh private key, so the private key is never shipped in the jar.
+            // The embedded domain.xml expects keystore.p12 + cacerts.p12 in config/, and JSSE
+            // loads them via the system properties set in setEnv. Users replace the cert by
+            // providing a custom instanceRoot or domain.xml.
+            generateEmbeddedKeyPair(instanceConfigDir);
         } catch (Exception ex) {
             LOG.log(SEVERE, "Failed to create instanceRoot", ex);
         }
@@ -211,6 +234,29 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         String autoDelete = gfProps.getProperties().getProperty(AUTO_DELETE, "true");
         gfProps.setProperty(AUTO_DELETE, autoDelete);
         return instanceRoot.getAbsolutePath();
+    }
+
+    private static void generateEmbeddedKeyPair(File instanceConfigDir) {
+        File keyStore = new File(instanceConfigDir, "keystore.p12");
+        File trustStore = new File(instanceConfigDir, "cacerts.p12");
+        if (keyStore.isFile() && trustStore.isFile()) {
+            return;
+        }
+        try {
+            char[] password = "changeit".toCharArray();
+            KeyTool keyTool = new KeyTool(keyStore, "PKCS12", password);
+            keyTool.generateKeyPair("s1as", "CN=localhost,OU=GlassFish,O=Eclipse Foundation", "RSA", 3650);
+            keyTool.copyCertificate("s1as", trustStore);
+            LOG.log(WARNING,
+                "Generated a self-signed s1as keypair for the embedded HTTPS listener at {0}."
+                + " This certificate is for development and testing only; replace it with a"
+                + " CA-issued certificate (or supply your own keystore via a custom domain.xml"
+                + " or the javax.net.ssl.keyStore system property) before exposing this server"
+                + " to untrusted networks.",
+                keyStore.getAbsolutePath());
+        } catch (Exception ex) {
+            LOG.log(WARNING, "Failed to generate embedded s1as keypair; HTTPS listener will be unusable.", ex);
+        }
     }
 
     private static void copy(URL url, File destFile, boolean overwrite) {

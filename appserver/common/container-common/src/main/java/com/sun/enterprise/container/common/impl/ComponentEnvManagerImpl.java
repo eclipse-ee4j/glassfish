@@ -314,10 +314,13 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         if (dependencyAppliesToScope(desc, ScopeType.MODULE)) {
             return getApplicationName(env) + "/" + getModuleName(env);
         }
-        if (dependencyAppliesToScope(desc, ScopeType.APP)) {
-            return getApplicationName(env);
-        }
-        return "";
+        // APP and GLOBAL scopes: scope the underlying physical resource (pool
+        // name, etc.) to the declaring app. For java:global/ this is what
+        // prevents two apps declaring the same name from sharing one physical
+        // pool — which would let connections opened against the first app's
+        // classloader linger after that app undeploys, blowing up the next
+        // app's lookups with "ClassLoader is not in expected state".
+        return getApplicationName(env);
     }
 
     private void addAllDescriptorBindings(JndiNameEnvironment jndiEnv, ScopeType scope, Collection<JNDIBinding> jndiBindings) {

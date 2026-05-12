@@ -20,7 +20,6 @@ package org.glassfish.tck.data.arquillian;
 
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.spi.LoadableExtension;
-import org.jboss.arquillian.core.spi.LoadableExtension.ExtensionBuilder;
 
 public class ArquillianExtension implements LoadableExtension {
 

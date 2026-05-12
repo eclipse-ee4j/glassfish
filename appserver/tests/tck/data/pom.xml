@@ -166,6 +166,7 @@
                 </dependency>
             </dependencies>
         </profile>
+        
         <profile>
             <id>in-global-transaction</id>
             <!-- An alternative way of running the TCK with each test wrapped in a global transaction
@@ -186,6 +187,7 @@
                 </pluginManagement>
             </build>
         </profile>
+        
         <profile>
             <id>full</id>
             <properties>
@@ -193,6 +195,7 @@
                 <groups>platform,tck-javatest</groups>
             </properties>
         </profile>
+        
         <profile>
             <id>web</id>
             <properties>
@@ -200,6 +203,7 @@
                 <groups>web,tck-javatest</groups>
             </properties>
         </profile>
+        
         <profile>
             <id>arquillian-managed</id>
             <dependencies>
@@ -211,6 +215,7 @@
                 </dependency>
             </dependencies>
         </profile>
+        
         <profile>
             <id>arquillian-remote</id>
             <!-- For this profile, ensure that the server is running with the following system property:

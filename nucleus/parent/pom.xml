@@ -246,6 +246,7 @@
         <jettison.version>1.5.5</jettison.version>
         <mimepull.version>1.11.0</mimepull.version>
         <jna.version>5.18.1</jna.version>
+        <jline.version>4.1.0</jline.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
@@ -668,7 +669,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>4.1.0</version>
+                <version>${jline.version}</version>
             </dependency>
 
             <!--3rd party dependencies -->

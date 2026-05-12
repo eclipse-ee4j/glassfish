@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +24,10 @@ import jakarta.inject.Inject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -106,10 +106,10 @@ public class MultimodeCommand extends CLICommand {
      */
     @Override
     protected void validate() throws CommandException, CommandValidationException {
-        if (printPromptOpt != null) {
-            printPrompt = printPromptOpt.booleanValue();
-        } else {
+        if (printPromptOpt == null) {
             printPrompt = programOpts.isInteractive();
+        } else {
+            printPrompt = printPromptOpt.booleanValue();
         }
         /*
          * Save value of --echo because CLICommand will reset it
@@ -140,7 +140,6 @@ public class MultimodeCommand extends CLICommand {
 
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
-        BufferedReader reader = null;
         // restore echo flag, saved in validate
         programOpts.setEcho(echo);
         try {
@@ -148,36 +147,25 @@ public class MultimodeCommand extends CLICommand {
                 System.out.println(strings.get("multimodeIntro"));
                 Prompter prompter = getPrompter();
                 return executeCommands(prompter);
-            } else {
-                printPrompt = false;
-                if (!file.canRead()) {
-                    throw new CommandException("File: " + file + " can not be read");
-                }
-                if (encoding == null) {
-                    reader = new BufferedReader(new FileReader(file, Charset.defaultCharset()));
-                } else {
-                    reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
-                }
             }
-            return executeCommands(new BufferedReaderPrompter(reader));
+            printPrompt = false;
+            if (!file.canRead()) {
+                throw new CommandException("File: " + file + " can not be read");
+            }
+            Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
+            try (BufferedReader reader = new BufferedReader(new FileReader(file, charset))) {
+                return executeCommands(new BufferedReaderPrompter(reader));
+            }
         } catch (IOException e) {
             throw new CommandException(e);
-        } finally {
-            try {
-                if (file != null && reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                // ignore it
-            }
         }
     }
 
-    private Prompter basicPrompter() throws IOException {
+    private Prompter basicPrompter() {
         return new BufferedReaderPrompter(new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset())));
     }
 
-    private Prompter getPrompter() throws IOException {
+    private Prompter getPrompter() {
         if (DISABLE_JLINE) {
             return basicPrompter();
         }
@@ -353,6 +341,7 @@ public class MultimodeCommand extends CLICommand {
             return reader.readLine();
         }
 
+        @Override
         public void close() {
 
         }
@@ -410,6 +399,7 @@ public class MultimodeCommand extends CLICommand {
             }
         }
 
+        @Override
         public void close() throws IOException {
             reader = null;
             terminal.close();
@@ -422,9 +412,9 @@ public class MultimodeCommand extends CLICommand {
      *
      * @return the exit code of the last command executed
      */
-    private int executeCommands(Prompter prompter) throws CommandException, CommandValidationException, IOException {
+    private int executeCommands(Prompter prompter) throws IOException {
         String line;
-        int rc = 0;
+        int resultCode = 0;
 
         /*
          * Any program options we start with are copied to the environment
@@ -440,6 +430,7 @@ public class MultimodeCommand extends CLICommand {
                 }
                 break;
             }
+            logger.warning("*****# " + line);
 
             if (line.trim().startsWith("#")) { // ignore comment lines
                 continue;
@@ -458,7 +449,7 @@ public class MultimodeCommand extends CLICommand {
             }
 
             String command = args[0];
-            if (command.length() == 0) {
+            if (command.isEmpty()) {
                 continue;
             }
 
@@ -492,13 +483,13 @@ public class MultimodeCommand extends CLICommand {
                 atomicReplace(habitat, po);
 
                 cmd = CLICommand.getCommand(habitat, command);
-                rc = cmd.execute(args);
+                resultCode = cmd.execute(args);
             } catch (CommandValidationException cve) {
                 logger.severe(cve.getMessage());
                 if (cmd != null) {
                     logger.severe(cmd.getUsage());
                 }
-                rc = ERROR;
+                resultCode = ERROR;
             } catch (InvalidCommandException ice) {
                 // find closest match with local or remote commands
                 logger.severe(ice.getMessage());
@@ -511,9 +502,9 @@ public class MultimodeCommand extends CLICommand {
                 } catch (InvalidCommandException e) {
                     // not a big deal if we cannot help
                 }
-                rc = ERROR;
+                resultCode = ERROR;
             } catch (CommandException ce) {
-                if (ce.getCause() instanceof java.net.ConnectException) {
+                if (ce.getCause() instanceof ConnectException) {
                     // find closest match with local commands
                     logger.severe(ce.getMessage());
                     try {
@@ -525,7 +516,7 @@ public class MultimodeCommand extends CLICommand {
                 } else {
                     logger.severe(ce.getMessage());
                 }
-                rc = ERROR;
+                resultCode = ERROR;
             } finally {
                 // restore the original program options
                 // XXX - is this necessary?
@@ -533,7 +524,7 @@ public class MultimodeCommand extends CLICommand {
             }
 
             // XXX - this duplicates code in AsadminMain, refactor it
-            switch (rc) {
+            switch (resultCode) {
                 case SUCCESS:
                     if (!programOpts.isTerse()) {
                         logger.fine(strings.get("CommandSuccessful", command));
@@ -547,9 +538,9 @@ public class MultimodeCommand extends CLICommand {
                     logger.fine(strings.get("CommandUnSuccessful", command));
                     break;
             }
-            CLIUtil.writeCommandToDebugLog(programOpts.getCommandName() + "[multimode]", env, args, rc);
+            CLIUtil.writeCommandToDebugLog(programOpts.getCommandName() + "[multimode]", env, args, resultCode);
         }
-        return rc;
+        return resultCode;
     }
 
     private static boolean isInternalCommand(String commandName) {
@@ -573,7 +564,9 @@ public class MultimodeCommand extends CLICommand {
             try {
                 if (cached == null) {
 
-                    if (computeRemoteCommandsCache()) return;
+                    if (computeRemoteCommandsCache()) {
+                        return;
+                    }
                 }
                 cached.complete(lineReader, parsedLine, list);
             } catch(CommandException ignored){

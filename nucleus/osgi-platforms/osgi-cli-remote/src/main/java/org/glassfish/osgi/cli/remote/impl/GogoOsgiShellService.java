@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
 import org.glassfish.api.ActionReport;
-import org.glassfish.common.util.io.EmptyInputStream;
 
 import static org.glassfish.osgi.cli.remote.impl.SessionOperation.EXECUTE;
 import static org.glassfish.osgi.cli.remote.impl.SessionOperation.LIST;
@@ -54,7 +53,7 @@ class GogoOsgiShellService extends OsgiShellService {
 
     @Override
     protected void execCommand(String cmdName, String cmd) throws Exception {
-        final InputStream in = new EmptyInputStream();
+        final InputStream in = InputStream.nullInputStream();
         if (sessionOperation == null) {
             if (ASADMIN_OSGI_SHELL.equals(cmdName)) {
                 stdout.println("gogo");

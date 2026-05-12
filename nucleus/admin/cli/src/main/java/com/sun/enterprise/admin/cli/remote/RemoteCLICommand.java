@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,6 +52,7 @@ import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -532,7 +533,7 @@ public class RemoteCLICommand extends CLICommand {
     @Override
     public int execute(String... argv) throws CommandException {
         try {
-            logger.log(Level.FINEST, "RemoteCLICommand executes");
+            logger.log(Level.FINE, () -> "Executing: " + Arrays.toString(argv));
             return super.execute(argv);
         } catch (ReExecuted reex) {
             return reex.getExecutionResult();
@@ -540,7 +541,7 @@ public class RemoteCLICommand extends CLICommand {
     }
 
     /**
-     * Set the directory in which any returned files will be stored. The default is the user's home directory.
+     * @param dir the directory in which any returned files will be stored. The default is the user's home directory.
      */
     public void setFileOutputDirectory(File dir) {
         outputDir = dir;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +42,7 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -124,9 +125,12 @@ public class OSGiCommandsITest {
             ps.println("lb");
         }
         AsadminResult result = ASADMIN.exec("osgi-shell", "--file", cmdFile.getAbsolutePath());
-        assertThat(result.getStdOut(),
-            stringContainsInOrder("cm:createFactoryConfiguration", "System Bundle", "Apache Felix Gogo Runtime"));
-        assertThat(result, AsadminResultMatcher.asadminOK());
+        assertAll(
+            () -> assertThat(result.getStdOut(),
+                stringContainsInOrder("cm:createFactoryConfiguration", "gogo:until", "START LEVEL 2", "System Bundle",
+                    "Apache Felix Gogo Runtime")),
+            () -> assertThat(result, AsadminResultMatcher.asadminOK())
+        );
     }
 
 

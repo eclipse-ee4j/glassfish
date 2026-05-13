@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,13 +29,12 @@ import jakarta.interceptor.Interceptor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
+import org.eclipse.jnosql.extensions.sql.repository.spi.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
-import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
@@ -70,13 +69,15 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 // TODO - activate this extension and JNoSQL extensions from a sniffer only if interfaces with @Repository annotation exist in the app
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
-    private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
-
-    /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
-       before it's used there
+    /*
+     * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register
+     * the GlassFishClassScanner before it's used there
      */
-    void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-
+    void afterBeanDiscovery(
+        @Observes
+        @Priority(Interceptor.Priority.LIBRARY_BEFORE)
+        AfterBeanDiscovery afterBeanDiscovery,
+        BeanManager beanManager) {
         boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
         boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
 
@@ -164,5 +165,4 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
 
         };
     }
-
 }

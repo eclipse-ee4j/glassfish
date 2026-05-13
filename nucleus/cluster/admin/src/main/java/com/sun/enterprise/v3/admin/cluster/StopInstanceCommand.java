@@ -86,7 +86,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
         })
 })
 public class StopInstanceCommand extends StopServer implements AdminCommand {
-
+    private static final Duration PORT_CHECK_SLEEP = Duration.ofMillis(100);
     @Inject
     private ServiceLocator locator;
     @Inject
@@ -296,7 +296,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand {
 
     private boolean pollForDeath() {
         Supplier<Boolean> supplier = () -> !instance.isListeningOnAdminPort();
-        return ProcessUtils.waitFor(supplier, getTimeout(timeout), false);
+        return ProcessUtils.waitFor(supplier, getTimeout(timeout), PORT_CHECK_SLEEP, false);
     }
 
 

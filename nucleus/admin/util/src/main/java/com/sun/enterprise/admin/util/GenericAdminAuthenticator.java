@@ -24,6 +24,9 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.realm.GlassFishUserStore;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
 import com.sun.enterprise.security.cli.CreateFileUser;
@@ -238,7 +241,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
         String remoteHostForTracking = detectRemoteHostForTracking(cbh, req);
 
-        attemptTracker.checkBeforeAuthentication(cbh.pw().getUserName(), remoteHostForTracking, cbh.pw().getPassword());
+        String trackingUsername = resolveTrackingUsername(cbh.pw().getUserName(), as.getAuthRealmName());
+        attemptTracker.checkBeforeAuthentication(trackingUsername, remoteHostForTracking, cbh.pw().getPassword());
 
         try {
             rejectRemoteAdminIfDisabled(cbh);
@@ -277,7 +281,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                         new Object[] { cbh.pw().getUserName(), cbh.clientPrincipal() == null ? "null" : cbh.clientPrincipal().getName(),
                                 cbh.tkn(), cbh.adminIndicator(), cbh.remoteHost(), cmd });
             }
-            attemptTracker.recordFailureAndDelay(cbh.pw().getUserName(), remoteHostForTracking, cbh.pw().getPassword());
+            attemptTracker.recordFailureAndDelay(trackingUsername, remoteHostForTracking, cbh.pw().getPassword());
             throw lex;
         }
     }
@@ -323,6 +327,28 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         Protocol protocol = config.getAdminListener().findHttpProtocol();
         Http http = protocol != null ? protocol.getHttp() : null;
         return http != null && http.isBehindProxy();
+    }
+
+    /**
+     * Returns the username to use for tracking failed authentication attempts.
+     * If the user does not exist in the admin realm, returns {@link AuthenticationAttemptTracker#UNKNOWN_USER_KEY}
+     * so that all attempts with non-existent usernames are grouped under the same key per host,
+     * preventing username enumeration and unbounded tracker map growth.
+     */
+    private String resolveTrackingUsername(String username, String realmName) {
+        if (username == null) {
+            return username;
+        }
+        try {
+            Realm realm = Realm.getInstance(realmName);
+            realm.getUser(username);
+            return username;
+        } catch (NoSuchUserException e) {
+            return AuthenticationAttemptTracker.UNKNOWN_USER_KEY;
+        } catch (Exception e) {
+            // If we can't check, treat as unknown user to prevent unbounded growth
+            return AuthenticationAttemptTracker.UNKNOWN_USER_KEY;
+        }
     }
 
     /*
@@ -435,7 +461,8 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new LoginException();
         }
 
-        attemptTracker.checkBeforeAuthentication(user, host, password);
+        String trackingUsername = resolveTrackingUsername(user, realm);
+        attemptTracker.checkBeforeAuthentication(trackingUsername, host, password);
 
         Subject subject;
         try {
@@ -461,7 +488,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                 ADMSEC_LOGGER.log(Level.FINE, "*** LoginException during auth\n  user={0}\n  host={1}\n  realm={2}",
                         new Object[] { user, host, realm });
             }
-            attemptTracker.recordFailureAndDelay(user, host, password);
+            attemptTracker.recordFailureAndDelay(trackingUsername, host, password);
             throw lex;
         }
     }
@@ -514,4 +541,4 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         }
     }
 
-    }
+}

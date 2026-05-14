@@ -53,8 +53,16 @@ public class AuthenticationAttemptTracker {
 
     private static final Logger LOG = System.getLogger(AuthenticationAttemptTracker.class.getName());
 
+    /**
+     * Sentinel username used to track failed authentication attempts for non-existent users.
+     * All attempts with unknown usernames are grouped under this key per remote host,
+     * preventing username enumeration attacks and unbounded tracker map growth.
+     */
+    public static final String UNKNOWN_USER_KEY = "__unknown_user__";
+
     // Configuration constants
     static final int MAX_DELAY_SECONDS = 60; // 1 minute
+    static final int FAILURE_COUNT_REACHING_MAX_DELAY = (int) Math.floor(Math.sqrt(MAX_DELAY_SECONDS));
     static final int MAX_CONCURRENT_DELAYS = 3;
     static final int WARN_THRESHOLD_FAILURES = 5;
 
@@ -152,8 +160,10 @@ public class AuthenticationAttemptTracker {
         int failureCount = data.failureCount.incrementAndGet();
         data.lastFailureTime.set(System.currentTimeMillis());
 
-        // Calculate exponential delay: 2^(failures-1) seconds, capped at MAX_DELAY_SECONDS
-        int delaySeconds = (int) Math.min(Math.pow(2, failureCount - 1), MAX_DELAY_SECONDS);
+        // Calculate exponential delay
+        int delaySeconds = failureCount - 1 < FAILURE_COUNT_REACHING_MAX_DELAY
+                ? (int) Math.pow(2, failureCount - 1)
+                : MAX_DELAY_SECONDS;
         boolean isAtDelayCap = delaySeconds >= MAX_DELAY_SECONDS;
 
         // Log at WARN on the 10th failure (first time the threshold is crossed) and the first time

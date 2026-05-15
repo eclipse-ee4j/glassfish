@@ -24,9 +24,11 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -35,7 +37,9 @@ import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.boot.impl.GlassFishImpl;
 import org.glassfish.main.jdke.props.SystemProperties;
 
@@ -63,6 +67,7 @@ class AutoDisposableGlassFish extends GlassFishImpl {
         // If there are custom configurations like http.port, https.port, jmx.port then configure them.
         CommandRunner commandRunner = null;
         Set<String> knownPropertyPrefixes = new HashSet<>();
+        ArrayList<String> configPropertiesToSet = new ArrayList<>();
         for (String key : gfProps.getPropertyNames()) {
             String propertyName = key;
             if (key.startsWith(GENERAL_CONFIG_PROP_PREFIX)) {
@@ -92,10 +97,12 @@ class AutoDisposableGlassFish extends GlassFishImpl {
                     continue;
                 }
             }
-            CommandResult result = commandRunner.run("set", propertyName + "=" + propertyValue);
-            if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
-                throw new GlassFishException(result.getOutput(), result.getFailureCause());
-            }
+            configPropertiesToSet.add(propertyName + "=" + propertyValue);
+        }
+
+        CommandResult result = commandRunner.run("set", configPropertiesToSet.toArray(String[]::new));
+        if (result.getExitStatus() != CommandResult.ExitStatus.SUCCESS) {
+            throw new GlassFishException(result.getOutput(), result.getFailureCause());
         }
     }
 

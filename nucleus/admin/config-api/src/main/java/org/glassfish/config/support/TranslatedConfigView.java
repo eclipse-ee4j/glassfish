@@ -88,9 +88,11 @@ public class TranslatedConfigView implements ConfigView {
             if (stringValue.indexOf('$') == -1) {
                 return value;
             }
-            DomainScopedPasswordAliasStore dasPasswordAliasStore = domainPasswordAliasStore();
-            if (dasPasswordAliasStore != null) {
-                if (getAlias(stringValue) != null) {
+            // We first search for alias in the value which is much faster than loading the store..
+            // This speeds up the startup and avoids loading the store if it's not needed
+            if (getAlias(stringValue) != null) {
+                DomainScopedPasswordAliasStore dasPasswordAliasStore = domainPasswordAliasStore();
+                if (dasPasswordAliasStore != null) {
                     try {
                         return getRealPasswordFromAlias(stringValue, dasPasswordAliasStore);
                     } catch (Exception e) {
@@ -100,7 +102,6 @@ public class TranslatedConfigView implements ConfigView {
                     }
                 }
             }
-
             // Perform property substitution in the value
             // The loop limit is imposed to prevent infinite looping to values
             // such as a=${a} or a=foo ${b} and b=bar {$a}

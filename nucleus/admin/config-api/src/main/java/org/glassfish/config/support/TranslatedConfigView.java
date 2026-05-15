@@ -88,9 +88,10 @@ public class TranslatedConfigView implements ConfigView {
             if (stringValue.indexOf('$') == -1) {
                 return value;
             }
-            DomainScopedPasswordAliasStore dasPasswordAliasStore = domainPasswordAliasStore();
-            if (dasPasswordAliasStore != null) {
-                if (getAlias(stringValue) != null) {
+            if (getAlias(stringValue) != null) {
+                // First search for alias in value, it's faster than loading alias store. If no alias in value, store doesn't need to load. Speeds up startup.
+                DomainScopedPasswordAliasStore dasPasswordAliasStore = domainPasswordAliasStore();
+                if (dasPasswordAliasStore != null) {
                     try {
                         return getRealPasswordFromAlias(stringValue, dasPasswordAliasStore);
                     } catch (Exception e) {

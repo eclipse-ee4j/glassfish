@@ -19,10 +19,14 @@ package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.config.serverbeans.AdminService;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.realm.GlassFishUserStore;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
 import com.sun.enterprise.security.cli.CreateFileUser;
@@ -48,6 +52,8 @@ import javax.security.auth.login.LoginException;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.common.util.admin.AuthTokenManager;
+import org.glassfish.grizzly.config.dom.Http;
+import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -123,6 +129,9 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     @Inject
     private AuthenticationService authService;
+
+    @Inject
+    private AuthenticationAttemptTracker attemptTracker;
 
     @Override
     public synchronized void postConstruct() {
@@ -229,6 +238,12 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     private Subject authenticate(final Request req, final String alternateHostname) throws IOException, LoginException {
         final AdminCallbackHandler cbh = new AdminCallbackHandler(habitat, req, alternateHostname, getDefaultAdminUser(), localPassword);
+
+        String remoteHostForTracking = detectRemoteHostForTracking(cbh, req);
+
+        String trackingUsername = resolveTrackingUsername(cbh.pw().getUserName(), as.getAuthRealmName());
+        attemptTracker.checkBeforeAuthentication(trackingUsername, remoteHostForTracking, cbh.pw().getPassword());
+
         try {
             rejectRemoteAdminIfDisabled(cbh);
 
@@ -243,6 +258,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                                 cbh.tkn(), cbh.adminIndicator(), cbh.remoteHost() });
             }
 
+            attemptTracker.recordSuccess(cbh.pw().getUserName(), remoteHostForTracking, cbh.pw().getPassword());
             return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
@@ -265,7 +281,73 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                         new Object[] { cbh.pw().getUserName(), cbh.clientPrincipal() == null ? "null" : cbh.clientPrincipal().getName(),
                                 cbh.tkn(), cbh.adminIndicator(), cbh.remoteHost(), cmd });
             }
+            attemptTracker.recordFailureAndDelay(trackingUsername, remoteHostForTracking, cbh.pw().getPassword());
             throw lex;
+        }
+    }
+
+    // Check for X-GlassFish-Remote-Host header (set by AdminConsoleAuthModule in the Admin Console UI).
+    // If present and request is from localhost, use the header value for tracking instead. Otherwise return remote host.
+    // Also check X-Real-IP and X-Forwarded-For headers when the serverName is configured (reverse proxy setup).
+    private String detectRemoteHostForTracking(final AdminCallbackHandler cbh, final Request req) {
+        String remoteHostForTracking = cbh.remoteHost();
+
+        if (NetUtils.isLocal(req.getRemoteAddr())) {
+            String forwardedHost = req.getHeader("X-GlassFish-Remote-Host");
+            if (forwardedHost != null && !forwardedHost.isBlank()) {
+                return forwardedHost;
+            }
+        } else if (isBehindProxyEnabled()) {
+            return NetUtils.getRemoteHost(
+                new NetUtils.RequestInfoProvider() {
+                    @Override
+                    public String getHeader(String name) {
+                        return req.getHeader(name);
+                    }
+
+                    @Override
+                    public String getRemoteHost() {
+                        return remoteHostForTracking;
+                    }
+
+                },
+                true
+            );
+        }
+
+        return remoteHostForTracking;
+    }
+
+    /**
+     * Checks if behindProxy is enabled in the admin listener configuration.
+     * When enabled, the server trusts X-Real-IP and X-Forwarded-For headers.
+     */
+    private boolean isBehindProxyEnabled() {
+        Config config = domain.getServerNamed("server").getConfig();
+        Protocol protocol = config.getAdminListener().findHttpProtocol();
+        Http http = protocol != null ? protocol.getHttp() : null;
+        return http != null && http.isBehindProxy();
+    }
+
+    /**
+     * Returns the username to use for tracking failed authentication attempts.
+     * If the user does not exist in the admin realm, returns {@link AuthenticationAttemptTracker#UNKNOWN_USER_KEY}
+     * so that all attempts with non-existent usernames are grouped under the same key per host,
+     * preventing username enumeration and unbounded tracker map growth.
+     */
+    private String resolveTrackingUsername(String username, String realmName) {
+        if (username == null) {
+            return username;
+        }
+        try {
+            Realm realm = Realm.getInstance(realmName);
+            realm.getUser(username);
+            return username;
+        } catch (NoSuchUserException e) {
+            return AuthenticationAttemptTracker.UNKNOWN_USER_KEY;
+        } catch (Exception e) {
+            // If we can't check, treat as unknown user to prevent unbounded growth
+            return AuthenticationAttemptTracker.UNKNOWN_USER_KEY;
         }
     }
 
@@ -379,6 +461,9 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new LoginException();
         }
 
+        String trackingUsername = resolveTrackingUsername(user, realm);
+        attemptTracker.checkBeforeAuthentication(trackingUsername, host, password);
+
         Subject subject;
         try {
             rejectRemoteAdminIfDisabled(host);
@@ -386,6 +471,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             if (ADMSEC_LOGGER.isLoggable(Level.FINE)) {
                 ADMSEC_LOGGER.log(Level.FINE, "*** Login worked\n  user={0}\n  host={1}\n", new Object[] { user, host });
             }
+            attemptTracker.recordSuccess(user, host, password);
             return subject;
         } catch (RemoteAdminAccessException ex) {
             /*
@@ -402,6 +488,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                 ADMSEC_LOGGER.log(Level.FINE, "*** LoginException during auth\n  user={0}\n  host={1}\n  realm={2}",
                         new Object[] { user, host, realm });
             }
+            attemptTracker.recordFailureAndDelay(trackingUsername, host, password);
             throw lex;
         }
     }
@@ -453,4 +540,5 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
             throw new SecurityException(e);
         }
     }
+
 }

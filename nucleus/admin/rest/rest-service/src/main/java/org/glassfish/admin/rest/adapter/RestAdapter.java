@@ -17,6 +17,7 @@
 
 package org.glassfish.admin.rest.adapter;
 
+import com.sun.enterprise.admin.util.AuthenticationAttemptTracker;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
@@ -75,7 +76,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -177,9 +177,18 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
             reportError(req, res, HttpURLConnection.HTTP_FORBIDDEN, localStrings.getLocalString("rest.adapter.auth.forbidden",
                     "Remote access not allowed. If you desire remote access, please turn on secure admin"), e);
         } catch (LoginException e) {
-            int status = HttpURLConnection.HTTP_UNAUTHORIZED;
-            String msg = localStrings.getLocalString("rest.adapter.auth.userpassword", "Invalid user name or password");
-            res.setHeader(HEADER_AUTHENTICATE, "BASIC");
+            int status;
+            String msg;
+
+            if (e instanceof AuthenticationAttemptTracker.TooManyRequestsException) {
+                status = 429; // HTTP_TOO_MANY_REQUESTS
+                msg = e.getMessage();
+            } else {
+                status = HttpURLConnection.HTTP_UNAUTHORIZED;
+                msg = localStrings.getLocalString("rest.adapter.auth.userpassword", "Invalid user name or password");
+                res.setHeader(HEADER_AUTHENTICATE, "BASIC");
+            }
+
             reportError(req, res, status, msg, e);
         } catch (Exception e) {
             // TODO: This string is duplicated.  Can we pull this text out of the logging bundle?
@@ -302,7 +311,7 @@ public abstract class RestAdapter extends HttpHandler implements ProxiedRestAdap
     }
 
     private void reportError(Request req, Response res, int statusCode, String msg, Exception exception) {
-        LOG.log(WARNING, "reportError(req, res, statusCode=" + statusCode + ", msg, e)", exception);
+        LOG.log(DEBUG, "reportError(req, res, statusCode=" + statusCode + ", msg, e)", exception);
         try {
             // TODO: There's a lot of arm waving and failing here.  I'd like this to be cleaner, but I don't
             // have time at the moment.  jdlee 8/11/10

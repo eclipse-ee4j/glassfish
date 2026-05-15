@@ -323,6 +323,7 @@ The following topics are addressed here:
 
 * <<To Create an HTTP Configuration>>
 * <<To Delete an HTTP Configuration>>
+* <<Behind Proxy Configuration>>
 
 [[to-create-an-http-configuration]]
 
@@ -381,6 +382,27 @@ See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-http` at the command line.
+
+[[behind-proxy-configuration]]
+
+===== Behind Proxy Configuration
+
+When GlassFish Server is deployed behind a reverse proxy (such as nginx or Apache HTTP Server), you can enable the `behind-proxy` option to have the server read client IP addresses from proxy headers instead of the direct connection's remote address.
+
+To enable behind-proxy mode, use the `asadmin set` command:
+
+[source]
+----
+asadmin set configs.config.server-config.network-config.protocols.protocol.admin-listener.http.behind-proxy=true
+----
+
+When `behind-proxy` is enabled:
+
+* The server reads the `X-Real-IP` header first (set by the closest proxy)
+* If `X-Real-IP` is not present, it reads the `X-Forwarded-For` header and takes the first IP in the list (original client)
+* If neither header is present, it falls back to the request's direct remote address
+
+This configuration is useful for ensuring proper client IP tracking for brute-force attack protection.
 
 [[administering-http-transports]]
 

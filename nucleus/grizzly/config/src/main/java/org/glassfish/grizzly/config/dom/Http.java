@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,6 +37,8 @@ import org.jvnet.hk2.config.types.PropertyBag;
 public interface Http extends ConfigBeanProxy, PropertyBag {
 
     boolean AUTH_PASS_THROUGH_ENABLED = false;
+
+    boolean BEHIND_PROXY = false;
 
     boolean CHUNKING_ENABLED = true;
 
@@ -521,6 +523,15 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     boolean isHttp2Enabled();
 
     void setHttp2Enabled(boolean http2Enabled);
+
+    /**
+     * If set to true, the server is configured behind a reverse proxy and will trust
+     * X-Real-IP and X-Forwarded-For headers to determine the client's real IP address.
+     */
+    @Attribute(defaultValue = "" + BEHIND_PROXY, dataType = Boolean.class)
+    boolean isBehindProxy();
+
+    void setBehindProxy(boolean behindProxy);
 
     @Override
     default Protocol getParent() {

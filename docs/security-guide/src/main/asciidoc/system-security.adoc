@@ -1066,6 +1066,7 @@ The following topics are addressed here:
 `start-cluster` Subcommands]
 * xref:#using-start-instance-and-start-cluster-with-a-password-file[Using `start-instance` and `start-cluster` With a Password File]
 * xref:#to-change-an-administration-password[To Change an Administration Password]
+* xref:#brute-force-attack-protection[Brute-Force Attack Protection]
 * xref:#to-set-a-password-from-a-file[To Set a Password From a File]
 * xref:#administering-password-aliases[Administering Password Aliases]
 
@@ -1334,6 +1335,29 @@ See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help change-admin-password` at the command line.
+
+
+[[brute-force-attack-protection]]
+==== Brute-Force Attack Protection
+
+{productName} includes protection against brute-force authentication attacks on the administration interface (both the Administration Console and REST API). This protection works by:
+
+* Tracking failed authentication attempts per username and remote host combination
+* Applying an exponential delay after each failed attempt (1 second, 2 seconds, 4 seconds, 8 seconds, etc.)
+* Capping the maximum delay at 60 seconds
+* Rejecting additional concurrent authentication attempts when too many requests are being delayed for the same user/host (HTTP 429 Too Many Requests)
+
+This mechanism makes it impractical for attackers to try many passwords in rapid succession while allowing legitimate users to retry after a short wait.
+
+This mechanism applies only for remote connections. Local connections are never delayed.
+
+[[behind-proxy-configuration]]
+
+##### Behind Proxy Configuration
+
+When the server is deployed behind a reverse proxy, you must configure GlassFish to trust the proxy headers (`X-Real-IP` and `X-Forwarded-For`) to correctly identify the client's real IP address. Without this configuration, all authentication attempts would be tracked under the proxy's IP address instead of individual client IPs. Any failed authentication attempt would delay authentication for all clients, even a valid client with the correct credentials.
+
+For more information about configuring behind-proxy mode and other HTTP options, see xref:administration-guide.adoc#behind-proxy-configuration[Behind Proxy Configuration] in the Administration Guide.
 
 [[to-set-a-password-from-a-file]]
 

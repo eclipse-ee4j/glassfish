@@ -19,7 +19,7 @@ package com.sun.enterprise.security.cli;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.config.serverbeans.Server;
@@ -101,27 +101,29 @@ public class CLIUtil {
                 return authRealm;
             }
         }
+
         return null;
     }
 
-    static JaccProvider findJaccProvider(final SecurityService securityService, final String jaccProviderName) {
-        final List<JaccProvider> jaccProviders = securityService.getJaccProvider();
-        for (JaccProvider jaccProv : jaccProviders) {
-            if (jaccProv.getName().equals(jaccProviderName)) {
-                return jaccProv;
+    static JakartaAuthorizationModule findJakartaAuthorizationProvider(SecurityService securityService, String authorizationProviderName) {
+        final List<JakartaAuthorizationModule> authorizationProviders = securityService.getJakartaAuthorizationModule();
+        for (JakartaAuthorizationModule authorizationProvider : authorizationProviders) {
+            if (authorizationProvider.getName().equals(authorizationProviderName)) {
+                return authorizationProvider;
             }
         }
         return null;
     }
 
-    static MessageSecurityConfig findMessageSecurityConfig(final SecurityService securityService, final String authLayer) {
-        List<MessageSecurityConfig> mscs = securityService.getMessageSecurityConfig();
+    static MessageSecurityConfig findJakartaAuthenticationConfig(SecurityService securityService, String authLayer) {
+        List<MessageSecurityConfig> jakartaAuthenticationConfigurations = securityService.getMessageSecurityConfig();
 
-        for (MessageSecurityConfig msc : mscs) {
-            if (msc.getAuthLayer().equals(authLayer)) {
-                return msc;
+        for (MessageSecurityConfig jakartaAuthenticationConfiguration : jakartaAuthenticationConfigurations) {
+            if (jakartaAuthenticationConfiguration.getAuthLayer().equals(authLayer)) {
+                return jakartaAuthenticationConfiguration;
             }
         }
+
         return null;
     }
 }

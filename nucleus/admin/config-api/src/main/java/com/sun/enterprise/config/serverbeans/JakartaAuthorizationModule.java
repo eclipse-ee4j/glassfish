@@ -32,12 +32,14 @@ import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * Defines the standard JACC properties used for setting up the JACC provider.
+ * Defines the standard Jakarta Authorization properties used for setting up the Jakarta Authorization module.
+ *
+ * <p>
  * It also allows optional properties which can be used by the provider implementation
  * for its configuration.
  */
-@Configured
-public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
+@Configured(name = "jacc-provider")
+public interface JakartaAuthorizationModule extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the {@code name} property.
@@ -65,16 +67,16 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      *
      * @return possible object is {@link String}
      */
-    @Attribute
+    @Attribute(value = "policy-provider")
     @NotNull
-    String getPolicyProvider();
+    String getPolicyClass();
 
     /**
      * Sets the value of the {@code policyProvider} property.
      *
      * @param policyProvider allowed object is {@link String}
      */
-    void setPolicyProvider(String policyProvider) throws PropertyVetoException;
+    void setPolicyClass(String policyProvider) throws PropertyVetoException;
 
     /**
      * Gets the value of the {@code policyConfigurationFactoryProvider} property.
@@ -84,19 +86,20 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      *
      * @return possible object is {@link String}
      */
-    @Attribute
-    String getPolicyConfigurationFactoryProvider();
+    @Attribute(value = "policy-configuration-factory-provider")
+    String getPolicyConfigurationFactoryClass();
 
     /**
      * Sets the value of the {@code policyConfigurationFactoryProvider} property.
      *
-     * @param configurationFactoryProvider allowed object is {@link String}
+     * @param configurationFactoryClassName allowed object is {@link String}
      */
-    void setPolicyConfigurationFactoryProvider(String configurationFactoryProvider) throws PropertyVetoException;
+    void setPolicyConfigurationFactoryClass(String configurationFactoryClassName) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}.
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element

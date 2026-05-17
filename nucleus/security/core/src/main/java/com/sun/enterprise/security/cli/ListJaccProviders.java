@@ -20,7 +20,7 @@ package com.sun.enterprise.security.cli;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -96,9 +96,9 @@ public class ListJaccProviders implements AdminCommand, AdminCommandSecurity.Pre
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        List<JaccProvider> jaccProviders = securityService.getJaccProvider();
-        JaccProvider jprov = null;
-        for (JaccProvider jaccProv : jaccProviders) {
+        List<JakartaAuthorizationModule> jaccProviders = securityService.getJakartaAuthorizationModule();
+        JakartaAuthorizationModule jprov = null;
+        for (JakartaAuthorizationModule jaccProv : jaccProviders) {
             ActionReport.MessagePart part = report.getTopMessagePart().addChild();
             part.setMessage(jaccProv.getName());
         }

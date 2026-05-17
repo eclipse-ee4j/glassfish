@@ -22,6 +22,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
@@ -29,13 +30,13 @@ import jakarta.interceptor.Interceptor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
+import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer;
+import org.eclipse.jnosql.extensions.sql.repository.spi.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
-import org.eclipse.jnosql.jakartapersistence.mapping.repository.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
@@ -47,6 +48,8 @@ import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
 /**
@@ -70,7 +73,6 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 // TODO - activate this extension and JNoSQL extensions from a sniffer only if interfaces with @Repository annotation exist in the app
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
-    private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
 
     /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
        before it's used there
@@ -108,7 +110,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         /* This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
            In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
            only beans in the deployed app are added to a bean archive. Beans defined by an EE container
-           don't automatically have bean archive.
+           don't automatically have a bean archive.
          */
         Class<?>[] dummyBeansClasses = {AbstractBean.class, AbstractRepositoryPersistenceBean.class};
         for (var dummyBeanClass : dummyBeansClasses) {
@@ -133,7 +135,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                     .scope(ApplicationScoped.class)
                     // enable as alternative to override beans in case they are added as application libraries
                     .alternative(true)
-                    .priority(CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY);
+                    .priority(INTEGRATION_BEANS_PRIORITY);
         }
     }
 

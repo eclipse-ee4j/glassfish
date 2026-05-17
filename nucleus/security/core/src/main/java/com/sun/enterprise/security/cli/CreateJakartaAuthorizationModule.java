@@ -19,10 +19,9 @@ package com.sun.enterprise.security.cli;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -38,18 +37,25 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
 import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.DAS_SERVER_NAME;
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.glassfish.api.admin.RuntimeType.DAS;
+import static org.glassfish.api.admin.RuntimeType.INSTANCE;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.config.support.CommandTarget.CLUSTER;
+import static org.glassfish.config.support.CommandTarget.CONFIG;
+import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
+
 /**
- * Create Jacc Provider Command
+ * Create Jakarta Authorization Module Command
  *
  * Usage: create-jacc-provider --policyconfigfactoryclass pc_factory_class --policyproviderclass pol_provider_class [--help]
  * [--user admin_user] [--passwordfile file_name] [ --property (name=value)[:name=value]*] [ --target target_name]
@@ -65,35 +71,35 @@ import org.jvnet.hk2.config.TransactionFailure;
 @Service(name = "create-jacc-provider")
 @PerLookup
 @I18n("create.jacc.provider")
-@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
-@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
-public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Preauthorization {
+@ExecuteOn({ DAS, INSTANCE })
+@TargetType({ CommandTarget.DAS, STANDALONE_INSTANCE, CLUSTER, CONFIG })
+public class CreateJakartaAuthorizationModule implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJACCProvider.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJakartaAuthorizationModule.class);
 
     @Param(name = "policyconfigfactoryclass", alias = "policyConfigurationFactoryProvider")
-    private String polConfFactoryClass;
+    private String policyConfigurationFactoryClass;
 
     @Param(name = "policyproviderclass", alias = "policyProvider")
-    private String polProviderClass;
+    private String policyClass;
 
     @Param(name = "jaccprovidername", primary = true)
-    private String jaccProviderName;
+    private String jakartaAuthorizationModuleName;
 
     @Param(optional = true, name = "property", separator = ':')
     private Properties properties;
 
-    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(name = "target", optional = true, defaultValue = DAS_SERVER_NAME)
     private String target;
 
     @Inject
-    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Named(DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
     private Domain domain;
 
-    @AccessRequired.NewChild(type = JaccProvider.class)
+    @AccessRequired.NewChild(type = JakartaAuthorizationModule.class)
     private SecurityService securityService;
 
     @Override
@@ -102,44 +108,51 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
         if (config == null) {
             return false;
         }
+
         securityService = config.getSecurityService();
-        JaccProvider jaccProvider = CLIUtil.findJaccProvider(securityService, jaccProviderName);
-        if (jaccProvider != null) {
-            final ActionReport report = context.getActionReport();
-            report.setMessage(localStrings.getLocalString("create.jacc.provider.duplicatefound",
-                "JaccProvider named {0} exists. Cannot add duplicate JaccProvider.", jaccProviderName));
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+
+        JakartaAuthorizationModule jakartaAuthorizationProvider = CLIUtil.findJakartaAuthorizationProvider(securityService, jakartaAuthorizationModuleName);
+        if (jakartaAuthorizationProvider != null) {
+            ActionReport report = context.getActionReport();
+            report.setMessage(
+                localStrings.getLocalString("create.jacc.provider.duplicatefound",
+                "JakartaAuthorizationModule named {0} exists. Cannot add duplicate JakartaAuthorizationModule.",
+                jakartaAuthorizationModuleName));
+            report.setActionExitCode(FAILURE);
+
             return false;
         }
+
         return true;
     }
 
     @Override
     public void execute(AdminCommandContext context) {
-        final ActionReport report = context.getActionReport();
+        ActionReport report = context.getActionReport();
 
-        // No duplicate auth realms found. So add one.
+        // No duplicate authorization provider found. So add one.
         try {
-            ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-
-                @Override
-                public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
-                    JaccProvider newJacc = param.createChild(JaccProvider.class);
-                    newJacc.setName(jaccProviderName);
-                    newJacc.setPolicyConfigurationFactoryProvider(polConfFactoryClass);
-                    newJacc.setPolicyProvider(polProviderClass);
-                    param.getJaccProvider().add(newJacc);
-                    return newJacc;
-                }
-            }, securityService);
+            ConfigSupport.apply(param -> newAuthorizationProvider(param), securityService);
 
         } catch (TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString("create.auth.realm.fail", "Creation of Authrealm {0} failed", jaccProviderName)
+            report.setMessage(localStrings.getLocalString("create.auth.realm.fail", "Creation of Authrealm {0} failed", jakartaAuthorizationModuleName)
                 + "  " + e.getLocalizedMessage());
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setActionExitCode(FAILURE);
             report.setFailureCause(e);
             return;
         }
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+
+        report.setActionExitCode(SUCCESS);
     }
+
+    JakartaAuthorizationModule newAuthorizationProvider(SecurityService securityService) throws PropertyVetoException, TransactionFailure {
+        JakartaAuthorizationModule authorizationProvider = securityService.createChild(JakartaAuthorizationModule.class);
+        authorizationProvider.setName(jakartaAuthorizationModuleName);
+        authorizationProvider.setPolicyConfigurationFactoryClass(policyConfigurationFactoryClass);
+        authorizationProvider.setPolicyClass(policyClass);
+        securityService.getJakartaAuthorizationModule().add(authorizationProvider);
+
+        return authorizationProvider;
+    }
+
 }

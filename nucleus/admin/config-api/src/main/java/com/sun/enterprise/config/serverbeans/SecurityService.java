@@ -99,6 +99,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String}
      * @deprecated This attribute is deprecated.
      */
+    @Deprecated
     @Attribute(defaultValue = "AttributeDeprecated")
     String getAnonymousRole();
 
@@ -243,10 +244,10 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * getJaccProvider().add(newItem);
      * </pre>
      *
-     * <p>Objects of the following type(s) are allowed in the list {@link JaccProvider}
+     * <p>Objects of the following type(s) are allowed in the list {@link JakartaAuthorizationModule}
      */
-    @Element(required = true)
-    List<JaccProvider> getJaccProvider();
+    @Element(value = "jacc-provider", required = true)
+    List<JakartaAuthorizationModule> getJakartaAuthorizationModule();
 
     /**
      * Gets the value of the {@code auditModule} property.
@@ -291,6 +292,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
     /**
      * Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element

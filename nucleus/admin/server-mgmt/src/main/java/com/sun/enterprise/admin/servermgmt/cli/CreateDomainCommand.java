@@ -442,6 +442,8 @@ public final class CreateDomainCommand extends CLICommand {
             DomainBuilder domainBuilder = new DomainBuilder(domainConfig);
             domainBuilder.validateTemplate();
             domainBuilder.run();
+        } catch (DomainException e) {
+            throw e;
         } catch (Exception e) {
             throw new DomainException("Failed to create domain " + domainName, e);
         }

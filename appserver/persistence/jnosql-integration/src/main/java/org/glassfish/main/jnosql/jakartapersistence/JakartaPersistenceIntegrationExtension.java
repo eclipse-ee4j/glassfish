@@ -22,7 +22,6 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
@@ -31,7 +30,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer;
 import org.eclipse.jnosql.extensions.sql.repository.spi.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
@@ -46,10 +44,8 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
-import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
-import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
 /**

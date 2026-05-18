@@ -17,21 +17,21 @@
 
 package com.sun.enterprise.security.ee.authorization;
 
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.util.i18n.StringManager;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.Policy;
+import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyFactory;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.exousia.modules.def.DefaultPolicy;
 import org.glassfish.exousia.modules.def.DefaultPolicyFactory;
 import org.glassfish.hk2.api.IterableProvider;
 import org.jvnet.hk2.annotations.Service;
@@ -42,16 +42,16 @@ import static com.sun.enterprise.security.SecurityLoggerInfo.policyFactoryOverri
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyInstallError;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyLoading;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyNoSuchName;
-import static com.sun.enterprise.security.SecurityLoggerInfo.policyNotLoadingWarning;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyProviderConfigOverrideMsg;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
 /**
- * Loads the Default Policy File into the system.
+ * Loads the Default Jakarta Authorization Policy into the system.
  *
  * @author Harpreet Singh
  * @author Jyri J. Virkki
@@ -62,17 +62,15 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 public class PolicyLoader {
 
     @Inject
-    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Named(DEFAULT_INSTANCE_NAME)
     private SecurityService securityService;
 
     @Inject
-    private IterableProvider<JaccProvider> authorizationModules;
+    private IterableProvider<JakartaAuthorizationModule> authorizationModules;
 
     private static Logger LOGGER = SecurityLoggerInfo.getLogger();
-    private static StringManager SM = StringManager.getManager(PolicyLoader.class);
 
     private static final String POLICY_PROVIDER = "jakarta.security.jacc.policy.provider";
-    private static final String POLICY_CONF_FACTORY = "jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String POLICY_PROP_PREFIX = "com.sun.enterprise.jaccprovider.property.";
     private boolean isPolicyInstalled;
 
@@ -89,62 +87,31 @@ public class PolicyLoader {
         }
 
         // Get configuration object from domain.xml
-        JaccProvider authorizationModule = getConfiguredJakartaAuthorizationModule();
+        JakartaAuthorizationModule authorizationModule = getConfiguredJakartaAuthorizationModule();
 
-        // Set config properties (see method comments)
-        setPolicyConfigurationFactory(authorizationModule);
-
-        // Check if system property is set for the policy class name
-        String javaPolicyClassName = System.getProperty(POLICY_PROVIDER);
-
-        if (javaPolicyClassName != null) {
-            // inform user domain.xml is being ignored
-            LOGGER.log(INFO, policyProviderConfigOverrideMsg, new String[] { POLICY_PROVIDER, javaPolicyClassName });
-        } else if (authorizationModule != null) {
-            // Otherwise obtain authorization module policy-provider from domain.xml
-            javaPolicyClassName = authorizationModule.getPolicyProvider();
-        }
+        String policyConfigurationFactoryClassName = getPolicyConfigurationFactoryClassName(authorizationModule);
+        String policyFactoryClassName = getPolicyFactoryClassName();
+        String policyClassName = getPolicyClassName(authorizationModule);
 
         setProperty("simple.jacc.provider.JACCRoleMapper.class",
             "com.sun.enterprise.security.ee.authorization.GlassfishRoleMapper", false);
 
-        // Now install the policy provider if one was identified
-        if (javaPolicyClassName != null) {
+        try {
+            LOGGER.log(INFO, policyLoading, policyClassName);
 
-            try {
-                LOGGER.log(INFO, policyLoading, javaPolicyClassName);
-
-                Policy policy = loadPolicy(javaPolicyClassName);
-                PolicyFactory.setPolicyFactory(new DefaultPolicyFactory()); // TMP!!!
-                PolicyFactory.getPolicyFactory().setPolicy(policy);
-            } catch (Exception e) {
-                LOGGER.log(SEVERE, policyInstallError, e.getLocalizedMessage());
-                throw new RuntimeException(e);
-            }
-
-            // Success.
-            LOGGER.fine("Policy set to: " + javaPolicyClassName);
-            isPolicyInstalled = true;
-
-        } else {
-            // no value for policy provider found
-            LOGGER.warning(policyNotLoadingWarning);
-        }
-    }
-
-    private Policy loadPolicy(String javaPolicyClassName) throws ReflectiveOperationException, SecurityException {
-        Object javaPolicyInstance =
-                Thread.currentThread()
-                      .getContextClassLoader()
-                      .loadClass(javaPolicyClassName)
-                      .getDeclaredConstructor()
-                      .newInstance();
-
-        if (!(javaPolicyInstance instanceof Policy)) {
-            throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
+            PolicyFactory.setPolicyFactory(loadPolicyFactory(policyFactoryClassName));
+            PolicyFactory.getPolicyFactory().setPolicy(loadPolicy(policyClassName));
+        } catch (Exception e) {
+            LOGGER.log(SEVERE, policyInstallError, e.getLocalizedMessage());
+            throw new RuntimeException(e);
         }
 
-        return (Policy) javaPolicyInstance;
+        // Success.
+        LOGGER.fine("Policy config factory set to: " + policyConfigurationFactoryClassName);
+        LOGGER.fine("Policy factory set to: " + policyFactoryClassName);
+        LOGGER.fine("Policy set to: " + policyClassName);
+
+        isPolicyInstalled = true;
     }
 
     /**
@@ -153,8 +120,8 @@ public class PolicyLoader {
      * @return The config object or null on errors.
      *
      */
-    private JaccProvider getConfiguredJakartaAuthorizationModule() {
-        JaccProvider authorizationModule = null;
+    private JakartaAuthorizationModule getConfiguredJakartaAuthorizationModule() {
+        JakartaAuthorizationModule authorizationModule = null;
         try {
             String name = securityService.getJacc();
             authorizationModule = getAuthorizationModuleByName(name);
@@ -169,12 +136,12 @@ public class PolicyLoader {
         return authorizationModule;
     }
 
-    private JaccProvider getAuthorizationModuleByName(String authorizationModuleName) {
+    private JakartaAuthorizationModule getAuthorizationModuleByName(String authorizationModuleName) {
         if (authorizationModules == null || authorizationModuleName == null) {
             return null;
         }
 
-        for (JaccProvider authorizationModule : authorizationModules) {
+        for (JakartaAuthorizationModule authorizationModule : authorizationModules) {
             if (authorizationModule.getName().equals(authorizationModuleName)) {
                 return authorizationModule;
             }
@@ -195,31 +162,104 @@ public class PolicyLoader {
      * POLICY_PROP_PREFIX. This is currently a workaround for bug 4846938. A cleaner interface should be adopted.
      *
      */
-    private void setPolicyConfigurationFactory(JaccProvider authorizationModule) {
-        if (authorizationModule == null) {
-            return;
+    private String getPolicyConfigurationFactoryClassName(JakartaAuthorizationModule authorizationModule) {
+        // Check if system property is set for the PolicyConfigurationFactory class name
+        String policyConfigurationFactoryClassName = System.getProperty(PolicyConfigurationFactory.FACTORY_NAME);
+
+        if (policyConfigurationFactoryClassName != null) {
+            // Inform user domain.xml is being ignored
+            LOGGER.log(WARNING, policyFactoryOverride, new String[] { PolicyConfigurationFactory.FACTORY_NAME, policyConfigurationFactoryClassName });
+
+            return policyConfigurationFactoryClassName;
         }
 
-        // Handle Jakarta Authorization-specified property for factory
-        String factoryFromSystemProperty = System.getProperty(POLICY_CONF_FACTORY);
-        if (factoryFromSystemProperty != null) {
-            LOGGER.log(WARNING, policyFactoryOverride, new String[] { POLICY_CONF_FACTORY, factoryFromSystemProperty });
-        } else {
-            // use domain.xml value by setting the property to it
-            String factoryFromDomain = authorizationModule.getPolicyConfigurationFactoryProvider();
-            if (factoryFromDomain == null) {
+        if (authorizationModule != null) {
+            // Use domain.xml value by setting the property to it
+            policyConfigurationFactoryClassName = authorizationModule.getPolicyConfigurationFactoryClass();
+            if (policyConfigurationFactoryClassName == null) {
                 LOGGER.log(WARNING, policyConfigFactoryNotDefined);
             } else {
-                setProperty(POLICY_CONF_FACTORY, factoryFromDomain, true);
+                // Next, make properties of this authorization module available to module
+                List<Property> authorizationModuleProperties = authorizationModule.getProperty();
+                for (Property authorizationModuleProperty : authorizationModuleProperties) {
+                    String name = POLICY_PROP_PREFIX + authorizationModuleProperty.getName();
+                    String value = authorizationModuleProperty.getValue();
+                    setProperty(name, value, true);
+                }
             }
+        } else {
+            policyConfigurationFactoryClassName = DefaultPolicyFactory.class.getName();
         }
 
-        // Next, make properties of this authorization module available to module
-        List<Property> authorizationModuleProperties = authorizationModule.getProperty();
-        for (Property authorizationModuleProperty : authorizationModuleProperties) {
-            String name = POLICY_PROP_PREFIX + authorizationModuleProperty.getName();
-            String value = authorizationModuleProperty.getValue();
-            setProperty(name, value, true);
+        setProperty(PolicyConfigurationFactory.FACTORY_NAME, policyConfigurationFactoryClassName, true);
+
+        return policyConfigurationFactoryClassName;
+    }
+
+    private String getPolicyClassName(JakartaAuthorizationModule authorizationModule) {
+        // Check if system property is set for the policy class name
+        String policyClassName = System.getProperty(POLICY_PROVIDER);
+
+        if (policyClassName != null) {
+            // inform user domain.xml is being ignored
+            LOGGER.log(INFO, policyProviderConfigOverrideMsg, new String[] { POLICY_PROVIDER, policyClassName });
+
+            return policyClassName;
         }
+
+        if (authorizationModule != null) {
+            // Otherwise obtain authorization module policy-provider from domain.xml
+            policyClassName = authorizationModule.getPolicyClass();
+        } else {
+            policyClassName = DefaultPolicy.class.getName();
+        }
+
+        setProperty(POLICY_PROVIDER, policyClassName, true);
+
+        return policyClassName;
+    }
+
+    private String getPolicyFactoryClassName() {
+        // Check if system property is set for the policy factory class name
+        String policyFactoryClassName = System.getProperty(PolicyFactory.FACTORY_NAME);
+
+        if (policyFactoryClassName != null) {
+            return policyFactoryClassName;
+        }
+
+        policyFactoryClassName = DefaultPolicyFactory.class.getName();
+
+        setProperty(PolicyFactory.FACTORY_NAME, policyFactoryClassName, true);
+
+        return policyFactoryClassName;
+    }
+
+    private Policy loadPolicy(String policyClassName) throws ReflectiveOperationException, SecurityException {
+        Object policy = loadClass(policyClassName);
+
+        if (!(policy instanceof Policy)) {
+            throw new RuntimeException("Using class name " + policyClassName + " instance " + policy + " is not a Policy instance.");
+        }
+
+        return (Policy) policy;
+    }
+
+    private PolicyFactory loadPolicyFactory(String policyFactoryClassName) throws ReflectiveOperationException, SecurityException {
+        Object policyFactory = loadClass(policyFactoryClassName);
+
+        if (!(policyFactory instanceof PolicyFactory)) {
+            throw new RuntimeException(policyFactory + " is not a PolicyFactory instance.");
+        }
+
+        return (PolicyFactory) policyFactory;
+    }
+
+    private Object loadClass(String className) throws ReflectiveOperationException, SecurityException {
+        return
+            Thread.currentThread()
+                  .getContextClassLoader()
+                  .loadClass(className)
+                  .getDeclaredConstructor()
+                  .newInstance();
     }
 }

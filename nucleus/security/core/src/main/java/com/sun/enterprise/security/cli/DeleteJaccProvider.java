@@ -19,7 +19,7 @@ package com.sun.enterprise.security.cli;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -77,7 +77,7 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
     private SecurityService securityService;
 
     @AccessRequired.To("delete")
-    private JaccProvider jprov;
+    private JakartaAuthorizationModule jprov;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
@@ -87,16 +87,16 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
             return false;
         }
         securityService = config.getSecurityService();
-        jprov = CLIUtil.findJaccProvider(securityService, jaccprovider);
+        jprov = CLIUtil.findJakartaAuthorizationProvider(securityService, jaccprovider);
         if (jprov == null) {
             report
-                .setMessage(localStrings.getLocalString("delete.jacc.provider.notfound", "JaccProvider named {0} not found", jaccprovider));
+                .setMessage(localStrings.getLocalString("delete.jacc.provider.notfound", "JakartaAuthorizationModule named {0} not found", jaccprovider));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
         if ("default".equals(jprov.getName()) || "simple".equals(jprov.getName())) {
             report.setMessage(localStrings.getLocalString("delete.jacc.provider.notallowed",
-                "JaccProvider named {0} is a system provider and cannot be deleted", jaccprovider));
+                "JakartaAuthorizationModule named {0} is a system provider and cannot be deleted", jaccprovider));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
@@ -108,25 +108,25 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         try {
-            List<JaccProvider> jaccProviders = securityService.getJaccProvider();
-            JaccProvider jprov = null;
-            for (JaccProvider jaccProv : jaccProviders) {
+            List<JakartaAuthorizationModule> jaccProviders = securityService.getJakartaAuthorizationModule();
+            JakartaAuthorizationModule jprov = null;
+            for (JakartaAuthorizationModule jaccProv : jaccProviders) {
                 if (jaccProv.getName().equals(jaccprovider)) {
                     jprov = jaccProv;
                     break;
                 }
             }
 
-            final JaccProvider jaccprov = jprov;
+            final JakartaAuthorizationModule jaccprov = jprov;
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
                 @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
-                    param.getJaccProvider().remove(jaccprov);
+                    param.getJakartaAuthorizationModule().remove(jaccprov);
                     return null;
                 }
             }, securityService);
         } catch (TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString("delete.jacc.provider.fail", "Deletion of JaccProvider {0} failed", jaccprovider)
+            report.setMessage(localStrings.getLocalString("delete.jacc.provider.fail", "Deletion of JakartaAuthorizationModule {0} failed", jaccprovider)
                 + "  " + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);

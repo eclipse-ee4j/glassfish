@@ -26,6 +26,7 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -41,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 /**
  * Smoketest using a minimal Jakarta Data application with a default Jakarta Persisence data source.
  */
+@Disabled("SqlRepositoryProducer can not be found, and also hard to import since has no default constructor - WELD-001435: Normal scoped bean class org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer is not proxyable because it has no no-args constructor")
 public class DataRepositoryTest {
 
     private static final System.Logger LOG = System.getLogger(DataRepositoryTest.class.getName());

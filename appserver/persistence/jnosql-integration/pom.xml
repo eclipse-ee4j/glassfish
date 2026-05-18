@@ -54,6 +54,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.jnosql.mapping</groupId>
+            <artifactId>jnosql-mapping-reflection</artifactId>
+            <version>${jnosql.version}</version>
+        </dependency>
+        <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>
         </dependency>

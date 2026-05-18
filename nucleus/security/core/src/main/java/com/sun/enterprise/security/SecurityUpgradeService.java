@@ -20,7 +20,7 @@ package com.sun.enterprise.security;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 
 import jakarta.inject.Inject;
@@ -71,11 +71,11 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         for (Config config : configs.getConfig()) {
             SecurityService service = config.getSecurityService();
             if (service != null) {
-                upgradeJACCProvider(service);
+                upgradeJakartaAuthorizationModule(service);
             }
         }
 
-        //Clear up the old policy files for applications
+        // Clear up the old policy files for applications
         String instanceRoot = env.getInstanceRoot().getAbsolutePath();
         File genPolicyDir = new File(instanceRoot, DIR_GENERATED_POLICY);
         if (genPolicyDir != null) {
@@ -87,8 +87,8 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
             }
         }
 
-        //Update an existing JDBC realm-Change the digest algorithm to MD5 if none exists
-        //Since the default algorithm is SHA-256 in v3.1, but was MD5 prior to 3.1
+        // Update an existing JDBC realm-Change the digest algorithm to MD5 if none exists
+        // Since the default algorithm is SHA-256 in v3.1, but was MD5 prior to 3.1
 
         for (Config config : configs.getConfig()) {
             SecurityService service = config.getSecurityService();
@@ -157,25 +157,26 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         return false;
     }
 
-    private void upgradeJACCProvider(SecurityService securityService) {
+    private void upgradeJakartaAuthorizationModule(SecurityService securityService) {
         try {
-            List<JaccProvider> jaccProviders = securityService.getJaccProvider();
-            for (JaccProvider jacc : jaccProviders) {
+            List<JakartaAuthorizationModule> jakataAuthorizationModules = securityService.getJakartaAuthorizationModule();
+            for (JakartaAuthorizationModule jakataAuthorizationModule : jakataAuthorizationModules) {
                 if ("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory"
-                    .equals(jacc.getPolicyConfigurationFactoryProvider())) {
+                    .equals(jakataAuthorizationModule.getPolicyConfigurationFactoryClass())) {
                     //simple policy provider already present
                     return;
                 }
             }
+
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
                 @Override
                 public Object run(SecurityService secServ) throws PropertyVetoException, TransactionFailure {
-                    JaccProvider jacc = secServ.createChild(JaccProvider.class);
+                    JakartaAuthorizationModule jakartaAuthorizationModule = secServ.createChild(JakartaAuthorizationModule.class);
                     //add the simple provider to the domain's security service
-                    jacc.setName("simple");
-                    jacc.setPolicyConfigurationFactoryProvider("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory");
-                    jacc.setPolicyProvider("org.glassfish.exousia.modules.locked.SimplePolicyProvider");
-                    secServ.getJaccProvider().add(jacc);
+                    jakartaAuthorizationModule.setName("simple");
+                    jakartaAuthorizationModule.setPolicyConfigurationFactoryClass("org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory\"");
+                    jakartaAuthorizationModule.setPolicyClass("org.glassfish.exousia.modules.def.DefaultPolicy");
+                    secServ.getJakartaAuthorizationModule().add(jakartaAuthorizationModule);
                     return secServ;
                 }
             }, securityService);

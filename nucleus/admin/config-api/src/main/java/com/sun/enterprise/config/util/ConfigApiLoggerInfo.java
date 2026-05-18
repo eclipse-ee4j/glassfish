@@ -161,13 +161,13 @@ public class ConfigApiLoggerInfo {
     @LogMessageInfo(message = "Problem parsing auth-realm property", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String failureParsingAuthRealmProperty = LOGMSG_PREFIX + "-00040";
 
-    @LogMessageInfo(message = "Failure creating JaccProvider", cause = "unknown", action = "unknown", level = "SEVERE")
+    @LogMessageInfo(message = "Failure creating JakartaAuthorizationModule", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String failureCreatingJaccProvider = LOGMSG_PREFIX + "-00041";
 
     @LogMessageInfo(message = "Problem parsing jacc-provider", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String problemParsingJaacProvider = LOGMSG_PREFIX + "-00042";
 
-    @LogMessageInfo(message = "Create JaccProvider Property failed. Attr = {0} and Val = {1}", cause = "unknown", action = "unknown", level = "SEVERE")
+    @LogMessageInfo(message = "Create JakartaAuthorizationModule Property failed. Attr = {0} and Val = {1}", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String failureCreatingJaccProviderAttr = LOGMSG_PREFIX + "-00043";
 
     @LogMessageInfo(message = "Problem parsing jacc-provider property", cause = "unknown", action = "unknown", level = "SEVERE")

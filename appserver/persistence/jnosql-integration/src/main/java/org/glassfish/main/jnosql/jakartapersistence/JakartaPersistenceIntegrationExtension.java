@@ -44,8 +44,8 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
-import org.glassfish.main.jnosql.util.CdiExtensionUtil;
 
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
 /**
@@ -109,7 +109,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         /* This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
            In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
            only beans in the deployed app are added to a bean archive. Beans defined by an EE container
-           don't automatically have bean archive.
+           don't automatically have a bean archive.
          */
         Class<?>[] dummyBeansClasses = {AbstractBean.class, AbstractRepositoryPersistenceBean.class};
         for (var dummyBeanClass : dummyBeansClasses) {
@@ -134,7 +134,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                     .scope(ApplicationScoped.class)
                     // enable as alternative to override beans in case they are added as application libraries
                     .alternative(true)
-                    .priority(CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY);
+                    .priority(INTEGRATION_BEANS_PRIORITY);
         }
     }
 

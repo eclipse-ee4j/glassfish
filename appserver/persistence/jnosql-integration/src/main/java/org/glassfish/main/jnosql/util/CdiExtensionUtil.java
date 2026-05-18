@@ -19,6 +19,7 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
@@ -36,6 +37,12 @@ public final class CdiExtensionUtil {
 
     private CdiExtensionUtil() {
         // utility class
+    }
+
+    public static void addAnnotatedTypes(BeforeBeanDiscovery beforeBean, BeanManager beanManager, Class<?>... types) {
+        for (Class<?> type : types) {
+            beforeBean.addAnnotatedType(beanManager.createAnnotatedType(type), "JNoSQL " + type.getName());
+        }
     }
 
     public static <T> BeanConfigurator<T> addBean(Class<T> beanClass, AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {

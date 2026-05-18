@@ -28,7 +28,7 @@ import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.config.serverbeans.DiagnosticService;
 import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.LogService;
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
@@ -729,7 +729,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
         }
     }
 
-    /* Loop through all jacc-provider elements in the template and create JaccProvider config objects.
+    /* Loop through all jacc-provider elements in the template and create JakartaAuthorizationModule config objects.
      * Cursor should already be at first jacc-provider START_ELEMENT.
      * from template:
      * <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
@@ -742,19 +742,19 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
             try {
                 if (parser.getEventType() == START_ELEMENT || parser.next() == START_ELEMENT) {
                     if (parser.getLocalName().equals("jacc-provider") && ss != null) {
-                        JaccProvider jp = ss.createChild(JaccProvider.class);
-                        ss.getJaccProvider().add(jp);
+                        JakartaAuthorizationModule jp = ss.createChild(JakartaAuthorizationModule.class);
+                        ss.getJakartaAuthorizationModule().add(jp);
                         for (int i = 0; i < parser.getAttributeCount(); i++) {
                             String attr = parser.getAttributeLocalName(i);
                             String val = parser.getAttributeValue(i);
                             if (attr.equals("policy-provider")) {
-                                jp.setPolicyProvider(val);
+                                jp.setPolicyClass(val);
                             }
                             if (attr.equals("name")) {
                                 jp.setName(val);
                             }
                             if (attr.equals("policy-configuration-factory-provider")) {
-                                jp.setPolicyConfigurationFactoryProvider(val);
+                                jp.setPolicyConfigurationFactoryClass(val);
                             }
                         }
 
@@ -769,7 +769,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
         }
     }
 
-    private void createJaccProviderProperty(JaccProvider jp) throws PropertyVetoException {
+    private void createJaccProviderProperty(JakartaAuthorizationModule jp) throws PropertyVetoException {
         while (!(parser.getEventType() == END_ELEMENT && parser.getLocalName().equals("jacc-provider"))) {
             String attr = null;
             String val = null;

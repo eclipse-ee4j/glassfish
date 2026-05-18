@@ -20,7 +20,7 @@ package com.sun.enterprise.security;
 import com.sun.enterprise.config.serverbeans.AuditModule;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JakartaAuthorizationModule;
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.audit.BaseAuditManager;
@@ -125,7 +125,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                 NotProcessed notProcessed = null;
                 if (instance instanceof AuthRealm) {
                     authRealmCreated((AuthRealm) instance);
-                } else if (instance instanceof JaccProvider) {
+                } else if (instance instanceof JakartaAuthorizationModule) {
                     notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
                     // inject PolicyLoader and try to call loadPolicy
                     // but policyLoader in V2 does not allow reloading of policy provider
@@ -149,8 +149,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                 NotProcessed notProcessed = null;
                 if (instance instanceof AuthRealm) {
                     authRealmDeleted((AuthRealm) instance);
-                } else if (instance instanceof JaccProvider) {
-                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
+                } else if (instance instanceof JakartaAuthorizationModule) {
+                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization module once installed, restart required");
                     // inject PolicyLoader and try to call loadPolicy
                     // but policyLoader in V2 does not allow reloading of policy provider
                     // once installed. The only option is restart the server
@@ -174,8 +174,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                 NotProcessed notProcessed = null;
                 if (instance instanceof AuthRealm) {
                     authRealmUpdated((AuthRealm) instance);
-                } else if (instance instanceof JaccProvider) {
-                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
+                } else if (instance instanceof JakartaAuthorizationModule) {
+                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization module once installed, restart required");
                     // inject PolicyLoader and try to call loadPolicy
                     // but policyLoader in V2 does not allow reloading of policy provider
                     // once installed. The only option is restart the server
@@ -196,7 +196,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                         auditManager.setAuditOn(auditON);
                     }
                     if (!jacc.equals(((SecurityService) instance).getJacc())) {
-                        notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
+                        notProcessed = new NotProcessed("Cannot change Jakarta Authorization module once installed, restart required");
                     }
                     if ((mappedPrincipalClassName != null)
                             && !mappedPrincipalClassName.equals(((SecurityService) instance).getMappedPrincipalClass())) {

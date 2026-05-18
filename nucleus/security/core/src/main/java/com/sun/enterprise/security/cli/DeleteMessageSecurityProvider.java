@@ -98,7 +98,7 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
             return false;
         }
         secService = config.getSecurityService();
-        msgSecCfg = CLIUtil.findMessageSecurityConfig(secService, authLayer);
+        msgSecCfg = CLIUtil.findJakartaAuthenticationConfig(secService, authLayer);
         if (msgSecCfg == null) {
             final ActionReport report = context.getActionReport();
             report.setMessage(localStrings.getLocalString("delete.message.security.provider.confignotfound",

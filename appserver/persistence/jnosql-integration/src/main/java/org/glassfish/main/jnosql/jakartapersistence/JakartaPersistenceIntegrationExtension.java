@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -69,12 +69,15 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 // TODO - activate this extension and JNoSQL extensions from a sniffer only if interfaces with @Repository annotation exist in the app
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
-
-    /* Must be triggered before the JakartaPersistenceExtension from JNoSQL to register the GlassFishClassScanner
-       before it's used there
+    /*
+     * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register
+     * the GlassFishClassScanner before it's used there
      */
-    void afterBeanDiscovery(@Observes @Priority(Interceptor.Priority.LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-
+    void afterBeanDiscovery(
+        @Observes
+        @Priority(Interceptor.Priority.LIBRARY_BEFORE)
+        AfterBeanDiscovery afterBeanDiscovery,
+        BeanManager beanManager) {
         boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
         boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
 
@@ -162,5 +165,4 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
 
         };
     }
-
 }

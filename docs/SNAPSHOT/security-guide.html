@@ -52,6 +52,7 @@
 <li><a href="#additional-considerations-for-the-start-instance-and-start-cluster-subcommands">Additional Considerations for the <code>start-instance</code> and <code>start-cluster</code> Subcommands</a></li>
 <li><a href="#using-start-instance-and-start-cluster-with-a-password-file">Using <code>start-instance</code> and <code>start-cluster</code> With a Password File</a></li>
 <li><a href="#to-change-an-administration-password">To Change an Administration Password</a></li>
+<li><a href="#brute-force-attack-protection">Brute-Force Attack Protection</a></li>
 <li><a href="#to-set-a-password-from-a-file">To Set a Password From a File</a></li>
 <li><a href="#administering-password-aliases">Administering Password Aliases</a></li>
 </ul>
@@ -2103,6 +2104,9 @@ sensitive passwords are not visible in the <code>domain.xml</code> file.</p>
 <p><a href="#to-change-an-administration-password">To Change an Administration Password</a></p>
 </li>
 <li>
+<p><a href="#brute-force-attack-protection">Brute-Force Attack Protection</a></p>
+</li>
+<li>
 <p><a href="#to-set-a-password-from-a-file">To Set a Password From a File</a></p>
 </li>
 <li>
@@ -2499,6 +2503,43 @@ Enter new admin password again&gt;newadmin</code></pre>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommand by
 typing <code>asadmin help change-admin-password</code> at the command line.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="brute-force-attack-protection"><a class="anchor" href="#brute-force-attack-protection"></a>Brute-Force Attack Protection</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish includes protection against brute-force authentication attacks on the administration interface (both the Administration Console and REST API). This protection works by:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tracking failed authentication attempts per username and remote host combination</p>
+</li>
+<li>
+<p>Applying an exponential delay after each failed attempt (1 second, 2 seconds, 4 seconds, 8 seconds, etc.)</p>
+</li>
+<li>
+<p>Capping the maximum delay at 60 seconds</p>
+</li>
+<li>
+<p>Rejecting additional concurrent authentication attempts when too many requests are being delayed for the same user/host (HTTP 429 Too Many Requests)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This mechanism makes it impractical for attackers to try many passwords in rapid succession while allowing legitimate users to retry after a short wait.</p>
+</div>
+<div class="paragraph">
+<p>This mechanism applies only for remote connections. Local connections are never delayed.</p>
+</div>
+<div class="sect4">
+<h5 id="behind-proxy-configuration"><a class="anchor" href="#behind-proxy-configuration"></a>Behind Proxy Configuration</h5>
+<div class="paragraph">
+<p>When the server is deployed behind a reverse proxy, you must configure GlassFish to trust the proxy headers (<code>X-Real-IP</code> and <code>X-Forwarded-For</code>) to correctly identify the client&#8217;s real IP address. Without this configuration, all authentication attempts would be tracked under the proxy&#8217;s IP address instead of individual client IPs. Any failed authentication attempt would delay authentication for all clients, even a valid client with the correct credentials.</p>
+</div>
+<div class="paragraph">
+<p>For more information about configuring behind-proxy mode and other HTTP options, see <a href="administration-guide.html#behind-proxy-configuration">Behind Proxy Configuration</a> in the Administration Guide.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -8182,7 +8223,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-17 22:35:04 UTC
+Last updated 2026-05-19 09:11:36 UTC
 </div>
 </div>
 </body>

@@ -22746,6 +22746,9 @@ configurations that are applied when you follow the instructions in
 <li>
 <p><a href="#to-delete-an-http-configuration">To Delete an HTTP Configuration</a></p>
 </li>
+<li>
+<p><a href="#behind-proxy-configuration">Behind Proxy Configuration</a></p>
+</li>
 </ul>
 </div>
 <div class="sect4">
@@ -22824,6 +22827,39 @@ Command delete-http executed successfully.</code></pre>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommand by
 typing <code>asadmin help delete-http</code> at the command line.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="behind-proxy-configuration"><a class="anchor" href="#behind-proxy-configuration"></a>Behind Proxy Configuration</h5>
+<div class="paragraph">
+<p>When GlassFish Server is deployed behind a reverse proxy (such as nginx or Apache HTTP Server), you can enable the <code>behind-proxy</code> option to have the server read client IP addresses from proxy headers instead of the direct connection&#8217;s remote address.</p>
+</div>
+<div class="paragraph">
+<p>To enable behind-proxy mode, use the <code>asadmin set</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin set configs.config.server-config.network-config.protocols.protocol.admin-listener.http.behind-proxy=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When <code>behind-proxy</code> is enabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The server reads the <code>X-Real-IP</code> header first (set by the closest proxy)</p>
+</li>
+<li>
+<p>If <code>X-Real-IP</code> is not present, it reads the <code>X-Forwarded-For</code> header and takes the first IP in the list (original client)</p>
+</li>
+<li>
+<p>If neither header is present, it falls back to the request&#8217;s direct remote address</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This configuration is useful for ensuring proper client IP tracking for brute-force attack protection.</p>
 </div>
 </div>
 </div>
@@ -32961,7 +32997,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-17 22:31:59 UTC
+Last updated 2026-05-19 09:08:34 UTC
 </div>
 </div>
 </body>

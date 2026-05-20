@@ -23,6 +23,7 @@ import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
+import com.sun.enterprise.util.Utility;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -130,16 +131,25 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         // - first load preloads all the singleton dependencies which take about 500ms to initialize.
         // It's typically not loaded in time before it's needed on the main thread but it still decreases
         // the time the main thread needs to wait until the initialization completes by about 2/3, to about 150ms
-        ForkJoinPool.commonPool().submit(() -> serviceLocator.getService(CommandRunner.class));
+        runAsynchWithThreadContext(() -> serviceLocator.getService(CommandRunner.class), Thread.currentThread());
 
         // Preload the service for the set command (name="set") in a background thread.
         // AutoDisposableGlassFish always needs to run it so it can retrieve it faster
         // - we load the singleton GetSetModularityHelper dependency heere eagerly because it takes about 250ms to initialize
         // Again, it doesn't load completely in time before it's needed on the main thread but decreases the wait time on the main to about 80ms
+        runAsynchWithThreadContext(
+                () -> {
+                    final ActiveDescriptor<?> setCommandDescriptor = serviceLocator.getBestDescriptor(BuilderHelper.createNameFilter("set"));
+                    serviceLocator.getServiceHandle(setCommandDescriptor)
+                            .getService();
+                },
+                Thread.currentThread());
+    }
+
+    private static void runAsynchWithThreadContext(Utility.RunnableWithException action, Thread spawningThread) {
+        final ClassLoader contextClassLoader = spawningThread.getContextClassLoader();
         ForkJoinPool.commonPool().submit(() -> {
-            final ActiveDescriptor<?> setCommandDescriptor = serviceLocator.getBestDescriptor(BuilderHelper.createNameFilter("set"));
-            serviceLocator.getServiceHandle(setCommandDescriptor)
-                    .getService();
+            Utility.runWithContextClassLoader(contextClassLoader, action);
         });
     }
 
@@ -186,7 +196,12 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             installRootValue = instanceRoot.getAbsolutePath();
             gfProps.setProperty("-type", "EMBEDDED");
             final String installRootFinalValue = installRootValue;
-            asyncResult = asyncResult.thenRun(() -> JarUtil.extractRars(installRootFinalValue));
+            final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            asyncResult = asyncResult.thenRunAsync(
+                    () -> {
+                        Utility.runWithContextClassLoader(contextClassLoader,
+                                () -> JarUtil.extractRars(installRootFinalValue));
+                    });
         }
         JarUtil.setEnv(installRootValue);
 

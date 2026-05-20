@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -37,9 +36,7 @@ import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.main.boot.impl.GlassFishImpl;
 import org.glassfish.main.jdke.props.SystemProperties;
 

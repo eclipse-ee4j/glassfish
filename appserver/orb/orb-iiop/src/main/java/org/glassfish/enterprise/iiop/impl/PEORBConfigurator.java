@@ -30,12 +30,8 @@ import com.sun.corba.ee.spi.threadpool.ThreadPoolManager;
 import com.sun.corba.ee.spi.transport.Acceptor;
 import com.sun.corba.ee.spi.transport.TransportDefault;
 import com.sun.corba.ee.spi.transport.TransportManager;
-import com.sun.enterprise.util.net.NetUtils;
 
 import java.lang.System.Logger;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,6 +45,7 @@ import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.pfl.dynamic.copyobject.spi.ObjectCopierFactory ;
 
@@ -62,8 +59,6 @@ public class PEORBConfigurator implements ORBConfigurator {
     private static final String SSL = "SSL";
     private static final String SSL_MUTUALAUTH = "SSL_MUTUALAUTH";
     private static final String IIOP_CLEAR_TEXT_CONNECTION = "IIOP_CLEAR_TEXT";
-    private static final String DEFAULT_ORB_INIT_HOST = NetUtils.getHostName();
-    private static final Set<String> ANY_ADDRS = new HashSet<>(Arrays.asList("0.0.0.0", "::", "::ffff:0.0.0.0"));
 
     @Override
     public synchronized void configure(DataCollector dc, ORB orb) {
@@ -131,7 +126,7 @@ public class PEORBConfigurator implements ORBConfigurator {
             }
 
             boolean isLazy = Boolean.parseBoolean(iiopListener.getLazyInit());
-            String host = handleAddrAny(iiopListener.getAddress());
+            String host = ORBLocator.toConcreteHost(iiopListener.getAddress());
             int port = Integer.parseInt(iiopListener.getPort());
             boolean isSslListener = Boolean.parseBoolean(iiopListener.getSecurityEnabled()) && iiopListener.getSsl() != null;
             if (isSslListener) {
@@ -146,13 +141,6 @@ public class PEORBConfigurator implements ORBConfigurator {
                 }
             }
         }
-    }
-
-    private String handleAddrAny(String hostAddr) {
-        if (!ANY_ADDRS.contains(hostAddr)) {
-            return hostAddr;
-        }
-        return DEFAULT_ORB_INIT_HOST;
     }
 
     private Acceptor addAcceptor(org.omg.CORBA.ORB orb, boolean isLazy, String host, String type, int port) {

@@ -31,7 +31,7 @@ public enum GlassFishVariable {
     /** Directory where we have domains */
     DOMAINS_ROOT("AS_DEF_DOMAINS_PATH", "com.sun.aas.domainsRoot"),
     /** Autodetected host name. */
-    HOST_NAME(null, "com.sun.aas.hostName"),
+    HOST_NAME("AS_HOSTNAME", "com.sun.aas.hostName"),
     /** Java home directory set by JVM automatically via <code>java.home</code> or via JAVA_HOME by user. */
     JAVA_HOME("JAVA_HOME", "java.home"),
     /** Java home set by AS_JAVA, has higher priority than JAVA_HOME. */

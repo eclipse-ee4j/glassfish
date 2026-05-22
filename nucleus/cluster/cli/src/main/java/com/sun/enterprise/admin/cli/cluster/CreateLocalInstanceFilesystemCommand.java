@@ -185,7 +185,7 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
             // Check if hostName is valid by looking up its address
             InetAddress.getByName(DASHost);
         } catch (UnknownHostException e) {
-            String thisHost = NetUtils.getHostName();
+            String thisHost = NetUtils.getCanonicalHostName();
             String msg = Strings.get("Instance.DasHostUnknown", DASHost, thisHost);
             throw new CommandException(msg, e);
         }
@@ -193,7 +193,7 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
         // See if DAS is reachable
         if (!NetUtils.isRunning(DASHost, DASPort)) {
             // DAS provided host and port
-            String thisHost = NetUtils.getHostName();
+            String thisHost = NetUtils.getCanonicalHostName();
             String msg = Strings.get("Instance.DasHostUnreachable", DASHost, Integer.toString(DASPort), thisHost);
             throw new CommandException(msg);
         }

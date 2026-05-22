@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
@@ -265,20 +266,13 @@ public final class NetUtils {
         if (LOCALHOST_IP.equals(address)) {
             return true;
         }
-
-        final String[] myIPs = getHostIPs();
-        for (String myIP : myIPs) {
-            if (address.equals(myIP)) {
+        try {
+            InetAddress inetAddress = InetAddress.getByName(address);
+            if (getHostNames().contains(inetAddress.getCanonicalHostName())) {
+                // if the address is same as the host name, it is considered local too
                 return true;
             }
-        }
-
-        if (getHostName().equals(address)) {
-            // if the address is same as the host name, it is considered local too
-            return true;
-        }
-        try {
-            return InetAddress.getByName(address).isLoopbackAddress();
+            return inetAddress.isLoopbackAddress();
         } catch (UnknownHostException e) {
             LOG.log(TRACE, "Unable to resolve the address.", e);
             return false;
@@ -368,8 +362,13 @@ public final class NetUtils {
 
 
     /**
-     * @return resolved host name of the local host (see <code>hostname</code> command on linux) or
-     *         loopback hostname.
+     * Returns the host name of the local host (see <code>hostname</code> command on linux).
+     * If the host name cannot be resolved, loopback host name is returned.
+     * <p>
+     * The result should be resolvable from the same machine, but might be unknown
+     * to other hosts.
+     *
+     * @return host name of the local host or loopback hostname.
      */
     public static String getHostName() {
         try {
@@ -402,7 +401,6 @@ public final class NetUtils {
      * @return list of autodetected host names except loopbacks and unresolvable host names. Never null.
      */
     public static List<String> getHostNames() {
-        ThrowingPredicate<NetworkInterface> isLoopback = NetworkInterface::isLoopback;
         ThrowingPredicate<InetAddress> isHostName = address -> {
             if (address.getCanonicalHostName().equals(address.getHostAddress())) {
                 return false;
@@ -438,12 +436,15 @@ public final class NetUtils {
             return a.getCanonicalHostName().compareTo(b.getCanonicalHostName());
         };
         try {
-            return NetworkInterface.networkInterfaces()
-                .flatMap(NetworkInterface::inetAddresses).sorted(addressComparator).filter(isHostName)
-                .map(InetAddress::getCanonicalHostName).distinct().toList();
+            return Stream
+                .concat(
+                    NetworkInterface.networkInterfaces().flatMap(NetworkInterface::inetAddresses).filter(isHostName)
+                        .sorted(addressComparator).map(InetAddress::getCanonicalHostName),
+                    Stream.of(getHostName()))
+                .distinct().toList();
         } catch (SocketException e) {
             LOG.log(WARNING, "Failed to list network interfaces.", e);
-            return List.of();
+            return List.of(getHostName());
         }
     }
 

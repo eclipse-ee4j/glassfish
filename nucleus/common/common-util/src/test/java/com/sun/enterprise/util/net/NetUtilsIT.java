@@ -45,7 +45,6 @@ import static org.testcontainers.utility.MountableFile.forHostPath;
  */
 public class NetUtilsIT {
 
-    private static final String METHOD_GET_HOST_NAME = "getHostName";
     private static final String HOSTNAME = "docker001";
     private static final String COMMAND_SUFFIX =
         "echo \"hostname: $(hostname)\n\""

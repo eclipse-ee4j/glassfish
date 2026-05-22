@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -85,10 +85,9 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
         dasPropsFile = new File(agentConfigDir, "das.properties");
 
         if (dasPropsFile.isFile()) {
-            //Issue GLASSFISH-15263
-            //Don't validate for localhost - can't tell if it's user specified or default.
-            //Just use what's in das.properties so user doesn't have to specify --host
-            if (programOpts.getHost() != null && !programOpts.getHost().equals(DEFAULT_HOSTNAME)) {
+            // Don't validate for local host - can't tell if it's user specified or default.
+            // Just use what's in das.properties so user doesn't have to specify --host
+            if (programOpts.getHost() != null && !DEFAULT_HOSTNAME.equals(programOpts.getHost())) {
                 //validate must come before setDasDefaults
                 validateDasOptions(programOpts.getHost(), String.valueOf(programOpts.getPort()),
                         String.valueOf(programOpts.isSecure()), dasPropsFile);

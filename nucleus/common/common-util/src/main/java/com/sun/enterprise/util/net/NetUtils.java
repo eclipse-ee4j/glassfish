@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.glassfish.embeddable.GlassFishVariable;
+
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 
@@ -387,6 +389,10 @@ public final class NetUtils {
      */
     public static String getCanonicalHostName() {
         // short-circuit out if user has reverse-DNS issues
+        String envValue = System.getenv(GlassFishVariable.HOST_NAME.getEnvName());
+        if (envValue != null) {
+            return envValue;
+        }
         if (Boolean.parseBoolean(System.getenv("AS_NO_REVERSE_DNS"))) {
             return getHostName();
         }

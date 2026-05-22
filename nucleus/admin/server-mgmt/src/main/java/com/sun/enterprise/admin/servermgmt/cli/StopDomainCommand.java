@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.cli.remote.DASUtils;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.universal.process.KillNotPossibleException;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.lang.System.Logger;
@@ -78,17 +78,10 @@ public class StopDomainCommand extends LocalDomainCommand {
      */
     @Override
     protected void initDomain() throws CommandException {
-        // only initialize local domain information if it's a local operation
-
-        // TODO Byron said in April 2013 that we should probably just check if
-        // NetUtils says that the getHost() --> isThisMe() rather than merely
-        // checking for the magic "localhost" string.  Too risky to fool with it today.
-        // FIXME: Not every operating system uses localhost
-        // FIXME: When explicitly used --host argument, should use the remote variant.
-        if (programOpts.getHost().equals(CLIConstants.DEFAULT_HOSTNAME)) {
+        if (NetUtils.isLocal(programOpts.getHost())) {
             super.initDomain();
-        } else if (userArgDomainName != null) { // remote case
-            throw new CommandException("No domain name allowed with --host option.");
+        } else if (userArgDomainName != null) {
+            throw new CommandException("Using domain name is not allowed with non-local --host option.");
         }
     }
 

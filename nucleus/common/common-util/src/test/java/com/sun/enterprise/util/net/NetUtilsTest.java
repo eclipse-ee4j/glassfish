@@ -16,24 +16,30 @@
 
 package com.sun.enterprise.util.net;
 
+import java.lang.System.Logger;
 import java.net.InetAddress;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import static java.lang.System.Logger.Level.INFO;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NetUtilsTest {
+    private static final Logger LOG = System.getLogger(NetUtilsTest.class.getName());
 
     @Test
     void getFreePort() throws Exception {
@@ -46,8 +52,24 @@ public class NetUtilsTest {
     }
 
     @Test
+    void getHostNames() throws Exception {
+        List<String> hostNames = NetUtils.getHostNames();
+        assertThat("Detected hostnames: " + hostNames, hostNames, containsInRelativeOrder(NetUtils.getHostName()));
+    }
+
+    @Test
     void getHostName() throws Exception {
-        assertDoesNotThrow(() -> NetUtils.getHostName());
+        String hostName = assertDoesNotThrow(() -> NetUtils.getHostName());
+        LOG.log(INFO,  "Detected host name: " + hostName);
+    }
+
+    @Test
+    void getCanonicalHostName() throws Exception {
+        String hostName = assertDoesNotThrow(() -> NetUtils.getCanonicalHostName());
+        LOG.log(INFO,  "Detected host name: " + hostName);
+        // First letter is not a number, should not return an ip address
+        assertThat("Canonical host name should not be an ip address", hostName,
+            matchesPattern("^[a-zA-Z][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})*$"));
     }
 
     @Test

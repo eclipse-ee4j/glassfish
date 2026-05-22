@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -268,10 +268,10 @@ public class ProgramOptions {
         if (!ok(host)) {
             host = env.getStringOption(HOST);
         }
-        if (!ok(host)) {
-            host = CLIConstants.DEFAULT_HOSTNAME;
+        if (ok(host)) {
+            return host;
         }
-        return host;
+        return CLIConstants.DEFAULT_HOSTNAME;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -138,17 +138,8 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     private void setSystemPropertiesFromEnv(boolean forceOverwrite) {
         // adding our version of some system properties.
         setProperty(JAVA_ROOT.getSystemPropertyName(), System.getProperty(JAVA_HOME.getSystemPropertyName()), forceOverwrite);
-        if (forceOverwrite || null == System.getProperty(HOST_NAME.getSystemPropertyName())) {
-            String hostname = "localhost";
-            try {
-                // canonical name checks to make sure host is proper
-                hostname = NetUtils.getCanonicalHostName();
-            } catch (Exception ex) {
-                LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
-            }
-            if (hostname != null) {
-                setProperty(HOST_NAME.getSystemPropertyName(), hostname, true);
-            }
+        if (forceOverwrite || System.getProperty(HOST_NAME.getSystemPropertyName()) == null) {
+            setProperty(HOST_NAME.getSystemPropertyName(), NetUtils.getCanonicalHostName(), true);
         }
     }
 

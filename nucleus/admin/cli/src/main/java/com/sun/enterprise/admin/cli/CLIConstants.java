@@ -17,8 +17,9 @@
 
 package com.sun.enterprise.admin.cli;
 
+import com.sun.enterprise.util.net.NetUtils;
+
 import java.lang.System.Logger.Level;
-import java.net.InetAddress;
 import java.time.Duration;
 
 import org.glassfish.embeddable.GlassFishVariable;
@@ -33,7 +34,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_STOP_SERVER;
  */
 public final class CLIConstants {
     public static final int DEFAULT_ADMIN_PORT = 4848;
-    public static final String DEFAULT_HOSTNAME = InetAddress.getLoopbackAddress().getHostName();
+    public static final String DEFAULT_HOSTNAME = NetUtils.getCanonicalHostName();
     public static final String EOL = System.lineSeparator();
 
     public static final Duration WAIT_FOR_DAS_TIME_MS = getEnv(TIMEOUT_START_SERVER);

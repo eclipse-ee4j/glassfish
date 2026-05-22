@@ -131,17 +131,9 @@ public class ASenvPropertyReader {
                 .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
             String javaHome = new File(System.getProperty(JAVA_HOME.getSystemPropertyName())).toPath().toString();
             putIfAbsent(JAVA_ROOT.getPropertyName(), javaHome);
-            putIfAbsent(HOST_NAME.getPropertyName(), getHostname());
+            putIfAbsent(HOST_NAME.getPropertyName(), NetUtils.getCanonicalHostName());
             putIfAbsent(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
             putIfAbsent(PRODUCT_ROOT.getPropertyName(), installDir.getParentFile().toPath().toString());
-        }
-
-        private static String getHostname() {
-            try {
-                return NetUtils.getCanonicalHostName();
-            } catch (Exception ex) {
-                return "localhost";
-            }
         }
     }
 }

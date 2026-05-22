@@ -322,12 +322,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
     }
 
     private String getCertificateDN() {
-        String cn;
-        try {
-            cn = NetUtils.getCanonicalHostName();
-        } catch (Exception e) {
-            cn = "localhost";
-        }
+        String cn = NetUtils.getCanonicalHostName();
         // Use the suffix, if provided, in creating the DN (by augmenting the CN).
         return CERTIFICATE_DN_PREFIX + cn + INSTANCE_CN_SUFFIX + CERTIFICATE_DN_SUFFIX;
     }

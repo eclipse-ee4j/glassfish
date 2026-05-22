@@ -52,11 +52,7 @@ public class KeystoreManager {
     protected static String getCertificateDN(RepositoryConfig cfg, final String CNSuffix) {
         String cn = getCNFromCfg(cfg);
         if (cn == null) {
-            try {
-                cn = NetUtils.getCanonicalHostName();
-            } catch (Exception e) {
-                cn = "localhost";
-            }
+            cn = NetUtils.getCanonicalHostName();
         }
         // Use the suffix, if provided, in creating the DN (by augmenting the CN).
         // must be of form "CN=..., OU=..."

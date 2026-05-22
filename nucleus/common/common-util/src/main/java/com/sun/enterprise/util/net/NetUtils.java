@@ -29,6 +29,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -379,49 +380,71 @@ public final class NetUtils {
     }
 
     /**
-     * This method returns the fully qualified name of the host.
+     * This method tries to choose the best fully qualified name of this host.
      * If the name can't be resolved (on Windows if there isn't a domain specified),
-     * just host name is returned
+     * just result of {@link #getHostName()} is returned
      *
      * @return fully qualified name of the local host.
-     * @throws UnknownHostException so it can be handled on a case by case basis
      */
-    public static String getCanonicalHostName() throws UnknownHostException {
-        final String defaultHostname = InetAddress.getLocalHost().getHostName();
+    public static String getCanonicalHostName() {
         // short-circuit out if user has reverse-DNS issues
         if (Boolean.parseBoolean(System.getenv("AS_NO_REVERSE_DNS"))) {
-            return defaultHostname;
+            return getHostName();
         }
+        return getHostNames().stream().findFirst().orElse(getHostName());
+    }
 
-        // look for full name
-        // check to see if ip returned or canonical hostname is different than hostname
-        // It is possible for dhcp connected computers to have an erroneous name returned
-        // that is created by the dhcp server. If that happens, return just the default hostname
-        final String hostname = InetAddress.getLocalHost().getCanonicalHostName();
-        if (hostname.equals(InetAddress.getLocalHost().getHostAddress())
-                || !hostname.startsWith(defaultHostname)) {
-            // don't want IP or canonical hostname, this will cause a lot of problems for dhcp users
-            // get just plain host name instead
-            return defaultHostname;
-        }
-
-        // If the DNS is inconsistent between domain hosts, it is sometimes better to use
-        // any reachable public IP address. This check is not perfect - however usually if
-        // the host name doesn't contain any dots, it is already a bad name for wider networks.
-        if (!hostname.contains(".")) {
-            ThrowingPredicate<NetworkInterface> isLoopback = NetworkInterface::isLoopback;
-            try {
-                String host = NetworkInterface.networkInterfaces().filter(Predicate.not(isLoopback))
-                    .flatMap(NetworkInterface::inetAddresses)
-                    .map(InetAddress::getHostAddress)
-                    .filter(name -> name.indexOf('.') > 0)
-                    .findFirst().orElse(hostname);
-                return host;
-            } catch (SocketException e) {
-                LOG.log(WARNING, "Failed to list network interfaces.", e);
+    /**
+     * Goes over network interfaces and collects resolvable host names of this hosts.
+     * The list is ordered, loopback host names are last.
+     * Host names with dots are preferred to those without.
+     *
+     * @return list of autodetected host names except loopbacks and unresolvable host names. Never null.
+     */
+    public static List<String> getHostNames() {
+        ThrowingPredicate<NetworkInterface> isLoopback = NetworkInterface::isLoopback;
+        ThrowingPredicate<InetAddress> isHostName = address -> {
+            if (address.getCanonicalHostName().equals(address.getHostAddress())) {
+                return false;
             }
+            return true;
+        };
+        Comparator<? super InetAddress> addressComparator = (a, b) -> {
+            // loopback addresses should be last
+            if (a.isLoopbackAddress() && !b.isLoopbackAddress()) {
+                return 1;
+            }
+            if (!a.isLoopbackAddress() && b.isLoopbackAddress()) {
+                return -1;
+            }
+            // prefer addresses that have a resolvable host name
+            boolean aHasHostName = !a.getCanonicalHostName().equals(a.getHostAddress());
+            boolean bHasHostName = !b.getCanonicalHostName().equals(b.getHostAddress());
+            if (aHasHostName && !bHasHostName) {
+                return -1;
+            }
+            if (!aHasHostName && bHasHostName) {
+                return 1;
+            }
+            boolean aHasDots = a.getCanonicalHostName().contains(".");
+            boolean bHasDots = b.getCanonicalHostName().contains(".");
+            if (aHasDots && !bHasDots) {
+                return -1;
+            }
+            if (!aHasDots && bHasDots) {
+                return 1;
+            }
+            // otherwise, sort by host name
+            return a.getCanonicalHostName().compareTo(b.getCanonicalHostName());
+        };
+        try {
+            return NetworkInterface.networkInterfaces()
+                .flatMap(NetworkInterface::inetAddresses).sorted(addressComparator).filter(isHostName)
+                .map(InetAddress::getCanonicalHostName).distinct().toList();
+        } catch (SocketException e) {
+            LOG.log(WARNING, "Failed to list network interfaces.", e);
+            return List.of();
         }
-        return hostname;
     }
 
     public enum PortAvailability {

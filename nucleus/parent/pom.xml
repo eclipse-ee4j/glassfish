@@ -228,7 +228,7 @@
         <stax2-api.version>4.3.0</stax2-api.version>
 
         <!-- GlassFish Components -->
-        <grizzly.version>5.0.1</grizzly.version>
+        <grizzly.version>5.0.2-SNAPSHOT</grizzly.version>
         <grizzly.npn.version>2.0.1</grizzly.npn.version>
         <glassfish-management-api.version>3.3.0</glassfish-management-api.version>
 

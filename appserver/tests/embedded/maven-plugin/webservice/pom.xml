@@ -44,7 +44,7 @@
                 <plugins>
                     <plugin>
                         <groupId>org.glassfish.embedded</groupId>
-                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                        <artifactId>embedded-glassfish-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>start</id>

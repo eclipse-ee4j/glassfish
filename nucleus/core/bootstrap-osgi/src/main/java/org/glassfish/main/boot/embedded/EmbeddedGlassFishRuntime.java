@@ -35,15 +35,20 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 import org.glassfish.main.boot.log.LogFacade;
 
@@ -89,18 +94,25 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             properties.putAll(glassFishProperties.getProperties());
 
             final GlassFishProperties gfProps = new GlassFishProperties(properties);
-            setEnv(gfProps);
+            final CompletableFuture<Void> setEnvFuture = setEnv(gfProps);
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
             final ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
+             // Building the serviceLocator takes about 600ms, around 1/5
             final ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
                 List.of(new EmbeddedInhabitantsParser(), new DuplicatePostProcessor()), null);
+
+            preloadEssentialServicesInBackground(serviceLocator);
 
             final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null,
                 startupContext);
 
             final Consumer<GlassFish> onDispose = gf -> glassFishInstances.remove(gfProps.getInstanceRoot());
-            final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose);
+
+            // We need to complete the setup before creating AutoDisposableGlassFish
+            setEnvFuture.join();
+
+            final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose); // takes 900ms
             glassFishInstances.put(gfProps.getInstanceRoot(), glassFish);
 
             return glassFish;
@@ -109,6 +121,26 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         } catch (Exception e) {
             throw new GlassFishException(e);
         }
+    }
+
+    // Preloads some services in background. They will always be needed during startup.
+    // Instead of loading them lazily in the main thread, we load them immediately in background so that they are loaded sooner
+    private void preloadEssentialServicesInBackground(final ServiceLocator serviceLocator) {
+        // Preload command runner. AutoDisposableGlassFish always needs to run it
+        // - first load preloads all the singleton dependencies which take about 500ms to initialize.
+        // It's typically not loaded in time before it's needed on the main thread but it still decreases
+        // the time the main thread needs to wait until the initialization completes by about 2/3, to about 150ms
+        ForkJoinPool.commonPool().submit(() -> serviceLocator.getService(CommandRunner.class));
+
+        // Preload the service for the set command (name="set") in a background thread.
+        // AutoDisposableGlassFish always needs to run it so it can retrieve it faster
+        // - we load the singleton GetSetModularityHelper dependency heere eagerly because it takes about 250ms to initialize
+        // Again, it doesn't load completely in time before it's needed on the main thread but decreases the wait time on the main to about 80ms
+        ForkJoinPool.commonPool().submit(() -> {
+            final ActiveDescriptor<?> setCommandDescriptor = serviceLocator.getBestDescriptor(BuilderHelper.createNameFilter("set"));
+            serviceLocator.getServiceHandle(setCommandDescriptor)
+                    .getService();
+        });
     }
 
     @Override
@@ -130,7 +162,15 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         }
     }
 
-    private void setEnv(GlassFishProperties gfProps) throws Exception {
+    /*
+       Unpacks the domain directory and sets up the properties related to the environment
+
+       Asynchronously completes tasks that aren't essential during startup to move them from the main thread.
+       The returned future should be joined before creating AutoDisposableGlassFish, which applies properties
+       that might depend on having the environment completely set up.
+    */
+    private CompletableFuture<Void> setEnv(GlassFishProperties gfProps) throws Exception {
+        CompletableFuture<Void> asyncResult = CompletableFuture.completedFuture(null);
         String instanceRootValue = gfProps.getInstanceRoot();
         if (instanceRootValue == null) {
             instanceRootValue = createTempInstanceRoot(gfProps);
@@ -145,7 +185,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         if (installRootValue == null) {
             installRootValue = instanceRoot.getAbsolutePath();
             gfProps.setProperty("-type", "EMBEDDED");
-            JarUtil.extractRars(installRootValue);
+            final String installRootFinalValue = installRootValue;
+            asyncResult = asyncResult.thenRun(() -> JarUtil.extractRars(installRootFinalValue));
         }
         JarUtil.setEnv(installRootValue);
 
@@ -159,6 +200,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
         gfProps.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.getAbsolutePath());
         gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+
+        return asyncResult;
     }
 
     private String createTempInstanceRoot(GlassFishProperties gfProps) throws Exception {

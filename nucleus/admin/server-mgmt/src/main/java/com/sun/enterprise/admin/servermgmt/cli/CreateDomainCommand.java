@@ -297,9 +297,20 @@ public final class CreateDomainCommand extends CLICommand {
             logger.info(ce.getLocalizedMessage());
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), ce);
         } catch (Exception e) {
-            logger.fine(e.getLocalizedMessage());
+            logger.fine(() -> getLocalizedMessageWithCauses(e));
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), e);
         }
+    }
+
+    private static String getLocalizedMessageWithCauses(Exception e) {
+        StringBuilder message = new StringBuilder(e.getLocalizedMessage());
+        Throwable exceptionIterator = e;
+        while (exceptionIterator.getCause() != null) {
+            exceptionIterator = exceptionIterator.getCause();
+            message.append("\nCaused by:\n")
+                    .append(exceptionIterator.getLocalizedMessage());
+        }
+        return message.toString();
     }
 
     /**

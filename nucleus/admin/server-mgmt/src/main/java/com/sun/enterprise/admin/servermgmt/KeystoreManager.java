@@ -84,6 +84,7 @@ public class KeystoreManager {
         // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", dasCertDN));
+        String keyToolOutput;
         try {
             final KeyTool keyTool = new KeyTool(keyStore, masterPassword.toCharArray());
             keyTool.generateKeyPair(CERTIFICATE_ALIAS, dasCertDN, "RSA", 3650);
@@ -91,9 +92,14 @@ public class KeystoreManager {
             // Generate a new self signed certificate with glassfish-instance as the alias
             // Create the default self-signed cert for instances to use for SSL auth.
             final String instanceCertDN = getInstanceCertDN(config);
-            keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
+            keyToolOutput = keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
+        } catch (IllegalArgumentException e) {
+            throw new DomainException(_strMgr.getString("InvalidPassword"), e);
         } catch (IOException e) {
             throw new DomainException(_strMgr.getString("SomeProblemWithKeytool"), e);
+        }
+        if (!keyStore.exists()) {
+            throw new DomainException("KeyTool command failed to create the keystore with the following output: " + keyToolOutput);
         }
     }
 

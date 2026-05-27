@@ -80,6 +80,11 @@ public class KeystoreManager {
      * @throws DomainException
      */
     protected void createKeyStore(File keyStore, RepositoryConfig config, String masterPassword) throws DomainException {
+        if (keyStore.exists()) {
+            // keystore shouldn't exist in the template, all keys should be domain specific
+            throw new DomainException(_strMgr.getString("KeystoreShouldntExist", keyStore.getName()));
+        }
+
         // Generate a new self signed certificate with s1as as the alias
         // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);

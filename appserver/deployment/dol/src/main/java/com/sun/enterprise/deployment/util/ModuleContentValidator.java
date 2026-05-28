@@ -25,6 +25,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -67,8 +68,8 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
             // ensure that the file is present and return
             URL url = null;
             try {
-                url = new URL(wsdlFileUri);
-            } catch(java.net.MalformedURLException e) {
+                url = URI.create(wsdlFileUri).toURL();
+            } catch (IllegalArgumentException | java.net.MalformedURLException e) {
                 // don't care, will eventuall fail below
             }
             if (url!=null) {
@@ -141,11 +142,11 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
                 return;
             }
             try {
-                URL url = new URL(wsdlFileUri);
+                URL url = URI.create(wsdlFileUri).toURL();
                 if (url.getProtocol()!=null && !url.getProtocol().equals("file")) {
                     return;
                 }
-            } catch(java.net.MalformedURLException e) {
+            } catch (IllegalArgumentException | java.net.MalformedURLException e) {
                 // ignore it could be a relative uri
             }
             InputStream wsdlFileInputStream = archive_.getEntry(wsdlFileUri);

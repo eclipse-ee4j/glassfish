@@ -205,7 +205,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             // If wsdl file is an http URL, download that WSDL and all embedded relative wsdls, schemas
             if (ws.getWsdlFileUri().startsWith("http")) {
                 try {
-                    wsdlFileUri = downloadWsdlsAndSchemas(new URL(ws.getWsdlFileUri()), wsdlDir);
+                    wsdlFileUri = downloadWsdlsAndSchemas(URI.create(ws.getWsdlFileUri()).toURL(), wsdlDir);
                 } catch (Exception e) {
                     throw new DeploymentException(e.toString(), e);
                 }
@@ -282,7 +282,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
                 File newDir = new File(wsdlDir.getAbsolutePath() + File.separator + location.substring(0, location.lastIndexOf(File.separator)));
                 mkDirs(newDir);
             }
-            downloadFile(new URL(urlWithoutFileName + "/" + next.getLocation()), new File(wsdlDir.getAbsolutePath() + File.separator + location));
+            downloadFile(URI.create(urlWithoutFileName + "/" + next.getLocation()).toURL(), new File(wsdlDir.getAbsolutePath() + File.separator + location));
         }
 
         // Download all wsdl relative imports
@@ -295,7 +295,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             } else {
                 newWsdlDir = wsdlDir;
             }
-            downloadWsdlsAndSchemas(new URL(urlWithoutFileName + "/" + next.getLocation()), newWsdlDir);
+            downloadWsdlsAndSchemas(URI.create(urlWithoutFileName + "/" + next.getLocation()).toURL(), newWsdlDir);
         }
         return fileName;
     }
@@ -334,7 +334,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
                         ws.setWsdlFileUrl(retVal);
                     }
                 } else if (mappedEntry.startsWith("http")) {
-                    retVal = new URL(mappedEntry);
+                    retVal = URI.create(mappedEntry).toURL();
                     if (ws != null) {
                         ws.setWsdlFileUrl(retVal);
                     }

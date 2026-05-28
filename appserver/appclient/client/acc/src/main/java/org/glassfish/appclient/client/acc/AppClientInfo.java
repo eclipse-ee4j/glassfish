@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -216,8 +217,8 @@ public abstract class AppClientInfo {
         throws MalformedURLException, IOException {
         URL url = null;
         try {
-            url = new URL(uri);
-        } catch(java.net.MalformedURLException e) {
+            url = URI.create(uri).toURL();
+        } catch (IllegalArgumentException | java.net.MalformedURLException e) {
             // ignore
             url = null;
         }
@@ -237,7 +238,7 @@ public abstract class AppClientInfo {
 
     private static URL createJarUrl(File jarFile, String entry)
         throws MalformedURLException, IOException {
-        return new URL("jar:" + jarFile.toURI().toURL() + "!/" + entry);
+        return URI.create("jar:" + jarFile.toURI().toURL() + "!/" + entry).toURL();
     }
 
     protected ApplicationClientDescriptor getAppClient(

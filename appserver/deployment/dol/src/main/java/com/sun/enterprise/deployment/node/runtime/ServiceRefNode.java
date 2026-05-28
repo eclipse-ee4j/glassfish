@@ -29,6 +29,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -118,9 +119,9 @@ public class ServiceRefNode extends DeploymentDescriptorNode<ServiceReferenceDes
             }
         } else if (WebServicesTagNames.WSDL_OVERRIDE.equals(name)) {
             try {
-                URL url = new URL(value);
+                URL url = URI.create(value).toURL();
                 descriptor.setWsdlOverride(url);
-            } catch (MalformedURLException mue) {
+            } catch (IllegalArgumentException | MalformedURLException mue) {
                 DOLUtils.getDefaultLogger().log(Level.INFO, "Warning : Invalid wsdl override url=" + value, mue);
             }
         } else {

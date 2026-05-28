@@ -26,6 +26,8 @@ import com.sun.enterprise.deployment.web.UserDataConstraint;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -711,7 +713,11 @@ public class WebServiceEndpoint extends Descriptor implements HandlerChainContai
 
     public URL composeEndpointAddress(URL root, String contextRoot) throws MalformedURLException {
         String uri = getEndpointAddressPath(contextRoot);
-        return new URL(root.getProtocol(), root.getHost(), root.getPort(), uri);
+        try {
+            return new URI(root.getProtocol(), null, root.getHost(), root.getPort(), uri, null, null).toURL();
+        } catch (URISyntaxException e) {
+            throw new MalformedURLException(e.getMessage());
+        }
     }
 
     public String getEndpointAddressPath() {
@@ -790,7 +796,11 @@ public class WebServiceEndpoint extends Descriptor implements HandlerChainContai
         // content using jar URLs.
         URL context = composeEndpointAddress(root);
         String mainFile = context.getFile() + "/" + PUBLISHING_SUBCONTEXT + "/" + webService.getWsdlFileUri();
-        return new URL(context.getProtocol(), context.getHost(), context.getPort(), mainFile);
+        try {
+            return new URI(context.getProtocol(), null, context.getHost(), context.getPort(), mainFile, null, null).toURL();
+        } catch (URISyntaxException e) {
+            throw new MalformedURLException(e.getMessage());
+        }
     }
 
 

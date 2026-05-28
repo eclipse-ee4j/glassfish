@@ -28,6 +28,7 @@ import com.sun.enterprise.deployment.WebService;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.logging.Level;
 
@@ -105,15 +106,15 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
 
     public static URL createJarUrl(File jarFile, String entry)
         throws MalformedURLException, IOException {
-        return new URL("jar:" + jarFile.toURI().toURL() + "!/" + entry);
+        return URI.create("jar:" + jarFile.toURI().toURL() + "!/" + entry).toURL();
     }
 
     public static URL getEntryAsUrl(File moduleLocation, String uri)
         throws MalformedURLException, IOException {
         URL url = null;
         try {
-            url = new URL(uri);
-        } catch(java.net.MalformedURLException e) {
+            url = URI.create(uri).toURL();
+        } catch (IllegalArgumentException | java.net.MalformedURLException e) {
             // ignore
             url = null;
         }
@@ -148,7 +149,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
                 } else {
                     // If the given WSDL is an http URL, create a URL directly from this
                     if(wsdlFileUri.startsWith("http")) {
-                        serviceRef.setWsdlFileUrl(new URL(wsdlFileUri));
+                        serviceRef.setWsdlFileUrl(URI.create(wsdlFileUri).toURL());
                     } else {
                         // Given WSDL location is a relative path - append this to the module dir
                         URL wsdlFileUrl = internalGetUrl(moduleDesc, wsdlFileUri);
@@ -191,11 +192,11 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
                 String wsdlFileUri = webService.getWsdlFileUri();
                 URL wsdlFileURL=null;
                 try {
-                    URL url = new URL(wsdlFileUri);
+                    URL url = URI.create(wsdlFileUri).toURL();
                     if (url.getProtocol()!=null && !url.getProtocol().equalsIgnoreCase("file")) {
                         wsdlFileURL=url;
                     }
-                } catch(java.net.MalformedURLException e) {
+                } catch (IllegalArgumentException | java.net.MalformedURLException e) {
                     // ignore, it could just be a relate URI
                 }
                 if (wsdlFileURL==null) {

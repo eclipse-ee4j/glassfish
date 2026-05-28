@@ -496,7 +496,7 @@ public class WsUtil {
 
             // Convert each relative import into an absolute import, using
             // the final wsdl's Url as the context
-            URL relativeUrl = new URL(finalWsdlUrl, next.getLocation());
+            URL relativeUrl = URI.create(finalWsdlUrl.toExternalForm()).resolve(next.getLocation()).toURL();
             transformer.setParameter(WSDL_IMPORT_LOCATION_PARAM_NAME + wsdlImportNum, relativeUrl);
 
             wsdlImportNum++;
@@ -508,7 +508,7 @@ public class WsUtil {
 
             // Convert each relative import into an absolute import, using
             // the final wsdl's Url as the context
-            URL relativeUrl = new URL(finalWsdlUrl, next.getLocation());
+            URL relativeUrl = URI.create(finalWsdlUrl.toExternalForm()).resolve(next.getLocation()).toURL();
             transformer.setParameter(SCHEMA_IMPORT_LOCATION_PARAM_NAME + schemaImportNum, relativeUrl);
 
             schemaImportNum++;
@@ -516,14 +516,14 @@ public class WsUtil {
 
         int wsdlIncludeNum = 0;
         for (Import next : wsdlIncludes) {
-            URL relativeUrl = new URL(finalWsdlUrl, next.getLocation());
+            URL relativeUrl = URI.create(finalWsdlUrl.toExternalForm()).resolve(next.getLocation()).toURL();
             transformer.setParameter(WSDL_INCLUDE_LOCATION_PARAM_NAME + wsdlIncludeNum, relativeUrl);
             wsdlIncludeNum++;
         }
 
         int schemaIncludeNum = 0;
         for (Import next : schemaIncludes) {
-            URL relativeUrl = new URL(finalWsdlUrl, next.getLocation());
+            URL relativeUrl = URI.create(finalWsdlUrl.toExternalForm()).resolve(next.getLocation()).toURL();
             transformer.setParameter(SCHEMA_INCLUDE_LOCATION_PARAM_NAME + schemaIncludeNum, relativeUrl);
             schemaIncludeNum++;
         }
@@ -571,7 +571,7 @@ public class WsUtil {
         }
         final String wsdlFileUri = serviceRef.getWsdlFileUri();
         if (wsdlFileUri.startsWith("http")) {
-            return new URL(wsdlFileUri);
+            return URI.create(wsdlFileUri).toURL();
         }
         if (wsdlFileUri.startsWith("WEB-INF") || wsdlFileUri.startsWith("META-INF")) {
             // This can be the case when the toURL fails

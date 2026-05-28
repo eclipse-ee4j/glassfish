@@ -41,6 +41,7 @@ import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -194,8 +195,8 @@ public class HandlerChainHandler extends AbstractHandler {
         try {
             URL handlerFileURL=null;
             try {
-                handlerFileURL = new URL(handlerFile);
-            } catch(java.net.MalformedURLException e) {
+                handlerFileURL = URI.create(handlerFile).toURL();
+            } catch (IllegalArgumentException | java.net.MalformedURLException e) {
                 // swallowing purposely
             }
 

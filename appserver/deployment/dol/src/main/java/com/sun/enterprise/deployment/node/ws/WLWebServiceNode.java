@@ -27,6 +27,7 @@ import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
@@ -89,8 +90,8 @@ public class WLWebServiceNode extends DisplayableComponentNode<WebService> {
             if (WLWebServicesTagNames.WSDL_PUBLISH_FILE.equals(element.getQName())) {
                 URL url = null;
                 try {
-                    url = new URL(value);
-                } catch (MalformedURLException e) {
+                    url = URI.create(value).toURL();
+                } catch (IllegalArgumentException | MalformedURLException e) {
                     try {
                         // try file
                         url = new File(value).toURI().toURL();

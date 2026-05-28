@@ -79,7 +79,7 @@ public class ClassPathManager16 extends ClassPathManager {
             String ssp = resourceURI.getSchemeSpecificPart();
             String jarOnlySSP = ssp.substring(0, ssp.indexOf('!'));
 
-            URL jarOnlyURL = new URL(jarOnlySSP).toURI().toURL();
+            URL jarOnlyURL = URI.create(jarOnlySSP).toURL();
 
             /*
              *Use introspection to invoke the method.  This avoids complications

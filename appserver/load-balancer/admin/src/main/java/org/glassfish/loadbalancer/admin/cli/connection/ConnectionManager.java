@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.URI;
 import java.net.URL;
 
 import javax.net.ssl.HostnameVerifier;
@@ -86,7 +87,7 @@ public class ConnectionManager {
         try {
 
             //---------------------------------
-            url = new URL(HTTP_PROTOCOL, _lbHost, Integer.parseInt(_lbPort), contextRoot);
+            url = new URI(HTTP_PROTOCOL, null, _lbHost, Integer.parseInt(_lbPort), contextRoot, null, null).toURL();
             if (_lbProxyHost != null && _lbProxyPort != null) {
                 Proxy proxy = new Proxy(Proxy.Type.HTTP,
                         new InetSocketAddress(_lbProxyHost, Integer.parseInt(_lbProxyPort)));
@@ -144,7 +145,7 @@ public class ConnectionManager {
             sc.init(sslUtils.getKeyManagers(), trustAllCerts, new java.security.SecureRandom());
 
             //---------------------------------
-            url = new URL(HTTPS_PROTOCOL, _lbHost, Integer.parseInt(_lbPort), contextRoot);
+            url = new URI(HTTPS_PROTOCOL, null, _lbHost, Integer.parseInt(_lbPort), contextRoot, null, null).toURL();
             if (_lbProxyHost != null && _lbProxyPort != null) {
                 Proxy proxy = new Proxy(Proxy.Type.HTTP,
                         new InetSocketAddress(_lbProxyHost, Integer.parseInt(_lbProxyPort)));

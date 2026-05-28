@@ -112,8 +112,8 @@ public class Util {
                         !entry.getName().endsWith(MODULES_DIR_SUFFIX)) {
                     continue;
                 }
-                moduleJarURLs.add(new URL(JARFILE_URL_PREFIX + modulesJar.getName() +
-                        JARENTRY_PREFIX + entry.getName()));
+                moduleJarURLs.add(URI.create(JARFILE_URL_PREFIX + modulesJar.getName() +
+                        JARENTRY_PREFIX + entry.getName()).toURL());
             }
         } catch (Exception ex) {
             ex.printStackTrace();

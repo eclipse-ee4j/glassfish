@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -162,8 +163,8 @@ public class UtilHandlers {
             // Attempt to read from localhost
             path = "http://localhost:" + port + path;
             try {
-                url = new URL(path);
-            } catch (MalformedURLException ex) {
+                url = URI.create(path).toURL();
+            } catch (IllegalArgumentException | MalformedURLException ex) {
                 url = null;
             }
         }

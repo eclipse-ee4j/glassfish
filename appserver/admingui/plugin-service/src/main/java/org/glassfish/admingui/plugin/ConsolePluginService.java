@@ -20,6 +20,7 @@ package org.glassfish.admingui.plugin;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -311,7 +312,7 @@ public class ConsolePluginService {
                     // Found one... add it.
                     url = urls.nextElement();
                     try {
-                        providerURLs.add(new URL(url, ""));
+                        providerURLs.add(URI.create(url.toExternalForm()).toURL());
                     } catch (Exception ex) {
                         // Ignore b/c this should not ever happen, we're not
                         // changing the URL

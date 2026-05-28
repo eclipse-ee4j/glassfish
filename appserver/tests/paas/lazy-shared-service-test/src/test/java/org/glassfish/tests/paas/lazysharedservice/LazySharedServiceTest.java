@@ -28,6 +28,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -141,7 +142,7 @@ public class LazySharedServiceTest {
     }
 
     private void get(String urlStr, String result) throws Exception {
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         URLConnection yc = url.openConnection();
         System.out.println("\nURLConnection [" + yc + "] : ");
         BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -302,7 +303,7 @@ public class LazySharedServiceTest {
         HttpURLConnection huc;
 
         try {
-            URL u = new URL(urlString);
+            URL u = URI.create(urlString).toURL();
             huc =  (HttpURLConnection)  u.openConnection();
             huc.setRequestMethod("GET");
             huc.connect();

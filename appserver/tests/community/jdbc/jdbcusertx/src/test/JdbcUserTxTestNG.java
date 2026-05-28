@@ -55,7 +55,7 @@ public class JdbcUserTxTestNG {
 
           String testurl = "http://" + host  + ":" + port + "/"+
         strContextRoot + "/MyServlet?testcase=usertx";
-      URL url = new URL(testurl);
+      URL url = URI.create(testurl).toURL();
       echo("Connecting to: " + url.toString());
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.connect();
@@ -96,7 +96,7 @@ public class JdbcUserTxTestNG {
 
           String testurl = "http://" + host  + ":" + port + "/"+
         strContextRoot + "/MyServlet?testcase=noleak";
-      URL url = new URL(testurl);
+      URL url = URI.create(testurl).toURL();
       echo("Connecting to: " + url.toString());
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.connect();

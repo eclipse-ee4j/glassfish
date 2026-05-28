@@ -58,7 +58,7 @@ public class HelloJSPTestNG {
 
         String testurl = "http://" + host  + ":" + port + "/"+ strContextRoot + "/hello.jsp";
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -97,7 +97,7 @@ public class HelloJSPTestNG {
         //
     String testurl = "http://" + host  + ":" + port;
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -130,7 +130,7 @@ public class HelloJSPTestNG {
 
         String testurl = "http://" + host  + ":" + port + "/"+ strContextRoot + "/first.html";
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -170,7 +170,7 @@ public class HelloJSPTestNG {
 
         String testurl = "http://" + host  + ":" + port + "/"+ strContextRoot + "/simpleservlet";
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

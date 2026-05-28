@@ -59,7 +59,7 @@ public class JSFInjectionTestNG {
 
         String testUrl = "http://" + host  + ":" + port + "/"+ strContextRoot + "/jsfHello.jsf";
         echo("URL is: " + testUrl);
-        URL url = new URL(testUrl);
+        URL url = URI.create(testUrl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

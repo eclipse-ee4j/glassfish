@@ -53,7 +53,7 @@ public class JSFInjectionTestNG {
             boolean testPass = false;
 
             String testUrl = "http://" + host + ":" + port + "/" + strContextRoot + "/jsfHello.xhtml";
-            URL url = new URL(testUrl);
+            URL url = URI.create(testUrl).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();

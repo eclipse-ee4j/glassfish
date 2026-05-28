@@ -94,7 +94,7 @@ public class SlsbnicmtTestNG {
         String url = "http://" + host + ":" + port + strContextRoot + "/test?tc=" + c;
         System.out.println("url = "+url);
 
-        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL().openConnection();
         int code = conn.getResponseCode();
         if (code != 200) {
             System.err.println("Unexpected return code: " + code);

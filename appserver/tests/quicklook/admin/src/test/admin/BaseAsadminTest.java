@@ -17,6 +17,7 @@
 package test.admin;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -45,7 +46,7 @@ public class BaseAsadminTest {
 
     protected Manifest invokeURLAndGetManifest(String urls) {
         try {
-            URL url = new URL(urls);
+            URL url = URI.create(urls).toURL();
             HttpURLConnection uc = (HttpURLConnection)url.openConnection();
             uc.setRequestMethod("GET");
             uc.setRequestProperty("User-Agent", "hk2-agent");

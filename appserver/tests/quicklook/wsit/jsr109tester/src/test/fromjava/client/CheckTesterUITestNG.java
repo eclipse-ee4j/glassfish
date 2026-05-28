@@ -22,6 +22,7 @@ import org.testng.Assert;
 
 import java.lang.reflect.*;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -84,7 +85,7 @@ public class CheckTesterUITestNG {
     public static String wget(String url) throws Exception {
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new InputStreamReader(new URL(url).openConnection().getInputStream()));
+            in = new BufferedReader(new InputStreamReader(URI.create(url).toURL().openConnection().getInputStream()));
             StringBuilder response = new StringBuilder();
 
             String inputLine;

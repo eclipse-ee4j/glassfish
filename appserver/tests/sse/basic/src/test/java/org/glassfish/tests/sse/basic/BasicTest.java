@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.io.*;
 
@@ -31,7 +32,7 @@ import java.io.*;
 public class BasicTest {
     @Test
     public void testException() throws Exception {
-        URL url = new URL("http://localhost:8080/sse-basic-test/exception");
+        URL url = URI.create("http://localhost:8080/sse-basic-test/exception").toURL();
         HttpURLConnection uc = (HttpURLConnection) url.openConnection();
         if (uc.getResponseCode() != 200) {
             throw new RuntimeException("Invoked main page, got HTTP response code="+uc.getResponseCode());

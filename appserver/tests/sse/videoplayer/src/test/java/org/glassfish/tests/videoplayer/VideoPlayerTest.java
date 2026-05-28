@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -31,13 +32,13 @@ import java.net.URL;
 public class VideoPlayerTest {
     @Test
     public void testBroadcast() throws Exception {
-        URL url = new URL("http://localhost:8080/videoplayer/");
+        URL url = URI.create("http://localhost:8080/videoplayer/").toURL();
         HttpURLConnection uc = (HttpURLConnection) url.openConnection();
         if (uc.getResponseCode() != 200) {
             throw new RuntimeException("Invoked main page, got HTTP response code="+uc.getResponseCode());
         }
 
-        url = new URL("http://localhost:8080/videoplayer/remotecontrol/play");
+        url = URI.create("http://localhost:8080/videoplayer/remotecontrol/play").toURL();
         uc = (HttpURLConnection) url.openConnection();
         if (uc.getResponseCode() != 200) {
             throw new RuntimeException("Invoked play URL, got HTTP response code="+uc.getResponseCode());

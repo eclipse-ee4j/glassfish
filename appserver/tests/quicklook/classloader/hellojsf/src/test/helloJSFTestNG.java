@@ -68,7 +68,7 @@ public class helloJSFTestNG {
 
         try{
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/index.jsp";
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         //echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

@@ -49,8 +49,8 @@ public class NumberGuessTestNG {
     public void appDeployedFirstPagetest() throws Exception {
 
         try {
-            HttpURLConnection conn = (HttpURLConnection) 
-                new URL("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/home.xhtml").openConnection();
+            HttpURLConnection conn = (HttpURLConnection)
+                URI.create("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/home.xhtml").toURL().openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
 

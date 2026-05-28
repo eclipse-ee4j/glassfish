@@ -75,7 +75,7 @@ public class OsgiWeldTestNG {
         boolean result = false;
         String testurl = "http://" + m_host  + ":" + m_port + "/"
                 + strContextRoot +"/OsgiWeld?command=exports";
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
@@ -95,7 +95,7 @@ public class OsgiWeldTestNG {
 
     private boolean checkForString(String testurl, String str) throws Exception {
         //System.out.println("Checking for " + str + "in " + testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();

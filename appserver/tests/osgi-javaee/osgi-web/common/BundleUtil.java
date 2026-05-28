@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -73,7 +74,7 @@ public class BundleUtil {
 
     public void invokeURL(String url, String[] parameters) {
         try {
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
             HttpURLConnection connection = (HttpURLConnection) u.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);

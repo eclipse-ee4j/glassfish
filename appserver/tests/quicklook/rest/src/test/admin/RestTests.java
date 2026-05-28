@@ -18,6 +18,7 @@ package test.admin;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -87,7 +88,7 @@ public class RestTests {
     }
 
     protected HttpURLConnection getConnection(String url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         connection.setRequestProperty("X-GlassFish-3", "true");
         return connection;
     }

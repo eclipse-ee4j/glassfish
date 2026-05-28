@@ -844,7 +844,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      */
     private HttpConnectorAddress followRedirection(final HttpConnectorAddress originalAddr, final String redirection)
             throws MalformedURLException {
-        final URL url = new URL(redirection);
+        final URL url = URI.create(redirection).toURL();
         final boolean useSecure = (url.getProtocol().equalsIgnoreCase("https"));
         HttpConnectorAddress hca = new HttpConnectorAddress(url.getHost(), url.getPort(), useSecure, originalAddr.getPath(),
                 originalAddr.getSSLSocketFactory());

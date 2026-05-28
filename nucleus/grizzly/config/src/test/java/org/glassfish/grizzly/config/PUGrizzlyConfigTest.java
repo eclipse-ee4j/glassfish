@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URI;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -72,7 +73,7 @@ public class PUGrizzlyConfigTest {
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
                 helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            final String httpContent = helper.getContent(new URL("http://localhost:38082"));
+            final String httpContent = helper.getContent(URI.create("http://localhost:38082").toURL());
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent);
 
             final String xProtocolContent = getXProtocolContent("localhost", 38082);
@@ -93,11 +94,11 @@ public class PUGrizzlyConfigTest {
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
                 helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            final String httpContent1 = helper.getContent(new URL("http://localhost:38082"));
+            final String httpContent1 = helper.getContent(URI.create("http://localhost:38082").toURL());
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent1);
 
             HttpsURLConnection.setDefaultSSLSocketFactory(helper.getSSLSocketFactory());
-            final String httpContent2 = helper.getContent(new URL("https://localhost:38082"));
+            final String httpContent2 = helper.getContent(URI.create("https://localhost:38082").toURL());
             assertEquals("<html><body>You've found the server on port 38082</body></html>", httpContent2);
         } finally {
             if (grizzlyConfig != null) {

@@ -399,11 +399,11 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
                 // Create a new sub URL from the resource URL (i.e. res.source). To avoid
                 // double encoding
                 // (see https://glassfish.dev.java.net/issues/show_bug.cgi?id=13045)
-                // use URL constructor instead of first creating a URI and then calling
-                // toURL().
+                // use URL.of with a constructed URI rather than going via URI.toURL
+                // (which would re-encode the path).
                 // If the resource URL is not properly encoded, that's not our problem.
                 // Whoever has supplied the resource URL is at fault.
-                URL ret = new URL("jar", null /* host */, -1 /* port */, res.source + "!/" + name, handler);
+                URL ret = URL.of(new URI("jar:" + res.source + "!/" + name), handler);
                 handler.tieUrl(ret);
                 return ret;
             } catch (Throwable thr) {

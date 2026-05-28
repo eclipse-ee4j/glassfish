@@ -328,7 +328,7 @@ public class ASClassLoaderUtil {
                 String path = classpathTokenizer.nextToken();
                 try {
                     // Try to see if the path is absolute
-                    URI uri = new URL(path).toURI();
+                    URI uri = new URI(path);
                     if (uri.isAbsolute()) {
                         urls.add(uri.toURL());
                         continue;

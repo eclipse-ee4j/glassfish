@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -58,7 +59,7 @@ public class MySqlTest {
 
     private static void get(String url, String result) throws Exception {
         try {
-            URL servlet = new URL(url);
+            URL servlet = URI.create(url).toURL();
             HttpURLConnection uc = (HttpURLConnection) servlet.openConnection();
             System.out.println("\nURLConnection = " + uc + " : ");
             if (uc.getResponseCode() != 200) {

@@ -20,6 +20,7 @@ package org.glassfish.tests.jmxUndeployEvent;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.hamcrest.CoreMatchers;
@@ -38,7 +39,7 @@ public class WebTest {
 
     @Test
     public void testWeb() throws Exception {
-        URL url = new URL("http://localhost:8080/" + contextPath + "/ServletTest");
+        URL url = URI.create("http://localhost:8080/" + contextPath + "/ServletTest").toURL();
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             urlConnection.setDoOutput(true);

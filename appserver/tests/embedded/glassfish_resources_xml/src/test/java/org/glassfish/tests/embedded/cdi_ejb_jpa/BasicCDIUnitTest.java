@@ -87,7 +87,7 @@ public class BasicCDIUnitTest {
     }
 
     private void get(String urlStr, String result) throws Exception {
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         URLConnection yc = url.openConnection();
         System.out.println("\nURLConnection [" + yc + "] : ");
         BufferedReader in = new BufferedReader(new InputStreamReader(

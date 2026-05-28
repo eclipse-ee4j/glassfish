@@ -20,6 +20,7 @@ package org.glassfish.tests.dirListing;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class WebTest {
 
 
     private static void goGet(String host, int port, String result, String contextPath) throws Exception {
-        URL servlet = new URL("http://localhost:8080/test");
+        URL servlet = URI.create("http://localhost:8080/test").toURL();
         HttpURLConnection connection = (HttpURLConnection) servlet.openConnection();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String line = null;

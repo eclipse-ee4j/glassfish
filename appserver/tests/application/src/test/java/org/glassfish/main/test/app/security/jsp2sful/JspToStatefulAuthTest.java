@@ -19,6 +19,7 @@ package org.glassfish.main.test.app.security.jsp2sful;
 import java.io.File;
 import java.lang.System.Logger;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.glassfish.main.itest.tools.FormAuthHttpClient;
@@ -106,7 +107,7 @@ public class JspToStatefulAuthTest {
         earArchive.as(ZipExporter.class).exportTo(earFile, true);
         assertThat(ASADMIN.exec("deploy", "--target", "server", earFile.getAbsolutePath()), asadminOK());
 
-        baseUrl = new URL("http://localhost:8080/jsp2sful");
+        baseUrl = URI.create("http://localhost:8080/jsp2sful").toURL();
     }
 
 

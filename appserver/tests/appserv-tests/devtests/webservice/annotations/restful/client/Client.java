@@ -25,6 +25,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import org.w3c.dom.Node;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -43,7 +44,7 @@ public class Client {
         stat.addDescription("webservices-simple-restful-svc");
         String endpointAddress =
             "http://HTTP_HOST:HTTP_PORT/restful/webservice/AddNumbersService";
-        URL url = new URL(endpointAddress+"?num1=10&num2=20");
+        URL url = URI.create(endpointAddress+"?num1=10&num2=20").toURL();
         System.out.println ("Invoking URL="+url);
         process(url, args);
         stat.printSummary("webservices-simple-restful-svc");

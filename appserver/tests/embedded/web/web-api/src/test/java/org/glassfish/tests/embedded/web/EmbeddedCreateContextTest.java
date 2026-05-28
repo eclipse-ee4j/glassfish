@@ -20,6 +20,7 @@ package org.glassfish.tests.embedded.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -66,7 +67,7 @@ public class EmbeddedCreateContextTest {
         File docRoot = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         Context context = embedded.createContext(docRoot, contextRoot, null);
 
-        URL servlet = new URL("http://localhost:8080/" + contextRoot + "/hello");
+        URL servlet = URI.create("http://localhost:8080/" + contextRoot + "/hello").toURL();
         URLConnection yc = servlet.openConnection();
         StringBuilder sb = new StringBuilder();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {

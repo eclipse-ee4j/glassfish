@@ -42,7 +42,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -405,32 +408,73 @@ public class WeldUtils {
      * @return true, if the specified type is in the valid list and not in the excluded list; Otherwise, false.
      */
     protected static boolean isValidAnnotation(Class<? extends Annotation> annotationType, Collection<String> validTypeNames, Collection<String> excludedTypeNames) {
-        boolean result = false;
+        if (validTypeNames == null || validTypeNames.isEmpty()) {
+            return false;
+        }
+        // Result depends only on (annotationType, validTypeNames). The excludedTypeNames
+        // parameter only guards against infinite recursion over self-referential annotation
+        // chains and does not change the result. Cache by validTypeNames identity (callers
+        // reuse the same Set instance across scanning passes) so repeat calls during request
+        // processing are O(1).
+        ConcurrentMap<Class<? extends Annotation>, Boolean> perScopeListCache =
+                IS_VALID_ANNOTATION_CACHE.computeIfAbsent(validTypeNames, k -> new ConcurrentHashMap<>());
+        Boolean cached = perScopeListCache.get(annotationType);
+        if (cached != null) {
+            return cached;
+        }
+        // Share a single mutable HashSet across the entire recursion and backtrack on the way
+        // out, rather than allocating + copying a fresh HashSet on every recursive call.
+        HashSet<String> excludedScopes;
+        if (excludedTypeNames == null || excludedTypeNames.isEmpty()) {
+            excludedScopes = new HashSet<>();
+        } else {
+            excludedScopes = new HashSet<>(excludedTypeNames);
+        }
+        boolean result = isValidAnnotation(annotationType, validTypeNames, excludedScopes, perScopeListCache);
+        perScopeListCache.putIfAbsent(annotationType, result);
+        return result;
+    }
 
-        if (validTypeNames != null && !validTypeNames.isEmpty()) {
-
-            HashSet<String> excludedScopes = new HashSet<String>();
-            if (excludedTypeNames != null) {
-                excludedScopes.addAll(excludedTypeNames);
-            }
-
-            String annotationTypeName = annotationType.getName();
-            if (validTypeNames.contains(annotationTypeName) && !excludedScopes.contains(annotationTypeName)) {
-                result = true;
-            } else if (!excludedScopes.contains(annotationTypeName)) {
-                // If the annotation type itself is not an excluded type, then check it's annotation
-                // types, less itself (to avoid infinite recursion)
-                excludedScopes.add(annotationTypeName);
-                for (Annotation parent : annotationType.getAnnotations()) {
-                    if (isValidAnnotation(parent.annotationType(), validTypeNames, excludedScopes)) {
-                        result = true;
-                        break;
-                    }
+    private static boolean isValidAnnotation(Class<? extends Annotation> annotationType, Collection<String> validTypeNames, HashSet<String> excludedScopes, ConcurrentMap<Class<? extends Annotation>, Boolean> perScopeListCache) {
+        String annotationTypeName = annotationType.getName();
+        if (excludedScopes.contains(annotationTypeName)) {
+            return false;
+        }
+        if (validTypeNames.contains(annotationTypeName)) {
+            return true;
+        }
+        Boolean cached = perScopeListCache.get(annotationType);
+        if (cached != null) {
+            return cached;
+        }
+        // Mark as currently-being-checked to avoid infinite recursion on self-referential chains.
+        excludedScopes.add(annotationTypeName);
+        try {
+            for (Annotation parent : annotationType.getAnnotations()) {
+                if (isValidAnnotation(parent.annotationType(), validTypeNames, excludedScopes, perScopeListCache)) {
+                    return true;
                 }
             }
+            return false;
+        } finally {
+            excludedScopes.remove(annotationTypeName);
         }
+    }
 
-        return result;
+    /**
+     * Memoization of {@link #isValidAnnotation(Class, Collection, Collection)} keyed by the
+     * caller-supplied {@code validTypeNames} Collection (identity-stable across the deployment /
+     * request scanning passes that Weld performs) and the annotation class being checked.
+     */
+    private static final Map<Collection<String>, ConcurrentMap<Class<? extends Annotation>, Boolean>> IS_VALID_ANNOTATION_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * Drop the {@link #isValidAnnotation(Class, Collection, Collection)} memoization. Intended
+     * for deployment lifecycle hooks if needed; the cache is otherwise safe to retain for the
+     * JVM lifetime because annotation hierarchies do not change at runtime.
+     */
+    public static void clearIsValidAnnotationCache() {
+        IS_VALID_ANNOTATION_CACHE.clear();
     }
 
     private static Types getTypes(DeploymentContext context) {

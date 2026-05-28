@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
@@ -320,7 +321,7 @@ public class StandardClassLoader
             if (factory != null) {
                 streamHandler = factory.createURLStreamHandler(protocol);
             }
-            URL url = new URL(null, repository, streamHandler);
+            URL url = URL.of(URI.create(repository), streamHandler);
             super.addURL(url);
         } catch (MalformedURLException e) {
             IllegalArgumentException iae = new IllegalArgumentException
@@ -845,7 +846,7 @@ public class StandardClassLoader
             JarFile jarFile = null;
             try {
                 if (repository.startsWith("jar:")) {
-                    URL url = new URL(null, repository, streamHandler);
+                    URL url = URL.of(URI.create(repository), streamHandler);
                     JarURLConnection conn =
                         (JarURLConnection) url.openConnection();
                     conn.setAllowUserInteraction(false);
@@ -858,7 +859,7 @@ public class StandardClassLoader
                 } else if (repository.startsWith("file:")) {
                     jarFile = new JarFile(repository.substring(5));
                 } else if (repository.endsWith(".jar")) {
-                    URL url = new URL(null, repository, streamHandler);
+                    URL url = URL.of(URI.create(repository), streamHandler);
                     URLConnection conn = url.openConnection();
                     JarInputStream jis =
                         new JarInputStream(conn.getInputStream());
@@ -924,8 +925,8 @@ public class StandardClassLoader
                 } else {
                     streamHandler = null;
                 }
-                url[i] = new URL(null, input[i], streamHandler);
-            } catch (MalformedURLException e) {
+                url[i] = URL.of(URI.create(input[i]), streamHandler);
+            } catch (IllegalArgumentException | MalformedURLException e) {
                 url[i] = null;
             }
         }

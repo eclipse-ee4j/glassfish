@@ -19,6 +19,7 @@ package org.apache.catalina.startup;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 
@@ -125,7 +126,7 @@ public class SetDocBaseRule extends Rule {
         }
 
         if (docBase.toLowerCase(Locale.ENGLISH).endsWith(".war")) {
-            URL war = new URL("jar:" + (new File(docBase)).toURL() + "!/");
+            URL war = URI.create("jar:" + (new File(docBase)).toURI().toURL() + "!/").toURL();
             String contextPath = child.getPath();
             if (contextPath.equals("")) {
                 contextPath = "ROOT";
@@ -138,7 +139,7 @@ public class SetDocBaseRule extends Rule {
             if (!docDir.exists()) {
                 File warFile = new File(docBase + ".war");
                 if (warFile.exists()) {
-                    URL war = new URL("jar:" + warFile.toURL() + "!/");
+                    URL war = URI.create("jar:" + warFile.toURI().toURL() + "!/").toURL();
                     docBase = ExpandWar.expand(host, war, child.getPath());
                     file = new File(docBase);
                     docBase = file.getCanonicalPath();

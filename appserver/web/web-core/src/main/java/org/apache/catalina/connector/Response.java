@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1358,8 +1359,8 @@ public class Response implements HttpResponse, HttpServletResponse {
         // Is this a valid absolute URL?
         URL url = null;
         try {
-            url = new URL(location);
-        } catch (MalformedURLException e) {
+            url = URI.create(location).toURL();
+        } catch (IllegalArgumentException | MalformedURLException e) {
             return false;
         }
 

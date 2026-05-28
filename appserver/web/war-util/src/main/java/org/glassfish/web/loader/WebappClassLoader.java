@@ -30,6 +30,7 @@ import java.lang.System.Logger;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.Permission;
@@ -365,9 +366,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
 
         // Add this repository to our underlying class loader
         try {
-            super.addURL(new URL(repository));
+            super.addURL(URI.create(repository).toURL());
             hasExternalRepositories = true;
-        } catch (MalformedURLException e) {
+        } catch (IllegalArgumentException | MalformedURLException e) {
             throw new IllegalArgumentException("Invalid repository: " + repository, e);
         }
     }

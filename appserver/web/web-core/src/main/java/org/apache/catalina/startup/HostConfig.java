@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -482,8 +483,7 @@ public class HostConfig
                             continue;
                         }
                     }
-                    URL config =
-                        new URL("file", null, dir.getCanonicalPath());
+                    URL config = new File(dir.getCanonicalPath()).toURI().toURL();
                     ((Deployer) host).install(config, null);
                 } catch (Throwable t) {
                     String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_DEPLOYING_CONFIG_DESCRIPTOR_EXCEPTION),
@@ -608,8 +608,8 @@ public class HostConfig
                     URL url = null;
                     String path = null;
                     try {
-                        url = new URL("jar:file:" +
-                                      dir.getCanonicalPath() + "!/");
+                        url = URI.create("jar:file:" +
+                                      dir.getCanonicalPath() + "!/").toURL();
                         path = ExpandWar.expand(host, url);
                     } catch (IOException e) {
                         // JAR decompression failure
@@ -623,7 +623,7 @@ public class HostConfig
                     }
                     try {
                         if (path != null) {
-                            url = new URL("file:" + path);
+                            url = URI.create("file:" + path).toURL();
                             ((Deployer) host).install(contextPath, url);
                         }
                     } catch (Throwable t) {
@@ -639,9 +639,8 @@ public class HostConfig
                         log.log(Level.INFO, LogFacade.DEPLOYING_WEB_APP_ARCHIVE, files[i]);
                     }
                     try {
-                        URL url = new URL("file", null,
-                                          dir.getCanonicalPath());
-                        url = new URL("jar:" + url.toString() + "!/");
+                        URL url = new File(dir.getCanonicalPath()).toURI().toURL();
+                        url = URI.create("jar:" + url.toString() + "!/").toURL();
                         ((Deployer) host).install(contextPath, url);
                     } catch (Throwable t) {
                         String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_DEPLOYING_WEB_APP_ARCHIVE_EXCEPTION),
@@ -694,7 +693,7 @@ public class HostConfig
                 }
                 long t1=System.currentTimeMillis();
                 try {
-                    URL url = new URL("file", null, dir.getCanonicalPath());
+                    URL url = new File(dir.getCanonicalPath()).toURI().toURL();
                     ((Deployer) host).install(contextPath, url);
                 } catch (Throwable t) {
                     String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_DEPLOYING_WEB_APP_DIR),

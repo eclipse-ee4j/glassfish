@@ -16,8 +16,9 @@
 
 package client;
 
-import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ public class Client {
     public void doTest(String[] args) {
         try {
             String webURL = args[0];
-            URL url = new URL(args[0] + "//");
+            URL url = URI.create(args[0] + "//").toURL();
             System.out.println("Invoking " + url.toExternalForm());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();

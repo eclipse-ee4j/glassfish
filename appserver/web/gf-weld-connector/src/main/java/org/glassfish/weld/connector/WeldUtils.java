@@ -150,6 +150,13 @@ public class WeldUtils {
     }
 
     /**
+     * Memoization of {@link #isValidAnnotation(Class, Collection, Collection)} keyed by the
+     * caller-supplied {@code validTypeNames} Collection (identity-stable across the deployment /
+     * request scanning passes that Weld performs) and the annotation class being checked.
+     */
+    private static final Map<Collection<String>, ConcurrentMap<Class<? extends Annotation>, Boolean>> IS_VALID_ANNOTATION_CACHE = new ConcurrentHashMap<>();
+
+    /**
      * Determine whether the specified archive is an implicit bean deployment archive.
      *
      * @param context The deployment context
@@ -397,6 +404,15 @@ public class WeldUtils {
     }
 
     /**
+     * Drop the {@link #isValidAnnotation(Class, Collection, Collection)} memoization. Intended
+     * for deployment lifecycle hooks if needed; the cache is otherwise safe to retain for the
+     * JVM lifetime because annotation hierarchies do not change at runtime.
+     */
+    public static void clearIsValidAnnotationCache() {
+        IS_VALID_ANNOTATION_CACHE.clear();
+    }
+
+    /**
      * Determine whether the specified annotation type is one of the specified valid types and not in the specified
      * exclusion list. Positive results include those annotations which are themselves annotated with types in the valid
      * list.
@@ -459,22 +475,6 @@ public class WeldUtils {
         } finally {
             excludedScopes.remove(annotationTypeName);
         }
-    }
-
-    /**
-     * Memoization of {@link #isValidAnnotation(Class, Collection, Collection)} keyed by the
-     * caller-supplied {@code validTypeNames} Collection (identity-stable across the deployment /
-     * request scanning passes that Weld performs) and the annotation class being checked.
-     */
-    private static final Map<Collection<String>, ConcurrentMap<Class<? extends Annotation>, Boolean>> IS_VALID_ANNOTATION_CACHE = new ConcurrentHashMap<>();
-
-    /**
-     * Drop the {@link #isValidAnnotation(Class, Collection, Collection)} memoization. Intended
-     * for deployment lifecycle hooks if needed; the cache is otherwise safe to retain for the
-     * JVM lifetime because annotation hierarchies do not change at runtime.
-     */
-    public static void clearIsValidAnnotationCache() {
-        IS_VALID_ANNOTATION_CACHE.clear();
     }
 
     private static Types getTypes(DeploymentContext context) {

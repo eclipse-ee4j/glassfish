@@ -67,8 +67,8 @@ public class WebTest {
 
     private void invokeAtRootContext() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port +
-            "/checkRequestPath?run=first");
+        URL url = URI.create("http://" + host  + ":" + port +
+            "/checkRequestPath?run=first").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -78,8 +78,8 @@ public class WebTest {
                                 + ", received: " + responseCode);
         }
 
-        url = new URL("http://" + host  + ":" + port +
-            "/dispatchFrom?run=first");
+        url = URI.create("http://" + host  + ":" + port +
+            "/dispatchFrom?run=first").toURL();
         System.out.println("Connecting to: " + url.toString());
         conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -92,8 +92,8 @@ public class WebTest {
 
     private void invokeAtContextRoot() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot +
-            "/checkRequestPath?run=second");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot +
+            "/checkRequestPath?run=second").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -103,8 +103,8 @@ public class WebTest {
                                 + ", received: " + responseCode);
         }
 
-        url = new URL("http://" + host  + ":" + port + contextRoot +
-            "/dispatchFrom?run=second");
+        url = URI.create("http://" + host  + ":" + port + contextRoot +
+            "/dispatchFrom?run=second").toURL();
         System.out.println("Connecting to: " + url.toString());
         conn = (HttpURLConnection) url.openConnection();
         conn.connect();

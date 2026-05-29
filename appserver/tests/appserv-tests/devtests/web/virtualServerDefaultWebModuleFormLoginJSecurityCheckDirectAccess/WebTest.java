@@ -105,7 +105,7 @@ public class WebTest {
 
         String jsessionId = getSessionIdFromCookie(cookie, JSESSIONID);
         String redirect = location.substring("Location:".length()).trim();
-        followRedirect(new URL(redirect).getPath(), jsessionId);
+        followRedirect(URI.create(redirect).toURL().getPath(), jsessionId);
     }
 
     /*

@@ -43,7 +43,7 @@ public class WebTest {
 
         try{
             System.out.println("Running test");
-            url = new URL("http://" + host  + ":" + port  + contextRoot + "/ServletTest");
+            url = URI.create("http://" + host  + ":" + port  + contextRoot + "/ServletTest").toURL();
             String originalLoc = url.toString();
             System.out.println("\n Invoking url: " + url.toString());
             conn = url.openConnection();

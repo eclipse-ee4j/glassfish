@@ -100,7 +100,7 @@ public class WebTest {
         }
 
         String redirect = location.substring("Location:".length()).trim();
-        followRedirect(new URL(redirect));
+        followRedirect(URI.create(redirect).toURL());
     }
 
     private void followRedirect(URL url) throws Exception {

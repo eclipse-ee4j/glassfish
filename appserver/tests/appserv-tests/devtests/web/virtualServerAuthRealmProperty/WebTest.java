@@ -76,7 +76,7 @@ public class WebTest {
 
         String jsessionId = accessIndexDotJsp();
         String redirect = accessLoginPage(jsessionId);
-        followRedirect(new URL(redirect).getPath(), jsessionId);
+        followRedirect(URI.create(redirect).toURL().getPath(), jsessionId);
 
         stat.addStatus(TEST_NAME, stat.PASS);
     }

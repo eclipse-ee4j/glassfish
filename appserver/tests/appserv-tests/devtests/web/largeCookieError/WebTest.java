@@ -66,8 +66,8 @@ public class WebTest {
 
     private void invokeWithLargeCookie() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/largecookie.html");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/largecookie.html").toURL();
         System.out.println(url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -60,8 +60,8 @@ public class WebTest {
 
     public void doTest() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + "/"
-            + "%E3%81%A8%E7%B2%AEJot%E7%B2%AEEnterpriseApplication2%E7%B2%A4%E3%82%8D-war/test.jsp");
+        URL url = URI.create("http://" + host  + ":" + port + "/"
+            + "%E3%81%A8%E7%B2%AEJot%E7%B2%AEEnterpriseApplication2%E7%B2%A4%E3%82%8D-war/test.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

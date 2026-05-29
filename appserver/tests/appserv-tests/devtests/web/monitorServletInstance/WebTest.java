@@ -112,7 +112,7 @@ public class WebTest {
 
         StringBuilder sb = new StringBuilder();
 
-        URL url = new URL(urlString);
+        URL url = URI.create(urlString).toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.addRequestProperty("accept", "application/xml");

@@ -44,7 +44,7 @@ public class ServletTest extends HttpServlet {
         String port = request.getParameter("port");
         String contextRoot = request.getParameter("contextRoot");
 
-        URL url = new URL("http://" + host  + ":" + port + "/web-multiServletRequests/ServletTest2?host="+ host + "&port=" + port + "&contextRoot=" + contextRoot);
+        URL url = URI.create("http://" + host  + ":" + port + "/web-multiServletRequests/ServletTest2?host="+ host + "&port=" + port + "&contextRoot=" + contextRoot).toURL();
         System.out.println("\n Servlet1 Invoking url: " + url.toString());
         URLConnection conn = url.openConnection();
         if (conn instanceof HttpURLConnection) {

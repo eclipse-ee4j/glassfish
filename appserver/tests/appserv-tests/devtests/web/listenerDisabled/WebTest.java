@@ -42,8 +42,8 @@ public class WebTest{
 
         stat.addDescription("Ensure disabled HTTP listener gives ConnectException");
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/ServletTest");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/ServletTest").toURL();
         System.out.println("Invoking url: " + url.toString());
 
         try {

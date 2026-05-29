@@ -57,7 +57,7 @@ public class WebTest {
 
     public void doTest1() throws Exception {
 
-        URL url = new URL("http://" + host + ":" + port + contextRoot + "/from1.jsp");
+        URL url = URI.create("http://" + host + ":" + port + contextRoot + "/from1.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -73,7 +73,7 @@ public class WebTest {
      */
     public void doTest2() throws Exception {
 
-        URL url = new URL("http://" + host + ":" + port + contextRoot + "/from2.jsp");
+        URL url = URI.create("http://" + host + ":" + port + contextRoot + "/from2.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

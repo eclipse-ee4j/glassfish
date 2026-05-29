@@ -57,7 +57,7 @@ public class WebTest {
         BufferedReader input = null;
         boolean status = false;
         try {
-            URL url = new URL(urlString);
+            URL url = URI.create(urlString).toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

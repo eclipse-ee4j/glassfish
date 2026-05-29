@@ -68,8 +68,8 @@ public class WebTest{
 
     public void doTest(String port, int expectedResponseStatus) throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port +
-            contextRoot + "/ServletTest");
+        URL url = URI.create("http://" + host  + ":" + port +
+            contextRoot + "/ServletTest").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

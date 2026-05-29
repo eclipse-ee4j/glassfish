@@ -71,7 +71,7 @@ public class WebTest {
                                   String expected2,
                                   String expected3) {
         try {
-            URL url = new URL(urlString);
+            URL url = URI.create(urlString).toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

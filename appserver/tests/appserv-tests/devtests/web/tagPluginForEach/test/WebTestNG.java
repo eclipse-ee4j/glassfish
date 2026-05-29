@@ -55,7 +55,7 @@ public class WebTestNG {
      */
     private static boolean doTest(String urlString, String expected) {
         try {
-            URL url = new URL(urlString);
+            URL url = URI.create(urlString).toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

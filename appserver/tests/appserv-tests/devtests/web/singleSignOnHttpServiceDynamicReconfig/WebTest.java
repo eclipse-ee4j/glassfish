@@ -74,7 +74,7 @@ public class WebTest {
 
         String jsessionId = accessIndexDotJsp();
         String redirect = accessLoginPage(jsessionId);
-        String jsessionIdSSO = followRedirect(new URL(redirect).getPath(),
+        String jsessionIdSSO = followRedirect(URI.create(redirect).toURL().getPath(),
                                               jsessionId);
 
         if (jsessionIdSSO != null) {

@@ -42,8 +42,8 @@ public class WebTest{
         try {
             stat.addDescription("Trace not allowed test");
 
-            URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/ServletTest");
+            URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/ServletTest").toURL();
             System.out.println("Invoking url: " + url.toString());
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

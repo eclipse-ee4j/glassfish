@@ -79,7 +79,7 @@ public class WebTest extends BaseDevTest {
     }
 
     private HttpsURLConnection doSSLHandshake(String urlAddress, SSLSocketFactory ssf) throws Exception {
-        URL url = new URL(urlAddress);
+        URL url = URI.create(urlAddress).toURL();
         HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 

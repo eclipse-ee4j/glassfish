@@ -38,7 +38,7 @@ public class WebTest {
         stat.addDescription("Unit test for non blocking read and then non blocking write");
 
         try {
-            URL url = new URL("http://" + host + ":" + port + "/" + contextRoot + "/test?testname=abc&data=1");
+            URL url = URI.create("http://" + host + ":" + port + "/" + contextRoot + "/test?testname=abc&data=1").toURL();
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-type", "text/plain; charset=utf-8");

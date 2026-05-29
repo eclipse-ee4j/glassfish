@@ -81,7 +81,7 @@ public class WebTest extends BaseDevTest {
     private boolean run() throws Exception {
         String urlStr = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println("GET " + urlStr);
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
         urlConnection.setRequestMethod("GET");
         urlConnection.setRequestProperty("Authorization", "Basic amF2YWVlOmphdmFlZQ==");

@@ -61,7 +61,7 @@ public class WebTest {
 
         String urlStr = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println(method + " " + urlStr);
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
         urlConnection.setRequestMethod(method);
         if (auth) {

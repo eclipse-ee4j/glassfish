@@ -66,7 +66,7 @@ public class WebTest {
                      + urlPattern;
         System.out.println("Accessing " + url);
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != expectedCode) {

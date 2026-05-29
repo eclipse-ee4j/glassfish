@@ -60,8 +60,8 @@ public class WebTest {
 
     public void doTest() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port +
-            "/fromContext/dispatchFrom?myname=myvalue");
+        URL url = URI.create("http://" + host  + ":" + port +
+            "/fromContext/dispatchFrom?myname=myvalue").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

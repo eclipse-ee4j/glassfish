@@ -38,7 +38,7 @@ public class WebTest {
         stat.addDescription("Unit test for non blocking read");
 
         try {
-            URL url = new URL("http://" + host + ":" + port + contextRoot + "/test");
+            URL url = URI.create("http://" + host + ":" + port + contextRoot + "/test").toURL();
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("POST");
             conn.setChunkedStreamingMode(5);

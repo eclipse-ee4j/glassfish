@@ -63,8 +63,8 @@ public class WebTest {
         HttpURLConnection conn = null;
         int responseCode = -1;
 
-        url = new URL("http://" + host  + ":" + port
-                      + contextRoot + "/Servlet_1");
+        url = URI.create("http://" + host  + ":" + port
+                      + contextRoot + "/Servlet_1").toURL();
         System.out.println("Connecting to: " + url.toString());
         conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -73,8 +73,8 @@ public class WebTest {
             fail = true;
         }
 
-        url = new URL("http://" + host  + ":" + port
-                      + contextRoot + "/Servlet_2");
+        url = URI.create("http://" + host  + ":" + port
+                      + contextRoot + "/Servlet_2").toURL();
         System.out.println("Connecting to: " + url.toString());
         conn = (HttpURLConnection) url.openConnection();
         conn.connect();

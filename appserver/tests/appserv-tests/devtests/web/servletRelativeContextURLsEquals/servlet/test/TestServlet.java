@@ -37,7 +37,7 @@ public class TestServlet extends HttpServlet {
 
         try {
             URL main = context.getResource("/test/res1.jsp");
-            URL sub = new URL(main, "res2.jsp");
+            URL sub = URI.create(main.toExternalForm()).resolve("res2.jsp").toURL();
             URL sub1 = context.getResource("/test/res2.jsp");
             if (sub.equals(sub1) && sub.toString().equals(sub1.toString())) {
                 passed = true;

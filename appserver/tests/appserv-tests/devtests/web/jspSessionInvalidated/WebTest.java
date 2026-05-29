@@ -55,8 +55,8 @@ public class WebTest {
     /*
     public void doTest() {
         try {
-            URL url = new URL("http://" + host  + ":" + port
-                    + contextRoot + "/jsp/test.jsp");
+            URL url = URI.create("http://" + host  + ":" + port
+                    + contextRoot + "/jsp/test.jsp").toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
@@ -89,8 +89,8 @@ public class WebTest {
     public void doTest() throws Exception {
         BufferedReader input = null;
         try {
-            URL url = new URL("http://" + host  + ":" + port
-                    + contextRoot + "/jsp/test.jsp");
+            URL url = URI.create("http://" + host  + ":" + port
+                    + contextRoot + "/jsp/test.jsp").toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

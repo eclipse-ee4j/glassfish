@@ -72,9 +72,9 @@ public class WebTest {
 
     private void invokeJsp() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
                           + "/jsp/formHintField.jsp?requestCharset="
-                          + REQUEST_CHARSET);
+                          + REQUEST_CHARSET).toURL();
         System.out.println("Invoking URL: " + url.toString());
 
         URLConnection conn = url.openConnection();

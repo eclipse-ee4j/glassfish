@@ -78,7 +78,7 @@ public class WebTest {
         if (param != null) {
             sb.append("?").append(param);
         }
-        URL url = new URL(sb.toString());
+        URL url = URI.create(sb.toString()).toURL();
 
         System.out.println("Connecting to: " + url.toString());
 

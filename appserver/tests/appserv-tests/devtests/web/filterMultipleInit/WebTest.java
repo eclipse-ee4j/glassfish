@@ -76,8 +76,8 @@ public class WebTest {
     }
 
     public boolean doTest(String page) throws Exception {
-        URL url = new URL("http://" + host  + ":" + port
-                          + contextRoot + "/" + page);
+        URL url = URI.create("http://" + host  + ":" + port
+                          + contextRoot + "/" + page).toURL();
 
         System.out.println("Connecting to: " + url.toString());
 

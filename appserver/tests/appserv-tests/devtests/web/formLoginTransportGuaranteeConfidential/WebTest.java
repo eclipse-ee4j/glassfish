@@ -70,8 +70,8 @@ public class WebTest {
 
     public void run() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + httpPort + contextRoot
-                          + "/protected.jsp");
+        URL url = URI.create("http://" + host  + ":" + httpPort + contextRoot
+                          + "/protected.jsp").toURL();
         System.out.println(url.toString());
         URLConnection conn = url.openConnection();
         java.util.Map fields = conn.getHeaderFields();

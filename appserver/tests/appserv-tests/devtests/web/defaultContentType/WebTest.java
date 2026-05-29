@@ -56,7 +56,7 @@ public class WebTest extends BaseDevTest {
     }
 
     private boolean invoke(final String expected) throws Exception {
-        URL url = new URL("http://" + host + ":" + port + "/test.xyz");
+        URL url = URI.create("http://" + host + ":" + port + "/test.xyz").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

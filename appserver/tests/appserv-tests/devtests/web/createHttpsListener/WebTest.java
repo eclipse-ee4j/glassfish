@@ -44,7 +44,7 @@ public class WebTest {
 
         try{
             System.out.println("Running test");
-url = new URL("https://" + host  + ":" + 8181 + contextRoot + "/ServletTest");
+url = URI.create("https://" + host  + ":" + 8181 + contextRoot + "/ServletTest").toURL();
             //url = new URL("https://" + host  + ":" + port + contextRoot + "/ServletTest");
             String originalLoc = url.toString();
             System.out.println("\n Invoking url: " + url.toString());

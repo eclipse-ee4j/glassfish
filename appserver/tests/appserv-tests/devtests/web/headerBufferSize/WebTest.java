@@ -322,7 +322,7 @@ public class WebTest {
                     queryString.append( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
             }
         }
-        URL urlToCall = new URL( url + queryString.toString() );
+        URL urlToCall = URI.create( url + queryString.toString() ).toURL();
         HttpURLConnection urlConnection = (HttpURLConnection) urlToCall.openConnection();
         urlConnection.setInstanceFollowRedirects(true);
         urlConnection.setUseCaches(false);
@@ -399,7 +399,7 @@ public class WebTest {
      **/
     protected static Hashtable doPostCall(String url, Hashtable headers, String[] cookies, Hashtable requestParams)
                         throws MalformedURLException, IOException {
-        URL urlToCall = new URL(url);
+        URL urlToCall = URI.create(url).toURL();
         HttpURLConnection urlConnection = (HttpURLConnection) urlToCall.openConnection();
         urlConnection.setInstanceFollowRedirects(true);
         urlConnection.setUseCaches(false);

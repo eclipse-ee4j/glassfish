@@ -62,7 +62,7 @@ public class WebTest {
         String url = "http://" + host + ":" + port + contextRoot
                      + "/index.jsp";
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
         int code = conn.getResponseCode();
         if (code != 200) {
             throw new Exception("Unexpected return code: " + code);

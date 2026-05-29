@@ -56,8 +56,8 @@ public class WebTest {
 
     private void invokeServlet() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/setHttpOnly");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/setHttpOnly").toURL();
         System.out.println("Invoking URL: " + url.toString());
 
         URLConnection conn = url.openConnection();

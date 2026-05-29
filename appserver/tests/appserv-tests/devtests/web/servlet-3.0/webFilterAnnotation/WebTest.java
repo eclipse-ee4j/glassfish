@@ -60,7 +60,7 @@ public class WebTest {
         String url = "http://" + host + ":" + port + contextRoot
                      + "/mytest";
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {

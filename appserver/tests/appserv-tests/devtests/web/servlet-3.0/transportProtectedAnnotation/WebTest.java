@@ -84,7 +84,7 @@ public class WebTest{
             String urlAddress, SSLSocketFactory ssf,
             boolean needAuthenticate) throws Exception{
 
-        URL url = new URL(urlAddress);
+        URL url = URI.create(urlAddress).toURL();
         HttpURLConnection connection = null;
 
         if (ssf != null) {

@@ -104,7 +104,7 @@ public class WebTest {
 
         String redirectTo = redirectLine.substring(index);
         System.out.println("Redirect to: " + redirectTo);
-        URL url = new URL(redirectTo);
+        URL url = URI.create(redirectTo).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();

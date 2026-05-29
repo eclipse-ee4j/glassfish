@@ -59,7 +59,7 @@ public class WebTest {
     public void doTest() throws Exception {
         String url = "http://" + host + ":" + port + contextRoot + "/test";
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
         int code = conn.getResponseCode();
         if (code != 200) {
             throw new Exception("Unexpected return code: " + code);

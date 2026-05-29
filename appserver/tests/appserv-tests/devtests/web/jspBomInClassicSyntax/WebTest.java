@@ -97,8 +97,8 @@ public class WebTest {
         InputStream is = null;
         BufferedReader input = null;
         try {
-            URL url = new URL("http://" + host  + ":" + port
-                              + contextRoot + "/" + jspPage);
+            URL url = URI.create("http://" + host  + ":" + port
+                              + contextRoot + "/" + jspPage).toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

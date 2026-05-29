@@ -64,10 +64,10 @@ public class WebTest {
      * @return true on success, false on failure
      */
     public boolean doTestURL() throws Exception {
-        URL url = new URL("http://" + host + ":" + port
+        URL url = URI.create("http://" + host + ":" + port
             + contextRoot + "/TestServlet"
             + ";jsessionid=CFE28BD89B33B59CD7249ACBDA5B479D"
-            + ":1234");
+            + ":1234").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

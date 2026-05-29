@@ -61,8 +61,8 @@ public class WebTest {
 
     public void doTest() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port
-                          + contextRoot + "/UTF-16BE.jsp");
+        URL url = URI.create("http://" + host  + ":" + port
+                          + contextRoot + "/UTF-16BE.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

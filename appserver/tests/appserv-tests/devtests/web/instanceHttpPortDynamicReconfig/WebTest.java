@@ -67,7 +67,7 @@ public class WebTest {
 
     private void invoke() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + newPort + contextRoot);
+        URL url = URI.create("http://" + host  + ":" + newPort + contextRoot).toURL();
         System.out.println("Connecting ... "+url);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

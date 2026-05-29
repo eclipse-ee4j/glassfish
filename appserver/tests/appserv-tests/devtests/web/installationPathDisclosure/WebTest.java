@@ -36,7 +36,7 @@ public class WebTest{
         try{
             stat.addDescription("Basic Host/Context mapping");
             System.out.println("Running test");
-            url = new URL("http://" + host  + ":" + port + "///BREAK");
+            url = URI.create("http://" + host  + ":" + port + "///BREAK").toURL();
             String originalLoc = url.toString();
             System.out.println("\n Invoking url: " + url.toString());
             conn = url.openConnection();
@@ -54,7 +54,7 @@ public class WebTest{
                     stat.addStatus("Test installationPathDisclosure", stat.FAIL);
                 }
             }
-            url = new URL("http://" + host  + ":" + port + "/BREAK////");
+            url = URI.create("http://" + host  + ":" + port + "/BREAK////").toURL();
             originalLoc = url.toString();
             System.out.println("\n Invoking url: " + url.toString());
             conn = url.openConnection();

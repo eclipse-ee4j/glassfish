@@ -36,7 +36,7 @@ public class WebTest{
         try{
             stat.addDescription("JMX undeployment event test.");
 
-            url = new URL("http://" + host  + ":" + port + contextRoot + "/ServletTest");
+            url = URI.create("http://" + host  + ":" + port + contextRoot + "/ServletTest").toURL();
             System.out.println("\n Invoking url: " + url.toString());
             conn = url.openConnection();
             if (conn instanceof HttpURLConnection) {

@@ -72,8 +72,8 @@ public class WebTest {
              * has been enabled, and therefore must fail (with a 404 response
              * code) since the InvokerServlet should not have been enabled.
              */
-            url = new URL("http://" + host  + ":" + port + contextRoot
-                    + "/servlet/TestServlet");
+            url = URI.create("http://" + host  + ":" + port + contextRoot
+                    + "/servlet/TestServlet").toURL();
             System.out.println("Connecting to: " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
             conn.connect();
@@ -87,8 +87,8 @@ public class WebTest {
              * Connect to the correct mapping, as specified in the deployment
              * descriptor. This must work.
              */
-            url = new URL("http://" + host  + ":" + port + contextRoot
-                    + "/TestServlet");
+            url = URI.create("http://" + host  + ":" + port + contextRoot
+                    + "/TestServlet").toURL();
             System.out.println("Connecting to: " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
             conn.connect();

@@ -36,7 +36,7 @@ public class WebTest{
         try{
             stat.addDescription("Basic Host/Context mapping");
             System.out.println("Running test");
-            url = new URL("http://" + host  + ":" + port + "/");
+            url = URI.create("http://" + host  + ":" + port + "/").toURL();
             String originalLoc = url.toString();
             System.out.println("\n Invoking url: " + url.toString());
             conn = url.openConnection();

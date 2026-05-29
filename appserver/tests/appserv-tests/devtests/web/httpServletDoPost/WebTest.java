@@ -55,7 +55,7 @@ public class WebTest {
 
     private static void checkResponseCode(final String host, final int port, final String contextPath)
         throws IOException {
-        final URL url = new URL("http://" + host + ":" + port + contextPath);
+        final URL url = URI.create("http://" + host + ":" + port + contextPath).toURL();
         System.out.println("\n Invoking url: " + url.toString());
         final URLConnection conn = url.openConnection();
         DataOutputStream out = null;

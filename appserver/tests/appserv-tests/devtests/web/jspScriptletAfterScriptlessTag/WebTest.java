@@ -52,8 +52,8 @@ public class WebTest {
 
         BufferedReader bis = null;
         try {
-            URL url = new URL("http://" + host  + ":" + port
-                       + contextRoot + "/jsp/test.jspx");
+            URL url = URI.create("http://" + host  + ":" + port
+                       + contextRoot + "/jsp/test.jspx").toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

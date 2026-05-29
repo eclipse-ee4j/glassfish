@@ -68,8 +68,8 @@ public class WebTest {
 
     private void invoke() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/jsp/caching/basicCache.jsp");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/jsp/caching/basicCache.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

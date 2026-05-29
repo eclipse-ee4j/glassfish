@@ -76,7 +76,7 @@ public class WebTest {
 
         String jsessionId = accessIndexDotJsp();
         String redirect = accessLoginPage(jsessionId);
-        String jsessionIdSSO = followRedirect(new URL(redirect).getPath(),
+        String jsessionIdSSO = followRedirect(URI.create(redirect).toURL().getPath(),
                                               jsessionId);
 
         // Store the JSESSIONIDSSO in a file
@@ -116,8 +116,8 @@ public class WebTest {
      */
     private String accessIndexDotJsp() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/index.jsp");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/index.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

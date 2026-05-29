@@ -71,7 +71,7 @@ public class WebTest {
             throws Exception {
 
         Integer result = null;
-        URL url = new URL("http://" + host  + ":" + port + contextRoot + uri);
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot + uri).toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

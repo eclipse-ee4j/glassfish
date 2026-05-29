@@ -71,7 +71,7 @@ public class WebTest {
         System.out.println("Invoking servlet at: " + url);
 
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
         int code = conn.getResponseCode();
 
         InputStream is = null;

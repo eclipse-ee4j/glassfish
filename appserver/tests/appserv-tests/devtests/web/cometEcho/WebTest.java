@@ -110,7 +110,7 @@ public class WebTest {
         String line = null;
 
         try{
-            URL url = new URL(urlStr);
+            URL url = URI.create(urlStr).toURL();
             String data = "msg=" + URLEncoder.encode(message);
             HttpURLConnection urlConnection =  (HttpURLConnection)url.openConnection();
             urlConnection.setRequestMethod("POST");
@@ -164,7 +164,7 @@ public class WebTest {
             BufferedReader br = null;
 
             try {
-                URL url = new URL(urlStr);
+                URL url = URI.create(urlStr).toURL();
                 HttpURLConnection urlConnection =  (HttpURLConnection)url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();

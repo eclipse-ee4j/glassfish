@@ -62,8 +62,8 @@ public class WebTest {
 
     private void invokeJsp() throws Exception {
 
-        URL url = new URL("http://" + host + ":" + port + "/"
-                          + contextRoot1 + "/jsp/test.jsp");
+        URL url = URI.create("http://" + host + ":" + port + "/"
+                          + contextRoot1 + "/jsp/test.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -76,8 +76,8 @@ public class WebTest {
             return;
         }
 
-        url = new URL("http://" + host + ":" + port + "/"
-                          + contextRoot2 + "/jsp/test.jsp");
+        url = URI.create("http://" + host + ":" + port + "/"
+                          + contextRoot2 + "/jsp/test.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
         conn = (HttpURLConnection) url.openConnection();
         conn.connect();

@@ -57,7 +57,7 @@ public class WebTest {
 
         try {
 
-            url = new URL("http://" + host  + ":" + port + contextRoot);
+            url = URI.create("http://" + host  + ":" + port + contextRoot).toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setInstanceFollowRedirects(false);
@@ -68,7 +68,7 @@ public class WebTest {
                     responseCode != HttpURLConnection.HTTP_MOVED_PERM) {
                 fail = true;
             } else {
-                url = new URL(conn.getHeaderField("Location"));
+                url = URI.create(conn.getHeaderField("Location")).toURL();
                 System.out.println("Redirected to: " + url.toString());
                 conn = (HttpURLConnection)url.openConnection();
                 conn.connect();

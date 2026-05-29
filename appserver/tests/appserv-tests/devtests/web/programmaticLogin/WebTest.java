@@ -65,7 +65,7 @@ public class WebTest {
 
         String uri = contextRoot +
             "/ServletTest?user=testuser3&password=secret";
-        URL url = new URL("http://" + host  + ":" + port + uri);
+        URL url = URI.create("http://" + host  + ":" + port + uri).toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

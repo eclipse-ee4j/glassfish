@@ -54,8 +54,8 @@ public class WebTest {
 
     public void doTest() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port
-                          + contextRoot + "/From");
+        URL url = URI.create("http://" + host  + ":" + port
+                          + contextRoot + "/From").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         long start = System.currentTimeMillis();

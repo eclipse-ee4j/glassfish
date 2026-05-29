@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -70,7 +71,7 @@ public class PortUnificationTest extends BaseDevTest {
                     + puName));
             //report("enable-listener", asadmin("set",
             //    "configs.config." + clusterName + "-config.network-config.network-listeners.network-listener.http-listener-1.enabled=true"));
-            final String content = getContent(new URL("http://localhost:" + port).openConnection());
+            final String content = getContent(URI.create("http://localhost:" + port).toURL().openConnection());
             report("http-read", content.contains("<h1>Your server is now running</h1>"));
             //report("dummy-read", "Dummy-Protocol-Response".equals(getDummyProtocolContent("localhost")));
 

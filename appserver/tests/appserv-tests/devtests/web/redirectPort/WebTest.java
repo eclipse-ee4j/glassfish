@@ -57,8 +57,8 @@ public class WebTest {
 
         try {
 
-            url = new URL("http://" + host  + ":" + port + contextRoot
-                    + "/jsp/test.jsp");
+            url = URI.create("http://" + host  + ":" + port + contextRoot
+                    + "/jsp/test.jsp").toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
@@ -67,7 +67,7 @@ public class WebTest {
             if (responseCode != HttpURLConnection.HTTP_MOVED_TEMP) {
                 fail = true;
             } else {
-                url = new URL(conn.getHeaderField("Location"));
+                url = URI.create(conn.getHeaderField("Location")).toURL();
                 System.out.println("Redirected to: " + url.toString());
                 SSLContext ctx = SSLContext.getInstance("TLS");
                 ctx.init(null, getTrustManagers(trustStorePath), null);

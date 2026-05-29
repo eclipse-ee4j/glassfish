@@ -59,14 +59,14 @@ public class WebTest
          throws Exception
     {
 
-        URL url = new URL("http://" + host  + ":" + port + contextPath);
+        URL url = URI.create("http://" + host  + ":" + port + contextPath).toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
         System.out.println("Response code: " + responseCode);
         if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-            url = new URL(conn.getHeaderField("Location"));
+            url = URI.create(conn.getHeaderField("Location")).toURL();
             System.out.println("Redirected to: " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
             conn.connect();

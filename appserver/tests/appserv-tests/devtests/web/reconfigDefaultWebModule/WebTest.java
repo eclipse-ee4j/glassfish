@@ -35,7 +35,7 @@ public class WebTest {
         String contextRoot = args[2];
 
         try {
-            URL url = new URL("http://" + host  + ":" + port + "/");
+            URL url = URI.create("http://" + host  + ":" + port + "/").toURL();
             System.out.println("Invoking url: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);

@@ -64,7 +64,7 @@ public class WebTest {
         Thread.sleep(2000); // WORKAROUND @XXX
         String url = "http://" + host + ":" + port + contextRoot;
         System.out.println("opening connection to " + url);
-        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {

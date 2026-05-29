@@ -59,7 +59,7 @@ public class Client {
             String url = "http://" + host + ":" + port + "/" + appName
                     + "/HelloServlet";
             System.out.println("invoking webclient servlet at " + url);
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
             HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
             int code = c1.getResponseCode();
             InputStream is = c1.getInputStream();

@@ -62,7 +62,7 @@ public class WebTest {
         String url = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println("opening connection to " + url);
 
-        InputStream in = new URL(url).openStream();
+        InputStream in = URI.create(url).toURL().openStream();
         BufferedReader rdr = new BufferedReader(new InputStreamReader(in));
         String line = rdr.readLine();
         if (EXPECTED_RESPONSE.equals(line)) {

@@ -58,7 +58,7 @@ public class HttpClient {
 
             System.out.println("invoking webclient servlet at " + url);
 
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
 
             URLConnection uc = u.openConnection();
 
@@ -72,7 +72,7 @@ public class HttpClient {
 
             for (int i = 0; i < 3; i++) {
                 System.out.println("Connecting for the " + i + " time....");
-                u = new URL(url);
+                u = URI.create(url).toURL();
                 uc = u.openConnection();
                 uc.setRequestProperty("Cookie", cookie);
                 uc.connect();
@@ -101,7 +101,7 @@ public class HttpClient {
                     "/" + appName + "/" + servletName;
             for (int i = 0; i < 3; i++) {
                 System.out.println("Connecting for the " + i + " time....");
-                u = new URL(url);
+                u = URI.create(url).toURL();
                 uc = u.openConnection();
                 uc.setRequestProperty("Cookie", stateInfo.getJsessionCookie());
                 uc.connect();

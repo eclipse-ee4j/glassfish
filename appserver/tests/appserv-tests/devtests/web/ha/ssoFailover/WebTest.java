@@ -150,7 +150,7 @@ public class WebTest extends BaseDevTest {
 
             String redirect = location.substring("Location:".length()).trim();
             // follow the redirect
-            int cA1 = go(port1, new URL(redirect).getPath(), "A");
+            int cA1 = go(port1, URI.create(redirect).toURL().getPath(), "A");
             int cB1 = go(port1, contextRootPrefix + "-b/index.jsp", "B");
 
             // stop inst1

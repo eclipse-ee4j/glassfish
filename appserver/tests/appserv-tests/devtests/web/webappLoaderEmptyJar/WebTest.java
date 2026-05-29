@@ -67,7 +67,7 @@ public class WebTest {
             "/jsp/stringBean.jsp";
         System.out.println("Invoking " + url);
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
         int code = conn.getResponseCode();
         if (code != 200) {
             throw new Exception("Unexpected response code: " + code);

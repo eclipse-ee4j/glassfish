@@ -65,8 +65,8 @@ public class WebTest {
      * Attempts to access resource protected by FORM based login.
      */
     private void run() throws Exception {
-        URL url = new URL("http://" + host  + ":" + httpPort + contextRoot +
-                "/protected.txt");
+        URL url = URI.create("http://" + host  + ":" + httpPort + contextRoot +
+                "/protected.txt").toURL();
         System.out.println("Connecting to " + url.toString());
         URLConnection conn = url.openConnection();
         String redirectLocation = conn.getHeaderField("Location");
@@ -131,7 +131,7 @@ public class WebTest {
 
     private HttpsURLConnection connect(String urlAddress,
             SSLSocketFactory ssf) throws Exception {
-        URL url = new URL(urlAddress);
+        URL url = URI.create(urlAddress).toURL();
         HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
         HttpsURLConnection connection = (HttpsURLConnection)
             url.openConnection();

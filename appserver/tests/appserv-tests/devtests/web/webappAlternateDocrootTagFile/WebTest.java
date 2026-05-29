@@ -64,7 +64,7 @@ public class WebTest {
         String url = "http://" + host + ":" + port + contextRoot
                      + "/x.jsp";
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {

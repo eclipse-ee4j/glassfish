@@ -60,7 +60,7 @@ public class WebTest {
 
         String url = "http://" + host + ":" + port + contextRoot + urlPattern;
         HttpURLConnection conn = (HttpURLConnection)
-            (new URL(url)).openConnection();
+            URI.create(url).toURL().openConnection();
         conn.setRequestProperty("Authorization", "Basic amF2YWVlOmphdmFlZQ==");
         conn.connect();
 

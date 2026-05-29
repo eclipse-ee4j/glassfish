@@ -103,7 +103,7 @@ public class WebTest {
             throw new Exception("Missing MYJSESSIONID in the Location response header");
         }
         System.out.println("Redirect to: " + redirectTo);
-        URL url = new URL(redirectTo);
+        URL url = URI.create(redirectTo).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();

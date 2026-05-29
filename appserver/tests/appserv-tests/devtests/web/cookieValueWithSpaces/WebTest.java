@@ -66,8 +66,8 @@ public class WebTest {
 
     private void invokeCreateCookie() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/createCookie");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/createCookie").toURL();
         System.out.println(url.toString());
 
         URLConnection conn = url.openConnection();

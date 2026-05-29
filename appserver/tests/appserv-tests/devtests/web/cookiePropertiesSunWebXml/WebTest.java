@@ -89,8 +89,8 @@ public class WebTest {
 
     private void invokeJsp() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
-                          + "/jsp/test.jsp");
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
+                          + "/jsp/test.jsp").toURL();
         System.out.println("Invoking URL: " + url.toString());
 
         URLConnection conn = url.openConnection();

@@ -71,7 +71,7 @@ public class WebTest
 
         jsessionId = accessServlet();
         String redirect = accessLoginPage();
-        followRedirect(new URL(redirect).getPath());
+        followRedirect(URI.create(redirect).toURL().getPath());
     }
 
     /*

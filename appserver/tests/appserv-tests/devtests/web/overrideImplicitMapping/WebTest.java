@@ -52,8 +52,8 @@ public class WebTest {
 
         try {
 
-            URL url = new URL("http://" + host  + ":" + port
-                              + contextRoot + "/index.jsp");
+            URL url = URI.create("http://" + host  + ":" + port
+                              + contextRoot + "/index.jsp").toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

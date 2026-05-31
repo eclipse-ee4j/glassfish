@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 public class Client {
@@ -73,7 +74,7 @@ public class Client {
         String result = null;
 
         try {
-            URL url = new URL(connection);
+            URL url = URI.create(connection).toURL();
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -72,7 +73,7 @@ public class Client {
 
     private int invokeServlet(String url) throws Exception {
 
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
 
         HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
         int code = c1.getResponseCode();

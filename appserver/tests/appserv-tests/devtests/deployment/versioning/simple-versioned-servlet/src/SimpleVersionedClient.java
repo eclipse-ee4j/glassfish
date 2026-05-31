@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -71,7 +72,7 @@ public class SimpleVersionedClient {
     private TestResponse invokeServlet() throws Exception {
         log("Invoking URL = " + url);
         log("Expected version identifier = " + versionIdentifier);
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
         HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
         int code = c1.getResponseCode();
         InputStream is = c1.getInputStream();

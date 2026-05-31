@@ -19,6 +19,7 @@ import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.AttachmentPart;
 import jakarta.xml.soap.Name;
 
+import java.net.URI;
 import java.net.URL;
 import javax.activation.DataHandler;
 
@@ -170,7 +171,7 @@ public class SendSOAPMessageWithJMS {
         Properties P = new Properties();
         P.load(props);
 
-        return (new URL(P.getProperty("url")));
+        return (URI.create(P.getProperty("url")).toURL());
     }
 
 

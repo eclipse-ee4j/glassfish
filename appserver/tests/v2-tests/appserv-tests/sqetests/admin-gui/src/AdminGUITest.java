@@ -17,6 +17,7 @@
 import com.meterware.httpunit.*;
 import util.Util;
 import util.JSSE;
+import java.net.URI;
 import java.net.URL;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -58,7 +59,7 @@ public class AdminGUITest {
                 URL = "http://"+host+":"+port;
             } else {
                 System.out.println("GOING TO EXECUTE EE TEST CASE");
-                JSSE jse = new JSSE(new URL("https", host, Integer.parseInt(port), "/index.jsf"));
+                JSSE jse = new JSSE(new URI("https", null, host, Integer.parseInt(port), "/index.jsf", null, null).toURL());
                 jse.trustAnyServerCertificate();
                 URL = "https://"+host+":"+port;
             }

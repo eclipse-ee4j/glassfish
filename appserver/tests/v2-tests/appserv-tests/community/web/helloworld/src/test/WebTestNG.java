@@ -56,7 +56,7 @@ public class WebTestNG {
 
         String testurl = "http://" + host  + ":" + port + "/"+ contextRoot + "/hello.jsp";
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

@@ -62,8 +62,8 @@ public class WebTest {
 
     public void doTest() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port
-                + contextRoot + "/including.jsp");
+        URL url = URI.create("http://" + host  + ":" + port
+                + contextRoot + "/including.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -83,8 +83,8 @@ public class WebTest {
 
     public void analyseResult(String result) throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port
-                +"/dbReader/dbReader?servletName=callflow-simple-jsp");
+        URL url = URI.create("http://" + host  + ":" + port
+                +"/dbReader/dbReader?servletName=callflow-simple-jsp").toURL();
         System.out.println("Analysing Result .... Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -111,8 +111,8 @@ public class WebTest {
 
     public void cleandb() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port
-                +"/dbReader/dbReader?cleandb=true");
+        URL url = URI.create("http://" + host  + ":" + port
+                +"/dbReader/dbReader?cleandb=true").toURL();
         System.out.println("Cleaning DB .... Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

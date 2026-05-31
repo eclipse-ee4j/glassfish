@@ -60,6 +60,9 @@ public class ServerUtils {
             // Avoid duplicates
             excludedPorts.add(port);
         }
+        if (excludedPorts.size() != count) {
+            throw new AssertionError("Excluded only " + excludedPorts.size() + " ports of " + count + " requested.");
+        }
         return generatedPorts;
     }
 

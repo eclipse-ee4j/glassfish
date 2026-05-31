@@ -157,7 +157,7 @@ public class Client extends AdminBaseDevTest {
         String result=null;
 
         try {
-            URL url = new URL(connection);
+            URL url = URI.create(connection).toURL();
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

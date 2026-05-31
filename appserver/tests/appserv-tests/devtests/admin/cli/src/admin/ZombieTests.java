@@ -81,7 +81,7 @@ public class ZombieTests extends AdminBaseDevTest {
     }
 
     private void makeDasUndead() throws MalformedURLException, IOException {
-        URL zombieUrl = new URL("http://localhost:8080/Zombie");
+        URL zombieUrl = URI.create("http://localhost:8080/Zombie").toURL();
         URLConnection conn = zombieUrl.openConnection();
         conn.getInputStream().close();
     }

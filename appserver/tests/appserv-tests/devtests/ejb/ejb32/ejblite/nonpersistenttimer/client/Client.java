@@ -55,7 +55,7 @@ public class Client {
 
             System.out.println("invoking webclient servlet at " + url);
 
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
 
             HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
             int code = c1.getResponseCode();

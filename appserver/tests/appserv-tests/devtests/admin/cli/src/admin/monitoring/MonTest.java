@@ -404,7 +404,7 @@ abstract class MonTest {
      */
     static boolean wget(int port, String uri) {
         try {
-            URL url = new URL("http://localhost:" + port + "/" + uri);
+            URL url = URI.create("http://localhost:" + port + "/" + uri).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(60000);
             conn.getInputStream().close();

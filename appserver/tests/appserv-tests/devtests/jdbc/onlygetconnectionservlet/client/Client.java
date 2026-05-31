@@ -33,8 +33,8 @@ public class Client {
          //SimpleReporterAdapter stat = new SimpleReporterAdapter();
         String testSuite = "jdbc-onlygetconnection ";
 
-        HttpURLConnection conn =(HttpURLConnection) new URL("http://localhost:8080/" +
-            "onlygetconnectionservlet/onlygetconnectionservlet").openConnection();
+        HttpURLConnection conn =(HttpURLConnection) URI.create("http://localhost:8080/" +
+            "onlygetconnectionservlet/onlygetconnectionservlet").toURL().openConnection();
 
         /*
         InputStream sis = conn.getInputStream();
@@ -69,8 +69,8 @@ public class Client {
                 HttpURLConnection conn = null;
                 public void run() {
                     try {
-                    conn =(HttpURLConnection) new URL("http://localhost:8080/" +
-                         "onlygetconnectionservlet/onlygetconnectionservlet").openConnection();
+                    conn =(HttpURLConnection) URI.create("http://localhost:8080/" +
+                         "onlygetconnectionservlet/onlygetconnectionservlet").toURL().openConnection();
 
                     InputStream sis = conn.getInputStream();
                     BufferedReader in = new BufferedReader( new InputStreamReader(sis) );

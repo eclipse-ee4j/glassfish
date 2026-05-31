@@ -225,7 +225,7 @@ public class Client {
 
     private int invokeServlet(String url) throws Exception {
 
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
 
         HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
         int code = c1.getResponseCode();

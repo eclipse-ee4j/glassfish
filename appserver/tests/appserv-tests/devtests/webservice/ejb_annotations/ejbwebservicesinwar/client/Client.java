@@ -39,7 +39,7 @@ public class Client {
        public void doTest(String[] args) {
             try {
 
-                URL serviceInfo = new URL (args[0]);
+                URL serviceInfo = URI.create(args[0]).toURL();
                 URLConnection con = serviceInfo.openConnection();
                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 

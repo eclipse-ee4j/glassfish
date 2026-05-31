@@ -61,6 +61,8 @@ import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.InvalidAlgorithmParameterException;
@@ -1178,10 +1180,10 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
         String serverHost = hostAndPort.get(0);
         redirectPort = Integer.parseInt((hostAndPort.get(1)));
         try {
-            url = new URL(protocol, serverHost, redirectPort, file.toString());
+            url = new URI(protocol + "://" + serverHost + ":" + redirectPort + file).toURL();
             hresponse.sendRedirect(url.toString());
             return false;
-        } catch (MalformedURLException e) {
+        } catch (URISyntaxException | MalformedURLException e) {
             hresponse.sendError(SC_INTERNAL_SERVER_ERROR, URLEncoder.encode(hrequest.getRequestURI(), UTF_8));
             return false;
         }

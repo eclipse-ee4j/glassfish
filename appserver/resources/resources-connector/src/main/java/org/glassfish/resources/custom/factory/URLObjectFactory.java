@@ -18,6 +18,7 @@
 package org.glassfish.resources.custom.factory;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -64,11 +65,11 @@ public class URLObjectFactory implements Serializable, ObjectFactory {
         }
 
         if (protocol != null && host != null && port != -1 && file != null) {
-            return new URL(protocol, host, port, file);
+            return new URI(protocol, null, host, port, file, null, null).toURL();
         } else if (protocol != null && host != null && file != null) {
-            return new URL(protocol, host, file);
+            return new URI(protocol, null, host, -1, file, null, null).toURL();
         } else if (spec != null) {
-            return new URL(spec);
+            return URI.create(spec).toURL();
         }
 
         throw new IllegalArgumentException("URLObjectFactory does not have necessary parameters for URL construction");

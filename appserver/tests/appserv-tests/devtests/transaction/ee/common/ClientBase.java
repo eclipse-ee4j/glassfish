@@ -111,7 +111,7 @@ public abstract class ClientBase extends AdminBaseDevTest {
         boolean result=false;
 
         try {
-            URL url = new URL(connection);
+            URL url = URI.create(connection).toURL();
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

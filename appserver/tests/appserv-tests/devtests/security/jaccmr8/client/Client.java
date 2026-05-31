@@ -437,7 +437,7 @@ public class Client {
         }
 
         private int invokeServlet(String url, Hashtable contentHash, String user, StringBuffer output) throws Exception {
-                URL u = new URL(url);
+                URL u = URI.create(url).toURL();
                 HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
                 c1.setAllowUserInteraction(true);
                 if ((user != null) && (user.length() > 0)) {

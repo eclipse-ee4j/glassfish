@@ -138,7 +138,7 @@ public class HttpBasicAuthTest implements Runnable {
     protected void run0() throws Exception {
 
             System.out.println("running ...");
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
             URLConnection uconn = u.openConnection();
 
             String up = username + ":" + password;

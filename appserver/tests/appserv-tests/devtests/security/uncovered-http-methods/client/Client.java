@@ -446,7 +446,7 @@ public class Client {
         
         System.out.println("Invoking servlet with HTTP method: " + httpMethod);
         
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
         HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
         c1.setRequestMethod(httpMethod);
         
@@ -485,7 +485,7 @@ public class Client {
                 }
             }
         } else if (code == HttpURLConnection.HTTP_MOVED_TEMP) {
-            URL redir = new URL(c1.getHeaderField("Location"));
+            URL redir = URI.create(c1.getHeaderField("Location")).toURL();
             String line = "Servlet redirected to: " + redir.toString();
             output.append(line);
             System.out.println(line);

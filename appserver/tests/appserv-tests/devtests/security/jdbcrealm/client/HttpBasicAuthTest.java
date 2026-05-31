@@ -160,7 +160,7 @@ public class HttpBasicAuthTest implements Runnable {
 
         System.out.println(Thread.currentThread().getName() +
                            " - running ...");
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
         URLConnection uconn = u.openConnection();
 
         String up = username + ":" + password;

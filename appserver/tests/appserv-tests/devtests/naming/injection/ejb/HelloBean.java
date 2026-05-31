@@ -28,7 +28,7 @@ public class HelloBean implements Hello {
 
     static {
         try {
-            expectedURL = new URL("http://java.net");
+            expectedURL = URI.create("http://java.net").toURL();
             for(int i = 0; i < expectedURLs.length; i++) {
                 expectedURLs[i] = expectedURL;
             }

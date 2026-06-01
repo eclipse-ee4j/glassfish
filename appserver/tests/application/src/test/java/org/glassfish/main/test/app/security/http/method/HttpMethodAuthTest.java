@@ -19,7 +19,6 @@ package org.glassfish.main.test.app.security.http.method;
 import java.io.File;
 import java.lang.System.Logger;
 import java.net.URI;
-import java.net.URL;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.HttpClient10;

@@ -23,7 +23,6 @@ import org.testng.Assert;
 import java.lang.reflect.*;
 import java.io.*;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLConnection;
 
 /**

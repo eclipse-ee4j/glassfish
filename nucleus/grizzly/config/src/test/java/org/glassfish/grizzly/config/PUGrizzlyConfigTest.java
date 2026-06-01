@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URI;
-import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 

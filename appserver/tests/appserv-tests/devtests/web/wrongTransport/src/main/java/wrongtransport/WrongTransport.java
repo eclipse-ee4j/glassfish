@@ -20,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 
 import com.sun.appserv.test.BaseDevTest;
 import org.glassfish.grizzly.config.portunif.HttpProtocolFinder;

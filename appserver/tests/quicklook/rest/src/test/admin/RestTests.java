@@ -19,7 +19,6 @@ package test.admin;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

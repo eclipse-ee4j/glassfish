@@ -1307,7 +1307,8 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>3.1.4</version>
                     <configuration>
-                        <deployAtEnd>true</deployAtEnd>
+                        <!-- true would disable alternative deployment as the last module has deployment disabled -->
+                        <deployAtEnd>false</deployAtEnd>
                         <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
                         <skip>${deploy.skip}</skip>
                     </configuration>

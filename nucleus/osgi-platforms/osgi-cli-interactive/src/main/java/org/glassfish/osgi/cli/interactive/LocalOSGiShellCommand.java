@@ -1,17 +1,14 @@
 /*
  * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- *
  * This Source Code may also be made available under the following Secondary
  * Licenses when the conditions for such availability set forth in the
  * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
  * version 2 with the GNU Classpath Exception, which is available at
  * https://www.gnu.org/software/classpath/license.html.
- *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
@@ -34,19 +31,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandValidationException;
-import org.glassfish.common.util.io.EmptyOutputStream;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
@@ -59,24 +55,29 @@ import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.LineReaderImpl;
 import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jline.terminal.impl.ExternalTerminal;
+import org.jline.terminal.impl.DumbTerminal;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.io.OutputStream.nullOutputStream;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 import static org.glassfish.hk2.utilities.BuilderHelper.createContractFilter;
 
 /**
  * A simple local asadmin sub-command to establish an interactive osgi shell.
+ * <p>
+ * This class is forked from com.sun.enterprise.admin.cli.MultimodeCommand.
+ * <p>
+ * Original code authors:
+ * केदार(km@dev.java.net)
+ * Bill Shannon
  *
- * <p>This class is forked from com.sun.enterprise.admin.cli.MultimodeCommand.
- *
- * <p>Original code authors:
- *      केदार(km@dev.java.net)
- *      Bill Shannon
  * @author ancoron
  */
 @Service(name = "osgi-shell")
@@ -111,7 +112,6 @@ public class LocalOSGiShellCommand extends CLICommand {
     private RemoteCLICommand cmd;
     private String shellType;
 
-
     @Override
     public void postConstruct() {
         super.postConstruct();
@@ -119,7 +119,7 @@ public class LocalOSGiShellCommand extends CLICommand {
             cmd = new RemoteCLICommand(REMOTE_COMMAND, locator.getService(ProgramOptions.class),
                 locator.getService(Environment.class));
         } catch (MultiException | CommandException e) {
-            logger.log(Level.SEVERE, "postConstruct failed!", e);
+            logger.log(SEVERE, "postConstruct failed!", e);
         }
     }
 
@@ -137,6 +137,7 @@ public class LocalOSGiShellCommand extends CLICommand {
         // to also apply to all commands in multimode.
         echo = programOpts.isEcho();
     }
+
 
     /**
      * In the usage message modify the --printprompt option to have a
@@ -158,6 +159,7 @@ public class LocalOSGiShellCommand extends CLICommand {
         return uopts;
     }
 
+
     @Override
     protected int executeCommand() throws CommandException {
         if (cmd == null) {
@@ -166,21 +168,35 @@ public class LocalOSGiShellCommand extends CLICommand {
         programOpts.setEcho(echo);
         // restore echo flag, saved in validate
         if (encoding != null) {
-            // see Configuration.getEncoding()...
+            // see jline.internal.Configuration.getEncoding()...
             SystemProperties.setProperty("input.encoding", encoding, true);
         }
         final String[] args = enhanceForTarget(new String[] {REMOTE_COMMAND, "asadmin-osgi-shell"});
-        logger.log(Level.FINEST, "executeCommand: args {0}", Arrays.toString(args));
         shellType = cmd.executeAndReturnOutput(args).trim();
-        try (Terminal terminal = createTerminal()) {
-            LineReaderBuilder builder  = LineReaderBuilder.builder().appName(REMOTE_COMMAND).terminal(terminal);
-            if (isInteractive()) {
-                builder.completer(getCommandCompleter());
-                builder.option(LineReader.Option.INSERT_TAB, false);
-            }
-            return executeCommands(builder.build());
+
+        // Any program options we start with are copied to the environment to serve as defaults for
+        // commands we run, and then we give each command an empty program options.
+        programOpts.toEnvironment(env);
+
+        String sessionId = startSession();
+        logger.log(FINEST, () -> "Started session with id: " + sessionId);
+        final LineReader lineReader;
+        if (isInteractive()) {
+            lineReader = createInteractiveLineReader(shellType);
+        } else {
+            lineReader = createFileLineReader(file, encoding);
+        }
+        // Unfortunately the LineReader is not AutoCloseable, but we still have to close all streams.
+        try (Terminal terminal = lineReader.getTerminal()) {
+            return executeCommands(lineReader, sessionId);
         } catch (IOException e) {
             throw new CommandException(e);
+        } finally {
+            // what if something breaks on the wire?
+            int resultCode = stopSession(sessionId);
+            if (resultCode != SUCCESS) {
+                return resultCode;
+            }
         }
     }
 
@@ -196,197 +212,88 @@ public class LocalOSGiShellCommand extends CLICommand {
         return targetArgs;
     }
 
-
-    private Terminal createTerminal() throws IOException, CommandException {
-        if (!isInteractive()) {
-            if (!file.canRead()) {
-                throw new CommandException("File: " + file + " can not be read");
-            }
-
-            Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
-
-            return new ExternalTerminal(REMOTE_COMMAND, "dumb",
-                new FileInputStream(file), new EmptyOutputStream(), charset);
-        }
-
-        System.out.println(STRINGS.get("multimodeIntro"));
-
-        return TerminalBuilder.builder().system(true).build();
-    }
-
-
-    /**
-     * Get the command completion.
-     *
-     * @return The command completer
-     */
-    private Completer getCommandCompleter() {
-        if ("gogo".equals(shellType)) {
-            return new StringsCompleter(
-                    "bundlelevel",
-                    "cd",
-                    "frameworklevel",
-                    "headers",
-                    "help",
-                    "inspect",
-                    "install",
-                    "lb",
-                    "log",
-                    "ls",
-                    "refresh",
-                    "resolve",
-                    "start",
-                    "stop",
-                    "uninstall",
-                    "update",
-                    "which",
-                    "cat",
-                    "each",
-                    "echo",
-                    "format",
-                    "getopt",
-                    "gosh",
-                    "grep",
-                    "not",
-                    "set",
-                    "sh",
-                    "source",
-                    "tac",
-                    "telnetd",
-                    "type",
-                    "until",
-                    "deploy",
-                    "info",
-                    "javadoc",
-                    "list",
-                    "repos",
-                    "source"
-                    );
-        } else if ("felix".equals(shellType)) {
-            return new StringsCompleter(
-                    "exit",
-                    "quit",
-                    "help",
-                    "bundlelevel",
-                    "cd",
-                    "find",
-                    "headers",
-                    "inspect",
-                    "install",
-                    "log",
-                    "ps",
-                    "refresh",
-                    "resolve",
-                    "scr",
-                    "shutdown",
-                    "start",
-                    "startlevel",
-                    "stop",
-                    "sysprop",
-                    "uninstall",
-                    "update",
-                    "version"
-                    );
-        }
-
-        return new NullCompleter();
-    }
-
-
     /**
      * Read commands from the specified {@link java.io.BufferedReader}
-     * and execute them.  If printPrompt is set, prompt first.
+     * and execute them. If printPrompt is set, prompt first.
      *
+     * @param sessionId
      * @return the exit code of the last command executed
      */
-    private int executeCommands(LineReader reader) throws CommandException {
-        String line;
-        int rc = 0;
-
-        /*
-         * Any program options we start with are copied to the environment
-         * to serve as defaults for commands we run, and then we give each
-         * command an empty program options.
-         */
-        programOpts.toEnvironment(env);
-
-        String sessionId = startSession();
-
-        try {
-            while (true) {
-                try {
-                    if (isInteractive()) {
-                        line = reader.readLine(shellType + "$ ");
-                    } else {
-                        line = reader.readLine();
-                    }
-                } catch (EndOfFileException e) {
-                    break;
+    private int executeCommands(LineReader reader, String sessionId) {
+        logger.log(FINEST, "executeCommands(reader={0}, sessionId={1})", new Object[] {reader, sessionId});
+        int resultCode = 0;
+        while (true) {
+            final String line;
+            try {
+                if (isInteractive()) {
+                    line = reader.readLine(shellType + "$ ");
+                } else {
+                    line = reader.readLine();
                 }
-
-                if (line == null || line.isBlank()) {
-                    // ignore blank lines
-                    continue;
-                }
-
-                if (line.trim().startsWith("#")) {
-                    // ignore comment lines
-                    continue;
-                }
-
-                final String[] args;
-                try {
-                    args = getArgs(line);
-                } catch (ArgumentException ex) {
-                    logger.severe(ex.getMessage());
-                    continue;
-                }
-
-                final String command = args[0];
-                // handle built-in exit and quit commands
-                if ("exit".equals(command) || "quit".equals(command)) {
-                    break;
-                }
-
-                final String[] arguments = enhanceForTarget(prepareArguments(sessionId, args));
-                try {
-                    /*
-                     * Every command gets its own copy of program options
-                     * so that any program options specified in its
-                     * command line options don't effect other commands.
-                     * But all commands share the same environment.
-                     */
-                    final ProgramOptions programOptions = new ProgramOptions(env);
-                    // copy over AsadminMain info
-                    programOptions.setModulePath(programOpts.getModulePath());
-                    programOptions.setClassPath(programOpts.getClassPath());
-                    programOptions.setClassName(programOpts.getClassName());
-                    // remove the old one and replace it
-                    atomicReplace(locator, programOptions);
-
-                    String output = cmd.executeAndReturnOutput(arguments).trim();
-                    if (output != null && !output.isEmpty()) {
-                        logger.info(output);
-                    }
-                } catch (CommandValidationException cve) {
-                    logger.severe(cve.getMessage());
-                    logger.severe(cmd.getUsage());
-                    rc = ERROR;
-                } catch (CommandException ce) {
-                    logger.severe(ce.getMessage());
-                    rc = ERROR;
-                } finally {
-                    // restore the original program options
-                    // XXX - is this necessary?
-                    atomicReplace(locator, programOpts);
-                }
-                CLIUtil.writeCommandToDebugLog(name, env, arguments, rc);
+                logger.log(FINEST, () -> "Read command line: " + line);
+            } catch (EndOfFileException e) {
+                logger.log(FINEST, "Nothing to read, end of file reached.", e);
+                break;
             }
-        } finally {
-            // what if something breaks on the wire?
-            rc = stopSession(sessionId);
+            if (line == null || line.isBlank()) {
+                // ignore blank lines
+                continue;
+            }
+
+            if (line.trim().startsWith("#")) {
+                // ignore comment lines
+                continue;
+            }
+
+            final String[] args;
+            try {
+                args = getArgs(line);
+            } catch (ArgumentException ex) {
+                logger.severe(ex.getMessage());
+                continue;
+            }
+
+            final String command = args[0];
+            // handle built-in exit and quit commands
+            if ("exit".equals(command) || "quit".equals(command)) {
+                break;
+            }
+
+            final String[] arguments = enhanceForTarget(prepareArguments(sessionId, args));
+            try {
+                /*
+                 * Every command gets its own copy of program options
+                 * so that any program options specified in its
+                 * command line options don't effect other commands.
+                 * But all commands share the same environment.
+                 */
+                final ProgramOptions programOptions = new ProgramOptions(env);
+                // copy over AsadminMain info
+                programOptions.setModulePath(programOpts.getModulePath());
+                programOptions.setClassPath(programOpts.getClassPath());
+                programOptions.setClassName(programOpts.getClassName());
+                // remove the old one and replace it
+                atomicReplace(locator, programOptions);
+
+                String output = cmd.executeAndReturnOutput(arguments).trim();
+                if (output != null && !output.isEmpty()) {
+                    logger.info(output);
+                }
+            } catch (CommandValidationException cve) {
+                logger.severe(cve.getMessage());
+                logger.severe(cmd.getUsage());
+                resultCode = ERROR;
+            } catch (CommandException ce) {
+                logger.severe(ce.getMessage());
+                resultCode = ERROR;
+            } finally {
+                // restore the original program options
+                // XXX - is this necessary?
+                atomicReplace(locator, programOpts);
+            }
+            CLIUtil.writeCommandToDebugLog(name, env, arguments, resultCode);
         }
-        return rc;
+        return resultCode;
     }
 
 
@@ -423,6 +330,7 @@ public class LocalOSGiShellCommand extends CLICommand {
 
 
     private int stopSession(String sessionId) throws CommandException {
+        logger.log(FINEST, "stopSession(sessionId={0})", sessionId);
         if (sessionId == null) {
             return 0;
         }
@@ -435,6 +343,52 @@ public class LocalOSGiShellCommand extends CLICommand {
         return file == null;
     }
 
+    private static LineReader createInteractiveLineReader(String shellType) throws CommandException {
+        System.out.println(STRINGS.get("multimodeIntro"));
+        final Terminal terminal;
+        try {
+            terminal = TerminalBuilder.builder().system(true).build();
+        } catch (IOException e) {
+            throw new CommandException(e);
+        }
+        logger.log(FINEST, () -> "Created terminal: " + terminal);
+        LineReaderBuilder builder = LineReaderBuilder.builder().appName(REMOTE_COMMAND).terminal(terminal);
+        builder.completer(getCommandCompleter(shellType));
+        builder.option(LineReader.Option.INSERT_TAB, false);
+        return builder.build();
+    }
+
+    private static LineReader createFileLineReader(File file, String encoding) throws CommandException {
+        if (!file.canRead()) {
+            throw new CommandException("File \"" + file + "\" can not be read");
+        }
+        Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
+        try {
+            return new FileLineReader(file, charset);
+        } catch (IOException e) {
+            throw new CommandException(e);
+        }
+    }
+
+    /**
+     * Get the command completion.
+     *
+     * @return The command completer
+     */
+    private static Completer getCommandCompleter(String shellType) {
+        if ("gogo".equals(shellType)) {
+            return new StringsCompleter("bundlelevel", "cd", "frameworklevel", "headers", "help", "inspect", "install",
+                "lb", "log", "ls", "refresh", "resolve", "start", "stop", "uninstall", "update", "which", "cat", "each",
+                "echo", "format", "getopt", "gosh", "grep", "not", "set", "sh", "source", "tac", "telnetd", "type",
+                "until", "deploy", "info", "javadoc", "list", "repos", "source");
+        } else if ("felix".equals(shellType)) {
+            return new StringsCompleter("exit", "quit", "help", "bundlelevel", "cd", "find", "headers", "inspect",
+                "install", "log", "ps", "refresh", "resolve", "scr", "shutdown", "start", "startlevel", "stop",
+                "sysprop", "uninstall", "update", "version");
+        }
+
+        return new NullCompleter();
+    }
 
     private static void atomicReplace(ServiceLocator locator, ProgramOptions options) {
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
@@ -453,5 +407,35 @@ public class LocalOSGiShellCommand extends CLICommand {
             args.add(t.nextToken());
         }
         return args.toArray(String[]::new);
+    }
+
+
+    private static final class FileLineReader extends LineReaderImpl {
+        private FileLineReader(File file, Charset charset) throws IOException {
+            super(new FileInputVirtualTerminal(file, charset), null, null);
+        }
+    }
+
+
+    private static final class FileInputVirtualTerminal extends DumbTerminal {
+        private static final Logger LOG = Logger.getLogger(FileInputVirtualTerminal.class.getName());
+        private final File file;
+
+        private FileInputVirtualTerminal(File file, Charset charset) throws IOException {
+            // Both streams are closed by the parent
+            super(REMOTE_COMMAND, Terminal.TYPE_DUMB, new FileInputStream(file), nullOutputStream(), charset);
+            this.file = file;
+        }
+
+        @Override
+        protected void doClose() throws IOException {
+            LOG.log(Level.FINEST, () -> "Closing " + this);
+            super.doClose();
+        }
+
+        @Override
+        public String toString() {
+            return getKind() + "[" + file + "]";
+        }
     }
 }

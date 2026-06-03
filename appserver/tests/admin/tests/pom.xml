@@ -83,7 +83,7 @@
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
             <type>zip</type>
-            <version>${project.version}</version>
+            <version>${glassfish.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

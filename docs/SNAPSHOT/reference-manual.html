@@ -3716,6 +3716,7 @@
 <li><a href="#examples-236">Examples</a>
 <ul class="sectlevel3">
 <li><a href="#sthref2046">Example 1   Setting the Maximum Number of Log History Files to Maintain</a></li>
+<li><a href="#example-2-setting-multiple-attributes-in-a-single-invocation">Example 2   Setting Multiple Attributes in a Single Invocation</a></li>
 </ul>
 </li>
 <li><a href="#exit-status-245">Exit Status</a></li>
@@ -46813,7 +46814,7 @@ Command set-batch-runtime-configuration executed successfully.</code></pre>
 <h2 id="set-log-attributes"><a class="anchor" href="#set-log-attributes"></a>set-log-attributes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Sets the logging attributes for one or more loggers</p>
+<p>Sets the logging attributes for one or more handlers or formatters</p>
 </div>
 <div class="sect2">
 <h3 id="synopsis-244"><a class="anchor" href="#synopsis-244"></a>Synopsis</h3>
@@ -46912,6 +46913,22 @@ current set of attributes.</p>
 org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=8
 
 org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles logging attribute value set to 8.
+The logging attributes are saved successfully for server.
+
+Command set-log-attributes executed successfully.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="example-2-setting-multiple-attributes-in-a-single-invocation"><a class="anchor" href="#example-2-setting-multiple-attributes-in-a-single-invocation"></a>Example 2   Setting Multiple Attributes in a Single Invocation</h4>
+<div class="paragraph">
+<p>This example sets two attributes at once by separating <code>name=value</code> pairs with a colon.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin set-log-attributes \
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress=true:org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=5
+
 The logging attributes are saved successfully for server.
 
 Command set-log-attributes executed successfully.</code></pre>
@@ -55453,7 +55470,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-03 17:10:27 UTC
+Last updated 2026-06-03 17:31:40 UTC
 </div>
 </div>
 </body>

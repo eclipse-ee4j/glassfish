@@ -266,6 +266,7 @@
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
         <legal.doc.source>${project.build.commonResourcesDirectory}/legal</legal.doc.source>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
+        <cyclonedx.skip>true</cyclonedx.skip>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
 
@@ -2476,19 +2477,6 @@
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>command-security-maven-plugin</artifactId>
             </plugin>
-            <!-- Disables sbom generation inherited from parent -->
-            <plugin>
-                <groupId>org.cyclonedx</groupId>
-                <artifactId>cyclonedx-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase></phase>
-                        <goals>
-                            <goal>makeAggregateBom</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -2511,6 +2499,7 @@
                 <release.projectName>Eclipse GlassFish</release.projectName>
                 <release.autoPublish>false</release.autoPublish>
                 <release.waitUntil>published</release.waitUntil>
+                <cyclonedx.skip>false</cyclonedx.skip>
             </properties>
         </profile>
         <profile>

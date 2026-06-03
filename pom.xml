@@ -45,6 +45,7 @@
 
     <properties>
         <project.build.outputTimestamp>2026-05-05T00:17:58Z</project.build.outputTimestamp>
+        <cyclonedx.skip>true</cyclonedx.skip>
     </properties>
 
     <build>
@@ -95,19 +96,6 @@
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Disables sbom generation inherited from parent -->
-            <plugin>
-                <groupId>org.cyclonedx</groupId>
-                <artifactId>cyclonedx-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase></phase>
-                        <goals>
-                            <goal>makeAggregateBom</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -181,6 +169,22 @@
                 <module>appserver</module>
                 <module>docs</module>
                 <module>docs/publish</module>
+            </modules>
+        </profile>
+
+        <!--
+        Override cyclonedx skip
+        -->
+        <profile>
+            <id>oss-release</id>
+            <properties>
+                <cyclonedx.skip>false</cyclonedx.skip>
+            </properties>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+                <module>docs</module>
             </modules>
         </profile>
 

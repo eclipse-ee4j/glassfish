@@ -11,7 +11,7 @@ prev=set-batch-runtime-configuration.html
 
 == set-log-attributes
 
-Sets the logging attributes for one or more loggers
+Sets the logging attributes for one or more handlers or formatters
 
 === Synopsis
 
@@ -77,6 +77,20 @@ asadmin set-log-attributes --target=server \
 org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=8
 
 org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles logging attribute value set to 8.
+The logging attributes are saved successfully for server.
+
+Command set-log-attributes executed successfully.
+----
+
+==== Example 2   Setting Multiple Attributes in a Single Invocation
+
+This example sets two attributes at once by separating `name=value` pairs with a colon.
+
+[source]
+----
+asadmin set-log-attributes \
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress=true:org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=5
+
 The logging attributes are saved successfully for server.
 
 Command set-log-attributes executed successfully.

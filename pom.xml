@@ -34,6 +34,7 @@
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Aggregator POM</name>
+    <description>Root POM of the GlassFish project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <scm>

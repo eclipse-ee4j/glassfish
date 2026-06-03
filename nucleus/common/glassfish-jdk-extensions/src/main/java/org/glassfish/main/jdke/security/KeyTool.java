@@ -119,9 +119,10 @@ public class KeyTool {
      * @param dn distinguished name, e.g. "CN=localhost, OU=Development, O=Example, L=City, ST=State, C=Country"
      * @param keyAlgorithm the key algorithm, e.g. "RSA", "DSA", "EC"
      * @param certValidity the validity of the certificate in days, must be positive
+     * @return Output of the keytool command
      * @throws IOException
      */
-    public void generateKeyPair(String alias, String dn, String keyAlgorithm, int certValidity) throws IOException {
+    public String generateKeyPair(String alias, String dn, String keyAlgorithm, int certValidity) throws IOException {
         final List<String> command = List.of(
             KEYTOOL,
             "-J-Duser.language=en",
@@ -139,7 +140,7 @@ public class KeyTool {
             LOG.log(DEBUG, "Created directory for keystore: {0}", keyStore.getParentFile());
         }
         // 4 times - once for key store, once for key password, each once more for confirmation
-        execute(command, password, password, password, password);
+        return execute(command, password, password, password, password);
     }
 
 
@@ -202,9 +203,10 @@ public class KeyTool {
      *
      * @param alias the alias of the certificate to export
      * @param outputFile the file to write the certificate to. It must not exist yet.
+     * @return Output of the keytool command
      * @throws IOException if an error occurs during the process
      */
-    public void exportCertificate(String alias, final File outputFile) throws IOException {
+    public String exportCertificate(String alias, final File outputFile) throws IOException {
         final List<String> exportCommand = List.of(
             KEYTOOL,
             "-J-Duser.language=en",
@@ -214,7 +216,7 @@ public class KeyTool {
             "-keystore", keyStore.getAbsolutePath(),
             "-file", outputFile.getAbsolutePath()
             );
-        execute(exportCommand, password);
+        return execute(exportCommand, password);
     }
 
 
@@ -226,6 +228,8 @@ public class KeyTool {
      * @throws IOException
      */
     public void changeKeyStorePassword(char[] newPassword) throws IOException {
+        LOG.log(INFO, () -> "Changing password on the keystore file: " + keyStore);
+
         // We grab the current key store, so everything is done in memory until the end.
         final KeyStore ks = loadKeyStore();
         final char[] oldPassword = password;
@@ -280,8 +284,8 @@ public class KeyTool {
     }
 
 
-    private void execute(final List<String> command, char[]... stdinLines) throws IOException {
-        execute(keyStore, command, stdinLines);
+    private String execute(final List<String> command, char[]... stdinLines) throws IOException {
+        return execute(keyStore, command, stdinLines);
     }
 
 
@@ -362,7 +366,7 @@ public class KeyTool {
     }
 
 
-    private static void execute(final File keyStore, final List<String> command, final char[]... stdinLines) throws IOException {
+    private static String execute(final File keyStore, final List<String> command, final char[]... stdinLines) throws IOException {
         LOG.log(INFO, () -> "Executing command: " + command.stream().collect(Collectors.joining(" ")));
         final ProcessBuilder builder = new ProcessBuilder(command).directory(keyStore.getParentFile());
         final Process process;
@@ -387,6 +391,10 @@ public class KeyTool {
             if (exitCode != 0) {
                 throw new IOException("KeyTool command failed with exit code: " + exitCode + " and output: " + output);
             }
+            if (output.endsWith("Too many failures - try later\n")) {
+                throw new IllegalArgumentException("KeyTool command failed with exit code: " + exitCode + " and output: " + output);
+            }
+            return output;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Interrupted", e);

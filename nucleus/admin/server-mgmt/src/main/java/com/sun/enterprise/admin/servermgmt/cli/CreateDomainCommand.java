@@ -119,9 +119,6 @@ public final class CreateDomainCommand extends CLICommand {
     @Param(name = "domain_name", primary = true)
     private String domainName;
 
-    public CreateDomainCommand() {
-    }
-
     /**
      * Add --adminport and --instanceport options with proper default values. (Can't set default values above because it
      * conflicts with --portbase option processing.)
@@ -192,7 +189,7 @@ public final class CreateDomainCommand extends CLICommand {
         }
     }
 
-    public void verifyPortBase() throws CommandValidationException {
+    private void verifyPortBase() throws CommandValidationException {
         if (usePortBase()) {
             final int portbase = convertPortStr(portBase);
             setOptionsWithPortBase(portbase);
@@ -264,7 +261,6 @@ public final class CreateDomainCommand extends CLICommand {
         } else {
             char[] pwdArr = getAdminPassword();
             adminPassword = pwdArr != null ? new String(pwdArr) : null;
-            boolean haveAdminPwd = true;
         }
 
         if (saveMasterPassword) {
@@ -274,10 +270,13 @@ public final class CreateDomainCommand extends CLICommand {
         if (masterPassword == null) {
             if (useMasterPassword) {
                 char[] mpArr = getMasterPassword();
-                masterPassword = mpArr == null ? null : new String(mpArr);
+                masterPassword = mpArr == null ? KEYSTORE_PASSWORD_DEFAULT : new String(mpArr);
             } else {
                 masterPassword = KEYSTORE_PASSWORD_DEFAULT;
             }
+        } else {
+            // Even if we don't save it, we still need it to create keystores
+            masterPassword = KEYSTORE_PASSWORD_DEFAULT;
         }
 
         try {
@@ -291,15 +290,26 @@ public final class CreateDomainCommand extends CLICommand {
             }
 
             // saving the login information happens inside this method
-            createTheDomain(domainDir, domainProperties);
+            createTheDomain();
             return 0;
         } catch (CommandException ce) {
             logger.info(ce.getLocalizedMessage());
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), ce);
         } catch (Exception e) {
-            logger.fine(e.getLocalizedMessage());
+            logger.fine(() -> getLocalizedMessageWithCauses(e));
             throw new CommandException(strings.get("CouldNotCreateDomain", domainName), e);
         }
+    }
+
+    private static String getLocalizedMessageWithCauses(Exception e) {
+        StringBuilder message = new StringBuilder(e.getLocalizedMessage());
+        Throwable exceptionIterator = e;
+        while (exceptionIterator.getCause() != null) {
+            exceptionIterator = exceptionIterator.getCause();
+            message.append("\nCaused by:\n")
+                    .append(exceptionIterator.getLocalizedMessage());
+        }
+        return message.toString();
     }
 
     /**
@@ -407,30 +417,31 @@ public final class CreateDomainCommand extends CLICommand {
      * @param domainProperties properties to insert in domainConfig
      * @throws CommandException if domain cannot be created
      */
-    private void createTheDomain(final String domainPath, Properties domainProperties) throws DomainException, CommandValidationException {
+    private void createTheDomain() throws DomainException, CommandValidationException {
 
-        if (FileUtils.safeGetCanonicalFile(new File(domainPath, domainName)).exists()) {
+        if (FileUtils.safeGetCanonicalFile(new File(domainDir, domainName)).exists()) {
             throw new CommandValidationException(strings.get("DomainExists", domainName));
         }
         DomainConfig domainConfig = null;
-        if (template == null || template.endsWith(".jar")) {
-            domainConfig = new DomainConfig(domainName, domainPath, adminUser, adminPassword, masterPassword,
-                saveMasterPassword, adminPort, instancePort, domainProperties);
-            domainConfig.put(DomainConfig.K_VALIDATE_PORTS, Boolean.valueOf(checkPorts));
-            domainConfig.put(DomainConfig.KEYTOOLOPTIONS, keytoolOptions);
-            domainConfig.put(DomainConfig.K_TEMPLATE_NAME, template);
-            domainConfig.put(DomainConfig.K_PORTBASE, portBase);
-            domainConfig.put(DomainConfig.K_INITIAL_ADMIN_USER_GROUPS, Version.getDomainDefaultAdminGroups());
-            initSecureAdminSettings(domainConfig);
-            try {
-                DomainBuilder domainBuilder = new DomainBuilder(domainConfig);
-                domainBuilder.validateTemplate();
-                domainBuilder.run();
-            } catch (Exception e) {
-                throw new DomainException(e.getMessage());
-            }
-        } else {
+        if (template != null && !template.endsWith(".jar")) {
             throw new DomainException(strings.get("InvalidTemplateValue", template));
+        }
+        domainConfig = new DomainConfig(domainName, domainDir, adminUser, adminPassword, masterPassword,
+            saveMasterPassword, adminPort, instancePort, domainProperties);
+        domainConfig.put(DomainConfig.K_VALIDATE_PORTS, Boolean.valueOf(checkPorts));
+        domainConfig.put(DomainConfig.KEYTOOLOPTIONS, keytoolOptions);
+        domainConfig.put(DomainConfig.K_TEMPLATE_NAME, template);
+        domainConfig.put(DomainConfig.K_PORTBASE, portBase);
+        domainConfig.put(DomainConfig.K_INITIAL_ADMIN_USER_GROUPS, Version.getDomainDefaultAdminGroups());
+        initSecureAdminSettings(domainConfig);
+        try {
+            DomainBuilder domainBuilder = new DomainBuilder(domainConfig);
+            domainBuilder.validateTemplate();
+            domainBuilder.run();
+        } catch (DomainException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DomainException("Failed to create domain " + domainName, e);
         }
         logger.info(strings.get("DomainCreated", domainName));
         Integer aPort = (Integer) domainConfig.get(DomainConfig.K_ADMIN_PORT);

@@ -93,7 +93,7 @@ public final class ServerHelper {
                 // We are the DAS. Return our hostname
                 return System.getProperty(HOST_NAME.getSystemPropertyName());
             }
-            return NetUtils.getHostName();
+            return NetUtils.getCanonicalHostName();
         }
 
         String hostName = null;
@@ -107,7 +107,7 @@ public final class ServerHelper {
             }
             // Hack to get around the fact that the default localhost node entry is malformed
             if (hostName == null && nodeName.equals("localhost-" + domain.getName())) {
-                return NetUtils.getHostName();
+                return NetUtils.getCanonicalHostName();
             }
         }
 

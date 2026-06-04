@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @ExtendWith(OrbJunitExtension.class)
 public class CreateIiopListenerTest {
 
-    private static final String LOCALHOST = NetUtils.getHostName();
+    private static final String LOCALHOST = NetUtils.getCanonicalHostName();
 
     @Inject
     private ServiceLocator services;

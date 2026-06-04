@@ -32,7 +32,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.arrayWithSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -45,7 +46,12 @@ import static org.testcontainers.utility.MountableFile.forHostPath;
  */
 public class NetUtilsIT {
 
+    private static final String LOCALHOST = "localhost";
+    private static final String LOCALHOST_IPV4 = "127.0.0.1";
+    private static final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1%lo";
+
     private static final String HOSTNAME = "docker001";
+
     private static final String COMMAND_SUFFIX =
         "echo \"hostname: $(hostname)\n\""
          + " && echo \"/etc/hosts:\n$(cat /etc/hosts)\n\""
@@ -56,14 +62,15 @@ public class NetUtilsIT {
         import java.net.NetworkInterface;
         import java.util.Collections;
         import java.util.stream.Collectors;
+        import java.util.List;
 
         public class ContainerClass {
 
             public static void main(String[] args) throws Exception {
                 try {
-                    System.out.println("JVM, Localhost: " + InetAddress.getLocalHost());
+                    System.out.println("JVM, InetAddress.getLocalhost(): " + toString(InetAddress.getLocalHost()));
                 } catch (Exception e) {
-                    System.out.println("JVM, Localhost: Failed to resolve localhost: " + e);
+                    System.out.println("JVM, InetAddress.getLocalhost() failed: " + e.getMessage());
                 }
                 System.out.println("JVM, LoopbackAddress: " + InetAddress.getLoopbackAddress());
                 System.out.println("JVM, Known local addresses: "
@@ -72,7 +79,9 @@ public class NetUtilsIT {
                         .map(ContainerClass::toString)
                         .collect(Collectors.joining(", ")));
                 System.out.println("RESULT_getHostName: " + com.sun.enterprise.util.net.NetUtils.getHostName());
-                System.out.println("RESULT_getHostIPs: " + ipAddressessToString(com.sun.enterprise.util.net.NetUtils.getHostIPs()));
+                System.out.println("RESULT_getCanonicalHostName: " + com.sun.enterprise.util.net.NetUtils.getCanonicalHostName());
+                System.out.println("RESULT_getHostAddresses: " + ipAddressessToString(com.sun.enterprise.util.net.NetUtils.getHostAddresses()));
+                System.out.println("RESULT_getResolvableHostNames: " + listToString(com.sun.enterprise.util.net.NetUtils.getResolvableHostNames()));
                 System.out.println("RESULT_isPortFree: " + com.sun.enterprise.util.net.NetUtils.isPortFree(4848));
                 System.out.println("RESULT_checkPort: " + com.sun.enterprise.util.net.NetUtils.checkPort(4848));
                 System.out.println("RESULT_isLocal: " + com.sun.enterprise.util.net.NetUtils.METHOD_ISLOCAL);
@@ -90,8 +99,12 @@ public class NetUtilsIT {
                 }
             }
 
-            private static String ipAddressessToString(String[] addresses) {
-                return String.join(",", addresses);
+            private static String ipAddressessToString(List<InetAddress> addresses) {
+                return addresses.stream().map(ContainerClass::toString).collect(Collectors.joining(", "));
+            }
+
+            private static String listToString(List<?> objects) {
+                return objects.stream().map(String::valueOf).collect(Collectors.joining(", "));
             }
         }
         """;
@@ -123,13 +136,19 @@ public class NetUtilsIT {
     @Test
     void defaultHosts() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainer(containerClass);
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetHostIPs(logs), stringContainsInOrder(getContainerHostIP())),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                    equalTo("localhost/127.0.0.1[reachable]"),
+                    equalTo("localhost/0:0:0:0:0:0:0:1%lo[reachable]"))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -138,22 +157,47 @@ public class NetUtilsIT {
     }
 
     @Test
+    void emptyHosts() throws Exception {
+        String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, LOCALHOST_IPV4);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, LOCALHOST_IPV4);
+        container = createContainerWitHosts("", containerClass);
+        container.start();
+        final String[] logs = getLogs(container);
+        assertAll(container.getLogs(),
+            () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo("127.0.0.1")),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo()),
+                    equalTo("127.0.0.1/127.0.0.1[reachable]"),
+                    equalTo("0:0:0:0:0:0:0:1%lo/0:0:0:0:0:0:0:1%lo[reachable]"))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayWithSize(0)),
+            () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
+            () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
+            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
+            () -> assertThat(getResultForIsSameHost(logs), equalTo("true"))
+        );
+    }
+
+    @Test
     void extraHostnameVsLoopback() throws Exception {
-        // FIXME: Controversial: known addresses contain docker001/172.17.0.4[reachable]
-        //        but getLocalHost returns docker001/127.0.0.1
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainer(containerClass)
             .withExtraHost(HOSTNAME, "::1") // IPv6 localhost
-            .withExtraHost(HOSTNAME, "127.0.0.1") // usual localhost
+            .withExtraHost(HOSTNAME, LOCALHOST_IPV4) // usual localhost
         ;
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            // Why - ipv4 loopback has special priority.
-            () -> assertThat(getResultForGetHostIPs(logs),
-                stringContainsInOrder("127.0.0.1", getContainerHostIP(), "0:0:0:0:0:0:0:1")),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                    equalTo(getLocalhostAddressInfoV4()),
+                    equalTo(getLocalhostAddressInfoV6()))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -164,19 +208,24 @@ public class NetUtilsIT {
     @Test
     void extraHostnameUnreachableIpVsLoopback() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", "0:0:0:0:0:0:0:1%lo");
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, LOCALHOST_IPV6);
         container = createContainer(containerClass)
             .withExtraHost(HOSTNAME, "127.0.0.13") // unreachable IP
             .withExtraHost(HOSTNAME, "::1") // IPv6 localhost
-            .withExtraHost(HOSTNAME, "127.0.0.1") // usual localhost
+            .withExtraHost(HOSTNAME, LOCALHOST_IPV4) // usual localhost
             .withExtraHost("dockerhost", "172.17.0.1") // remote host, not interesting for JVM.
         ;
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetHostIPs(logs),
-                stringContainsInOrder("127.0.0.1", "127.0.0.13", getContainerHostIP(), "0:0:0:0:0:0:0:1")),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                    equalTo(getLocalhostAddressInfoV4()),
+                    equalTo(getLocalhostAddressInfoV6()))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -188,7 +237,7 @@ public class NetUtilsIT {
     void extraHostnameUnreachableIP() throws Exception {
         // FIXME: There is another record of the hostname and correct IP, can we reach it?
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainer(containerClass)
             .withExtraHost(HOSTNAME, "127.0.0.13") // unreachable IP
         ;
@@ -196,7 +245,13 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetHostIPs(logs), stringContainsInOrder("127.0.0.13", getContainerHostIP())),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                    arrayContaining(
+                        equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                        equalTo(getLocalhostAddressInfoV4()),
+                        equalTo(getLocalhostAddressInfoV6()))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -208,13 +263,19 @@ public class NetUtilsIT {
     @Test
     void extraBadLocalhostMapping() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
-        container = createContainer(containerClass).withExtraHost("localhost", "127.0.0.100");
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
+        container = createContainer(containerClass).withExtraHost(LOCALHOST, "127.0.0.100");
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetHostIPs(logs), stringContainsInOrder(getContainerHostIP())),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                    equalTo(getLocalhostAddressInfoV4()),
+                    equalTo(getLocalhostAddressInfoV6()))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -223,32 +284,21 @@ public class NetUtilsIT {
     }
 
     @Test
-    void emptyHosts() throws Exception {
-        String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, "127.0.0.1");
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", "127.0.0.1");
-        container = createContainerWitHosts("", containerClass);
-        container.start();
-        final String[] logs = getLogs(container);
-        assertAll(container.getLogs(),
-            () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
-            () -> assertThat(getResultForGetHostIPs(logs), equalTo("127.0.0.1")),
-            () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
-            () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
-            () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
-            () -> assertThat(getResultForIsSameHost(logs), equalTo("true"))
-        );
-    }
-
-    @Test
-    void justLoopback() throws Exception {
-        String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, "localhost");
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+    void justIpv6Loopback() throws Exception {
+        String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, LOCALHOST);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainerWitHosts("::1 localhost", containerClass);
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
-            () -> assertThat(getResultForGetHostName(logs), equalTo("localhost")),
-            () -> assertThat(getResultForGetHostIPs(logs), equalTo("0:0:0:0:0:0:0:1")),
+            () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo()),
+                    equalTo(getHostAddressInfo(LOCALHOST, LOCALHOST_IPV6)),
+                    equalTo(getHostAddressInfo(LOCALHOST_IPV4, LOCALHOST_IPV4)))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining("localhost")),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -257,15 +307,21 @@ public class NetUtilsIT {
     }
 
     @Test
-    void justHost() throws Exception {
+    void justIpv6Host() throws Exception {
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainerWitHosts("::1 " + HOSTNAME, containerClass);
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetHostIPs(logs), equalTo("0:0:0:0:0:0:0:1")),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo()),
+                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV6)),
+                    equalTo(getHostAddressInfo(LOCALHOST_IPV4, LOCALHOST_IPV4)))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -278,14 +334,19 @@ public class NetUtilsIT {
         String hosts = "127.0.0.13 " + HOSTNAME + "\n::1 " + HOSTNAME + "\n127.0.0.1 " + HOSTNAME
             + "\n172.17.0.1 dockerhost";
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, "dockerhost");
-        String containerClass = filterMethodIsSameHost(containerClass0, "localhost", HOSTNAME);
+        String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainerWitHosts(hosts, containerClass);
         container.start();
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetHostIPs(logs),
-                stringContainsInOrder("127.0.0.1", "127.0.0.13", "0:0:0:0:0:0:0:1")),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetHostAddresses(logs),
+                arrayContaining(
+                    equalTo(getContainerHostAddressInfo()),
+                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV4)),
+                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV6)))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("false")),
@@ -308,16 +369,36 @@ public class NetUtilsIT {
         final Path classFilePath = Files.writeString(Files.createTempFile("ContainerClass", ".java"), classFileContent);
         return new GenericContainer<>("eclipse-temurin:" + Runtime.version().feature())
             .withCopyFileToContainer(forHostPath(System.getProperty("jarFilePath")), "/app/lib.jar")
-            .withCopyFileToContainer(forHostPath(classFilePath),
-                "/app/ContainerClass.java")
+            .withCopyFileToContainer(forHostPath(classFilePath), "/app/ContainerClass.java")
             .withCommand("sh", "-c", bashCommand)
             .withCreateContainerCmdModifier(cmd -> cmd.withHostName(HOSTNAME))
             .waitingFor(Wait.forLogMessage(".*DONE.*", 1).withStartupTimeout(Duration.ofSeconds(5L)));
     }
 
+    private String getContainerHostAddressInfo() {
+        String containerHostIP = getContainerHostIP();
+        return getHostAddressInfo(containerHostIP, containerHostIP);
+    }
+
+    private String getContainerHostAddressInfo(String hostName) {
+        return getHostAddressInfo(hostName, getContainerHostIP());
+    }
+
+    private String getLocalhostAddressInfoV4() {
+        return getHostAddressInfo(LOCALHOST, LOCALHOST_IPV4);
+    }
+
+    private String getLocalhostAddressInfoV6() {
+        return getHostAddressInfo(LOCALHOST, LOCALHOST_IPV6);
+    }
+
+    private String getHostAddressInfo(String host, String ip) {
+        return host + "/" + ip + "[reachable]";
+    }
+
     private String getContainerHostIP() {
         var networkSettings = container.getContainerInfo().getNetworkSettings();
-        String ip = networkSettings.getIpAddress();
+        String ip = networkSettings.getGlobalIPv6Address();
         if (ip != null && !ip.isEmpty()) {
             return ip;
         }
@@ -349,8 +430,17 @@ public class NetUtilsIT {
         return getResult("RESULT_getHostName: ", logs);
     }
 
-    private static String getResultForGetHostIPs(String[] logs) {
-        return getResult("RESULT_getHostIPs: ", logs);
+    private static String getResultForGetCanonicalHostName(String[] logs) {
+        return getResult("RESULT_getCanonicalHostName: ", logs);
+    }
+
+    private static String[] getResultForGetHostAddresses(String[] logs) {
+        return getResult("RESULT_getHostAddresses: ", logs).split(", ");
+    }
+
+    private static String[] getResultForGetResolvableHostNames(String[] logs) {
+        String result = getResult("RESULT_getResolvableHostNames: ", logs);
+        return result.isBlank() ? new String[0] : result.split(", ");
     }
 
     private static String getResultForIsPortFree(String[] logs) {

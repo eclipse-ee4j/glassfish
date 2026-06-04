@@ -20,17 +20,17 @@ import java.lang.System.Logger;
 import java.net.InetAddress;
 import java.util.List;
 
+import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -52,9 +52,9 @@ public class NetUtilsTest {
     }
 
     @Test
-    void getHostNames() throws Exception {
-        List<String> hostNames = NetUtils.getHostNames();
-        assertThat("Detected hostnames: " + hostNames, hostNames, containsInRelativeOrder(NetUtils.getHostName()));
+    void getResolvableHostNames() throws Exception {
+        List<String> hostNames = NetUtils.getResolvableHostNames();
+        assertThat("Detected hostnames: " + hostNames, hostNames, not(IsEmptyCollection.empty()));
     }
 
     @Test
@@ -89,28 +89,28 @@ public class NetUtilsTest {
         );
     }
 
+    // The text behind % marks interface name.
     @Test
     @EnabledOnOs(OS.WINDOWS)
     void isLocalHost_windows() {
-        assertTrue(NetUtils.isLocal("::1%1"), "IPv6 address ::1%1, short format");
+        assertTrue(NetUtils.isLocal("::1%1"), "IPv6 address ::1%1, short windows format");
     }
 
     @Test
-    @DisabledOnOs(OS.WINDOWS)
+    @EnabledOnOs(OS.LINUX)
     void isLocalHost_linux() {
-        assertTrue(NetUtils.isLocal("::1%lo"), "IPv6 address ::1%lo, short format");
+        assertTrue(NetUtils.isLocal("::1%lo"), "IPv6 address ::1%lo, short linux format");
+    }
+
+    @Test
+    @EnabledOnOs(OS.MAC)
+    void isLocalHost_mac() {
+        assertTrue(NetUtils.isLocal("::1%lo0"), "IPv6 address ::1%lo0, short mac format");
     }
 
     @Test
     void getHostAddresses() throws Exception {
-        InetAddress[] addresses = NetUtils.getHostAddresses();
-        assertThat(addresses, arrayWithSize(greaterThan(0)));
+        List<InetAddress> addresses = NetUtils.getHostAddresses();
+        assertThat(addresses, hasSize(greaterThan(0)));
     }
-
-    @Test
-    void getHostIPs() throws Exception {
-        String[] addresses = NetUtils.getHostIPs();
-        assertThat(addresses, arrayWithSize(greaterThan(0)));
-    }
-
 }

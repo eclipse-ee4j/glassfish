@@ -221,7 +221,7 @@ public class DefaultTransactionService implements ProxyChecker {
             }
             final String serverName;
             if (properties.getProperty(JTS_XA_SERVER_NAME) == null) {
-                serverName = NetUtils.getHostName();
+                serverName = NetUtils.getCanonicalHostName();
             } else {
                 serverName = properties.getProperty(JTS_XA_SERVER_NAME);
                 LOG.log(DEBUG, "DTR: Got serverName from JTS_XA_SERVER_NAME");

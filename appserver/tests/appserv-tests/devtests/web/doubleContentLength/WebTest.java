@@ -61,9 +61,9 @@ public class WebTest {
         Socket s = new Socket(host, port);
         OutputStream os = s.getOutputStream();
 
-        System.out.println(("POST " + contextPath + " HTTP/1.1\n"));
+        System.out.println(("POST " + contextPath + " HTTP/1.1\r\n"));
         try {
-            os.write(("POST " + contextPath + " HTTP/1.1\n").getBytes());
+            os.write(("POST " + contextPath + " HTTP/1.1\r\n").getBytes());
             os.write(("Host: localhost\r\n").getBytes());
             os.write("content-length: 0\r\n".getBytes());
             os.write("content-length: 10\r\n".getBytes());

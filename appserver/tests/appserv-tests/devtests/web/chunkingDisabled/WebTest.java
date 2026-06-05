@@ -69,13 +69,13 @@ public class WebTest {
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
 
-        String get = "GET " + contextRoot + "/TestServlet" + " HTTP/1.1\n";
+        String get = "GET " + contextRoot + "/TestServlet" + " HTTP/1.1\r\n";
         os.write(get.getBytes());
 
-        String hostHeader = "Host: " + host + ":" + port + "\n";
+        String hostHeader = "Host: " + host + ":" + port + "\r\n";
         os.write(hostHeader.getBytes());
 
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

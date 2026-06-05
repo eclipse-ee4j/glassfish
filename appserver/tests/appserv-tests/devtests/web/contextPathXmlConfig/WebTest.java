@@ -76,10 +76,10 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/webapp-context-path-xml-test.jsp" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/webapp-context-path-xml-test.jsp" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

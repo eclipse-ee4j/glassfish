@@ -62,10 +62,10 @@ public class WebTest {
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         System.out.println(("OPTIONS " + contextRoot + "/TestServlet"
-            + " HTTP/1.0\n"));
+            + " HTTP/1.0\r\n"));
         os.write(("OPTIONS " + contextRoot + "/TestServlet"
-            + " HTTP/1.0\n").getBytes());
-        os.write("\n".getBytes());
+            + " HTTP/1.0\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

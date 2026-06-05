@@ -59,8 +59,8 @@ public class WebTest
         OutputStream os = s.getOutputStream();
 
         System.out.println("GET " + contextPath + " HTTP/1.0");
-        os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
-        os.write("\n".getBytes());
+        os.write(("GET " + contextPath + " HTTP/1.0\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

@@ -57,8 +57,8 @@ public class WebTest {
             String requestUri = contextRoot + "/causeError.jsp";
 
             System.out.println("GET " + requestUri + " HTTP/1.0");
-            os.write(("GET " + requestUri + " HTTP/1.0\n").getBytes());
-            os.write("\n".getBytes());
+            os.write(("GET " + requestUri + " HTTP/1.0\r\n").getBytes());
+            os.write("\r\n".getBytes());
 
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));

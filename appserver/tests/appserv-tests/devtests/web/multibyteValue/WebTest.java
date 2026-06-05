@@ -64,10 +64,10 @@ public class WebTest {
         Socket s = new Socket(host, port);
         OutputStream os = s.getOutputStream();
         System.out.println(("GET " + contextPath + "?j_encoding=Shift_JIS"
-                                                            + " HTTP/1.0\n"));
+                                                            + " HTTP/1.0\r\n"));
         os.write(("GET " + contextPath + "?j_encoding=Shift_JIS"
-                                                + " HTTP/1.0\n").getBytes());
-        os.write("\n".getBytes());
+                                                + " HTTP/1.0\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

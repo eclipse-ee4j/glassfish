@@ -61,10 +61,10 @@ public class WebTest {
         // Access test1.jsp
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/test1.jsp" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/test1.jsp" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -84,12 +84,12 @@ public class WebTest {
         // Access test2.jsp
         sock = new Socket(host, new Integer(port).intValue());
         os = sock.getOutputStream();
-        get = "GET " + contextRoot + "/test2.jsp" + " HTTP/1.0\n";
+        get = "GET " + contextRoot + "/test2.jsp" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        String acceptLanguage = "Accept-Language: de\n";
+        String acceptLanguage = "Accept-Language: de\r\n";
         os.write(acceptLanguage.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         is = sock.getInputStream();
         br = new BufferedReader(new InputStreamReader(is));

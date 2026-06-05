@@ -70,10 +70,10 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + "/jsp/test.jsp HTTP/1.0\n";
+            String get = "GET " + contextRoot + "/jsp/test.jsp HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
@@ -89,7 +89,7 @@ public class WebTest {
             }
 
             if (!found) {
-                throw new Exception("Wrong response, expected: \n" +
+                throw new Exception("Wrong response, expected: \r\n" +
                                  "For JDK 5: " + EXPECTED_ERROR + '\n' +
                                  "For JDK 6: " + EXPECTED_ERROR_JDK6);
             }

@@ -91,11 +91,11 @@ public class WebTest {
         OutputStream os = sock.getOutputStream();
         for (String reqLine : reqLines) {
             System.out.println(reqLine);
-            os.write((reqLine + "\n").getBytes());
+            os.write((reqLine + "\r\n").getBytes());
         }
 
-        os.write("Host: localhost\n".getBytes());
-        os.write("Connection: close\n".getBytes());
+        os.write("Host: localhost\r\n".getBytes());
+        os.write("Connection: close\r\n".getBytes());
         os.write("\r\n".getBytes());
 
         System.out.println();

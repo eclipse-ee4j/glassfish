@@ -69,10 +69,10 @@ public class WebTest {
         try{
             s = new Socket(host, port);
             os = s.getOutputStream();
-            System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
-            os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
-            os.write("Authorization: Basic ajJlZTpqMmVl\n".getBytes());
-            os.write("\n".getBytes());
+            System.out.println(("GET " + contextPath + " HTTP/1.0\r\n"));
+            os.write(("GET " + contextPath + " HTTP/1.0\r\n").getBytes());
+            os.write("Authorization: Basic ajJlZTpqMmVl\r\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));

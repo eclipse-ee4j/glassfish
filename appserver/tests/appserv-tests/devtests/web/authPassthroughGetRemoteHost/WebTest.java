@@ -91,11 +91,11 @@ public class WebTest {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/remoteHost.jsp "
-            + "HTTP/1.0\n";
+            + "HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("Proxy-ip: 127.0.0.1\n".getBytes());
-        os.write("\n".getBytes());
+        os.write("Proxy-ip: 127.0.0.1\r\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

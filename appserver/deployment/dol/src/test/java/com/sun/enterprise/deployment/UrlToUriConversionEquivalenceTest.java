@@ -17,69 +17,130 @@
 package com.sun.enterprise.deployment;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Pins down the behavioural equivalence (and the known divergences) between the deprecated
- * {@code new URL(protocol, host, port, file)} constructor and its replacement
- * {@code new URI(protocol, null, host, port, file, null, null).toURL()} used in
- * {@link WebServiceEndpoint#composeEndpointAddress(URL, String)}.
+ * Documents the behavioural equivalence <em>and the known divergences</em> between the deprecated
+ * string-based {@code java.net.URL} constructors (deprecated since Java 20) and the two
+ * {@code java.net.URI}-based replacements this change uses:
  *
- * <p>The deprecated four-argument {@code URL} constructor copies the {@code file} part verbatim,
- * whereas the multi-argument {@code URI} constructor percent-encodes its path argument. For the
- * plain ASCII paths these endpoint addresses use in practice the two are identical; this test
- * makes that guarantee explicit and documents the two cases where they intentionally differ.
+ * <ul>
+ *   <li><b>multi-arg form</b> &mdash; {@code new URI(scheme, null, host, port, path, null, null).toURL()},
+ *       used by {@link WebServiceEndpoint#composeEndpointAddress(URL, String)}. It correctly omits a
+ *       default ({@code -1}) port, but <em>percent-encodes the path</em> and parses the host as a
+ *       registry-based authority.</li>
+ *   <li><b>spec form</b> &mdash; {@code new URI(scheme + "://" + host + ":" + port + file).toURL()},
+ *       used by the {@code RealmAdapter} SSL redirect. It copies the already-encoded request URI
+ *       verbatim (no re-encoding, query string preserved), but is strict about raw illegal
+ *       characters.</li>
+ * </ul>
+ *
+ * <p>The behaviour pinned here was confirmed against the deprecated {@code URL} constructor on
+ * JDK 21. The point of the test is the one dmatej raised on the PR: the replacement is not a blind
+ * 1:1 swap, so the traps (re-encoding, unicode host, raw spaces) are nailed down explicitly and any
+ * future JDK/behaviour drift fails here rather than in production.
  */
 class UrlToUriConversionEquivalenceTest {
 
     @SuppressWarnings("deprecation") // the deprecated URL ctor is the reference behaviour under test
-    private static URL legacy(String protocol, String host, int port, String file) throws Exception {
-        return new URL(protocol, host, port, file);
+    private static String legacy(String scheme, String host, int port, String file) throws Exception {
+        return new URL(scheme, host, port, file).toExternalForm();
     }
 
-    private static URL migrated(String protocol, String host, int port, String file) throws Exception {
-        return new URI(protocol, null, host, port, file, null, null).toURL();
+    /** The form used in {@link WebServiceEndpoint}. */
+    private static String multiArg(String scheme, String host, int port, String path) throws Exception {
+        return new URI(scheme, null, host, port, path, null, null).toURL().toExternalForm();
     }
 
-    private static void assertEquivalent(String protocol, String host, int port, String file) throws Exception {
-        assertEquals(
-            legacy(protocol, host, port, file).toExternalForm(),
-            migrated(protocol, host, port, file).toExternalForm(),
-            "URI replacement must match the deprecated URL constructor for " + protocol + "://" + host + ":" + port + file);
+    /** The form used in the {@code RealmAdapter} SSL redirect. */
+    private static String spec(String scheme, String host, int port, String file) throws Exception {
+        return new URI(scheme + "://" + host + ":" + port + file).toURL().toExternalForm();
     }
+
+    // ---- cases where every form agrees with the deprecated constructor -------------------------
 
     @Test
-    void plainPathsAreEquivalent() throws Exception {
-        assertEquivalent("http", "localhost", 8080, "/app/MyService");
-        assertEquivalent("https", "example.com", 443, "/a/b/c/MyServiceService");
-        assertEquivalent("http", "127.0.0.1", 80, "/");
-        assertEquivalent("http", "localhost", 8080, "/ctx/sub/endpoint");
+    void plainAsciiPathsAreEquivalent() throws Exception {
+        for (String path : new String[] {"/app/MyService", "/a/b/c/MyServiceService", "/"}) {
+            assertEquals(legacy("https", "host.example", 8080, path), multiArg("https", "host.example", 8080, path),
+                "multi-arg must match deprecated URL for " + path);
+            assertEquals(legacy("https", "host.example", 8080, path), spec("https", "host.example", 8080, path),
+                "spec form must match deprecated URL for " + path);
+        }
     }
 
     /**
-     * Default port (-1): both forms omit the {@code :port} segment, so they stay equivalent.
-     * This is why {@code WebServiceEndpoint} keeps the multi-argument {@code URI} constructor
-     * rather than assembling a {@code host:port} string (a {@code ":-1"} would otherwise leak in).
+     * Default port ({@code -1}): both the deprecated ctor and the multi-arg URI ctor omit the
+     * {@code :port} segment. This is why {@code WebServiceEndpoint} keeps the multi-arg ctor rather
+     * than assembling a {@code host:port} string (the spec form would otherwise emit {@code :-1}).
      */
     @Test
-    void defaultPortIsEquivalent() throws Exception {
-        assertEquivalent("http", "localhost", -1, "/app/MyService");
+    void multiArgHandlesDefaultPort() throws Exception {
+        assertEquals(legacy("http", "host.example", -1, "/app/MyService"),
+            multiArg("http", "host.example", -1, "/app/MyService"));
+    }
+
+    /** A raw (non-ASCII) character in the path is preserved identically by all three forms. */
+    @Test
+    void rawUnicodeInPathIsPreserved() throws Exception {
+        String path = "/app/café";
+        assertEquals(legacy("https", "host.example", 8080, path), multiArg("https", "host.example", 8080, path));
+        assertEquals(legacy("https", "host.example", 8080, path), spec("https", "host.example", 8080, path));
+    }
+
+    // ---- divergences: multi-arg form re-encodes / validates --------------------------------------
+
+    /**
+     * Multi-arg ctor percent-encodes the path. A path that is <em>already</em> encoded is therefore
+     * double-encoded ({@code %2F} -&gt; {@code %252F}). Endpoint addresses are built from un-encoded
+     * descriptor values so this does not arise in practice, but the boundary is recorded here.
+     */
+    @Test
+    void multiArgReEncodesPreEncodedPath() throws Exception {
+        assertEquals("https://host.example:8080/a%2Fb", legacy("https", "host.example", 8080, "/a%2Fb"));
+        assertEquals("https://host.example:8080/a%252Fb", multiArg("https", "host.example", 8080, "/a%2Fb"));
+        // the spec form, by contrast, copies it verbatim (matches the deprecated ctor)
+        assertEquals(legacy("https", "host.example", 8080, "/a%2Fb"), spec("https", "host.example", 8080, "/a%2Fb"));
+    }
+
+    /** Multi-arg ctor percent-encodes a raw space; the deprecated ctor copied it verbatim. */
+    @Test
+    void multiArgEncodesRawSpace() throws Exception {
+        assertEquals("https://host.example:8080/a b", legacy("https", "host.example", 8080, "/a b"));
+        assertEquals("https://host.example:8080/a%20b", multiArg("https", "host.example", 8080, "/a b"));
     }
 
     /**
-     * Known, intentional divergence: a {@code file} that already contains a percent-encoded
-     * sequence is copied verbatim by {@code new URL(...)} but re-encoded by the {@code URI}
-     * constructor ({@code %2F} becomes {@code %252F}). Endpoint address paths are composed from
-     * un-encoded descriptor values, so this case does not arise in practice, but the test records
-     * the boundary so a future change that starts feeding pre-encoded input is caught here.
+     * Multi-arg ctor parses the host as a registry-based authority and <em>rejects</em> a non-ASCII
+     * (IDN) host that the deprecated ctor accepted verbatim. This is the unicode-host case dmatej
+     * flagged: a web-service endpoint deployed against an IDN host would now fail here. The spec
+     * form (RealmAdapter) keeps the host verbatim, matching the old behaviour.
      */
     @Test
-    void preEncodedPathIsReEncoded() throws Exception {
-        assertEquals("http://localhost:8080/a%2Fb", legacy("http", "localhost", 8080, "/a%2Fb").toExternalForm());
-        assertEquals("http://localhost:8080/a%252Fb", migrated("http", "localhost", 8080, "/a%2Fb").toExternalForm());
+    void multiArgRejectsUnicodeHostWhileSpecFormPreservesIt() throws Exception {
+        assertThrows(URISyntaxException.class,
+            () -> new URI("https", null, "höst.example", 8080, "/app/x", null, null));
+        assertEquals(legacy("https", "höst.example", 8080, "/app/x"),
+            spec("https", "höst.example", 8080, "/app/x"));
+    }
+
+    // ---- divergences: spec form is strict about raw illegal characters ---------------------------
+
+    /**
+     * The spec form is RFC-3986 strict, so a raw space (or other illegal char) throws instead of
+     * being copied verbatim. In the {@code RealmAdapter} redirect the input is
+     * {@code HttpServletRequest.getRequestURI()} + {@code getQueryString()}, which the container has
+     * already percent-encoded, and the surrounding catch turns a failure into an HTTP 500 rather
+     * than a crash &mdash; so the exposure is contained, but it is a real change.
+     */
+    @Test
+    void specFormRejectsRawSpace() {
+        assertThrows(URISyntaxException.class, () -> new URI("https://host.example:8080/a b"));
     }
 }

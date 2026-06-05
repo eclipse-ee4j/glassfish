@@ -29,7 +29,6 @@ import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -224,7 +223,7 @@ public class GetApplicationLaunchURLsCommand implements AdminCommand, AdminComma
                     }
                     try {
                         int port = Integer.parseInt(portStr);
-                        URL url = new URI(proto, null, host, port, contextRoot, null, null).toURL();
+                        URL url = new URL(proto, host, port, contextRoot);
                         serverURLs.add(url);
                     } catch (Exception ee) {
                         logger.log(Level.WARNING, ee.getMessage(), ee);

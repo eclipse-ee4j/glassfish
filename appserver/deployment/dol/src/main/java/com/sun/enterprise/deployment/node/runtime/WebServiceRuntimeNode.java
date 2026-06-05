@@ -26,7 +26,6 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,9 +67,9 @@ public class WebServiceRuntimeNode extends DeploymentDescriptorNode<WebService> 
                 return;
             }
             try {
-                URL url = URI.create(value).toURL();
+                URL url = new URL(value);
                 descriptor.setClientPublishUrl(url);
-            } catch (IllegalArgumentException | MalformedURLException mue) {
+            } catch (MalformedURLException mue) {
                 LOG.log(Level.WARNING, "Warning : Invalid final wsdl url=" + value, mue);
             }
         } else {

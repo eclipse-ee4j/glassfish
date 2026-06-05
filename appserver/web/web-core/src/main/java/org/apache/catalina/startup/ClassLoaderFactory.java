@@ -120,7 +120,7 @@ public final class ClassLoaderFactory {
                     continue;
                 if (log.isLoggable(FINE))
                     log.log(FINE, "Including directory or JAR " + file.getAbsolutePath());
-                URL url = new File(file.getCanonicalPath() + File.separator).toURI().toURL();
+                URL url = new URL("file", null, file.getCanonicalPath() + File.separator);
                 set.add(url);
             }
         }
@@ -139,7 +139,7 @@ public final class ClassLoaderFactory {
                     File file = new File(directory, filenames[j]);
                     if (log.isLoggable(FINE))
                         log.log(FINE, "Including jar file " + file.getAbsolutePath());
-                    URL url = file.getCanonicalFile().toURI().toURL();
+                    URL url = new URL("file", null, file.getCanonicalPath());
                     set.add(url);
                 }
             }

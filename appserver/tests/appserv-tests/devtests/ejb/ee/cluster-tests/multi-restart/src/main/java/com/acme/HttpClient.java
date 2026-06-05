@@ -65,7 +65,7 @@ public class HttpClient {
 
                 System.out.println("invoking webclient servlet at " + url);
 
-                URL u = URI.create(url).toURL();
+                URL u = new URL(url);
                 URLConnection uc = u.openConnection();
 
                 stateInfo = extractSessionStates(uc);
@@ -131,7 +131,7 @@ public class HttpClient {
 
     private boolean accessApplication(String urlStr) {
         try {
-            URL url = URI.create(urlStr).toURL();
+            URL url = new URL(urlStr);
             URLConnection uc = url.openConnection();
             for (String cookie : responseCookies) {
                 uc.setRequestProperty("Cookie", cookie);

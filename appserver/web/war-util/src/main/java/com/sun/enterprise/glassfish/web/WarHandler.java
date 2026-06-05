@@ -204,9 +204,9 @@ public class WarHandler extends AbstractArchiveHandler {
             }
 
             try {
-                URI.create(path).toURL();
+                new URL(path);
                 cloader.addRepository(path);
-            } catch (IllegalArgumentException | MalformedURLException mue1) {
+            } catch (MalformedURLException mue1) {
                 // Not a URL, interpret as file
                 File file = new File(path);
                 if (!file.isAbsolute()) {

@@ -85,7 +85,7 @@ public class HTTPInputArchive extends AbstractReadableArchive {
         if (! (name.charAt(0) == '/')) {
             name = "/" + name;
         }
-        return URI.create("jar:" + archiveURI.toASCIIString() + "!" + name).toURL();
+        return new URL("jar:" + archiveURI.toASCIIString() + "!" + name);
     }
 
     @Override

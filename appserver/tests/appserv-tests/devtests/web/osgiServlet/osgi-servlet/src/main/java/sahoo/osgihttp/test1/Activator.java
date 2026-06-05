@@ -75,7 +75,7 @@ public class Activator implements BundleActivator {
                 String inputLine = new String();
                 StringBuffer resbuf = new StringBuffer();
                 BufferedReader in = null;
-                source = URI.create(urlstr).toURL();
+                source = new URL(urlstr);
                 in = new BufferedReader(new InputStreamReader(source.openStream()));
                 while ((inputLine = in.readLine()) != null) {
                         resbuf.append(inputLine);

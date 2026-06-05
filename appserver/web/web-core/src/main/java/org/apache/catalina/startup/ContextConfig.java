@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -909,7 +908,7 @@ public class ContextConfig
             pathName = pathName.substring(1).replace('/','#');
         }
         if (docBase.toLowerCase(Locale.ENGLISH).endsWith(".war") && !file.isDirectory() && unpackWARs) {
-            URL war = URI.create("jar:" + (new File(docBase)).toURI().toURL() + "!/").toURL();
+            URL war = new URL("jar:" + (new File(docBase)).toURI().toURL() + "!/");
             docBase = ExpandWar.expand(host, war, pathName);
             file = new File(docBase);
             docBase = file.getCanonicalPath();
@@ -919,7 +918,7 @@ public class ContextConfig
         } else if (docBase.toLowerCase(Locale.ENGLISH).endsWith(".war") &&
                 !file.isDirectory() && !unpackWARs) {
             URL war =
-                URI.create("jar:" + (new File (docBase)).toURI().toURL() + "!/").toURL();
+                new URL("jar:" + (new File (docBase)).toURI().toURL() + "!/");
             ExpandWar.validate(host, war, pathName);
         } else {
             File docDir = new File(docBase);
@@ -927,7 +926,7 @@ public class ContextConfig
                 File warFile = new File(docBase + ".war");
                 if (warFile.exists()) {
                     URL war =
-                        URI.create("jar:" + warFile.toURI().toURL() + "!/").toURL();
+                        new URL("jar:" + warFile.toURI().toURL() + "!/");
                     if (unpackWARs) {
                         docBase = ExpandWar.expand(host, war, pathName);
                         file = new File(docBase);

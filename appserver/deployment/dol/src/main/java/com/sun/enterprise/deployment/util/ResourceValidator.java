@@ -49,7 +49,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.net.MalformedURLException;
-import java.net.URI;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -440,9 +440,9 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 if (jndiName != null && !jndiName.hasJavaPrefix()) {
                     try {
                         // for jndi-name like "http://localhost:8080/index.html"
-                        URI.create(jndiName.toString()).toURL();
+                        new URL(jndiName.toString());
                         resRefResource.noValidation();
-                    } catch (IllegalArgumentException | MalformedURLException e) {
+                    } catch (MalformedURLException e) {
                         // If jndi-name is not an actual url, we might want to lookup the name
                     }
                 }

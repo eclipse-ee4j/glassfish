@@ -51,7 +51,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -5876,7 +5875,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
                 }
                 String fullPath = getName() + path;
                 String hostName = getParent().getName();
-                return URL.of(new URI("jndi", "", getJNDIUri(hostName, fullPath), null),
+                return new URL("jndi", "", 0, getJNDIUri(hostName, fullPath),
                     new DirContextURLStreamHandler(resources));
             } catch (Exception e) {
                 // do nothing

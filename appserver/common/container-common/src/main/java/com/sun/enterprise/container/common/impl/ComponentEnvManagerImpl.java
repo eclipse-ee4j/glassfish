@@ -60,7 +60,7 @@ import jakarta.validation.ValidatorContext;
 import jakarta.validation.ValidatorFactory;
 
 import java.net.MalformedURLException;
-import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -587,8 +587,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                     try {
                         // For jndi-name like "http://localhost:8080/index.html"
                         value = namingUtils.createCloningNamingObjectFactory(name,
-                            namingUtils.createSimpleNamingObjectFactory(name, URI.create(physicalJndiName.toString()).toURL()));
-                    } catch (IllegalArgumentException | MalformedURLException e) {
+                            namingUtils.createSimpleNamingObjectFactory(name, new URL(physicalJndiName.toString())));
+                    } catch (MalformedURLException e) {
                         // For jndi-name or lookup-name like "url/testUrl"
                         value = namingUtils.createLazyNamingObjectFactory(name, physicalJndiName, false);
                     }

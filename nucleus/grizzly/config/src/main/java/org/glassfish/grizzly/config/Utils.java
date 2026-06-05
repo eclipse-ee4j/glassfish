@@ -24,7 +24,6 @@ import java.lang.System.Logger.Level;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class Utils {
         URL url = Utils.class.getClassLoader().getResource(fileURL);
         if (url == null) {
             try {
-                url = URI.create(fileURL).toURL();
+                url = new URL(fileURL);
             } catch (MalformedURLException e) {
                 throw new GrizzlyConfigException(e.getMessage());
             }

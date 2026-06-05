@@ -273,8 +273,8 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
             URL resourceURL = super.findResource(name);
             if (resourceURL != null) {
                 try {
-                    resourceURL = URL.of(URI.create(resourceURL.toExternalForm()), urlStreamHandler);
-                } catch (IllegalArgumentException | MalformedURLException e) {
+                    resourceURL = new URL(resourceURL, resourceURL.toExternalForm(), urlStreamHandler);
+                } catch (MalformedURLException e) {
                     resourceURL = null;
                 }
             }
@@ -323,7 +323,7 @@ public class AppLibClassLoaderServiceImpl implements EventListener {
         @Override
         public void connect() throws IOException {
             if (jarURLConnection == null) {
-                URLConnection urlConnection = URI.create(url.toExternalForm()).toURL().openConnection();
+                URLConnection urlConnection = new URL(url.toExternalForm()).openConnection();
                 urlConnection.setUseCaches(false);
                 jarURLConnection = (JarURLConnection) urlConnection;
             }

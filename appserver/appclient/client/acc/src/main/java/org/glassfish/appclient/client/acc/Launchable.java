@@ -98,7 +98,7 @@ interface Launchable {
                         Thread.currentThread().getContextClassLoader());
             }
             if ( ! (result instanceof JWSFacadeLaunchable)) {
-                URL clientOrFacadeURL = URI.create("file:" + result.getURI().getSchemeSpecificPart()).toURL();
+                URL clientOrFacadeURL = new URL("file:" + result.getURI().getSchemeSpecificPart());
                 /*
                  * For the embedded case especially there might not be an
                  * ACCClassLoader instance yet.  Create one if needed

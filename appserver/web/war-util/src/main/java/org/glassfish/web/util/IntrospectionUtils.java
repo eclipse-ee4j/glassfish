@@ -26,8 +26,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Hashtable;
@@ -606,7 +604,7 @@ public final class IntrospectionUtils {
                 // On some environments is still the jre directory.
                 f = new File(javaHome + "/../lib/tools.jar");
             }
-            v.addElement(f.getAbsoluteFile().toURI().toURL());
+            v.addElement(new URL("file", "", f.getAbsolutePath()));
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
         }
@@ -639,11 +637,7 @@ public final class IntrospectionUtils {
             if (!f.exists()) {
                 return null;
             }
-            try {
-                return new URI("file", "", path, null).toURL();
-            } catch (URISyntaxException use) {
-                throw new MalformedURLException(use.getMessage());
-            }
+            return new URL("file", "", path);
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
@@ -673,12 +667,7 @@ public final class IntrospectionUtils {
                 if (f.isDirectory()) {
                     path += "/";
                 }
-                URL url;
-                try {
-                    url = new URI("file", "", path, null).toURL();
-                } catch (URISyntaxException use) {
-                    throw new MalformedURLException(use.getMessage());
-                }
+                URL url = new URL("file", "", path);
                 if (!jars.contains(url)) {
                     jars.addElement(url);
                 }

@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 
@@ -261,7 +260,7 @@ public class httpd implements Runnable,LogMessage
                     else if(server_response.statusCode==302 || server_response.statusCode==307) {
                         System.out.println("Inside Redirection******************************");
                         String Host=server_response.mh.get("Location");
-                        URL newurl=URI.create(Host).toURL();
+                        URL newurl=new URL(Host);
                         String actualhost=newurl.getHost();
                         Socket serversocket=new Socket(actualhost,80);
                         start=Host.indexOf("://")+3;
@@ -332,7 +331,7 @@ public class httpd implements Runnable,LogMessage
                         String Host=server_response.mh.get("Location");
                         //System.out.println("New host is"+Host);
 
-                        URL newurl=URI.create(Host).toURL();
+                        URL newurl=new URL(Host);
                         String actualhost=newurl.getHost();
                         Socket serversocket=new Socket(actualhost,80);
                         start=Host.indexOf("://")+3;

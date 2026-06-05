@@ -26,8 +26,6 @@ import com.sun.enterprise.v3.common.PlainTextActionReporter;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
@@ -157,12 +155,7 @@ public final class RuntimeRootImpl extends AMXImplBase
         final Protocol protocol = networkConfig().getProtocols().findProtocol(ADMIN_LISTENER_NAME);
         final String scheme = Boolean.parseBoolean(protocol.getSecurityEnabled()) ? "https" : "http";
         final String host = "localhost";
-        final URL url;
-        try {
-            url = new URI(scheme, null, host, getRESTPort(), "/" + get_asadmin(), null, null).toURL();
-        } catch (URISyntaxException e) {
-            throw new MalformedURLException(e.getMessage());
-        }
+        URL url = new URL(scheme, host, getRESTPort(), "/" + get_asadmin());
         return url.toString() + "/";
     }
 
@@ -176,7 +169,7 @@ public final class RuntimeRootImpl extends AMXImplBase
         {
             final String url = getRESTBaseURL() + cmd;
 
-            final URL invoke = URI.create(url).toURL();
+            final URL invoke = new URL(url);
             //System.out.println( "Opening connection to: " + invoke );
             conn = (HttpURLConnection) invoke.openConnection();
 

@@ -26,7 +26,6 @@ import com.sun.jsftemplating.layout.descriptors.handler.OutputTypeManager;
 import com.sun.jsftemplating.util.FileUtil;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class GadgetHandlers {
                 url = FileUtil.searchForFile(gadgetName, null);
             }
             if (url == null) {
-                url = URI.create(gadgetName).toURL();
+                url = new URL(gadgetName);
             }
         } catch (Exception ex) {
             throw new IllegalArgumentException("Cannot creaqte URL from '"

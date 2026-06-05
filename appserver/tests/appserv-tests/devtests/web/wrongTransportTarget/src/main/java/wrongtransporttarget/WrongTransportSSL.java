@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.security.KeyStore;
 import javax.net.ssl.HostnameVerifier;
@@ -159,7 +158,7 @@ public class WrongTransportSSL extends BaseDevTest {
 
     private HttpsURLConnection doSSLHandshake(String urlAddress, SSLSocketFactory ssf)
         throws Exception {
-        URL url = URI.create(urlAddress).toURL();
+        URL url = new URL(urlAddress);
         HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
         HttpsURLConnection.setFollowRedirects(true);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();

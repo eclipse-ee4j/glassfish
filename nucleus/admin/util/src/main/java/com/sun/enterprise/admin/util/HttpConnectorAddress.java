@@ -19,8 +19,6 @@ package com.sun.enterprise.admin.util;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
@@ -215,11 +213,7 @@ public final class HttpConnectorAddress {
     }
 
     public URL toURL(String path) throws MalformedURLException {
-        try {
-            return new URI(getConnectorType(), null, getHost(), getPort(), path == null ? "" : path, null, null).toURL();
-        } catch (URISyntaxException e) {
-            throw new MalformedURLException(e.getMessage());
-        }
+        return new URL(getConnectorType(), getHost(), getPort(), path == null ? "" : path);
     }
 
     public synchronized SSLSocketFactory getSSLSocketFactory() {

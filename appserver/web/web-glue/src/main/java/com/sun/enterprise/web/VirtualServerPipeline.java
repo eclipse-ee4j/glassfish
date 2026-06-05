@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -253,7 +252,7 @@ public class VirtualServerPipeline extends StandardPipeline {
 
             if (redirectMatch.isEscape) {
                 try {
-                    URL url = URI.create(location).toURL();
+                    URL url = new URL(location);
                     locationCC = locations.poll();
                     if (locationCC == null) {
                         locationCC = new CharChunk();
@@ -271,7 +270,7 @@ public class VirtualServerPipeline extends StandardPipeline {
                         locationCC.append(url.getQuery());
                     }
                     location = locationCC.toString();
-                } catch (IllegalArgumentException | MalformedURLException mue) {
+                } catch (MalformedURLException mue) {
                     if (redirectMatch.validURI) {
                         logger.log(Level.WARNING,
                             LogFacade.INVALID_REDIRECTION_LOCATION,
@@ -336,9 +335,9 @@ public class VirtualServerPipeline extends StandardPipeline {
 
             // START 6810361
             try {
-                URL u = URI.create(urlPrefix).toURL();
+                URL u = new URL(urlPrefix);
                 urlPrefixPath = u.getPath();
-            } catch (IllegalArgumentException | MalformedURLException e) {
+            } catch (MalformedURLException e) {
                 urlPrefixPath = urlPrefix;
                 this.validURI = false;
             }

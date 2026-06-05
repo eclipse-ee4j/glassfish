@@ -30,7 +30,6 @@ import java.lang.System.Logger;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.Permission;
@@ -364,14 +363,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
             return;
         }
 
-        // Add this repository to our underlying class loader.
-        // The repository is a file: URL that on Windows carries native '\' separators; the
-        // deprecated URL(String) constructor normalized those to '/', whereas URI is strict and
-        // rejects '\'. Replace them to reproduce the previous behaviour (no-op on '/' platforms).
+        // Add this repository to our underlying class loader
         try {
-            super.addURL(URI.create(repository.replace('\\', '/')).toURL());
+            super.addURL(new URL(repository));
             hasExternalRepositories = true;
-        } catch (IllegalArgumentException | MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Invalid repository: " + repository, e);
         }
     }

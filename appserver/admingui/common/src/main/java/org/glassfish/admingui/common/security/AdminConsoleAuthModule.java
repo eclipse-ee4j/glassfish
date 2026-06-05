@@ -43,7 +43,6 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
@@ -185,8 +184,8 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
             // Save this for use later...
             URL url = null;
             try {
-                url = URI.create(restURL).toURL();
-            } catch (IllegalArgumentException | MalformedURLException ex) {
+                url = new URL(restURL);
+            } catch (MalformedURLException ex) {
                 throw new IllegalArgumentException("Unable to parse REST URL: (" + restURL + ")", ex);
             }
             session.setAttribute(REST_SERVER_NAME, url.getHost());

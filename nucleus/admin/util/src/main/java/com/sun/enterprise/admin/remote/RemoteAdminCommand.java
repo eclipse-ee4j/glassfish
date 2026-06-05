@@ -814,7 +814,7 @@ public class RemoteAdminCommand {
      */
     private HttpConnectorAddress followRedirection(final HttpConnectorAddress originalAddr, final String redirection)
             throws MalformedURLException {
-        final URL url = URI.create(redirection).toURL();
+        final URL url = new URL(redirection);
         final boolean useSecure = (url.getProtocol().equalsIgnoreCase("https"));
         HttpConnectorAddress hca = new HttpConnectorAddress(url.getHost(), url.getPort(), useSecure, originalAddr.getPath(),
                 originalAddr.getSSLSocketFactory());

@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.security.KeyStore;
 import javax.net.ssl.HostnameVerifier;
@@ -78,7 +77,7 @@ public class HttpRedirectElement extends BaseDevTest {
 
     private HttpURLConnection getConnection(final String url) throws Exception {
         return secureRedirect
-            ? (HttpURLConnection) URI.create(url).toURL().openConnection()
+            ? (HttpURLConnection) new URL(url).openConnection()
             : doSSLHandshake(url, ssf);
     }
 
@@ -99,7 +98,7 @@ public class HttpRedirectElement extends BaseDevTest {
 
     private HttpsURLConnection doSSLHandshake(String urlAddress, SSLSocketFactory ssf)
         throws Exception {
-        URL url = URI.create(urlAddress).toURL();
+        URL url = new URL(urlAddress);
         HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
         HttpsURLConnection.setFollowRedirects(true);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();

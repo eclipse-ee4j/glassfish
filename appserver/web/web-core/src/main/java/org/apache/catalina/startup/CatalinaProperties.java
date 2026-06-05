@@ -20,7 +20,7 @@ package org.apache.catalina.startup;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -83,7 +83,7 @@ public class CatalinaProperties {
         try {
             String configUrl = getConfigUrl();
             if (configUrl != null) {
-                is = URI.create(configUrl).toURL().openStream();
+                is = (new URL(configUrl)).openStream();
             }
         } catch (Throwable t) {
             // Ignore

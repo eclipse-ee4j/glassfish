@@ -1647,9 +1647,9 @@ public class WebModule extends PwcWebModule implements Context {
                     }
 
                     try {
-                        URI.create(path).toURL();
+                        new URL(path);
                         loader.addRepository(path);
-                    } catch (IllegalArgumentException | MalformedURLException mue1) {
+                    } catch (MalformedURLException mue1) {
                         // Not a URL, interpret as file
                         File file = new File(path);
 

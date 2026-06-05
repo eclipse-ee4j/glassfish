@@ -19,7 +19,7 @@ package wrongtransport;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
+import java.net.URL;
 
 import com.sun.appserv.test.BaseDevTest;
 import org.glassfish.grizzly.config.portunif.HttpProtocolFinder;
@@ -33,7 +33,7 @@ public class WrongTransport extends BaseDevTest {
         try {
             secureURL = "https://" + host + ":" + port + "/";
             final String url = "http://" + host + ":" + port + "/";
-            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setInstanceFollowRedirects(true);
             checkStatus(connection);
         } catch (Throwable t) {

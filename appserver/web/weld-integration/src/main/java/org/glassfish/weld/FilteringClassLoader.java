@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Runtime.Version;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
@@ -110,8 +109,8 @@ class FilteringClassLoader extends ClassLoader {
 
     private URL toManifestURL(final URL extensionUrl) {
         try {
-            return URI.create(extensionUrl.toExternalForm().replaceFirst(PATH_WELD_EXTENTSION, PATH_MANIFEST)).toURL();
-        } catch (final IllegalArgumentException | MalformedURLException e) {
+            return new URL(extensionUrl.toExternalForm().replaceFirst(PATH_WELD_EXTENTSION, PATH_MANIFEST));
+        } catch (final MalformedURLException e) {
             // ISE: because it should be always possible to use the constructor here.
             throw new IllegalStateException("Unprocessable URL: " + extensionUrl, e);
         }

@@ -21,7 +21,6 @@ package org.apache.catalina.startup;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -118,9 +117,9 @@ public final class Bootstrap {
             String repository = tokenizer.nextToken();
             // Check for a JAR URL repository
             try {
-                urlList.add(URI.create(repository).toURL());
+                urlList.add(new URL(repository));
                 continue;
-            } catch (IllegalArgumentException | MalformedURLException e) {
+            } catch (MalformedURLException e) {
                 // Ignore
             }
             // Local repository

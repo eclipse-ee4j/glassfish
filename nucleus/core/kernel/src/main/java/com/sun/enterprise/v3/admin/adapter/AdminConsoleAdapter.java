@@ -35,7 +35,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -501,9 +500,8 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, E
                     .getNetworkListener(ServerTags.ADMIN_LISTENER_ID);
             SecureAdmin secureAdmin = serviceLocator.getService(SecureAdmin.class);
 
-            URL url = new URI(SecureAdmin.isEnabled(secureAdmin) ? "https" : "http",
-                    null, adminListener.getAddress(), Integer.parseInt(adminListener.getPort()),
-                    "/management/domain", null, null).toURL();
+            URL url = new URL(SecureAdmin.isEnabled(secureAdmin) ? "https" : "http",
+                    adminListener.getAddress(), Integer.parseInt(adminListener.getPort()), "/management/domain");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             try (InputStream ignored = connection.getInputStream()) {
                 isRestStarted = true;

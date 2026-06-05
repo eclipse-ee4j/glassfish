@@ -17,8 +17,6 @@
 package org.glassfish.web.deployment.util;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -79,10 +77,6 @@ public class VirtualServerInfo {
      * @return the web server root URL
      */
     public URL getWebServerRootURL() throws MalformedURLException {
-        try {
-            return new URI(protocol, null, host, port, "", null, null).toURL();
-        } catch (URISyntaxException e) {
-            throw new MalformedURLException(e.getMessage());
-        }
+        return new URL(protocol, host, port, "");
     }
 }

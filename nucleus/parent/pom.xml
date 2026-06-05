@@ -258,7 +258,7 @@
         <shrinkwrap.version>3.3.7</shrinkwrap.version>
         <testcontainers.version>2.0.5</testcontainers.version>
 
-        <surefire.version>3.5.5</surefire.version>
+        <surefire.version>3.5.6</surefire.version>
         <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
@@ -1029,7 +1029,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.10.0</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -1329,7 +1329,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.10.0</version>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>

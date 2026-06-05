@@ -364,9 +364,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
             return;
         }
 
-        // Add this repository to our underlying class loader
+        // Add this repository to our underlying class loader.
+        // The repository is a file: URL that on Windows carries native '\' separators; the
+        // deprecated URL(String) constructor normalized those to '/', whereas URI is strict and
+        // rejects '\'. Replace them to reproduce the previous behaviour (no-op on '/' platforms).
         try {
-            super.addURL(URI.create(repository).toURL());
+            super.addURL(URI.create(repository.replace('\\', '/')).toURL());
             hasExternalRepositories = true;
         } catch (IllegalArgumentException | MalformedURLException e) {
             throw new IllegalArgumentException("Invalid repository: " + repository, e);

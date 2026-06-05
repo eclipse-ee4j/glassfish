@@ -21,7 +21,6 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLConnection;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;

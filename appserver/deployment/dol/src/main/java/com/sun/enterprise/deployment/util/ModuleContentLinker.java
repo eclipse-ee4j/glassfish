@@ -171,7 +171,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
                 serviceRef.setMappingFile(mappingFile);
 
             }
-        } catch (java.net.MalformedURLException mex) {
+        } catch (IllegalArgumentException | java.net.MalformedURLException mex) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, "enterprise.deployment.backend.invalidWsdlURL",
                 new Object[] {serviceRef.getWsdlFileUri()});

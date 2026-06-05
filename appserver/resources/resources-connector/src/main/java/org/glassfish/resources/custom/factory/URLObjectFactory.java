@@ -19,7 +19,6 @@ package org.glassfish.resources.custom.factory;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 

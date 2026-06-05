@@ -15,6 +15,7 @@
  */
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 import com.sun.appserv.test.util.results.SimpleReporterAdapter;

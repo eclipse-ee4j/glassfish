@@ -15,6 +15,7 @@
  */
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import com.sun.appserv.test.BaseDevTest;

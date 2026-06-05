@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,16 +66,16 @@ public class HttpClient10 {
             InputStream inputStream = socket.getInputStream();
             socket.setSoLinger(true, 1000);
             PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-            outputWriter.println(method + " " + url.getPath() + " HTTP/1.0");
-            outputWriter.println("Host: " + url.getHost() + ':' + url.getPort());
+            outputWriter.print(method + " " + url.getPath() + " HTTP/1.0\r\n");
+            outputWriter.print("Host: " + url.getHost() + ':' + url.getPort() + "\r\n");
             if (content != null) {
-                outputWriter.println("Content-Length: " + content.length());
+                outputWriter.print("Content-Length: " + content.length() + "\r\n");
             }
             if (user != null && password != null) {
                 String basicAuth = Base64.getEncoder().encodeToString((user + ":" + password).getBytes(UTF_8));
-                outputWriter.println("Authorization: Basic " + basicAuth);
+                outputWriter.print("Authorization: Basic " + basicAuth + "\r\n");
             }
-            outputWriter.println("");
+            outputWriter.print("\r\n");
             if (content != null) {
                 outputWriter.print(content);
             }

@@ -183,11 +183,10 @@ class JvmOptions {
 
     private List<String> postProcessOrdering(List<String> unsorted) {
         /*
-         * (1) JVM has one known order dependency. If these 3 are here, then unlock MUST appear first in the list
-         * -XX:+UnlockDiagnosticVMOptions -XX:+LogVMOutput -XX:LogFile=D:/as/domains/domain1/logs/jvm.log
-         *
-         * June 2012 http://java.net/jira/browse/GLASSFISH-18777 JFR needs UnlockCommercialFeatures -- it is also
-         * order-dependent. New algorithm -- put -XX:+Unlock* first
+         * (1) JVM has one known order dependency. The -XX:+Unlock* options (e.g. -XX:+UnlockDiagnosticVMOptions,
+         * -XX:+UnlockCommercialFeatures) unlock other -XX options and therefore MUST appear before any option they
+         * unlock. June 2012 http://java.net/jira/browse/GLASSFISH-18777 JFR needs UnlockCommercialFeatures -- it is
+         * also order-dependent. Algorithm -- put -XX:+Unlock* first.
          *
          * (2) TODO Get the name of the instance early. We no longer send in the instanceRoot as an arg so -- ????
          */

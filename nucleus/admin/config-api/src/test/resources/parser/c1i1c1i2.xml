@@ -154,8 +154,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-client</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Xmx512m</jvm-options>
@@ -278,8 +276,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-server</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
@@ -408,8 +404,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-server</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
@@ -538,8 +532,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-server</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
@@ -668,8 +660,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-server</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
@@ -798,8 +788,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-server</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>
@@ -928,8 +916,6 @@
         <jvm-options>-XX:MaxPermSize=192m</jvm-options>
         <jvm-options>-server</jvm-options>
         <jvm-options>-XX:+UnlockDiagnosticVMOptions</jvm-options>
-        <jvm-options>-XX:+LogVMOutput</jvm-options>
-        <jvm-options>-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</jvm-options>
         <jvm-options>-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf</jvm-options>
         <jvm-options>-Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as</jvm-options>
         <jvm-options>-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12</jvm-options>

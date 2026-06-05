@@ -53,8 +53,6 @@ EXAMPLES
 
                asadmin> list-jvm-options
                -Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf
-               -XX: LogVMOutput
-               -XX: UnlockDiagnosticVMOptions
                -Dcom.sun.enterprise.config.config_environment_factory_class=
                com.sun.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory
                -Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
@@ -68,7 +66,6 @@ EXAMPLES
                /lib/ext${path.separator}${com.sun.aas.derbyRoot}/lib
                -Xmx512m
                -XX:MaxPermSize=192m
-               -XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
                Command list-jvm-options executed successfully.
 
 EXIT STATUS

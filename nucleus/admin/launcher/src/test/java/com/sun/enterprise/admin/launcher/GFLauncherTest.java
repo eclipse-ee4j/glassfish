@@ -179,7 +179,8 @@ public class GFLauncherTest {
      */
     @Test
     public void libExtJarOnClasspath() throws Exception {
-        File extDir = new File(domainsDir, "domain2/lib/ext");
+        File libDir = new File(domainsDir, "domain2/lib");
+        File extDir = new File(libDir, "ext");
         File extJar = new File(extDir, "test-provider.jar");
         assertTrue(extDir.mkdirs() || extDir.isDirectory(), "could not create " + extDir);
         try {
@@ -192,6 +193,7 @@ public class GFLauncherTest {
         } finally {
             extJar.delete();
             extDir.delete();
+            libDir.delete();
         }
     }
 

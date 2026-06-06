@@ -547,8 +547,8 @@ class GlassFishMainLauncher extends GFLauncher {
         all.addAll(domainXMLJavaConfigProfiler.getClasspath());
         all.addAll(domainXMLjavaConfig.getSystemClasspath());
         all.addAll(domainXMLjavaConfig.getEnvClasspath());
-        all.addAll(domainXMLjavaConfig.getSuffixClasspath());
         all.addAll(getExtensionJars(instanceRootDir));
+        all.addAll(domainXMLjavaConfig.getSuffixClasspath());
         return all.toArray(File[]::new);
     }
 
@@ -566,7 +566,8 @@ class GlassFishMainLauncher extends GFLauncher {
      */
     private List<File> getExtensionJars(File instanceRootDir) {
         File extDir = new File(new File(instanceRootDir, "lib"), "ext");
-        File[] jars = extDir.listFiles(file -> file.isFile() && file.getName().endsWith(".jar"));
+        File[] jars = extDir.listFiles(
+            file -> file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jar"));
         if (jars == null || jars.length == 0) {
             return emptyList();
         }

@@ -317,9 +317,16 @@ public class NetUtilsIT {
     }
 
     private String getContainerHostIP() {
-        // FIXME: The following call is unstable, randomly returns an empty string.
-//        return container.getContainerInfo().getNetworkSettings().getGlobalIPv6Address();
-        return "172.17.";
+        var networkSettings = container.getContainerInfo().getNetworkSettings();
+        String ip = networkSettings.getIpAddress();
+        if (ip != null && !ip.isEmpty()) {
+            return ip;
+        }
+        return networkSettings.getNetworks().values().stream()
+            .map(network -> network.getIpAddress())
+            .filter(addr -> addr != null && !addr.isEmpty())
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Container has no IPv4 address assigned"));
     }
 
     private static String filterMethodIsLocal(String template, String address) {

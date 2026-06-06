@@ -105,9 +105,9 @@ public class WebTest extends BaseDevTest {
             String postData = "j_username=" + user
                 + "&j_password=" + password;
             String post = "POST " + contextRootPrefix + "-a/j_security_check"
-                + " HTTP/1.0\n"
-                + "Content-Type: application/x-www-form-urlencoded\n"
-                + "Content-length: " + postData.length() + "\n\n"
+                + " HTTP/1.0\r\n"
+                + "Content-Type: application/x-www-form-urlencoded\r\n"
+                + "Content-length: " + postData.length() + "\r\n\r\n"
                 + postData;
             System.out.println(post);
             os.write(post.getBytes());
@@ -186,7 +186,7 @@ public class WebTest extends BaseDevTest {
         try {
             sock = new Socket(host, port);
             os = sock.getOutputStream();
-            String get = "GET " + path + " HTTP/1.0\n";
+            String get = "GET " + path + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
             StringBuilder sb = new StringBuilder("Cookie: ");
@@ -207,7 +207,7 @@ public class WebTest extends BaseDevTest {
             os.write(sb.toString().getBytes());
             System.out.println(sb);
 
-            os.write("\n\n".getBytes());
+            os.write("\r\n\r\n".getBytes());
 
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));

@@ -60,10 +60,10 @@ public class WebTest {
         try {
             sock.setSoTimeout(50000);
             OutputStream os = sock.getOutputStream();
-            String get = "GET /index.html HTTP/1.1\n";
+            String get = "GET /index.html HTTP/1.1\r\n";
             os.write(get.getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
             InputStream is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             long start = System.currentTimeMillis();

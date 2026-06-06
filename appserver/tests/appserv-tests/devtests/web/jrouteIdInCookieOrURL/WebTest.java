@@ -98,9 +98,9 @@ public class WebTest {
     public void doTestCookie() throws Exception {
         Socket socket = new Socket(host, Integer.parseInt(port));
         OutputStream os = socket.getOutputStream();
-        os.write(("GET " + contextRoot + "/TestServlet HTTP/1.0\n").getBytes());
-        os.write("Cookie: JROUTE=1234\n".getBytes());
-        os.write("\n".getBytes());
+        os.write(("GET " + contextRoot + "/TestServlet HTTP/1.0\r\n").getBytes());
+        os.write("Cookie: JROUTE=1234\r\n".getBytes());
+        os.write("\r\n".getBytes());
         InputStream is = socket.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;
@@ -112,7 +112,7 @@ public class WebTest {
         if (EXPECTED_RESPONSE.equals(lastLine)) {
             stat.addStatus(testName, SimpleReporterAdapter.PASS);
         } else {
-            System.err.printf("Wrong response. Expected: %s, received: %s\n", EXPECTED_RESPONSE, line);
+            System.err.printf("Wrong response. Expected: %s, received: %s\r\n", EXPECTED_RESPONSE, line);
             stat.addStatus(testName, SimpleReporterAdapter.FAIL);
         }
     }

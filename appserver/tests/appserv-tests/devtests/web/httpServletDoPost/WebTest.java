@@ -87,8 +87,8 @@ public class WebTest {
         try {
             s.setSoTimeout(10000);
             OutputStream os = s.getOutputStream();
-            System.out.println("POST " + contextPath + " " + protocol + "\n");
-            os.write(("POST " + contextPath + " " + protocol + "\n").getBytes());
+            System.out.println("POST " + contextPath + " " + protocol + "\r\n");
+            os.write(("POST " + contextPath + " " + protocol + "\r\n").getBytes());
             os.write("Host: localhost\r\n".getBytes());
             os.write("content-length: 0\r\n".getBytes());
             os.write("\r\n".getBytes());

@@ -65,15 +65,15 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/TestServlet" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/TestServlet" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("Accept-Language: de\n".getBytes());
+        os.write("Accept-Language: de\r\n".getBytes());
         // Send Accept-Language header with invalid locale code. Make sure
         // this locale is getting ignored
-        os.write("Accept-Language: 12\n".getBytes());
-        os.write("Accept-Language: FR\n".getBytes());
-        os.write("\n".getBytes());
+        os.write("Accept-Language: 12\r\n".getBytes());
+        os.write("Accept-Language: FR\r\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

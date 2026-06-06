@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -108,20 +108,13 @@ public class TransactionalInterceptorBase implements Serializable {
     }
 
     public Object proceed(InvocationContext ctx) throws Exception {
-        Transactional transactionalAnnotation = ctx.getMethod().getAnnotation(Transactional.class);
+        Transactional transactionalAnnotation = getTransactionalAnnotation(ctx);
         Class<?>[] rollbackOn = null;
         Class<?>[] dontRollbackOn = null;
 
-        if (transactionalAnnotation != null) { //if at method level
+        if (transactionalAnnotation != null) {
             rollbackOn = transactionalAnnotation.rollbackOn();
             dontRollbackOn = transactionalAnnotation.dontRollbackOn();
-        } else { //if not, at class level
-            Class<?> targetClass = ctx.getTarget().getClass();
-            transactionalAnnotation = targetClass.getAnnotation(Transactional.class);
-            if (transactionalAnnotation != null) {
-                rollbackOn = transactionalAnnotation.rollbackOn();
-                dontRollbackOn = transactionalAnnotation.dontRollbackOn();
-            }
         }
 
         Object object;
@@ -188,6 +181,34 @@ public class TransactionalInterceptorBase implements Serializable {
             throw checkedException;
         }
         return object;
+    }
+
+    /**
+     * Resolves the {@link Transactional} annotation that applies to the intercepted invocation, together with its
+     * {@code rollbackOn}/{@code dontRollbackOn} attributes.
+     * <p>
+     * A method-level annotation takes precedence over a class-level one. When {@code @Transactional} is not declared
+     * directly, it is looked up from the interceptor bindings of the invocation via
+     * {@link InvocationContext#getInterceptorBinding(Class)}. Unlike {@link Class#getAnnotation(Class)}, which does not
+     * traverse meta-annotations, the binding set includes {@code @Transactional} contributed through CDI stereotypes (at
+     * any nesting depth) as well as bindings added dynamically by CDI extensions. A direct class-level lookup is kept as
+     * a final fallback for invocation contexts that do not expose interceptor bindings.
+     *
+     * @param ctx the current invocation context
+     * @return the applicable {@link Transactional} annotation, or {@code null} if none can be resolved
+     */
+    private Transactional getTransactionalAnnotation(InvocationContext ctx) {
+        Transactional transactionalAnnotation = ctx.getMethod().getAnnotation(Transactional.class);
+        if (transactionalAnnotation != null) {
+            return transactionalAnnotation;
+        }
+
+        transactionalAnnotation = ctx.getInterceptorBinding(Transactional.class);
+        if (transactionalAnnotation != null) {
+            return transactionalAnnotation;
+        }
+
+        return ctx.getTarget().getClass().getAnnotation(Transactional.class);
     }
 
     /**

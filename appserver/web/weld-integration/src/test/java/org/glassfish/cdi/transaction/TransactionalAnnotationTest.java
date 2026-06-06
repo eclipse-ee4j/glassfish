@@ -17,17 +17,24 @@
 
 package org.glassfish.cdi.transaction;
 
+import jakarta.enterprise.inject.Stereotype;
 import jakarta.transaction.InvalidTransactionException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.TransactionRequiredException;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import static java.lang.annotation.ElementType.TYPE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -233,6 +240,64 @@ public class TransactionalAnnotationTest {
             transactionManager.begin();
             assertThrows(SQLWarningExtensionExtension.class, () -> transactionalInterceptorREQUIRED.transactional(ctx));
             assertThrows(RollbackException.class, transactionManager::commit);
+        }
+    }
+
+    /**
+     * Reproduces issue #26017: when {@code @Transactional(rollbackOn = ...)} is carried by a CDI stereotype rather than
+     * declared directly on the bean, its {@code rollbackOn} must still trigger a rollback for the listed checked
+     * exceptions. The resolved binding (including those contributed by stereotypes) is exposed through
+     * {@link jakarta.interceptor.InvocationContext#getInterceptorBinding(Class)}, which the interceptor consults.
+     */
+    @Test
+    public void testRollbackOnFromStereotypeCheckedException() throws Exception {
+        TransactionalInterceptorRequired transactionalInterceptorREQUIRED = new TransactionalInterceptorRequired();
+        jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
+        TransactionalInterceptorBase.setTestTransactionManager(transactionManager);
+
+        // @Transactional is meta-annotated on the stereotype, not on the bean itself.
+        Transactional transactionalFromStereotype = StereotypeWithTransactional.class.getAnnotation(Transactional.class);
+        Set<Annotation> interceptorBindings = Set.of(transactionalFromStereotype);
+
+        InvocationContext ctx = new InvocationContext(
+            StereotypedBean.class.getMethod("doSomething"), null) {
+
+            @Override
+            public Object getTarget() {
+                return new StereotypedBean();
+            }
+
+            @Override
+            public Set<Annotation> getInterceptorBindings() {
+                return interceptorBindings;
+            }
+
+            @Override
+            public Object proceed() throws Exception {
+                throw new StereotypeCheckedException();
+            }
+        };
+
+        transactionManager.begin();
+        assertThrows(StereotypeCheckedException.class, () -> transactionalInterceptorREQUIRED.transactional(ctx));
+        assertThrows(RollbackException.class, transactionManager::commit);
+    }
+
+    static class StereotypeCheckedException extends Exception {
+        private static final long serialVersionUID = 1L;
+    }
+
+    @Transactional(rollbackOn = StereotypeCheckedException.class)
+    @Stereotype
+    @Target(TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface StereotypeWithTransactional {
+    }
+
+    @StereotypeWithTransactional
+    static class StereotypedBean {
+        public void doSomething() throws StereotypeCheckedException {
+            throw new StereotypeCheckedException();
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParserException;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.matchesPattern;
@@ -169,5 +171,35 @@ public class GFLauncherTest {
         launcher.setup();
         launcher.launch();
         assertThat(launcher.getCommandLine(), hasItems("-Dorg.glassfish.job-manager.drop-interrupted-commands=true"));
+    }
+
+    /**
+     * A jar dropped into the domain's {@code lib/ext} directory must be added to the
+     * server classpath (issue #26058 - drop-in support for static JCA providers).
+     */
+    @Test
+    public void libExtJarOnClasspath() throws Exception {
+        File extDir = new File(domainsDir, "domain2/lib/ext");
+        File extJar = new File(extDir, "test-provider.jar");
+        assertTrue(extDir.mkdirs() || extDir.isDirectory(), "could not create " + extDir);
+        try {
+            assertTrue(extJar.createNewFile() || extJar.isFile(), "could not create " + extJar);
+            launchParams.setDomainName("domain2");
+            launcher.setup();
+            launcher.launch();
+            assertThat(getClasspath(launcher.getCommandLine()),
+                containsString(extJar.getAbsolutePath()));
+        } finally {
+            extJar.delete();
+            extDir.delete();
+        }
+    }
+
+    /** @return the value of the {@code -cp} argument */
+    private static String getClasspath(CommandLine cmdline) {
+        List<String> command = cmdline.toList();
+        int cpIndex = command.indexOf("-cp");
+        assertTrue(cpIndex >= 0 && cpIndex + 1 < command.size(), "no -cp argument in " + command);
+        return command.get(cpIndex + 1);
     }
 }

@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-main-aggregator</artifactId>
-    <version>8.0.3</version>
+    <version>8.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Aggregator POM</name>
@@ -44,7 +44,7 @@
     </scm>
 
     <properties>
-        <project.build.outputTimestamp>2026-06-07T13:07:43Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-06-07T14:07:20Z</project.build.outputTimestamp>
         <cyclonedx.skip>true</cyclonedx.skip>
     </properties>
 

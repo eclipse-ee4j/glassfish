@@ -125,9 +125,12 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
      * interrupts a statement and leaves the connection closed). Without raising a
      * CONNECTION_ERROR_OCCURRED event the broken connection is never removed from the pool and,
      * when "validate-atmost-once-period-in-seconds" is greater than zero, it is also never
-     * re-validated on checkout, so it stays broken forever. Raising the event lets the pool
-     * discard the connection, mirroring how the XA path reacts in
-     * {@link ManagedConnectionImpl#XAStartOccurred()} / {@link ManagedConnectionImpl#XAEndOccurred()}.
+     * re-validated on checkout, so it stays broken forever. Raising the event flags the resource
+     * with hasConnectionErrorOccurred(), which makes the pool discard the connection on the next
+     * checkout regardless of the validate-atmost-once period. The actual pool removal is handled by
+     * the connection event listener, which defers it until the transaction completes when the
+     * resource is still enlisted (see
+     * com.sun.enterprise.resource.listener.LocalTxConnectionEventListener).
      *
      * @param sqle the exception thrown by the physical connection
      */

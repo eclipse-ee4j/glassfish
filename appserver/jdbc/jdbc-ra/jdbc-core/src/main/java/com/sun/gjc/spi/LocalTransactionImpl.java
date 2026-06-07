@@ -22,6 +22,8 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.LocalTransactionException;
 
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
+import java.sql.SQLRecoverableException;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.FINEST;
@@ -65,6 +67,7 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
                 _logger.finest("Exception during begin() : " + sqle);
             }
 
+            notifyConnectionErrorIfFatal(sqle);
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         }
     }
@@ -84,6 +87,7 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
                 _logger.finest("Exception during commit() : " + sqle);
             }
 
+            notifyConnectionErrorIfFatal(sqle);
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         } finally {
             managedConnectionImpl.transactionCompleted();
@@ -105,10 +109,62 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
                 _logger.finest("Exception during rollback() : " + sqle);
             }
 
+            notifyConnectionErrorIfFatal(sqle);
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         } finally {
             managedConnectionImpl.transactionCompleted();
         }
+    }
+
+    /**
+     * Signals a connection error to the <code>ManagedConnection</code> when the given
+     * <code>SQLException</code> indicates that the underlying physical connection is broken.
+     * <p>
+     * Local transaction operations (begin/commit/rollback) are the place where a connection
+     * that died while in the pool is first detected (for example after a request timeout
+     * interrupts a statement and leaves the connection closed). Without raising a
+     * CONNECTION_ERROR_OCCURRED event the broken connection is never removed from the pool and,
+     * when "validate-atmost-once-period-in-seconds" is greater than zero, it is also never
+     * re-validated on checkout, so it stays broken forever. Raising the event lets the pool
+     * discard the connection, mirroring how the XA path reacts in
+     * {@link ManagedConnectionImpl#XAStartOccurred()} / {@link ManagedConnectionImpl#XAEndOccurred()}.
+     *
+     * @param sqle the exception thrown by the physical connection
+     */
+    private void notifyConnectionErrorIfFatal(SQLException sqle) {
+        if (isConnectionError(sqle)) {
+            managedConnectionImpl.connectionErrorOccurred(sqle, null);
+        }
+    }
+
+    /**
+     * Determines whether the given <code>SQLException</code> (or any exception in its
+     * {@link SQLException#getNextException() next} or {@link Throwable#getCause() cause} chain)
+     * represents a fatal connection error, as opposed to a transient or data related failure that
+     * leaves the connection usable. Detection is driver agnostic: it relies on the standard
+     * connection-exception subclasses and on SQLState class "08" (connection exception) defined by
+     * the SQL standard. For example Oracle reports ORA-17008 ("Closed connection") with SQLState
+     * "08003" and a socket read interrupted by a request timeout as a
+     * <code>SQLRecoverableException</code>.
+     *
+     * @param sqle the exception to inspect
+     * @return true if the exception indicates the physical connection is no longer usable
+     */
+    static boolean isConnectionError(SQLException sqle) {
+        for (SQLException current = sqle; current != null; current = current.getNextException()) {
+            for (Throwable t = current; t != null; t = t.getCause()) {
+                if (t instanceof SQLRecoverableException || t instanceof SQLNonTransientConnectionException) {
+                    return true;
+                }
+                if (t instanceof SQLException) {
+                    String sqlState = ((SQLException) t).getSQLState();
+                    if (sqlState != null && sqlState.startsWith("08")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

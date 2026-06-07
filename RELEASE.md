@@ -1,20 +1,20 @@
 # Releasing a new GlassFish version
 
-In this example we assume 8.0.1.
+In this example we assume 8.0.4.
 If any step failed, you have to resolve the issue and start from the appropriate step again.
 
-1. Create a release branch RELEASE_8.0.1 and push it to the Eclipse GlassFish GitHub repository.
+1. Create a release branch RELEASE_8.0.4 and push it to the Eclipse GlassFish GitHub repository.
 2. Open [glassfish-release](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish-release)
 3. Click [Build with parameters](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish-release/build) in menu.
-    - `releaseVersion` = `8.0.1`
-    - `nextVersion` = `8.0.2-SNAPSHOT`
+    - `releaseVersion` = `8.0.4`
+    - `nextVersion` = `8.0.5-SNAPSHOT`
     - click [Build] button.
 4. Wait for it to finish successfully
 5. Verify that everything was done:
     1. Verify that the deployment is present in [Maven Central Deployments](https://central.sonatype.com/publishing/deployments)
        - It is possible that you will not have permissions to visit the namespace. Ask project leads or
          check if expected artifacts made it to Maven Central, then this was obviously successful.
-    2. Verify that a new [8.0.1 tag](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.1) was created.
+    2. Verify that a new [8.0.4 tag](https://github.com/eclipse-ee4j/glassfish/tags) was created.
     3. Verify that the release branch changed the number to the `nextVersion` value.
 6. Create a Draft PR based on this branch.
 7. Find the `Glassfish Full Profile Distribution` on the page of the release build under [glassfish-release](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish-release)
@@ -33,8 +33,8 @@ infrastructure.
           Update the info based on the release notes on [GitHub](https://github.com/eclipse-ee4j/glassfish/releases)
         - in [`download.md`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources/download.md),
           replace information in the "Eclipse GlassFish 8.x" section at the top with info for the new version in `download_gf8.md`
-        - check [`README.md`](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/website/src/main/resources/README.md),
-          if release information is still actual.
+        - check [`README.md`](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/website/src/main/resources/README.md)
+          and update the Latest News chapter.
     - with an update for the docs:
         - Update the property `glassfish.version.8x` with the released version in [docs/pom.xml](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/pom.xml)
 13. Open [Maven Central Deployments](https://central.sonatype.com/publishing/deployments) and click the Publish button.
@@ -43,7 +43,7 @@ infrastructure.
    (usually takes few minutes now)
 15. Upload the new release to the Eclipse download folder.
     Go to [glassfish-copy-to-downloads](https://ci.eclipse.org/glassfish/job/glassfish-copy-to-downloads)
-    - Enter the version to copy; 8.0.1
+    - Enter the version to copy; 8.0.4
     - click [Build] button
 16. If everything is OK, then merge the PR.
 17. Delete the branch after merge, only tag will remain.

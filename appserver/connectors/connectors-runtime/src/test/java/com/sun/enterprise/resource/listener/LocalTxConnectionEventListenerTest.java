@@ -22,6 +22,7 @@ import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ManagedConnection;
 
 import java.util.Map;
@@ -30,10 +31,13 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LocalTxConnectionEventListenerTest {
 
@@ -79,9 +83,37 @@ public class LocalTxConnectionEventListenerTest {
         assertEquals(0, associatedHandlesAndClearMap.size());
     }
 
+    /**
+     * Issue #25930: a connection error signalled while the resource is still enlisted in a
+     * transaction must flag the resource but defer pool removal (and keep the listener attached),
+     * so the transaction-completion path does not later re-process an already removed handle.
+     */
+    @Test
+    public void connectionErrorWhileEnlistedDefersPoolRemoval() throws ResourceException {
+        ManagedConnection managedConnection = createMock(ManagedConnection.class);
+        // Strict mock with no recorded calls: removeConnectionEventListener must NOT be invoked.
+        replay(managedConnection);
+
+        ResourceHandle resourceHandle = createResourceHandle(managedConnection, 1);
+        resourceHandle.getResourceState().setEnlisted(true);
+
+        LocalTxConnectionEventListener listener = new LocalTxConnectionEventListener(resourceHandle);
+        listener.connectionErrorOccurred(new ConnectionEvent(managedConnection, ConnectionEvent.CONNECTION_ERROR_OCCURRED));
+
+        // The connection is flagged, so the pool discards it on the next checkout regardless of
+        // the validate-atmost-once period...
+        assertTrue(resourceHandle.hasConnectionErrorOccurred());
+        // ...but while still enlisted the listener is kept and pool removal is deferred.
+        verify(managedConnection);
+    }
+
     private ResourceHandle createResourceHandle(int i) throws ResourceException {
         ManagedConnection managedConnection = createNiceMock(ManagedConnection.class);
         replay();
+        return new ResourceHandle(managedConnection, new ResourceSpec(new SimpleJndiName("testResource" + i), 0), null);
+    }
+
+    private ResourceHandle createResourceHandle(ManagedConnection managedConnection, int i) {
         return new ResourceHandle(managedConnection, new ResourceSpec(new SimpleJndiName("testResource" + i), 0), null);
     }
 }

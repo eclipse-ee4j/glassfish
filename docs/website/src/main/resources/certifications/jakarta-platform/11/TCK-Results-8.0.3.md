@@ -48,10 +48,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
 <br/><br/>
 
 - [X] Java runtime used to run the implementation:<br/>
-  - Java runtime 1 used to run the implementation: <br/>
-   ```
-   openjdk version "21.0.2" 2024-01-16 OpenJDK Runtime Environment (build 21.0.2+13-58) OpenJDK 64-Bit Server VM (build 21.0.2+13-58, mixed mode, sharing)
-   ```
+  - `openjdk version "21.0.2" 2024-01-16 OpenJDK Runtime Environment (build 21.0.2+13-58) OpenJDK 64-Bit Server VM (build 21.0.2+13-58, mixed mode, sharing)`
 
 - [X] Summary of the information for the certification environment, operating system, cloud, ...:<br/>
   - Operating System 1 used to run the implementation: <br/>

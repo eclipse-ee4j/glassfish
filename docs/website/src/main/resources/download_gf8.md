@@ -13,11 +13,9 @@ This release focused  focuses on security improvements including components of G
 * Optimized Jakarta Faces performance (rendering performance improved by more than 2 times)
 * Optimized Embedded GlassFish startup time (starts approximately 10% faster)
 
-
 ### TCK results
 
  * [Full](./certifications/jakarta-platform/11/TCK-Results-8.0.3.md)
-
 
 ### Download
 
@@ -34,7 +32,6 @@ More details:
 
 * [Eclipse GlassFish 8.0.3 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3)
 * [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
-
 
 ## Eclipse GlassFish 8.0.2
 

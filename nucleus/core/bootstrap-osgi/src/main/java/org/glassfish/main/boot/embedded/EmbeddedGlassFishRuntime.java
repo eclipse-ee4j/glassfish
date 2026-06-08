@@ -26,15 +26,22 @@ import com.sun.enterprise.module.common_impl.AbstractFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -169,11 +176,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             new File(tmpDir).mkdirs();
         }
 
-        File instanceRoot = File.createTempFile("gfembed", "tmp", new File(tmpDir));
-        // Convert the file into a directory.
-        if (!instanceRoot.delete() || !instanceRoot.mkdir()) {
-            throw new Exception("cannot create directory: " + instanceRoot.getAbsolutePath());
-        }
+        // Create the directory restricted to the current user (see issue #25545).
+        File instanceRoot = createOwnerOnlyTempDirectory(new File(tmpDir).toPath(), "gfembed").toFile();
 
         try {
             String[] configFiles = new String[] {
@@ -211,6 +215,31 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         String autoDelete = gfProps.getProperties().getProperty(AUTO_DELETE, "true");
         gfProps.setProperty(AUTO_DELETE, autoDelete);
         return instanceRoot.getAbsolutePath();
+    }
+
+    /**
+     * Creates a temporary directory that is accessible only by the current user.
+     * <p>
+     * On POSIX file systems the directory is created atomically with {@code rwx------} permissions.
+     * On other file systems (e.g. Windows) the directory is created first and then access is
+     * restricted to the owner on a best-effort basis.
+     */
+    private static Path createOwnerOnlyTempDirectory(Path parent, String prefix) throws IOException {
+        if (parent.getFileSystem().supportedFileAttributeViews().contains("posix")) {
+            FileAttribute<Set<PosixFilePermission>> ownerOnly =
+                PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+            return Files.createTempDirectory(parent, prefix, ownerOnly);
+        }
+        Path dir = Files.createTempDirectory(parent, prefix);
+        File file = dir.toFile();
+        // Best effort on non-POSIX file systems: remove access for everyone, then grant it to the owner only.
+        file.setReadable(false, false);
+        file.setWritable(false, false);
+        file.setExecutable(false, false);
+        file.setReadable(true, true);
+        file.setWritable(true, true);
+        file.setExecutable(true, true);
+        return dir;
     }
 
     private static void copy(URL url, File destFile, boolean overwrite) {

@@ -64,8 +64,13 @@ Table 2-1 {productName} Class Loaders
 provided by the JVM software.
 
 |Extension |The Extension class loader loads classes from JAR files
-present in the system extensions directory, domain-dir``/lib/ext``. It is
-parent to the Public API class loader. See xref:#using-the-java-optional-package-mechanism[Using the Java
+present in the system extensions directory, domain-dir``/lib/ext``.
+Because Java 9 removed the JVM extension mechanism (`java.ext.dirs`),
+{productName} instead adds the JAR files in domain-dir``/lib/ext`` to the
+front of the server classpath, immediately after any JAR files added with
+the `classpath-prefix` option, so that they retain their former
+precedence. It is parent to the Public API class loader. See
+xref:#using-the-java-optional-package-mechanism[Using the Java
 Optional Package Mechanism].
 
 |Public API |The Public API class loader makes available all classes
@@ -168,14 +173,12 @@ domain-dir``/lib/ext`` directory, or use the `asadmin add-library` command
 with the `--type ext` option, then restart the server. For more
 information about the `asadmin add-library` command, see the {productName} Reference Manual.
 
-For more information, see
-http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html[Optional
-Packages - An Overview]
-(`http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html`)
-and
-http://download.oracle.com/javase/tutorial/ext/basics/load.html[Understanding
-Extension Class Loading]
-(`http://docs.oracle.com/javase/tutorial/ext/basics/load.html`).
+Java 9 removed the original JVM extension mechanism (`java.ext.dirs`).
+{productName} therefore adds the JAR files found in domain-dir``/lib/ext``
+to the front of the server classpath, immediately after any JAR files
+added with the `classpath-prefix` option. This restores the familiar
+drop-in behavior for JAR files that must be visible on the JVM system
+classpath, such as a statically registered `java.security.Provider` (JCA).
 
 [[using-the-endorsed-standards-override-mechanism]]
 

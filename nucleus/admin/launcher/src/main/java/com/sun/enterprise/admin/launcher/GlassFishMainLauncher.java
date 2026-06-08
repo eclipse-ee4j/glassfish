@@ -544,10 +544,12 @@ class GlassFishMainLauncher extends GFLauncher {
     private File[] createClasspath(File instanceRootDir) {
         List<File> all = new ArrayList<>();
         all.addAll(domainXMLjavaConfig.getPrefixClasspath());
+        // lib/ext jars replace the old extension mechanism, so they go at the front of
+        // the classpath (right after classpath-prefix) to keep their former precedence.
+        all.addAll(getExtensionJars(instanceRootDir));
         all.addAll(domainXMLJavaConfigProfiler.getClasspath());
         all.addAll(domainXMLjavaConfig.getSystemClasspath());
         all.addAll(domainXMLjavaConfig.getEnvClasspath());
-        all.addAll(getExtensionJars(instanceRootDir));
         all.addAll(domainXMLjavaConfig.getSuffixClasspath());
         return all.toArray(File[]::new);
     }

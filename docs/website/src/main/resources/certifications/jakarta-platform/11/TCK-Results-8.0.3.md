@@ -96,13 +96,29 @@ Total tests run: 1904, Passes: 1904, Failures: 0, Skips: 0
 ********************************************************************************
 ```
 
-Job name: jakarta-connector-tck-glassfish
+Job name: jakarta-connector/jakarta-connector-appclient-tck-glassfish
 
 ```
 ********************************************************************************
-Completed running 151 tests.
-Number of Tests Failed      = 0
-Number of Tests with Errors = 0
+Jakarta Connectors TCK - Appclient protocol
+Total tests run: 151, Passes: 151, Failures: 0, Errors: 0, Skips: 0
+********************************************************************************
+```
+
+Job name: jakarta-connector/jakarta-connector-tck-glassfish
+
+```
+********************************************************************************
+Jakarta Connectors TCK - JavaTest protocol
+Total tests run: 308, Passes: 308, Failures: 0, Errors: 0, Skips: 0
+********************************************************************************
+```
+
+Total for jakarta-connector
+
+```
+********************************************************************************
+Total tests run: 459
 ********************************************************************************
 ```
 

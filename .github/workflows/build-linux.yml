@@ -3,7 +3,7 @@ name: Build on Ubuntu
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "7.0" ]
 
 jobs:
   build:

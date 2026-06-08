@@ -11,8 +11,7 @@ following is a summary of the TCK results for releases of Jakarta EE Platform 11
 - [X] Organization Name ("Organization") and, if applicable, URL:
   [Eclipse Foundation](https://eclipse.org) <br/><br/>
 - [X] Product Name, Version and download URL (if applicable):
-   Eclipse GlassFish
-     - JDK 21 [glassfish-8.0.3.zip](https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/8.0.3/glassfish-8.0.3.zip), SHA-256: `52e7101c48c17d41883d49e3328ca1fa3d208b408781ac1f798b81caeef7b4ca` 
+     - Eclipse GlassFish 8.0.3 - [glassfish-8.0.3.zip](https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/8.0.3/glassfish-8.0.3.zip), SHA-256: `52e7101c48c17d41883d49e3328ca1fa3d208b408781ac1f798b81caeef7b4ca` 
      <br/><br/>
 - [X] Specification Name, Version and download URL:
   [Jakarta EE Platform 11](https://jakarta.ee/specifications/platform/11) <br/><br/>

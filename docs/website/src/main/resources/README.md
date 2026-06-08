@@ -104,7 +104,7 @@ Download links are available from the [GlassFish Download page](download.md).
 
 GlassFish 8.0.3 focused on security improvements, including components of GlassFish, Jakarta Faces rendering performance
 and reducing Embedded GlassFish startup time.
-See version [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.2) for more details.
+See version [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3) for more details.
 
 ## May 6, 2026 -- Eclipse GlassFish 8.0.2 Available
 

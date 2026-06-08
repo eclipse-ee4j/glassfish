@@ -5,7 +5,7 @@ This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/releas
 
 ## Eclipse GlassFish 8.0.3
 
-This release focused  focuses on security improvements including components of GlassFish. - see [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3) for details.
+This release focused on security improvements including components of GlassFish. - see [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3) for details.
 
 ### Main Changes
 

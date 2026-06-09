@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -189,28 +190,6 @@
                     </execution>
 
                     <!--
-                        Get the collection of documentation for the 5.1.0 release.
-                    -->
-                    <execution>
-                        <id>get-5x</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <excludes>META-INF/**</excludes>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.docs</groupId>
-                                    <artifactId>distribution</artifactId>
-                                    <version>${glassfish.version.5x}</version>
-                                    <outputDirectory>${docs.5x.dir}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-
-                    <!--
                         Copy the hello.war to the docs directory.
                     -->
                     <execution>
@@ -279,6 +258,31 @@
                                     <fileset dir="${project.build.outputDirectory}">
                                     </fileset>
                                 </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>get-5x</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${docs.5x.dir}"/>
+                                <get
+                                    src="https://repo.maven.apache.org/maven2/org/glassfish/docs/distribution/${glassfish.version.5x}/distribution-${glassfish.version.5x}.jar"
+                                    dest="${project.build.directory}/distribution-${glassfish.version.5x}.jar"
+                                    skipexisting="true"
+                                />
+                                <unzip
+                                    src="${project.build.directory}/distribution-${glassfish.version.5x}.jar"
+                                    dest="${docs.5x.dir}"
+                                >
+                                    <patternset>
+                                        <exclude name="META-INF/**"/>
+                                    </patternset>
+                                </unzip>
                             </target>
                         </configuration>
                     </execution>

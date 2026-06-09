@@ -5,13 +5,17 @@ This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/releas
 
 ## Eclipse GlassFish 8.0.3
 
-This release focused on security improvements including external components, we also optimized startup and deployment.
-See [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3) for details.
+This release focused on security improvements including components of GlassFish. - see [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3) for details.
 
 ### Main Changes
 
 * Security improvements
-* Deployment and startup optimizations
+* Optimized Jakarta Faces performance (rendering performance improved by more than 2 times)
+* Optimized Embedded GlassFish startup time (starts approximately 10% faster)
+
+### TCK results
+
+ * [Full](./certifications/jakarta-platform/11/TCK-Results-8.0.3.md)
 
 ### Download
 

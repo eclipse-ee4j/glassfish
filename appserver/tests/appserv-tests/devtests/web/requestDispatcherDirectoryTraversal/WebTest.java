@@ -88,11 +88,11 @@ public class WebTest {
             System.out.println("Host=" + host + ", port=" + port);
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + "/page.jsp?blah=/../WEB-INF/web.xml HTTP/1.1\n";
+            String get = "GET " + contextRoot + "/page.jsp?blah=/../WEB-INF/web.xml HTTP/1.1\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             String line = null;
@@ -141,11 +141,11 @@ public class WebTest {
                     + "%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af"
                     + "%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af"
                     + "%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae"
-                    + "%c0" + appserverTestPath + "/domains/domain1/config/local-password HTTP/1.1\n";
+                    + "%c0" + appserverTestPath + "/domains/domain1/config/local-password HTTP/1.1\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             String line = bis.readLine();
@@ -181,11 +181,11 @@ public class WebTest {
             // Validating the ":" file traversal check
             sock = new Socket(host, Integer.valueOf(adminPort));
             os = sock.getOutputStream();
-            String get = "GET " + "/resource/file%3a///etc/passwd/ HTTP/1.1\n";
+            String get = "GET " + "/resource/file%3a///etc/passwd/ HTTP/1.1\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             String line = bis.readLine();

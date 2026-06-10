@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>8.0.3-SNAPSHOT</version>
+        <version>8.0.4-SNAPSHOT</version>
     </parent>
 
     <name>GlassFish JDBC Tests</name>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
-            <version>3.0.0</version>
+            <version>3.2.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

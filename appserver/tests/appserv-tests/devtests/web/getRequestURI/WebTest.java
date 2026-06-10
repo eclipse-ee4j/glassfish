@@ -68,10 +68,10 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/jsp/main.jsp" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/jsp/main.jsp" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
@@ -96,10 +96,10 @@ public class WebTest {
 
             Socket sock2 = new Socket(host, new Integer(port).intValue());
             os = sock2.getOutputStream();
-            get = "GET "+ contextRoot + line + " HTTP/1.0\n";
+            get = "GET "+ contextRoot + line + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
             is = sock2.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
 

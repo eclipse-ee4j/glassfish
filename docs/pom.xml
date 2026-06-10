@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+    Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>8.0.3-SNAPSHOT</version>
+        <version>8.0.4-SNAPSHOT</version>
         <relativePath>../appserver</relativePath>
     </parent>
 
@@ -63,7 +63,7 @@
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
         <glassfish.version.7x>7.0.25</glassfish.version.7x>
         <glassfish.version.71x>7.1.0</glassfish.version.71x>
-        <glassfish.version.8x>8.0.2</glassfish.version.8x>
+        <glassfish.version.8x>8.0.3</glassfish.version.8x>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
         <glassfish.version.71x.artifact>${glassfish.version.71x}</glassfish.version.71x.artifact>
         <glassfish.version.8x.artifact>${glassfish.version.8x}</glassfish.version.8x.artifact>

@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.tests</groupId>
         <artifactId>embedded-tests</artifactId>
-        <version>8.0.3-SNAPSHOT</version>
+        <version>8.0.4-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.embedded</groupId>
@@ -190,7 +190,7 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>3.9.15</version>
+                <version>3.9.16</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

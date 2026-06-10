@@ -101,7 +101,6 @@ public class TranslatedConfigView implements ConfigView {
                     }
                 }
             }
-
             // Perform property substitution in the value
             // The loop limit is imposed to prevent infinite looping to values
             // such as a=${a} or a=foo ${b} and b=bar {$a}

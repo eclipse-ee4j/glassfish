@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,7 +63,7 @@ public class BasicAuthTestNG {
 
             String result="RESULT: principal: testuser3";
             goGet(host, port, result,
-                  "Authorization: Basic dGVzdHVzZXIzOnNlY3JldA==\n");
+                  "Authorization: Basic dGVzdHVzZXIzOnNlY3JldA==\r\n");
             Assert.assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -80,7 +81,7 @@ public class BasicAuthTestNG {
 
             String result="RESULT: principal: testuser42";
             goGet(host, port, result,
-                  "Authorization: Basic dGVzdHVzZXI0MjpzZWNyZXQ=\n");
+                  "Authorization: Basic dGVzdHVzZXI0MjpzZWNyZXQ=\r\n");
             Assert.assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -98,7 +99,7 @@ public class BasicAuthTestNG {
 
             String result="HTTP/1.1 403";
             goGet(host, port, result,
-                  "Authorization: Basic ajJlZTpqMmVl\n");
+                  "Authorization: Basic ajJlZTpqMmVl\r\n");
             Assert.assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -116,7 +117,7 @@ public class BasicAuthTestNG {
 
             String result="HTTP/1.1 401";
             goGet(host, port, result,
-                  "Authorization: Basic ajJlZTo=\n");
+                  "Authorization: Basic ajJlZTo=\r\n");
             Assert.assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -138,7 +139,7 @@ public class BasicAuthTestNG {
         Socket s = new Socket(host, port);
         OutputStream os = s.getOutputStream();
 
-        os.write("GET /basicauth/Test.jsp HTTP/1.0\n".getBytes());
+        os.write("GET /basicauth/Test.jsp HTTP/1.0\r\n".getBytes());
         os.write(auth.getBytes());
         os.write("\n".getBytes());
 

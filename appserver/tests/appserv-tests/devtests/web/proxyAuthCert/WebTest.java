@@ -99,9 +99,9 @@ public class WebTest {
         socket = new Socket(host, new Integer(port).intValue());
         OutputStream os = socket.getOutputStream();
 
-        os.write(("GET " + contextRoot + "/TestServlet HTTP/1.0\n").getBytes());
-        os.write(("Proxy-auth-cert: " + CLIENT_CERT + "\n").getBytes());
-        os.write("\n".getBytes());
+        os.write(("GET " + contextRoot + "/TestServlet HTTP/1.0\r\n").getBytes());
+        os.write(("Proxy-auth-cert: " + CLIENT_CERT + "\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

@@ -137,7 +137,6 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
         ActiveInboundResourceAdapter aira = getActiveResourceAdapter(resourceAdapterMid);
         aira.updateMDBRuntimeInfo(descriptor, this.messageBeanPM.getPoolDescriptor());
 
-        // the resource adapter this MDB client is deployed to
         ResourceAdapter ra = aira.getResourceAdapter();
         if (ra == null) {
             String i18nMsg = localStrings.getString("msg-bean-client.ra.class.not.specified", resourceAdapterMid);
@@ -155,11 +154,16 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
             throw new IllegalStateException("Unsupported message listener type");
         }
 
-        if (logger.isLoggable(FINEST)) {
-            logger.log(FINEST, "ActivationSpecClassName = " + activationSpecClassName);
-        }
         try {
-            ActivationSpec activationSpec = getActivationSpec(aira, activationSpecClassName);
+            ActivationSpec activationSpec;
+            try {
+                activationSpec = getActivationSpec(aira, activationSpecClassName);
+            } catch (IllegalArgumentException ex) {
+                String errorMsg = localStrings.getString("msg-bean-client.activation.invalid.property", descriptor.getName());
+                logger.log(Level.SEVERE, errorMsg, ex);
+                throw new ConnectorRuntimeException(errorMsg, ex);
+            }
+
             activationSpec.setResourceAdapter(ra);
 
             // at this stage, activation-spec is created, config properties merged with ejb-descriptor.
@@ -171,9 +175,12 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
             this.myState = BLOCKED;
             ra.endpointActivation(this, activationSpec);
             aira.addEndpointFactoryInfo(beanID_, new MessageEndpointFactoryInfo(this, activationSpec));
+
+        } catch (ConnectorRuntimeException cre) {
+            throw cre;
         } catch (Exception ex) {
             logger.log(Level.WARNING, "endpoint.activation.failure",
-                new Object[] {resourceAdapterMid, activationSpecClassName, ex});
+            new Object[] {resourceAdapterMid, activationSpecClassName, ex});
             throw new ConnectorRuntimeException("Setup failed.", ex);
         }
     }

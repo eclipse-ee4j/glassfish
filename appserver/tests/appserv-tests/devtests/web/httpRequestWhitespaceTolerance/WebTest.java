@@ -66,11 +66,11 @@ public class WebTest {
         System.out.println("Host=" + host + ", port=" + port);
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET   " + contextRoot + "/index.jsp  HTTP/1.1\n";
+        String get = "GET   " + contextRoot + "/index.jsp  HTTP/1.1\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("Host: localhost\n".getBytes());
-        os.write("\n".getBytes());
+        os.write("Host: localhost\r\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

@@ -75,9 +75,9 @@ public class WebTest {
 
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        os.write(("GET " + contextRoot + "/TestServlet HTTP/1.1\n").getBytes());
-        os.write(("Host: " + SERVER_NAME + ":" + SERVER_PORT + "\n").getBytes());
-        os.write("\n".getBytes());
+        os.write(("GET " + contextRoot + "/TestServlet HTTP/1.1\r\n").getBytes());
+        os.write(("Host: " + SERVER_NAME + ":" + SERVER_PORT + "\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

@@ -1584,16 +1584,20 @@ described in <a href="#fvxzq">Table 2-1</a>.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bootstrap</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Bootstrap class loader loads the basic runtime classes
-provided by the JVM software.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Extension</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Extension class loader loads classes from JAR files
-present in the system extensions directory, domain-dir<code>/lib/ext</code>. It is
-parent to the Public API class loader. See <a href="#using-the-java-optional-package-mechanism">Using the Java
-Optional Package Mechanism</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The JVM class loaders load the basic runtime classes provided by the JVM
+software and internal Eclipse GlassFish classes.</p>
+</div>
+<div class="paragraph">
+<p>It is possible to provide additional JARs to the JVM classpath by
+dropping them into the domain-dir<code>/lib/ext</code> directory. Eclipse GlassFish
+adds all JARs in that directory to the front of the JVM classpath,
+immediately after any JAR files added with the <code>classpath-prefix</code>
+option, so that they take precedence over the internal Eclipse GlassFish
+classes. See <a href="#using-the-java-optional-package-mechanism">Using the
+Java Optional Package Mechanism</a>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public API</p></td>
@@ -1716,14 +1720,12 @@ with the <code>--type ext</code> option, then restart the server. For more
 information about the <code>asadmin add-library</code> command, see the Eclipse GlassFish Reference Manual.</p>
 </div>
 <div class="paragraph">
-<p>For more information, see
-<a href="http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html">Optional
-Packages - An Overview</a>
-(<code><a href="http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html" class="bare">http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html</a></code>)
-and
-<a href="http://download.oracle.com/javase/tutorial/ext/basics/load.html">Understanding
-Extension Class Loading</a>
-(<code><a href="http://docs.oracle.com/javase/tutorial/ext/basics/load.html" class="bare">http://docs.oracle.com/javase/tutorial/ext/basics/load.html</a></code>).</p>
+<p>Java 9 removed the original JVM extension mechanism (<code>java.ext.dirs</code>).
+Eclipse GlassFish therefore adds the JAR files found in domain-dir<code>/lib/ext</code>
+to the front of the server classpath, immediately after any JAR files
+added with the <code>classpath-prefix</code> option. This restores the familiar
+drop-in behavior for JAR files that must be visible on the JVM system
+classpath, such as a statically registered <code>java.security.Provider</code> (JCA).</p>
 </div>
 </div>
 <div class="sect2">
@@ -22818,7 +22820,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-10 08:55:32 UTC
+Last updated 2026-06-10 13:23:49 UTC
 </div>
 </div>
 </body>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +54,13 @@ class AutoDisposableGlassFish extends GlassFishImpl {
     private final boolean autoDelete;
     private final Consumer<GlassFish> onDisposeAction;
 
+    /**
+     * Deletes the temporary instance root if {@link #dispose()} was never called before the JVM
+     * exits. See issue #25545.
+     */
+    private final Thread cleanupHook = new Thread(this::cleanupOnShutdown, "gfembed-cleanup");
+    private boolean cleanupHookRegistered;
+
     AutoDisposableGlassFish(ModuleStartup gfKernel, ServiceLocator serviceLocator, GlassFishProperties gfProps,
         Consumer<GlassFish> onDispose) throws GlassFishException {
         super(gfKernel, serviceLocator);
@@ -104,17 +111,62 @@ class AutoDisposableGlassFish extends GlassFishImpl {
     }
 
     @Override
+    public synchronized void start() throws GlassFishException {
+        super.start();
+        // The instance may be started more than once (start/stop/start), but the hook must be
+        // registered only once - addShutdownHook rejects an already registered thread.
+        if (autoDelete && instanceRoot != null && !cleanupHookRegistered) {
+            try {
+                Runtime.getRuntime().addShutdownHook(cleanupHook);
+                cleanupHookRegistered = true;
+            } catch (IllegalStateException e) {
+                // The JVM is already shutting down, nothing more we can do here.
+                LOG.log(Level.DEBUG, "Could not register the temp directory cleanup hook.", e);
+            }
+        }
+    }
+
+    @Override
     public synchronized void dispose() throws GlassFishException {
+        // The directory is deleted here, so the shutdown hook is no longer needed.
+        // It can't be removed if the JVM is already shutting down (i.e. we are called from the hook).
+        if (cleanupHookRegistered) {
+            try {
+                Runtime.getRuntime().removeShutdownHook(cleanupHook);
+                cleanupHookRegistered = false;
+            } catch (IllegalStateException e) {
+                LOG.log(Level.DEBUG, "Could not remove the temp directory cleanup hook.", e);
+            }
+        }
         onDisposeAction.accept(this);
         try {
             super.dispose();
         } finally {
-            if (autoDelete && instanceRoot != null) {
-                // Might have been deleted already.
-                if (instanceRoot.exists()) {
-                    deleteRecursive(instanceRoot);
-                }
-            }
+            deleteInstanceRoot();
+        }
+    }
+
+    /**
+     * Invoked by the JVM shutdown hook when {@link #dispose()} was not called. Disposes the instance
+     * so the server stops cleanly and releases its files, then deletes the temporary directory.
+     */
+    private void cleanupOnShutdown() {
+        try {
+            dispose();
+        } catch (IllegalStateException e) {
+            // Already disposed - the directory has already been deleted.
+            LOG.log(Level.DEBUG, "GlassFish already disposed on shutdown.", e);
+        } catch (GlassFishException e) {
+            // Best effort: dispose failed, still try to remove the temporary directory.
+            LOG.log(Level.WARNING, "GlassFish dispose failed on shutdown, deleting temp directory anyway.", e);
+            deleteInstanceRoot();
+        }
+    }
+
+    private void deleteInstanceRoot() {
+        if (autoDelete && instanceRoot != null && instanceRoot.exists()) {
+            // Might have been deleted already.
+            deleteRecursive(instanceRoot);
         }
     }
 

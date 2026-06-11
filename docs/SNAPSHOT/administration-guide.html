@@ -2559,30 +2559,33 @@ Administer Eclipse GlassFish</a>.</p>
 <h4 id="osgi-module-management-subsystem"><a class="anchor" href="#osgi-module-management-subsystem"></a>OSGi Module Management Subsystem</h4>
 <div class="paragraph">
 <p>The OSGi module management subsystem that is provided with Eclipse GlassFish is the <a href="http://felix.apache.org/">Apache Felix OSGi framework</a> . To
-administer this framework, use the either of the following tools:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="http://felix.apache.org/documentation/subprojects/apache-felix-remote-shell.html">Apache
+administer this framework, use the
+<a href="http://felix.apache.org/documentation/subprojects/apache-felix-remote-shell.html">Apache
 Felix Gogo</a> remote shell. This shell is provided with Eclipse GlassFish.
 The shell uses the Felix Gogo shell service to interact with the OSGi
 module management subsystem.</p>
-</li>
-<li>
-<p>GlassFish OSGi Administration Console. This console is distributed as
-an add-on component for Eclipse GlassFish or as a set of files from the
-Maven GlassFish repository. In both distributions, the GlassFish OSGi
-Web Console is provided as an extension to the Administration Console
-and as a standalone web application. The GlassFish OSGi Administration
-Console is a customized version of the
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The GlassFish OSGi Web Console is no longer distributed with
+Eclipse GlassFish. Advanced users can install the
 <a href="http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html">Apache
-Felix Web Console</a>.</p>
-</li>
-</ul>
+Felix Web Console</a> manually. See
+<a href="https://github.com/eclipse-ee4j/glassfish/issues/24314">issue #24314</a>
+for a community-described procedure.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>These tools enable you to perform administrative tasks on OSGi bundles
+<p>The shell enables you to perform administrative tasks on OSGi bundles
 such as:</p>
 </div>
 <div class="ulist">
@@ -2804,212 +2807,6 @@ service.id = 68
 ...
 gogo$</code></pre>
 </div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="to-download-and-install-the-glassfish-osgi-web-console"><a class="anchor" href="#to-download-and-install-the-glassfish-osgi-web-console"></a>To Download and Install the GlassFish OSGi Web Console</h5>
-<div class="paragraph">
-<p>The GlassFish OSGi Web Console is distributed as follows:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>As an add-on component for Eclipse GlassFish</p>
-</li>
-<li>
-<p>As a set of files from the <a href="https://maven.java.net">GlassFish Maven
-repository</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In both distributions, the GlassFish OSGi Web Console is provided as an
-extension to the Administration Console and as a standalone web
-application.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Perform one of the following sets of steps, depending on how you are
-obtaining the GlassFish OSGi Web Console.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>If you are obtaining the console as an add-on component, install the
-GlassFish OSGi Admin Console component.</p>
-</li>
-<li>
-<p>If you are obtaining the console from the Maven repository, download
-and unzip the required files.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Download the following files to the parent of the <code>glassfish8</code>
-directory of your Eclipse GlassFish installation.
-<a href="http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip"><code>glassfish-osgi-http-3.1.2.zip</code></a></p>
-<div class="paragraph">
-<p><a href="http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-gui/3.1.2/glassfish-osgi-gui-3.1.2.zip"><code>glassfish-osgi-gui-3.1.2.zip</code></a></p>
-</div>
-</li>
-<li>
-<p>Unzip the files that you downloaded.</p>
-<div class="paragraph">
-<p>The contents of the files are added to the
-as-install<code>/modules/autostart</code> directory of your Eclipse GlassFish
-installation.</p>
-</div>
-</li>
-<li>
-<p>Restart the DAS. For instructions, see <a href="#to-restart-a-domain">To Restart a Domain</a>.</p>
-</li>
-</ol>
-</div>
-<div id="GSADG797" class="paragraph">
-<p>Next Steps</p>
-</div>
-<div class="paragraph">
-<p>After downloading and installing the GlassFish OSGi Web Console, you can
-access the console as explained in the following sections:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console">To Access the GlassFish OSGi Web Console Through the
-Eclipse GlassFish Administration Console</a></p>
-</li>
-<li>
-<p><a href="#to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application">To Access the GlassFish OSGi Web Console as a Standalone Web Application</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect4">
-<h5 id="to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console"><a class="anchor" href="#to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console"></a>To Access the GlassFish OSGi Web Console Through the Eclipse GlassFish Administration Console</h5>
-<div class="paragraph">
-<p>A tab for the GlassFish OSGi Web Console is provided for the DAS and for
-every Eclipse GlassFish instance in a domain.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS and the instance for which you want to access
-the GlassFish OSGi Web Console are running.</p>
-</li>
-<li>
-<p>Start the Eclipse GlassFish Administration Console.
-For instructions, see <a href="#administration-console">Administration Console</a>.</p>
-</li>
-<li>
-<p>Open the Administration Console page for the DAS or instance for
-which you are accessing the GlassFish OSGi Web Console.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>For the DAS, in the navigation tree, select the server (Admin Server) node.</p>
-</li>
-<li>
-<p>For a standalone instance, perform these steps:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>In the navigation tree, expand the Standalone Instances node.</p>
-</li>
-<li>
-<p>Under the Standalone Instances node, select the instance.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>For a clustered instance, perform these steps:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>In the navigation tree, expand the Clusters node.</p>
-</li>
-<li>
-<p>Under the Clusters node, select the cluster that contains the instance.
-The General Information page for the cluster opens.</p>
-</li>
-<li>
-<p>In the General Information page for the cluster, click the Instances tab.
-The Clustered Server Instances page for the cluster opens.</p>
-</li>
-<li>
-<p>In the Server Instances table on the Clustered Server Instances
-page, select the instance.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>On the Administration Console page for the DAS or instance, click
-the OSGi Console tab. You are prompted for the user name and password of the administrative
-user of the GlassFish OSGi Web Console.</p>
-</li>
-<li>
-<p>In response to the prompt, provide the user name and password of the
-administrative user of the GlassFish OSGi Web Console.
-The user name and password of this user are both preset to <code>admin</code>.
-The GlassFish OSGi Web Console page opens.</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect4">
-<h5 id="to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application"><a class="anchor" href="#to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application"></a>To Access the GlassFish OSGi Web Console as a Standalone Web Application</h5>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Ensure that the DAS or the instance for which you want to access the
-GlassFish OSGi Web Console is running.</p>
-</li>
-<li>
-<p>In a web browser, open the following location:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>http://host:http-port/osgi/system/console/</code></pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">host</dt>
-<dd>
-<p>The host where the DAS or instance is running.</p>
-</dd>
-<dt class="hdlist1">http-port</dt>
-<dd>
-<p>The port on which Eclipse GlassFish listens for HTTP requests.
-The default is 8080.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>For example, if the DAS is running on the local host and Eclipse GlassFish listens
-  for HTTP requests on the default port, open the following location:</p>
-</div>
-<div class="paragraph">
-<p>+</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>http://localhost:8080/osgi/system/console/</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>When prompted, provide the user name and password of the
-administrative user of the GlassFish OSGi Web Console.</p>
-<div class="paragraph">
-<p>The user name and password of this user are both preset to <code>admin</code>.</p>
-</div>
-</li>
-</ol>
 </div>
 </div>
 </div>
@@ -32997,7 +32794,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 07:18:13 UTC
+Last updated 2026-06-11 12:18:03 UTC
 </div>
 </div>
 </body>

@@ -60,10 +60,10 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + url + " HTTP/1.0\n";
+            String get = "GET " + contextRoot + url + " HTTP/1.0\r\n";
             System.out.print(get);
             os.write(get.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));

@@ -121,16 +121,16 @@ public class WebTest {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String getRequestLine = "GET " + contextRoot + "/CheckSession" +
-            " HTTP/1.0\n";
+            " HTTP/1.0\r\n";
         System.out.print("\nConnecting to: " + getRequestLine);
         os.write(getRequestLine.getBytes());
-        String cookieHeaderLine = "Cookie: " + jsessionIdCookie + "\n";
+        String cookieHeaderLine = "Cookie: " + jsessionIdCookie + "\r\n";
         System.out.print(cookieHeaderLine);
         os.write(cookieHeaderLine.getBytes());
-        cookieHeaderLine = "Cookie: " + persistedSessionCookie + "\n";
+        cookieHeaderLine = "Cookie: " + persistedSessionCookie + "\r\n";
         System.out.print(cookieHeaderLine);
         os.write(cookieHeaderLine.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

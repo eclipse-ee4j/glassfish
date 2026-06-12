@@ -250,7 +250,7 @@ public class WebTest {
 
         private void assertContains(String body, String expected) {
             if (!body.contains(expected)) {
-                throw new RuntimeException("Response body check failure.\n"
+                throw new RuntimeException("Response body check failure.\r\n"
                         + "Expected to contain substring: [" + expected
                         + "]\nActual: [" + body + "]");
             }

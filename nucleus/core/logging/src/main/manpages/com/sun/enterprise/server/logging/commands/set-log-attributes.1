@@ -2,7 +2,7 @@ set-log-attributes(1)     asadmin Utility Subcommands    set-log-attributes(1)
 
 NAME
        set-log-attributes - sets the logging attributes for one or more
-       loggers
+       handlers or formatters
 
 SYNOPSIS
            set-log-attributes [--help] [--target=target]
@@ -10,9 +10,9 @@ SYNOPSIS
 
 DESCRIPTION
        The set-log-attributes subcommand sets logging attributes for one or
-       more loggers. The attributes you can set correspond to the attributes
-       that are available in the logging.properties file for the domain.
-       Depending on the attributes you set, a server restart may be necessary.
+       more handlers or formatters. The attributes you can set correspond
+       to the attributes that are available in the logging.properties file
+       for the domain.
 
        This subcommand is supported in remote mode only.
 
@@ -49,64 +49,101 @@ OPERANDS
            Administration Guide for complete explanations of each of
            these values.
 
-           com.sun.enterprise.server.logging.GFFileHandler.alarms
-               Default is false.
-
-           com.sun.enterprise.server.logging.GFFileHandler.excludeFields
-               Default is an empty string.
-
-           com.sun.enterprise.server.logging.GFFileHandler.file
-               Default is ${com.sun.aas.instanceRoot}/logs/server.log.
-
-           com.sun.enterprise.server.logging.GFFileHandler.flushFrequency
-               Default is 1.
-
-           com.sun.enterprise.server.logging.GFFileHandler.formatter
+           handlers
                Default is
-               com.sun.enterprise.server.logging.UniformLogFormatter.
+               org.glassfish.main.jul.handler.SimpleLogHandler,org.glassfish.main.jul.handler.GlassFishLogHandler,org.glassfish.main.jul.handler.SyslogHandler.
 
-           com.sun.enterprise.server.logging.GFFileHandler.logtoConsole
-               Default is false.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.capacity
+               Default is 1000000.
 
-           com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles
+           org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.timeoutInSeconds
                Default is 0.
 
-           com.sun.enterprise.server.logging.GFFileHandler.multiLineMode
+           org.glassfish.main.jul.handler.GlassFishLogHandler.enabled
                Default is true.
 
-           com.sun.enterprise.server.logging.GFFileHandler.retainErrorsStasticsForHours
-               Default is 0.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.encoding
+               Default is UTF-8.
 
-           com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes
-               Default is 2000000.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.file
+               Default is ${com.sun.aas.instanceRoot}/logs/server.log.
 
-           com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes
-               Default is 0.
-
-           com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging
-               Default is false.
-
-           handlers
-               Default is java.util.logging.ConsoleHandler.
-
-           java.util.logging.ConsoleHandler.formatter
-               Default is
-               com.sun.enterprise.server.logging.UniformLogFormatter.
-
-           java.util.logging.FileHandler.count
+           org.glassfish.main.jul.handler.GlassFishLogHandler.flushFrequency
                Default is 1.
 
-           java.util.logging.FileHandler.formatter
-               Default is java.util.logging.XMLFormatter.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.formatter
+               Default is
+               org.glassfish.main.jul.formatter.ODLLogFormatter.
 
-           java.util.logging.FileHandler.limit
-               Default is 50000.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields
+               Default is an empty string.
 
-           java.util.logging.FileHandler.pattern
-               Default is %h/java%u.log.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.multiline
+               Default is true.
 
-           log4j.logger.org.hibernate.validator.util.Version
-               Default is warn.
+           org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.printSource
+               Default is false.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.level
+               Default is ALL.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.redirectStandardStreams
+               Default is true.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress
+               Default is false.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.megabytes
+               Default is 100.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes
+               Default is 0.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles
+               Default is 0.
+
+           org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.rollOnDateChange
+               Default is false.
+
+           org.glassfish.main.jul.handler.SimpleLogHandler.formatter
+               Default is
+               org.glassfish.main.jul.formatter.UniformLogFormatter.
+
+           org.glassfish.main.jul.handler.SimpleLogHandler.formatter.excludedFields
+               Default is an empty string.
+
+           org.glassfish.main.jul.handler.SimpleLogHandler.formatter.printSource
+               Default is false.
+
+           org.glassfish.main.jul.handler.SimpleLogHandler.level
+               Default is INFO.
+
+           org.glassfish.main.jul.handler.SimpleLogHandler.useErrorStream
+               Default is true.
+
+           org.glassfish.main.jul.handler.SyslogHandler.buffer.capacity
+               Default is 5000.
+
+           org.glassfish.main.jul.handler.SyslogHandler.buffer.timeoutInSeconds
+               Default is 300.
+
+           org.glassfish.main.jul.handler.SyslogHandler.enabled
+               Default is false.
+
+           org.glassfish.main.jul.handler.SyslogHandler.encoding
+               Default is UTF-8.
+
+           org.glassfish.main.jul.handler.SyslogHandler.formatter
+               Default is java.util.logging.SimpleFormatter.
+
+           org.glassfish.main.jul.handler.SyslogHandler.host
+               Default is an empty string.
+
+           org.glassfish.main.jul.handler.SyslogHandler.level
+               Default is SEVERE.
+
+           org.glassfish.main.jul.handler.SyslogHandler.port
+               Default is 514.
 
 EXAMPLES
        Example 1, Setting the Maximum Number of Log History Files to Maintain
@@ -114,10 +151,22 @@ EXAMPLES
            the server as a whole.
 
                asadmin> set-log-attributes --target=server \
-               com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=8
-               com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles logging
-               attribute set with value 8.
-               These logging attributes are set for server.
+               org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=8
+
+               org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles logging attribute value set to 8.
+               The logging attributes are saved successfully for server.
+
+               Command set-log-attributes executed successfully.
+
+       Example 2, Setting Multiple Attributes in a Single Invocation
+           This example sets two attributes at once by separating
+           name=value pairs with a colon.
+
+               asadmin> set-log-attributes \
+               org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress=true:org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=5
+
+               The logging attributes are saved successfully for server.
+
                Command set-log-attributes executed successfully.
 
 EXIT STATUS
@@ -136,4 +185,4 @@ SEE ALSO
        "Administering the Logging Service" in Eclipse GlassFish Server
        Administration Guide
 
-Jakarta EE 11                         12 Feb 2011            set-log-attributes(1)
+Jakarta EE 11                         27 May 2026            set-log-attributes(1)

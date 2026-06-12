@@ -73,15 +73,15 @@ public class WebTest {
         try{
             s = new Socket(host, port);
             os = s.getOutputStream();
-            System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
-            os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
+            System.out.println(("GET " + contextPath + " HTTP/1.0\r\n"));
+            os.write(("GET " + contextPath + " HTTP/1.0\r\n").getBytes());
             if (requireAuthentication) {
-                os.write("Authorization: Basic amF2YWVlOmphdmFlZQ==\n".getBytes());
+                os.write("Authorization: Basic amF2YWVlOmphdmFlZQ==\r\n".getBytes());
             }
             if (sessionId != null) {
-                os.write(("Cookie: JSESSIONID=" + sessionId + "\n").getBytes());
+                os.write(("Cookie: JSESSIONID=" + sessionId + "\r\n").getBytes());
             }
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));

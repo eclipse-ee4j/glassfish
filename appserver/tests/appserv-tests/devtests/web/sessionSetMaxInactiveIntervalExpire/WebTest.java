@@ -90,9 +90,9 @@ public class WebTest {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         os.write(("GET " + contextRoot + "/CheckSession"
-            + " HTTP/1.0\n").getBytes());
-        os.write(("Cookie: " + clientCookie + "\n").getBytes());
-        os.write("\n".getBytes());
+            + " HTTP/1.0\r\n").getBytes());
+        os.write(("Cookie: " + clientCookie + "\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

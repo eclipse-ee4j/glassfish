@@ -44,10 +44,10 @@ public class WebTest {
         String contextPath) throws Exception {
         Socket s = new Socket(host, port);
         OutputStream os = s.getOutputStream();
-        System.out.println("GET " + contextPath + " HTTP/1.1\n");
-        os.write(("GET " + contextPath + " HTTP/1.1\n").getBytes());
-        os.write("Host: localhost\n".getBytes());
-        os.write("\n".getBytes());
+        System.out.println("GET " + contextPath + " HTTP/1.1\r\n");
+        os.write(("GET " + contextPath + " HTTP/1.1\r\n").getBytes());
+        os.write("Host: localhost\r\n".getBytes());
+        os.write("\r\n".getBytes());
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;

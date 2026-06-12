@@ -52,10 +52,10 @@ public class WebTest {
             OutputStream os = s.getOutputStream();
 
             contextPath += "?url=" + contextPath;
-            System.out.println(("GET " + contextPath + " HTTP/1.1\n"));
-            os.write(("GET " + contextPath + " HTTP/1.1\n").getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            System.out.println(("GET " + contextPath + " HTTP/1.1\r\n"));
+            os.write(("GET " + contextPath + " HTTP/1.1\r\n").getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
 
             InputStream is = s.getInputStream();
             System.out.println("Time: " + (System.currentTimeMillis() - time));

@@ -24,15 +24,18 @@ import com.sun.enterprise.security.store.PasswordAdapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
 
 import org.glassfish.security.common.FileRealmHelper;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+import static java.lang.System.Logger.Level.INFO;
 
 public class DomainSecurity extends MasterPasswordFileManager {
 
+    private static final Logger LOG = System.getLogger(DomainSecurity.class.getName());
 
     /**
      * Modifies the contents of given keyfile with administrator's user-name and password. Uses the FileRealm classes that
@@ -75,7 +78,11 @@ public class DomainSecurity extends MasterPasswordFileManager {
      */
     void createSSLCertificateDatabase(File configDir, DomainConfig config, String masterPassword) throws RepositoryException {
         createKeyStore(new File(configDir, KEYSTORE_FILENAME_DEFAULT), config, masterPassword);
-        changeKeystorePassword(KEYSTORE_PASSWORD_DEFAULT, masterPassword, new File(configDir, TRUSTSTORE_FILENAME_DEFAULT));
+        final File trustStoreFile = new File(configDir, TRUSTSTORE_FILENAME_DEFAULT);
+        if (trustStoreFile.exists()) {
+            changeKeystorePassword(KEYSTORE_PASSWORD_DEFAULT, masterPassword, trustStoreFile);
+        }
+        LOG.log(INFO, () -> "Copying keystore certificates to the trust store: " + trustStoreFile);
         copyCertificatesToTrustStore(configDir, masterPassword);
     }
 

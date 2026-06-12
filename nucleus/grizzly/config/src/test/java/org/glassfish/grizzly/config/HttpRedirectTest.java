@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -40,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class HttpRedirectTest {
+    private static final Logger LOG = System.getLogger(HttpRedirectTest.class.getName());
     private static final GrizzlyConfigTestHelper helper = new GrizzlyConfigTestHelper(HttpRedirectTest.class);
 
     /**
@@ -147,14 +150,15 @@ public class HttpRedirectTest {
             Socket s = socketFactory.createSocket("localhost", 48480);
             OutputStream out = s.getOutputStream();
             out.write(("GET " + resourceURL + " HTTP/1.1\n").getBytes(UTF_8));
-            out.write(("Host: " + host + ':' + Integer.toString(port) + '\n').getBytes(UTF_8));
-            out.write("\n".getBytes(UTF_8));
+            out.write(("Host: " + host + ':' + Integer.toString(port) + "\r\n").getBytes(UTF_8));
+            out.write("\r\n".getBytes(UTF_8));
             out.flush();
             InputStream in = s.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF_8));
             boolean found = false;
 
             for (String line = br.readLine(); line != null; line = br.readLine()) {
+                LOG.log(Level.INFO, "Response line: {0}", line);
                 if (line.length() > 0 && line.toLowerCase().charAt(0) == 'l') {
                     final String lineLC = line.toLowerCase();
 

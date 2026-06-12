@@ -207,19 +207,20 @@ asadmin create-jvm-options -verbose\:class
 ----
 
 To send the JVM messages to a special JVM log file instead of `stdout`,
-use the following `asadmin create-jvm-options` commands:
+use the following `asadmin create-jvm-options` command to route JVM
+unified logging to a file:
 
 [source]
 ----
-asadmin create-jvm-options -XX\:+LogVMOutput
-asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
+asadmin create-jvm-options -Xlog\:all\:file=${com.sun.aas.instanceRoot}/logs/jvm.log
 ----
 
 
 [NOTE]
 ====
-These `-XX` options are specific to the OpenJDK (or Hotspot) JVM and do
-not work with the JRockit JVM.
+`-Xlog` is the JVM unified logging option available in the OpenJDK (or
+Hotspot) JVM. It replaces the legacy `-XX:+LogVMOutput` and `-XX:LogFile`
+options.
 ====
 
 

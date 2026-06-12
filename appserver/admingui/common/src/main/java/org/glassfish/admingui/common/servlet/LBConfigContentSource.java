@@ -69,12 +69,11 @@ public class LBConfigContentSource  implements DownloadServlet.ContentSource {
         // Get appName
         HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
         String lbName = request.getParameter("lbName");
-        String restUrl = request.getParameter("restUrl");
 
         // Create the tmpFile
         InputStream tmpFile = null;
         try {
-            String endpoint = restUrl + "/load-balancers/load-balancer/" + lbName + "/export-http-lb-config";
+            String endpoint = request.getSession().getAttribute("REST_URL") + "/load-balancers/load-balancer/" + lbName + "/export-http-lb-config";
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = new Date();
             Map attrsMap = new HashMap();

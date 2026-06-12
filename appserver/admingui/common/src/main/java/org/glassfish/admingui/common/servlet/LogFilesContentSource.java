@@ -60,12 +60,11 @@ public class LogFilesContentSource  implements DownloadServlet.ContentSource {
         // Get appName
         HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
         String target = request.getParameter("target");
-        String restUrl = request.getParameter("restUrl");
 
         // Create the tmpFile
         InputStream tmpFile = null;
         try {
-            String endpoint = restUrl + "/collect-log-files";
+            String endpoint = request.getSession().getAttribute("REST_URL") + "/collect-log-files";
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = new Date();
             Map attrsMap = new HashMap();

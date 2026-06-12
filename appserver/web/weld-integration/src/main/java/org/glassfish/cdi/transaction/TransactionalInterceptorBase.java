@@ -187,23 +187,26 @@ public class TransactionalInterceptorBase implements Serializable {
      * Resolves the {@link Transactional} annotation that applies to the intercepted invocation, together with its
      * {@code rollbackOn}/{@code dontRollbackOn} attributes.
      * <p>
-     * A method-level annotation takes precedence over a class-level one. When {@code @Transactional} is not declared
-     * directly, it is looked up from the interceptor bindings of the invocation via
-     * {@link InvocationContext#getInterceptorBinding(Class)}. Unlike {@link Class#getAnnotation(Class)}, which does not
-     * traverse meta-annotations, the binding set includes {@code @Transactional} contributed through CDI stereotypes (at
-     * any nesting depth) as well as bindings added dynamically by CDI extensions. A direct class-level lookup is kept as
-     * a final fallback for invocation contexts that do not expose interceptor bindings.
+     * The interceptor binding resolved by the container via {@link InvocationContext#getInterceptorBinding(Class)} is
+     * consulted first. Unlike {@link Class#getAnnotation(Class)}, which does not traverse meta-annotations, the binding
+     * set includes {@code @Transactional} contributed through CDI stereotypes (at any nesting depth) as well as bindings
+     * added or disabled dynamically by CDI extensions; it already reflects method-over-class precedence. This also
+     * covers the edge case where an extension disables the binding on the method but keeps it on the class, in which
+     * case the class-level annotation is the one that applies.
+     * <p>
+     * Direct reflection on the method and then the target class is used only as a fallback for invocation contexts that
+     * do not expose interceptor bindings (for example when the interceptor is not driven by a CDI container).
      *
      * @param ctx the current invocation context
      * @return the applicable {@link Transactional} annotation, or {@code null} if none can be resolved
      */
     private Transactional getTransactionalAnnotation(InvocationContext ctx) {
-        Transactional transactionalAnnotation = ctx.getMethod().getAnnotation(Transactional.class);
+        Transactional transactionalAnnotation = ctx.getInterceptorBinding(Transactional.class);
         if (transactionalAnnotation != null) {
             return transactionalAnnotation;
         }
 
-        transactionalAnnotation = ctx.getInterceptorBinding(Transactional.class);
+        transactionalAnnotation = ctx.getMethod().getAnnotation(Transactional.class);
         if (transactionalAnnotation != null) {
             return transactionalAnnotation;
         }

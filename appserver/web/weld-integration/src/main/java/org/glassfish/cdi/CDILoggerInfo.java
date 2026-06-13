@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,9 +39,6 @@ public class CDILoggerInfo {
     public static Logger getLogger() {
         return CDI_LOGGER;
     }
-
-    @LogMessageInfo(message = "Setting Context Class Loader for {0} to {1}.", level = "FINER")
-    public static final String SETTING_CONTEXT_CLASS_LOADER = CDI_LOGMSG_PREFIX + "-00001";
 
     @LogMessageInfo(message = "BeanDeploymentArchiveImpl::addBeanClass - adding {0} to {1}.", level = "FINE")
     public static final String ADD_BEAN_CLASS = CDI_LOGMSG_PREFIX + "-00002";

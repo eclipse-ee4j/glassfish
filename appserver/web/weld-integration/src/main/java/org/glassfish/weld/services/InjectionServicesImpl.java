@@ -44,6 +44,8 @@ import jakarta.persistence.PersistenceUnit;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.ejb.api.EjbContainerServices;
@@ -68,6 +70,12 @@ public class InjectionServicesImpl implements InjectionServices {
 
     private WsInjectionHandler wsHandler;
 
+    // Whether a target class is an interceptor depends only on the class and its superclass chain,
+    // all invariant for the loaded class. Memoized to skip the superclass walk and the per-class
+    // getAnnotations() reflection on the injection hot path. Scoped to this instance, which lives for
+    // the bean deployment archive, so it is freed with the deployment.
+    private final Map<Class<?>, Boolean> isInterceptorCache = new ConcurrentHashMap<>();
+
     public InjectionServicesImpl(InjectionManager injectionMgr, BundleDescriptor context, DeploymentImpl deployment) {
         injectionManager = injectionMgr;
         bundleContext = context;
@@ -75,6 +83,10 @@ public class InjectionServicesImpl implements InjectionServices {
     }
 
     private boolean isInterceptor(Class beanClass) {
+        return isInterceptorCache.computeIfAbsent(beanClass, InjectionServicesImpl::computeIsInterceptor);
+    }
+
+    private static boolean computeIsInterceptor(Class beanClass) {
         HashSet<String> annos = new HashSet<>();
         annos.add(jakarta.interceptor.Interceptor.class.getName());
         boolean res = false;

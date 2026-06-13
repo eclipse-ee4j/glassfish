@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 
@@ -105,7 +106,7 @@ public class SessionsResource extends AbstractResource {
                 ar.getExtraProperties().put("username", username);
             }
             ar.getExtraProperties().put("token",
-                    sessionManager.createSession(grizzlyRequest.getRemoteAddr(), subject, chooseTimeout(restConfig)));
+                    sessionManager.createSession(grizzlyRequest.getRemoteAddr(), subject, chooseTimeout(restConfig, data)));
 
         } else {
             if (!responseErrorStatusSet) {
@@ -116,7 +117,20 @@ public class SessionsResource extends AbstractResource {
         return responseBuilder.entity(new ActionReportResult(ar)).build();
     }
 
-    private int chooseTimeout(final RestConfig restConfig) {
+    private int chooseTimeout(final RestConfig restConfig, Map<String, String> data) {
+        // The admin console passes the configured admin session timeout
+        // (das-config adminSessionTimeoutInMinutes) so that the REST token lifetime
+        // matches the admin GUI session timeout. Without this, the token would always
+        // expire after the rest-config session-token-timeout (default 30 minutes),
+        // regardless of the Admin Session Timeout setting. See issue #24982.
+        String requested = data.get("sessionTimeoutInMinutes");
+        if (requested != null && !requested.isEmpty()) {
+            try {
+                return Integer.parseInt(requested);
+            } catch (NumberFormatException ignore) {
+                // Fall through to the rest-config default.
+            }
+        }
         int inactiveSessionLifeTime = 30 /*mins*/;
         if (restConfig != null) {
             inactiveSessionLifeTime = Integer.parseInt(restConfig.getSessionTokenTimeout());

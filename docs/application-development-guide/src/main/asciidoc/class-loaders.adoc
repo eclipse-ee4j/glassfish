@@ -149,11 +149,40 @@ You must use `delegate="true"` for a web application that accesses EJB
 components or that acts as a web service client or endpoint. For details
 about `glassfish-web.xml`, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
-For a number of packages, including `java.*` and `javax.*`, symbol
-resolution is always delegated to the parent class loader regardless of
-the `delegate` setting. This prevents applications from overriding core
-Java runtime classes or changing the API versions of specifications that
-are part of the Jakarta EE platform.
+For a number of packages, symbol resolution is always delegated to the
+parent class loader regardless of the `delegate` setting. This prevents
+applications from overriding core Java runtime classes or changing the
+API versions of specifications that are part of the Jakarta EE platform.
+The always-delegated packages are:
+
+* `java.*` and `javax.*` - Java runtime and Java extension classes
+* `jakarta.*` - Jakarta EE specification APIs
+* `sun.*` - JRE internal classes
+* `org.xml.sax.*` and `org.w3c.dom.*` - SAX and DOM classes provided by
+the JRE
+* `org.eclipse.microprofile.*` - MicroProfile specification APIs
+* `com.sun.faces.*` and `org.glassfish.wasp.taglibs.standard.*` - the
+Jakarta Faces (Mojarra) implementation and JSP standard tag library
+bundled with the {productName}
+
+As a result, setting `delegate="false"` alone does not cause an
+application to use a Jakarta Faces implementation bundled in its
+`WEB-INF/lib` directory; the `jakarta.faces.*` API and the
+`com.sun.faces.*` implementation are still loaded from the server.
+To make the application use its own bundled Jakarta Faces implementation
+instead of the one provided by the {productName}, set the
+`useBundledJsf` property to `true` in the `class-loader` element of the
+`glassfish-web.xml` file:
+
+[source,xml]
+----
+<glassfish-web-app error-url="">
+  <class-loader delegate="false"/>
+  <property name="useBundledJsf" value="true"/>
+</glassfish-web-app>
+----
+
+For details, see "xref:application-deployment-guide.adoc#class-loader[class-loader]" in {productName} Application Deployment Guide.
 
 [[using-the-java-optional-package-mechanism]]
 

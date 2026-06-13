@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,14 @@
 package org.glassfish.tests.embedded.basic.lifecycle;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.glassfish.embeddable.GlassFish;
@@ -29,6 +37,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -92,6 +103,63 @@ public class LifeCycleTest {
         instance2.dispose();
         logger.info("Instance2 disposed");
         checkDisposed();
+    }
+
+
+    /**
+     * Verifies that the temporary directory is deleted by the JVM shutdown hook when an embedded
+     * GlassFish instance is started and stopped but never disposed (issue #25545). The scenario is
+     * run in a forked JVM, because the shutdown hook only runs when the JVM exits.
+     */
+    @Test
+    public void shutdownHookDeletesTempDirWhenNotDisposed(@TempDir File forkTmpDir) throws Exception {
+        runForkedStartStopWithoutDispose(forkTmpDir);
+
+        File[] leftovers = forkTmpDir.listFiles((dir, name) -> name.startsWith("gfembed"));
+        assertNotNull(leftovers, "Could not list the temporary directory " + forkTmpDir);
+        assertEquals(0, leftovers.length,
+            "The shutdown hook must delete the gfembed temp directory when dispose() is not called,"
+                + " but found: " + Arrays.toString(leftovers));
+    }
+
+    private void runForkedStartStopWithoutDispose(File forkTmpDir) throws Exception {
+        String javaBin = Path.of(System.getProperty("java.home"), "bin", "java").toString();
+        List<String> command = new ArrayList<>();
+        command.add(javaBin);
+        // Forward this JVM's options (e.g. --add-opens required by embedded GlassFish).
+        command.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+        command.add("-cp");
+        command.add(buildClasspath());
+        command.add(StartStopNoDisposeRunner.class.getName());
+        command.add(forkTmpDir.getAbsolutePath());
+
+        Process process = new ProcessBuilder(command).inheritIO().start();
+        if (!process.waitFor(5, TimeUnit.MINUTES)) {
+            process.destroyForcibly();
+            fail("The forked embedded GlassFish process did not finish in time.");
+        }
+        assertEquals(0, process.exitValue(), "The forked embedded GlassFish process failed.");
+    }
+
+    /**
+     * Builds the classpath for the forked JVM. Surefire often runs tests in an isolated
+     * {@link URLClassLoader}, so {@code java.class.path} alone does not contain the test
+     * dependencies (including the embedded GlassFish uber jar). Collect the URLs from the
+     * classloader hierarchy and fall back to {@code java.class.path} if none are found.
+     */
+    private static String buildClasspath() throws Exception {
+        StringBuilder classpath = new StringBuilder();
+        for (ClassLoader cl = LifeCycleTest.class.getClassLoader(); cl != null; cl = cl.getParent()) {
+            if (cl instanceof URLClassLoader urlClassLoader) {
+                for (URL url : urlClassLoader.getURLs()) {
+                    if (classpath.length() > 0) {
+                        classpath.append(File.pathSeparatorChar);
+                    }
+                    classpath.append(new File(url.toURI()).getAbsolutePath());
+                }
+            }
+        }
+        return classpath.length() > 0 ? classpath.toString() : System.getProperty("java.class.path");
     }
 
 

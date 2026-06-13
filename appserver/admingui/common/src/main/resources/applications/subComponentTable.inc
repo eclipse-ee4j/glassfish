@@ -59,7 +59,7 @@ println("sectionDetail =  $attribute{sectionDetail}");
                 url="#{request.contextPath}/common/applications/appclientLaunch.jsf?appName=#{appName}&moduleName=#{td.value.moduleName}"/>
             />
             <sun:hyperlink id="downloadStubs" rendered="#{td.value.hasAppClientStub}" text="$resource{i18n.deployTable.downloadStubs}"
-                onClick="window.location = '#{request.contextPath}/download/client-stubs.zip?contentSourceId=ClientStubs&appName=#{appName}&restUrl=#{sessionScope.REST_URL}'; return false; "
+                onClick="window.location = '#{request.contextPath}/download/client-stubs.zip?contentSourceId=ClientStubs&appName=#{appName}'; return false; "
                            />
         </sun:tableColumn>
 

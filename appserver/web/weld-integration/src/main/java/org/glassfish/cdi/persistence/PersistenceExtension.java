@@ -40,6 +40,7 @@ import jakarta.persistence.metamodel.Metamodel;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
@@ -51,11 +52,17 @@ public class PersistenceExtension implements Extension  {
     private PersistenceUnitDescriptor firstPersistenceUnitDescriptor;
 
     public void afterBean(final @Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        var container = Globals.get(InvocationManager.class)
-                                  .getCurrentInvocation()
-                                  .getContainer();
+        if (Globals.getDefaultHabitat() == null) {
+            return;
+        }
 
-        if (container instanceof ApplicationInfo applicationInfo) {
+        ComponentInvocation currentInvocation = Globals.get(InvocationManager.class).getCurrentInvocation();
+
+        if (currentInvocation == null) {
+            return;
+        }
+
+        if (currentInvocation.getContainer() instanceof ApplicationInfo applicationInfo) {
 
             PersistenceUnitsDescriptor persistenceUnits = applicationInfo.getMetaData(PersistenceUnitsDescriptor.class);
 

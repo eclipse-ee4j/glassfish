@@ -69,10 +69,10 @@ public class WebTest {
     private void doTest() throws Exception {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/test" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/test" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

@@ -80,7 +80,7 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/CreateSession" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/CreateSession" + " HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\r\n".getBytes());
@@ -122,10 +122,10 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/ResumeSession" + " HTTP/1.0\n";
+        String get = "GET " + contextRoot + "/ResumeSession" + " HTTP/1.0\r\n";
         System.out.print(get);
         os.write(get.getBytes());
-        String cookie = "Cookie: " + jsessionId + "\n";
+        String cookie = "Cookie: " + jsessionId + "\r\n";
         System.out.println(cookie);
         os.write(cookie.getBytes());
         os.write("\r\n".getBytes());

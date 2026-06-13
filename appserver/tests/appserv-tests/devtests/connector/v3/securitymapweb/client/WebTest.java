@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -127,14 +127,14 @@ public class WebTest {
         try {
             String userpass = encode(userName + ":" + userName);
 
-            String auth = "Authorization: Basic " + userpass + "\n";
+            String auth = "Authorization: Basic " + userpass + "\r\n";
 
             socket = new Socket(host, port);
             os = socket.getOutputStream();
 
-            os.write("GET /security-map-web/ HTTP/1.0\n".getBytes());
+            os.write("GET /security-map-web/ HTTP/1.0\r\n".getBytes());
             os.write(auth.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             System.out.println("Send request");
 

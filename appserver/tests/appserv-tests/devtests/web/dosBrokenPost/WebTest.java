@@ -45,7 +45,7 @@ public class WebTest extends Thread {
         throws Exception {
         Socket s = new Socket(host, port);
         OutputStream os = s.getOutputStream();
-        os.write(("POST " + contextPath + " HTTP/1.1\n").getBytes());
+        os.write(("POST " + contextPath + " HTTP/1.1\r\n").getBytes());
         os.write("Host: localhost\r".getBytes());
         os.write("content-length: 0\r".getBytes());
         os.write("content-length: 10\r".getBytes());

@@ -40,7 +40,7 @@
 	<h:outputScript name="faces.js" library="jakarta.faces" target="head" />
     <sun:script url="$resource{i18nc.adminjsf.url}" />
 </sun:head>
-<sun:body onLoad="javascript: logViewerRaw('/download/log/?contentSourceId=LogViewer&start=0&instanceName=#{pageSession.encodedInstanceName}&restUrl=' + encodeURIComponent('#{sessionScope.REST_URL}'))" id="body3">
+<sun:body onLoad="javascript: logViewerRaw('/download/log/?contentSourceId=LogViewer&start=0&instanceName=#{pageSession.encodedInstanceName}')" id="body3">
 <sun:form id="propertyForm">
 #include "/common/shared/alertMsg_1.inc"
     <!-- Page Title -->

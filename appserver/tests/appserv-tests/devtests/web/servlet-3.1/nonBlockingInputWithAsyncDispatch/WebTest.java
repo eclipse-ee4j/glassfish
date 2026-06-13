@@ -56,7 +56,7 @@ public class WebTest {
                     output.flush();
                     /*
                     int sleepInSeconds = 3;
-                    System.out.format("Sleeping %d sec\n", sleepInSeconds);
+                    System.out.format("Sleeping %d sec\r\n", sleepInSeconds);
                     Thread.sleep(sleepInSeconds * 1000);
                     */
                     data = "World";

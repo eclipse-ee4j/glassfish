@@ -78,9 +78,9 @@ public class WebTest
         sock = new Socket(host, port);
         OutputStream os = sock.getOutputStream();
 
-        System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
-        os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
-        os.write("\n".getBytes());
+        System.out.println(("GET " + contextPath + " HTTP/1.0\r\n"));
+        os.write(("GET " + contextPath + " HTTP/1.0\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = null;
         BufferedReader bis = null;

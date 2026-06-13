@@ -79,7 +79,7 @@ public class WebTest {
     private void invoke() throws Exception {
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET /mytest HTTP/1.0\n";
+        String get = "GET /mytest HTTP/1.0\r\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\r\n".getBytes());

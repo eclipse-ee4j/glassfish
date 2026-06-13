@@ -60,12 +60,11 @@ public class ClientStubsContentSource  implements DownloadServlet.ContentSource 
         // Get appName
         HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
         String appName = request.getParameter("appName");
-        String restUrl = request.getParameter("restUrl");
 
         // Create the tmpFile
         InputStream tmpFile = null;
         try {
-            String endpoint = restUrl + "/applications/application/" + appName + "/get-client-stubs";
+            String endpoint = request.getSession().getAttribute("REST_URL") + "/applications/application/" + appName + "/get-client-stubs";
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = new Date();
             Map attrsMap = new HashMap();

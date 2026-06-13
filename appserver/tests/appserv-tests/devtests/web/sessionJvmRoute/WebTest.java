@@ -116,11 +116,11 @@ public class WebTest {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String getRequestLine = "GET " + contextRoot + "/CheckSession" +
-            " HTTP/1.0\n";
+            " HTTP/1.0\r\n";
         System.out.println("\nConnecting to: " + getRequestLine);
         os.write(getRequestLine.getBytes());
-        os.write(("Cookie: " + clientCookie + "\n").getBytes());
-        os.write("\n".getBytes());
+        os.write(("Cookie: " + clientCookie + "\r\n").getBytes());
+        os.write("\r\n".getBytes());
 
         sessionCookieHeader = null;
         InputStream is = null;

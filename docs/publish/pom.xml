@@ -189,28 +189,6 @@
                     </execution>
 
                     <!--
-                        Get the collection of documentation for the 5.1.0 release.
-                    -->
-                    <execution>
-                        <id>get-5x</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <excludes>META-INF/**</excludes>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.docs</groupId>
-                                    <artifactId>distribution</artifactId>
-                                    <version>${glassfish.version.5x}</version>
-                                    <outputDirectory>${docs.5x.dir}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-
-                    <!--
                         Copy the hello.war to the docs directory.
                     -->
                     <execution>
@@ -239,6 +217,31 @@
                         the glassfish.version.latest property.
                     -->
                 </executions>
+            </plugin>
+
+            <!-- 5.1.0 has a snapshot parent, maven dependency plugin fails to download it. -->
+            <!-- Dependency plugin 3.11.0 broke this, 3.10.0 worked, you can revert this commit when they fix it. -->
+            <plugin>
+                <groupId>io.github.download-maven-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>get-5x</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <url>https://repo1.maven.org/maven2/org/glassfish/docs/distribution/${glassfish.version.5x}/distribution-${glassfish.version.5x}.jar</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${docs.5x.dir}</outputDirectory>
+                    <sha1>4e9a4745922f340753bc7f4b57665003765c629b</sha1>
+                    <excludes>
+                        <exclude>META-INF/**</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
 
             <!--

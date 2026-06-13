@@ -145,6 +145,21 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
     }
 
     /**
+     * @return the configured admin GUI session timeout in minutes
+     *         (das-config {@code adminSessionTimeoutInMinutes}), or {@code null}
+     *         if it cannot be determined.
+     */
+    private static String getAdminSessionTimeout() {
+        try {
+            return getServiceLocator().getService(Domain.class).getServerNamed("server")
+                    .getConfig().getAdminService().getDasConfig().getAdminSessionTimeoutInMinutes();
+        } catch (Exception ex) {
+            logger.log(Level.FINE, "Unable to read admin session timeout", ex);
+            return null;
+        }
+    }
+
+    /**
      *
      */
     @Override
@@ -222,6 +237,13 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         String remoteHost = getRemoteHost(request);
         MultivaluedMap payLoad = new MultivaluedHashMap();
         payLoad.putSingle("remoteHostName", remoteHost);
+        // Tie the REST token lifetime to the admin GUI session timeout so that
+        // changing "Admin Session Timeout" (including 0 = never) actually takes
+        // effect for the console. See issue #24982.
+        String adminSessionTimeout = getAdminSessionTimeout();
+        if (adminSessionTimeout != null) {
+            payLoad.putSingle("sessionTimeoutInMinutes", adminSessionTimeout);
+        }
 
         Response resp = target.request(RESPONSE_TYPE)
                 .header("X-GlassFish-Remote-Host", remoteHost)

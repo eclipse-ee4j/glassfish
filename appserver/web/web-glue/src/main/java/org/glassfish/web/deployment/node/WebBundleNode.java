@@ -22,7 +22,6 @@ import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.node.SaxParserHandler;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.xml.ConcurrencyTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.ArrayList;
@@ -109,8 +108,7 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
     @Override
     public Collection<String> elementsAllowingEmptyValue() {
         return Set.of(
-            WebTagNames.LOAD_ON_STARTUP,
-            ConcurrencyTagNames.QUALIFIER);
+            WebTagNames.LOAD_ON_STARTUP);
     }
 
     @Override

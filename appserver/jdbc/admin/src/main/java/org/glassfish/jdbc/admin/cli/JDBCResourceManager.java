@@ -239,7 +239,7 @@ public class JDBCResourceManager implements ResourceManager {
                     String msg = I18N.getLocalString("delete.jdbc.resource.no.resource-ref",
                             "jdbc-resource [ {0} ] is not referenced in target [ {1} ]",
                             jndiName, target);
-                    return new ResourceStatus(FAILURE, msg);
+                    return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
 
                 if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {

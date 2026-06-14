@@ -17,6 +17,9 @@
 
 package org.glassfish.admin.rest.resources;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.net.NetUtils;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -27,7 +30,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
@@ -37,6 +41,7 @@ import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.admin.restconnector.RestConfig;
 import org.glassfish.common.util.admin.RestSessionManager;
 import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.RemoteAdminAccessException;
 import org.glassfish.jersey.internal.util.collection.Ref;
 
@@ -51,6 +56,9 @@ import static jakarta.ws.rs.core.Response.Status.UNAUTHORIZED;
  */
 @Path("/sessions")
 public class SessionsResource extends AbstractResource {
+
+    private static final Logger LOGGER = Logger.getLogger(SessionsResource.class.getName());
+
     @Inject
     private RestSessionManager sessionManager;
 
@@ -106,7 +114,7 @@ public class SessionsResource extends AbstractResource {
                 ar.getExtraProperties().put("username", username);
             }
             ar.getExtraProperties().put("token",
-                    sessionManager.createSession(grizzlyRequest.getRemoteAddr(), subject, chooseTimeout(restConfig, data)));
+                    sessionManager.createSession(grizzlyRequest.getRemoteAddr(), subject, chooseTimeout(restConfig, grizzlyRequest)));
 
         } else {
             if (!responseErrorStatusSet) {
@@ -117,18 +125,19 @@ public class SessionsResource extends AbstractResource {
         return responseBuilder.entity(new ActionReportResult(ar)).build();
     }
 
-    private int chooseTimeout(final RestConfig restConfig, Map<String, String> data) {
-        // The admin console passes the configured admin session timeout
-        // (das-config adminSessionTimeoutInMinutes) so that the REST token lifetime
-        // matches the admin GUI session timeout. Without this, the token would always
-        // expire after the rest-config session-token-timeout (default 30 minutes),
-        // regardless of the Admin Session Timeout setting. See issue #24982.
-        String requested = data.get("sessionTimeoutInMinutes");
-        if (requested != null && !requested.isEmpty()) {
-            try {
-                return Integer.parseInt(requested);
-            } catch (NumberFormatException ignore) {
-                // Fall through to the rest-config default.
+    private int chooseTimeout(final RestConfig restConfig, final Request grizzlyRequest) {
+        // For requests originating from the admin console, tie the REST token
+        // lifetime to the configured admin GUI session timeout (das-config
+        // adminSessionTimeoutInMinutes, 0 = never) so that changing "Admin Session
+        // Timeout" actually takes effect for the console. Without this the token
+        // would always expire after the rest-config session-token-timeout (default
+        // 30 minutes), regardless of the Admin Session Timeout setting. Other REST
+        // clients (asadmin, scripts, ...) keep the rest-config default.
+        // See issue #24982.
+        if (isFromAdminConsole(grizzlyRequest)) {
+            Integer adminSessionTimeout = getAdminSessionTimeout();
+            if (adminSessionTimeout != null) {
+                return adminSessionTimeout;
             }
         }
         int inactiveSessionLifeTime = 30 /*mins*/;
@@ -136,6 +145,35 @@ public class SessionsResource extends AbstractResource {
             inactiveSessionLifeTime = Integer.parseInt(restConfig.getSessionTokenTimeout());
         }
         return inactiveSessionLifeTime;
+    }
+
+    /**
+     * The admin console always runs co-located with the DAS and is the only
+     * client that sends the {@code X-GlassFish-Remote-Host} header. Restricting
+     * the admin-session timeout to such requests means a remote REST client
+     * cannot influence its own token lifetime. This mirrors the check in
+     * {@code GenericAdminAuthenticator}.
+     */
+    private boolean isFromAdminConsole(final Request grizzlyRequest) {
+        return NetUtils.isLocal(grizzlyRequest.getRemoteAddr())
+                && grizzlyRequest.getHeader("X-GlassFish-Remote-Host") != null;
+    }
+
+    /**
+     * @return the configured admin GUI session timeout in minutes (das-config
+     *         {@code adminSessionTimeoutInMinutes}), or {@code null} if it cannot
+     *         be determined or parsed.
+     */
+    private Integer getAdminSessionTimeout() {
+        try {
+            Domain domain = Globals.getDefaultBaseServiceLocator().getService(Domain.class);
+            String value = domain.getServerNamed("server").getConfig().getAdminService()
+                    .getDasConfig().getAdminSessionTimeoutInMinutes();
+            return value == null ? null : Integer.valueOf(value.trim());
+        } catch (RuntimeException ex) {
+            LOGGER.log(Level.FINE, "Unable to read admin session timeout", ex);
+            return null;
+        }
     }
 
     @Path("{sessionId}/")

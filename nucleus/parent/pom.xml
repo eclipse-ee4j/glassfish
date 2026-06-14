@@ -1168,7 +1168,8 @@
                     <version>1.6.0</version>
                     <configuration>
                         <updatePomFile>true</updatePomFile>
-                        <flattenedPomFilename>${project.build.directory}/flattened-pom.xml</flattenedPomFilename>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                        <flattenedPomFilename>flattened-pom.xml</flattenedPomFilename>
                     </configuration>
                     <executions>
                         <execution>

@@ -1738,8 +1738,17 @@ public class Response implements HttpResponse, HttpServletResponse {
 
     @Override
     public void sendEarlyHints() {
-        // TODO: EE 12
+        // Ignore any call from an included servlet, or once the response has been committed.
+        if (isCommitted() || included) {
+            return;
+        }
 
+        try {
+            grizzlyResponse.sendEarlyHints();
+        } catch (IOException e) {
+            // Early hints are best-effort; failure to send them must not break the final response.
+            log("sendEarlyHints", e);
+        }
     }
 
 

@@ -74,7 +74,7 @@ public class WebTest {
             + "&j_password=" + adminPassword + " HTTP/1.0";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("\n\n".getBytes());
+        os.write("\r\n\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -107,10 +107,10 @@ public class WebTest {
         OutputStream os = sock.getOutputStream();
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("\n".getBytes());
-        String cookie = "Cookie: " + jsessionId + "\n";
+        os.write("\r\n".getBytes());
+        String cookie = "Cookie: " + jsessionId + "\r\n";
         os.write(cookie.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

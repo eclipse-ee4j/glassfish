@@ -44,7 +44,7 @@
 
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
 
-        <omnifish.arquillian.version>2.1.2</omnifish.arquillian.version>
+        <omnifish.arquillian.version>2.2.0</omnifish.arquillian.version>
     </properties>
 
     <dependencyManagement>
@@ -61,14 +61,14 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.10.1.Final</version>
+                <version>1.10.2.Final</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian.junit5</groupId>
                 <artifactId>arquillian-junit5-container</artifactId>
-                <version>1.10.1.Final</version>
+                <version>1.10.2.Final</version>
                 <scope>test</scope>
             </dependency>
 

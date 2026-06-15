@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>2.0.2</version>
+        <version>2.0.4</version>
         <relativePath />
     </parent>
 
@@ -34,6 +34,7 @@
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Aggregator POM</name>
+    <description>Root POM of the GlassFish project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <scm>
@@ -44,6 +45,7 @@
 
     <properties>
         <project.build.outputTimestamp>2026-05-02T23:46:07Z</project.build.outputTimestamp>
+        <cyclonedx.skip>true</cyclonedx.skip>
     </properties>
 
     <build>
@@ -104,19 +106,6 @@
                               </bannedDependencies>
                             </rules>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Disables sbom generation inherited from parent -->
-            <plugin>
-                <groupId>org.cyclonedx</groupId>
-                <artifactId>cyclonedx-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase></phase>
-                        <goals>
-                            <goal>makeAggregateBom</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -194,6 +183,22 @@
         </profile>
 
         <!--
+        Override cyclonedx skip
+        -->
+        <profile>
+            <id>oss-release</id>
+            <properties>
+                <cyclonedx.skip>false</cyclonedx.skip>
+            </properties>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+                <module>docs</module>
+            </modules>
+        </profile>
+
+        <!--
         Merges all exec files in the directory tree - useful when you want to se the code coverage
         produced by integration tests executed by different modules, or exactly opposite - to see
         not covered by tests at all.
@@ -205,7 +210,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.14</version>
+                        <version>0.8.15</version>
                         <executions>
                             <execution>
                                 <id>jacoco-merge</id>

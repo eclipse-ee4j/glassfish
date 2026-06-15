@@ -70,11 +70,11 @@ public class WebTest {
             System.out.println("Host=" + host + ", port=" + port);
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + "/page.jsp?blah=/../WEB-INF/web.xml HTTP/1.1\n";
+            String get = "GET " + contextRoot + "/page.jsp?blah=/../WEB-INF/web.xml HTTP/1.1\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             String line = null;

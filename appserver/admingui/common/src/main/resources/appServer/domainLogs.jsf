@@ -114,7 +114,7 @@
             if (event.preventDefault) {
               event.preventDefault();
             }
-            var url = '#{request.contextPath}/download/log-files-' + $('#{targetNameId}').value + '.zip?contentSourceId=LogFiles&target=' + $('#{targetNameId}').value + '&restUrl=#{sessionScope.REST_URL}';
+            var url = '#{request.contextPath}/download/log-files-' + $('#{targetNameId}').value + '.zip?contentSourceId=LogFiles&target=' + $('#{targetNameId}').value;
             if(location.protocol != 'https:' &&
               navigator.appName.indexOf("Internet Explorer") != -1 &&
               navigator.appVersion.indexOf("MSIE 10") != -1) {

@@ -67,10 +67,10 @@ public class WebTest {
         try{
             s = new Socket(host, port);
             os = s.getOutputStream();
-            String getPath = "GET " + contextPath + " HTTP/1.0\n";
+            String getPath = "GET " + contextPath + " HTTP/1.0\r\n";
             System.out.println(getPath);
             os.write(getPath.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));

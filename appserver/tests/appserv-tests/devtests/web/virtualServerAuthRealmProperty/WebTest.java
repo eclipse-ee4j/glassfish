@@ -95,10 +95,10 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + "/index.jsp" + " HTTP/1.0\n";
+            String get = "GET " + contextRoot + "/index.jsp" + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
@@ -141,12 +141,12 @@ public class WebTest {
             String get = "GET " + contextRoot
                 + "/j_security_check?j_username=" + adminUser
                 + "&j_password=" + adminPassword
-                + " HTTP/1.0\n";
+                + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            String cookie = "Cookie: " + jsessionId + "\n";
+            String cookie = "Cookie: " + jsessionId + "\r\n";
             os.write(cookie.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
@@ -189,12 +189,12 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + path + " HTTP/1.0\n";
+            String get = "GET " + path + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            String cookie = "Cookie: " + jsessionId + "\n";
+            String cookie = "Cookie: " + jsessionId + "\r\n";
             os.write(cookie.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
@@ -241,12 +241,12 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + "/index.jsp" + " HTTP/1.0\n";
+            String get = "GET " + contextRoot + "/index.jsp" + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            String cookie = "Cookie: " + jsessionIdSSO + "\n";
+            String cookie = "Cookie: " + jsessionIdSSO + "\r\n";
             os.write(cookie.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
 
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));

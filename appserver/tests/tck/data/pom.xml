@@ -45,7 +45,7 @@
 
         <jakarta.data.tck.version>1.1.0-M3</jakarta.data.tck.version>
 
-        <weld.version>7.0.0.Alpha1</weld.version>
+        <weld.version>7.0.0.Beta2</weld.version>
     </properties>
 
     <dependencyManagement>

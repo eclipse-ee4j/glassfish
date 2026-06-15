@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -239,7 +240,7 @@ class GlassFishMainLauncher extends GFLauncher {
 
         final Path installRoot = new File(asenvProps.get(INSTALL_ROOT.getPropertyName())).toPath();
         modulepath = installRoot.resolve(Path.of("lib", "bootstrap")).toAbsolutePath().normalize().toFile();
-        classpath = createClasspath();
+        classpath = createClasspath(callerParameters.getInstanceRootDir());
         setCommandLine(prepareCommandLine(callerParameters));
 
         // if no <network-config> element, we need to upgrade this domain
@@ -540,14 +541,41 @@ class GlassFishMainLauncher extends GFLauncher {
 
 
     /** create a list of all the classpath pieces in the right order */
-    private File[] createClasspath() {
+    private File[] createClasspath(File instanceRootDir) {
         List<File> all = new ArrayList<>();
         all.addAll(domainXMLjavaConfig.getPrefixClasspath());
+        // lib/ext jars replace the old extension mechanism, so they go at the front of
+        // the classpath (right after classpath-prefix) to keep their former precedence.
+        all.addAll(getExtensionJars(instanceRootDir));
         all.addAll(domainXMLJavaConfigProfiler.getClasspath());
         all.addAll(domainXMLjavaConfig.getSystemClasspath());
         all.addAll(domainXMLjavaConfig.getEnvClasspath());
         all.addAll(domainXMLjavaConfig.getSuffixClasspath());
         return all.toArray(File[]::new);
+    }
+
+
+    /**
+     * Returns the jars found in the instance's <code>lib/ext</code> directory.
+     * <p>
+     * Java&nbsp;9 removed the extension mechanism (<code>java.ext.dirs</code> /
+     * <code>lib/ext</code>), so jars dropped there - typically a statically registered
+     * {@link java.security.Provider} (JCA) - are no longer picked up automatically. Adding
+     * them to the server classpath restores the familiar drop-in behavior.
+     *
+     * @param instanceRootDir the domain or instance root directory
+     * @return jars in <code>lib/ext</code>, sorted by name; empty if the directory is absent
+     */
+    private List<File> getExtensionJars(File instanceRootDir) {
+        File extDir = new File(new File(instanceRootDir, "lib"), "ext");
+        File[] jars = extDir.listFiles(
+            file -> file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jar"));
+        if (jars == null || jars.length == 0) {
+            return emptyList();
+        }
+        Arrays.sort(jars);
+        LOG.log(INFO, () -> "Adding " + jars.length + " jar(s) from " + extDir + " to the server classpath.");
+        return Arrays.asList(jars);
     }
 
 

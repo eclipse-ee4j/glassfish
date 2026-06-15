@@ -59,11 +59,11 @@ public class WebTest {
         Socket sock = new Socket(host, new Integer(port).intValue());
         sock.setSoTimeout(5000);
         OutputStream os = sock.getOutputStream();
-        String get = "GET / HTTP/1.1\n";
+        String get = "GET / HTTP/1.1\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        os.write("Host: localhost\n".getBytes());
-        os.write("\n".getBytes());
+        os.write("Host: localhost\r\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

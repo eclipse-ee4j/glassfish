@@ -89,10 +89,10 @@ public class WebTest {
 
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String request = "GET " + contextRoot + "/From " + "HTTP/1.0\n";
+        String request = "GET " + contextRoot + "/From " + "HTTP/1.0\r\n";
         System.out.println(request);
         os.write(request.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         long start = System.currentTimeMillis();
         long end = 0;

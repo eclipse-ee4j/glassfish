@@ -38,13 +38,13 @@ or [buying their services.](#professional-services-and-enterprise-support)
 
 | GlassFish Version | Jakarta EE Version | Java Requirements |
 |:------------------|:-------------------|:------------------|
-| 8.0.0             | 11                 | 21, 25            |
-| 7.1.0             | 10                 | 17, 21, 25        |
-| 7.0.25            | 10                 | 11, 17, 21        |
-| 6.2.5             | 9.1                | 11, 17            |
-| 6.1.0             | 9.1                | 11                |
-| 6.0.0             | 9                  | 8                 |
-| 5.1.0             | 8 and Java EE 8    | 8                 |
+| 8.0               | 11                 | 21, 25            |
+| 7.1               | 10                 | 17, 21, 25        |
+| 7.0               | 10                 | 11, 17, 21        |
+| 6.2               | 9.1                | 11, 17            |
+| 6.1               | 9.1                | 11                |
+| 6.0               | 9                  | 8                 |
+| 5.1               | 8 and Java EE 8    | 8                 |
 
 ## Building
 

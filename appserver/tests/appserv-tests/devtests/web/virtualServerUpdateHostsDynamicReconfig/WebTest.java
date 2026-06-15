@@ -83,13 +83,13 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/test.txt HTTP/1.1\n";
+        String get = "GET " + contextRoot + "/test.txt HTTP/1.1\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        String host = "Host: myhost\n";
+        String host = "Host: myhost\r\n";
         System.out.println(host);
         os.write(host.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
@@ -118,13 +118,13 @@ public class WebTest {
 
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
-        String get = "GET " + contextRoot + "/test.txt HTTP/1.1\n";
+        String get = "GET " + contextRoot + "/test.txt HTTP/1.1\r\n";
         System.out.println(get);
         os.write(get.getBytes());
-        String host = "Host: mynewhost\n";
+        String host = "Host: mynewhost\r\n";
         System.out.println(host);
         os.write(host.getBytes());
-        os.write("\n".getBytes());
+        os.write("\r\n".getBytes());
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));

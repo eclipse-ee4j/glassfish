@@ -80,10 +80,16 @@ public class KeystoreManager {
      * @throws DomainException
      */
     protected void createKeyStore(File keyStore, RepositoryConfig config, String masterPassword) throws DomainException {
+        if (keyStore.exists()) {
+            // keystore shouldn't exist in the template, all keys should be domain specific
+            throw new DomainException(_strMgr.getString("KeystoreShouldntExist", keyStore.getName()));
+        }
+
         // Generate a new self signed certificate with s1as as the alias
         // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", dasCertDN));
+        String keyToolOutput;
         try {
             final KeyTool keyTool = new KeyTool(keyStore, masterPassword.toCharArray());
             keyTool.generateKeyPair(CERTIFICATE_ALIAS, dasCertDN, "RSA", 3650);
@@ -91,9 +97,14 @@ public class KeystoreManager {
             // Generate a new self signed certificate with glassfish-instance as the alias
             // Create the default self-signed cert for instances to use for SSL auth.
             final String instanceCertDN = getInstanceCertDN(config);
-            keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
+            keyToolOutput = keyTool.generateKeyPair(INSTANCE_SECURE_ADMIN_ALIAS, instanceCertDN, "RSA", 3650);
+        } catch (IllegalArgumentException e) {
+            throw new DomainException(_strMgr.getString("InvalidPassword"), e);
         } catch (IOException e) {
             throw new DomainException(_strMgr.getString("SomeProblemWithKeytool"), e);
+        }
+        if (!keyStore.exists()) {
+            throw new DomainException("KeyTool command failed to create the keystore with the following output: " + keyToolOutput);
         }
     }
 

@@ -68,7 +68,7 @@ public class BasicAuthTest extends ITestBase {
 
         try {
             String result = "RESULT: principal: testuser3";
-            goGet(host, port, result, "Authorization: Basic dGVzdHVzZXIzOnNlY3JldA==\n");
+            goGet(host, port, result, "Authorization: Basic dGVzdHVzZXIzOnNlY3JldA==\r\n");
             assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -83,7 +83,7 @@ public class BasicAuthTest extends ITestBase {
 
         try {
             String result = "RESULT: principal: testuser42";
-            goGet(host, port, result, "Authorization: Basic dGVzdHVzZXI0MjpzZWNyZXQ=\n");
+            goGet(host, port, result, "Authorization: Basic dGVzdHVzZXI0MjpzZWNyZXQ=\r\n");
             assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -99,7 +99,7 @@ public class BasicAuthTest extends ITestBase {
         try {
 
             String result = "HTTP/1.1 403";
-            goGet(host, port, result, "Authorization: Basic ajJlZTpqMmVl\n");
+            goGet(host, port, result, "Authorization: Basic ajJlZTpqMmVl\r\n");
             assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -114,7 +114,7 @@ public class BasicAuthTest extends ITestBase {
         try {
 
             String result = "HTTP/1.1 401";
-            goGet(host, port, result, "Authorization: Basic ajJlZTo=\n");
+            goGet(host, port, result, "Authorization: Basic ajJlZTo=\r\n");
             assertTrue(true, testName);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -141,9 +141,10 @@ public class BasicAuthTest extends ITestBase {
         try (Socket socket = new Socket(host, Integer.parseInt(port))) {
             OutputStream os = socket.getOutputStream();
 
-            os.write(("GET /" + appName + "/Test.jsp HTTP/1.0\n").getBytes());
+            os.write(("GET /" + appName + "/Test.jsp HTTP/1.0\r\n").getBytes());
             os.write(auth.getBytes());
-            os.write("\n".getBytes());
+            os.write("\r\n".getBytes());
+            os.flush();
 
             BufferedReader bis = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 

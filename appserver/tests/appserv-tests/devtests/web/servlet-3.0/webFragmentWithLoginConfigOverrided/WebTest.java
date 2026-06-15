@@ -87,7 +87,7 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + contextRoot + "/index.jsp HTTP/1.0\n";
+            String get = "GET " + contextRoot + "/index.jsp HTTP/1.0\r\n";
             System.out.print(get);
             os.write(get.getBytes());
             os.write("\r\n".getBytes());
@@ -132,10 +132,10 @@ public class WebTest {
             String get = "GET " + contextRoot
                 + "/j_security_check?j_username=" + adminUser
                 + "&j_password=" + adminPassword
-                + " HTTP/1.0\n";
+                + " HTTP/1.0\r\n";
             System.out.println(get);
             os.write(get.getBytes());
-            String cookie = "Cookie: " + jsessionId + "\n";
+            String cookie = "Cookie: " + jsessionId + "\r\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
 
@@ -177,10 +177,10 @@ public class WebTest {
         try {
             sock = new Socket(host, new Integer(port).intValue());
             os = sock.getOutputStream();
-            String get = "GET " + path + " HTTP/1.0\n";
+            String get = "GET " + path + " HTTP/1.0\r\n";
             System.out.print(get);
             os.write(get.getBytes());
-            String sendCookie = "Cookie: " + jsessionId + "\n";
+            String sendCookie = "Cookie: " + jsessionId + "\r\n";
             System.out.println(sendCookie);
             os.write(sendCookie.getBytes());
             os.write("\r\n".getBytes());

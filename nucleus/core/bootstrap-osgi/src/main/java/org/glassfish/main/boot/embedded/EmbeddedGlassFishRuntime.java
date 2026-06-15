@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,27 +23,40 @@ import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
+import com.sun.enterprise.util.Utility;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import org.glassfish.embeddable.CommandRunner;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 import org.glassfish.main.boot.log.LogFacade;
 
@@ -89,18 +102,25 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             properties.putAll(glassFishProperties.getProperties());
 
             final GlassFishProperties gfProps = new GlassFishProperties(properties);
-            setEnv(gfProps);
+            final CompletableFuture<Void> setEnvFuture = setEnv(gfProps);
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
             final ModulesRegistry modulesRegistry = AbstractFactory.getInstance().createModulesRegistry();
+             // Building the serviceLocator takes about 600ms, around 1/5
             final ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext,
                 List.of(new EmbeddedInhabitantsParser(), new DuplicatePostProcessor()), null);
+
+            preloadEssentialServicesInBackground(serviceLocator);
 
             final ModuleStartup gfKernel = main.findStartupService(modulesRegistry, serviceLocator, null,
                 startupContext);
 
             final Consumer<GlassFish> onDispose = gf -> glassFishInstances.remove(gfProps.getInstanceRoot());
-            final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose);
+
+            // We need to complete the setup before creating AutoDisposableGlassFish
+            setEnvFuture.join();
+
+            final GlassFish glassFish = new AutoDisposableGlassFish(gfKernel, serviceLocator, gfProps, onDispose); // takes 900ms
             glassFishInstances.put(gfProps.getInstanceRoot(), glassFish);
 
             return glassFish;
@@ -109,6 +129,35 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         } catch (Exception e) {
             throw new GlassFishException(e);
         }
+    }
+
+    // Preloads some services in background. They will always be needed during startup.
+    // Instead of loading them lazily in the main thread, we load them immediately in background so that they are loaded sooner
+    private void preloadEssentialServicesInBackground(final ServiceLocator serviceLocator) {
+        // Preload command runner. AutoDisposableGlassFish always needs to run it
+        // - first load preloads all the singleton dependencies which take about 500ms to initialize.
+        // It's typically not loaded in time before it's needed on the main thread but it still decreases
+        // the time the main thread needs to wait until the initialization completes by about 2/3, to about 150ms
+        runAsynchWithThreadContext(() -> serviceLocator.getService(CommandRunner.class), Thread.currentThread());
+
+        // Preload the service for the set command (name="set") in a background thread.
+        // AutoDisposableGlassFish always needs to run it so it can retrieve it faster
+        // - we load the singleton GetSetModularityHelper dependency heere eagerly because it takes about 250ms to initialize
+        // Again, it doesn't load completely in time before it's needed on the main thread but decreases the wait time on the main to about 80ms
+        runAsynchWithThreadContext(
+                () -> {
+                    final ActiveDescriptor<?> setCommandDescriptor = serviceLocator.getBestDescriptor(BuilderHelper.createNameFilter("set"));
+                    serviceLocator.getServiceHandle(setCommandDescriptor)
+                            .getService();
+                },
+                Thread.currentThread());
+    }
+
+    private static void runAsynchWithThreadContext(Utility.RunnableWithException action, Thread spawningThread) {
+        final ClassLoader contextClassLoader = spawningThread.getContextClassLoader();
+        ForkJoinPool.commonPool().submit(() -> {
+            Utility.runWithContextClassLoader(contextClassLoader, action);
+        });
     }
 
     @Override
@@ -130,7 +179,15 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         }
     }
 
-    private void setEnv(GlassFishProperties gfProps) throws Exception {
+    /*
+       Unpacks the domain directory and sets up the properties related to the environment
+
+       Asynchronously completes tasks that aren't essential during startup to move them from the main thread.
+       The returned future should be joined before creating AutoDisposableGlassFish, which applies properties
+       that might depend on having the environment completely set up.
+    */
+    private CompletableFuture<Void> setEnv(GlassFishProperties gfProps) throws Exception {
+        CompletableFuture<Void> asyncResult = CompletableFuture.completedFuture(null);
         String instanceRootValue = gfProps.getInstanceRoot();
         if (instanceRootValue == null) {
             instanceRootValue = createTempInstanceRoot(gfProps);
@@ -145,7 +202,13 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         if (installRootValue == null) {
             installRootValue = instanceRoot.getAbsolutePath();
             gfProps.setProperty("-type", "EMBEDDED");
-            JarUtil.extractRars(installRootValue);
+            final String installRootFinalValue = installRootValue;
+            final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            asyncResult = asyncResult.thenRunAsync(
+                    () -> {
+                        Utility.runWithContextClassLoader(contextClassLoader,
+                                () -> JarUtil.extractRars(installRootFinalValue));
+                    });
         }
         JarUtil.setEnv(installRootValue);
 
@@ -159,6 +222,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         // StartupContext requires the installRoot to be set in the GlassFishProperties.
         gfProps.setProperty(INSTALL_ROOT.getPropertyName(), installRoot.getAbsolutePath());
         gfProps.setProperty(BootstrapKeys.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+
+        return asyncResult;
     }
 
     private String createTempInstanceRoot(GlassFishProperties gfProps) throws Exception {
@@ -169,11 +234,8 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
             new File(tmpDir).mkdirs();
         }
 
-        File instanceRoot = File.createTempFile("gfembed", "tmp", new File(tmpDir));
-        // Convert the file into a directory.
-        if (!instanceRoot.delete() || !instanceRoot.mkdir()) {
-            throw new Exception("cannot create directory: " + instanceRoot.getAbsolutePath());
-        }
+        // Create the directory restricted to the current user (see issue #25545).
+        File instanceRoot = createOwnerOnlyTempDirectory(new File(tmpDir).toPath(), "gfembed").toFile();
 
         try {
             String[] configFiles = new String[] {
@@ -211,6 +273,31 @@ class EmbeddedGlassFishRuntime extends GlassFishRuntime {
         String autoDelete = gfProps.getProperties().getProperty(AUTO_DELETE, "true");
         gfProps.setProperty(AUTO_DELETE, autoDelete);
         return instanceRoot.getAbsolutePath();
+    }
+
+    /**
+     * Creates a temporary directory that is accessible only by the current user.
+     * <p>
+     * On POSIX file systems the directory is created atomically with {@code rwx------} permissions.
+     * On other file systems (e.g. Windows) the directory is created first and then access is
+     * restricted to the owner on a best-effort basis.
+     */
+    private static Path createOwnerOnlyTempDirectory(Path parent, String prefix) throws IOException {
+        if (parent.getFileSystem().supportedFileAttributeViews().contains("posix")) {
+            FileAttribute<Set<PosixFilePermission>> ownerOnly =
+                PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+            return Files.createTempDirectory(parent, prefix, ownerOnly);
+        }
+        Path dir = Files.createTempDirectory(parent, prefix);
+        File file = dir.toFile();
+        // Best effort on non-POSIX file systems: remove access for everyone, then grant it to the owner only.
+        file.setReadable(false, false);
+        file.setWritable(false, false);
+        file.setExecutable(false, false);
+        file.setReadable(true, true);
+        file.setWritable(true, true);
+        file.setExecutable(true, true);
+        return dir;
     }
 
     private static void copy(URL url, File destFile, boolean overwrite) {

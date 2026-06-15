@@ -56,10 +56,10 @@ private static void goGet(int testVersion, String host, int port,
             OutputStream os = s.getOutputStream();
 
             contextPath += "?versionToTest=" +testVersion +"&url=" + contextPath;
-            System.out.println(("GET " + contextPath + " HTTP/1.1\n"));
-            os.write(("GET " + contextPath + " HTTP/1.1\n").getBytes());
-            os.write("Host: localhost\n".getBytes());
-            os.write("\n".getBytes());
+            System.out.println(("GET " + contextPath + " HTTP/1.1\r\n"));
+            os.write(("GET " + contextPath + " HTTP/1.1\r\n").getBytes());
+            os.write("Host: localhost\r\n".getBytes());
+            os.write("\r\n".getBytes());
 
             InputStream is = s.getInputStream();
             System.out.println("Time: " + (System.currentTimeMillis() - time));
@@ -101,9 +101,9 @@ private static void goGet(int testVersion, String host, int port,
            /*
             s = new Socket(host, port);
             os = s.getOutputStream();
-            System.out.println(("GET " + contextPath + " HTTP/1.1\n"));
-            os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
-            os.write("\n".getBytes());
+            System.out.println(("GET " + contextPath + " HTTP/1.1\r\n"));
+            os.write(("GET " + contextPath + " HTTP/1.0\r\n").getBytes());
+            os.write("\r\n".getBytes());
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
 

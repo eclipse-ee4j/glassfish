@@ -376,6 +376,9 @@ public class WeldUtils {
      *
      * @return true, if the specified class has at least one of the annotations specified in validScopes, and none of the
      * annotations specified in excludedScopes; Otherwise, false.
+     *
+     * <p><b>Expensive</b> — performs a reflective annotation-hierarchy walk per annotation on the
+     * class. See {@link #isValidAnnotation} for the caching contract request-path callers must follow.
      */
     public static boolean hasValidAnnotation(Class<?> annotatedClass, Collection<String> validScopes, Collection<String> excludedScopes) {
         // Check all the annotations on the specified Class to determine if the class is annotated
@@ -399,34 +402,52 @@ public class WeldUtils {
      * @param excludedTypeNames The excluded annotation type names
      *
      * @return true, if the specified type is in the valid list and not in the excluded list; Otherwise, false.
+     *
+     * <p><b>Expensive — request-path callers must cache.</b> This recursively walks the annotation
+     * meta-hierarchy via reflection ({@link Class#getAnnotations()} on the annotation type and
+     * transitively on every meta-annotation reached), so its cost grows with hierarchy depth and it
+     * is not something to call per request. The result is invariant for a given
+     * {@code (annotationType, validTypeNames)} pair, so a caller on the request path MUST memoize the
+     * outcome rather than re-invoking — see {@code InjectionServicesImpl.isInterceptor}, which caches
+     * its result per deployment. Deployment-time scans may call directly. If a future request-path
+     * caller cannot readily cache the outcome itself, fold a deployment-scoped cache into this method
+     * instead of calling it hot.
      */
     protected static boolean isValidAnnotation(Class<? extends Annotation> annotationType, Collection<String> validTypeNames, Collection<String> excludedTypeNames) {
-        boolean result = false;
+        if (validTypeNames == null || validTypeNames.isEmpty()) {
+            return false;
+        }
+        // Share a single mutable HashSet across the entire recursion and backtrack on the way
+        // out, rather than allocating + copying a fresh HashSet on every recursive call.
+        HashSet<String> excludedScopes;
+        if (excludedTypeNames == null || excludedTypeNames.isEmpty()) {
+            excludedScopes = new HashSet<>();
+        } else {
+            excludedScopes = new HashSet<>(excludedTypeNames);
+        }
+        return isValidAnnotation(annotationType, validTypeNames, excludedScopes);
+    }
 
-        if (validTypeNames != null && !validTypeNames.isEmpty()) {
-
-            HashSet<String> excludedScopes = new HashSet<String>();
-            if (excludedTypeNames != null) {
-                excludedScopes.addAll(excludedTypeNames);
-            }
-
-            String annotationTypeName = annotationType.getName();
-            if (validTypeNames.contains(annotationTypeName) && !excludedScopes.contains(annotationTypeName)) {
-                result = true;
-            } else if (!excludedScopes.contains(annotationTypeName)) {
-                // If the annotation type itself is not an excluded type, then check it's annotation
-                // types, less itself (to avoid infinite recursion)
-                excludedScopes.add(annotationTypeName);
-                for (Annotation parent : annotationType.getAnnotations()) {
-                    if (isValidAnnotation(parent.annotationType(), validTypeNames, excludedScopes)) {
-                        result = true;
-                        break;
-                    }
+    private static boolean isValidAnnotation(Class<? extends Annotation> annotationType, Collection<String> validTypeNames, HashSet<String> excludedScopes) {
+        String annotationTypeName = annotationType.getName();
+        if (excludedScopes.contains(annotationTypeName)) {
+            return false;
+        }
+        if (validTypeNames.contains(annotationTypeName)) {
+            return true;
+        }
+        // Mark as currently-being-checked to avoid infinite recursion on self-referential chains.
+        excludedScopes.add(annotationTypeName);
+        try {
+            for (Annotation parent : annotationType.getAnnotations()) {
+                if (isValidAnnotation(parent.annotationType(), validTypeNames, excludedScopes)) {
+                    return true;
                 }
             }
+            return false;
+        } finally {
+            excludedScopes.remove(annotationTypeName);
         }
-
-        return result;
     }
 
     private static Types getTypes(DeploymentContext context) {

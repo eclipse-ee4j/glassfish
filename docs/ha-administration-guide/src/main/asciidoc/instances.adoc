@@ -1665,7 +1665,7 @@ configuration files:
 * `cacerts.jks`
 * `default-web.xml`
 * `domain.xml`
-* `domain-passwords`
+* `domain-passwords.p12`
 * `keyfile`
 * `keystore.p12`
 * `keystore.jks`
@@ -1705,7 +1705,7 @@ admin-keyfile
 cacerts.p12
 default-web.xml
 domain.xml
-domain-passwords
+domain-passwords.p12
 keyfile
 keystore.p12
 server.policy

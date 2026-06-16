@@ -80,6 +80,7 @@
     </developers>
 
     <modules>
+        <module>vdl</module>
         <module>dataprovider</module>
         <module>plugin-service</module>
         <module>common</module>
@@ -106,16 +107,6 @@
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jsftemplating</groupId>
-            <artifactId>jsftemplating</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jsftemplating</groupId>
-            <artifactId>jsftemplating-dt</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -162,6 +153,7 @@
           </plugin>
         </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>dev</id>

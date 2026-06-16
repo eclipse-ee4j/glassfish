@@ -143,8 +143,8 @@
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>3.2.0</jakarta.persistence-api.version>
-        <eclipselink.version>5.0.0</eclipselink.version>
-        <eclipselink.asm.version>9.9.0</eclipselink.asm.version>
+        <eclipselink.version>5.0.1-RC2</eclipselink.version>
+        <eclipselink.asm.version>9.10.0</eclipselink.asm.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.2.0-M1</jakarta.mail-api.version>
@@ -189,9 +189,9 @@
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.1.0-M3</jakarta.data-api.version>
         <jakarta.data.spec.version>1.1</jakarta.data.spec.version>
-        <jakarta.nosql-api.version>1.1.0-M2</jakarta.nosql-api.version>
+        <jakarta.nosql-api.version>1.1.0-M3</jakarta.nosql-api.version>
         <jakarta.nosql.spec.version>1.1.0</jakarta.nosql.spec.version>
-        <jnosql.version>1.2.0-SNAPSHOT</jnosql.version>
+        <jnosql.version>1.2.0-M1</jnosql.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -210,16 +210,16 @@
         <jakarta.jsonp-api.version>2.1.3</jakarta.jsonp-api.version>
         <parsson.version>1.1.9</parsson.version>
         <parsson-media.version>1.1.9</parsson-media.version>
-        <jakarta.json.bind-api.version>3.0.1</jakarta.json.bind-api.version>
+        <jakarta.json.bind-api.version>3.1.0-M1</jakarta.json.bind-api.version>
         <yasson.version>3.0.4</yasson.version>
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>4.1.0-M2</jakarta.pages-api.version>
-        <jstl-api.version>3.0.2</jstl-api.version>
+        <jstl-api.version>3.1.0-SNAPSHOT</jstl-api.version>
         <wasp.version>4.0.0</wasp.version>
 
         <!-- Jakarta MVC -->
-        <jakarta.mvc-api.version>3.0.0</jakarta.mvc-api.version>
+        <jakarta.mvc-api.version>3.0.1</jakarta.mvc-api.version>
         <krazo.version>4.0.2</krazo.version>
 
         <!-- Jakarta SOAP (XML Web Services) -->
@@ -266,7 +266,7 @@
         <jettison.version>1.5.5</jettison.version>
         <mimepull.version>1.11.0</mimepull.version>
         <jna.version>5.19.1</jna.version>
-        <jline.version>4.1.0</jline.version>
+        <jline.version>4.1.3</jline.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
@@ -275,10 +275,10 @@
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>3.0.0</osgi-resource-locator.version>
         <slf4j.version>2.0.18</slf4j.version>
-        <shrinkwrap.version>3.3.5</shrinkwrap.version>
+        <shrinkwrap.version>3.3.7</shrinkwrap.version>
         <testcontainers.version>2.0.5</testcontainers.version>
 
-        <surefire.version>3.5.5</surefire.version>
+        <surefire.version>3.6.0-M1</surefire.version>
         <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
@@ -1200,7 +1200,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>13.4.0</version>
+                            <version>13.6.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -1915,20 +1915,6 @@
                                                 <ignoreVersion>
                                                     <type>range</type>
                                                     <version>[3.2.0,)</version>
-                                                </ignoreVersion>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>.*-M.*</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                        </rule>
-
-                                        <rule>
-                                            <groupId>org.glassfish.jsftemplating</groupId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[4.1.0,)</version>
                                                 </ignoreVersion>
                                                 <ignoreVersion>
                                                     <type>regex</type>

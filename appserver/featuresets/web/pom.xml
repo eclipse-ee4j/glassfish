@@ -1822,8 +1822,9 @@
 
         <!-- glassfish-gui -->
         <dependency>
-            <groupId>org.glassfish.jsftemplating</groupId>
+            <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>jsftemplating</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

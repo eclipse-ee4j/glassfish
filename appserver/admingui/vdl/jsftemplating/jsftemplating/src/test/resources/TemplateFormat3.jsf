@@ -1,0 +1,60 @@
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun:page id="page">
+    <sun:html id="html">
+    <sun:head id="head">
+        <sun:title id="title">The title</sun:title>
+    </sun:head>
+    <sun:body id="body">
+
+        <!decorate 'single1' />
+        <!decorate "single2" />
+        <!decorate
+        "single3" />
+        <!decorate template="single4" />
+        <!decorate template='single5' />
+        <!decorate template:"Template.jsf" />
+        <!decorate template:'"single7"' />
+        <!decorate template = "single11" />
+        <!decorate template= 'single12' />
+        <!decorate template
+        :"single13" />
+        <!decorate
+        />
+        <!decorate
+        >
+        <staticText value="foo" />
+        </
+        decorate
+        >
+        <!decorate template:
+        'mult2'
+        >
+        <f:verbatim>
+            <br /><br /><p>
+            <center> Test </center>
+            </p>
+        </f:verbatim>
+
+        <sun:form>
+        </sun:form>
+        </decorate>
+    </sun:body>
+    </sun:html>
+</sun:page>

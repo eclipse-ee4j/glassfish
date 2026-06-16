@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+    Created by Ken Paulsen on August 18, 2004
+-->
+
+<!ELEMENT layoutDefinition (event?, resources?, types?, handlers?, layout)>
+
+<!-- Container for Resources -->
+<!ELEMENT resources (resource*)>
+
+<!-- A Resource is something such as a ResourceBundle, the factory class instantiates the Resource -->
+<!ELEMENT resource EMPTY>
+<!ATTLIST resource
+    id            CDATA    #REQUIRED
+    extraInfo        CDATA    #REQUIRED
+    factoryClass        CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>
+
+<!-- Container for ComponentTypes -->
+<!ELEMENT types (componentType*)>
+
+<!-- ComponentTypes define factories to instantiate UIComponents -->
+<!ELEMENT componentType EMPTY>
+<!ATTLIST componentType
+    id            CDATA    #REQUIRED
+    factoryClass        CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>
+
+<!-- Container for HandlerDefinitions -->
+<!ELEMENT handlers (handlerDefinition*)>
+
+<!-- Handler Definitions define Handlers to be used later -->
+<!ELEMENT handlerDefinition (handler | inputDef | outputDef)*>
+<!ATTLIST handlerDefinition
+    id            CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+    className        CDATA    ""
+    methodName        CDATA    ""
+>
+
+<!-- InputDef is used inside HandlerDefinitions -->
+<!ELEMENT inputDef EMPTY>
+<!ATTLIST inputDef
+    name            CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+    default            CDATA    #IMPLIED
+    type            CDATA    #IMPLIED
+    required        CDATA    #IMPLIED
+>
+
+<!-- OutputDef is used inside HandlerDefinitions -->
+<!ELEMENT outputDef EMPTY>
+<!ATTLIST outputDef
+    name            CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+    type            CDATA    #IMPLIED
+>
+
+<!ELEMENT event (handler)*>
+<!ATTLIST event
+    type            CDATA    #REQUIRED
+>
+
+<!-- Handlers are used inside Events -->
+<!ELEMENT handler (input | outputMapping)*>
+<!ATTLIST handler
+    id            CDATA    #REQUIRED
+>
+
+<!-- Input is used inside Handlers -->
+<!ELEMENT input (list)*>
+<!ATTLIST input
+    name            CDATA    #REQUIRED
+    value            CDATA    ""
+>
+
+<!-- OutputMapping is used inside Handlers -->
+<!ELEMENT outputMapping EMPTY>
+<!ATTLIST outputMapping
+    outputName        CDATA    #REQUIRED
+    targetType        CDATA    "attribute"
+    targetKey        CDATA    #REQUIRED
+>
+
+<!ELEMENT layout (if | foreach | while | facet | staticText | component | event | markup)*>
+
+<!-- FIXME: "if" is only meaningful outside a component -->
+<!ELEMENT if (if | foreach | while | facet | staticText | component | event | markup | attribute)*>
+<!ATTLIST if
+    condition        CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>
+
+<!-- FIXME: "foreach" is only meaningful outside a component -->
+<!ELEMENT foreach (if | foreach | while | facet | staticText | component | event | markup | attribute)*>
+<!ATTLIST foreach
+    key            CDATA    #REQUIRED
+    list            CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>
+
+<!-- FIXME: "while" is only meaningful outside a component -->
+<!ELEMENT while (if | foreach | while | facet | staticText | component | event | markup | attribute)*>
+<!ATTLIST while
+    condition        CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>
+
+<!ELEMENT facet (if | foreach | while | facet | staticText | component | event | markup | attribute)*>
+<!ATTLIST facet
+    id            CDATA    #REQUIRED
+    rendered        CDATA    "auto"
+    description        CDATA    #IMPLIED
+>
+
+<!-- FIXME: "staticText" is only meaningful outside a component -->
+<!ELEMENT staticText (#PCDATA)>
+<!ATTLIST staticText
+    escape            CDATA    #IMPLIED
+>
+
+<!ELEMENT component (option | facet | staticText | event | edit | component | markup)*>
+<!ATTLIST component
+    type            CDATA    #REQUIRED
+    id            CDATA    #REQUIRED
+    overwrite        CDATA    "false"
+    description        CDATA    #IMPLIED
+>
+
+<!ELEMENT edit (option | facet | event | component | markup)*>
+<!ATTLIST edit
+    id            CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>
+
+<!-- FIXME: "markup" is only meaningful outside a component?? -->
+<!-- markup type can be "open", "close", or "both" -->
+<!ELEMENT markup (if | foreach | while | facet | staticText | edit | component | event | markup | attribute)*>
+<!ATTLIST markup
+    tag            CDATA    #REQUIRED
+    type            CDATA    "both"
+    description        CDATA    #IMPLIED
+>
+
+<!-- "attribute" is only meaningful inside markup -->
+<!ELEMENT attribute (event)*>
+<!ATTLIST attribute
+    name            CDATA    #REQUIRED
+    value            CDATA    #REQUIRED
+    property        CDATA    #IMPLIED
+    description        CDATA    #IMPLIED
+>
+
+<!-- "option" is meaningful to a component -->
+<!ELEMENT option (list*)>
+<!ATTLIST option
+    name            CDATA    #REQUIRED
+    value            CDATA    ""
+    description        CDATA    #IMPLIED
+>
+
+<!-- "list" is used inside an option -->
+<!ELEMENT list EMPTY>
+<!ATTLIST list
+    value            CDATA    #REQUIRED
+    description        CDATA    #IMPLIED
+>

@@ -1,0 +1,58 @@
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<body>
+    <p>    This package provides a strategy for rendering complex components.  A
+    complex component is any component that consists of multiple
+    sub-components.  The {@link com.sun.jsftemplating.renderer.TemplateRenderer}
+    is the actual Renderer class, the other files in this package provide
+    support for creating and holding the LayoutDefinition information.
+    While {@link com.sun.jsftemplating.renderer.TemplateRenderer} could also
+    render a simple component, the flexibility and extensibility
+    capabilities are probably overkill for small components.</p>
+
+    <p>    The {@link com.sun.jsftemplating.renderer.TemplateRenderer}
+    is driven off a "template".  The template is actually a tree data
+    structure consisting of
+    "{@link com.sun.jsftemplating.layout.descriptors.LayoutElement}"
+    objects.  This structure is walked in order to render the component.
+    This data structure may be populated programatically, however, a
+    {@link com.sun.jsftemplating.layout.LayoutDefinitionManager}
+    is the recommended way to obtain the structure.  A
+    {@link com.sun.jsftemplating.layout.LayoutDefinitionManager}
+    is responsible for locating a
+    {@link com.sun.jsftemplating.layout.descriptors.LayoutDefinition} for a
+    particular component (such as a table component).  How this is done is
+    left to implementations of
+    {@link com.sun.jsftemplating.layout.LayoutDefinitionManager}.  One
+    implementation currently exists which populates the
+    {@link com.sun.jsftemplating.layout.descriptors.LayoutElement}
+    tree from an XML file:
+    {@link com.sun.jsftemplating.layout.xml.XMLLayoutDefinitionManager}.</p>
+
+    <p>    Different types of
+    {@link com.sun.jsftemplating.layout.descriptors.LayoutElement} objects are
+    used to effect the output.
+    {@link com.sun.jsftemplating.layout.descriptors.LayoutElement}
+    are delegated the encode responsibilty so that they may determine
+    whether and how their child components are encoded.  See the
+    {@link com.sun.jsftemplating.layout.descriptors.LayoutElement}
+    documentation and the implementing classes of
+    {@link com.sun.jsftemplating.layout.descriptors.LayoutElement}
+    for more information.</p>
+</body>

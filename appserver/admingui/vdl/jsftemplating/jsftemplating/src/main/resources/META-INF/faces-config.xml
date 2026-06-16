@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
+    Copyright (c) 2006, 2022 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+              version="4.0">
+
+    <!--
+        Templating for JavaServer Faces Technology default JavaServer Faces
+        configuration file.
+    -->
+
+    <application>
+        <view-handler>com.sun.jsftemplating.layout.LayoutViewHandler</view-handler>
+        <state-manager>com.sun.jsftemplating.layout.LayoutStateManager</state-manager>
+        <el-resolver>com.sun.jsftemplating.el.RestrictedELResolver</el-resolver>
+        <el-resolver>com.sun.jsftemplating.el.PageSessionResolver</el-resolver>
+        <locale-config>
+            <default-locale>en</default-locale>
+        </locale-config>
+    </application>
+
+    <component>
+        <component-type>com.sun.jsftemplating.EventComponent</component-type>
+        <component-class>com.sun.jsftemplating.component.EventComponent</component-class>
+    </component>
+    <component>
+        <component-type>com.sun.jsftemplating.If</component-type>
+        <component-class>com.sun.jsftemplating.component.If</component-class>
+    </component>
+    <component>
+        <component-type>com.sun.jsftemplating.While</component-type>
+        <component-class>com.sun.jsftemplating.component.While</component-class>
+    </component>
+    <component>
+        <component-type>com.sun.jsftemplating.ForEach</component-type>
+        <component-class>com.sun.jsftemplating.component.ForEach</component-class>
+    </component>
+    <component>
+        <component-type>com.sun.jsftemplating.AjaxRequest</component-type>
+        <component-class>com.sun.jsftemplating.component.AjaxRequest</component-class>
+    </component>
+    <component>
+        <component-type>com.sun.jsftemplating.StaticText</component-type>
+        <component-class>com.sun.jsftemplating.component.StaticText</component-class>
+    </component>
+
+    <render-kit>
+        <renderer>
+            <component-family>com.sun.jsftemplating.EventComponent</component-family>
+            <renderer-type>com.sun.jsftemplating.EventComponent</renderer-type>
+            <renderer-class>com.sun.jsftemplating.renderer.TemplateRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>com.sun.jsftemplating.If</component-family>
+            <renderer-type>com.sun.jsftemplating.If</renderer-type>
+            <renderer-class>com.sun.jsftemplating.renderer.TemplateRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>com.sun.jsftemplating.While</component-family>
+            <renderer-type>com.sun.jsftemplating.While</renderer-type>
+            <renderer-class>com.sun.jsftemplating.renderer.TemplateRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>com.sun.jsftemplating.ForEach</component-family>
+            <renderer-type>com.sun.jsftemplating.ForEach</renderer-type>
+            <renderer-class>com.sun.jsftemplating.renderer.TemplateRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>com.sun.jsftemplating.AjaxRequest</component-family>
+            <renderer-type>com.sun.jsftemplating.AjaxRequest</renderer-type>
+            <renderer-class>com.sun.jsftemplating.renderer.TemplateRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>com.sun.jsftemplating.StaticText</component-family>
+            <renderer-type>com.sun.jsftemplating.StaticText</renderer-type>
+            <renderer-class>com.sun.jsftemplating.renderer.TemplateRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+
+</faces-config>

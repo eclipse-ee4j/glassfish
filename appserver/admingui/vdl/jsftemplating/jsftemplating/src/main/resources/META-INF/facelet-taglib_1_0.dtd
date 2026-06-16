@@ -1,0 +1,36 @@
+<!--
+ Copyright 2005 Sun Microsystems, Inc. All rights reserved.
+ Licensed under the Common Development and Distribution License,
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+   http://www.sun.com/cddl/
+   
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ implied. See the License for the specific language governing
+ permissions and limitations under the License.
+ 
+ $Id: facelet-taglib_1_0.dtd,v 1.1 2007-04-25 20:58:14 jdlee Exp $
+-->
+
+<!ELEMENT facelet-taglib (library-class|(namespace,(tag|function)+))>
+<!ATTLIST facelet-taglib xmlns CDATA #FIXED "http://java.sun.com/JSF/Facelet">
+<!ELEMENT namespace (#PCDATA)>
+<!ELEMENT library-class (#PCDATA)>
+<!ELEMENT tag (tag-name,(handler-class|component|converter|validator|source))>
+<!ELEMENT tag-name (#PCDATA)>
+<!ELEMENT handler-class (#PCDATA)>
+<!ELEMENT component (component-type,renderer-type?,handler-class?)>
+<!ELEMENT component-type (#PCDATA)>
+<!ELEMENT renderer-type (#PCDATA)>
+<!ELEMENT converter (converter-id, handler-class?)>
+<!ELEMENT converter-id (#PCDATA)>
+<!ELEMENT validator (validator-id, handler-class?)>
+<!ELEMENT validator-id (#PCDATA)>
+<!ELEMENT source (#PCDATA)>
+<!ELEMENT function (function-name,function-class,function-signature)>
+<!ELEMENT function-name (#PCDATA)>
+<!ELEMENT function-class (#PCDATA)>
+<!ELEMENT function-signature (#PCDATA)>

@@ -103,7 +103,7 @@ public final class ResourceAttributes {
      */
     public void set(String name, Properties value) {
         requireNonNull(name, "name");
-        requireNonNull(name, "value");
+        requireNonNull(value, "value");
         properties.put(name, value);
     }
 
@@ -113,7 +113,7 @@ public final class ResourceAttributes {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Resource) ) {
+        if (!(obj instanceof ResourceAttributes) ) {
             return false;
         }
         ResourceAttributes other = (ResourceAttributes) obj;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,6 +52,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.NamespaceSupport;
 
+import static java.lang.Boolean.TRUE;
+
 
 /**
  * This class implements all the callbacks for the SAX Parser in JAXP 1.1
@@ -99,6 +101,7 @@ public class SaxParserHandler extends DefaultHandler {
         if (classList == null) {
             return null;
         }
+
         versionUpgradeList = new ArrayList<>();
         for (int n = 0; n < classList.size(); ++n) {
             VersionUpgrade versionUpgrade = null;
@@ -166,17 +169,17 @@ public class SaxParserHandler extends DefaultHandler {
 
         // This node might know of elements which should permit empty values,
         // or elements for which we should preserve white space.  Track them.
-        Collection<String> c = bundleNode.elementsAllowingEmptyValue();
-        if (!c.isEmpty()) {
-            mappingStuff.mElementsAllowingEmptyValuesMutable.addAll(c);
+        Collection<String> elementsAllowingEmptyValue = bundleNode.elementsAllowingEmptyValue();
+        if (!elementsAllowingEmptyValue.isEmpty()) {
+            mappingStuff.mElementsAllowingEmptyValuesMutable.addAll(elementsAllowingEmptyValue);
         }
 
-        c = bundleNode.elementsPreservingWhiteSpace();
-        if (!c.isEmpty()) {
-            mappingStuff.mElementsPreservingWhiteSpaceMutable.addAll(c);
+        Collection<String> elementsPreservingWhiteSpace = bundleNode.elementsPreservingWhiteSpace();
+        if (!elementsPreservingWhiteSpace.isEmpty()) {
+            mappingStuff.mElementsPreservingWhiteSpaceMutable.addAll(elementsPreservingWhiteSpace);
         }
 
-        mappingStuff.mBundleRegistrationStatus.put(rootNodeKey, Boolean.TRUE);
+        mappingStuff.mBundleRegistrationStatus.put(rootNodeKey, TRUE);
     }
 
     // It creates the InputSource

@@ -235,6 +235,13 @@ public class JDBCResourceManager implements ResourceManager {
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
+                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                    String msg = I18N.getLocalString("delete.jdbc.resource.no.resource-ref",
+                            "jdbc-resource [ {0} ] is not referenced in target [ {1} ]",
+                            jndiName, target);
+                    return new ResourceStatus(ResourceStatus.FAILURE, msg);
+                }
+
                 if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
                     String msg = I18N.getLocalString("delete.jdbc.resource.multiple.resource-refs",
                             "jdbc resource [ {0} ] is referenced in multiple " +
@@ -248,7 +255,7 @@ public class JDBCResourceManager implements ResourceManager {
         try {
 
             // delete resource-ref
-            if (!CommandTarget.TARGET_DOMAIN.equals(target) && resourceUtil.isResourceRefInTarget(jndiName, target)) {
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
                 resourceUtil.deleteResourceRef(jndiName, target);
             }
 

@@ -1,28 +1,35 @@
 # Eclipse GlassFish
 
-## About
+[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation sponsored by the Eclipse Foundation.
 
-[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation
-sponsored by the Eclipse Foundation.
+## 📋 Quick Links
 
-### Release Notes
-* You can read about the [release notes here](https://github.com/eclipse-ee4j/glassfish/releases)
+- [Release Notes](https://github.com/eclipse-ee4j/glassfish/releases)
+- [Building Instructions](#building)
+- [Basic Usage](#basic-usage)
+- [Professional Support](#professional-services-and-enterprise-support)
 
-### Compatibility
+## 🔄 Version Compatibility
 
-* Eclipse GlassFish 8.0.0 is Jakarta EE 11 compatible, requires Java 21+
-* Eclipse GlassFish 7.1.0 is Jakarta EE 10 compatible, requires Java 17+
-* Eclipse GlassFish 7.0.25 is Jakarta EE 10 compatible, requires Java 11, supports 17 and 21
-* Eclipse GlassFish 6.2.5 is Jakarta EE 9.1 compatible, requires Java 11, supports 17
-* Eclipse GlassFish 6.1.0 is Jakarta EE 9.1 compatible, requires Java 11
-* Eclipse GlassFish 6.0.0 is Jakarta EE 9 compatible, requires Java 8
-* Eclipse GlassFish 5.1.0 is Java EE 8 and Jakarta EE 8 compatible, requires Java 8
+| GlassFish Version | Jakarta EE Version | Java Requirements |
+|-------------------|-------------------|-------------------|
+| 8.0.0 | Jakarta EE 11 | Java 21, 25 |
+| 7.1.0 | Jakarta EE 10 | Java 17, 21, 25 |
+| 7.0.25 | Jakarta EE 10 | Java 11, 17, 21 |
+| 6.2.5 | Jakarta EE 9.1 | Java 11, 17 |
+| 6.1.0 | Jakarta EE 9.1 | Java 11 |
+| 6.0.0 | Jakarta EE 9 | Java 8 |
+| 5.1.0 | Java EE 8 / Jakarta EE 8 | Java 8 |
 
-### Distribution
+## 📦 Distribution
 
-The Zip distributions can be found on following paths:
-* appserver/distributions/glassfish/target/glassfish.zip (Full Profile)
-* appserver/distributions/web/target/web.zip (Web Profile)
+After building, find distributions at:
+- **GlassFish Server Full Profile**: `appserver/distributions/glassfish/target/glassfish.zip`
+- **GlassFish Server Web Profile**: `appserver/distributions/web/target/web.zip`
+- **Embedded GlassFish All**:
+`appserver/extras/embedded/all/target/glassfish-embedded-all.jar`
+- **Embedded GlassFish Web**:
+`appserver/extras/embedded/web/target/glassfish-embedded-web.jar`
 
 ## Building
 
@@ -117,6 +124,16 @@ Build server results of pull requests can be found at [CI Glassfish](https://ci.
 * Starting Eclipse GlassFish: `glassfish7/bin/asadmin start-domain`
 * Visit [http://localhost:4848](http://localhost:4848)
 * Stopping Eclipse GlassFish: `glassfish7/bin/asadmin stop-domain`
+
+## Security Considerations
+
+For production deployments, consider the following security measures:
+
+* **Disable the Admin Console**: The web-based Administration Console should be disabled in production environments to reduce attack surface and prevent CSRF attacks where malicious links can execute admin commands. Use `asadmin set server.admin-service.property.adminConsoleStartup=never` and restart the domain.
+* **Enable Secure Admin**: Use `asadmin enable-secure-admin` to secure administrative communications.
+* **Use strong passwords**: Change default passwords and use strong authentication.
+
+For comprehensive security guidance, see the [Security Guide](docs/latest/security-guide.html).
 
 ## Professional Services and Enterprise Support
 

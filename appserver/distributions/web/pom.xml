@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -102,6 +102,17 @@
                         <goals>
                             <goal>check-distribution</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>archive-with-dependencies</id>
+                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>

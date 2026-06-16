@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -19,7 +19,9 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+    child.project.url.inherit.append.path="false"
+    >
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -34,8 +36,8 @@
     <version>7.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Nucleus Parent</name>
-    <description>Glassfish Nucleus Parent Project</description>
+    <name>GlassFish Nucleus Parent</name>
+    <description>${project.name} ${project.version}</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
     <licenses>
         <license>
@@ -60,11 +62,14 @@
         </mailingList>
     </mailingLists>
 
-    <scm>
+    <scm child.scm.connection.inherit.append.path="false"
+     child.scm.developerConnection.inherit.append.path="false"
+     child.scm.url.inherit.append.path="false">
         <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
         <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/glassfish</url>
     </scm>
+
     <issueManagement>
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
@@ -107,10 +112,10 @@
         <hibernate-validator.version>8.0.3.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
-        <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
+        <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
 
         <!-- Jakarta SOAP (with Attachments) -->
-        <webservices.version>4.0.4</webservices.version>
+        <webservices.version>4.0.6</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
@@ -148,7 +153,7 @@
         <!-- ORB -->
         <pfl.version>5.1.0</pfl.version>
         <glassfish-corba.version>5.0.0</glassfish-corba.version>
-        <gmbal.version>4.1.0</gmbal.version>
+        <gmbal.version>4.1.1</gmbal.version>
 
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
@@ -1156,6 +1161,53 @@
                             <JAVA_HOME>${java.home}</JAVA_HOME>
                         </environmentVariables>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                    <configuration>
+                        <updatePomFile>true</updatePomFile>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                        <flattenedPomFilename>flattened-pom.xml</flattenedPomFilename>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>flat-jar</id>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <flattenMode>oss</flattenMode>
+                                <pomElements>
+                                    <url />
+                                    <scm />
+                                    <repositories>flatten</repositories>
+                                    <distributionManagement>flatten</distributionManagement>
+                                </pomElements>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>archive-with-dependencies</id>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <flattenMode>fatjar</flattenMode>
+                                <pomElements>
+                                    <name />
+                                    <description />
+                                    <organization />
+                                    <url />
+                                    <scm />
+                                    <developers />
+                                    <inceptionYear />
+                                    <mailingLists />
+                                    <issueManagement />
+                                </pomElements>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>

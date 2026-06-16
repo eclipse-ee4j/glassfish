@@ -57,7 +57,7 @@ respective copies of the domain's configuration.
 
 [NOTE]
 ====
-Oracle recommends that you enable secure admin as described in
+It is recommended that you enable secure admin as described in
 xref:administrative-security.adoc#managing-administrative-security[Managing Administrative Security]
 so that {productName} securely transfers these files on the network.
 ====

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+# Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -17,8 +17,11 @@
 #
 
 startAsMainProcess () {
+
+    export ASADMIN_CLASSPATH="$AS_INSTALL/appserver-cli.jar:${ASADMIN_CLASSPATH}"
+
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
-      exec "$JAVA" ${ASADMIN_JVM_OPTIONS} --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$ASADMIN_CLASSPATH" com.sun.enterprise.admin.cli.AdminMain start-domain --help
+      exec "$JAVA" ${ASADMIN_JVM_OPTIONS} --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$ASADMIN_CLASSPATH" org.glassfish.admin.cli.AsadminMain start-domain --help
     fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
@@ -28,7 +31,7 @@ startAsMainProcess () {
     local DRY_RUN_OUTPUT=()
     local SKIP_LINES_UNTIL_DUMP=y
     local DRY_RUN_OUTPUT_BEFORE_DUMP=
-    while read COM; do
+    while IFS= read -r COM; do
       if [[ "$SKIP_LINES_UNTIL_DUMP" == y ]]; then
         if [[ "$COM" == Dump* ]]; then
           SKIP_LINES_UNTIL_DUMP=n
@@ -36,11 +39,10 @@ startAsMainProcess () {
           DRY_RUN_OUTPUT_BEFORE_DUMP+="$COM\n";
         fi
       else
-        DRY_RUN_OUTPUT+=("$COM");
+        DRY_RUN_OUTPUT+=("'$COM'");
       fi
-    done < <("$JAVA" ${ASADMIN_JVM_OPTIONS} --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$ASADMIN_CLASSPATH" com.sun.enterprise.admin.cli.AdminMain start-domain --dry-run "$@" || echo "FAILED")
-    if [[ x"$DRY_RUN_OUTPUT" == x ]]
-      then
+    done < <("$JAVA" ${ASADMIN_JVM_OPTIONS} --module-path "${ASADMIN_MODULEPATH}" --add-modules ALL-MODULE-PATH -cp "$ASADMIN_CLASSPATH" org.glassfish.admin.cli.AsadminMain start-domain --dry-run "$@" || echo "FAILED")
+    if [[ ${#DRY_RUN_OUTPUT[@]} -eq 0 ]]; then
         echo -n -e "${DRY_RUN_OUTPUT_BEFORE_DUMP}" >&2
         exit 1
     fi
@@ -49,7 +51,7 @@ startAsMainProcess () {
     # If all OK, execute the command to start GlassFish.
     # Remove the last line as it's not part of the command.
     local FINAL_COMMAND=(${DRY_RUN_OUTPUT[@]:0:${OUTPUT_LENGTH}-2})
-    exec "${FINAL_COMMAND[@]}"
+    eval "exec ${FINAL_COMMAND[@]}"
 
 }
 

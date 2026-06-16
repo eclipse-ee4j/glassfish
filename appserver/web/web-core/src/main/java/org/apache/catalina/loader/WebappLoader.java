@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -720,11 +720,6 @@ public class WebappLoader
                 setReloadable(((Boolean) event.getNewValue()).booleanValue() );
             } catch (NumberFormatException e) {
                 log.log(Level.SEVERE, SET_RELOADABLE_PROPERTY_EXCEPTION, neutralizeForLog(event.getNewValue().toString()));
-            }
-        } else if ("antiJARLocking".equals(propName)) {
-            ClassLoader cloader = Thread.currentThread().getContextClassLoader();
-            if (cloader instanceof WebappClassLoader) {
-                ((WebappClassLoader) cloader).setAntiJARLocking(((Boolean) event.getNewValue()).booleanValue());
             }
         }
     }

@@ -33,8 +33,6 @@
     <packaging>pom</packaging>
 
     <name>Eclipse GlassFish Parent Project</name>
-    <description>Eclipse GlassFish Parent Project</description>
-    <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
 
     <modules>
         <module>common</module>
@@ -71,12 +69,6 @@
         <module>itest-tools</module>
         <module>ant-tasks</module>
     </modules>
-
-    <scm>
-        <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
-        <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
-        <url>https://github.com/eclipse-ee4j/glassfish</url>
-    </scm>
 
     <properties>
         <glassfish.version>${project.version}</glassfish.version>

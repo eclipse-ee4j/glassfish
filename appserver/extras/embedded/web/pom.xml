@@ -237,24 +237,95 @@
 
     <profiles>
         <profile>
-            <!-- generate empty javadoc jar -->
+            <!--
+                Generate real sources and javadoc JARs aggregated from the bundled
+                modules, so that the javadoc can be published on javadoc.io and IDEs
+                can attach sources (issue #24278).
+            -->
             <id>oss-release</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
+                    <!-- Collect the sources of all bundled modules into one source tree. -->
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-source-dependencies</id>
+                                <goals>
+                                    <goal>unpack-dependencies</goal>
+                                </goals>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <classifier>sources</classifier>
+                                    <!-- Not every (third-party) dependency publishes a sources JAR. -->
+                                    <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+                                    <includeScope>compile</includeScope>
+                                    <includeScope>runtime</includeScope>
+                                    <includeTypes>jar,glassfish-jar</includeTypes>
+                                    <outputDirectory>${project.build.directory}/sources</outputDirectory>
+                                    <includes>**/*.java</includes>
+                                    <!-- A stray module-info.java puts javac into module mode and breaks the run. -->
+                                    <excludes>**/module-info.java</excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Build the javadoc JAR from the collected sources. -->
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <sourcepath>${project.build.directory}/sources</sourcepath>
+                            <!-- Best-effort: keep going on the inevitable warnings/errors in aggregated sources. -->
+                            <failOnError>false</failOnError>
+                            <failOnWarnings>false</failOnWarnings>
+                            <doclint>none</doclint>
+                            <detectLinks>false</detectLinks>
+                            <detectOfflineLinks>false</detectOfflineLinks>
+                            <quiet>true</quiet>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!--
+                        The inherited 'source' profile would attach an empty sources JAR
+                        (this module has no src/main/java); disable it in favour of the
+                        aggregated sources JAR built below.
+                    -->
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Build the sources JAR from the collected sources. -->
                     <plugin>
                         <artifactId>maven-jar-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>create-empty-javadoc-jar</id>
+                                <id>create-sources-jar</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <classesDirectory>${project.build.directory}/javadoc</classesDirectory>
-                                    <classifier>javadoc</classifier>
+                                    <classesDirectory>${project.build.directory}/sources</classesDirectory>
+                                    <classifier>sources</classifier>
                                 </configuration>
                             </execution>
                         </executions>

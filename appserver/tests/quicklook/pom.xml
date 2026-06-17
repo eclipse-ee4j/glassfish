@@ -53,7 +53,7 @@
 
                                 <echo message="compile classpath: ${compile_classpath}"/>
                                 <echo message="plugin classpath:  ${plugin_classpath}"/>
-                                
+
                                 <!-- Full Profile -->
                                 <if>
                                     <equals arg1="${test.gd}" arg2="true" />
@@ -63,7 +63,7 @@
                                         </ant>
                                     </then>
                                 </if>
-                                
+
                                  <if>
                                     <equals arg1="${test.gd.security}" arg2="true" />
                                     <then>
@@ -72,7 +72,7 @@
                                         </ant>
                                     </then>
                                 </if>
-                                
+
                                 <!-- Web Profile -->
                                 <if>
                                     <equals arg1="${test.web.profile}" arg2="true" />
@@ -106,7 +106,7 @@
                                         </ant>
                                     </then>
                                 </if>
-                               
+
                                 <!-- Other -->
                                 <if>
                                     <equals arg1="${test.em}" arg2="true" />
@@ -116,7 +116,7 @@
                                         </ant>
                                     </then>
                                 </if>
-                                
+
                                 <if>
                                     <equals arg1="${test.ri}" arg2="true" />
                                     <then>
@@ -148,19 +148,19 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>1.10.9</version>
+                        <groupId>org.glassfish.external</groupId>
+                        <artifactId>ant-osgi</artifactId>
+                        <version>1.10.17</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.ant</groupId>
                         <artifactId>ant-junit</artifactId>
-                        <version>1.10.9</version>
+                        <version>1.10.17</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.ant</groupId>
                         <artifactId>ant-apache-regexp</artifactId>
-                        <version>1.10.9</version>
+                        <version>1.10.17</version>
                         <scope>runtime</scope>
                     </dependency>
                     <dependency>
@@ -217,7 +217,7 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties> 
+            <properties>
                 <test.gd>true</test.gd>
             </properties>
         </profile>
@@ -227,7 +227,7 @@
                 <test.gd.security>true</test.gd.security>
             </properties>
         </profile>
-        
+
         <!-- Web Profile -->
         <profile>
             <id>test_wd</id>
@@ -253,7 +253,7 @@
                 <stop.wd.security>true</stop.wd.security>
             </properties>
         </profile>
-        
+
         <!-- Other -->
         <profile>
             <id>test_em</id>
@@ -267,7 +267,7 @@
                 <test.ri>true</test.ri>
             </properties>
         </profile>
-        
+
         <profile>
             <id>dev_debug</id>
             <properties>

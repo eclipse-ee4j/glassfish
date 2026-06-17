@@ -53,7 +53,6 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -96,5 +95,4 @@
             </dependencies>
         </profile>
     </profiles>
-
 </project>

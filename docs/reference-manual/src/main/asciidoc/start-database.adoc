@@ -121,14 +121,14 @@ asadmin-options::
 `--sqlfilename`::
   Path to a file containing SQL statements to be executed after starting
   up the Java DB. Each statement should be separated by a ";". Statements
-  may be put on new lines. The file encoding to be used is UTF-8. 
-  This file is only taken into consideration when `dbname` is specified. 
+  may be put on new lines. The file encoding to be used is UTF-8.
+  This file is only taken into consideration when `dbname` is specified.
 `--dbuser`::
   The user name of the Java DB user that is to execute init SQL statements.
-  This option is used only when `dbname` and `sqlfilename` are specified. 
-  If this option is omitted the DB schema used for the init SQL statements 
-  is owned by the default user. Must be combined with the general `passwordfile` 
-  option of which the file it points to must contain the `AS_ADMIN_DBPASSWORD` 
+  This option is used only when `dbname` and `sqlfilename` are specified.
+  If this option is omitted the DB schema used for the init SQL statements
+  is owned by the default user. Must be combined with the general `passwordfile`
+  option of which the file it points to must contain the `AS_ADMIN_DBPASSWORD`
   key with as value the password associated with the user.
 
 +

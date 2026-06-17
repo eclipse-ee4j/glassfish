@@ -146,8 +146,9 @@
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.15</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.18.3</jackson.version>
-        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
+        <jackson.version>2.22.0</jackson.version>
+        <jackson-annotations.version>2.22</jackson-annotations.version>
+        <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
@@ -656,7 +657,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

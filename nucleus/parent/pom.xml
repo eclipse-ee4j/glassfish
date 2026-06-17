@@ -371,7 +371,7 @@
                 <exclusions>
                     <exclusion>
                         <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.core</artifactId>
+                        <artifactId>osgi.core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

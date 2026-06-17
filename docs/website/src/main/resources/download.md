@@ -1,10 +1,10 @@
 # Eclipse GlassFish Downloads
 
-## Eclipse GlassFish 8.0.2
+## Eclipse GlassFish ${glassfish.version.8x}
 
 Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/release/11) specification, which is a major new feature release. Eclipse GlassFish 8 requires JDK 21 or higher.
 
-### Breaking Changes Compared to 7.1.0
+### Breaking Changes Compared to ${glassfish.version.71x}
 
 * Compliance with Jakarta EE 11
 * Minimal supported version is Java 21
@@ -17,14 +17,14 @@ Eclipse GlassFish is an application server, implementing Jakarta EE. This releas
 
 ### Download
 
-* [Eclipse GlassFish 8.0.2, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-8.0.2.zip) (zip)
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/8.0.2)
-* [Eclipse GlassFish 8.0.2, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-8.0.2.zip) (zip)
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/8.0.2)
-* [Eclipse GlassFish Embedded 8.0.2, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.2/glassfish-embedded-all-8.0.2.jar) (jar) — run with `java -jar glassfish-embedded-all-8.0.2.jar`, no installation required
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/8.0.2)
-* [Eclipse GlassFish Embedded 8.0.2, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.2/glassfish-embedded-web-8.0.2.jar) (jar) — run with `java -jar glassfish-embedded-web-8.0.2.jar`, no installation required
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/8.0.2)
+* [Eclipse GlassFish ${glassfish.version.8x}, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-${glassfish.version.8x}.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/${glassfish.version.8x})
+* [Eclipse GlassFish ${glassfish.version.8x}, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-${glassfish.version.8x}.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/${glassfish.version.8x})
+* [Eclipse GlassFish Embedded ${glassfish.version.8x}, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/${glassfish.version.8x}/glassfish-embedded-all-${glassfish.version.8x}.jar) (jar) — run with `java -jar glassfish-embedded-all-${glassfish.version.8x}.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/${glassfish.version.8x})
+* [Eclipse GlassFish Embedded ${glassfish.version.8x}, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/${glassfish.version.8x}/glassfish-embedded-web-${glassfish.version.8x}.jar) (jar) — run with `java -jar glassfish-embedded-web-${glassfish.version.8x}.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/${glassfish.version.8x})
 
 More details:
 
@@ -37,37 +37,37 @@ Download all GlassFish 8.x releases at the [Eclipse GlassFish 8.x Downloads](dow
 
 ----
 
-## Eclipse GlassFish 7.1.0
+## Eclipse GlassFish ${glassfish.version.71x}
 
 Eclipse GlassFish is an application server, implementing [Jakarta EE](https://jakarta.ee/about).
 This release is corresponding with the [Jakarta EE 10](https://jakarta.ee/specifications/platform/10) specification, which is a major feature release.
 
-GlassFish 7.1.0 is a final release, containing final Jakarta EE 10 APIs.
+GlassFish ${glassfish.version.71x} is a final release, containing final Jakarta EE 10 APIs.
 It is tested with Java 17, 21 and 25 experimentally can be used also with newer or non LTS version.
 
 This is the first release after several months of intensive work on fixes and feature upgrades.
 
 The release marks the transition to the latest version of the Java Platform, so we dropped support for Java 11, and are now supporting Java 25 instead.
-GlassFish 7.1.0 introduces support for Microprofile Health, switches keystores from JKS to PKCS12, the current industry standard, and adapted server bootstrap to JPMS.
+GlassFish ${glassfish.version.71x} introduces support for Microprofile Health, switches keystores from JKS to PKCS12, the current industry standard, and adapted server bootstrap to JPMS.
 
 We also implemented more user friendly interactive asadmin, improved user communication on server startups, etc. The complete list of changes is available on GitHub.
 
-This is a step of gradual modernization while it did not slow down the development of GlassFish 8, based on Jakarta EE 11, while GlassFish 7.1.0 still supports Jakarta EE 10.
+This is a step of gradual modernization while it did not slow down the development of GlassFish 8, based on Jakarta EE 11, while GlassFish ${glassfish.version.71x} still supports Jakarta EE 10.
 
 Download:
 
-* [Eclipse GlassFish 7.1.0, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.1.0.zip) (zip)
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/7.1.0)
-* [Eclipse GlassFish 7.1.0, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.1.0.zip) (zip)
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/7.1.0)
-* [Eclipse GlassFish Embedded 7.1.0, Jakarta EE Platform, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/7.1.0/glassfish-embedded-all-7.1.0.jar) (jar) — run with `java -jar glassfish-embedded-all-7.1.0.jar`, no installation required
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.1.0)
-* [Eclipse GlassFish Embedded 7.1.0, Jakarta EE Web Profile, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/7.1.0/glassfish-embedded-web-7.1.0.jar) (jar) — run with `java -jar glassfish-embedded-web-7.1.0.jar`, no installation required
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.1.0)
+* [Eclipse GlassFish ${glassfish.version.71x}, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-${glassfish.version.71x}.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/${glassfish.version.71x})
+* [Eclipse GlassFish ${glassfish.version.71x}, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-${glassfish.version.71x}.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/${glassfish.version.71x})
+* [Eclipse GlassFish Embedded ${glassfish.version.71x}, Jakarta EE Platform, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/${glassfish.version.71x}/glassfish-embedded-all-${glassfish.version.71x}.jar) (jar) — run with `java -jar glassfish-embedded-all-${glassfish.version.71x}.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/${glassfish.version.71x})
+* [Eclipse GlassFish Embedded ${glassfish.version.71x}, Jakarta EE Web Profile, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/${glassfish.version.71x}/glassfish-embedded-web-${glassfish.version.71x}.jar) (jar) — run with `java -jar glassfish-embedded-web-${glassfish.version.71x}.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/${glassfish.version.71x})
 
 More details:
 
-* [Eclipse GlassFish 7.1.0 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.0)
+* [Eclipse GlassFish ${glassfish.version.71x} Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/${glassfish.version.71x})
 * [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### All Eclipse GlassFish 7.x Downloads

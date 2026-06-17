@@ -93,6 +93,26 @@ public class SecurityLoggerInfo {
             level = "WARNING")
     public static final String securityUpgradeServiceWarning = LOGMSG_PREFIX + "-01015";
 
+    @LogMessageInfo(
+            message = "Migrated legacy security store [{0}] to PKCS12 [{1}]. The original file was renamed to [{2}].",
+            level = "INFO")
+    public static final String securityUpgradeKeystoreMigrated = LOGMSG_PREFIX + "-01016";
+
+    @LogMessageInfo(
+            message = "Could not migrate legacy security store [{0}] to PKCS12. The server may fail to read it.",
+            cause = "The legacy store could not be read with the domain master password or could not be written as PKCS12.",
+            action = "Convert the store to PKCS12 manually (for example using keytool -importkeystore) or recreate it.",
+            level = "WARNING")
+    public static final String securityUpgradeKeystoreMigrationFailed = LOGMSG_PREFIX + "-01017";
+
+    @LogMessageInfo(
+            message = "Found legacy security store(s) in [{0}] but the master password is not available, so they cannot be"
+                    + " migrated to PKCS12.",
+            cause = "The domain still uses JKS/JCEKS security stores and the master password could not be obtained.",
+            action = "Start the domain with the master password available so the stores can be migrated to PKCS12.",
+            level = "WARNING")
+    public static final String securityUpgradeKeystoreNoMasterPassword = LOGMSG_PREFIX + "-01018";
+
     // General login processing messages: start 1050
     @LogMessageInfo(
             message = "Certificate authentication requires certificate realm.",

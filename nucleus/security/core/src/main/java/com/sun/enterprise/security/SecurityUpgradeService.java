@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,11 +22,18 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.JaccProvider;
 import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.store.PasswordAdapter;
 
 import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,11 +41,17 @@ import java.util.logging.Logger;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.security.common.MasterPassword;
+import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
 
 /**
  * The only thing that needs to added Extra for SecurityService migration is the addition of the new JACC provider. This would be
@@ -57,10 +70,23 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     @Inject
     ServerEnvironment env;
 
+    @Inject
+    @Optional
+    MasterPassword masterPasswordProvider;
+
     private static final String DIR_GENERATED_POLICY = "generated" + File.separator + "policy";
     private static final String DIR_CONFIG = "config";
     private static final String JKS = ".jks";
     private static final String NSS = ".db";
+
+    // Legacy (7.0.x and older) security store file names that need to be converted to PKCS12.
+    private static final String LEGACY_KEYSTORE = "keystore.jks";
+    private static final String LEGACY_TRUSTSTORE = "cacerts.jks";
+    private static final String LEGACY_DOMAIN_PASSWORDS = "domain-passwords";
+
+    private static final String TYPE_JKS = "JKS";
+    private static final String TYPE_JCEKS = "JCEKS";
+    private static final String BAK_SUFFIX = ".bak";
 
     private static final String JDBC_REALM_CLASSNAME = "com.sun.enterprise.security.ee.auth.realm.jdbc.JDBCRealm";
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";
@@ -127,6 +153,10 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
             }
         }
 
+        // Convert legacy JKS/JCEKS security stores left over from 7.0.x or older to PKCS12,
+        // since 7.1.0+ only reads the fixed *.p12 file names.
+        migrateLegacyKeystores();
+
         //Detect an NSS upgrade scenario and point to the steps wiki
 
         if (requiresSecureAdmin()) {
@@ -134,6 +164,102 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
             _logger.log(Level.WARNING, SecurityLoggerInfo.securityUpgradeServiceWarning);
         }
 
+    }
+
+    /**
+     * Detects legacy JKS/JCEKS security stores in {@code <domain>/config} and converts them to PKCS12
+     * under the file names used by 7.1.0+ ({@code keystore.p12}, {@code cacerts.p12},
+     * {@code domain-passwords.p12}).
+     * <p>
+     * The conversion is idempotent: a store is skipped if the legacy file is absent or the PKCS12 target
+     * already exists. Each converted legacy file is retained with a {@value #BAK_SUFFIX} suffix instead of
+     * being deleted, and any failure is logged without aborting the upgrade.
+     */
+    private void migrateLegacyKeystores() {
+        File configDir = new File(env.getInstanceRoot(), DIR_CONFIG);
+        if (!configDir.isDirectory()) {
+            return;
+        }
+
+        boolean legacyPresent = new File(configDir, LEGACY_KEYSTORE).exists()
+            || new File(configDir, LEGACY_TRUSTSTORE).exists()
+            || new File(configDir, LEGACY_DOMAIN_PASSWORDS).exists();
+        if (!legacyPresent) {
+            return;
+        }
+
+        char[] masterPassword = masterPasswordProvider == null ? null : masterPasswordProvider.getMasterPassword();
+        if (masterPassword == null) {
+            _logger.log(Level.WARNING, SecurityLoggerInfo.securityUpgradeKeystoreNoMasterPassword,
+                configDir.getAbsolutePath());
+            return;
+        }
+
+        migrateStore(new File(configDir, LEGACY_KEYSTORE), TYPE_JKS,
+            new File(configDir, KEYSTORE_FILENAME_DEFAULT), masterPassword);
+        migrateStore(new File(configDir, LEGACY_TRUSTSTORE), TYPE_JKS,
+            new File(configDir, TRUSTSTORE_FILENAME_DEFAULT), masterPassword);
+        migrateStore(new File(configDir, LEGACY_DOMAIN_PASSWORDS), TYPE_JCEKS,
+            new File(configDir, PasswordAdapter.PASSWORD_ALIAS_KEYSTORE), masterPassword);
+    }
+
+    /**
+     * Converts a single legacy keystore to PKCS12. No-op when the legacy file is missing or the target
+     * already exists. All entries (private keys, trusted certificates and secret keys) are copied using the
+     * master password, and on success the legacy file is renamed to {@code <name>}{@value #BAK_SUFFIX}.
+     */
+    private void migrateStore(File legacyFile, String legacyType, File targetFile, char[] masterPassword) {
+        if (!legacyFile.exists() || targetFile.exists()) {
+            return;
+        }
+        try {
+            convertToPkcs12(legacyFile, legacyType, targetFile, masterPassword);
+
+            File backup = new File(legacyFile.getPath() + BAK_SUFFIX);
+            String backupName = legacyFile.renameTo(backup) ? backup.getName() : legacyFile.getName();
+            _logger.log(Level.INFO, SecurityLoggerInfo.securityUpgradeKeystoreMigrated,
+                new Object[] {legacyFile.getAbsolutePath(), targetFile.getAbsolutePath(), backupName});
+        } catch (Exception e) {
+            // Best effort: do not leave a half-written PKCS12 behind and keep the legacy file in place.
+            if (targetFile.exists() && !targetFile.delete()) {
+                targetFile.deleteOnExit();
+            }
+            _logger.log(Level.WARNING, SecurityLoggerInfo.securityUpgradeKeystoreMigrationFailed,
+                legacyFile.getAbsolutePath());
+            _logger.log(Level.FINE, "Legacy keystore migration failure detail", e);
+        }
+    }
+
+    /**
+     * Reads {@code legacyFile} of the given {@code legacyType} (e.g. {@code JKS} or {@code JCEKS}) and writes
+     * its entries to {@code targetFile} as a PKCS12 keystore, all secured with {@code masterPassword}. Private
+     * keys, trusted certificates and secret keys are copied. Package-visible for testing.
+     */
+    static void convertToPkcs12(File legacyFile, String legacyType, File targetFile, char[] masterPassword)
+        throws Exception {
+        KeyStore source = KeyStore.getInstance(legacyType);
+        try (FileInputStream in = new FileInputStream(legacyFile)) {
+            source.load(in, masterPassword);
+        }
+
+        KeyStore target = KeyStore.getInstance(KEYSTORE_TYPE_DEFAULT);
+        target.load(null, masterPassword);
+
+        Enumeration<String> aliases = source.aliases();
+        while (aliases.hasMoreElements()) {
+            String alias = aliases.nextElement();
+            if (source.isKeyEntry(alias)) {
+                Key key = source.getKey(alias, masterPassword);
+                Certificate[] chain = source.getCertificateChain(alias);
+                target.setKeyEntry(alias, key, masterPassword, chain);
+            } else if (source.isCertificateEntry(alias)) {
+                target.setCertificateEntry(alias, source.getCertificate(alias));
+            }
+        }
+
+        try (FileOutputStream out = new FileOutputStream(targetFile)) {
+            target.store(out, masterPassword);
+        }
     }
 
     /*

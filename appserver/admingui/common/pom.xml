@@ -55,7 +55,7 @@
             <artifactId>jsftemplating-dt</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>rest-client</artifactId>
@@ -81,7 +81,7 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>

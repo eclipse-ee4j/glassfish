@@ -241,6 +241,7 @@ public class TemplateParserTest {
     try {
         TemplateParser parser = new TemplateParser(cl.getResource("./TemplateFormat.jsf"));
         parser.open();
+
         // Read some lines
         parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine();
         parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine();
@@ -248,10 +249,15 @@ public class TemplateParserTest {
         parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine();
         parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine(); parser.readLine();
 
-        // Test readUntil.  On line before, read until openning comment.
-        Assert.assertEquals("testReadUntilStr", "    // This text should be commented out.  <tags> should not be parsed.\n    <!--", parser.readUntil("<!--", false));
-        Assert.assertEquals("testReadUntilStr2", "\n    This text should be commented out.  <tags> should not be parsed.\n    -->", parser.readUntil("-->", false));
-        Assert.assertEquals("testReadUntilStr3", "\n    /*\n     *    This text should be commented out.  <tags> should not be parsed.\n     */", parser.readUntil("*/", false));
+        // Test readUntil - normalize line endings for cross-platform compatibility
+        String result1 = parser.readUntil("<!--", false).replaceAll("\\r\\n", "\n");
+        Assert.assertEquals("testReadUntilStr", "    // This text should be commented out.  <tags> should not be parsed.\n    <!--", result1);
+
+        String result2 = parser.readUntil("-->", false).replaceAll("\\r\\n", "\n");
+        Assert.assertEquals("testReadUntilStr2", "\n    This text should be commented out.  <tags> should not be parsed.\n    -->", result2);
+
+        String result3 = parser.readUntil("*/", false).replaceAll("\\r\\n", "\n");
+        Assert.assertEquals("testReadUntilStr3", "\n    /*\n     *    This text should be commented out.  <tags> should not be parsed.\n     */", result3);
 
         parser.close();
     } catch (Exception ex) {

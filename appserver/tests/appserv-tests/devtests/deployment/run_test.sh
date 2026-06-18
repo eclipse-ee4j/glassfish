@@ -54,7 +54,7 @@ test_run(){
   then
       ${S1AS_HOME}/bin/asadmin stop-domain
   fi
-  
+
   if [[ ${1} = "deployment_cluster_all" ]]; then
       cp -r ${APS_HOME}/devtests/deployment/server-logs/ ${WORKSPACE}/results/
   fi
@@ -111,7 +111,7 @@ generate_junit_report_deployment(){
 }
 
 run_test_id(){
-  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+  unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
   cd `dirname ${0}`
   test_init
   test_run ${1}

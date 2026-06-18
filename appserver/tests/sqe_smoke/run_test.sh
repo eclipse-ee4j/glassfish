@@ -42,7 +42,7 @@ test_run_sqe_smoke(){
 run_test_id(){
   source `dirname ${0}`/../common_test.sh
   kill_process
-  unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+  unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
   test_init
   if [[ ${1} = "sqe_smoke_all" ]]; then
     test_run_sqe_smoke | tee ${TEST_RUN_LOG}

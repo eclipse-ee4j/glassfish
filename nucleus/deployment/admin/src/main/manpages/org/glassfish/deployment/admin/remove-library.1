@@ -21,23 +21,20 @@ DESCRIPTION
        names separated by spaces.
 
            Note
-           +---------------------------------------+
-           |           The library archive file is |
-           |           removed from the DAS. For   |
-           |           common and extension        |
-           |           libraries, you must restart |
-           |           the DAS so the library      |
-           |           removals are picked up by   |
-           |           the server runtime. To      |
-           |           remove the libraries from   |
-           |           other server instances,     |
-           |           synchronize the instances   |
-           |           with the DAS by restarting  |
-           |           them.                       |
-           |           This command is not         |
-           |           supported on the Windows    |
-           |           operating system.           |
-           +---------------------------------------+
+           +----------------------------------------+
+           |           The library archive file is  |
+           |           removed from the DAS. Since  |
+           |           GlassFish 7.0.18, common     |
+           |           library removals are picked  |
+           |           up by the runtime without    |
+           |           restarting the DAS or server |
+           |           instances. Extension         |
+           |           libraries (lib/ext) still    |
+           |           require a restart.           |
+           |           This command is not          |
+           |           supported on the Windows     |
+           |           operating system.            |
+           +----------------------------------------+
 
        This subcommand is supported in remote mode only.
 

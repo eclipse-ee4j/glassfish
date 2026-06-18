@@ -132,20 +132,31 @@
                             <event id="restartCheck">
                                 <ui:event type="beforeEncode">
                                     if ("!$session{supportCluster}") {
-                                        gf.restRequest(endpoint="#{sessionScope.REST_URL}/_get-restart-required", method="get", result="#{requestScope.result}");
-                                        setSessionAttribute(key="restartRequired", value="#{requestScope.result.data.extraProperties.entity.restartRequired}");
-                                        setSessionAttribute(key="unprocessedChanges", value="#{requestScope.result.data.extraProperties.entity.unprocessedChanges}");
+                                        gf.restRequest(
+                                            endpoint="#{sessionScope.REST_URL}/_get-restart-required", 
+                                            method="get", 
+                                            result="#{requestScope.result}");
+                                        
+                                        setSessionAttribute(
+                                            key="restartRequired", 
+                                            value="#{requestScope.result.data.extraProperties.entity.restartRequired eq true}");
+                                        
+                                        setSessionAttribute(
+                                            key="unprocessedChanges", 
+                                            value="#{requestScope.result.data.extraProperties.entity.unprocessedChanges}");
                                     }
                                     if("$session{supportCluster}") {
                                         setSessionAttribute(key="restartRequired" value="$boolean{false}");
                                     }
                                 </ui:event>
+                                
                                 <!-- Masthead Integration Point -->
                                 <ui:event type="afterCreate">
                                     includeFirstIntegrationPoint(type="org.glassfish.admingui:masthead" root="$this{component}");
                                     includeFirstIntegrationPoint(type="org.glassfish.admingui:favicon" root="#{view}");
                                 </ui:event>
                             </event>
+                            
                             <h:commandButton id="execButton" text="na" style="display:none;">
                                 <ui:event type="command">
                                     <!-- Ok to use #{param} here -->

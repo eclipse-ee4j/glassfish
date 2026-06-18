@@ -25,20 +25,32 @@
     }
     getPluginIdFromViewId(viewId="#{facesContext.viewRoot.viewId}", pluginId="#{pluginId}");
 </ui:event>
+
 <event>
     <!-- Before Create must be inside a component, cannot be at page-level -->
     <ui:event type="beforeCreate">
         setPartialRequest("false");
     </ui:event>
+    
     <ui:event type="beforeEncode">
         <!-- Set request-scoped restart flag to compare w/ session -->
         if (!$session{supportCluster}) {
-            gf.restRequest(endpoint="#{sessionScope.REST_URL}/_get-restart-required", method="get", result="#{requestScope.result}");
-            setSessionAttribute(key="restartRequired", value="#{requestScope.result.data.extraProperties.entity.restartRequired}");
-            setSessionAttribute(key="unprocessedChanges", value="#{requestScope.result.data.extraProperties.entity.unprocessedChanges}");
+            gf.restRequest(
+                endpoint="#{sessionScope.REST_URL}/_get-restart-required", 
+                method="get", result="#{requestScope.result}");
+            
+            setSessionAttribute(
+                key="restartRequired", 
+                value="#{requestScope.result.data.extraProperties.entity.restartRequired eq true}");
+                
+            setSessionAttribute(
+                key="unprocessedChanges", 
+                value="#{requestScope.result.data.extraProperties.entity.unprocessedChanges}");
         }
         if($session{supportCluster}) {
-            setSessionAttribute(key="restartRequired" value="$boolean{false}");
+            setSessionAttribute(
+                key="restartRequired" 
+                value="$boolean{false}");
         }
 
         gf.restRequest(endpoint="#{request.scheme}://#{sessionScope.serverName}:#{sessionScope.serverPort}/management/domain/anonymous-user-enabled"
@@ -81,6 +93,7 @@
         Content Missing!
     </insert>
 "</div>
+
 <f:verbatim>
 <script type="text/javascript">
     var loc = top.window.location.href;

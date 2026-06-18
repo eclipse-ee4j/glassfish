@@ -215,7 +215,7 @@
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>4.1.0-M2</jakarta.pages-api.version>
-        <jstl-api.version>3.1.0-SNAPSHOT</jstl-api.version>
+        <jstl-api.version>3.0.2</jstl-api.version>
         <wasp.version>4.0.0</wasp.version>
 
         <!-- Jakarta MVC -->
@@ -260,7 +260,7 @@
         <ant.version>1.10.17</ant.version>
         <ant-osgi.version>1.10.17</ant-osgi.version>
         <jackson.version>2.22.0</jackson.version>
-        <jackson-annotations.version>2.21</jackson-annotations.version>
+        <jackson-annotations.version>2.22</jackson-annotations.version>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.5</jettison.version>

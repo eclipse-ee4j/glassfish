@@ -19492,7 +19492,9 @@ the latest database support information.</p>
 <h5 id="making-the-jdbc-driver-jar-files-accessible"><a class="anchor" href="#making-the-jdbc-driver-jar-files-accessible"></a>Making the JDBC Driver JAR Files Accessible</h5>
 <div class="paragraph">
 <p>To integrate the JDBC driver into a Eclipse GlassFish domain, copy the
-JAR files into the domain-dir<code>/lib</code> directory, then restart the server.
+JAR files into the domain-dir<code>/lib</code> directory.
+Since GlassFish 7.0.18, restarting the server is not required for the
+runtime to pick up these libraries.
 This makes classes accessible to all applications or modules deployed on
 servers that share the same configuration. For more information about
 Eclipse GlassFish class loaders, see "<a href="application-development-guide.html#class-loaders">Class Loaders</a>" in
@@ -19500,8 +19502,8 @@ Eclipse GlassFish Application Development Guide.</p>
 </div>
 <div class="paragraph">
 <p>If you are using an Oracle database with EclipseLink extensions, copy
-the JAR files into the domain-dir<code>/lib/ext</code> directory, then restart the
-server. For details, see "<a href="application-development-guide.html#oracle-database-enhancements">Oracle Database
+the JAR files into the domain-dir<code>/lib/ext</code> directory, then restart the server.
+For details, see "<a href="application-development-guide.html#oracle-database-enhancements">Oracle Database
 Enhancements</a>" in Eclipse GlassFish Application
 Development Guide.</p>
 </div>
@@ -32794,7 +32796,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-17 10:04:53 UTC
+Last updated 2026-06-18 09:14:44 UTC
 </div>
 </div>
 </body>

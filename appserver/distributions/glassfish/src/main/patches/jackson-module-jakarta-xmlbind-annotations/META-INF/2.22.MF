@@ -1,0 +1,60 @@
+Manifest-Version: 1.0
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-SymbolicName: com.fasterxml.jackson.module.jackson-module-jakar
+ ta-xmlbind-annotations
+Implementation-Vendor-Id: com.fasterxml.jackson.module
+Specification-Title: Jackson module: Jakarta XML Bind Annotations (jak
+ arta.xml.bind)
+Bundle-DocURL: https://github.com/FasterXML/jackson-modules-base
+Import-Package: jakarta.activation;resolution:=optional;version="[2.0,
+ 3)",jakarta.xml.bind;version="[3.0,4.0.100)",jakarta.xml.bind.annotat
+ ion;version="[3.0,4.0.100)",jakarta.xml.bind.annotation.adapters;vers
+ ion="[3.0,4.0.100)",com.fasterxml.jackson.annotation;version="[2.22,3
+ )",com.fasterxml.jackson.core;version="[2.22,3)",com.fasterxml.jackso
+ n.core.util;version="[2.22,3)",com.fasterxml.jackson.databind;version
+ ="[2.22,3)",com.fasterxml.jackson.databind.cfg;version="[2.22,3)",com
+ .fasterxml.jackson.databind.deser.std;version="[2.22,3)",com.fasterxm
+ l.jackson.databind.introspect;version="[2.22,3)",com.fasterxml.jackso
+ n.databind.jsonFormatVisitors;version="[2.22,3)",com.fasterxml.jackso
+ n.databind.jsontype;version="[2.22,3)",com.fasterxml.jackson.databind
+ .jsontype.impl;version="[2.22,3)",com.fasterxml.jackson.databind.node
+ ;version="[2.22,3)",com.fasterxml.jackson.databind.ser.std;version="[
+ 2.22,3)",com.fasterxml.jackson.databind.type;version="[2.22,3)",com.f
+ asterxml.jackson.databind.util;version="[2.22,3)",com.fasterxml.jacks
+ on.module.jakarta.xmlbind.deser;version="[2.22,3)",com.fasterxml.jack
+ son.module.jakarta.xmlbind.ser;version="[2.22,3)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Export-Package: com.fasterxml.jackson.module.jakarta.xmlbind;version="
+ 2.22.0";uses:="com.fasterxml.jackson.annotation,com.fasterxml.jackson
+ .core,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind.c
+ fg,com.fasterxml.jackson.databind.introspect,com.fasterxml.jackson.da
+ tabind.jsontype,com.fasterxml.jackson.databind.type,com.fasterxml.jac
+ kson.databind.util,jakarta.xml.bind.annotation,jakarta.xml.bind.annot
+ ation.adapters",com.fasterxml.jackson.module.jakarta.xmlbind.deser;ve
+ rsion="2.22.0";uses:="com.fasterxml.jackson.core,com.fasterxml.jackso
+ n.databind,com.fasterxml.jackson.databind.deser.std,jakarta.activatio
+ n",com.fasterxml.jackson.module.jakarta.xmlbind.ser;version="2.22.0";
+ uses:="com.fasterxml.jackson.core,com.fasterxml.jackson.databind,com.
+ fasterxml.jackson.databind.jsonFormatVisitors,com.fasterxml.jackson.d
+ atabind.ser.std,jakarta.activation"
+Bundle-Name: Jackson module: Jakarta XML Bind Annotations (jakarta.xml
+ .bind)
+Multi-Release: true
+Build-Jdk-Spec: 1.8
+Bundle-Description: Support for using Jakarta XML Bind (aka JAXB 3.0) 
+ annotations as an alternativeto "native" Jackson annotations, for con
+ figuring data-binding.
+Implementation-Title: Jackson module: Jakarta XML Bind Annotations (ja
+ karta.xml.bind)
+Implementation-Version: 2.22.0
+Bundle-ManifestVersion: 2
+Specification-Vendor: FasterXML
+Bundle-Vendor: FasterXML
+Tool: Bnd-6.3.1.202206071316
+Implementation-Vendor: FasterXML
+Bundle-Version: 2.22.0
+X-Compile-Target-JDK: 1.8
+X-Compile-Source-JDK: 1.8
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Specification-Version: 2.22.0
+

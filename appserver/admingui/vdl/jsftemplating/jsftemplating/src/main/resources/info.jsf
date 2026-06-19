@@ -1,0 +1,66 @@
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!initPage
+    isDebug(value=>$attribute{isDebug});
+/>
+<f:verbatim>
+<html>
+   <head>
+    <title>Templating for JavaServer&trade; Faces Info</title>
+    <style type="text/css">
+.title h2 {text-align: center;}
+.title p {text-align: center;}
+.info .title {background-color: #333388; color: #CCCCCC; font-family: Arial,sans-serif; font-size: 14pt; font-weight: bold; margin-top: 40px; padding: 15px; white-space: nowrap;}
+.info pre {border: 2px solid #333388; padding: 15px;}
+h2 {color: #333388; font-family: Arial,sans-serif; font-size: 16pt; font-weight: bold; padding: 15px;}
+    </style>
+   </head>
+   <body bgcolor="#FFFFFF">
+   <div class="title">
+ <h2> Powered by Templating for JavaServer&trade; Faces Technology! </h2>
+ <p> Visit <a href="https://jsftemplating.dev.java.net">https://jsftemplating.dev.java.net</a>
+     to learn more about JSFTemplating.</p>
+    </div>
+</f:verbatim>
+<!if #{isDebug}>
+    <event>
+    <!beforeEncode
+        getGlobalHandlerInformation(info=>$attribute{handlers});
+        getGlobalComponentTypeInformation(info=>$attribute{compTypes});
+    />
+    </event>
+<f:verbatim>
+    <div class="info" id="handlers">
+        <div class="title">
+        Handlers:
+        </div>
+        <pre>$attribute{handlers}</pre>
+    </div>
+    <div class="info" id="types">
+        <div class="title">
+        ComponentTypes:
+        </div>
+        <pre>$attribute{compTypes}</pre>
+    </div>
+</f:verbatim>
+</!if>
+<f:verbatim>
+   </body>
+</html>
+</f:verbatim>

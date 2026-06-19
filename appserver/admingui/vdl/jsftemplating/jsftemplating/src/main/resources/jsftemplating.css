@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+.lfEditArea .lfEditor {display:inline; border:1px dotted #B66;}
+.lfEditAreaOFF .lfEditor {display:inline;}
+.lfEditAreaOFF .lfEditor .editMenu {display:none;}
+.lfEditorContent {}
+
+/* Popup Menu Styles */
+.popupArea .lfEditArea {background-color:#FFCCCC;}
+.popupMenu {position:absolute; text-align:left; z-index:1000; background-color:#FFF; font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:200px; visibility:hidden; border:2px outset #68D; padding:2px 2px 2px 2px;}
+.popupMenuTitle {font-family:Arial,Helvetica,sans-serif; text-align:center; font-weight:bold; background-color: #BBB; margin-bottom: 5px;}
+/* .popupMenuItems {padding-left:15px; padding-right:10px;} */

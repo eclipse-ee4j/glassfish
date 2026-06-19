@@ -1,0 +1,62 @@
+# Reader requirements:
+#   - Single pass reading.
+#   - Read until one of the following is encountered:
+#    '<', '#', "//", "/*", "<!--", '"', ''', '\'
+#   - if a '\' is hit, ignore the next character (including newlines)
+#   - if a component is hit ('<'):
+#    - Create LayoutComponent
+#    - recurse on children if they exist
+#    - Continue populating LayoutComponent until /> or </component>
+#   - if a single line comment is hit, skip the rest of the line
+#   - if a multi line comment is hit, skip until end is found
+#   - if a ''' or '"' is found (perhaps " should escape, ' should not?)
+#    - convert rest of line to String (and possibly subsequent lines)
+#    - if during component-search mode, create a StaticText (or
+#        verbatim) UIComponent
+
+<sun:page>
+    <sun:html>
+    <sun:head>
+        <sun:title>The title</sun:title>
+        <sun:script file="jsftemplating/js/jsftemplating.js" />
+    </sun:head>
+    <sun:body>
+
+    # This text should be commented out.  <tags> should not be parsed.
+    // This text should be commented out.  <tags> should not be parsed.
+    <!--
+    This text should be commented out.  <tags> should not be parsed.
+    -->
+    /*
+     *    This text should be commented out.  <tags> should not be parsed.
+     */
+
+"        <br /><br /><p>
+"        <center>
+"            single or double quotes ("'" or "'") allow text or markup
+    "            to be written directly to the output. The rest of a single
+"            line will be written out.
+"         </center>
+"        </p>
+'
+    '    <p> The following uses an actionListener, beforeEncode, and a command event... </p>
+'
+        <sun:hyperlink actionListener="$methodBinding{#{lfCommand.invokeCommandHandlers}}">
+        "Hyperlink Text <b> there should be a &lt;b&gt; between "Text" and 'there'.
+        <!beforeEncode println(value="BEFORE ENCODE!") />
+        <!command 
+            // ';' are optional, "//" is for comments
+            setAttribute(key="something"  value="Yes!")
+            getAttribute(key="something"  value=>$attribute{val});
+            println(value="$attribute{val}")
+        />
+        <!if something />
+        <!while something />
+        <!foreach key:something />
+        </sun:hyperlink>
+        <!facet staticText>
+        "Facets may be added using "!facet " infront of the type
+        </!facet>
+    </sun:body>
+    </sun:html>
+</sun:page>

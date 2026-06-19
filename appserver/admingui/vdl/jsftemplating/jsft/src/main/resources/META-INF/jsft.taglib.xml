@@ -1,0 +1,75 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+    Portions Copyright (c) 2011 Ken Paulsen
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<facelet-taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_4_0.xsd"
+                version="4.0">
+
+    <namespace>http://jsftemplating.java.net/jsft</namespace>
+
+    <tag>
+    <tag-name>event</tag-name>
+    <handler-class>com.sun.jsft.facelets.EventHandler</handler-class>
+    <attribute>
+        <description><![CDATA[
+        <p> Name of the event for which to install a listener. The
+        following table lists the valid values for this attribute,
+        and the corresponding event type for which the listener
+        action is registered.</p>
+
+        <table border="1">
+            <tr><th>value for "<code>type</code>" tag attribute</th>
+            <th>Type of event sent to listener method</th></tr>
+            <tr><td>preRenderComponent</td>
+            <td>jakarta.faces.event.PreRenderComponentEvent</td></tr>
+            <tr><td>postAddToView</td>
+            <td>jakarta.faces.event.PostAddToViewEvent</td></tr>
+            <tr><td>preValidate</td>
+            <td>jakarta.faces.event.PreValidateEvent</td></tr>
+            <tr><td>postValidate</td>
+            <td>jakarta.faces.event.PostValidateEvent</td></tr>
+        </table>
+
+        <p> In addition to these values, the fully qualified class
+            name of any java class that extends
+            <code>jakarta.faces.event.ComponentSystemEvent</code> may be
+            used as the value of the "type" attribute.</p>
+
+        <p> The listener that is registered will dipatch to the
+            expressions specified in the body of this element.  Each
+            expression must be separated by a semicolon and need not
+            be enclosed in #{}.</p>
+        ]]></description>
+        <name>type</name>
+        <required>true</required>
+        <type>java.lang.String</type>
+    </attribute>
+    </tag>
+
+    <tag>
+    <tag-name>deferredFragment</tag-name>
+    <component>
+        <component-type>com.sun.jsft.component.fragment.DeferredFragment</component-type>
+    </component>
+    </tag>
+
+</facelet-taglib>

@@ -82,7 +82,7 @@
         <microprofile.health-api.version>4.0.1</microprofile.health-api.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
-        <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
+        <microprofile-jwt-auth-api.version>2.2-RC1</microprofile-jwt-auth-api.version>
         <omnifaces-jwt-auth.version>4.0.0-M2</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
@@ -90,7 +90,6 @@
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>4.2.0</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>6.0.3</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
@@ -522,22 +521,6 @@
             </dependency>
 
             <!-- Admin console components -->
-            <dependency>
-                <groupId>org.glassfish.jsftemplating</groupId>
-                <artifactId>jsftemplating</artifactId>
-                <version>${jsftemplating.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jakarta.servlet</groupId>
-                        <artifactId>jakarta.servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jsftemplating</groupId>
-                <artifactId>jsftemplating-dt</artifactId>
-                <version>${jsftemplating.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
                 <artifactId>woodstock-webui-jsf</artifactId>

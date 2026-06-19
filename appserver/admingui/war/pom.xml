@@ -167,7 +167,7 @@
                                 jakarta.servlet.jsp-api,
                                 jakarta.el-api,
                                 org.glassfish.expressly,
-                                org.glassfish.jsftemplating,
+                                org.glassfish.main.admingui.jsftemplating,
                                 org.glassfish.main.admingui.dataprovider
                             </HK2-Import-Bundles>
                         </manifestEntries>

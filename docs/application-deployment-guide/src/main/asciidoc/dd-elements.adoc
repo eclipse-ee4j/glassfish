@@ -1218,11 +1218,18 @@ Servlet specification and looks in its class loader before looking in
 the parent class loader. It's safe to set this to `false` only for a web
 module that does not interact with any other modules.
 
-For a number of packages, including `java.*` and `javax.*`, symbol
-resolution is always delegated to the parent class loader regardless of
-the delegate setting. This prevents applications from overriding core
-Java runtime classes or changing the API versions of specifications that
-are part of the Jakarta EE platform.
+For a number of packages, symbol resolution is always delegated to the
+parent class loader regardless of the delegate setting: `jakarta.*`,
+`javax.*`, `sun.*`, `org.xml.sax.*`, `org.w3c.dom.*`,
+`org.eclipse.microprofile.*`, and the {productName} Jakarta Faces
+(Mojarra) and JSP standard tag library implementations (`com.sun.faces.*`
+and `org.glassfish.wasp.taglibs.standard.*`). Classes in the `java.*`
+namespace are always loaded by the JVM bootstrap class loader. This
+prevents applications from overriding core Java runtime classes or
+changing the API versions of specifications that are part of the Jakarta
+EE platform. To use a Jakarta Faces implementation bundled in the
+application instead of the one provided by the {productName}, set the
+`useBundledJsf` property described in xref:#gcfjs[Table C-24].
 
 |`dynamic-reload-interval` | |(optional) Not implemented. Included
 for backward compatibility with previous Oracle Web Server versions.
@@ -1262,6 +1269,20 @@ Table C-24 `class-loader` Properties
 |`ignoreHiddenJarFiles` |`false` |If `true`, specifies that all JAR and
 ZIP files in the `WEB-INF/lib` directory that start with a period (`.`)
 are ignored by the class loader.
+
+|`useBundledJsf` |`false` a|
+If `true`, the web module uses the Jakarta Faces implementation that is
+bundled in its `WEB-INF/lib` directory instead of the Mojarra
+implementation provided by the {productName}.
+
+By default, the `jakarta.faces.*` API and the `com.sun.faces.*`
+implementation are always loaded from the {productName}, regardless of
+the `delegate` attribute. Set this property to `true` (together with
+`delegate="false"`) when the application bundles its own version of
+Jakarta Faces and must use it.
+
+The `useMyFaces` property is a synonym for `useBundledJsf` and has the
+same effect.
 |===
 
 

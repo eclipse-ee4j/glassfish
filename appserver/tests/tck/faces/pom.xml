@@ -38,6 +38,7 @@
         <faces.tck.version>4.0.4</faces.tck.version>
         <tck.root>${project.build.directory}</tck.root>
         <tck.parentPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/pom.xml</tck.parentPomFile>
+        <tck.sigtestPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/faces-signaturetest/pom.xml</tck.sigtestPomFile>
     </properties>
 
     <dependencyManagement>
@@ -149,6 +150,8 @@
                                     element="version" value="2.1.2" replacement="${omnifish.arquillian.version}" />
                                 <pom-replace file="${tck.parentPomFile}"
                                     element="version" value="${faces.tck.version}" replacement="${project.parent.version}" />
+                                <pom-replace file="${tck.sigtestPomFile}"
+                                    element="version" value="3.0.0-M5" replacement="${surefire.version}" />
                                 <replace file="${tck.parentPomFile}">
                                     <replacetoken><![CDATA[<relativePath />]]></replacetoken>
                                     <replacevalue><![CDATA[<relativePath>../../..</relativePath>]]></replacevalue>

@@ -25,6 +25,7 @@ or [buying their services.](#professional-services-and-enterprise-support)
 ## 📦 Download Links
 
 * [Eclipse Downloads](https://download.eclipse.org/justj/?file=ee4j/glassfish)
+    * Download pages support Velocity templating during the website build, so GlassFish versions can be defined once (e.g. `#set($version = "7.0.24")`) and reused throughout each block.
 * Maven Central:
     * [GlassFish Server Full Profile](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/versions)
     * [GlassFish Server Web Profile](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/versions)

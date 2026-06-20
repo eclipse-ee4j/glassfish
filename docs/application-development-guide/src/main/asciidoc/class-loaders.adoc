@@ -155,7 +155,7 @@ applications from overriding core Java runtime classes or changing the
 API versions of specifications that are part of the Jakarta EE platform.
 The always-delegated packages are:
 
-* `java.*` and `javax.*` - Java runtime and Java extension classes
+* `javax.*` - Java extension classes
 * `jakarta.*` - Jakarta EE specification APIs
 * `sun.*` - JRE internal classes
 * `org.xml.sax.*` and `org.w3c.dom.*` - SAX and DOM classes provided by
@@ -164,6 +164,9 @@ the JRE
 * `com.sun.faces.*` and `org.glassfish.wasp.taglibs.standard.*` - the
 Jakarta Faces (Mojarra) implementation and JSP standard tag library
 bundled with the {productName}
+
+In addition, classes in the `java.*` namespace are always loaded by the
+JVM bootstrap class loader and can never be overridden by an application.
 
 As a result, setting `delegate="false"` alone does not cause an
 application to use a Jakarta Faces implementation bundled in its
